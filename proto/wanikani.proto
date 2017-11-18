@@ -1,0 +1,90 @@
+syntax = "proto2";
+
+package proto;
+
+message Meaning {
+  optional string meaning = 1;
+  optional bool is_primary = 2;
+}
+
+message Reading {
+  optional string reading = 1;
+  optional bool is_primary = 2;
+
+  enum Type {
+    ONYOMI = 1;
+    KUNYOMI = 2;
+    NANORI = 3;
+  }
+  optional Type type = 3;
+}
+
+message Radical {
+  optional string japanese = 1;
+  repeated Meaning meanings = 2;
+  optional string character_image = 3;
+
+  optional string mnemonic = 4;
+  optional string meaning_note = 5;
+}
+
+message Kanji {
+  optional string japanese = 1;
+  repeated Reading readings = 2;
+  repeated Meaning meanings = 3;
+
+  optional string meaning_mnemonic = 4;
+  optional string meaning_hint = 5;
+  optional string reading_mnemonic = 6;
+  optional string reading_hint = 7;
+
+  repeated int32 component_subject_ids = 8;
+}
+
+message Vocab {
+  optional string japanese = 1;
+  repeated Reading readings = 2;
+  repeated Meaning meanings = 3;
+
+  optional string meaning_explanation = 4;
+  optional string reading_explanation = 5;
+
+  message Sentence {
+    optional string japanese = 1;
+    optional string english = 2;
+  }
+  repeated Sentence sentences = 6;
+
+  repeated int32 component_subject_ids = 7;
+
+  enum PartOfSpeech {
+    NOUN = 1;
+    NUMERAL = 2;
+    INTRANSITIVE_VERB = 3;
+    ICHIDAN_VERB = 4;
+    TRANSITIVE_VERB = 5;
+    NO_ADJECTIVE = 6;
+    GODAN_VERB = 7;
+    NA_ADJECTIVE = 8;
+    I_ADJECTIVE = 9;
+    SUFFIX = 10;
+    ADVERB = 11;
+    SURU_VERB = 12;
+    PREFIX = 13;
+    PROPER_NOUN = 14;
+    EXPRESSION = 15;
+    ADJECTIVE = 16;
+  }
+  optional PartOfSpeech part_of_speech = 8;
+}
+
+message Subject {
+  optional int32 id = 1;
+  optional int32 level = 2;
+  optional string slug = 3;
+  optional string document_url = 4;
+
+  optional Radical radical = 5;
+  optional Kanji kanji = 6;
+  optional Vocab vocab = 7;
+}
