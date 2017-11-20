@@ -3,54 +3,27 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 
 	"github.com/golang/protobuf/proto"
 
 	"github.com/davidsansome/wk/api"
+	"github.com/davidsansome/wk/converter"
 	"github.com/davidsansome/wk/jsonapi"
-	pb "github.com/davidsansome/wk/proto"
 )
 
 var (
-	cookie   = flag.String("cookie", "", "Wanikani HTTP cookie")
-	apiToken = flag.String("api-token", "", "Wanikani API v2 token")
+	cookie    = flag.String("cookie", "", "Wanikani HTTP cookie")
+	apiToken  = flag.String("api-token", "", "Wanikani API v2 token")
+	directory = flag.String("directory", "data", "Output directory")
 )
-
-func SubjectToProto(o *api.SubjectObject) *pb.Subject {
-	var ret pb.Subject
-
-	ret.Id = proto.Int32(int32(o.ID))
-	ret.Level = proto.Int32(int32(o.Data.Level))
-	ret.Slug = proto.String(o.Data.Slug)
-	ret.DocumentUrl = proto.String(o.Data.DocumentURL)
-
-	switch o.Object {
-	case "radical":
-		ret.Radical = &pb.Radical{
-			Japanese: proto.String(o.Data.Character),
-		}
-		if len(o.Data.CharacterImages) >= 1 {
-			ret.Radical.CharacterImage = proto.String(o.Data.CharacterImages[0].URL)
-		}
-		for _, meaning := range o.Data.Meanings {
-			ret.Radical.Meanings = append(ret.Radical.Meanings, &pb.Meaning{
-				Meaning:   proto.String(meaning.Meaning),
-				IsPrimary: proto.Bool(meaning.Primary),
-			})
-		}
-	}
-
-	return &ret
-}
-
-func AddRadical(s *pb.Subject, r *jsonapi.Radical) {
-	s.Radical.Mnemonic = proto.String(r.Mnemonic)
-	s.Radical.MeaningNote = proto.String(r.MeaningNote)
-}
 
 func main() {
 	flag.Parse()
 
+	// Create API clients.
 	apiClient, err := api.New(*apiToken)
 	if err != nil {
 		panic(err)
@@ -61,24 +34,78 @@ func main() {
 		panic(err)
 	}
 
-	cur := apiClient.Subjects()
+	if _, err := os.Stat(*directory); os.IsNotExist(err) {
+		panic(err)
+	}
+
+	s := Scraper{apiClient, jsonClient, *directory}
+	if err := s.GetAll(); err != nil {
+		panic(err)
+	}
+}
+
+type Scraper struct {
+	apiClient  *api.Client
+	jsonClient *jsonapi.Client
+	directory  string
+}
+
+func (s *Scraper) GetAll() error {
+	cur := s.apiClient.Subjects("")
 	for {
 		subject, err := cur.Next()
 		if err != nil {
-			panic(err)
+			return err
 		}
 		if subject == nil {
 			break
 		}
 
-		r, err := jsonClient.GetRadical(subject.ID)
-		if err != nil {
-			panic(err)
+		// Don't fetch this subject again if we've already got it.
+		filename := fmt.Sprintf("%s/%d", s.directory, subject.ID)
+		if _, err := os.Stat(filename); !os.IsNotExist(err) {
+			continue
 		}
 
-		spb := SubjectToProto(subject)
-		AddRadical(spb, r)
+		spb := converter.SubjectToProto(subject)
 
-		fmt.Printf("%s\n", proto.MarshalTextString(spb))
+		// Fetch the other bits.
+		switch {
+		case spb.Radical != nil:
+			r, err := s.jsonClient.GetRadical(subject.ID)
+			if err != nil {
+				log.Printf("Error getting radical %d: %v", subject.ID, err)
+				break
+			}
+			converter.AddRadical(spb, r)
+
+		case spb.Kanji != nil:
+			r, err := s.jsonClient.GetKanji(subject.ID)
+			if err != nil {
+				log.Printf("Error getting kanji %d: %v", subject.ID, err)
+				break
+			}
+			converter.AddKanji(spb, r)
+
+		case spb.Vocabulary != nil:
+			r, err := s.jsonClient.GetVocabulary(subject.ID)
+			if err != nil {
+				log.Printf("Error getting vocabulary %d: %v", subject.ID, err)
+				break
+			}
+			converter.AddVocabulary(spb, r)
+		}
+
+		// Write it to a file.
+		data, err := proto.Marshal(spb)
+		if err != nil {
+			return err
+		}
+
+		err = ioutil.WriteFile(filename, data, 0644)
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }

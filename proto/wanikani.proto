@@ -25,7 +25,6 @@ message Radical {
   optional string character_image = 3;
 
   optional string mnemonic = 4;
-  optional string meaning_note = 5;
 }
 
 message Kanji {
@@ -41,7 +40,7 @@ message Kanji {
   repeated int32 component_subject_ids = 8;
 }
 
-message Vocab {
+message Vocabulary {
   optional string japanese = 1;
   repeated Reading readings = 2;
   repeated Meaning meanings = 3;
@@ -75,7 +74,9 @@ message Vocab {
     EXPRESSION = 15;
     ADJECTIVE = 16;
   }
-  optional PartOfSpeech part_of_speech = 8;
+  repeated PartOfSpeech parts_of_speech = 8;
+
+  optional string audio = 9;
 }
 
 message Subject {
@@ -86,5 +87,5 @@ message Subject {
 
   optional Radical radical = 5;
   optional Kanji kanji = 6;
-  optional Vocab vocab = 7;
+  optional Vocabulary vocabulary = 7;
 }

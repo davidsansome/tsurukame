@@ -44,17 +44,27 @@ func (c *Client) get(u *url.URL) (*http.Response, error) {
 	return resp, nil
 }
 
-func (c *Client) GetRadical(id int) (*Radical, error) {
-	resp, err := c.get(utils.MustParseURL(fmt.Sprintf("%s/radical/%d", urlBase, id)))
+func (c *Client) getSubject(id int, typ string, ret interface{}) error {
+	resp, err := c.get(utils.MustParseURL(fmt.Sprintf("%s/%s/%d", urlBase, typ, id)))
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	var ret Radical
 	d := json.NewDecoder(resp.Body)
-	if err := d.Decode(&ret); err != nil {
-		return nil, err
-	}
+	return d.Decode(ret)
+}
 
-	return &ret, nil
+func (c *Client) GetRadical(id int) (ret *Radical, err error) {
+	err = c.getSubject(id, "radical", &ret)
+	return
+}
+
+func (c *Client) GetKanji(id int) (ret *Kanji, err error) {
+	err = c.getSubject(id, "kanji", &ret)
+	return
+}
+
+func (c *Client) GetVocabulary(id int) (ret *Vocabulary, err error) {
+	err = c.getSubject(id, "vocabulary", &ret)
+	return
 }

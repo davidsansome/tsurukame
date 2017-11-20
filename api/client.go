@@ -50,10 +50,16 @@ type subjectsCursor struct {
 	ret  []*SubjectObject
 }
 
-func (c *Client) Subjects() *subjectsCursor {
+func (c *Client) Subjects(typ string) *subjectsCursor {
+	u := utils.MustParseURL(urlBase + "/subjects")
+	if typ != "" {
+		q := url.Values{}
+		q.Set("type", typ)
+		u.RawQuery = q.Encode()
+	}
 	return &subjectsCursor{
 		c:    c,
-		next: utils.MustParseURL(urlBase + "/subjects"),
+		next: u,
 	}
 }
 

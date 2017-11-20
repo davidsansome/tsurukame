@@ -18,13 +18,25 @@ type SubjectObject struct {
 		Slug            string `json:"slug"`
 		DocumentURL     string `json:"document_url"`
 		Character       string `json:"character"`
+		Characters      string `json:"characters"`
 		CharacterImages []struct {
 			ContentType string `json:"content_type"`
 			URL         string `json:"url"`
 		} `json:"character_images"`
-		Meanings []struct {
-			Meaning string `json:"meaning"`
-			Primary bool   `json:"primary"`
-		}
+		Meanings            []MeaningObject
+		Readings            []ReadingObject
+		ComponentSubjectIDs []int    `json:"component_subject_ids"`
+		PartsOfSpeech       []string `json:"parts_of_speech"`
 	} `json:"data"`
+}
+
+type MeaningObject struct {
+	Meaning string `json:"meaning"`
+	Primary bool   `json:"primary"`
+}
+
+type ReadingObject struct {
+	Type    string `json:"type"`
+	Primary bool   `json:"primary"`
+	Reading string `json:"reading"`
 }
