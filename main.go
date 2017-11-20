@@ -52,19 +52,20 @@ type Scraper struct {
 
 func (s *Scraper) GetAll() error {
 	cur := s.apiClient.Subjects("")
+SubjectLoop:
 	for {
 		subject, err := cur.Next()
 		if err != nil {
 			return err
 		}
 		if subject == nil {
-			break
+			break SubjectLoop
 		}
 
 		// Don't fetch this subject again if we've already got it.
 		filename := fmt.Sprintf("%s/%d", s.directory, subject.ID)
 		if _, err := os.Stat(filename); !os.IsNotExist(err) {
-			continue
+			continue SubjectLoop
 		}
 
 		spb := converter.SubjectToProto(subject)
@@ -75,7 +76,7 @@ func (s *Scraper) GetAll() error {
 			r, err := s.jsonClient.GetRadical(subject.ID)
 			if err != nil {
 				log.Printf("Error getting radical %d: %v", subject.ID, err)
-				break
+				continue SubjectLoop
 			}
 			converter.AddRadical(spb, r)
 
@@ -83,7 +84,7 @@ func (s *Scraper) GetAll() error {
 			r, err := s.jsonClient.GetKanji(subject.ID)
 			if err != nil {
 				log.Printf("Error getting kanji %d: %v", subject.ID, err)
-				break
+				continue SubjectLoop
 			}
 			converter.AddKanji(spb, r)
 
@@ -91,7 +92,7 @@ func (s *Scraper) GetAll() error {
 			r, err := s.jsonClient.GetVocabulary(subject.ID)
 			if err != nil {
 				log.Printf("Error getting vocabulary %d: %v", subject.ID, err)
-				break
+				continue SubjectLoop
 			}
 			converter.AddVocabulary(spb, r)
 		}
