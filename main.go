@@ -68,7 +68,10 @@ SubjectLoop:
 			continue SubjectLoop
 		}
 
-		spb := converter.SubjectToProto(subject)
+		spb, err := converter.SubjectToProto(subject)
+		if err != nil {
+			return err
+		}
 
 		// Fetch the other bits.
 		switch {

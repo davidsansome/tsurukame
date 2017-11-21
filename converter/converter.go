@@ -10,7 +10,7 @@ import (
 	pb "github.com/davidsansome/wk/proto"
 )
 
-func SubjectToProto(o *api.SubjectObject) *pb.Subject {
+func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
 	var ret pb.Subject
 
 	ret.Id = proto.Int32(int32(o.ID))
@@ -46,14 +46,13 @@ func SubjectToProto(o *api.SubjectObject) *pb.Subject {
 		for _, p := range o.Data.PartsOfSpeech {
 			pos, ok := convertPartOfSpeech(p)
 			if !ok {
-				fmt.Printf("Unknown part of speech: %s\n", p)
-			} else {
-				ret.Vocabulary.PartsOfSpeech = append(ret.Vocabulary.PartsOfSpeech, pos)
+				return nil, fmt.Errorf("Unknown part of speech: %s\n", p)
 			}
+			ret.Vocabulary.PartsOfSpeech = append(ret.Vocabulary.PartsOfSpeech, pos)
 		}
 	}
 
-	return &ret
+	return &ret, nil
 }
 
 func convertMeanings(m []api.MeaningObject) []*pb.Meaning {
@@ -129,6 +128,14 @@ func convertPartOfSpeech(p string) (pb.Vocabulary_PartOfSpeech, bool) {
 		return pb.Vocabulary_EXPRESSION, true
 	case "adjective":
 		return pb.Vocabulary_ADJECTIVE, true
+	case "interjection":
+		return pb.Vocabulary_INTERJECTION, true
+	case "counter":
+		return pb.Vocabulary_COUNTER, true
+	case "pronoun":
+		return pb.Vocabulary_PRONOUN, true
+	case "conjunction":
+		return pb.Vocabulary_CONJUNCTION, true
 	}
 	return pb.Vocabulary_NOUN, false
 }

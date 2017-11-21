@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 
@@ -29,6 +30,7 @@ func New(token string) (*Client, error) {
 }
 
 func (c *Client) get(u *url.URL) (*http.Response, error) {
+	log.Printf("Fetching %s", u)
 	resp, err := c.client.Do(&http.Request{
 		URL: u,
 		Header: map[string][]string{
@@ -73,6 +75,7 @@ func (c *subjectsCursor) Next() (*SubjectObject, error) {
 		if err != nil {
 			return nil, err
 		}
+		defer resp.Body.Close()
 
 		var coll subjectCollection
 		d := json.NewDecoder(resp.Body)

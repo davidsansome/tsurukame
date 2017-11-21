@@ -3,6 +3,7 @@ package jsonapi
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 
@@ -29,6 +30,7 @@ func New(cookie string) (*Client, error) {
 }
 
 func (c *Client) get(u *url.URL) (*http.Response, error) {
+	log.Printf("Fetching %s", u)
 	resp, err := c.client.Do(&http.Request{
 		URL: u,
 		Header: map[string][]string{
@@ -51,6 +53,7 @@ func (c *Client) getSubject(id int, typ string, ret interface{}) error {
 	}
 
 	d := json.NewDecoder(resp.Body)
+	defer resp.Body.Close()
 	return d.Decode(ret)
 }
 

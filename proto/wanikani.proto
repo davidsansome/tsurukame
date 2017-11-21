@@ -1,5 +1,7 @@
 syntax = "proto2";
 
+option objc_class_prefix = "WK";
+
 package proto;
 
 message Meaning {
@@ -73,6 +75,10 @@ message Vocabulary {
     PROPER_NOUN = 14;
     EXPRESSION = 15;
     ADJECTIVE = 16;
+    INTERJECTION = 17;
+    COUNTER = 18;
+    PRONOUN = 19;
+    CONJUNCTION = 20;
   }
   repeated PartOfSpeech parts_of_speech = 8;
 
@@ -85,7 +91,22 @@ message Subject {
   optional string slug = 3;
   optional string document_url = 4;
 
+  enum Type {
+    RADICAL = 1;
+    KANJI = 2;
+    VOCABULARY = 3;
+  }
+
   optional Radical radical = 5;
   optional Kanji kanji = 6;
   optional Vocabulary vocabulary = 7;
+}
+
+message Assignment {
+  optional int32 id = 1;
+  optional int32 level = 2;
+
+  optional int32 subject_id = 3;
+  optional Subject.Type subject_type = 4;
+  optional int32 available_at = 5;
 }
