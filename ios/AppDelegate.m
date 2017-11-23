@@ -7,16 +7,24 @@
 //
 
 #import "AppDelegate.h"
+#import "DataLoader.h"
 #import "MainViewController.h"
 
 @interface AppDelegate ()
 
 @end
 
-@implementation AppDelegate
+@implementation AppDelegate {
+  DataLoader *_dataLoader;
+}
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  _dataLoader = [[DataLoader alloc] initFromURL:[[NSBundle mainBundle] URLForResource:@"data"
+                                                                        withExtension:@"bin"]];
+  WKSubject *foo = [_dataLoader readSubject:42];
+  NSLog(@"%@", foo);
+  
   MainViewController *vc = [[MainViewController alloc] init];
   
   UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
