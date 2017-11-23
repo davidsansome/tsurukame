@@ -10,11 +10,14 @@
 
 #import <Foundation/Foundation.h>
 
+extern const NSString *WKClientErrorDomain;
+
 @interface Client : NSObject
 
 - (instancetype)initWithApiToken:(NSString *)apiToken NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
 
-typedef void (^AssignmentHandler)(NSArray<WKAssignment *> *);
-- (void)getAllAssignments:(AssignmentHandler *)handle;
+typedef void (^AssignmentHandler)(NSError *error, NSArray<WKAssignment *> *);
+- (void)getAllAssignments:(AssignmentHandler)handle;
 
 @end
