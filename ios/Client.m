@@ -8,7 +8,7 @@
 
 #import "Client.h"
 
-static NSString *kURLBase = @"https://www.wanikani.com/api/v2";
+static const char *kURLBase = "https://www.wanikani.com/api/v2";
 
 @implementation Client {
   NSString *_apiToken;
@@ -23,12 +23,29 @@ static NSString *kURLBase = @"https://www.wanikani.com/api/v2";
   return self;
 }
 
-- (id)getAllAssignments {
+- (void)getAllAssignments:(AssignmentHandler *)handler {
+  NSArray<WKAssignment *> *ret = [NSArray array];
+  
   NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%s/assignments", kURLBase]];
   [_urlSession dataTaskWithURL:url
              completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-    
-  }]
+               NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+               NSString *nextURLString = dict[@"pages"][@"next_url"];
+               if (nextURLString == nil) {
+               }
+               
+               for (NSDictionary *data in dict[@"data"]) {
+                 WKAssignment *assignment = [[WKAssignment alloc] init];
+                 assignment.id_p = data[@"id"];
+                 assignment.level = data[@"data"][@"level"];
+                 assignment.subjectId = data[@"data"][@"subject_id"];
+                 
+                 if (data[@"data"][@"subject_type"] == @"radical") {
+                   assignment.subjectType = 1;
+                 }
+               }
+             }
+   ];
 }
 
 @end

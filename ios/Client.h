@@ -6,12 +6,15 @@
 //  Copyright © 2017 David Sansome. All rights reserved.
 //
 
+#include "proto/Wanikani.pbobjc.h"
+
 #import <Foundation/Foundation.h>
 
 @interface Client : NSObject
 
 - (instancetype)initWithApiToken:(NSString *)apiToken NS_DESIGNATED_INITIALIZER;
 
-- getAllAssignments
+typedef void (^AssignmentHandler)(NSArray<WKAssignment *> *);
+- (void)getAllAssignments:(AssignmentHandler *)handle;
 
 @end
