@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "Client.h"
 #import "DataLoader.h"
 #import "MainViewController.h"
 
@@ -23,7 +24,13 @@
   _dataLoader = [[DataLoader alloc] initFromURL:[[NSBundle mainBundle] URLForResource:@"data"
                                                                         withExtension:@"bin"]];
   WKSubject *foo = [_dataLoader readSubject:42];
-  NSLog(@"%@", foo);
+  
+  Client *client = [[Client alloc] initWithApiToken:@"(redacted in git history)"];
+  [client getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
+    NSLog(@"error %@", error);
+    NSLog(@"length %d", (int)assignments.count);
+    NSLog(@"%@", assignments);
+  }];
   
   MainViewController *vc = [[MainViewController alloc] init];
   

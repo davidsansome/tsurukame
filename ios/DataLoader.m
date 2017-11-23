@@ -33,7 +33,7 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
 
 - (WKSubject *)readSubject:(int)subjectID {
   NSAssert(subjectID < _count && subjectID >= 0,
-           @"Tried to read subject %d outside 0-%d", subjectID, _count);
+           @"Tried to read subject %d outside 0-%d", subjectID, (int)_count);
   
   const uint32_t offset = ReadUint32(_file, (subjectID + 1) * 4);
   
