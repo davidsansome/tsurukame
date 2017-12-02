@@ -6,14 +6,10 @@
 //  Copyright © 2017 David Sansome. All rights reserved.
 //
 
+#import "AnswerChecker.h"
 #import "LanguageSpecificTextField.h"
 #import "ReviewViewController.h"
 #import "proto/Wanikani+Convenience.h"
-
-typedef enum : NSUInteger {
-  kTaskTypeReading,
-  kTaskTypeMeaning,
-} TaskType;
 
 static const int kActiveQueueSize = 10;
 
@@ -25,16 +21,20 @@ static const int kActiveQueueSize = 10;
 @property (weak, nonatomic) IBOutlet UIButton *submitButton;
 @property (weak, nonatomic) IBOutlet UILabel *correctAnswerLabel;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
-@property (weak, nonatomic) IBOutlet UILabel *progressLabel;
-@property (weak, nonatomic) IBOutlet UILabel *successRateLabel;
 
+@property (weak, nonatomic) IBOutlet UILabel *successRateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *doneLabel;
+@property (weak, nonatomic) IBOutlet UILabel *queueLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *successRateIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *doneIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *queueIcon;
 
 @property (nonatomic) DataLoader *dataLoader;
 @property (nonatomic) NSMutableArray<ReviewItem *> *activeQueue;
 @property (nonatomic) NSMutableArray<ReviewItem *> *reviewQueue;
 
 @property (nonatomic, readonly) int activeTaskIndex;  // An index into activeQueue;
-@property (nonatomic, readonly) TaskType activeTaskType;
+@property (nonatomic, readonly) WKTaskType activeTaskType;
 @property (nonatomic, readonly) ReviewItem *activeTask;
 @property (nonatomic, readonly) WKSubject *activeSubject;
 
@@ -62,8 +62,22 @@ static const int kActiveQueueSize = 10;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  [self addShadowToView:self.successRateIcon];
+  [self addShadowToView:self.successRateLabel];
+  [self addShadowToView:self.doneIcon];
+  [self addShadowToView:self.doneLabel];
+  [self addShadowToView:self.queueIcon];
+  [self addShadowToView:self.queueLabel];
   
   self.answerField.delegate = self;
+}
+
+- (void)addShadowToView:(UIView *)view {
+  view.layer.shadowColor = [UIColor blackColor].CGColor;
+  view.layer.shadowOffset = CGSizeMake(1, 1);
+  view.layer.shadowOpacity = 0.6;
+  view.layer.shadowRadius = 1.5;
+  view.clipsToBounds = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -85,6 +99,26 @@ static const int kActiveQueueSize = 10;
 }
 
 - (void)randomTask {
+  // Update the progress labels.
+  if (self.tasksAnswered == 0) {
+    self.successRateLabel.text = @"100%";
+  } else {
+    self.successRateLabel.text = [NSString stringWithFormat:@"%d%%",
+                                  (int)(self.tasksAnsweredCorrectly / self.tasksAnswered)];
+  }
+  int queueLength = (int)(self.activeQueue.count + self.reviewQueue.count);
+  self.doneLabel.text = [NSString stringWithFormat:@"%d", self.reviewsCompleted];
+  self.queueLabel.text = [NSString stringWithFormat:@"%d", queueLength];
+  
+  // Update the progress bar.
+  int totalLength = queueLength + self.reviewsCompleted;
+  if (totalLength == 0) {
+    self.progressBar.progress = 0.0;
+  } else {
+    self.progressBar.progress = (double)(self.reviewsCompleted) / totalLength;
+  }
+  
+  // Choose a random task from the active queue.
   if (self.activeQueue.count == 0) {
     return;
   }
@@ -92,29 +126,57 @@ static const int kActiveQueueSize = 10;
   _activeTask = self.activeQueue[self.activeTaskIndex];
   _activeSubject = [self.dataLoader loadSubject:self.activeTask.assignment.subjectId];
   
+  // Choose whether to ask the meaning or the reading.
   if (self.activeTask.passedMeaning) {
-    _activeTaskType = kTaskTypeReading;
+    _activeTaskType = kWKTaskTypeReading;
   } else if (self.activeTask.passedReading) {
-    _activeTaskType = kTaskTypeMeaning;
+    _activeTaskType = kWKTaskTypeMeaning;
   } else {
-    _activeTaskType = (TaskType)arc4random_uniform(2);
+    _activeTaskType = (WKTaskType)arc4random_uniform(kWKTaskType_Max);
   }
   
-  switch (self.activeTaskType) {
-    case kTaskTypeMeaning:
-      [self.questionLabel setText:self.activeSubject.japanese];
+  // Fill the question labels.
+  NSString *subjectTypePrompt;
+  NSString *taskTypePrompt;
+  
+  switch (self.activeTask.assignment.subjectType) {
+    case WKSubject_Type_Kanji:
+      subjectTypePrompt = @"Kanji";
       break;
-      
-    case kTaskTypeReading:
-      [self.questionLabel setText:self.activeSubject.primaryMeaning];
+    case WKSubject_Type_Radical:
+      subjectTypePrompt = @"Radical";
+      break;
+    case WKSubject_Type_Vocabulary:
+      subjectTypePrompt = @"Vocabulary";
       break;
   }
+  switch (self.activeTaskType) {
+    case kWKTaskTypeMeaning:
+      taskTypePrompt = @"Meaning";
+      break;
+    case kWKTaskTypeReading:
+      taskTypePrompt = @"Reading";
+      break;
+    case kWKTaskType_Max:
+      assert(false);
+  }
+  
+  UIFont *boldFont = [UIFont boldSystemFontOfSize:self.promptLabel.font.pointSize];
+  NSMutableAttributedString *prompt = [[NSMutableAttributedString alloc] initWithString:
+                                       [NSString stringWithFormat:@"%@ %@",
+                                        subjectTypePrompt, taskTypePrompt]];
+  [prompt setAttributes:@{NSFontAttributeName: boldFont}
+                  range:NSMakeRange(prompt.length - taskTypePrompt.length, taskTypePrompt.length)];
+  [self.promptLabel setAttributedText:prompt];
+  [self.questionLabel setText:self.activeSubject.japanese];
+  [self.correctAnswerLabel setHidden:YES];
 }
 
 #pragma mark - Answering
 
 - (void)submit {
-  
+  WKAnswerCheckerResult result = CheckAnswer(_answerField.text, _activeSubject, _activeTaskType);
+  NSLog(@"Result %d", result);
 }
 
 - (IBAction)submitButtonPressed:(id)sender {

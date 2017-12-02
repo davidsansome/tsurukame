@@ -14,5 +14,8 @@
 
 @property (nonatomic, readonly) NSString *japanese;
 @property (nonatomic, readonly) NSString *primaryMeaning;
+@property (nonatomic, readonly) NSArray<WKReading *> *primaryReadings;
+@property (nonatomic, readonly) NSArray<WKReading *> *alternateReadings;
+@property (nonatomic, readonly) NSArray<WKMeaning *> *meanings;
 
 @end
