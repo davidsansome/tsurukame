@@ -10,14 +10,19 @@
 
 #import <Foundation/Foundation.h>
 
-extern const NSString *WKClientErrorDomain;
+NS_ASSUME_NONNULL_BEGIN
+
+extern NSErrorDomain WKClientErrorDomain;
 
 @interface Client : NSObject
 
 - (instancetype)initWithApiToken:(NSString *)apiToken NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-typedef void (^AssignmentHandler)(NSError *error, NSArray<WKAssignment *> *);
+typedef void (^AssignmentHandler)(NSError * _Nullable error,
+                                  NSArray<WKAssignment *> * _Nullable assignments);
 - (void)getAllAssignments:(AssignmentHandler)handle;
 
 @end
+
+NS_ASSUME_NONNULL_END

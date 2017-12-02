@@ -13,8 +13,12 @@
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<WKAssignment *> *)assignments {
   NSMutableArray *ret = [NSMutableArray array];
   for (WKAssignment *assignment in assignments) {
+    if (!assignment.hasAvailableAt) {
+      continue;
+    }
     NSDate *readyForReview = [NSDate dateWithTimeIntervalSince1970:assignment.availableAt];
-    if ([readyForReview timeIntervalSinceNow] > 0) {
+    if ([readyForReview timeIntervalSinceNow] < 0) {
+      NSLog(@"Ready: %@", assignment);
       [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
     }
   }
