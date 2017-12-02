@@ -8,12 +8,14 @@
 
 #import "LanguageSpecificTextField.h"
 #import "ReviewViewController.h"
+#import "proto/Wanikani+Convenience.h"
 
 typedef enum : NSUInteger {
-  Correct,
-  Incorrect,
-  Invalid,
-} AnswerCorrectness;
+  kTaskTypeReading,
+  kTaskTypeMeaning,
+} TaskType;
+
+static const int kActiveQueueSize = 10;
 
 @interface ReviewViewController () <UITextFieldDelegate>
 
@@ -27,7 +29,14 @@ typedef enum : NSUInteger {
 @property (weak, nonatomic) IBOutlet UILabel *successRateLabel;
 
 
-@property (nonatomic) NSManagedObjectContext* ctx;
+@property (nonatomic) DataLoader *dataLoader;
+@property (nonatomic) NSMutableArray<ReviewItem *> *activeQueue;
+@property (nonatomic) NSMutableArray<ReviewItem *> *reviewQueue;
+
+@property (nonatomic, readonly) int activeTaskIndex;  // An index into activeQueue;
+@property (nonatomic, readonly) TaskType activeTaskType;
+@property (nonatomic, readonly) ReviewItem *activeTask;
+@property (nonatomic, readonly) WKSubject *activeSubject;
 
 @property (nonatomic) int reviewsCompleted;
 @property (nonatomic) int tasksAnsweredCorrectly;
@@ -39,9 +48,13 @@ typedef enum : NSUInteger {
 
 #pragma mark - Constructors
 
-- (instancetype)initWithContext:(NSManagedObjectContext*)ctx {
-  if (self = [super init]) {
-    _ctx = ctx;
+- (instancetype)initWithItems:(NSArray<ReviewItem *> *)items
+                   dataLoader:(DataLoader *)dataLoader {
+  if (self = [super initWithNibName:nil bundle:nil]) {
+    _dataLoader = dataLoader;
+    _reviewQueue = [NSMutableArray arrayWithArray:items];
+    _activeQueue = [NSMutableArray array];
+    [self refillActiveQueue];
   }
   return self;
 }
@@ -53,20 +66,48 @@ typedef enum : NSUInteger {
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-  // TODO: tasks
+  [self randomTask];
   [super viewWillAppear:animated];
   [self.answerField becomeFirstResponder];
 }
 
 #pragma mark - Setup
 
-- (void)createTasks {
-  // TODO: tasks
-  self.reviewsCompleted = 0;
-  self.tasksAnsweredCorrectly = 0;
-  self.tasksAnswered = 0;
+- (void)refillActiveQueue {
+  while (self.activeQueue.count < kActiveQueueSize &&
+         self.reviewQueue.count != 0) {
+    const NSUInteger i = arc4random_uniform((uint32_t)self.reviewQueue.count);
+    ReviewItem * item = [self.reviewQueue objectAtIndex:i];
+    [self.reviewQueue removeObjectAtIndex:i];
+    [self.activeQueue addObject:item];
+  }
+}
+
+- (void)randomTask {
+  if (self.activeQueue.count == 0) {
+    return;
+  }
+  _activeTaskIndex = arc4random_uniform((uint32_t)self.activeQueue.count);
+  _activeTask = self.activeQueue[self.activeTaskIndex];
+  _activeSubject = [self.dataLoader loadSubject:self.activeTask.assignment.subjectId];
   
-  // TODO: tasks
+  if (self.activeTask.passedMeaning) {
+    _activeTaskType = kTaskTypeReading;
+  } else if (self.activeTask.passedReading) {
+    _activeTaskType = kTaskTypeMeaning;
+  } else {
+    _activeTaskType = (TaskType)arc4random_uniform(2);
+  }
+  
+  switch (self.activeTaskType) {
+    case kTaskTypeMeaning:
+      [self.questionLabel setText:self.activeSubject.japanese];
+      break;
+      
+    case kTaskTypeReading:
+      [self.questionLabel setText:self.activeSubject.primaryMeaning];
+      break;
+  }
 }
 
 #pragma mark - Answering

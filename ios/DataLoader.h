@@ -17,6 +17,6 @@
 - (instancetype)initFromURL:(NSURL *)url NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-- (WKSubject *)readSubject:(int)subjectID;
+- (WKSubject *)loadSubject:(int)subjectID;
 
 @end

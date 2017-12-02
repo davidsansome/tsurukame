@@ -11,6 +11,8 @@
 static const char *kURLBase = "https://www.wanikani.com/api/v2";
 const NSString *WKClientErrorDomain = @"WKClientErrorDomain";
 
+typedef void(^PartialResponseHandler)(NSArray *data, NSError *error);
+
 @implementation Client {
   NSString *_apiToken;
   NSURLSession *_urlSession;
@@ -34,46 +36,86 @@ const NSString *WKClientErrorDomain = @"WKClientErrorDomain";
   return req;
 }
 
+- (void)startPagedQueryFor:(NSURL *)url
+                   handler:(PartialResponseHandler)handler {
+  NSURLRequest *req = [self authorizeRequestForURL:url];
+  NSLog(@"Request: %@", url);
+  NSURLSessionDataTask *task = [_urlSession dataTaskWithRequest:req
+                                              completionHandler:^(NSData * _Nullable data,
+                                                                  NSURLResponse * _Nullable response,
+                                                                  NSError * _Nullable error) {
+                                                [self parseJsonResponse:data
+                                                                  error:error
+                                                                handler:handler];
+                                              }];
+  [task resume];
+}
+
+- (void)parseJsonResponse:(NSData *)data
+                    error:(NSError *)error
+                  handler:(PartialResponseHandler)handler {
+  if (error != nil) {
+    handler(nil, error);
+    return;
+  }
+  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+  if (error != nil) {
+    handler(nil, error);
+    return;
+  }
+  if (dict[@"error"] != nil) {
+    handler(nil, [NSError errorWithDomain:WKClientErrorDomain
+                                     code:0
+                                 userInfo:@{NSLocalizedDescriptionKey: dict[@"error"]}]);
+    return;
+  }
+  
+  handler(dict[@"data"], nil);
+  
+  // Get the next page if we have one.
+  if (dict[@"pages"][@"next_url"] != [NSNull null]) {
+    NSString *nextURLString = dict[@"pages"][@"next_url"];
+    NSLog(@"Request: %@", nextURLString);
+    NSURLRequest *req = [self authorizeRequestForURL:[NSURL URLWithString:nextURLString]];
+    NSURLSessionDataTask *task = [_urlSession dataTaskWithRequest:req
+                                                completionHandler:^(NSData * _Nullable data,
+                                                                    NSURLResponse * _Nullable response,
+                                                                    NSError * _Nullable error) {
+                                                  [self parseJsonResponse:data
+                                                                    error:error
+                                                                  handler:handler];
+                                                }];
+    [task resume];
+  } else {
+    handler(nil, nil);
+  }
+}
+
 - (void)getAllAssignments:(AssignmentHandler)handler {
   NSMutableArray<WKAssignment *> *ret = [NSMutableArray array];
   
-  void (^completionHandler)(NSData * _Nullable data,
-                            NSURLResponse * _Nullable response,
-                            NSError * _Nullable error) = ^void(NSData * _Nullable data,
-                                                               NSURLResponse * _Nullable response,
-                                                               NSError * _Nullable error) {
-    if (error != nil) {
+  NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%s/assignments", kURLBase]];
+  [self startPagedQueryFor:url handler:^(NSArray *data, NSError *error) {
+    if (error) {
       handler(error, nil);
       return;
-    }
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-    if (error != nil) {
-      handler(error, nil);
-      return;
-    }
-    if (dict[@"error"] != nil) {
-      handler([NSError errorWithDomain:WKClientErrorDomain
-                                  code:0
-                              userInfo:@{NSLocalizedDescriptionKey: dict[@"error"]}], nil);
+    } else if (!data) {
+      handler(nil, ret);
       return;
     }
     
-    NSString *nextURLString = dict[@"pages"][@"next_url"];
-    if (nextURLString == nil) {
-    }
-    
-    for (NSDictionary *data in dict[@"data"]) {
+    for (NSDictionary *d in data) {
       WKAssignment *assignment = [[WKAssignment alloc] init];
-      assignment.id_p = [data[@"id"] intValue];
-      assignment.level = [data[@"data"][@"level"] intValue];
-      assignment.subjectId = [data[@"data"][@"subject_id"] intValue];
+      assignment.id_p = [d[@"id"] intValue];
+      assignment.level = [d[@"data"][@"level"] intValue];
+      assignment.subjectId = [d[@"data"][@"subject_id"] intValue];
       
-      if (data[@"data"][@"available_at"] != [NSNull null]) {
+      if (d[@"data"][@"available_at"] != [NSNull null]) {
         assignment.availableAt =
-            [[_dateFormatter dateFromString:data[@"data"][@"available_at"]] timeIntervalSince1970];
+            [[_dateFormatter dateFromString:d[@"data"][@"available_at"]] timeIntervalSince1970];
       }
       
-      NSString *subjectType = data[@"data"][@"subject_type"];
+      NSString *subjectType = d[@"data"][@"subject_type"];
       if ([subjectType isEqualToString:@"radical"]) {
         assignment.subjectType = WKSubject_Type_Radical;
       } else if ([subjectType isEqualToString:@"kanji"]) {
@@ -85,17 +127,7 @@ const NSString *WKClientErrorDomain = @"WKClientErrorDomain";
       }
       [ret addObject:assignment];
     }
-    
-    // TODO: get next page.
-    handler(nil, ret);
-  };
-  
-  NSURLRequest *req =
-      [self authorizeRequestForURL:
-          [NSURL URLWithString:[NSString stringWithFormat:@"%s/assignments", kURLBase]]];
-  NSURLSessionDataTask *task = [_urlSession dataTaskWithRequest:req
-                                              completionHandler:completionHandler];
-  [task resume];
+  }];
 }
 
 @end

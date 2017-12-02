@@ -10,6 +10,7 @@
 #import "Client.h"
 #import "DataLoader.h"
 #import "MainViewController.h"
+#import "ReviewViewController.h"
 
 @interface AppDelegate ()
 
@@ -23,14 +24,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   _dataLoader = [[DataLoader alloc] initFromURL:[[NSBundle mainBundle] URLForResource:@"data"
                                                                         withExtension:@"bin"]];
-  WKSubject *foo = [_dataLoader readSubject:42];
-  
+
   Client *client = [[Client alloc] initWithApiToken:@"(redacted in git history)"];
-  [client getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
-    NSLog(@"error %@", error);
-    NSLog(@"length %d", (int)assignments.count);
-    NSLog(@"%@", assignments);
-  }];
   
   MainViewController *vc = [[MainViewController alloc] init];
   
@@ -41,6 +36,18 @@
   
   self.window.backgroundColor = [UIColor whiteColor];
   [self.window makeKeyAndVisible];
+  
+  [client getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
+    if (error) {
+      NSLog(@"Failed to get assignments: %@", error);
+      return;
+    }
+    
+    ReviewViewController *rvc = [[ReviewViewController alloc]
+                                 initWithItems:[ReviewItem assignmentsReadyForReview:assignments]
+                                 dataLoader:_dataLoader];
+    [vc.navigationController pushViewController:rvc animated:YES];
+  }];
 
   return YES;
 }
