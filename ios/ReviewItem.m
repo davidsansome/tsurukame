@@ -18,7 +18,6 @@
     }
     NSDate *readyForReview = [NSDate dateWithTimeIntervalSince1970:assignment.availableAt];
     if ([readyForReview timeIntervalSinceNow] < 0) {
-      NSLog(@"Ready: %@", assignment);
       [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
     }
   }

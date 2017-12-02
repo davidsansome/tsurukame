@@ -30,6 +30,34 @@
   return nil;
 }
 
+- (NSArray<WKReading *> *)primaryReadings {
+  if (self.hasVocabulary) {
+    return [self readingsFrom:self.vocabulary.readingsArray primary:YES];
+  } else if (self.hasKanji) {
+    return [self readingsFrom:self.kanji.readingsArray primary:YES];
+  }
+  return nil;
+}
+
+- (NSArray<WKReading *> *)alternateReadings {
+  if (self.hasVocabulary) {
+    return [self readingsFrom:self.vocabulary.readingsArray primary:NO];
+  } else if (self.hasKanji) {
+    return [self readingsFrom:self.kanji.readingsArray primary:NO];
+  }
+  return nil;
+}
+
+- (NSArray<WKReading *> *)readingsFrom:(NSArray<WKReading *> *)readings primary:(BOOL)primary {
+  NSMutableArray<WKReading *> *ret = [NSMutableArray array];
+  for (WKReading *reading in readings) {
+    if (reading.isPrimary == primary) {
+      [ret addObject:reading];
+    }
+  }
+  return ret;
+}
+
 - (NSString *)japanese {
   if (self.hasVocabulary) {
     return self.vocabulary.japanese;
@@ -37,6 +65,17 @@
     return self.kanji.japanese;
   } else if (self.hasRadical) {
     return self.radical.japanese;
+  }
+  return nil;
+}
+
+- (NSArray<WKMeaning *> *)meanings {
+  if (self.hasVocabulary) {
+    return self.vocabulary.meaningsArray;
+  } else if (self.hasKanji) {
+    return self.kanji.meaningsArray;
+  } else if (self.hasRadical) {
+    return self.radical.meaningsArray;
   }
   return nil;
 }
