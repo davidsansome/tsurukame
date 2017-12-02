@@ -37,16 +37,23 @@
   self.window.backgroundColor = [UIColor whiteColor];
   [self.window makeKeyAndVisible];
   
+  NSLog(@"Starting thread %@", [NSThread currentThread]);
   [client getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
     if (error) {
       NSLog(@"Failed to get assignments: %@", error);
       return;
     }
+    NSLog(@"Callback thread %@", [NSThread currentThread]);
+    NSLog(@"Got %lu assignments", (unsigned long)assignments.count);
+    NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments];
+    NSLog(@"Got %lu items", (unsigned long)items.count);
     
-    ReviewViewController *rvc = [[ReviewViewController alloc]
-                                 initWithItems:[ReviewItem assignmentsReadyForReview:assignments]
-                                 dataLoader:_dataLoader];
-    [vc.navigationController pushViewController:rvc animated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      ReviewViewController *rvc = [[ReviewViewController alloc]
+                                   initWithItems:items
+                                   dataLoader:_dataLoader];
+      [vc.navigationController pushViewController:rvc animated:YES];
+    });
   }];
 
   return YES;

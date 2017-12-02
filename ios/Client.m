@@ -8,10 +8,12 @@
 
 #import "Client.h"
 
-static const char *kURLBase = "https://www.wanikani.com/api/v2";
-const NSString *WKClientErrorDomain = @"WKClientErrorDomain";
+NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^PartialResponseHandler)(NSArray *data, NSError *error);
+static const char *kURLBase = "https://www.wanikani.com/api/v2";
+NSErrorDomain WKClientErrorDomain = @"WKClientErrorDomain";
+
+typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nullable error);
 
 @implementation Client {
   NSString *_apiToken;
@@ -24,7 +26,8 @@ typedef void(^PartialResponseHandler)(NSArray *data, NSError *error);
     _apiToken = apiToken;
     _urlSession = [NSURLSession sharedSession];
     _dateFormatter = [[NSDateFormatter alloc] init];
-    [_dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"];
+    _dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'";
+    _dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
   }
   return self;
 }
@@ -131,3 +134,5 @@ typedef void(^PartialResponseHandler)(NSArray *data, NSError *error);
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

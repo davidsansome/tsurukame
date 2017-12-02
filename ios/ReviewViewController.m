@@ -51,6 +51,7 @@ static const int kActiveQueueSize = 10;
 - (instancetype)initWithItems:(NSArray<ReviewItem *> *)items
                    dataLoader:(DataLoader *)dataLoader {
   if (self = [super initWithNibName:nil bundle:nil]) {
+    NSLog(@"Starting review with %lu items", (unsigned long)items.count);
     _dataLoader = dataLoader;
     _reviewQueue = [NSMutableArray arrayWithArray:items];
     _activeQueue = [NSMutableArray array];
