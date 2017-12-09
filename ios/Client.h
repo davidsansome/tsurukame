@@ -21,7 +21,10 @@ extern NSErrorDomain WKClientErrorDomain;
 
 typedef void (^AssignmentHandler)(NSError * _Nullable error,
                                   NSArray<WKAssignment *> * _Nullable assignments);
-- (void)getAllAssignments:(AssignmentHandler)handle;
+- (void)getAssignmentsModifiedAfter:(NSString *)date
+                            handler:(AssignmentHandler)handler;
+
+- (NSString *)currentISO8601Time;
 
 @end
 

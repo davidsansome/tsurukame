@@ -94,11 +94,20 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
   }
 }
 
-- (void)getAllAssignments:(AssignmentHandler)handler {
+- (void)getAssignmentsModifiedAfter:(NSString *)date
+                            handler:(AssignmentHandler)handler {
   NSMutableArray<WKAssignment *> *ret = [NSMutableArray array];
+
+  NSURLComponents *url =
+      [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/assignments",
+                                             kURLBase]];
+  if (date && date.length) {
+    [url setQueryItems:@[
+        [NSURLQueryItem queryItemWithName:@"updated_after" value:date],
+    ]];
+  }
   
-  NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%s/assignments", kURLBase]];
-  [self startPagedQueryFor:url handler:^(NSArray *data, NSError *error) {
+  [self startPagedQueryFor:url.URL handler:^(NSArray *data, NSError *error) {
     if (error) {
       handler(error, nil);
       return;
@@ -131,6 +140,10 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
       [ret addObject:assignment];
     }
   }];
+}
+
+- (NSString *)currentISO8601Time {
+  return [_dateFormatter stringFromDate:[NSDate date]];
 }
 
 @end
