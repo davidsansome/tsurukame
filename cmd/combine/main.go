@@ -72,10 +72,10 @@ func Combine() error {
 	defer fh.Close()
 
 	// Write the index.
-	binary.Write(fh, order, int32(len(all)))
+	binary.Write(fh, order, uint32(len(all)))
 	offset := 4 + 4*len(all)
 	for _, d := range all {
-		binary.Write(fh, order, int32(offset))
+		binary.Write(fh, order, uint32(offset))
 		offset += len(d)
 	}
 
