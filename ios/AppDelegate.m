@@ -28,7 +28,8 @@
                                                                         withExtension:@"bin"]];
   _reachability = [Reachability reachabilityForInternetConnection];
 
-  Client *client = [[Client alloc] initWithApiToken:@"(redacted in git history)"];
+  Client *client = [[Client alloc] initWithApiToken:@"(redacted in git history)"
+                                             cookie:@"(redacted in git history)"];
   
   LocalCachingClient *lcc = [[LocalCachingClient alloc] initWithClient:client reachability:_reachability];
   
@@ -60,6 +61,14 @@
                                    dataLoader:_dataLoader];
       [vc.navigationController pushViewController:rvc animated:YES];
     });
+  }];
+  
+  WKProgress *progress = [[WKProgress alloc] init];
+  progress.id_p = 1234;
+  progress.readingWrong = true;
+  progress.meaningWrong = false;
+  [client sendProgress:@[progress] handler:^(NSError * _Nullable error) {
+    NSLog(@"Send progress error: %@", error);
   }];
 
   return YES;

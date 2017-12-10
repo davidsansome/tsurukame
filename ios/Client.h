@@ -16,15 +16,20 @@ extern NSErrorDomain WKClientErrorDomain;
 
 @interface Client : NSObject
 
-- (instancetype)initWithApiToken:(NSString *)apiToken NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithApiToken:(NSString *)apiToken
+                          cookie:(NSString *)cookie NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
+
+- (NSString *)currentISO8601Time;
 
 typedef void (^AssignmentHandler)(NSError * _Nullable error,
                                   NSArray<WKAssignment *> * _Nullable assignments);
 - (void)getAssignmentsModifiedAfter:(NSString *)date
                             handler:(AssignmentHandler)handler;
 
-- (NSString *)currentISO8601Time;
+typedef void (^ProgressHandler)(NSError * _Nullable error);
+- (void)sendProgress:(NSArray<WKProgress *> *)progress
+             handler:(ProgressHandler)handler;
 
 @end
 
