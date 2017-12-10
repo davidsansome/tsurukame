@@ -110,3 +110,9 @@ message Assignment {
   optional Subject.Type subject_type = 4;
   optional int32 available_at = 5;
 }
+
+message Progress {
+  optional int32 id = 1;
+  optional bool meaning_wrong = 2;
+  optional bool reading_wrong = 3;
+}
