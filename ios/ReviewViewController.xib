@@ -14,12 +14,13 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ReviewViewController">
             <connections>
                 <outlet property="answerField" destination="v3m-sw-5xf" id="Nto-0s-60v"/>
-                <outlet property="background" destination="MKd-La-jxK" id="6NZ-BH-5Ln"/>
                 <outlet property="correctAnswerLabel" destination="I7V-hL-bKH" id="82L-Vq-p1U"/>
                 <outlet property="doneIcon" destination="nKI-W2-7Sg" id="wUk-Kw-UsS"/>
                 <outlet property="doneLabel" destination="YQc-aD-qaY" id="7Tj-pE-dJY"/>
                 <outlet property="progressBar" destination="Yj1-Y8-b1K" id="iYo-nZ-91f"/>
+                <outlet property="promptBackground" destination="4Jl-RS-jHd" id="pJZ-rL-6d0"/>
                 <outlet property="promptLabel" destination="okE-oE-zWM" id="ca9-iC-iz8"/>
+                <outlet property="questionBackground" destination="MKd-La-jxK" id="cHn-RU-iXO"/>
                 <outlet property="questionLabel" destination="inU-Be-2CK" id="r6y-gk-9Dk"/>
                 <outlet property="queueIcon" destination="JWQ-Z4-6ag" id="hPO-5x-B5K"/>
                 <outlet property="queueLabel" destination="Tk9-fa-nyb" id="fnZ-nl-mHk"/>
@@ -36,7 +37,10 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MKd-La-jxK">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="145.5"/>
-                    <color key="backgroundColor" red="0.792156862745098" green="0.0" blue="0.75686274509803919" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Jl-RS-jHd">
+                    <rect key="frame" x="0.0" y="145.5" width="375" height="40"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Question" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="inU-Be-2CK">
                     <rect key="frame" x="0.0" y="45.5" width="375" height="100"/>
@@ -65,7 +69,6 @@
                 </textField>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prompt" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okE-oE-zWM">
                     <rect key="frame" x="0.0" y="145.5" width="375" height="40"/>
-                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="j2u-NV-4ye"/>
                     </constraints>
@@ -94,13 +97,13 @@
                 </button>
                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="Yj1-Y8-b1K">
                     <rect key="frame" x="0.0" y="20" width="375" height="5"/>
-                    <color key="backgroundColor" red="0.79174292800000001" green="0.0" blue="0.7552106019" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="5" id="hD4-7L-Bfo"/>
                     </constraints>
                     <color key="progressTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <color key="trackTintColor" red="0.79174292800000001" green="0.0" blue="0.7552106019" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="trackTintColor" red="1" green="1" blue="1" alpha="0.25503355704697989" colorSpace="custom" customColorSpace="sRGB"/>
                 </progressView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tick" translatesAutoresizingMaskIntoConstraints="NO" id="nKI-W2-7Sg">
                     <rect key="frame" x="246" y="28" width="16" height="16"/>
@@ -158,6 +161,7 @@
                 <constraint firstItem="JWQ-Z4-6ag" firstAttribute="top" secondItem="Yj1-Y8-b1K" secondAttribute="bottom" constant="3" id="ALA-uM-PXU"/>
                 <constraint firstItem="okE-oE-zWM" firstAttribute="top" secondItem="inU-Be-2CK" secondAttribute="bottom" id="C1H-oF-BAH"/>
                 <constraint firstItem="I7V-hL-bKH" firstAttribute="top" secondItem="v3m-sw-5xf" secondAttribute="bottom" constant="8" id="CEP-uv-J0f"/>
+                <constraint firstItem="4Jl-RS-jHd" firstAttribute="bottom" secondItem="okE-oE-zWM" secondAttribute="bottom" id="CMm-r9-vqv"/>
                 <constraint firstItem="MOA-Qp-tQa" firstAttribute="centerY" secondItem="v3m-sw-5xf" secondAttribute="centerY" id="D2f-Pz-1yO"/>
                 <constraint firstAttribute="trailing" secondItem="Tk9-fa-nyb" secondAttribute="trailing" constant="6" id="DOk-5W-tlq"/>
                 <constraint firstItem="E9g-0M-Gn6" firstAttribute="top" secondItem="Yj1-Y8-b1K" secondAttribute="bottom" constant="3" id="Fxk-KQ-t6E"/>
@@ -174,6 +178,7 @@
                 <constraint firstItem="v3m-sw-5xf" firstAttribute="top" secondItem="okE-oE-zWM" secondAttribute="bottom" constant="8" id="bBq-z6-iqD"/>
                 <constraint firstAttribute="trailing" secondItem="inU-Be-2CK" secondAttribute="trailing" id="btx-ia-dZb"/>
                 <constraint firstItem="inU-Be-2CK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="dhX-on-Ley"/>
+                <constraint firstItem="4Jl-RS-jHd" firstAttribute="leading" secondItem="okE-oE-zWM" secondAttribute="leading" id="e9k-mB-s2X"/>
                 <constraint firstItem="MKd-La-jxK" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="jNV-uC-kP8"/>
                 <constraint firstItem="MOA-Qp-tQa" firstAttribute="height" secondItem="v3m-sw-5xf" secondAttribute="height" id="jdW-Fy-NuX"/>
                 <constraint firstItem="nKI-W2-7Sg" firstAttribute="leading" secondItem="E9g-0M-Gn6" secondAttribute="trailing" constant="12" id="jwT-Ln-7id"/>
@@ -186,6 +191,8 @@
                 <constraint firstAttribute="trailing" secondItem="I7V-hL-bKH" secondAttribute="trailing" id="s3f-xX-DSU"/>
                 <constraint firstItem="inU-Be-2CK" firstAttribute="bottom" secondItem="MKd-La-jxK" secondAttribute="bottom" id="uvy-LJ-P3h"/>
                 <constraint firstItem="8ki-0j-q8v" firstAttribute="top" secondItem="Yj1-Y8-b1K" secondAttribute="bottom" constant="3" id="vqv-DO-Hrd"/>
+                <constraint firstItem="4Jl-RS-jHd" firstAttribute="top" secondItem="okE-oE-zWM" secondAttribute="top" id="vs0-mO-Oog"/>
+                <constraint firstItem="4Jl-RS-jHd" firstAttribute="trailing" secondItem="okE-oE-zWM" secondAttribute="trailing" id="yPT-8P-cKl"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="lDJ-k1-76U"/>
             <connections>

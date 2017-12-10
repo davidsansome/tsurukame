@@ -13,9 +13,26 @@
 
 static const int kActiveQueueSize = 10;
 
+static NSArray<id> *kRadicalGradient;
+static NSArray<id> *kKanjiGradient;
+static NSArray<id> *kVocabularyGradient;
+static NSArray<id> *kReadingGradient;
+static NSArray<id> *kMeaningGradient;
+static UIColor *kReadingTextColor;
+static UIColor *kMeaningTextColor;
+
+static void AddShadowToView(UIView *view) {
+  view.layer.shadowColor = [UIColor blackColor].CGColor;
+  view.layer.shadowOffset = CGSizeMake(1, 1);
+  view.layer.shadowOpacity = 0.6;
+  view.layer.shadowRadius = 1.5;
+  view.clipsToBounds = NO;
+}
+
 @interface ReviewViewController () <UITextFieldDelegate>
 
-@property (weak, nonatomic) IBOutlet UIView *background;
+@property (weak, nonatomic) IBOutlet UIView *questionBackground;
+@property (weak, nonatomic) IBOutlet UIView *promptBackground;
 @property (weak, nonatomic) IBOutlet UILabel *questionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *promptLabel;
 @property (weak, nonatomic) IBOutlet LanguageSpecificTextField *answerField;
@@ -29,6 +46,9 @@ static const int kActiveQueueSize = 10;
 @property (weak, nonatomic) IBOutlet UIImageView *successRateIcon;
 @property (weak, nonatomic) IBOutlet UIImageView *doneIcon;
 @property (weak, nonatomic) IBOutlet UIImageView *queueIcon;
+
+@property (nonatomic) CAGradientLayer *questionGradient;
+@property (nonatomic) CAGradientLayer *promptGradient;
 
 @property (nonatomic) DataLoader *dataLoader;
 @property (nonatomic) NSMutableArray<ReviewItem *> *activeQueue;
@@ -51,6 +71,22 @@ static const int kActiveQueueSize = 10;
 
 - (instancetype)initWithItems:(NSArray<ReviewItem *> *)items
                    dataLoader:(DataLoader *)dataLoader {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    kRadicalGradient = @[(id)[UIColor colorWithRed:0.000f green:0.667f blue:1.000f alpha:1.0f].CGColor,
+                         (id)[UIColor colorWithRed:0.000f green:0.576f blue:0.867f alpha:1.0f].CGColor];
+    kKanjiGradient = @[(id)[UIColor colorWithRed:1.000f green:0.000f blue:0.667f alpha:1.0f].CGColor,
+                       (id)[UIColor colorWithRed:0.867f green:0.000f blue:0.576f alpha:1.0f].CGColor];
+    kVocabularyGradient = @[(id)[UIColor colorWithRed:0.667f green:0.000f blue:1.000f alpha:1.0f].CGColor,
+                            (id)[UIColor colorWithRed:0.576f green:0.000f blue:0.867f alpha:1.0f].CGColor];
+    kReadingGradient = @[(id)[UIColor colorWithRed:0.235f green:0.235f blue:0.235f alpha:1.0f].CGColor,
+                         (id)[UIColor colorWithRed:0.102f green:0.102f blue:0.102f alpha:1.0f].CGColor];
+    kMeaningGradient = @[(id)[UIColor colorWithRed:0.933f green:0.933f blue:0.933f alpha:1.0f].CGColor,
+                         (id)[UIColor colorWithRed:0.882f green:0.882f blue:0.882f alpha:1.0f].CGColor];
+    kReadingTextColor = [UIColor whiteColor];
+    kMeaningTextColor = [UIColor colorWithRed:0.333f green:0.333f blue:0.333f alpha:1.0f];
+  });
+  
   if (self = [super initWithNibName:nil bundle:nil]) {
     NSLog(@"Starting review with %lu items", (unsigned long)items.count);
     _dataLoader = dataLoader;
@@ -63,22 +99,25 @@ static const int kActiveQueueSize = 10;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  [self addShadowToView:self.successRateIcon];
-  [self addShadowToView:self.successRateLabel];
-  [self addShadowToView:self.doneIcon];
-  [self addShadowToView:self.doneLabel];
-  [self addShadowToView:self.queueIcon];
-  [self addShadowToView:self.queueLabel];
+  AddShadowToView(self.successRateIcon);
+  AddShadowToView(self.successRateLabel);
+  AddShadowToView(self.doneIcon);
+  AddShadowToView(self.doneLabel);
+  AddShadowToView(self.queueIcon);
+  AddShadowToView(self.queueLabel);
+  
+  _questionGradient = [CAGradientLayer layer];
+  [_questionBackground.layer addSublayer:_questionGradient];
+  _promptGradient = [CAGradientLayer layer];
+  [_promptBackground.layer addSublayer:_promptGradient];
   
   self.answerField.delegate = self;
 }
 
-- (void)addShadowToView:(UIView *)view {
-  view.layer.shadowColor = [UIColor blackColor].CGColor;
-  view.layer.shadowOffset = CGSizeMake(1, 1);
-  view.layer.shadowOpacity = 0.6;
-  view.layer.shadowRadius = 1.5;
-  view.clipsToBounds = NO;
+- (void) viewDidLayoutSubviews {
+  [super viewDidLayoutSubviews];
+  _questionGradient.frame = _questionBackground.bounds;
+  _promptGradient.frame = _promptBackground.bounds;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -89,7 +128,7 @@ static const int kActiveQueueSize = 10;
 
 - (IBAction)backButtonPressed:(id)sender {
   UIAlertController *c =
-      [UIAlertController alertControllerWithTitle:@"Are you sure?"
+      [UIAlertController alertControllerWithTitle:@"End review session?"
                                           message:@"You'll lose progress on any half-answered reviews"
                                    preferredStyle:UIAlertControllerStyleAlert];
   [c addAction:[UIAlertAction actionWithTitle:@"End review session"
@@ -160,24 +199,34 @@ static const int kActiveQueueSize = 10;
   // Fill the question labels.
   NSString *subjectTypePrompt;
   NSString *taskTypePrompt;
+  NSArray *questionGradient;
+  NSArray *promptGradient;
+  UIColor *promptTextColor;
   
   switch (self.activeTask.assignment.subjectType) {
     case WKSubject_Type_Kanji:
       subjectTypePrompt = @"Kanji";
+      questionGradient = kKanjiGradient;
       break;
     case WKSubject_Type_Radical:
       subjectTypePrompt = @"Radical";
+      questionGradient = kRadicalGradient;
       break;
     case WKSubject_Type_Vocabulary:
       subjectTypePrompt = @"Vocabulary";
+      questionGradient = kVocabularyGradient;
       break;
   }
   switch (self.activeTaskType) {
     case kWKTaskTypeMeaning:
       taskTypePrompt = @"Meaning";
+      promptGradient = kMeaningGradient;
+      promptTextColor = kMeaningTextColor;
       break;
     case kWKTaskTypeReading:
       taskTypePrompt = @"Reading";
+      promptGradient = kReadingGradient;
+      promptTextColor = kReadingTextColor;
       break;
     case kWKTaskType_Max:
       assert(false);
@@ -189,9 +238,15 @@ static const int kActiveQueueSize = 10;
                                         subjectTypePrompt, taskTypePrompt]];
   [prompt setAttributes:@{NSFontAttributeName: boldFont}
                   range:NSMakeRange(prompt.length - taskTypePrompt.length, taskTypePrompt.length)];
-  [self.promptLabel setAttributedText:prompt];
-  [self.questionLabel setText:self.activeSubject.japanese];
-  [self.correctAnswerLabel setHidden:YES];
+  
+  [UIView animateWithDuration:0.2f animations:^{
+    [self.promptLabel setAttributedText:prompt];
+    [self.questionLabel setText:self.activeSubject.japanese];
+    [self.correctAnswerLabel setHidden:YES];
+    _questionGradient.colors = questionGradient;
+    _promptGradient.colors = promptGradient;
+    _promptLabel.textColor = promptTextColor;
+  }];
 }
 
 #pragma mark - Answering
