@@ -379,6 +379,27 @@ typedef GPB_ENUM(WKAssignment_FieldNumber) {
 @property(nonatomic, readwrite) BOOL hasAvailableAt;
 @end
 
+#pragma mark - WKProgress
+
+typedef GPB_ENUM(WKProgress_FieldNumber) {
+  WKProgress_FieldNumber_Id_p = 1,
+  WKProgress_FieldNumber_MeaningWrong = 2,
+  WKProgress_FieldNumber_ReadingWrong = 3,
+};
+
+@interface WKProgress : GPBMessage
+
+@property(nonatomic, readwrite) int32_t id_p;
+
+@property(nonatomic, readwrite) BOOL hasId_p;
+@property(nonatomic, readwrite) BOOL meaningWrong;
+
+@property(nonatomic, readwrite) BOOL hasMeaningWrong;
+@property(nonatomic, readwrite) BOOL readingWrong;
+
+@property(nonatomic, readwrite) BOOL hasReadingWrong;
+@end
+
 NS_ASSUME_NONNULL_END
 
 CF_EXTERN_C_END
