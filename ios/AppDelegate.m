@@ -35,6 +35,7 @@
   MainViewController *vc = [[MainViewController alloc] init];
   
   UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+  nav.navigationBarHidden = YES;
 
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   self.window.rootViewController = nav;

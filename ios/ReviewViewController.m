@@ -15,6 +15,7 @@ static const int kActiveQueueSize = 10;
 
 @interface ReviewViewController () <UITextFieldDelegate>
 
+@property (weak, nonatomic) IBOutlet UIView *background;
 @property (weak, nonatomic) IBOutlet UILabel *questionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *promptLabel;
 @property (weak, nonatomic) IBOutlet LanguageSpecificTextField *answerField;
@@ -84,6 +85,27 @@ static const int kActiveQueueSize = 10;
   [self randomTask];
   [super viewWillAppear:animated];
   [self.answerField becomeFirstResponder];
+}
+
+- (IBAction)backButtonPressed:(id)sender {
+  UIAlertController *c =
+      [UIAlertController alertControllerWithTitle:@"Are you sure?"
+                                          message:@"You'll lose progress on any half-answered reviews"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+  [c addAction:[UIAlertAction actionWithTitle:@"End review session"
+                                        style:UIAlertActionStyleDestructive
+                                      handler:^(UIAlertAction * _Nonnull action) {
+                                          [self.navigationController popViewControllerAnimated:YES];
+                                        }]];
+  [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                        style:UIAlertActionStyleCancel
+                                      handler:nil]];
+  [c addAction:[UIAlertAction actionWithTitle:@"Wrap up"
+                                        style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction * _Nonnull action) {
+    // TODO
+                                      }]];
+  [self presentViewController:c animated:YES completion:nil];
 }
 
 #pragma mark - Setup
