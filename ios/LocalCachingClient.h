@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)update;
 
 - (void)getAllAssignments:(AssignmentHandler)handler;
+- (void)sendProgress:(NSArray<WKProgress *> *)progress
+             handler:(ProgressHandler)handler;
 
 @end
 

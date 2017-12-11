@@ -188,9 +188,9 @@ static void AddShadowToView(UIView *view) {
   _activeSubject = [self.dataLoader loadSubject:self.activeTask.assignment.subjectId];
   
   // Choose whether to ask the meaning or the reading.
-  if (self.activeTask.passedMeaning) {
+  if (self.activeTask.answeredMeaning) {
     _activeTaskType = kWKTaskTypeReading;
-  } else if (self.activeTask.passedReading) {
+  } else if (self.activeTask.answeredReading) {
     _activeTaskType = kWKTaskTypeMeaning;
   } else {
     _activeTaskType = (WKTaskType)arc4random_uniform(kWKTaskType_Max);
@@ -253,7 +253,64 @@ static void AddShadowToView(UIView *view) {
 
 - (void)submit {
   WKAnswerCheckerResult result = CheckAnswer(_answerField.text, _activeSubject, _activeTaskType);
-  NSLog(@"Result %d", result);
+  bool wrong = false;
+  switch (result) {
+    case kWKAnswerPrecise:
+    case kWKAnswerImprecise:
+      [self markAnswer:true];
+      break;
+    case kWKAnswerIncorrect:
+      [self markAnswer:false];
+      break;
+    case kWKAnswerOtherKanjiReading:
+      // TODO
+      NSLog(@"Invalid kanji reading");
+      break;
+    case kWKAnswerContainsInvalidCharacters:
+      // TODO
+      NSLog(@"Invalid characters");
+      break;
+  }
+}
+
+- (void)markAnswer:(bool)correct {
+  // Mark the task.
+  switch (self.activeTaskType) {
+    case kWKTaskTypeMeaning:
+      NSLog(@"Meaning %s", correct ? "correct" : "incorrect");
+      if (!self.activeTask.answer.hasMeaningWrong) {
+        self.activeTask.answer.meaningWrong = !correct;
+        NSLog(@"That was the first meaning answer");
+      }
+      self.activeTask.answeredMeaning = correct;
+      break;
+    case kWKTaskTypeReading:
+      NSLog(@"Reading %s", correct ? "correct" : "incorrect");
+      if (!self.activeTask.answer.hasReadingWrong) {
+        self.activeTask.answer.readingWrong = !correct;
+        NSLog(@"That was the first reading answer");
+      }
+      self.activeTask.answeredReading = correct;
+      break;
+    case kWKTaskType_Max:
+      abort();
+  }
+  
+  // Update stats.
+  _tasksAnswered ++;
+  if (correct) {
+    _tasksAnsweredCorrectly ++;
+  }
+  
+  // Remove it from the active queue if that was the last part.
+  if (self.activeTask.answeredMeaning && self.activeTask.answeredReading) {
+    NSLog(@"Done both meaning and reading for this task!");
+    _reviewsCompleted ++;
+    [_activeQueue removeObjectAtIndex:_activeTaskIndex];
+    [self refillActiveQueue];
+  }
+  
+  [self randomTask];
 }
 
 - (IBAction)submitButtonPressed:(id)sender {
