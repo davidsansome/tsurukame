@@ -25,7 +25,8 @@ typedef NS_ENUM(NSInteger, WKTaskType) {
 - (instancetype)init NS_UNAVAILABLE;
 
 @property (nonatomic, readonly) WKAssignment *assignment;
-@property (nonatomic) bool passedReading;
-@property (nonatomic) bool passedMeaning;
+@property (nonatomic) bool answeredReading;
+@property (nonatomic) bool answeredMeaning;
+@property (nonatomic) WKProgress *answer;
 
 @end

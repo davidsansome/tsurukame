@@ -27,6 +27,8 @@
 - (instancetype)initFromAssignment:(WKAssignment *)assignment {
   if (self = [super init]) {
     _assignment = assignment;
+    _answer = [[WKProgress alloc] init];
+    _answer.id_p = assignment.subjectId;
   }
   return self;
 }

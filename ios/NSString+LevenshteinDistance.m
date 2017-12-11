@@ -18,8 +18,11 @@ static NSInteger SmallestOf2(NSInteger a, NSInteger b) {
 @implementation NSString (LevenshteinDistance)
 
 - (float)levenshteinDistanceTo:(NSString *)other {
-  if (self.length == 0 || other.length == 0) {
-    return 0.0;
+  if (self.length == 0) {
+    return other.length;
+  }
+  if (other.length == 0) {
+    return self.length;
   }
   
   // Step 1 (Steps follow description at http://www.merriampark.com/ld.htm)

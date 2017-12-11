@@ -63,13 +63,13 @@
     });
   }];
   
-  WKProgress *progress = [[WKProgress alloc] init];
+  /*WKProgress *progress = [[WKProgress alloc] init];
   progress.id_p = 1234;
   progress.readingWrong = true;
   progress.meaningWrong = false;
   [client sendProgress:@[progress] handler:^(NSError * _Nullable error) {
     NSLog(@"Send progress error: %@", error);
-  }];
+  }];*/
 
   return YES;
 }

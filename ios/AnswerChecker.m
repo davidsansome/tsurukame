@@ -63,8 +63,10 @@ WKAnswerCheckerResult CheckAnswer(NSString *answer, WKSubject *subject, WKTaskTy
         if ([meaningText isEqualToString:answer]) {
           return kWKAnswerPrecise;
         }
+        int distance = [meaningText levenshteinDistanceTo:answer];
         int tolerance = DistanceTolerance(meaningText);
-        if ([meaningText levenshteinDistanceTo:answer] < tolerance) {
+        NSLog(@"'%@' '%@' distance %d tolerance %d", meaningText, answer, distance, tolerance);
+        if (distance <= tolerance) {
           return kWKAnswerImprecise;
         }
       }

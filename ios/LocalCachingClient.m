@@ -122,6 +122,11 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   });
 }
 
+- (void)sendProgress:(NSArray<WKProgress *> *)progress handler:(ProgressHandler)handler {
+  // TODO: store locally.
+  [_client sendProgress:progress handler:handler];
+}
+
 - (void)update {
   dispatch_async(_queue, ^{
     @synchronized(self) {

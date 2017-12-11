@@ -1,11 +1,3 @@
-//
-//  Client.m
-//  wk
-//
-//  Created by David Sansome on 22/11/17.
-//  Copyright © 2017 David Sansome. All rights reserved.
-//
-
 #import "Client.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -55,19 +47,23 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
   return self;
 }
 
-- (NSURLRequest *)authorizeAPIRequest:(NSURL *)url {
+#pragma mark - Authorization
+
+- (NSMutableURLRequest *)authorizeAPIRequest:(NSURL *)url {
   NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
   [req setValue:[NSString stringWithFormat:@"Token token=%@", _apiToken]
       forHTTPHeaderField:@"Authorization"];
   return req;
 }
 
-- (NSURLRequest *)authorizeUserRequest:(NSURL *)url {
+- (NSMutableURLRequest *)authorizeUserRequest:(NSURL *)url {
   NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
   [req setValue:[NSString stringWithFormat:@"_wanikani_session=%@", _cookie]
        forHTTPHeaderField:@"Cookie"];
   return req;
 }
+
+#pragma mark - Query utilities
 
 - (void)startPagedQueryFor:(NSURL *)url
                    handler:(PartialResponseHandler)handler {
@@ -128,6 +124,8 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
   }
 }
 
+#pragma mark - Assignments
+
 - (void)getAssignmentsModifiedAfter:(NSString *)date
                             handler:(AssignmentHandler)handler {
   NSMutableArray<WKAssignment *> *ret = [NSMutableArray array];
@@ -176,13 +174,15 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
   }];
 }
 
-- (void)getProgressToken:(ProgressHandler)handler {
+#pragma mark - Progress
+
+- (void)fetchProgressToken:(ProgressHandler)handler {
   NSURLRequest *req = [self authorizeUserRequest:[NSURL URLWithString:@(kReviewSessionURL)]];
-    NSURLSessionDataTask *task =
-      [_urlSession dataTaskWithRequest:req
-                     completionHandler:^(NSData * _Nullable data,
-                                         NSURLResponse * _Nullable response,
-                                         NSError * _Nullable error) {
+  NSURLSessionDataTask *task =
+    [_urlSession dataTaskWithRequest:req
+                   completionHandler:^(NSData * _Nullable data,
+                                       NSURLResponse * _Nullable response,
+                                       NSError * _Nullable error) {
     if (error != nil) {
       handler(error);
       return;
@@ -214,32 +214,52 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
   [task resume];
 }
 
-- (void)sendProgress:(NSArray<WKProgress *> *)progress
-             handler:(ProgressHandler)handler {
-  if (_progressToken.length &&
-      - [_progressTokenUpdated timeIntervalSinceNow] < kProgressTokenValidity) {
-    [self sendProgressWithToken:progress handler:handler];
-    return;
-  }
-  [self getProgressToken:^(NSError *error) {
-    if (error != nil) {
-      handler(error);
-    } else {
-      [self sendProgressWithToken:progress handler:handler];
-    }
-  }];
+- (bool)isProgressTokenValid {
+  return _progressToken.length &&
+      - [_progressTokenUpdated timeIntervalSinceNow] < kProgressTokenValidity;
 }
 
-- (void)sendProgressWithToken:(NSArray<WKProgress *> *)progress
-                      handler:(ProgressHandler)handler {
-  NSMutableDictionary<NSString *, NSArray<NSString *> *> *obj = [NSMutableDictionary dictionary];
-  for (WKProgress *p in progress) {
-    obj[[@(p.id_p) stringValue]] = @[ [@(p.meaningWrong ? 1 : 0) stringValue],
-                                      [@(p.readingWrong ? 1 : 0) stringValue] ];
+- (void)sendProgress:(NSArray<WKProgress *> *)progress
+             handler:(ProgressHandler)handler {
+  void (^makeRequest)() = ^() {
+    // Encode the data to send in the request.
+    NSMutableDictionary<NSString *, NSArray<NSString *> *> *obj = [NSMutableDictionary dictionary];
+    for (WKProgress *p in progress) {
+      obj[[@(p.id_p) stringValue]] = @[ [@(p.meaningWrong ? 1 : 0) stringValue],
+                                        [@(p.readingWrong ? 1 : 0) stringValue] ];
+    }
+    NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
+    
+    // Add the CSRF token and the data to the request.
+    NSMutableURLRequest *req = [self authorizeUserRequest:[NSURL URLWithString:@(kReviewSessionURL)]];
+    [req addValue:_progressToken forHTTPHeaderField:@"X-CSRF-Token"];
+    req.HTTPMethod = @"PUT";
+    req.HTTPBody = data;
+
+    // Start the request.
+    NSLog(@"PUT %@ to %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding], req.URL);
+    NSURLSessionDataTask *task =
+      [_urlSession dataTaskWithRequest:req
+                     completionHandler:^(NSData * _Nullable data,
+                                         NSURLResponse * _Nullable response,
+                                         NSError * _Nullable error) {
+        handler(error);
+    }];
+    [task resume];
+  };
+
+  // Fetch a new progress token if it's invalid or expired.
+  if ([self isProgressTokenValid]) {
+    makeRequest();
+  } else {
+    [self fetchProgressToken:^(NSError *error) {
+      if (error != nil) {
+        handler(error);
+      } else {
+        makeRequest();
+      }
+    }];
   }
-  NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
-  NSLog(@"data: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-  handler(nil);
 }
 
 @end
