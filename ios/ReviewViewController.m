@@ -1,15 +1,10 @@
-//
-//  ReviewViewController.m
-//  Wordlist
-//
-//  Created by David Sansome on 29/7/17.
-//  Copyright © 2017 David Sansome. All rights reserved.
-//
-
 #import "AnswerChecker.h"
 #import "LanguageSpecificTextField.h"
 #import "ReviewViewController.h"
+#import "SubjectDetailsRenderer.h"
 #import "proto/Wanikani+Convenience.h"
+
+#import <WebKit/WebKit.h>
 
 static const int kActiveQueueSize = 10;
 
@@ -37,8 +32,8 @@ static void AddShadowToView(UIView *view) {
 @property (weak, nonatomic) IBOutlet UILabel *promptLabel;
 @property (weak, nonatomic) IBOutlet LanguageSpecificTextField *answerField;
 @property (weak, nonatomic) IBOutlet UIButton *submitButton;
-@property (weak, nonatomic) IBOutlet UILabel *correctAnswerLabel;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
+@property (weak, nonatomic) IBOutlet WKWebView *subjectDetailsView;
 
 @property (weak, nonatomic) IBOutlet UILabel *successRateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *doneLabel;
@@ -126,6 +121,10 @@ static void AddShadowToView(UIView *view) {
   [self.answerField becomeFirstResponder];
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+  return UIStatusBarStyleLightContent;
+}
+
 - (IBAction)backButtonPressed:(id)sender {
   UIAlertController *c =
       [UIAlertController alertControllerWithTitle:@"End review session?"
@@ -187,6 +186,9 @@ static void AddShadowToView(UIView *view) {
   _activeTask = self.activeQueue[self.activeTaskIndex];
   _activeSubject = [self.dataLoader loadSubject:self.activeTask.assignment.subjectId];
   
+  NSString *subjectDetailsHTML = WKRenderSubjectDetails(_activeSubject);
+  [_subjectDetailsView loadHTMLString:subjectDetailsHTML baseURL:nil];
+  
   // Choose whether to ask the meaning or the reading.
   if (self.activeTask.answeredMeaning) {
     _activeTaskType = kWKTaskTypeReading;
@@ -242,7 +244,6 @@ static void AddShadowToView(UIView *view) {
   [UIView animateWithDuration:0.2f animations:^{
     [self.promptLabel setAttributedText:prompt];
     [self.questionLabel setText:self.activeSubject.japanese];
-    [self.correctAnswerLabel setHidden:YES];
     _questionGradient.colors = questionGradient;
     _promptGradient.colors = promptGradient;
     _promptLabel.textColor = promptTextColor;
@@ -253,7 +254,6 @@ static void AddShadowToView(UIView *view) {
 
 - (void)submit {
   WKAnswerCheckerResult result = CheckAnswer(_answerField.text, _activeSubject, _activeTaskType);
-  bool wrong = false;
   switch (result) {
     case kWKAnswerPrecise:
     case kWKAnswerImprecise:

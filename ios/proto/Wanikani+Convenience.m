@@ -8,6 +8,22 @@
 
 #import "Wanikani+Convenience.h"
 
+static NSString *CommaSeparatedReadings(NSArray<WKReading *>* readings) {
+  NSMutableArray<NSString *>* strings = [NSMutableArray array];
+  for (WKReading *reading in readings) {
+    [strings addObject:reading.reading];
+  }
+  return [strings componentsJoinedByString:@", "];
+}
+
+static NSString *CommaSeparatedMeanings(NSArray<WKMeaning *>* meanings) {
+  NSMutableArray<NSString *>* strings = [NSMutableArray array];
+  for (WKMeaning *meaning in meanings) {
+    [strings addObject:meaning.meaning];
+  }
+  return [strings componentsJoinedByString:@", "];
+}
+
 @implementation WKSubject (Convenience)
 
 - (NSString *)primaryMeaning {
@@ -78,6 +94,69 @@
     return self.radical.meaningsArray;
   }
   return nil;
+}
+
+@end
+
+@implementation WKRadical (Convenience)
+
+- (NSString *)commaSeparatedMeanings {
+  return CommaSeparatedMeanings(self.meaningsArray);
+}
+
+@end
+
+@implementation WKKanji (Convenience)
+
+- (NSString *)commaSeparatedMeanings {
+  return CommaSeparatedMeanings(self.meaningsArray);
+}
+
+- (NSString *)commaSeparatedReadings {
+  return CommaSeparatedReadings(self.readingsArray);
+}
+
+@end
+
+@implementation WKVocabulary (Convenience)
+
+- (NSString *)commaSeparatedMeanings {
+  return CommaSeparatedMeanings(self.meaningsArray);
+}
+
+- (NSString *)commaSeparatedReadings {
+  return CommaSeparatedReadings(self.readingsArray);
+}
+
+- (NSString *)commaSeparatedPartsOfSpeech {
+  NSMutableArray<NSString *> *parts = [NSMutableArray array];
+  [self.partsOfSpeechArray enumerateValuesWithBlock:^(int32_t value, NSUInteger idx, BOOL * _Nonnull stop) {
+    NSString *str;
+    switch ((WKVocabulary_PartOfSpeech)value) {
+      case WKVocabulary_PartOfSpeech_Noun:             str = @"Noun";              break;
+      case WKVocabulary_PartOfSpeech_Numeral:          str = @"Numeral";           break;
+      case WKVocabulary_PartOfSpeech_IntransitiveVerb: str = @"Intransitive Verb"; break;
+      case WKVocabulary_PartOfSpeech_IchidanVerb:      str = @"Ichidan Verb";      break;
+      case WKVocabulary_PartOfSpeech_TransitiveVerb:   str = @"Transitive Verb";   break;
+      case WKVocabulary_PartOfSpeech_NoAdjective:      str = @"No Adjective";      break;
+      case WKVocabulary_PartOfSpeech_GodanVerb:        str = @"Godan Verb";        break;
+      case WKVocabulary_PartOfSpeech_NaAdjective:      str = @"Na Adjective";      break;
+      case WKVocabulary_PartOfSpeech_IAdjective:       str = @"I Adjective";       break;
+      case WKVocabulary_PartOfSpeech_Suffix:           str = @"Suffix";            break;
+      case WKVocabulary_PartOfSpeech_Adverb:           str = @"Adverb";            break;
+      case WKVocabulary_PartOfSpeech_SuruVerb:         str = @"Suru Verb";         break;
+      case WKVocabulary_PartOfSpeech_Prefix:           str = @"Prefix";            break;
+      case WKVocabulary_PartOfSpeech_ProperNoun:       str = @"Proper Noun";       break;
+      case WKVocabulary_PartOfSpeech_Expression:       str = @"Expression";        break;
+      case WKVocabulary_PartOfSpeech_Adjective:        str = @"Adjective";         break;
+      case WKVocabulary_PartOfSpeech_Interjection:     str = @"Interjection";      break;
+      case WKVocabulary_PartOfSpeech_Counter:          str = @"Counter";           break;
+      case WKVocabulary_PartOfSpeech_Pronoun:          str = @"Pronoun";           break;
+      case WKVocabulary_PartOfSpeech_Conjunction:      str = @"Conjunction";       break;
+    }
+    [parts addObject:str];
+  }];
+  return [parts componentsJoinedByString:@", "];
 }
 
 @end

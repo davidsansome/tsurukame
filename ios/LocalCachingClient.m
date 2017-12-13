@@ -63,7 +63,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   FMDatabaseQueue *ret = [FMDatabaseQueue databaseQueueWithPath:fileName];
 
   static NSArray<NSString *> *kSchemas;
-  dispatch_once_t once;
+  static dispatch_once_t once;
   dispatch_once(&once, ^(void) {
     kSchemas = @[
       @"CREATE TABLE sync ("

@@ -14,7 +14,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ReviewViewController">
             <connections>
                 <outlet property="answerField" destination="v3m-sw-5xf" id="Nto-0s-60v"/>
-                <outlet property="correctAnswerLabel" destination="I7V-hL-bKH" id="82L-Vq-p1U"/>
                 <outlet property="doneIcon" destination="nKI-W2-7Sg" id="wUk-Kw-UsS"/>
                 <outlet property="doneLabel" destination="YQc-aD-qaY" id="7Tj-pE-dJY"/>
                 <outlet property="progressBar" destination="Yj1-Y8-b1K" id="iYo-nZ-91f"/>
@@ -24,6 +23,7 @@
                 <outlet property="questionLabel" destination="inU-Be-2CK" id="r6y-gk-9Dk"/>
                 <outlet property="queueIcon" destination="JWQ-Z4-6ag" id="hPO-5x-B5K"/>
                 <outlet property="queueLabel" destination="Tk9-fa-nyb" id="fnZ-nl-mHk"/>
+                <outlet property="subjectDetailsView" destination="MFY-df-C7C" id="5Nk-it-t8a"/>
                 <outlet property="submitButton" destination="MOA-Qp-tQa" id="ddv-au-eTp"/>
                 <outlet property="successRateIcon" destination="4z8-Ng-Xdl" id="wuV-Q7-IJP"/>
                 <outlet property="successRateLabel" destination="E9g-0M-Gn6" id="DWA-W8-hKT"/>
@@ -74,15 +74,6 @@
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Correct Answer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I7V-hL-bKH">
-                    <rect key="frame" x="0.0" y="251.5" width="375" height="60"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="60" id="N3H-Vd-od6"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="32"/>
-                    <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOA-Qp-tQa">
@@ -150,17 +141,25 @@
                         <action selector="backButtonPressed:" destination="-1" eventType="touchUpInside" id="sb0-xY-DIz"/>
                     </connections>
                 </button>
+                <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MFY-df-C7C">
+                    <rect key="frame" x="0.0" y="249.5" width="375" height="417.5"/>
+                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <wkWebViewConfiguration key="configuration" allowsAirPlayForMediaPlayback="NO" allowsPictureInPictureMediaPlayback="NO">
+                        <dataDetectorTypes key="dataDetectorTypes"/>
+                        <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                        <wkPreferences key="preferences" javaScriptEnabled="NO"/>
+                    </wkWebViewConfiguration>
+                </wkWebView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="YQc-aD-qaY" firstAttribute="leading" secondItem="nKI-W2-7Sg" secondAttribute="trailing" constant="6" id="42i-gI-i8Y"/>
-                <constraint firstItem="I7V-hL-bKH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="5wb-0e-5aa"/>
+                <constraint firstItem="MFY-df-C7C" firstAttribute="leading" secondItem="lDJ-k1-76U" secondAttribute="leading" id="48R-0a-VJg"/>
                 <constraint firstItem="Tk9-fa-nyb" firstAttribute="top" secondItem="Yj1-Y8-b1K" secondAttribute="bottom" constant="3" id="7eT-nm-H3Z"/>
                 <constraint firstItem="E9g-0M-Gn6" firstAttribute="leading" secondItem="4z8-Ng-Xdl" secondAttribute="trailing" constant="6" id="9cA-Gw-wgY"/>
                 <constraint firstItem="8ki-0j-q8v" firstAttribute="leading" secondItem="lDJ-k1-76U" secondAttribute="leading" constant="3" id="A6b-MH-OTH"/>
                 <constraint firstItem="JWQ-Z4-6ag" firstAttribute="top" secondItem="Yj1-Y8-b1K" secondAttribute="bottom" constant="3" id="ALA-uM-PXU"/>
                 <constraint firstItem="okE-oE-zWM" firstAttribute="top" secondItem="inU-Be-2CK" secondAttribute="bottom" id="C1H-oF-BAH"/>
-                <constraint firstItem="I7V-hL-bKH" firstAttribute="top" secondItem="v3m-sw-5xf" secondAttribute="bottom" constant="8" id="CEP-uv-J0f"/>
                 <constraint firstItem="4Jl-RS-jHd" firstAttribute="bottom" secondItem="okE-oE-zWM" secondAttribute="bottom" id="CMm-r9-vqv"/>
                 <constraint firstItem="MOA-Qp-tQa" firstAttribute="centerY" secondItem="v3m-sw-5xf" secondAttribute="centerY" id="D2f-Pz-1yO"/>
                 <constraint firstAttribute="trailing" secondItem="Tk9-fa-nyb" secondAttribute="trailing" constant="6" id="DOk-5W-tlq"/>
@@ -175,6 +174,8 @@
                 <constraint firstItem="4z8-Ng-Xdl" firstAttribute="top" secondItem="Yj1-Y8-b1K" secondAttribute="bottom" constant="3" id="S3Q-IK-UFh"/>
                 <constraint firstItem="MKd-La-jxK" firstAttribute="leading" secondItem="lDJ-k1-76U" secondAttribute="leading" id="YUZ-gR-50u"/>
                 <constraint firstItem="YQc-aD-qaY" firstAttribute="top" secondItem="Yj1-Y8-b1K" secondAttribute="bottom" constant="3" id="Z9z-gk-CAc"/>
+                <constraint firstItem="MFY-df-C7C" firstAttribute="trailing" secondItem="lDJ-k1-76U" secondAttribute="trailing" id="ZLp-2M-Put"/>
+                <constraint firstItem="MFY-df-C7C" firstAttribute="bottom" secondItem="lDJ-k1-76U" secondAttribute="bottom" id="at0-4i-8U7"/>
                 <constraint firstItem="v3m-sw-5xf" firstAttribute="top" secondItem="okE-oE-zWM" secondAttribute="bottom" constant="8" id="bBq-z6-iqD"/>
                 <constraint firstAttribute="trailing" secondItem="inU-Be-2CK" secondAttribute="trailing" id="btx-ia-dZb"/>
                 <constraint firstItem="inU-Be-2CK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="dhX-on-Ley"/>
@@ -188,7 +189,7 @@
                 <constraint firstAttribute="trailing" secondItem="v3m-sw-5xf" secondAttribute="trailing" constant="8" id="oXZ-Wi-kxV"/>
                 <constraint firstItem="JWQ-Z4-6ag" firstAttribute="leading" secondItem="YQc-aD-qaY" secondAttribute="trailing" constant="12" id="otJ-jV-zCs"/>
                 <constraint firstItem="Tk9-fa-nyb" firstAttribute="leading" secondItem="JWQ-Z4-6ag" secondAttribute="trailing" constant="6" id="pY7-Fd-cXp"/>
-                <constraint firstAttribute="trailing" secondItem="I7V-hL-bKH" secondAttribute="trailing" id="s3f-xX-DSU"/>
+                <constraint firstItem="MFY-df-C7C" firstAttribute="top" secondItem="v3m-sw-5xf" secondAttribute="bottom" constant="6" id="tov-go-7FN"/>
                 <constraint firstItem="inU-Be-2CK" firstAttribute="bottom" secondItem="MKd-La-jxK" secondAttribute="bottom" id="uvy-LJ-P3h"/>
                 <constraint firstItem="8ki-0j-q8v" firstAttribute="top" secondItem="Yj1-Y8-b1K" secondAttribute="bottom" constant="3" id="vqv-DO-Hrd"/>
                 <constraint firstItem="4Jl-RS-jHd" firstAttribute="top" secondItem="okE-oE-zWM" secondAttribute="top" id="vs0-mO-Oog"/>
@@ -198,7 +199,7 @@
             <connections>
                 <action selector="backgroundTouched:" destination="-1" eventType="touchUpInside" id="nzV-eC-rJk"/>
             </connections>
-            <point key="canvasLocation" x="-331.5" y="48.5"/>
+            <point key="canvasLocation" x="-650.5" y="51.5"/>
         </view>
     </objects>
     <resources>
