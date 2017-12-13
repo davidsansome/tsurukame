@@ -2,6 +2,7 @@
 #import "LanguageSpecificTextField.h"
 #import "ReviewViewController.h"
 #import "SubjectDetailsRenderer.h"
+#import "WKKanaInput.h"
 #import "proto/Wanikani+Convenience.h"
 
 #import <WebKit/WebKit.h>
@@ -47,6 +48,7 @@ static void AddShadowToView(UIView *view) {
 @implementation ReviewViewController {
   DataLoader *_dataLoader;
   WKSubjectDetailsRenderer *_subjectDetailsRenderer;
+  WKKanaInput *_kanaInput;
 
   NSMutableArray<ReviewItem *> *_activeQueue;
   NSMutableArray<ReviewItem *> *_reviewQueue;
@@ -87,9 +89,12 @@ static void AddShadowToView(UIView *view) {
   if (self = [super initWithNibName:nil bundle:nil]) {
     NSLog(@"Starting review with %lu items", (unsigned long)items.count);
     _dataLoader = dataLoader;
+    _subjectDetailsRenderer = [[WKSubjectDetailsRenderer alloc] initWithDataLoader:_dataLoader];
+    _kanaInput = [[WKKanaInput alloc] initWithDelegate:self];
+    
     _reviewQueue = [NSMutableArray arrayWithArray:items];
     _activeQueue = [NSMutableArray array];
-    _subjectDetailsRenderer = [[WKSubjectDetailsRenderer alloc] initWithDataLoader:_dataLoader];
+    
     [self refillActiveQueue];
   }
   return self;
@@ -111,7 +116,7 @@ static void AddShadowToView(UIView *view) {
   
   _subjectDetailsView.navigationDelegate = self;
   
-  _answerField.delegate = self;
+  _answerField.delegate = _kanaInput;
 }
 
 - (void) viewDidLayoutSubviews {
@@ -228,11 +233,13 @@ static void AddShadowToView(UIView *view) {
   }
   switch (_activeTaskType) {
     case kWKTaskTypeMeaning:
+      _kanaInput.enabled = false;
       taskTypePrompt = @"Meaning";
       promptGradient = kMeaningGradient;
       promptTextColor = kMeaningTextColor;
       break;
     case kWKTaskTypeReading:
+      _kanaInput.enabled = true;
       taskTypePrompt = @"Reading";
       promptGradient = kReadingGradient;
       promptTextColor = kReadingTextColor;
