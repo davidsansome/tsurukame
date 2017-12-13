@@ -183,6 +183,11 @@ static void AddShadowToView(UIView *view) {
     self.progressBar.progress = (double)(_reviewsCompleted) / totalLength;
   }
   
+  // Hide the answer from last time.
+  _answerField.text = nil;
+  _answerField.enabled = YES;
+  _subjectDetailsView.hidden = YES;
+  
   // Choose a random task from the active queue.
   if (_activeQueue.count == 0) {
     return;
@@ -190,9 +195,6 @@ static void AddShadowToView(UIView *view) {
   _activeTaskIndex = arc4random_uniform((uint32_t)_activeQueue.count);
   _activeTask = _activeQueue[_activeTaskIndex];
   _activeSubject = [_dataLoader loadSubject:_activeTask.assignment.subjectId];
-  
-  NSString *subjectDetailsHTML = [_subjectDetailsRenderer renderSubjectDetails:_activeSubject];
-  [_subjectDetailsView loadHTMLString:subjectDetailsHTML baseURL:nil];
   
   // Choose whether to ask the meaning or the reading.
   if (_activeTask.answeredMeaning) {
@@ -253,6 +255,8 @@ static void AddShadowToView(UIView *view) {
     _promptGradient.colors = promptGradient;
     _promptLabel.textColor = promptTextColor;
   }];
+  
+  [_answerField becomeFirstResponder];
 }
 
 #pragma mark - Answering
@@ -315,11 +319,25 @@ static void AddShadowToView(UIView *view) {
     [self refillActiveQueue];
   }
   
-  [self randomTask];
+  // Show a new task if it was correct.
+  if (correct) {
+    [self randomTask];
+    return;
+  }
+  
+  // Otherwise show the correct answer.
+  NSString *subjectDetailsHTML = [_subjectDetailsRenderer renderSubjectDetails:_activeSubject];
+  [_subjectDetailsView loadHTMLString:subjectDetailsHTML baseURL:nil];
+  _subjectDetailsView.hidden = NO;
+  _answerField.enabled = NO;
 }
 
 - (IBAction)submitButtonPressed:(id)sender {
-  [self submit];
+  if (!_answerField.enabled) {
+    [self randomTask];
+  } else {
+    [self submit];
+  }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
