@@ -24,7 +24,7 @@ static void AddShadowToView(UIView *view) {
   view.clipsToBounds = NO;
 }
 
-@interface ReviewViewController () <UITextFieldDelegate>
+@interface ReviewViewController () <UITextFieldDelegate, WKNavigationDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *questionBackground;
 @property (weak, nonatomic) IBOutlet UIView *promptBackground;
@@ -108,6 +108,8 @@ static void AddShadowToView(UIView *view) {
   [_questionBackground.layer addSublayer:_questionGradient];
   _promptGradient = [CAGradientLayer layer];
   [_promptBackground.layer addSublayer:_promptGradient];
+  
+  _subjectDetailsView.navigationDelegate = self;
   
   self.answerField.delegate = self;
 }
@@ -327,6 +329,19 @@ static void AddShadowToView(UIView *view) {
 
 - (IBAction)backgroundTouched:(id)sender {
   [self.view endEditing:NO];
+}
+
+#pragma mark - WKNavigationDelegate
+
+- (void)webView:(WKWebView *)webView
+decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
+decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+  if ([navigationAction.request.URL.scheme isEqualToString:@"wk"]) {
+    // TODO.
+    decisionHandler(WKNavigationActionPolicyCancel);
+  } else {
+    decisionHandler(WKNavigationActionPolicyAllow);
+  }
 }
 
 @end
