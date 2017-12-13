@@ -45,7 +45,6 @@ static void AddShadowToView(UIView *view) {
 @property (nonatomic) CAGradientLayer *questionGradient;
 @property (nonatomic) CAGradientLayer *promptGradient;
 
-@property (nonatomic) DataLoader *dataLoader;
 @property (nonatomic) NSMutableArray<ReviewItem *> *activeQueue;
 @property (nonatomic) NSMutableArray<ReviewItem *> *reviewQueue;
 
@@ -60,7 +59,10 @@ static void AddShadowToView(UIView *view) {
 
 @end
 
-@implementation ReviewViewController
+@implementation ReviewViewController {
+  DataLoader *_dataLoader;
+  WKSubjectDetailsRenderer *_subjectDetailsRenderer;
+}
 
 #pragma mark - Constructors
 
@@ -87,6 +89,7 @@ static void AddShadowToView(UIView *view) {
     _dataLoader = dataLoader;
     _reviewQueue = [NSMutableArray arrayWithArray:items];
     _activeQueue = [NSMutableArray array];
+    _subjectDetailsRenderer = [[WKSubjectDetailsRenderer alloc] initWithDataLoader:_dataLoader];
     [self refillActiveQueue];
   }
   return self;
@@ -184,9 +187,9 @@ static void AddShadowToView(UIView *view) {
   }
   _activeTaskIndex = arc4random_uniform((uint32_t)self.activeQueue.count);
   _activeTask = self.activeQueue[self.activeTaskIndex];
-  _activeSubject = [self.dataLoader loadSubject:self.activeTask.assignment.subjectId];
+  _activeSubject = [_dataLoader loadSubject:self.activeTask.assignment.subjectId];
   
-  NSString *subjectDetailsHTML = WKRenderSubjectDetails(_activeSubject);
+  NSString *subjectDetailsHTML = [_subjectDetailsRenderer renderSubjectDetails:_activeSubject];
   [_subjectDetailsView loadHTMLString:subjectDetailsHTML baseURL:nil];
   
   // Choose whether to ask the meaning or the reading.
