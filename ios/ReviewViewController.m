@@ -42,26 +42,26 @@ static void AddShadowToView(UIView *view) {
 @property (weak, nonatomic) IBOutlet UIImageView *doneIcon;
 @property (weak, nonatomic) IBOutlet UIImageView *queueIcon;
 
-@property (nonatomic) CAGradientLayer *questionGradient;
-@property (nonatomic) CAGradientLayer *promptGradient;
-
-@property (nonatomic) NSMutableArray<ReviewItem *> *activeQueue;
-@property (nonatomic) NSMutableArray<ReviewItem *> *reviewQueue;
-
-@property (nonatomic, readonly) int activeTaskIndex;  // An index into activeQueue;
-@property (nonatomic, readonly) WKTaskType activeTaskType;
-@property (nonatomic, readonly) ReviewItem *activeTask;
-@property (nonatomic, readonly) WKSubject *activeSubject;
-
-@property (nonatomic) int reviewsCompleted;
-@property (nonatomic) int tasksAnsweredCorrectly;
-@property (nonatomic) int tasksAnswered;
-
 @end
 
 @implementation ReviewViewController {
   DataLoader *_dataLoader;
   WKSubjectDetailsRenderer *_subjectDetailsRenderer;
+
+  NSMutableArray<ReviewItem *> *_activeQueue;
+  NSMutableArray<ReviewItem *> *_reviewQueue;
+
+  int _activeTaskIndex;  // An index into activeQueue;
+  WKTaskType _activeTaskType;
+  ReviewItem *_activeTask;
+  WKSubject *_activeSubject;
+
+  int _reviewsCompleted;
+  int _tasksAnsweredCorrectly;
+  int _tasksAnswered;
+
+  CAGradientLayer *_questionGradient;
+  CAGradientLayer *_promptGradient;
 }
 
 #pragma mark - Constructors
@@ -97,12 +97,12 @@ static void AddShadowToView(UIView *view) {
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  AddShadowToView(self.successRateIcon);
-  AddShadowToView(self.successRateLabel);
-  AddShadowToView(self.doneIcon);
-  AddShadowToView(self.doneLabel);
-  AddShadowToView(self.queueIcon);
-  AddShadowToView(self.queueLabel);
+  AddShadowToView(_successRateIcon);
+  AddShadowToView(_successRateLabel);
+  AddShadowToView(_doneIcon);
+  AddShadowToView(_doneLabel);
+  AddShadowToView(_queueIcon);
+  AddShadowToView(_queueLabel);
   
   _questionGradient = [CAGradientLayer layer];
   [_questionBackground.layer addSublayer:_questionGradient];
@@ -111,7 +111,7 @@ static void AddShadowToView(UIView *view) {
   
   _subjectDetailsView.navigationDelegate = self;
   
-  self.answerField.delegate = self;
+  _answerField.delegate = self;
 }
 
 - (void) viewDidLayoutSubviews {
@@ -123,7 +123,7 @@ static void AddShadowToView(UIView *view) {
 - (void)viewWillAppear:(BOOL)animated {
   [self randomTask];
   [super viewWillAppear:animated];
-  [self.answerField becomeFirstResponder];
+  [_answerField becomeFirstResponder];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -154,50 +154,50 @@ static void AddShadowToView(UIView *view) {
 #pragma mark - Setup
 
 - (void)refillActiveQueue {
-  while (self.activeQueue.count < kActiveQueueSize &&
-         self.reviewQueue.count != 0) {
-    const NSUInteger i = arc4random_uniform((uint32_t)self.reviewQueue.count);
-    ReviewItem * item = [self.reviewQueue objectAtIndex:i];
-    [self.reviewQueue removeObjectAtIndex:i];
-    [self.activeQueue addObject:item];
+  while (_activeQueue.count < kActiveQueueSize &&
+         _reviewQueue.count != 0) {
+    const NSUInteger i = arc4random_uniform((uint32_t)_reviewQueue.count);
+    ReviewItem * item = [_reviewQueue objectAtIndex:i];
+    [_reviewQueue removeObjectAtIndex:i];
+    [_activeQueue addObject:item];
   }
 }
 
 - (void)randomTask {
   // Update the progress labels.
-  if (self.tasksAnswered == 0) {
+  if (_tasksAnswered == 0) {
     self.successRateLabel.text = @"100%";
   } else {
     self.successRateLabel.text = [NSString stringWithFormat:@"%d%%",
-                                  (int)(self.tasksAnsweredCorrectly / self.tasksAnswered)];
+                                  (int)(_tasksAnsweredCorrectly / _tasksAnswered)];
   }
-  int queueLength = (int)(self.activeQueue.count + self.reviewQueue.count);
-  self.doneLabel.text = [NSString stringWithFormat:@"%d", self.reviewsCompleted];
+  int queueLength = (int)(_activeQueue.count + _reviewQueue.count);
+  self.doneLabel.text = [NSString stringWithFormat:@"%d", _reviewsCompleted];
   self.queueLabel.text = [NSString stringWithFormat:@"%d", queueLength];
   
   // Update the progress bar.
-  int totalLength = queueLength + self.reviewsCompleted;
+  int totalLength = queueLength + _reviewsCompleted;
   if (totalLength == 0) {
     self.progressBar.progress = 0.0;
   } else {
-    self.progressBar.progress = (double)(self.reviewsCompleted) / totalLength;
+    self.progressBar.progress = (double)(_reviewsCompleted) / totalLength;
   }
   
   // Choose a random task from the active queue.
-  if (self.activeQueue.count == 0) {
+  if (_activeQueue.count == 0) {
     return;
   }
-  _activeTaskIndex = arc4random_uniform((uint32_t)self.activeQueue.count);
-  _activeTask = self.activeQueue[self.activeTaskIndex];
-  _activeSubject = [_dataLoader loadSubject:self.activeTask.assignment.subjectId];
+  _activeTaskIndex = arc4random_uniform((uint32_t)_activeQueue.count);
+  _activeTask = _activeQueue[_activeTaskIndex];
+  _activeSubject = [_dataLoader loadSubject:_activeTask.assignment.subjectId];
   
   NSString *subjectDetailsHTML = [_subjectDetailsRenderer renderSubjectDetails:_activeSubject];
   [_subjectDetailsView loadHTMLString:subjectDetailsHTML baseURL:nil];
   
   // Choose whether to ask the meaning or the reading.
-  if (self.activeTask.answeredMeaning) {
+  if (_activeTask.answeredMeaning) {
     _activeTaskType = kWKTaskTypeReading;
-  } else if (self.activeTask.answeredReading) {
+  } else if (_activeTask.answeredReading) {
     _activeTaskType = kWKTaskTypeMeaning;
   } else {
     _activeTaskType = (WKTaskType)arc4random_uniform(kWKTaskType_Max);
@@ -210,7 +210,7 @@ static void AddShadowToView(UIView *view) {
   NSArray *promptGradient;
   UIColor *promptTextColor;
   
-  switch (self.activeTask.assignment.subjectType) {
+  switch (_activeTask.assignment.subjectType) {
     case WKSubject_Type_Kanji:
       subjectTypePrompt = @"Kanji";
       questionGradient = kKanjiGradient;
@@ -224,7 +224,7 @@ static void AddShadowToView(UIView *view) {
       questionGradient = kVocabularyGradient;
       break;
   }
-  switch (self.activeTaskType) {
+  switch (_activeTaskType) {
     case kWKTaskTypeMeaning:
       taskTypePrompt = @"Meaning";
       promptGradient = kMeaningGradient;
@@ -248,7 +248,7 @@ static void AddShadowToView(UIView *view) {
   
   [UIView animateWithDuration:0.2f animations:^{
     [self.promptLabel setAttributedText:prompt];
-    [self.questionLabel setText:self.activeSubject.japanese];
+    [self.questionLabel setText:_activeSubject.japanese];
     _questionGradient.colors = questionGradient;
     _promptGradient.colors = promptGradient;
     _promptLabel.textColor = promptTextColor;
@@ -280,22 +280,22 @@ static void AddShadowToView(UIView *view) {
 
 - (void)markAnswer:(bool)correct {
   // Mark the task.
-  switch (self.activeTaskType) {
+  switch (_activeTaskType) {
     case kWKTaskTypeMeaning:
       NSLog(@"Meaning %s", correct ? "correct" : "incorrect");
-      if (!self.activeTask.answer.hasMeaningWrong) {
-        self.activeTask.answer.meaningWrong = !correct;
+      if (!_activeTask.answer.hasMeaningWrong) {
+        _activeTask.answer.meaningWrong = !correct;
         NSLog(@"That was the first meaning answer");
       }
-      self.activeTask.answeredMeaning = correct;
+      _activeTask.answeredMeaning = correct;
       break;
     case kWKTaskTypeReading:
       NSLog(@"Reading %s", correct ? "correct" : "incorrect");
-      if (!self.activeTask.answer.hasReadingWrong) {
-        self.activeTask.answer.readingWrong = !correct;
+      if (!_activeTask.answer.hasReadingWrong) {
+        _activeTask.answer.readingWrong = !correct;
         NSLog(@"That was the first reading answer");
       }
-      self.activeTask.answeredReading = correct;
+      _activeTask.answeredReading = correct;
       break;
     case kWKTaskType_Max:
       abort();
@@ -308,7 +308,7 @@ static void AddShadowToView(UIView *view) {
   }
   
   // Remove it from the active queue if that was the last part.
-  if (self.activeTask.answeredMeaning && self.activeTask.answeredReading) {
+  if (_activeTask.answeredMeaning && _activeTask.answeredReading) {
     NSLog(@"Done both meaning and reading for this task!");
     _reviewsCompleted ++;
     [_activeQueue removeObjectAtIndex:_activeTaskIndex];
