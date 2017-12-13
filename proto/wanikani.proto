@@ -109,6 +109,8 @@ message Assignment {
   optional int32 subject_id = 3;
   optional Subject.Type subject_type = 4;
   optional int32 available_at = 5;
+  optional int32 started_at = 6;
+  optional int32 srs_stage = 7;
 }
 
 message Progress {

@@ -358,6 +358,8 @@ typedef GPB_ENUM(WKAssignment_FieldNumber) {
   WKAssignment_FieldNumber_SubjectId = 3,
   WKAssignment_FieldNumber_SubjectType = 4,
   WKAssignment_FieldNumber_AvailableAt = 5,
+  WKAssignment_FieldNumber_StartedAt = 6,
+  WKAssignment_FieldNumber_SrsStage = 7,
 };
 
 @interface WKAssignment : GPBMessage
@@ -377,6 +379,12 @@ typedef GPB_ENUM(WKAssignment_FieldNumber) {
 @property(nonatomic, readwrite) int32_t availableAt;
 
 @property(nonatomic, readwrite) BOOL hasAvailableAt;
+@property(nonatomic, readwrite) int32_t startedAt;
+
+@property(nonatomic, readwrite) BOOL hasStartedAt;
+@property(nonatomic, readwrite) int32_t srsStage;
+
+@property(nonatomic, readwrite) BOOL hasSrsStage;
 @end
 
 #pragma mark - WKProgress
