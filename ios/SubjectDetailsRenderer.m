@@ -12,7 +12,7 @@ static const NSString *kHeader =
      "  margin: 0 0 0.2em;"
      "  padding-bottom: 0.2em;"
      "  color: #888888;"
-     "  font-size: 0.8em;"
+     "  font-size: 1em;"
      "  font-weight: normal;"
      "  letter-spacing: -1px;"
      "  line-height: 1em;"
