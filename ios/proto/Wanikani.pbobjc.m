@@ -985,6 +985,93 @@ typedef struct WKProgress__storage_ {
 
 @end
 
+#pragma mark - WKStudyMaterials
+
+@implementation WKStudyMaterials
+
+@dynamic hasId_p, id_p;
+@dynamic hasSubjectId, subjectId;
+@dynamic hasMeaningNote, meaningNote;
+@dynamic hasReadingNote, readingNote;
+@dynamic meaningSynonymsArray, meaningSynonymsArray_Count;
+
+typedef struct WKStudyMaterials__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t id_p;
+  int32_t subjectId;
+  NSString *meaningNote;
+  NSString *readingNote;
+  NSMutableArray *meaningSynonymsArray;
+} WKStudyMaterials__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "id_p",
+        .dataTypeSpecific.className = NULL,
+        .number = WKStudyMaterials_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(WKStudyMaterials__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "subjectId",
+        .dataTypeSpecific.className = NULL,
+        .number = WKStudyMaterials_FieldNumber_SubjectId,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(WKStudyMaterials__storage_, subjectId),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "meaningNote",
+        .dataTypeSpecific.className = NULL,
+        .number = WKStudyMaterials_FieldNumber_MeaningNote,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(WKStudyMaterials__storage_, meaningNote),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "readingNote",
+        .dataTypeSpecific.className = NULL,
+        .number = WKStudyMaterials_FieldNumber_ReadingNote,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(WKStudyMaterials__storage_, readingNote),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "meaningSynonymsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = WKStudyMaterials_FieldNumber_MeaningSynonymsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(WKStudyMaterials__storage_, meaningSynonymsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[WKStudyMaterials class]
+                                     rootClass:[WKWanikaniRoot class]
+                                          file:WKWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(WKStudyMaterials__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 
 #pragma clang diagnostic pop
 

@@ -47,6 +47,7 @@ static void AddShadowToView(UIView *view) {
 
 @implementation ReviewViewController {
   DataLoader *_dataLoader;
+  LocalCachingClient *_client;
   WKSubjectDetailsRenderer *_subjectDetailsRenderer;
   WKKanaInput *_kanaInput;
 
@@ -57,6 +58,7 @@ static void AddShadowToView(UIView *view) {
   WKTaskType _activeTaskType;
   ReviewItem *_activeTask;
   WKSubject *_activeSubject;
+  WKStudyMaterials *_activeStudyMaterials;
 
   int _reviewsCompleted;
   int _tasksAnsweredCorrectly;
@@ -69,7 +71,8 @@ static void AddShadowToView(UIView *view) {
 #pragma mark - Constructors
 
 - (instancetype)initWithItems:(NSArray<ReviewItem *> *)items
-                   dataLoader:(DataLoader *)dataLoader {
+                   dataLoader:(DataLoader *)dataLoader
+                       client:(LocalCachingClient *)client {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     kRadicalGradient = @[(id)[UIColor colorWithRed:0.000f green:0.667f blue:1.000f alpha:1.0f].CGColor,
@@ -89,6 +92,7 @@ static void AddShadowToView(UIView *view) {
   if (self = [super initWithNibName:nil bundle:nil]) {
     NSLog(@"Starting review with %lu items", (unsigned long)items.count);
     _dataLoader = dataLoader;
+    _client = client;
     _subjectDetailsRenderer = [[WKSubjectDetailsRenderer alloc] initWithDataLoader:_dataLoader];
     _kanaInput = [[WKKanaInput alloc] initWithDelegate:self];
     
@@ -200,6 +204,12 @@ static void AddShadowToView(UIView *view) {
   _activeTaskIndex = arc4random_uniform((uint32_t)_activeQueue.count);
   _activeTask = _activeQueue[_activeTaskIndex];
   _activeSubject = [_dataLoader loadSubject:_activeTask.assignment.subjectId];
+  _activeStudyMaterials = nil;
+  
+  [_client getStudyMaterialForID:_activeTask.assignment.subjectId
+                         handler:^(WKStudyMaterials * _Nullable studyMaterials) {
+    _activeStudyMaterials = studyMaterials;
+  }];
   
   // Choose whether to ask the meaning or the reading.
   if (_activeTask.answeredMeaning) {
@@ -269,7 +279,8 @@ static void AddShadowToView(UIView *view) {
 #pragma mark - Answering
 
 - (void)submit {
-  WKAnswerCheckerResult result = CheckAnswer(_answerField.text, _activeSubject, _activeTaskType);
+  WKAnswerCheckerResult result =
+      CheckAnswer(_answerField.text, _activeSubject, _activeStudyMaterials, _activeTaskType);
   switch (result) {
     case kWKAnswerPrecise:
     case kWKAnswerImprecise:

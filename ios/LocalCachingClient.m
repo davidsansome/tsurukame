@@ -67,7 +67,8 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   dispatch_once(&once, ^(void) {
     kSchemas = @[
       @"CREATE TABLE sync ("
-      "  assignments_updated_after TEXT"
+      "  assignments_updated_after TEXT,"
+      "  study_materials_updated_after TEXT"
       ");"
       "INSERT INTO sync (assignments_updated_after) VALUES (\"\");"
       "CREATE TABLE assignments ("
@@ -78,6 +79,10 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
       "  id INTEGER PRIMARY KEY,"
       "  wrong_meanings INTEGER,"
       "  wrong_readings INTEGER"
+      ");"
+      "CREATE TABLE study_materials ("
+      "  id INTEGER PRIMARY KEY,"
+      "  pb BLOB"
       ");"
     ];
   });
@@ -122,6 +127,22 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   });
 }
 
+- (void)getStudyMaterialForID:(int)subjectID handler:(StudyMaterialHandler)handler {
+  dispatch_async(_queue, ^{
+    [_db inDatabase:^(FMDatabase * _Nonnull db) {
+      FMResultSet *r = [db executeQuery:@"SELECT pb FROM study_materials WHERE id = ?", @(subjectID)];
+      while ([r next]) {
+        WKStudyMaterials *studyMaterials =
+            [WKStudyMaterials parseFromData:[r dataForColumnIndex:0] error:nil];
+        handler(studyMaterials);
+        [r close];
+        return;
+      }
+      handler(nil);
+    }];
+  });
+}
+
 - (void)sendProgress:(NSArray<WKProgress *> *)progress handler:(ProgressHandler)handler {
   // TODO: store locally.
   [_client sendProgress:progress handler:handler];
@@ -136,34 +157,76 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
       _busy = true;
     }
     
-    // Get the last assignment update time.
-    __block NSString *lastDate;
-    [_db inDatabase:^(FMDatabase * _Nonnull db) {
-      lastDate = [db stringForQuery:@"SELECT assignments_updated_after FROM sync"];
+    dispatch_group_t dispatchGroup = dispatch_group_create();
+    dispatch_group_enter(dispatchGroup);
+    [self updateAssignments:^{
+      dispatch_group_leave(dispatchGroup);
+    }];
+    dispatch_group_enter(dispatchGroup);
+    [self updateStudyMaterials:^{
+      dispatch_group_leave(dispatchGroup);
     }];
     
-    NSLog(@"Getting all assignments modified after %@", lastDate);
-    [_client getAssignmentsModifiedAfter:lastDate
-                                 handler:^(NSError *error, NSArray<WKAssignment *> *assignments) {
-      if (error) {
-        NSLog(@"Failed to get assignments: %@", error);
-      } else {
-        NSString *date = _client.currentISO8601Time;
-        [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
-          for (WKAssignment *assignment in assignments) {
-            CheckUpdate(db, @"REPLACE INTO assignments (id, pb) VALUES (?, ?)",
-                        @(assignment.id_p), assignment.data);
-          }
-          CheckUpdate(db, @"UPDATE sync SET assignments_updated_after = ?", date);
-        }];
-        NSLog(@"Recorded %lu new assignments at %@", (unsigned long)assignments.count, date);
-      }
-    
+    dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), ^{
       @synchronized(self) {
         _busy = false;
       }
-    }];
+    });
   });
+}
+
+- (void)updateAssignments:(void (^)(void))handler {
+  // Get the last assignment update time.
+  __block NSString *lastDate;
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    lastDate = [db stringForQuery:@"SELECT assignments_updated_after FROM sync"];
+  }];
+  
+  NSLog(@"Getting all assignments modified after %@", lastDate);
+  [_client getAssignmentsModifiedAfter:lastDate
+                               handler:^(NSError *error, NSArray<WKAssignment *> *assignments) {
+                                 if (error) {
+                                   NSLog(@"Failed to get assignments: %@", error);
+                                 } else {
+                                   NSString *date = _client.currentISO8601Time;
+                                   [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                                     for (WKAssignment *assignment in assignments) {
+                                       CheckUpdate(db, @"REPLACE INTO assignments (id, pb) VALUES (?, ?)",
+                                                   @(assignment.id_p), assignment.data);
+                                     }
+                                     CheckUpdate(db, @"UPDATE sync SET assignments_updated_after = ?", date);
+                                   }];
+                                   NSLog(@"Recorded %lu new assignments at %@", (unsigned long)assignments.count, date);
+                                 }
+                                 handler();
+                               }];
+}
+
+- (void)updateStudyMaterials:(void (^)(void))handler {
+  // Get the last study materials update time.
+  __block NSString *lastDate;
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    lastDate = [db stringForQuery:@"SELECT study_materials_updated_after FROM sync"];
+  }];
+  
+  NSLog(@"Getting all assignments modified after %@", lastDate);
+  [_client getStudyMaterialsModifiedAfter:lastDate
+                                 handler:^(NSError *error, NSArray<WKStudyMaterials *> *studyMaterials) {
+                                   if (error) {
+                                     NSLog(@"Failed to get study materials: %@", error);
+                                   } else {
+                                     NSString *date = _client.currentISO8601Time;
+                                     [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                                       for (WKStudyMaterials *studyMaterial in studyMaterials) {
+                                         CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES (?, ?)",
+                                                     @(studyMaterial.subjectId), studyMaterial.data);
+                                       }
+                                       CheckUpdate(db, @"UPDATE sync SET study_materials_updated_after = ?", date);
+                                     }];
+                                     NSLog(@"Recorded %lu new study materials at %@", (unsigned long)studyMaterials.count, date);
+                                   }
+                                   handler();
+                                 }];
 }
 
 @end

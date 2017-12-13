@@ -227,7 +227,7 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
 
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
              handler:(ProgressHandler)handler {
-  void (^makeRequest)() = ^() {
+  void (^makeRequest)(void) = ^() {
     // Encode the data to send in the request.
     NSMutableDictionary<NSString *, NSArray<NSString *> *> *obj = [NSMutableDictionary dictionary];
     for (WKProgress *p in progress) {
@@ -266,6 +266,49 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
       }
     }];
   }
+}
+
+#pragma mark - Study Materials
+
+- (void)getStudyMaterialsModifiedAfter:(NSString *)date
+                               handler:(StudyMaterialsHandler)handler {
+  NSMutableArray<WKStudyMaterials *> *ret = [NSMutableArray array];
+
+  NSURLComponents *url =
+      [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/study_materials",
+                                             kURLBase]];
+  if (date && date.length) {
+    [url setQueryItems:@[
+        [NSURLQueryItem queryItemWithName:@"updated_after" value:date],
+    ]];
+  }
+  
+  [self startPagedQueryFor:url.URL handler:^(NSArray *data, NSError *error) {
+    if (error) {
+      handler(error, nil);
+      return;
+    } else if (!data) {
+      handler(nil, ret);
+      return;
+    }
+    
+    for (NSDictionary *d in data) {
+      WKStudyMaterials *studyMaterials = [[WKStudyMaterials alloc] init];
+      studyMaterials.id_p = [d[@"id"] intValue];
+      studyMaterials.subjectId = [d[@"data"][@"subject_id"] intValue];
+
+      if (d[@"data"][@"meaning_note"] != [NSNull null]) {
+        studyMaterials.meaningNote = d[@"data"][@"meaning_note"];
+      }
+      if (d[@"data"][@"reading_note"] != [NSNull null]) {
+        studyMaterials.meaningNote = d[@"data"][@"reading_note"];
+      }
+      if (d[@"data"][@"meaning_synonyms"] != [NSNull null]) {
+        studyMaterials.meaningSynonymsArray = d[@"data"][@"meaning_synonyms"];
+      }
+      [ret addObject:studyMaterials];
+    }
+  }];
 }
 
 @end

@@ -58,7 +58,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
       ReviewViewController *rvc = [[ReviewViewController alloc]
                                    initWithItems:items
-                                   dataLoader:_dataLoader];
+                                   dataLoader:_dataLoader
+                                   client:lcc];
       [vc.navigationController pushViewController:rvc animated:YES];
     });
   }];
