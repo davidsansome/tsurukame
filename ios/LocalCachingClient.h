@@ -6,6 +6,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (^StudyMaterialHandler)(WKStudyMaterials * _Nullable);
+
 @interface LocalCachingClient : NSObject
 
 - (instancetype)initWithClient:(Client *)client
@@ -15,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)update;
 
 - (void)getAllAssignments:(AssignmentHandler)handler;
+- (void)getStudyMaterialForID:(int)subjectID handler:(StudyMaterialHandler)handler;
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
              handler:(ProgressHandler)handler;
 

@@ -10,4 +10,7 @@ typedef NS_ENUM(NSInteger, WKAnswerCheckerResult) {
   kWKAnswerIncorrect,
 };
 
-extern WKAnswerCheckerResult CheckAnswer(NSString *answer, WKSubject *subject, WKTaskType taskType);
+extern WKAnswerCheckerResult CheckAnswer(NSString *answer,
+                                         WKSubject *subject,
+                                         WKStudyMaterials *studyMaterials,
+                                         WKTaskType taskType);

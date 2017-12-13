@@ -31,6 +31,11 @@ typedef void (^ProgressHandler)(NSError * _Nullable error);
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
              handler:(ProgressHandler)handler;
 
+typedef void (^StudyMaterialsHandler)(NSError * _Nullable error,
+                                      NSArray<WKStudyMaterials *> * _Nullable studyMaterials);
+- (void)getStudyMaterialsModifiedAfter:(NSString *)date
+                               handler:(StudyMaterialsHandler)handler;
+
 @end
 
 NS_ASSUME_NONNULL_END

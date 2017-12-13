@@ -408,6 +408,38 @@ typedef GPB_ENUM(WKProgress_FieldNumber) {
 @property(nonatomic, readwrite) BOOL hasReadingWrong;
 @end
 
+#pragma mark - WKStudyMaterials
+
+typedef GPB_ENUM(WKStudyMaterials_FieldNumber) {
+  WKStudyMaterials_FieldNumber_Id_p = 1,
+  WKStudyMaterials_FieldNumber_SubjectId = 2,
+  WKStudyMaterials_FieldNumber_MeaningNote = 3,
+  WKStudyMaterials_FieldNumber_ReadingNote = 4,
+  WKStudyMaterials_FieldNumber_MeaningSynonymsArray = 5,
+};
+
+@interface WKStudyMaterials : GPBMessage
+
+@property(nonatomic, readwrite) int32_t id_p;
+
+@property(nonatomic, readwrite) BOOL hasId_p;
+@property(nonatomic, readwrite) int32_t subjectId;
+
+@property(nonatomic, readwrite) BOOL hasSubjectId;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *meaningNote;
+/** Test to see if @c meaningNote has been set. */
+@property(nonatomic, readwrite) BOOL hasMeaningNote;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *readingNote;
+/** Test to see if @c readingNote has been set. */
+@property(nonatomic, readwrite) BOOL hasReadingNote;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *meaningSynonymsArray;
+/** The number of items in @c meaningSynonymsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger meaningSynonymsArray_Count;
+
+@end
+
 NS_ASSUME_NONNULL_END
 
 CF_EXTERN_C_END

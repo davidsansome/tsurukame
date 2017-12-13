@@ -35,7 +35,10 @@ static int DistanceTolerance(NSString *answer) {
   return 2 + 1 * floor((double)(answer.length) / 7);
 }
 
-WKAnswerCheckerResult CheckAnswer(NSString *answer, WKSubject *subject, WKTaskType taskType) {
+WKAnswerCheckerResult CheckAnswer(NSString *answer,
+                                  WKSubject *subject,
+                                  WKStudyMaterials *studyMaterials,
+                                  WKTaskType taskType) {
   answer = FormattedString(answer);
   
   switch (taskType) {
@@ -57,9 +60,16 @@ WKAnswerCheckerResult CheckAnswer(NSString *answer, WKSubject *subject, WKTaskTy
       }
       break;
       
-    case kWKTaskTypeMeaning:
+    case kWKTaskTypeMeaning: {
+      NSMutableArray<NSString *> *meaningTexts =
+          [NSMutableArray arrayWithArray:studyMaterials.meaningSynonymsArray];
+      
       for (WKMeaning *meaning in subject.meanings) {
-        NSString *meaningText = FormattedString(meaning.meaning);
+        [meaningTexts addObject:meaning.meaning];
+      }
+      
+      for (NSString *meaning in meaningTexts) {
+        NSString *meaningText = FormattedString(meaning);
         if ([meaningText isEqualToString:answer]) {
           return kWKAnswerPrecise;
         }
@@ -71,6 +81,7 @@ WKAnswerCheckerResult CheckAnswer(NSString *answer, WKSubject *subject, WKTaskTy
         }
       }
       break;
+    }
       
     case kWKTaskType_Max:
       assert(false);
