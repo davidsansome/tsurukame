@@ -153,10 +153,16 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
       assignment.id_p = [d[@"id"] intValue];
       assignment.level = [d[@"data"][@"level"] intValue];
       assignment.subjectId = [d[@"data"][@"subject_id"] intValue];
+      assignment.srsStage = [d[@"data"][@"srs_stage"] intValue];
       
       if (d[@"data"][@"available_at"] != [NSNull null]) {
         assignment.availableAt =
             [[_dateFormatter dateFromString:d[@"data"][@"available_at"]] timeIntervalSince1970];
+      }
+      
+      if (d[@"data"][@"started_at"] != [NSNull null]) {
+        assignment.startedAt =
+            [[_dateFormatter dateFromString:d[@"data"][@"started_at"]] timeIntervalSince1970];
       }
       
       NSString *subjectType = d[@"data"][@"subject_type"];

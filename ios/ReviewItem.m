@@ -13,7 +13,7 @@
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<WKAssignment *> *)assignments {
   NSMutableArray *ret = [NSMutableArray array];
   for (WKAssignment *assignment in assignments) {
-    if (!assignment.hasAvailableAt) {
+    if (!assignment.hasAvailableAt || !assignment.hasStartedAt) {
       continue;
     }
     NSDate *readyForReview = [NSDate dateWithTimeIntervalSince1970:assignment.availableAt];

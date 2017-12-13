@@ -60,14 +60,14 @@ static void AddTextSection(NSMutableString *ret, NSString *title, NSString *cont
 
 static NSString *HighlightText(NSString *text) {
   NSMutableString *ret = [NSMutableString stringWithString:text];
-  [kHighlightRE replaceMatchesInString:ret
-                               options:0
-                                 range:NSMakeRange(0, ret.length)
-                          withTemplate:@"<span class=\"highlight $1\">$2</span>"];
   [kJaSpanRE replaceMatchesInString:ret
                             options:0
                               range:NSMakeRange(0, ret.length)
                        withTemplate:@"$1"];
+  [kHighlightRE replaceMatchesInString:ret
+                               options:0
+                                 range:NSMakeRange(0, ret.length)
+                          withTemplate:@"<span class=\"highlight $1\">$2</span>"];
   return ret;
 }
 
