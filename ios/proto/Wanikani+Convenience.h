@@ -19,3 +19,24 @@
 @property (nonatomic, readonly) NSArray<WKMeaning *> *meanings;
 
 @end
+
+@interface WKRadical (Convenience)
+
+@property (nonatomic, readonly) NSString *commaSeparatedMeanings;
+
+@end
+
+@interface WKKanji (Convenience)
+
+@property (nonatomic, readonly) NSString *commaSeparatedReadings;
+@property (nonatomic, readonly) NSString *commaSeparatedMeanings;
+
+@end
+
+@interface WKVocabulary (Convenience)
+
+@property (nonatomic, readonly) NSString *commaSeparatedReadings;
+@property (nonatomic, readonly) NSString *commaSeparatedMeanings;
+@property (nonatomic, readonly) NSString *commaSeparatedPartsOfSpeech;
+
+@end
