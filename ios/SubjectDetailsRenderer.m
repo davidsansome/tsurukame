@@ -82,6 +82,10 @@ static NSString *kHeader =
      "li:last-child:after {"
      "  content: none;"
      "}"
+     "a {"
+     "  text-decoration: none;"
+     "  color: black;"
+     "}"
      "</style>";
 
 static NSRegularExpression *kHighlightRE;
@@ -177,8 +181,8 @@ static NSRegularExpression *kJaSpanRE;
       continue;
     }
     
-    [ret appendFormat:@"<li><span class=\"related %@\">%@</span>%@</li>",
-     class, subject.japanese, subject.primaryMeaning];
+    [ret appendFormat:@"<li><a href=\"wk://subject/%d\"><span class=\"related %@\">%@</span>%@</a></li>",
+     subjectID, class, subject.japanese, subject.primaryMeaning];
   }
   [ret appendString:@"</ul>"];
   return ret;
