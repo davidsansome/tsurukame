@@ -9,6 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^StudyMaterialHandler)(WKStudyMaterials * _Nullable);
 
 extern NSNotificationName kLocalCachingClientBusyChangedNotification;
+extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 
 @interface LocalCachingClient : NSObject
 

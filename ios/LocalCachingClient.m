@@ -108,8 +108,10 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
 - (void)setBusy:(bool)busy {
   _busy = busy;
   
-  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-  [nc postNotificationName:kLocalCachingClientBusyChangedNotification object:self];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc postNotificationName:kLocalCachingClientBusyChangedNotification object:self];
+  });
 }
 
 - (void)getAllAssignments:(AssignmentHandler)handler {

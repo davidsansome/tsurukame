@@ -22,7 +22,6 @@
   Reachability *_reachability;
 }
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   _dataLoader = [[DataLoader alloc] initFromURL:[[NSBundle mainBundle] URLForResource:@"data"
                                                                         withExtension:@"bin"]];
@@ -33,7 +32,8 @@
   
   LocalCachingClient *lcc = [[LocalCachingClient alloc] initWithClient:client reachability:_reachability];
   
-  MainViewController *vc = (MainViewController *)self.window.rootViewController;
+  MainViewController *vc = (MainViewController *)
+      ((UINavigationController *)self.window.rootViewController).topViewController;
   vc.dataLoader = _dataLoader;
   vc.reachability = _reachability;
   vc.localCachingClient = lcc;
