@@ -8,7 +8,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^StudyMaterialHandler)(WKStudyMaterials * _Nullable);
 
+extern NSNotificationName kLocalCachingClientBusyChangedNotification;
+
 @interface LocalCachingClient : NSObject
+
+@property(nonatomic, getter=isBusy, readonly) bool busy;
 
 - (instancetype)initWithClient:(Client *)client
                   reachability:(Reachability *)reachability NS_DESIGNATED_INITIALIZER;

@@ -6,13 +6,9 @@
 
 @interface ReviewViewController : UIViewController
 
-- (instancetype)initWithItems:(NSArray<ReviewItem *> *)items
-                   dataLoader:(DataLoader *)dataLoader
-                       client:(LocalCachingClient *)client NS_DESIGNATED_INITIALIZER;
+@property(nonatomic, assign) DataLoader *dataLoader;
+@property(nonatomic, assign) LocalCachingClient *localCachingClient;
 
-- (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil
-                         bundle:(NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
-- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
+- (void)startReviewWithItems:(NSArray<ReviewItem *> *)items;
 
 @end
