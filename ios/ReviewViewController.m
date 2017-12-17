@@ -143,7 +143,7 @@ static void AddShadowToView(UIView *view) {
   UIAlertController *c =
       [UIAlertController alertControllerWithTitle:@"End review session?"
                                           message:@"You'll lose progress on any half-answered reviews"
-                                   preferredStyle:UIAlertControllerStyleAlert];
+                                   preferredStyle:UIAlertControllerStyleActionSheet];
   [c addAction:[UIAlertAction actionWithTitle:@"End review session"
                                         style:UIAlertActionStyleDestructive
                                       handler:^(UIAlertAction * _Nonnull action) {
