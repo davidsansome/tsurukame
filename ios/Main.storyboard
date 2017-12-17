@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ByY-Kf-IzJ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Whd-2S-WNr">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -12,6 +12,21 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="Or2-Qd-5D2">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="Whd-2S-WNr" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YMU-8O-uJl">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="ByY-Kf-IzJ" kind="relationship" relationship="rootViewController" id="eiN-13-U20"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AUY-rd-Kw3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-734" y="176"/>
+        </scene>
         <!--Main View Controller-->
         <scene sceneID="ydl-qq-SrR">
             <objects>
@@ -131,6 +146,7 @@
                             <outlet property="delegate" destination="ByY-Kf-IzJ" id="JPr-5f-GRh"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="49W-hQ-Zo2"/>
                     <connections>
                         <outlet property="syncOfflineImage" destination="ayt-6N-Vdn" id="HTS-cY-dKv"/>
                         <outlet property="syncSpinner" destination="O6t-Kx-ZYn" id="CYz-9y-uUA"/>

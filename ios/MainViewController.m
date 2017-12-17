@@ -29,6 +29,15 @@
 
 - (void)viewWillAppear:(BOOL)animated {
   [self updateSyncState];
+  self.refreshControl = [[UIRefreshControl alloc] init];
+  self.refreshControl.tintColor = [UIColor darkGrayColor];
+  self.refreshControl.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+  NSAttributedString *title = [[NSAttributedString alloc] initWithString:@"Pull to refresh..."];
+  self.refreshControl.attributedTitle = title;
+  [self.refreshControl addTarget:self
+                          action:@selector(didPullToRefresh)
+                forControlEvents:UIControlEventValueChanged];
+  
   [super viewWillAppear:animated];
 }
 
@@ -43,7 +52,7 @@
 - (void)updateSyncState {
   if (!_reachability.isReachable) {
     self.syncTitle.text = @"No internet connection";
-    self.syncSubtitle.text = @"Your progress will be synced when you're back online";
+    self.syncSubtitle.text = @"You can still do reviews, your progress will be synced when you're back online.";
     [self.syncSubtitle setHidden:NO];
     [self.syncSpinner stopAnimating];
     [self.syncOfflineImage setHidden:NO];
@@ -55,11 +64,19 @@
     [self.syncOfflineImage setHidden:YES];
   } else {
     self.syncTitle.text = @"Up to date!";
-    self.syncSubtitle.text = @"Your progress, synonyms and notes are synced to this device";
+    self.syncSubtitle.text = @"Your progress, synonyms and notes are synced to this device.";
     [self.syncSubtitle setHidden:NO];
     [self.syncSpinner stopAnimating];
     [self.syncOfflineImage setHidden:YES];
   }
+}
+
+- (void)didPullToRefresh {
+  [self.refreshControl endRefreshing];
+  if (!_reachability.isReachable) {
+    return;
+  }
+  [_localCachingClient update];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
