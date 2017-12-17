@@ -290,14 +290,19 @@ static void AddShadowToView(UIView *view) {
       [self markAnswer:false];
       break;
     case kWKAnswerOtherKanjiReading:
-      // TODO
-      NSLog(@"Invalid kanji reading");
+      [self shakeView:_answerField];
       break;
     case kWKAnswerContainsInvalidCharacters:
-      // TODO
-      NSLog(@"Invalid characters");
+      [self shakeView:_answerField];
       break;
   }
+}
+
+- (void)shakeView:(UIView *)view {
+  view.transform = CGAffineTransformMakeTranslation(20, 0);
+  [UIView animateWithDuration:0.8 delay:0.0 usingSpringWithDamping:0.2 initialSpringVelocity:2.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    view.transform = CGAffineTransformIdentity;
+  } completion:nil];
 }
 
 - (void)markAnswer:(bool)correct {
