@@ -22,10 +22,18 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }
 }
 
+NSNotificationName kLocalCachingClientBusyChangedNotification =
+    @"kLocalCachingClientBusyChangedNotification";
+
+@interface LocalCachingClient ()
+
+@property(nonatomic, getter=isBusy) bool busy;
+
+@end
+
 @implementation LocalCachingClient {
   Client *_client;
   Reachability *_reachability;
-  bool _busy;
   FMDatabaseQueue *_db;
   dispatch_queue_t _queue;
 }
@@ -36,7 +44,6 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   if (self) {
     _client = client;
     _reachability = reachability;
-    _busy = false;
     _db = [self openDatabase];
     assert(_db);
     _queue = dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0);
@@ -44,12 +51,6 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     if (_reachability.isReachable) {
       [self update];
     }
-    
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self
-           selector:@selector(reachabilityChanged:)
-               name:kReachabilityChangedNotification
-             object:_reachability];
   }
   return self;
 }
@@ -98,14 +99,17 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     for (; currentVersion < targetVersion; ++currentVersion) {
       CheckExecuteStatements(db, kSchemas[currentVersion]);
     }
-    CheckUpdate(db, [NSString stringWithFormat:@"PRAGMA user_version = %d", targetVersion]);
+    CheckUpdate(db, [NSString stringWithFormat:@"PRAGMA user_version = %lu", (unsigned long)targetVersion]);
     NSLog(@"Database updated to schema %lu", targetVersion);
   }];
   return ret;
 }
 
-- (void)reachabilityChanged:(NSNotification *)notification {
-  NSLog(@"Reachability changed: %d", _reachability.isReachable);
+- (void)setBusy:(bool)busy {
+  _busy = busy;
+  
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  [nc postNotificationName:kLocalCachingClientBusyChangedNotification object:self];
 }
 
 - (void)getAllAssignments:(AssignmentHandler)handler {
@@ -151,10 +155,10 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 - (void)update {
   dispatch_async(_queue, ^{
     @synchronized(self) {
-      if (_busy) {
+      if (self.isBusy) {
         return;
       }
-      _busy = true;
+      self.busy = true;
     }
     
     dispatch_group_t dispatchGroup = dispatch_group_create();
@@ -169,7 +173,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     
     dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), ^{
       @synchronized(self) {
-        _busy = false;
+        self.busy = false;
       }
     });
   });

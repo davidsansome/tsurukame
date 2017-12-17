@@ -27,6 +27,7 @@ static void AddShadowToView(UIView *view) {
 
 @interface ReviewViewController () <UITextFieldDelegate, WKNavigationDelegate>
 
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIView *questionBackground;
 @property (weak, nonatomic) IBOutlet UIView *promptBackground;
 @property (weak, nonatomic) IBOutlet UILabel *questionLabel;
@@ -46,13 +47,12 @@ static void AddShadowToView(UIView *view) {
 @end
 
 @implementation ReviewViewController {
-  DataLoader *_dataLoader;
-  LocalCachingClient *_client;
   WKSubjectDetailsRenderer *_subjectDetailsRenderer;
   WKKanaInput *_kanaInput;
 
   NSMutableArray<ReviewItem *> *_activeQueue;
   NSMutableArray<ReviewItem *> *_reviewQueue;
+  bool _wrapUp;
 
   int _activeTaskIndex;  // An index into activeQueue;
   WKTaskType _activeTaskType;
@@ -70,9 +70,7 @@ static void AddShadowToView(UIView *view) {
 
 #pragma mark - Constructors
 
-- (instancetype)initWithItems:(NSArray<ReviewItem *> *)items
-                   dataLoader:(DataLoader *)dataLoader
-                       client:(LocalCachingClient *)client {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     kRadicalGradient = @[(id)[UIColor colorWithRed:0.000f green:0.667f blue:1.000f alpha:1.0f].CGColor,
@@ -89,19 +87,24 @@ static void AddShadowToView(UIView *view) {
     kMeaningTextColor = [UIColor colorWithRed:0.333f green:0.333f blue:0.333f alpha:1.0f];
   });
   
-  if (self = [super initWithNibName:nil bundle:nil]) {
-    NSLog(@"Starting review with %lu items", (unsigned long)items.count);
-    _dataLoader = dataLoader;
-    _client = client;
-    _subjectDetailsRenderer = [[WKSubjectDetailsRenderer alloc] initWithDataLoader:_dataLoader];
+  self = [super initWithCoder:aDecoder];
+  if (self) {
     _kanaInput = [[WKKanaInput alloc] initWithDelegate:self];
-    
-    _reviewQueue = [NSMutableArray arrayWithArray:items];
-    _activeQueue = [NSMutableArray array];
-    
-    [self refillActiveQueue];
   }
   return self;
+}
+
+- (void)setDataLoader:(DataLoader *)dataLoader {
+  _dataLoader = dataLoader;
+  _subjectDetailsRenderer = [[WKSubjectDetailsRenderer alloc] initWithDataLoader:_dataLoader];
+}
+
+- (void)startReviewWithItems:(NSArray<ReviewItem *> *)items {
+  NSLog(@"Starting review with %lu items", (unsigned long)items.count);
+  _reviewQueue = [NSMutableArray arrayWithArray:items];
+  _activeQueue = [NSMutableArray array];
+  
+  [self refillActiveQueue];
 }
 
 - (void)viewDidLoad {
@@ -123,7 +126,7 @@ static void AddShadowToView(UIView *view) {
   _answerField.delegate = _kanaInput;
 }
 
-- (void) viewDidLayoutSubviews {
+- (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
   _questionGradient.frame = _questionBackground.bounds;
   _promptGradient.frame = _promptBackground.bounds;
@@ -140,6 +143,8 @@ static void AddShadowToView(UIView *view) {
 }
 
 - (IBAction)backButtonPressed:(id)sender {
+  __weak ReviewViewController *weakSelf = self;
+  
   UIAlertController *c =
       [UIAlertController alertControllerWithTitle:@"End review session?"
                                           message:@"You'll lose progress on any half-answered reviews"
@@ -152,17 +157,36 @@ static void AddShadowToView(UIView *view) {
   [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                         style:UIAlertActionStyleCancel
                                       handler:nil]];
-  [c addAction:[UIAlertAction actionWithTitle:@"Wrap up"
-                                        style:UIAlertActionStyleDefault
-                                      handler:^(UIAlertAction * _Nonnull action) {
-    // TODO
-                                      }]];
+  if (_wrapUp) {
+    [c addAction:[UIAlertAction actionWithTitle:@"Cancel wrap up"
+                                          style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * _Nonnull action) {
+                                          ReviewViewController *self = weakSelf;
+                                          if (self) {
+                                            self->_wrapUp = false;
+                                            [self updateWrapUpButton];
+                                          }
+                                        }]];
+  } else {
+    [c addAction:[UIAlertAction actionWithTitle:@"Wrap up"
+                                          style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * _Nonnull action) {
+                                          ReviewViewController *self = weakSelf;
+                                          if (self) {
+                                            self->_wrapUp = true;
+                                            [self updateWrapUpButton];
+                                          }
+                                        }]];
+  }
   [self presentViewController:c animated:YES completion:nil];
 }
 
 #pragma mark - Setup
 
 - (void)refillActiveQueue {
+  if (_wrapUp) {
+    return;
+  }
   while (_activeQueue.count < kActiveQueueSize &&
          _reviewQueue.count != 0) {
     const NSUInteger i = arc4random_uniform((uint32_t)_reviewQueue.count);
@@ -170,6 +194,16 @@ static void AddShadowToView(UIView *view) {
     [_reviewQueue removeObjectAtIndex:i];
     [_activeQueue addObject:item];
   }
+}
+
+- (void)updateWrapUpButton {
+  NSString *title;
+  if (_wrapUp) {
+    title = [NSString stringWithFormat:@"Back (%lu)", (unsigned long)_activeQueue.count];
+  } else {
+    title = @"Back";
+  }
+  [_backButton setTitle:title forState:UIControlStateNormal];
 }
 
 - (void)randomTask {
@@ -206,8 +240,8 @@ static void AddShadowToView(UIView *view) {
   _activeSubject = [_dataLoader loadSubject:_activeTask.assignment.subjectId];
   _activeStudyMaterials = nil;
   
-  [_client getStudyMaterialForID:_activeTask.assignment.subjectId
-                         handler:^(WKStudyMaterials * _Nullable studyMaterials) {
+  [_localCachingClient getStudyMaterialForID:_activeTask.assignment.subjectId
+                                     handler:^(WKStudyMaterials * _Nullable studyMaterials) {
     _activeStudyMaterials = studyMaterials;
   }];
   

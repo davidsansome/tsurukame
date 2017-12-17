@@ -33,45 +33,11 @@
   
   LocalCachingClient *lcc = [[LocalCachingClient alloc] initWithClient:client reachability:_reachability];
   
-  MainViewController *vc = [[MainViewController alloc] init];
+  MainViewController *vc = (MainViewController *)self.window.rootViewController;
+  vc.dataLoader = _dataLoader;
+  vc.reachability = _reachability;
+  vc.localCachingClient = lcc;
   
-  UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-  nav.navigationBarHidden = YES;
-
-  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  self.window.rootViewController = nav;
-  
-  self.window.backgroundColor = [UIColor whiteColor];
-  [self.window makeKeyAndVisible];
-  
-  NSLog(@"Starting thread %@", [NSThread currentThread]);
-  [lcc getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
-    if (error) {
-      NSLog(@"Failed to get assignments: %@", error);
-      return;
-    }
-    NSLog(@"Callback thread %@", [NSThread currentThread]);
-    NSLog(@"Got %lu assignments", (unsigned long)assignments.count);
-    NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments];
-    NSLog(@"Got %lu items", (unsigned long)items.count);
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-      ReviewViewController *rvc = [[ReviewViewController alloc]
-                                   initWithItems:items
-                                   dataLoader:_dataLoader
-                                   client:lcc];
-      [vc.navigationController pushViewController:rvc animated:YES];
-    });
-  }];
-  
-  /*WKProgress *progress = [[WKProgress alloc] init];
-  progress.id_p = 1234;
-  progress.readingWrong = true;
-  progress.meaningWrong = false;
-  [client sendProgress:@[progress] handler:^(NSError * _Nullable error) {
-    NSLog(@"Send progress error: %@", error);
-  }];*/
-
   return YES;
 }
 

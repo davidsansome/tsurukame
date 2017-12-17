@@ -1,13 +1,17 @@
-//
-//  MainViewController.h
-//  wk
-//
-//  Created by David Sansome on 22/11/17.
-//  Copyright © 2017 David Sansome. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 
-@interface MainViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+NS_ASSUME_NONNULL_BEGIN
+
+@class DataLoader;
+@class LocalCachingClient;
+@class Reachability;
+
+@interface MainViewController : UITableViewController
+
+@property(nonatomic) DataLoader *dataLoader;
+@property(nonatomic) Reachability *reachability;
+@property(nonatomic) LocalCachingClient *localCachingClient;
 
 @end
+
+NS_ASSUME_NONNULL_END
