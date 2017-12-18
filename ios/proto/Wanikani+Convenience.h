@@ -40,3 +40,9 @@
 @property (nonatomic, readonly) NSString *commaSeparatedPartsOfSpeech;
 
 @end
+
+@interface WKAssignment (Convenience)
+
+@property (nonatomic, readonly) bool isReadyForReview;
+
+@end

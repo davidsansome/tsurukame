@@ -1,3 +1,4 @@
 target 'wk' do
   pod 'FMDB'
+  pod 'MaterialComponents/Snackbar'
 end

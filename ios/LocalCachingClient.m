@@ -106,6 +106,9 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
 }
 
 - (void)setBusy:(bool)busy {
+  if (busy == _busy) {
+    return;
+  }
   _busy = busy;
   
   dispatch_async(dispatch_get_main_queue(), ^{
@@ -124,6 +127,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       while ([r next]) {
         WKAssignment *assignment = [WKAssignment parseFromData:[r dataForColumnIndex:0] error:&err];
         if (err) {
+          [self.delegate localCachingClientDidReportError:err];
           return;
         }
         [ret addObject:assignment];
@@ -192,7 +196,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   [_client getAssignmentsModifiedAfter:lastDate
                                handler:^(NSError *error, NSArray<WKAssignment *> *assignments) {
                                  if (error) {
-                                   NSLog(@"Failed to get assignments: %@", error);
+                                   [self.delegate localCachingClientDidReportError:error];
                                  } else {
                                    NSString *date = _client.currentISO8601Time;
                                    [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -219,7 +223,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   [_client getStudyMaterialsModifiedAfter:lastDate
                                  handler:^(NSError *error, NSArray<WKStudyMaterials *> *studyMaterials) {
                                    if (error) {
-                                     NSLog(@"Failed to get study materials: %@", error);
+                                     [self.delegate localCachingClientDidReportError:error];
                                    } else {
                                      NSString *date = _client.currentISO8601Time;
                                      [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {

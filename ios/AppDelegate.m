@@ -13,7 +13,9 @@
 #import "MainViewController.h"
 #import "ReviewViewController.h"
 
-@interface AppDelegate ()
+#import "MaterialSnackbar.h"
+
+@interface AppDelegate () <LocalCachingClientDelegate>
 
 @end
 
@@ -31,6 +33,7 @@
                                              cookie:@"(redacted in git history)"];
   
   LocalCachingClient *lcc = [[LocalCachingClient alloc] initWithClient:client reachability:_reachability];
+  lcc.delegate = self;
   
   MainViewController *vc = (MainViewController *)
       ((UINavigationController *)self.window.rootViewController).topViewController;
@@ -64,5 +67,10 @@
   // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (void)localCachingClientDidReportError:(NSError *)error {
+  MDCSnackbarMessage *message = [[MDCSnackbarMessage alloc] init];
+  message.text = error.localizedDescription;
+  [MDCSnackbarManager showMessage:message];
+}
 
 @end
