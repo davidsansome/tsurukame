@@ -212,7 +212,7 @@ static void AddShadowToView(UIView *view) {
     self.successRateLabel.text = @"100%";
   } else {
     self.successRateLabel.text = [NSString stringWithFormat:@"%d%%",
-                                  (int)(_tasksAnsweredCorrectly / _tasksAnswered)];
+                                  (int)((double)(_tasksAnsweredCorrectly) / _tasksAnswered * 100)];
   }
   int queueLength = (int)(_activeQueue.count + _reviewQueue.count);
   self.doneLabel.text = [NSString stringWithFormat:@"%d", _reviewsCompleted];
