@@ -84,7 +84,12 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       "CREATE TABLE study_materials ("
       "  id INTEGER PRIMARY KEY,"
       "  pb BLOB"
-      ");"
+      ");",
+      
+      @"CREATE TABLE user ("
+      "  id INTEGER PRIMARY KEY CHECK (id = 0),"
+      "  pb BLOB"
+      ");",
     ];
   });
   
@@ -137,20 +142,26 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   });
 }
 
-- (void)getStudyMaterialForID:(int)subjectID handler:(StudyMaterialHandler)handler {
-  dispatch_async(_queue, ^{
-    [_db inDatabase:^(FMDatabase * _Nonnull db) {
-      FMResultSet *r = [db executeQuery:@"SELECT pb FROM study_materials WHERE id = ?", @(subjectID)];
-      while ([r next]) {
-        WKStudyMaterials *studyMaterials =
-            [WKStudyMaterials parseFromData:[r dataForColumnIndex:0] error:nil];
-        handler(studyMaterials);
-        [r close];
-        return;
-      }
-      handler(nil);
-    }];
-  });
+- (WKStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID {
+  __block WKStudyMaterials *ret = nil;
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    FMResultSet *r = [db executeQuery:@"SELECT pb FROM study_materials WHERE id = ?", @(subjectID)];
+    while ([r next]) {
+      ret = [WKStudyMaterials parseFromData:[r dataForColumnIndex:0] error:nil];
+    }
+  }];
+  return nil;
+}
+
+- (WKUser * _Nullable)getUserInfo {
+  __block WKUser *ret = nil;
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    FMResultSet *r = [db executeQuery:@"SELECT pb FROM user"];
+    while ([r next]) {
+      ret = [WKUser parseFromData:[r dataForColumnIndex:0] error:nil];
+    }
+  }];
+  return ret;
 }
 
 - (void)sendProgress:(NSArray<WKProgress *> *)progress handler:(ProgressHandler)handler {
@@ -168,12 +179,19 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
     }
     
     dispatch_group_t dispatchGroup = dispatch_group_create();
+    
     dispatch_group_enter(dispatchGroup);
     [self updateAssignments:^{
       dispatch_group_leave(dispatchGroup);
     }];
+    
     dispatch_group_enter(dispatchGroup);
     [self updateStudyMaterials:^{
+      dispatch_group_leave(dispatchGroup);
+    }];
+    
+    dispatch_group_enter(dispatchGroup);
+    [self updateUserInfo:^{
       dispatch_group_leave(dispatchGroup);
     }];
     
@@ -219,7 +237,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
     lastDate = [db stringForQuery:@"SELECT study_materials_updated_after FROM sync"];
   }];
   
-  NSLog(@"Getting all assignments modified after %@", lastDate);
+  NSLog(@"Getting all study materials modified after %@", lastDate);
   [_client getStudyMaterialsModifiedAfter:lastDate
                                  handler:^(NSError *error, NSArray<WKStudyMaterials *> *studyMaterials) {
                                    if (error) {
@@ -237,6 +255,20 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
                                    }
                                    handler();
                                  }];
+}
+
+- (void)updateUserInfo:(void (^)(void))handler {
+  [_client getUserInfo:^(NSError * _Nullable error, WKUser * _Nullable user) {
+    if (error) {
+      [self.delegate localCachingClientDidReportError:error];
+    } else {
+      [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        CheckUpdate(db, @"REPLACE INTO user (id, pb) VALUES (0, ?)", user.data);
+      }];
+      NSLog(@"Got user info: %@", user);
+    }
+    handler();
+  }];
 }
 
 @end

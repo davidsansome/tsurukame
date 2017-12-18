@@ -1072,6 +1072,108 @@ typedef struct WKStudyMaterials__storage_ {
 
 @end
 
+#pragma mark - WKUser
+
+@implementation WKUser
+
+@dynamic hasUsername, username;
+@dynamic hasLevel, level;
+@dynamic hasMaxLevelGrantedBySubscription, maxLevelGrantedBySubscription;
+@dynamic hasProfileURL, profileURL;
+@dynamic hasStartedAt, startedAt;
+@dynamic hasSubscribed, subscribed;
+
+typedef struct WKUser__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t level;
+  int32_t maxLevelGrantedBySubscription;
+  int32_t startedAt;
+  NSString *username;
+  NSString *profileURL;
+} WKUser__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "username",
+        .dataTypeSpecific.className = NULL,
+        .number = WKUser_FieldNumber_Username,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(WKUser__storage_, username),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "level",
+        .dataTypeSpecific.className = NULL,
+        .number = WKUser_FieldNumber_Level,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(WKUser__storage_, level),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "maxLevelGrantedBySubscription",
+        .dataTypeSpecific.className = NULL,
+        .number = WKUser_FieldNumber_MaxLevelGrantedBySubscription,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(WKUser__storage_, maxLevelGrantedBySubscription),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "profileURL",
+        .dataTypeSpecific.className = NULL,
+        .number = WKUser_FieldNumber_ProfileURL,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(WKUser__storage_, profileURL),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "startedAt",
+        .dataTypeSpecific.className = NULL,
+        .number = WKUser_FieldNumber_StartedAt,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(WKUser__storage_, startedAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "subscribed",
+        .dataTypeSpecific.className = NULL,
+        .number = WKUser_FieldNumber_Subscribed,
+        .hasIndex = 5,
+        .offset = 6,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[WKUser class]
+                                     rootClass:[WKWanikaniRoot class]
+                                          file:WKWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(WKUser__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\004\007\241!!\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 
 #pragma clang diagnostic pop
 

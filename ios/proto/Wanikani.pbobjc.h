@@ -440,6 +440,41 @@ typedef GPB_ENUM(WKStudyMaterials_FieldNumber) {
 
 @end
 
+#pragma mark - WKUser
+
+typedef GPB_ENUM(WKUser_FieldNumber) {
+  WKUser_FieldNumber_Username = 1,
+  WKUser_FieldNumber_Level = 2,
+  WKUser_FieldNumber_MaxLevelGrantedBySubscription = 3,
+  WKUser_FieldNumber_ProfileURL = 4,
+  WKUser_FieldNumber_StartedAt = 5,
+  WKUser_FieldNumber_Subscribed = 6,
+};
+
+@interface WKUser : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *username;
+/** Test to see if @c username has been set. */
+@property(nonatomic, readwrite) BOOL hasUsername;
+
+@property(nonatomic, readwrite) int32_t level;
+
+@property(nonatomic, readwrite) BOOL hasLevel;
+@property(nonatomic, readwrite) int32_t maxLevelGrantedBySubscription;
+
+@property(nonatomic, readwrite) BOOL hasMaxLevelGrantedBySubscription;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *profileURL;
+/** Test to see if @c profileURL has been set. */
+@property(nonatomic, readwrite) BOOL hasProfileURL;
+
+@property(nonatomic, readwrite) int32_t startedAt;
+
+@property(nonatomic, readwrite) BOOL hasStartedAt;
+@property(nonatomic, readwrite) BOOL subscribed;
+
+@property(nonatomic, readwrite) BOOL hasSubscribed;
+@end
+
 NS_ASSUME_NONNULL_END
 
 CF_EXTERN_C_END

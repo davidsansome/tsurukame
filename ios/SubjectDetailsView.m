@@ -1,4 +1,5 @@
-#import "SubjectDetailsRenderer.h"
+#import "SubjectDetailsView.h"
+#import "SubjectDetailsViewController.h"
 #import "proto/Wanikani+Convenience.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -88,14 +89,16 @@ static NSString *kHeader =
      "}"
      "</style>";
 
+NSString *kWKSubjectDetailsViewSegueIdentifier = @"kWKSubjectDetailsViewSegueIdentifier";
+
 static NSRegularExpression *kHighlightRE;
 static NSRegularExpression *kJaSpanRE;
 
-@implementation WKSubjectDetailsRenderer {
-  DataLoader *_dataLoader;
+@implementation WKSubjectDetailsView {
+  int _linkSubjectID;
 }
 
-- (instancetype)initWithDataLoader:(DataLoader *)dataLoader {
+- (nullable instancetype)initWithCoder:(NSCoder *)coder {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     kHighlightRE = [NSRegularExpression regularExpressionWithPattern:
@@ -108,9 +111,9 @@ static NSRegularExpression *kJaSpanRE;
                  "\\[\\/[^\\]]+\\]" options:0 error:nil];
   });
   
-  self = [super init];
+  self = [super initWithCoder:coder];
   if (self) {
-    _dataLoader = dataLoader;
+    self.navigationDelegate = self;
   }
   return self;
 }
@@ -186,6 +189,39 @@ static NSRegularExpression *kJaSpanRE;
   }
   [ret appendString:@"</ul>"];
   return ret;
+}
+
+#pragma mark - Setters
+
+- (void)setSubject:(WKSubject *)subject {
+  [self loadHTMLString:[self renderSubjectDetails:subject] baseURL:nil];
+}
+
+#pragma mark - WKNavigationDelegate
+
+- (void)webView:(WKWebView *)webView
+decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
+decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+  NSURL *url = navigationAction.request.URL;
+  if (![url.scheme isEqualToString:@"wk"]) {
+    decisionHandler(WKNavigationActionPolicyAllow);
+    return;
+  }
+  
+  if ([url.host isEqualToString:@"subject"]) {
+    _linkSubjectID = [[url.path substringFromIndex:1] intValue];
+    [self.owner performSegueWithIdentifier:kWKSubjectDetailsViewSegueIdentifier sender:self];
+  }
+  decisionHandler(WKNavigationActionPolicyCancel);
+}
+
+- (void)prepareSegue:(UIStoryboardSegue *)segue {
+  if (![segue.identifier isEqualToString:kWKSubjectDetailsViewSegueIdentifier]) {
+    return;
+  }
+  SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
+  vc.dataLoader = _dataLoader;
+  vc.subject = [_dataLoader loadSubject:_linkSubjectID];
 }
 
 @end

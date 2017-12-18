@@ -126,3 +126,13 @@ message StudyMaterials {
   optional string reading_note = 4;
   repeated string meaning_synonyms = 5;
 }
+
+message User {
+  optional string username = 1;
+  optional int32 level = 2;
+  optional int32 max_level_granted_by_subscription = 3;
+  optional string profile_url = 4;
+  optional int32 started_at = 5;
+  optional bool subscribed = 6;
+}
+

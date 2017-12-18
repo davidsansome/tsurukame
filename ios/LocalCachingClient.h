@@ -6,8 +6,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^StudyMaterialHandler)(WKStudyMaterials * _Nullable);
-
 extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 
@@ -29,7 +27,9 @@ extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 - (void)update;
 
 - (void)getAllAssignments:(AssignmentHandler)handler;
-- (void)getStudyMaterialForID:(int)subjectID handler:(StudyMaterialHandler)handler;
+- (WKStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID;
+- (WKUser * _Nullable)getUserInfo;
+
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
              handler:(ProgressHandler)handler;
 

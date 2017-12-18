@@ -36,6 +36,9 @@ typedef void (^StudyMaterialsHandler)(NSError * _Nullable error,
 - (void)getStudyMaterialsModifiedAfter:(NSString *)date
                                handler:(StudyMaterialsHandler)handler;
 
+typedef void (^UserInfoHandler)(NSError * _Nullable error, WKUser * _Nullable user);
+- (void)getUserInfo:(UserInfoHandler)handler;
+
 @end
 
 NS_ASSUME_NONNULL_END
