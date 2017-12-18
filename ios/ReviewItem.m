@@ -7,17 +7,14 @@
 //
 
 #import "ReviewItem.h"
+#import "proto/Wanikani+Convenience.h"
 
 @implementation ReviewItem
 
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<WKAssignment *> *)assignments {
   NSMutableArray *ret = [NSMutableArray array];
   for (WKAssignment *assignment in assignments) {
-    if (!assignment.hasAvailableAt || !assignment.hasStartedAt) {
-      continue;
-    }
-    NSDate *readyForReview = [NSDate dateWithTimeIntervalSince1970:assignment.availableAt];
-    if ([readyForReview timeIntervalSinceNow] < 0) {
+    if (assignment.isReadyForReview) {
       [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
     }
   }

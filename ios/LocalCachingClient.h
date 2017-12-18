@@ -11,9 +11,16 @@ typedef void (^StudyMaterialHandler)(WKStudyMaterials * _Nullable);
 extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 
+@protocol LocalCachingClientDelegate
+
+- (void)localCachingClientDidReportError:(NSError *)error;
+
+@end
+
 @interface LocalCachingClient : NSObject
 
 @property(nonatomic, getter=isBusy, readonly) bool busy;
+@property(nonatomic) id<LocalCachingClientDelegate> delegate;
 
 - (instancetype)initWithClient:(Client *)client
                   reachability:(Reachability *)reachability NS_DESIGNATED_INITIALIZER;

@@ -148,6 +148,8 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="49W-hQ-Zo2"/>
                     <connections>
+                        <outlet property="lessonsCell" destination="cHi-TB-m7d" id="I2l-ag-Z07"/>
+                        <outlet property="reviewsCell" destination="GQA-UB-k55" id="BDV-S7-dFy"/>
                         <outlet property="syncOfflineImage" destination="ayt-6N-Vdn" id="HTS-cY-dKv"/>
                         <outlet property="syncSpinner" destination="O6t-Kx-ZYn" id="CYz-9y-uUA"/>
                         <outlet property="syncSubtitle" destination="wqr-A7-sT7" id="6Ng-NZ-xeh"/>

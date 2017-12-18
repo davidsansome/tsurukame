@@ -160,3 +160,15 @@ static NSString *CommaSeparatedMeanings(NSArray<WKMeaning *>* meanings) {
 }
 
 @end
+
+@implementation WKAssignment (Convenience)
+
+- (bool)isReadyForReview {
+  if (!self.hasAvailableAt || !self.hasStartedAt) {
+    return false;
+  }
+  NSDate *readyForReview = [NSDate dateWithTimeIntervalSince1970:self.availableAt];
+  return [readyForReview timeIntervalSinceNow] < 0;
+}
+
+@end

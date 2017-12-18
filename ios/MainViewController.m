@@ -1,11 +1,14 @@
 #import "MainViewController.h"
 #import "ReviewViewController.h"
+#import "proto/Wanikani+Convenience.h"
 
 @interface MainViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *syncTitle;
 @property (weak, nonatomic) IBOutlet UILabel *syncSubtitle;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *syncSpinner;
 @property (weak, nonatomic) IBOutlet UIImageView *syncOfflineImage;
+@property (weak, nonatomic) IBOutlet UITableViewCell *lessonsCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *reviewsCell;
 
 @end
 
@@ -47,6 +50,32 @@
 
 - (void)clientBusyChanged:(NSNotification *)notification {
   [self updateSyncState];
+  
+  // An update just finished - update the lesson and review counts.
+  if (!_localCachingClient.isBusy) {
+    __weak MainViewController *weakSelf = self;
+    [_localCachingClient getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
+      if (error) {
+        [weakSelf updateLessonCount:-1 reviewCount:-1];
+        return;
+      }
+      int reviews = 0;
+      for (WKAssignment *assignment in assignments) {
+        if (assignment.isReadyForReview) {
+          reviews ++;
+        }
+      }
+      [weakSelf updateLessonCount:0 reviewCount:reviews];
+    }];
+  }
+}
+
+- (void)updateLessonCount:(int)lessonCount reviewCount:(int)reviewCount {
+  __weak MainViewController *weakSelf = self;
+  dispatch_async(dispatch_get_main_queue(), ^{
+    weakSelf.lessonsCell.detailTextLabel.text = (lessonCount < 0) ? @"-" : [@(lessonCount) stringValue];
+    weakSelf.reviewsCell.detailTextLabel.text = (reviewCount < 0) ? @"-" : [@(reviewCount) stringValue];
+  });
 }
 
 - (void)updateSyncState {
