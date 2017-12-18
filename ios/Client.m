@@ -17,7 +17,7 @@ static NSError *MakeError(int code, NSString *msg) {
 static const NSTimeInterval kProgressTokenValidity = 2 * 60 * 60;  // 2 hours.
 static NSRegularExpression *kProgressTokenRE;
 
-typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nullable error);
+typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable error);
 
 @implementation Client {
   NSString *_apiToken;
@@ -65,6 +65,10 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
 
 #pragma mark - Query utilities
 
+- (NSString *)currentISO8601Time {
+  return [_dateFormatter stringFromDate:[NSDate date]];
+}
+
 - (void)startPagedQueryFor:(NSURL *)url
                    handler:(PartialResponseHandler)handler {
   NSURLRequest *req = [self authorizeAPIRequest:url];
@@ -79,10 +83,6 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
                     handler:handler];
   }];
   [task resume];
-}
-
-- (NSString *)currentISO8601Time {
-  return [_dateFormatter stringFromDate:[NSDate date]];
 }
 
 - (void)parseJsonResponse:(NSData *)data
@@ -105,6 +105,10 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
   handler(dict[@"data"], nil);
   
   // Get the next page if we have one.
+  if (!dict[@"pages"][@"next_url"]) {
+    // This is a single-page query, so don't call the handler again.
+    return;
+  }
   if (dict[@"pages"][@"next_url"] != [NSNull null]) {
     NSString *nextURLString = dict[@"pages"][@"next_url"];
     NSLog(@"Request: %@", nextURLString);
@@ -308,6 +312,33 @@ typedef void(^PartialResponseHandler)(NSArray * _Nullable data, NSError * _Nulla
       }
       [ret addObject:studyMaterials];
     }
+  }];
+}
+
+#pragma mark - Study Materials
+
+- (void)getUserInfo:(UserInfoHandler)handler {
+  NSURLComponents *url =
+  [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/user", kURLBase]];
+  
+  [self startPagedQueryFor:url.URL handler:^(NSDictionary *data, NSError *error) {
+    if (error) {
+      handler(error, nil);
+      return;
+    }
+    
+    WKUser *ret = [[WKUser alloc] init];
+    ret.username = data[@"username"];
+    ret.level = [data[@"level"] intValue];
+    ret.maxLevelGrantedBySubscription = [data[@"max_level_granted_by_subscription"] intValue];
+    ret.profileURL = data[@"profile_url"];
+    ret.subscribed = [data[@"subscribed"] boolValue];
+    
+    if (data[@"started_at"] != [NSNull null]) {
+      ret.startedAt = [[_dateFormatter dateFromString:data[@"started_at"]] timeIntervalSince1970];
+    }
+    
+    handler(nil, ret);
   }];
 }
 

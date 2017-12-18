@@ -1,13 +1,14 @@
 #import "AnswerChecker.h"
-#import "LanguageSpecificTextField.h"
+#import "ReviewSummaryViewController.h"
 #import "ReviewViewController.h"
-#import "SubjectDetailsRenderer.h"
+#import "SubjectDetailsView.h"
+#import "SubjectDetailsViewController.h"
 #import "WKKanaInput.h"
 #import "proto/Wanikani+Convenience.h"
 
 #import <WebKit/WebKit.h>
 
-static const int kActiveQueueSize = 10;
+static const int kActiveQueueSize = 5;
 
 static NSArray<id> *kRadicalGradient;
 static NSArray<id> *kKanjiGradient;
@@ -25,17 +26,17 @@ static void AddShadowToView(UIView *view) {
   view.clipsToBounds = NO;
 }
 
-@interface ReviewViewController () <UITextFieldDelegate, WKNavigationDelegate>
+@interface ReviewViewController () <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIView *questionBackground;
 @property (weak, nonatomic) IBOutlet UIView *promptBackground;
 @property (weak, nonatomic) IBOutlet UILabel *questionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *promptLabel;
-@property (weak, nonatomic) IBOutlet LanguageSpecificTextField *answerField;
+@property (weak, nonatomic) IBOutlet UITextField *answerField;
 @property (weak, nonatomic) IBOutlet UIButton *submitButton;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
-@property (weak, nonatomic) IBOutlet WKWebView *subjectDetailsView;
+@property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
 
 @property (weak, nonatomic) IBOutlet UILabel *successRateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *doneLabel;
@@ -47,18 +48,17 @@ static void AddShadowToView(UIView *view) {
 @end
 
 @implementation ReviewViewController {
-  WKSubjectDetailsRenderer *_subjectDetailsRenderer;
   WKKanaInput *_kanaInput;
 
   NSMutableArray<ReviewItem *> *_activeQueue;
   NSMutableArray<ReviewItem *> *_reviewQueue;
+  NSMutableArray<ReviewItem *> *_completedReviews;
   bool _wrapUp;
 
   int _activeTaskIndex;  // An index into activeQueue;
   WKTaskType _activeTaskType;
   ReviewItem *_activeTask;
   WKSubject *_activeSubject;
-  WKStudyMaterials *_activeStudyMaterials;
 
   int _reviewsCompleted;
   int _tasksAnsweredCorrectly;
@@ -94,15 +94,11 @@ static void AddShadowToView(UIView *view) {
   return self;
 }
 
-- (void)setDataLoader:(DataLoader *)dataLoader {
-  _dataLoader = dataLoader;
-  _subjectDetailsRenderer = [[WKSubjectDetailsRenderer alloc] initWithDataLoader:_dataLoader];
-}
-
 - (void)startReviewWithItems:(NSArray<ReviewItem *> *)items {
   NSLog(@"Starting review with %lu items", (unsigned long)items.count);
   _reviewQueue = [NSMutableArray arrayWithArray:items];
   _activeQueue = [NSMutableArray array];
+  _completedReviews = [NSMutableArray array];
   
   [self refillActiveQueue];
 }
@@ -121,7 +117,8 @@ static void AddShadowToView(UIView *view) {
   _promptGradient = [CAGradientLayer layer];
   [_promptBackground.layer addSublayer:_promptGradient];
   
-  _subjectDetailsView.navigationDelegate = self;
+  _subjectDetailsView.dataLoader = _dataLoader;
+  _subjectDetailsView.owner = self;
   
   _answerField.delegate = _kanaInput;
 }
@@ -181,10 +178,22 @@ static void AddShadowToView(UIView *view) {
   [self presentViewController:c animated:YES completion:nil];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+  if ([segue.identifier isEqualToString:@"reviewSummary"]) {
+    ReviewSummaryViewController *vc = (ReviewSummaryViewController *)segue.destinationViewController;
+    vc.dataLoader = _dataLoader;
+    vc.localCachingClient = _localCachingClient;
+    vc.items = _completedReviews;
+  } else if ([segue.identifier isEqualToString:kWKSubjectDetailsViewSegueIdentifier]) {
+    [_subjectDetailsView prepareSegue:segue];
+  }
+}
+
 #pragma mark - Setup
 
 - (void)refillActiveQueue {
   if (_wrapUp) {
+    [self updateWrapUpButton];
     return;
   }
   while (_activeQueue.count < kActiveQueueSize &&
@@ -229,21 +238,16 @@ static void AddShadowToView(UIView *view) {
   // Hide the answer from last time.
   _answerField.text = nil;
   _answerField.enabled = YES;
-  _subjectDetailsView.hidden = YES;
+  //_subjectDetailsView.hidden = YES;
   
   // Choose a random task from the active queue.
   if (_activeQueue.count == 0) {
+    [self performSegueWithIdentifier:@"reviewSummary" sender:self];
     return;
   }
   _activeTaskIndex = arc4random_uniform((uint32_t)_activeQueue.count);
   _activeTask = _activeQueue[_activeTaskIndex];
   _activeSubject = [_dataLoader loadSubject:_activeTask.assignment.subjectId];
-  _activeStudyMaterials = nil;
-  
-  [_localCachingClient getStudyMaterialForID:_activeTask.assignment.subjectId
-                                     handler:^(WKStudyMaterials * _Nullable studyMaterials) {
-    _activeStudyMaterials = studyMaterials;
-  }];
   
   // Choose whether to ask the meaning or the reading.
   if (_activeTask.answeredMeaning) {
@@ -313,8 +317,10 @@ static void AddShadowToView(UIView *view) {
 #pragma mark - Answering
 
 - (void)submit {
+  WKStudyMaterials *studyMaterials =
+      [_localCachingClient getStudyMaterialForID:_activeTask.assignment.subjectId];
   WKAnswerCheckerResult result =
-      CheckAnswer(_answerField.text, _activeSubject, _activeStudyMaterials, _activeTaskType);
+      CheckAnswer(_answerField.text, _activeSubject, studyMaterials, _activeTaskType);
   switch (result) {
     case kWKAnswerPrecise:
     case kWKAnswerImprecise:
@@ -372,6 +378,7 @@ static void AddShadowToView(UIView *view) {
   if (_activeTask.answeredMeaning && _activeTask.answeredReading) {
     NSLog(@"Done both meaning and reading for this task!");
     _reviewsCompleted ++;
+    [_completedReviews addObject:_activeTask];
     [_activeQueue removeObjectAtIndex:_activeTaskIndex];
     [self refillActiveQueue];
   }
@@ -383,8 +390,7 @@ static void AddShadowToView(UIView *view) {
   }
   
   // Otherwise show the correct answer.
-  NSString *subjectDetailsHTML = [_subjectDetailsRenderer renderSubjectDetails:_activeSubject];
-  [_subjectDetailsView loadHTMLString:subjectDetailsHTML baseURL:nil];
+  _subjectDetailsView.subject = _activeSubject;
   _subjectDetailsView.hidden = NO;
   _answerField.enabled = NO;
 }
@@ -400,23 +406,6 @@ static void AddShadowToView(UIView *view) {
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
   [self submit];
   return YES;
-}
-
-- (IBAction)backgroundTouched:(id)sender {
-  [self.view endEditing:NO];
-}
-
-#pragma mark - WKNavigationDelegate
-
-- (void)webView:(WKWebView *)webView
-decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
-decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-  if ([navigationAction.request.URL.scheme isEqualToString:@"wk"]) {
-    // TODO.
-    decisionHandler(WKNavigationActionPolicyCancel);
-  } else {
-    decisionHandler(WKNavigationActionPolicyAllow);
-  }
 }
 
 @end
