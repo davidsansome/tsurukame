@@ -41,6 +41,8 @@
                           action:@selector(didPullToRefresh)
                 forControlEvents:UIControlEventValueChanged];
   
+  [self updateLessonAndReviewCounts];
+  
   [super viewWillAppear:animated];
 }
 
@@ -53,21 +55,25 @@
   
   // An update just finished - update the lesson and review counts.
   if (!_localCachingClient.isBusy) {
-    __weak MainViewController *weakSelf = self;
-    [_localCachingClient getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
-      if (error) {
-        [weakSelf updateLessonCount:-1 reviewCount:-1];
-        return;
-      }
-      int reviews = 0;
-      for (WKAssignment *assignment in assignments) {
-        if (assignment.isReadyForReview) {
-          reviews ++;
-        }
-      }
-      [weakSelf updateLessonCount:0 reviewCount:reviews];
-    }];
+    [self updateLessonAndReviewCounts];
   }
+}
+
+- (void)updateLessonAndReviewCounts {
+  __weak MainViewController *weakSelf = self;
+  [_localCachingClient getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
+    if (error) {
+      [weakSelf updateLessonCount:-1 reviewCount:-1];
+      return;
+    }
+    int reviews = 0;
+    for (WKAssignment *assignment in assignments) {
+      if (assignment.isReadyForReview) {
+        reviews ++;
+      }
+    }
+    [weakSelf updateLessonCount:0 reviewCount:reviews];
+  }];
 }
 
 - (void)updateLessonCount:(int)lessonCount reviewCount:(int)reviewCount {
