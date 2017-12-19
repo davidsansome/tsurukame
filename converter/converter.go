@@ -11,38 +11,32 @@ import (
 )
 
 func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
-	var ret pb.Subject
+	ret := pb.Subject{
+		Id:          proto.Int32(int32(o.ID)),
+		Level:       proto.Int32(int32(o.Data.Level)),
+		Slug:        proto.String(o.Data.Slug),
+		DocumentUrl: proto.String(o.Data.DocumentURL),
+		Japanese:    proto.String(o.Data.Character),
+		Meanings:    convertMeanings(o.Data.Meanings),
+	}
 
-	ret.Id = proto.Int32(int32(o.ID))
-	ret.Level = proto.Int32(int32(o.Data.Level))
-	ret.Slug = proto.String(o.Data.Slug)
-	ret.DocumentUrl = proto.String(o.Data.DocumentURL)
+	if o.Object == "kanji" || o.Object == "vocabulary" {
+		ret.Readings = convertReadings(o.Data.Readings)
+		ret.ComponentSubjectIds = convertComponentSubjectIDs(o.Data.ComponentSubjectIDs)
+	}
 
 	switch o.Object {
 	case "radical":
-		ret.Radical = &pb.Radical{
-			Japanese: proto.String(o.Data.Character),
-			Meanings: convertMeanings(o.Data.Meanings),
-		}
+		ret.Radical = &pb.Radical{}
 		if len(o.Data.CharacterImages) >= 1 {
 			ret.Radical.CharacterImage = proto.String(o.Data.CharacterImages[0].URL)
 		}
 
 	case "kanji":
-		ret.Kanji = &pb.Kanji{
-			Japanese:            proto.String(o.Data.Character),
-			Readings:            convertReadings(o.Data.Readings),
-			Meanings:            convertMeanings(o.Data.Meanings),
-			ComponentSubjectIds: convertComponentSubjectIDs(o.Data.ComponentSubjectIDs),
-		}
+		ret.Kanji = &pb.Kanji{}
 
 	case "vocabulary":
-		ret.Vocabulary = &pb.Vocabulary{
-			Japanese:            proto.String(o.Data.Characters),
-			Readings:            convertReadings(o.Data.Readings),
-			Meanings:            convertMeanings(o.Data.Meanings),
-			ComponentSubjectIds: convertComponentSubjectIDs(o.Data.ComponentSubjectIDs),
-		}
+		ret.Vocabulary = &pb.Vocabulary{}
 		for _, p := range o.Data.PartsOfSpeech {
 			pos, ok := convertPartOfSpeech(p)
 			if !ok {

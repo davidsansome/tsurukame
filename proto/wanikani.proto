@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-option objc_class_prefix = "WK";
+//option objc_class_prefix = "WK";
 
 package proto;
 
@@ -22,41 +22,26 @@ message Reading {
 }
 
 message Radical {
-  optional string japanese = 1;
-  repeated Meaning meanings = 2;
-  optional string character_image = 3;
-
-  optional string mnemonic = 4;
+  optional string character_image = 1;
+  optional string mnemonic = 2;
 }
 
 message Kanji {
-  optional string japanese = 1;
-  repeated Reading readings = 2;
-  repeated Meaning meanings = 3;
-
-  optional string meaning_mnemonic = 4;
-  optional string meaning_hint = 5;
-  optional string reading_mnemonic = 6;
-  optional string reading_hint = 7;
-
-  repeated int32 component_subject_ids = 8;
+  optional string meaning_mnemonic = 1;
+  optional string meaning_hint = 2;
+  optional string reading_mnemonic = 3;
+  optional string reading_hint = 4;
 }
 
 message Vocabulary {
-  optional string japanese = 1;
-  repeated Reading readings = 2;
-  repeated Meaning meanings = 3;
-
-  optional string meaning_explanation = 4;
-  optional string reading_explanation = 5;
+  optional string meaning_explanation = 1;
+  optional string reading_explanation = 2;
 
   message Sentence {
     optional string japanese = 1;
     optional string english = 2;
   }
-  repeated Sentence sentences = 6;
-
-  repeated int32 component_subject_ids = 7;
+  repeated Sentence sentences = 3;
 
   enum PartOfSpeech {
     NOUN = 1;
@@ -80,9 +65,9 @@ message Vocabulary {
     PRONOUN = 19;
     CONJUNCTION = 20;
   }
-  repeated PartOfSpeech parts_of_speech = 8;
+  repeated PartOfSpeech parts_of_speech = 4;
 
-  optional string audio = 9;
+  optional string audio = 5;
 }
 
 message Subject {
@@ -91,15 +76,20 @@ message Subject {
   optional string slug = 3;
   optional string document_url = 4;
 
+  optional string japanese = 5;
+  repeated Reading readings = 6;  // Does not apply to radicals.
+  repeated Meaning meanings = 7;
+  repeated int32 component_subject_ids = 8;  // Does not apply to radicals.
+
+  optional Radical radical = 9;
+  optional Kanji kanji = 10;
+  optional Vocabulary vocabulary = 11;
+
   enum Type {
     RADICAL = 1;
     KANJI = 2;
     VOCABULARY = 3;
   }
-
-  optional Radical radical = 5;
-  optional Kanji kanji = 6;
-  optional Vocabulary vocabulary = 7;
 }
 
 message Assignment {
