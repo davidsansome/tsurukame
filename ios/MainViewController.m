@@ -30,8 +30,8 @@
   return self;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-  [self updateSyncState];
+- (void)viewDidLoad {
+  [super viewDidLoad];
   self.refreshControl = [[UIRefreshControl alloc] init];
   self.refreshControl.tintColor = [UIColor darkGrayColor];
   self.refreshControl.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
@@ -40,8 +40,12 @@
   [self.refreshControl addTarget:self
                           action:@selector(didPullToRefresh)
                 forControlEvents:UIControlEventValueChanged];
-  
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+  [self updateSyncState];
   [self updateLessonAndReviewCounts];
+  [_localCachingClient update];
   
   [super viewWillAppear:animated];
 }

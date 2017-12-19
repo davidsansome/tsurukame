@@ -31,7 +31,7 @@ extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 - (WKUser * _Nullable)getUserInfo;
 
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
-             handler:(ProgressHandler)handler;
+             handler:(ProgressHandler _Nullable)handler;
 
 @end
 
