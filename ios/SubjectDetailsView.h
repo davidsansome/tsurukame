@@ -6,15 +6,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *kWKSubjectDetailsViewSegueIdentifier;
+@protocol WKSubjectDetailsLinkHandler
+- (void)openSubject:(WKSubject *)subject;
+@end
 
 @interface WKSubjectDetailsView : WKWebView <WKNavigationDelegate>
 
 @property (nonatomic) DataLoader *dataLoader;
 @property (nonatomic) WKSubject *subject;
-@property (nonatomic, weak) UIViewController *owner;
+@property (nonatomic, weak) id<WKSubjectDetailsLinkHandler> linkHandler;
 
-- (void)prepareSegue:(UIStoryboardSegue *)segue;
+@property (nonatomic, readonly) WKSubject *lastSubjectClicked;
 
 @end
 

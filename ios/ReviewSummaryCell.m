@@ -10,7 +10,8 @@
 
 @implementation ReviewSummaryCell
 
-- (void)setItem:(ReviewItem *)item subject:(WKSubject *)subject {
+- (void)setSubject:(WKSubject *)subject {
+  _subject = subject;
   self.subjectLabel.text = subject.japanese;
   if (subject.hasRadical) {
     [self.readingLabel setHidden:YES];
@@ -24,7 +25,10 @@
     self.readingLabel.text = subject.vocabulary.commaSeparatedReadings;
     self.meaningLabel.text = subject.vocabulary.commaSeparatedMeanings;
   }
-  
+}
+
+- (void)setItem:(ReviewItem *)item {
+  _item = item;
   self.readingLabel.textColor = item.answer.readingWrong ? [UIColor redColor] : [UIColor blackColor];
   self.meaningLabel.textColor = item.answer.meaningWrong ? [UIColor redColor] : [UIColor blackColor];
 }

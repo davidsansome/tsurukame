@@ -1,9 +1,10 @@
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
+#import "proto/Wanikani+Convenience.h"
 
 #import <WebKit/WebKit.h>
 
-@interface SubjectDetailsViewController ()
+@interface SubjectDetailsViewController () <WKSubjectDetailsLinkHandler>
 
 @property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
 
@@ -14,15 +15,23 @@
 - (void)viewDidLoad {
   _subjectDetailsView.dataLoader = _dataLoader;
   _subjectDetailsView.subject = _subject;
-  _subjectDetailsView.owner = self;
-  
-  self.navigationController.navigationBarHidden = NO;
+  _subjectDetailsView.linkHandler = self;
+  self.navigationItem.title = _subject.japanese;
   
   [super viewDidLoad];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-  [_subjectDetailsView prepareSegue:segue];
+- (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+  self.navigationController.navigationBarHidden = NO;
+}
+
+- (void)openSubject:(WKSubject *)subject {
+  SubjectDetailsViewController *vc =
+      [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
+  vc.dataLoader = _dataLoader;
+  vc.subject = subject;
+  [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

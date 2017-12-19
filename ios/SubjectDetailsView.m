@@ -89,14 +89,10 @@ static NSString *kHeader =
      "}"
      "</style>";
 
-NSString *kWKSubjectDetailsViewSegueIdentifier = @"kWKSubjectDetailsViewSegueIdentifier";
-
 static NSRegularExpression *kHighlightRE;
 static NSRegularExpression *kJaSpanRE;
 
-@implementation WKSubjectDetailsView {
-  int _linkSubjectID;
-}
+@implementation WKSubjectDetailsView
 
 - (nullable instancetype)initWithCoder:(NSCoder *)coder {
   static dispatch_once_t onceToken;
@@ -209,19 +205,11 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
   }
   
   if ([url.host isEqualToString:@"subject"]) {
-    _linkSubjectID = [[url.path substringFromIndex:1] intValue];
-    [self.owner performSegueWithIdentifier:kWKSubjectDetailsViewSegueIdentifier sender:self];
+    int subjectID = [[url.path substringFromIndex:1] intValue];
+    _lastSubjectClicked = [_dataLoader loadSubject:subjectID];
+    [self.linkHandler openSubject:_lastSubjectClicked];
   }
   decisionHandler(WKNavigationActionPolicyCancel);
-}
-
-- (void)prepareSegue:(UIStoryboardSegue *)segue {
-  if (![segue.identifier isEqualToString:kWKSubjectDetailsViewSegueIdentifier]) {
-    return;
-  }
-  SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
-  vc.dataLoader = _dataLoader;
-  vc.subject = [_dataLoader loadSubject:_linkSubjectID];
 }
 
 @end

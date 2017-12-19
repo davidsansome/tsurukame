@@ -4,6 +4,7 @@
 
 @interface ReviewSummaryCell : UITableViewCell
 
-- (void)setItem:(ReviewItem *)item subject:(WKSubject *)subject;
+@property(nonatomic) ReviewItem *item;
+@property(nonatomic) WKSubject *subject;
 
 @end
