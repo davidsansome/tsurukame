@@ -15,15 +15,11 @@
   self.subjectLabel.text = subject.japanese;
   if (subject.hasRadical) {
     [self.readingLabel setHidden:YES];
-    self.meaningLabel.text = subject.radical.commaSeparatedMeanings;
-  } else if (subject.hasKanji) {
+    self.meaningLabel.text = subject.commaSeparatedMeanings;
+  } else if (subject.hasKanji || subject.hasVocabulary) {
     [self.readingLabel setHidden:NO];
-    self.readingLabel.text = subject.kanji.commaSeparatedReadings;
-    self.meaningLabel.text = subject.kanji.commaSeparatedMeanings;
-  } else if (subject.hasVocabulary) {
-    [self.readingLabel setHidden:NO];
-    self.readingLabel.text = subject.vocabulary.commaSeparatedReadings;
-    self.meaningLabel.text = subject.vocabulary.commaSeparatedMeanings;
+    self.readingLabel.text = subject.commaSeparatedReadings;
+    self.meaningLabel.text = subject.commaSeparatedMeanings;
   }
 }
 

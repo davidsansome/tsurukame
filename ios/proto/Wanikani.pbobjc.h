@@ -159,21 +159,11 @@ typedef GPB_ENUM(WKReading_FieldNumber) {
 #pragma mark - WKRadical
 
 typedef GPB_ENUM(WKRadical_FieldNumber) {
-  WKRadical_FieldNumber_Japanese = 1,
-  WKRadical_FieldNumber_MeaningsArray = 2,
-  WKRadical_FieldNumber_CharacterImage = 3,
-  WKRadical_FieldNumber_Mnemonic = 4,
+  WKRadical_FieldNumber_CharacterImage = 1,
+  WKRadical_FieldNumber_Mnemonic = 2,
 };
 
 @interface WKRadical : GPBMessage
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *japanese;
-/** Test to see if @c japanese has been set. */
-@property(nonatomic, readwrite) BOOL hasJapanese;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<WKMeaning*> *meaningsArray;
-/** The number of items in @c meaningsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger meaningsArray_Count;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *characterImage;
 /** Test to see if @c characterImage has been set. */
@@ -188,29 +178,13 @@ typedef GPB_ENUM(WKRadical_FieldNumber) {
 #pragma mark - WKKanji
 
 typedef GPB_ENUM(WKKanji_FieldNumber) {
-  WKKanji_FieldNumber_Japanese = 1,
-  WKKanji_FieldNumber_ReadingsArray = 2,
-  WKKanji_FieldNumber_MeaningsArray = 3,
-  WKKanji_FieldNumber_MeaningMnemonic = 4,
-  WKKanji_FieldNumber_MeaningHint = 5,
-  WKKanji_FieldNumber_ReadingMnemonic = 6,
-  WKKanji_FieldNumber_ReadingHint = 7,
-  WKKanji_FieldNumber_ComponentSubjectIdsArray = 8,
+  WKKanji_FieldNumber_MeaningMnemonic = 1,
+  WKKanji_FieldNumber_MeaningHint = 2,
+  WKKanji_FieldNumber_ReadingMnemonic = 3,
+  WKKanji_FieldNumber_ReadingHint = 4,
 };
 
 @interface WKKanji : GPBMessage
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *japanese;
-/** Test to see if @c japanese has been set. */
-@property(nonatomic, readwrite) BOOL hasJapanese;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<WKReading*> *readingsArray;
-/** The number of items in @c readingsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger readingsArray_Count;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<WKMeaning*> *meaningsArray;
-/** The number of items in @c meaningsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger meaningsArray_Count;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *meaningMnemonic;
 /** Test to see if @c meaningMnemonic has been set. */
@@ -228,39 +202,19 @@ typedef GPB_ENUM(WKKanji_FieldNumber) {
 /** Test to see if @c readingHint has been set. */
 @property(nonatomic, readwrite) BOOL hasReadingHint;
 
-@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *componentSubjectIdsArray;
-/** The number of items in @c componentSubjectIdsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger componentSubjectIdsArray_Count;
-
 @end
 
 #pragma mark - WKVocabulary
 
 typedef GPB_ENUM(WKVocabulary_FieldNumber) {
-  WKVocabulary_FieldNumber_Japanese = 1,
-  WKVocabulary_FieldNumber_ReadingsArray = 2,
-  WKVocabulary_FieldNumber_MeaningsArray = 3,
-  WKVocabulary_FieldNumber_MeaningExplanation = 4,
-  WKVocabulary_FieldNumber_ReadingExplanation = 5,
-  WKVocabulary_FieldNumber_SentencesArray = 6,
-  WKVocabulary_FieldNumber_ComponentSubjectIdsArray = 7,
-  WKVocabulary_FieldNumber_PartsOfSpeechArray = 8,
-  WKVocabulary_FieldNumber_Audio = 9,
+  WKVocabulary_FieldNumber_MeaningExplanation = 1,
+  WKVocabulary_FieldNumber_ReadingExplanation = 2,
+  WKVocabulary_FieldNumber_SentencesArray = 3,
+  WKVocabulary_FieldNumber_PartsOfSpeechArray = 4,
+  WKVocabulary_FieldNumber_Audio = 5,
 };
 
 @interface WKVocabulary : GPBMessage
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *japanese;
-/** Test to see if @c japanese has been set. */
-@property(nonatomic, readwrite) BOOL hasJapanese;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<WKReading*> *readingsArray;
-/** The number of items in @c readingsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger readingsArray_Count;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<WKMeaning*> *meaningsArray;
-/** The number of items in @c meaningsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger meaningsArray_Count;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *meaningExplanation;
 /** Test to see if @c meaningExplanation has been set. */
@@ -273,10 +227,6 @@ typedef GPB_ENUM(WKVocabulary_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<WKVocabulary_Sentence*> *sentencesArray;
 /** The number of items in @c sentencesArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger sentencesArray_Count;
-
-@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *componentSubjectIdsArray;
-/** The number of items in @c componentSubjectIdsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger componentSubjectIdsArray_Count;
 
 // |partsOfSpeechArray| contains |WKVocabulary_PartOfSpeech|
 @property(nonatomic, readwrite, strong, null_resettable) GPBEnumArray *partsOfSpeechArray;
@@ -315,9 +265,13 @@ typedef GPB_ENUM(WKSubject_FieldNumber) {
   WKSubject_FieldNumber_Level = 2,
   WKSubject_FieldNumber_Slug = 3,
   WKSubject_FieldNumber_DocumentURL = 4,
-  WKSubject_FieldNumber_Radical = 5,
-  WKSubject_FieldNumber_Kanji = 6,
-  WKSubject_FieldNumber_Vocabulary = 7,
+  WKSubject_FieldNumber_Japanese = 5,
+  WKSubject_FieldNumber_ReadingsArray = 6,
+  WKSubject_FieldNumber_MeaningsArray = 7,
+  WKSubject_FieldNumber_ComponentSubjectIdsArray = 8,
+  WKSubject_FieldNumber_Radical = 9,
+  WKSubject_FieldNumber_Kanji = 10,
+  WKSubject_FieldNumber_Vocabulary = 11,
 };
 
 @interface WKSubject : GPBMessage
@@ -335,6 +289,24 @@ typedef GPB_ENUM(WKSubject_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *documentURL;
 /** Test to see if @c documentURL has been set. */
 @property(nonatomic, readwrite) BOOL hasDocumentURL;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *japanese;
+/** Test to see if @c japanese has been set. */
+@property(nonatomic, readwrite) BOOL hasJapanese;
+
+/** Does not apply to radicals. */
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<WKReading*> *readingsArray;
+/** The number of items in @c readingsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger readingsArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<WKMeaning*> *meaningsArray;
+/** The number of items in @c meaningsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger meaningsArray_Count;
+
+/** Does not apply to radicals. */
+@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *componentSubjectIdsArray;
+/** The number of items in @c componentSubjectIdsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger componentSubjectIdsArray_Count;
 
 @property(nonatomic, readwrite, strong, null_resettable) WKRadical *radical;
 /** Test to see if @c radical has been set. */
