@@ -230,19 +230,22 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
 }
 
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
-             handler:(ProgressHandler)handler {
+             handler:(ProgressHandler _Nullable)handler {
   void (^makeRequest)(void) = ^() {
     // Encode the data to send in the request.
-    NSMutableDictionary<NSString *, NSArray<NSString *> *> *obj = [NSMutableDictionary dictionary];
+    NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
     for (WKProgress *p in progress) {
-      obj[[@(p.id_p) stringValue]] = @[ [@(p.meaningWrong ? 1 : 0) stringValue],
-                                        [@(p.readingWrong ? 1 : 0) stringValue] ];
+      [formParameters addObject:[NSString stringWithFormat:@"%d%%5B%%5D=%d&%d%%5B%%5D=%d",
+                                 p.id_p, p.meaningWrong ? 1 : 0,
+                                 p.id_p, p.readingWrong ? 1 : 0]];
     }
-    NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
+    NSData *data = [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
     
     // Add the CSRF token and the data to the request.
-    NSMutableURLRequest *req = [self authorizeUserRequest:[NSURL URLWithString:@(kReviewSessionURL)]];
+    NSMutableURLRequest *req = [self authorizeUserRequest:[NSURL URLWithString:@(kProgressURL)]];
     [req addValue:_progressToken forHTTPHeaderField:@"X-CSRF-Token"];
+    [req addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [req addValue:[@(data.length) stringValue] forHTTPHeaderField:@"Content-Length"];
     req.HTTPMethod = @"PUT";
     req.HTTPBody = data;
 
@@ -253,7 +256,9 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
                      completionHandler:^(NSData * _Nullable data,
                                          NSURLResponse * _Nullable response,
                                          NSError * _Nullable error) {
-        handler(error);
+        if (handler) {
+          handler(error);
+        }
     }];
     [task resume];
   };

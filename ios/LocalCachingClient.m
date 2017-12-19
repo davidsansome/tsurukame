@@ -47,10 +47,6 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
     _db = [self openDatabase];
     assert(_db);
     _queue = dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0);
-    
-    if (_reachability.isReachable) {
-      [self update];
-    }
   }
   return self;
 }
@@ -164,12 +160,16 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   return ret;
 }
 
-- (void)sendProgress:(NSArray<WKProgress *> *)progress handler:(ProgressHandler)handler {
+- (void)sendProgress:(NSArray<WKProgress *> *)progress handler:(ProgressHandler _Nullable)handler {
   // TODO: store locally.
   [_client sendProgress:progress handler:handler];
 }
 
 - (void)update {
+  if (!_reachability.isReachable) {
+    return;
+  }
+  
   dispatch_async(_queue, ^{
     @synchronized(self) {
       if (self.isBusy) {

@@ -341,18 +341,14 @@ static void AddShadowToView(UIView *view) {
   // Mark the task.
   switch (_activeTaskType) {
     case kWKTaskTypeMeaning:
-      NSLog(@"Meaning %s", correct ? "correct" : "incorrect");
       if (!_activeTask.answer.hasMeaningWrong) {
         _activeTask.answer.meaningWrong = !correct;
-        NSLog(@"That was the first meaning answer");
       }
       _activeTask.answeredMeaning = correct;
       break;
     case kWKTaskTypeReading:
-      NSLog(@"Reading %s", correct ? "correct" : "incorrect");
       if (!_activeTask.answer.hasReadingWrong) {
         _activeTask.answer.readingWrong = !correct;
-        NSLog(@"That was the first reading answer");
       }
       _activeTask.answeredReading = correct;
       break;
@@ -368,7 +364,8 @@ static void AddShadowToView(UIView *view) {
   
   // Remove it from the active queue if that was the last part.
   if (_activeTask.answeredMeaning && _activeTask.answeredReading) {
-    NSLog(@"Done both meaning and reading for this task!");
+    [_localCachingClient sendProgress:@[_activeTask.answer] handler:nil];
+    
     _reviewsCompleted ++;
     [_completedReviews addObject:_activeTask];
     [_activeQueue removeObjectAtIndex:_activeTaskIndex];

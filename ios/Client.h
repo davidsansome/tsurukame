@@ -29,7 +29,7 @@ typedef void (^AssignmentHandler)(NSError * _Nullable error,
 
 typedef void (^ProgressHandler)(NSError * _Nullable error);
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
-             handler:(ProgressHandler)handler;
+             handler:(ProgressHandler _Nullable)handler;
 
 typedef void (^StudyMaterialsHandler)(NSError * _Nullable error,
                                       NSArray<WKStudyMaterials *> * _Nullable studyMaterials);
