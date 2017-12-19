@@ -26,7 +26,7 @@ static void AddShadowToView(UIView *view) {
   view.clipsToBounds = NO;
 }
 
-@interface ReviewViewController () <UITextFieldDelegate>
+@interface ReviewViewController () <UITextFieldDelegate, WKSubjectDetailsLinkHandler>
 
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIView *questionBackground;
@@ -118,7 +118,7 @@ static void AddShadowToView(UIView *view) {
   [_promptBackground.layer addSublayer:_promptGradient];
   
   _subjectDetailsView.dataLoader = _dataLoader;
-  _subjectDetailsView.owner = self;
+  _subjectDetailsView.linkHandler = self;
   
   _answerField.delegate = _kanaInput;
 }
@@ -133,6 +133,7 @@ static void AddShadowToView(UIView *view) {
   [self randomTask];
   [super viewWillAppear:animated];
   [_answerField becomeFirstResponder];
+  self.navigationController.navigationBarHidden = YES;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -184,8 +185,10 @@ static void AddShadowToView(UIView *view) {
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
     vc.items = _completedReviews;
-  } else if ([segue.identifier isEqualToString:kWKSubjectDetailsViewSegueIdentifier]) {
-    [_subjectDetailsView prepareSegue:segue];
+  } else if ([segue.identifier isEqualToString:@"subjectDetails"]) {
+    SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
+    vc.dataLoader = _dataLoader;
+    vc.subject = _subjectDetailsView.lastSubjectClicked;
   }
 }
 
@@ -406,6 +409,12 @@ static void AddShadowToView(UIView *view) {
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
   [self submit];
   return YES;
+}
+
+#pragma mark - WKSubjectDetailsLinkHandler
+
+- (void)openSubject:(WKSubject *)subject {
+  [self performSegueWithIdentifier:@"subjectDetails" sender:self];
 }
 
 @end

@@ -1,5 +1,6 @@
 #import "ReviewSummaryCell.h"
 #import "ReviewSummaryViewController.h"
+#import "SubjectDetailsViewController.h"
 
 @interface ReviewSummaryViewController () <UITableViewDataSource>
 
@@ -15,6 +16,20 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+  self.navigationController.navigationBarHidden = YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+  if ([segue.identifier isEqualToString:@"subjectDetails"]) {
+    ReviewSummaryCell *cell = (ReviewSummaryCell *)sender;
+    SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
+    vc.dataLoader = _dataLoader;
+    vc.subject = cell.subject;
+  }
 }
 
 - (void)setItems:(NSArray<ReviewItem *> *)items {
@@ -93,7 +108,9 @@
       ret = [tableView dequeueReusableCellWithIdentifier:@"reviewCell"];
       ReviewItem *item = _items[indexPath.row];
       WKSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
-      [((ReviewSummaryCell *)ret) setItem:item subject:subject];
+      ReviewSummaryCell *cell = (ReviewSummaryCell *)ret;
+      cell.item = item;
+      cell.subject = subject;
       break;
     }
   }
