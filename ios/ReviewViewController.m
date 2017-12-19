@@ -1,6 +1,7 @@
 #import "AnswerChecker.h"
 #import "ReviewSummaryViewController.h"
 #import "ReviewViewController.h"
+#import "Style.h"
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
 #import "WKKanaInput.h"
@@ -10,9 +11,6 @@
 
 static const int kActiveQueueSize = 5;
 
-static NSArray<id> *kRadicalGradient;
-static NSArray<id> *kKanjiGradient;
-static NSArray<id> *kVocabularyGradient;
 static NSArray<id> *kReadingGradient;
 static NSArray<id> *kMeaningGradient;
 static UIColor *kReadingTextColor;
@@ -73,12 +71,6 @@ static void AddShadowToView(UIView *view) {
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    kRadicalGradient = @[(id)[UIColor colorWithRed:0.000f green:0.667f blue:1.000f alpha:1.0f].CGColor,
-                         (id)[UIColor colorWithRed:0.000f green:0.576f blue:0.867f alpha:1.0f].CGColor];
-    kKanjiGradient = @[(id)[UIColor colorWithRed:1.000f green:0.000f blue:0.667f alpha:1.0f].CGColor,
-                       (id)[UIColor colorWithRed:0.867f green:0.000f blue:0.576f alpha:1.0f].CGColor];
-    kVocabularyGradient = @[(id)[UIColor colorWithRed:0.667f green:0.000f blue:1.000f alpha:1.0f].CGColor,
-                            (id)[UIColor colorWithRed:0.576f green:0.000f blue:0.867f alpha:1.0f].CGColor];
     kReadingGradient = @[(id)[UIColor colorWithRed:0.235f green:0.235f blue:0.235f alpha:1.0f].CGColor,
                          (id)[UIColor colorWithRed:0.102f green:0.102f blue:0.102f alpha:1.0f].CGColor];
     kMeaningGradient = @[(id)[UIColor colorWithRed:0.933f green:0.933f blue:0.933f alpha:1.0f].CGColor,
@@ -121,6 +113,8 @@ static void AddShadowToView(UIView *view) {
   _subjectDetailsView.linkHandler = self;
   
   _answerField.delegate = _kanaInput;
+  
+  [self randomTask];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -130,7 +124,6 @@ static void AddShadowToView(UIView *view) {
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-  [self randomTask];
   [super viewWillAppear:animated];
   [_answerField becomeFirstResponder];
   self.navigationController.navigationBarHidden = YES;
@@ -241,7 +234,7 @@ static void AddShadowToView(UIView *view) {
   // Hide the answer from last time.
   _answerField.text = nil;
   _answerField.enabled = YES;
-  //_subjectDetailsView.hidden = YES;
+  _subjectDetailsView.hidden = YES;
   
   // Choose a random task from the active queue.
   if (_activeQueue.count == 0) {
@@ -264,22 +257,18 @@ static void AddShadowToView(UIView *view) {
   // Fill the question labels.
   NSString *subjectTypePrompt;
   NSString *taskTypePrompt;
-  NSArray *questionGradient;
   NSArray *promptGradient;
   UIColor *promptTextColor;
   
   switch (_activeTask.assignment.subjectType) {
     case WKSubject_Type_Kanji:
       subjectTypePrompt = @"Kanji";
-      questionGradient = kKanjiGradient;
       break;
     case WKSubject_Type_Radical:
       subjectTypePrompt = @"Radical";
-      questionGradient = kRadicalGradient;
       break;
     case WKSubject_Type_Vocabulary:
       subjectTypePrompt = @"Vocabulary";
-      questionGradient = kVocabularyGradient;
       break;
   }
   switch (_activeTaskType) {
@@ -309,7 +298,7 @@ static void AddShadowToView(UIView *view) {
   [UIView animateWithDuration:0.2f animations:^{
     [self.promptLabel setAttributedText:prompt];
     [self.questionLabel setText:_activeSubject.japanese];
-    _questionGradient.colors = questionGradient;
+    _questionGradient.colors = WKGradientForAssignment(_activeTask.assignment);
     _promptGradient.colors = promptGradient;
     _promptLabel.textColor = promptTextColor;
   }];

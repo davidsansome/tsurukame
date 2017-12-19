@@ -1,5 +1,6 @@
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
+#import "UIColor+HexString.h"
 #import "proto/Wanikani+Convenience.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -116,7 +117,6 @@ static NSRegularExpression *kJaSpanRE;
 
 - (NSString *)renderSubjectDetails:(WKSubject *)subject {
   NSMutableString *ret = [NSMutableString stringWithString:kHeader];
-  
   if (subject.hasRadical) {
     [self addTextSectionTo:ret title:@"Meaning" content:subject.commaSeparatedMeanings];
     [self addTextSectionTo:ret title:@"Mnemonic" content:[self highlightText:subject.radical.mnemonic]];
