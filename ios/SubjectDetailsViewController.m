@@ -8,6 +8,7 @@
 @interface SubjectDetailsViewController () <WKSubjectDetailsLinkHandler>
 
 @property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
+@property (weak, nonatomic) IBOutlet UILabel *subjectTitle;
 
 @end
 
@@ -20,7 +21,7 @@
   _subjectDetailsView.dataLoader = _dataLoader;
   _subjectDetailsView.subject = _subject;
   _subjectDetailsView.linkHandler = self;
-  self.navigationItem.title = _subject.japanese;
+  _subjectTitle.text = _subject.japanese;
   
   _gradientLayer = [CAGradientLayer layer];
   _gradientLayer.colors = WKGradientForSubject(_subject);
@@ -29,12 +30,17 @@
 
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
-  _gradientLayer.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.safeAreaInsets.top);
+  _gradientLayer.frame =
+      CGRectMake(0, 0, self.view.bounds.size.width,
+                 _subjectTitle.frame.origin.y + _subjectTitle.frame.size.height);
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-  [super viewDidAppear:animated];
-  self.navigationController.navigationBarHidden = NO;
+- (IBAction)backButtonPressed:(id)sender {
+  [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+  return UIStatusBarStyleLightContent;
 }
 
 - (void)openSubject:(WKSubject *)subject {
