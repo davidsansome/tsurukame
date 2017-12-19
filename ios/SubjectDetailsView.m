@@ -118,22 +118,22 @@ static NSRegularExpression *kJaSpanRE;
   NSMutableString *ret = [NSMutableString stringWithString:kHeader];
   
   if (subject.hasRadical) {
-    [self addTextSectionTo:ret title:@"Meaning" content:subject.radical.commaSeparatedMeanings];
+    [self addTextSectionTo:ret title:@"Meaning" content:subject.commaSeparatedMeanings];
     [self addTextSectionTo:ret title:@"Mnemonic" content:[self highlightText:subject.radical.mnemonic]];
   }
   if (subject.hasKanji) {
-    [self addTextSectionTo:ret title:@"Meaning" content:subject.kanji.commaSeparatedMeanings];
-    [self addTextSectionTo:ret title:@"Reading" content:subject.kanji.commaSeparatedReadings];  // TODO: primary readings only.
-    [self addTextSectionTo:ret title:@"Related Kanji" content:[self renderComponents:subject.kanji.componentSubjectIdsArray]];
+    [self addTextSectionTo:ret title:@"Meaning" content:subject.commaSeparatedMeanings];
+    [self addTextSectionTo:ret title:@"Reading" content:subject.commaSeparatedReadings];  // TODO: primary readings only.
+    [self addTextSectionTo:ret title:@"Related Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
     [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.kanji.meaningMnemonic]];
     [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.kanji.readingMnemonic]];
     // TODO: context
   }
   if (subject.hasVocabulary) {
-    [self addTextSectionTo:ret title:@"Meaning" content:subject.vocabulary.commaSeparatedMeanings];
-    [self addTextSectionTo:ret title:@"Reading" content:subject.vocabulary.commaSeparatedReadings];
+    [self addTextSectionTo:ret title:@"Meaning" content:subject.commaSeparatedMeanings];
+    [self addTextSectionTo:ret title:@"Reading" content:subject.commaSeparatedReadings];
     [self addTextSectionTo:ret title:@"Part of Speech" content:subject.vocabulary.commaSeparatedPartsOfSpeech];
-    [self addTextSectionTo:ret title:@"Related Kanji" content:[self renderComponents:subject.vocabulary.componentSubjectIdsArray]];
+    [self addTextSectionTo:ret title:@"Related Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
     [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.vocabulary.meaningExplanation]];
     [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.vocabulary.readingExplanation]];
     // TODO: context

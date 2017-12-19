@@ -8,37 +8,10 @@
 
 #import "Wanikani+Convenience.h"
 
-static NSString *CommaSeparatedReadings(NSArray<WKReading *>* readings) {
-  NSMutableArray<NSString *>* strings = [NSMutableArray array];
-  for (WKReading *reading in readings) {
-    [strings addObject:reading.reading];
-  }
-  return [strings componentsJoinedByString:@", "];
-}
-
-static NSString *CommaSeparatedMeanings(NSArray<WKMeaning *>* meanings) {
-  NSMutableArray<NSString *>* strings = [NSMutableArray array];
-  for (WKMeaning *meaning in meanings) {
-    [strings addObject:meaning.meaning];
-  }
-  return [strings componentsJoinedByString:@", "];
-}
-
 @implementation WKSubject (Convenience)
 
 - (NSString *)primaryMeaning {
-  if (self.hasVocabulary) {
-    return [self primaryMeaningFrom:self.vocabulary.meaningsArray];
-  } else if (self.hasKanji) {
-    return [self primaryMeaningFrom:self.kanji.meaningsArray];
-  } else if (self.hasRadical) {
-    return [self primaryMeaningFrom:self.radical.meaningsArray];
-  }
-  return nil;
-}
-
-- (NSString *)primaryMeaningFrom:(NSArray<WKMeaning *> *)meanings {
-  for (WKMeaning *meaning in meanings) {
+  for (WKMeaning *meaning in self.meaningsArray) {
     if (meaning.isPrimary) {
       return meaning.meaning;
     }
@@ -47,26 +20,16 @@ static NSString *CommaSeparatedMeanings(NSArray<WKMeaning *>* meanings) {
 }
 
 - (NSArray<WKReading *> *)primaryReadings {
-  if (self.hasVocabulary) {
-    return [self readingsFrom:self.vocabulary.readingsArray primary:YES];
-  } else if (self.hasKanji) {
-    return [self readingsFrom:self.kanji.readingsArray primary:YES];
-  }
-  return nil;
+  return [self readingsFilteredByPrimary:YES];
 }
 
 - (NSArray<WKReading *> *)alternateReadings {
-  if (self.hasVocabulary) {
-    return [self readingsFrom:self.vocabulary.readingsArray primary:NO];
-  } else if (self.hasKanji) {
-    return [self readingsFrom:self.kanji.readingsArray primary:NO];
-  }
-  return nil;
+  return [self readingsFilteredByPrimary:YES];
 }
 
-- (NSArray<WKReading *> *)readingsFrom:(NSArray<WKReading *> *)readings primary:(BOOL)primary {
+- (NSArray<WKReading *> *)readingsFilteredByPrimary:(BOOL)primary {
   NSMutableArray<WKReading *> *ret = [NSMutableArray array];
-  for (WKReading *reading in readings) {
+  for (WKReading *reading in self.readingsArray) {
     if (reading.isPrimary == primary) {
       [ret addObject:reading];
     }
@@ -74,59 +37,25 @@ static NSString *CommaSeparatedMeanings(NSArray<WKMeaning *>* meanings) {
   return ret;
 }
 
-- (NSString *)japanese {
-  if (self.hasVocabulary) {
-    return self.vocabulary.japanese;
-  } else if (self.hasKanji) {
-    return self.kanji.japanese;
-  } else if (self.hasRadical) {
-    return self.radical.japanese;
-  }
-  return nil;
-}
-
-- (NSArray<WKMeaning *> *)meanings {
-  if (self.hasVocabulary) {
-    return self.vocabulary.meaningsArray;
-  } else if (self.hasKanji) {
-    return self.kanji.meaningsArray;
-  } else if (self.hasRadical) {
-    return self.radical.meaningsArray;
-  }
-  return nil;
-}
-
-@end
-
-@implementation WKRadical (Convenience)
-
 - (NSString *)commaSeparatedMeanings {
-  return CommaSeparatedMeanings(self.meaningsArray);
-}
-
-@end
-
-@implementation WKKanji (Convenience)
-
-- (NSString *)commaSeparatedMeanings {
-  return CommaSeparatedMeanings(self.meaningsArray);
+  NSMutableArray<NSString *>* strings = [NSMutableArray array];
+  for (WKMeaning *meaning in self.meaningsArray) {
+    [strings addObject:meaning.meaning];
+  }
+  return [strings componentsJoinedByString:@", "];
 }
 
 - (NSString *)commaSeparatedReadings {
-  return CommaSeparatedReadings(self.readingsArray);
+  NSMutableArray<NSString *>* strings = [NSMutableArray array];
+  for (WKReading *reading in self.readingsArray) {
+    [strings addObject:reading.reading];
+  }
+  return [strings componentsJoinedByString:@", "];
 }
 
 @end
 
 @implementation WKVocabulary (Convenience)
-
-- (NSString *)commaSeparatedMeanings {
-  return CommaSeparatedMeanings(self.meaningsArray);
-}
-
-- (NSString *)commaSeparatedReadings {
-  return CommaSeparatedReadings(self.readingsArray);
-}
 
 - (NSString *)commaSeparatedPartsOfSpeech {
   NSMutableArray<NSString *> *parts = [NSMutableArray array];

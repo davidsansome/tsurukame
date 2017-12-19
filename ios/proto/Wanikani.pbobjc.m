@@ -203,15 +203,11 @@ BOOL WKReading_Type_IsValidValue(int32_t value__) {
 
 @implementation WKRadical
 
-@dynamic hasJapanese, japanese;
-@dynamic meaningsArray, meaningsArray_Count;
 @dynamic hasCharacterImage, characterImage;
 @dynamic hasMnemonic, mnemonic;
 
 typedef struct WKRadical__storage_ {
   uint32_t _has_storage_[1];
-  NSString *japanese;
-  NSMutableArray *meaningsArray;
   NSString *characterImage;
   NSString *mnemonic;
 } WKRadical__storage_;
@@ -223,28 +219,10 @@ typedef struct WKRadical__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "japanese",
-        .dataTypeSpecific.className = NULL,
-        .number = WKRadical_FieldNumber_Japanese,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(WKRadical__storage_, japanese),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "meaningsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(WKMeaning),
-        .number = WKRadical_FieldNumber_MeaningsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(WKRadical__storage_, meaningsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
         .name = "characterImage",
         .dataTypeSpecific.className = NULL,
         .number = WKRadical_FieldNumber_CharacterImage,
-        .hasIndex = 1,
+        .hasIndex = 0,
         .offset = (uint32_t)offsetof(WKRadical__storage_, characterImage),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -253,7 +231,7 @@ typedef struct WKRadical__storage_ {
         .name = "mnemonic",
         .dataTypeSpecific.className = NULL,
         .number = WKRadical_FieldNumber_Mnemonic,
-        .hasIndex = 2,
+        .hasIndex = 1,
         .offset = (uint32_t)offsetof(WKRadical__storage_, mnemonic),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -279,25 +257,17 @@ typedef struct WKRadical__storage_ {
 
 @implementation WKKanji
 
-@dynamic hasJapanese, japanese;
-@dynamic readingsArray, readingsArray_Count;
-@dynamic meaningsArray, meaningsArray_Count;
 @dynamic hasMeaningMnemonic, meaningMnemonic;
 @dynamic hasMeaningHint, meaningHint;
 @dynamic hasReadingMnemonic, readingMnemonic;
 @dynamic hasReadingHint, readingHint;
-@dynamic componentSubjectIdsArray, componentSubjectIdsArray_Count;
 
 typedef struct WKKanji__storage_ {
   uint32_t _has_storage_[1];
-  NSString *japanese;
-  NSMutableArray *readingsArray;
-  NSMutableArray *meaningsArray;
   NSString *meaningMnemonic;
   NSString *meaningHint;
   NSString *readingMnemonic;
   NSString *readingHint;
-  GPBInt32Array *componentSubjectIdsArray;
 } WKKanji__storage_;
 
 // This method is threadsafe because it is initially called
@@ -307,37 +277,10 @@ typedef struct WKKanji__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "japanese",
-        .dataTypeSpecific.className = NULL,
-        .number = WKKanji_FieldNumber_Japanese,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(WKKanji__storage_, japanese),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "readingsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(WKReading),
-        .number = WKKanji_FieldNumber_ReadingsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(WKKanji__storage_, readingsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
-        .name = "meaningsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(WKMeaning),
-        .number = WKKanji_FieldNumber_MeaningsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(WKKanji__storage_, meaningsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
         .name = "meaningMnemonic",
         .dataTypeSpecific.className = NULL,
         .number = WKKanji_FieldNumber_MeaningMnemonic,
-        .hasIndex = 1,
+        .hasIndex = 0,
         .offset = (uint32_t)offsetof(WKKanji__storage_, meaningMnemonic),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -346,7 +289,7 @@ typedef struct WKKanji__storage_ {
         .name = "meaningHint",
         .dataTypeSpecific.className = NULL,
         .number = WKKanji_FieldNumber_MeaningHint,
-        .hasIndex = 2,
+        .hasIndex = 1,
         .offset = (uint32_t)offsetof(WKKanji__storage_, meaningHint),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -355,7 +298,7 @@ typedef struct WKKanji__storage_ {
         .name = "readingMnemonic",
         .dataTypeSpecific.className = NULL,
         .number = WKKanji_FieldNumber_ReadingMnemonic,
-        .hasIndex = 3,
+        .hasIndex = 2,
         .offset = (uint32_t)offsetof(WKKanji__storage_, readingMnemonic),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -364,19 +307,10 @@ typedef struct WKKanji__storage_ {
         .name = "readingHint",
         .dataTypeSpecific.className = NULL,
         .number = WKKanji_FieldNumber_ReadingHint,
-        .hasIndex = 4,
+        .hasIndex = 3,
         .offset = (uint32_t)offsetof(WKKanji__storage_, readingHint),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "componentSubjectIdsArray",
-        .dataTypeSpecific.className = NULL,
-        .number = WKKanji_FieldNumber_ComponentSubjectIdsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(WKKanji__storage_, componentSubjectIdsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeInt32,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -399,25 +333,17 @@ typedef struct WKKanji__storage_ {
 
 @implementation WKVocabulary
 
-@dynamic hasJapanese, japanese;
-@dynamic readingsArray, readingsArray_Count;
-@dynamic meaningsArray, meaningsArray_Count;
 @dynamic hasMeaningExplanation, meaningExplanation;
 @dynamic hasReadingExplanation, readingExplanation;
 @dynamic sentencesArray, sentencesArray_Count;
-@dynamic componentSubjectIdsArray, componentSubjectIdsArray_Count;
 @dynamic partsOfSpeechArray, partsOfSpeechArray_Count;
 @dynamic hasAudio, audio;
 
 typedef struct WKVocabulary__storage_ {
   uint32_t _has_storage_[1];
-  NSString *japanese;
-  NSMutableArray *readingsArray;
-  NSMutableArray *meaningsArray;
   NSString *meaningExplanation;
   NSString *readingExplanation;
   NSMutableArray *sentencesArray;
-  GPBInt32Array *componentSubjectIdsArray;
   GPBEnumArray *partsOfSpeechArray;
   NSString *audio;
 } WKVocabulary__storage_;
@@ -429,37 +355,10 @@ typedef struct WKVocabulary__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "japanese",
-        .dataTypeSpecific.className = NULL,
-        .number = WKVocabulary_FieldNumber_Japanese,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(WKVocabulary__storage_, japanese),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "readingsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(WKReading),
-        .number = WKVocabulary_FieldNumber_ReadingsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(WKVocabulary__storage_, readingsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
-        .name = "meaningsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(WKMeaning),
-        .number = WKVocabulary_FieldNumber_MeaningsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(WKVocabulary__storage_, meaningsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
         .name = "meaningExplanation",
         .dataTypeSpecific.className = NULL,
         .number = WKVocabulary_FieldNumber_MeaningExplanation,
-        .hasIndex = 1,
+        .hasIndex = 0,
         .offset = (uint32_t)offsetof(WKVocabulary__storage_, meaningExplanation),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -468,7 +367,7 @@ typedef struct WKVocabulary__storage_ {
         .name = "readingExplanation",
         .dataTypeSpecific.className = NULL,
         .number = WKVocabulary_FieldNumber_ReadingExplanation,
-        .hasIndex = 2,
+        .hasIndex = 1,
         .offset = (uint32_t)offsetof(WKVocabulary__storage_, readingExplanation),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -483,15 +382,6 @@ typedef struct WKVocabulary__storage_ {
         .dataType = GPBDataTypeMessage,
       },
       {
-        .name = "componentSubjectIdsArray",
-        .dataTypeSpecific.className = NULL,
-        .number = WKVocabulary_FieldNumber_ComponentSubjectIdsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(WKVocabulary__storage_, componentSubjectIdsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeInt32,
-      },
-      {
         .name = "partsOfSpeechArray",
         .dataTypeSpecific.enumDescFunc = WKVocabulary_PartOfSpeech_EnumDescriptor,
         .number = WKVocabulary_FieldNumber_PartsOfSpeechArray,
@@ -504,7 +394,7 @@ typedef struct WKVocabulary__storage_ {
         .name = "audio",
         .dataTypeSpecific.className = NULL,
         .number = WKVocabulary_FieldNumber_Audio,
-        .hasIndex = 3,
+        .hasIndex = 2,
         .offset = (uint32_t)offsetof(WKVocabulary__storage_, audio),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -664,6 +554,10 @@ typedef struct WKVocabulary_Sentence__storage_ {
 @dynamic hasLevel, level;
 @dynamic hasSlug, slug;
 @dynamic hasDocumentURL, documentURL;
+@dynamic hasJapanese, japanese;
+@dynamic readingsArray, readingsArray_Count;
+@dynamic meaningsArray, meaningsArray_Count;
+@dynamic componentSubjectIdsArray, componentSubjectIdsArray_Count;
 @dynamic hasRadical, radical;
 @dynamic hasKanji, kanji;
 @dynamic hasVocabulary, vocabulary;
@@ -674,6 +568,10 @@ typedef struct WKSubject__storage_ {
   int32_t level;
   NSString *slug;
   NSString *documentURL;
+  NSString *japanese;
+  NSMutableArray *readingsArray;
+  NSMutableArray *meaningsArray;
+  GPBInt32Array *componentSubjectIdsArray;
   WKRadical *radical;
   WKKanji *kanji;
   WKVocabulary *vocabulary;
@@ -722,10 +620,46 @@ typedef struct WKSubject__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
+        .name = "japanese",
+        .dataTypeSpecific.className = NULL,
+        .number = WKSubject_FieldNumber_Japanese,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(WKSubject__storage_, japanese),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "readingsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(WKReading),
+        .number = WKSubject_FieldNumber_ReadingsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(WKSubject__storage_, readingsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "meaningsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(WKMeaning),
+        .number = WKSubject_FieldNumber_MeaningsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(WKSubject__storage_, meaningsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "componentSubjectIdsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = WKSubject_FieldNumber_ComponentSubjectIdsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(WKSubject__storage_, componentSubjectIdsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
         .name = "radical",
         .dataTypeSpecific.className = GPBStringifySymbol(WKRadical),
         .number = WKSubject_FieldNumber_Radical,
-        .hasIndex = 4,
+        .hasIndex = 5,
         .offset = (uint32_t)offsetof(WKSubject__storage_, radical),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
@@ -734,7 +668,7 @@ typedef struct WKSubject__storage_ {
         .name = "kanji",
         .dataTypeSpecific.className = GPBStringifySymbol(WKKanji),
         .number = WKSubject_FieldNumber_Kanji,
-        .hasIndex = 5,
+        .hasIndex = 6,
         .offset = (uint32_t)offsetof(WKSubject__storage_, kanji),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
@@ -743,7 +677,7 @@ typedef struct WKSubject__storage_ {
         .name = "vocabulary",
         .dataTypeSpecific.className = GPBStringifySymbol(WKVocabulary),
         .number = WKSubject_FieldNumber_Vocabulary,
-        .hasIndex = 6,
+        .hasIndex = 7,
         .offset = (uint32_t)offsetof(WKSubject__storage_, vocabulary),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,

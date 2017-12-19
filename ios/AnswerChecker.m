@@ -64,7 +64,7 @@ WKAnswerCheckerResult CheckAnswer(NSString *answer,
       NSMutableArray<NSString *> *meaningTexts =
           [NSMutableArray arrayWithArray:studyMaterials.meaningSynonymsArray];
       
-      for (WKMeaning *meaning in subject.meanings) {
+      for (WKMeaning *meaning in subject.meaningsArray) {
         [meaningTexts addObject:meaning.meaning];
       }
       

@@ -12,22 +12,9 @@
 
 @interface WKSubject (Convenience)
 
-@property (nonatomic, readonly) NSString *japanese;
 @property (nonatomic, readonly) NSString *primaryMeaning;
 @property (nonatomic, readonly) NSArray<WKReading *> *primaryReadings;
 @property (nonatomic, readonly) NSArray<WKReading *> *alternateReadings;
-@property (nonatomic, readonly) NSArray<WKMeaning *> *meanings;
-
-@end
-
-@interface WKRadical (Convenience)
-
-@property (nonatomic, readonly) NSString *commaSeparatedMeanings;
-
-@end
-
-@interface WKKanji (Convenience)
-
 @property (nonatomic, readonly) NSString *commaSeparatedReadings;
 @property (nonatomic, readonly) NSString *commaSeparatedMeanings;
 
@@ -35,8 +22,6 @@
 
 @interface WKVocabulary (Convenience)
 
-@property (nonatomic, readonly) NSString *commaSeparatedReadings;
-@property (nonatomic, readonly) NSString *commaSeparatedMeanings;
 @property (nonatomic, readonly) NSString *commaSeparatedPartsOfSpeech;
 
 @end
