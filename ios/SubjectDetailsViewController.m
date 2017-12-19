@@ -1,3 +1,4 @@
+#import "Style.h"
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
 #import "proto/Wanikani+Convenience.h"
@@ -10,15 +11,25 @@
 
 @end
 
-@implementation SubjectDetailsViewController
+@implementation SubjectDetailsViewController {
+  CAGradientLayer *_gradientLayer;
+}
 
 - (void)viewDidLoad {
+  [super viewDidLoad];
   _subjectDetailsView.dataLoader = _dataLoader;
   _subjectDetailsView.subject = _subject;
   _subjectDetailsView.linkHandler = self;
   self.navigationItem.title = _subject.japanese;
   
-  [super viewDidLoad];
+  _gradientLayer = [CAGradientLayer layer];
+  _gradientLayer.colors = WKGradientForSubject(_subject);
+  [self.view.layer insertSublayer:_gradientLayer atIndex:0];
+}
+
+- (void)viewDidLayoutSubviews {
+  [super viewDidLayoutSubviews];
+  _gradientLayer.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.safeAreaInsets.top);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
