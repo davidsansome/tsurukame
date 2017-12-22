@@ -103,7 +103,10 @@
     [self.syncOfflineImage setHidden:YES];
   } else {
     self.syncTitle.text = @"Up to date!";
-    self.syncSubtitle.text = @"Your progress, synonyms and notes are synced to this device.";
+    self.syncSubtitle.text = [NSString stringWithFormat:@"Synced at %@",
+                              [NSDateFormatter localizedStringFromDate:_localCachingClient.lastUpdated
+                                                             dateStyle:NSDateFormatterNoStyle
+                                                             timeStyle:NSDateFormatterMediumStyle]];
     [self.syncSubtitle setHidden:NO];
     [self.syncSpinner stopAnimating];
     [self.syncOfflineImage setHidden:YES];

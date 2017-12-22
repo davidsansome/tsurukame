@@ -20,7 +20,8 @@ extern NSErrorDomain WKClientErrorDomain;
                           cookie:(NSString *)cookie NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-- (NSString *)currentISO8601Time;
+@property (nonatomic, readonly) NSDateFormatter *dateFormatter;
+@property (nonatomic, readonly) NSString *currentISO8601Time;
 
 typedef void (^AssignmentHandler)(NSError * _Nullable error,
                                   NSArray<WKAssignment *> * _Nullable assignments);
