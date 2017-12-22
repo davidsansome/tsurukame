@@ -20,7 +20,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-  self.navigationController.navigationBarHidden = YES;
+  self.navigationController.navigationBarHidden = NO;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -31,6 +31,10 @@
     vc.localCachingClient = _localCachingClient;
     vc.subject = cell.subject;
   }
+}
+
+- (IBAction)doneClicked:(id)sender {
+  [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)setItems:(NSArray<ReviewItem *> *)items {
