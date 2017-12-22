@@ -27,6 +27,7 @@
   _item = item;
   self.readingLabel.textColor = item.answer.readingWrong ? [UIColor redColor] : [UIColor blackColor];
   self.meaningLabel.textColor = item.answer.meaningWrong ? [UIColor redColor] : [UIColor blackColor];
+  NSLog(@"%d %@, %d %@", item.answer.readingWrong, self.readingLabel.textColor, item.answer.meaningWrong, self.meaningLabel.textColor);
 }
 
 @end

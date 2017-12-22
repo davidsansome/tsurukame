@@ -181,6 +181,7 @@ static void AddShadowToView(UIView *view) {
   } else if ([segue.identifier isEqualToString:@"subjectDetails"]) {
     SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
     vc.dataLoader = _dataLoader;
+    vc.localCachingClient = _localCachingClient;
     vc.subject = _subjectDetailsView.lastSubjectClicked;
   }
 }
@@ -248,7 +249,7 @@ static void AddShadowToView(UIView *view) {
   // Choose whether to ask the meaning or the reading.
   if (_activeTask.answeredMeaning) {
     _activeTaskType = kWKTaskTypeReading;
-  } else if (_activeTask.answeredReading) {
+  } else if (_activeTask.answeredReading || _activeSubject.hasRadical) {
     _activeTaskType = kWKTaskTypeMeaning;
   } else {
     _activeTaskType = (WKTaskType)arc4random_uniform(kWKTaskType_Max);
@@ -316,10 +317,10 @@ static void AddShadowToView(UIView *view) {
   switch (result) {
     case kWKAnswerPrecise:
     case kWKAnswerImprecise:
-      [self markAnswer:true];
+      [self markAnswer:true studyMaterials:studyMaterials];
       break;
     case kWKAnswerIncorrect:
-      [self markAnswer:false];
+      [self markAnswer:false studyMaterials:studyMaterials];
       break;
     case kWKAnswerOtherKanjiReading:
       [self shakeView:_answerField];
@@ -337,7 +338,7 @@ static void AddShadowToView(UIView *view) {
   } completion:nil];
 }
 
-- (void)markAnswer:(bool)correct {
+- (void)markAnswer:(bool)correct studyMaterials:(WKStudyMaterials *)studyMaterials {
   // Mark the task.
   switch (_activeTaskType) {
     case kWKTaskTypeMeaning:
@@ -363,7 +364,7 @@ static void AddShadowToView(UIView *view) {
   }
   
   // Remove it from the active queue if that was the last part.
-  if (_activeTask.answeredMeaning && _activeTask.answeredReading) {
+  if (_activeTask.answeredMeaning && (_activeSubject.hasRadical || _activeTask.answeredReading)) {
     [_localCachingClient sendProgress:@[_activeTask.answer] handler:nil];
     
     _reviewsCompleted ++;
@@ -379,7 +380,7 @@ static void AddShadowToView(UIView *view) {
   }
   
   // Otherwise show the correct answer.
-  _subjectDetailsView.subject = _activeSubject;
+  [_subjectDetailsView updateWithSubject:_activeSubject studyMaterials:studyMaterials];
   _subjectDetailsView.hidden = NO;
   _answerField.enabled = NO;
 }

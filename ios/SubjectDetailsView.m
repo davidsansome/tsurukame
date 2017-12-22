@@ -88,14 +88,91 @@ static NSString *kHeader =
      "  text-decoration: none;"
      "  color: black;"
      "}"
+     "span.pri { font-weight: normal; }"
+     "span.alt { font-weight: lighter; }"
+     "span.user { color: #3B99FC; }"
      "</style>";
-
-static NSRegularExpression *kHighlightRE;
-static NSRegularExpression *kJaSpanRE;
 
 @implementation WKSubjectDetailsView
 
 - (nullable instancetype)initWithCoder:(NSCoder *)coder {
+  self = [super initWithCoder:coder];
+  if (self) {
+    self.navigationDelegate = self;
+  }
+  return self;
+}
+
+#pragma mark - Rendering
+
+- (NSString *)renderSubjectDetails:(WKSubject *)subject
+                    studyMaterials:(WKStudyMaterials *)studyMaterials {
+  NSMutableString *ret = [NSMutableString stringWithString:kHeader];
+  if (subject.hasRadical) {
+    [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
+    [self addTextSectionTo:ret title:@"Mnemonic" content:[self highlightText:subject.radical.mnemonic]];
+  }
+  if (subject.hasKanji) {
+    [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
+    [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray]];
+    [self addTextSectionTo:ret title:@"Related Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
+    [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.kanji.meaningMnemonic]];
+    [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.kanji.readingMnemonic]];
+    // TODO: context
+  }
+  if (subject.hasVocabulary) {
+    [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
+    [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray]];
+    [self addTextSectionTo:ret title:@"Part of Speech" content:subject.vocabulary.commaSeparatedPartsOfSpeech];
+    [self addTextSectionTo:ret title:@"Related Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
+    [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.vocabulary.meaningExplanation]];
+    [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.vocabulary.readingExplanation]];
+    // TODO: context
+  }
+  
+  return ret;
+}
+
+- (NSString *)renderMeanings:(NSArray<WKMeaning *> *)meanings
+              studyMaterials:(WKStudyMaterials *)studyMaterials {
+  NSMutableArray<NSString *> *ret = [NSMutableArray array];
+  for (WKMeaning *meaning in meanings) {
+    if (meaning.isPrimary) {
+      [ret addObject:[NSString stringWithFormat:@"<span class=\"pri\">%@</span>", meaning.meaning]];
+    }
+  }
+  for (NSString *meaning in studyMaterials.meaningSynonymsArray) {
+    [ret addObject:[NSString stringWithFormat:@"<span class=\"user\">%@</span>", meaning]];
+  }
+  for (WKMeaning *meaning in meanings) {
+    if (!meaning.isPrimary) {
+      [ret addObject:[NSString stringWithFormat:@"<span class=\"alt\">%@</span>", meaning.meaning]];
+    }
+  }
+  return [ret componentsJoinedByString:@", "];
+}
+
+- (NSString *)renderReadings:(NSArray<WKReading *> *)readings {
+  NSMutableArray<NSString *> *ret = [NSMutableArray array];
+  for (WKReading *reading in readings) {
+    if (reading.isPrimary) {
+      [ret addObject:[NSString stringWithFormat:@"<span class=\"pri\">%@</span>", reading.reading]];
+    } else {
+      [ret addObject:[NSString stringWithFormat:@"<span class=\"alt\">%@</span>", reading.reading]];
+    }
+  }
+  return [ret componentsJoinedByString:@", "];
+}
+
+- (void)addTextSectionTo:(NSMutableString *)ret
+                   title:(NSString *)title
+                 content:(NSString *)content {
+  [ret appendFormat:@"<div><h1>%@</h1>%@</div>", title, content];
+}
+
+- (NSString *)highlightText:(NSString *)text {
+  static NSRegularExpression *kHighlightRE;
+  static NSRegularExpression *kJaSpanRE;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     kHighlightRE = [NSRegularExpression regularExpressionWithPattern:
@@ -107,48 +184,7 @@ static NSRegularExpression *kJaSpanRE;
                  "([^\\[]+)"
                  "\\[\\/[^\\]]+\\]" options:0 error:nil];
   });
-  
-  self = [super initWithCoder:coder];
-  if (self) {
-    self.navigationDelegate = self;
-  }
-  return self;
-}
 
-- (NSString *)renderSubjectDetails:(WKSubject *)subject {
-  NSMutableString *ret = [NSMutableString stringWithString:kHeader];
-  if (subject.hasRadical) {
-    [self addTextSectionTo:ret title:@"Meaning" content:subject.commaSeparatedMeanings];
-    [self addTextSectionTo:ret title:@"Mnemonic" content:[self highlightText:subject.radical.mnemonic]];
-  }
-  if (subject.hasKanji) {
-    [self addTextSectionTo:ret title:@"Meaning" content:subject.commaSeparatedMeanings];
-    [self addTextSectionTo:ret title:@"Reading" content:subject.commaSeparatedReadings];  // TODO: primary readings only.
-    [self addTextSectionTo:ret title:@"Related Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
-    [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.kanji.meaningMnemonic]];
-    [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.kanji.readingMnemonic]];
-    // TODO: context
-  }
-  if (subject.hasVocabulary) {
-    [self addTextSectionTo:ret title:@"Meaning" content:subject.commaSeparatedMeanings];
-    [self addTextSectionTo:ret title:@"Reading" content:subject.commaSeparatedReadings];
-    [self addTextSectionTo:ret title:@"Part of Speech" content:subject.vocabulary.commaSeparatedPartsOfSpeech];
-    [self addTextSectionTo:ret title:@"Related Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
-    [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.vocabulary.meaningExplanation]];
-    [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.vocabulary.readingExplanation]];
-    // TODO: context
-  }
-  
-  return ret;
-}
-
-- (void)addTextSectionTo:(NSMutableString *)ret
-                   title:(NSString *)title
-                 content:(NSString *)content {
-  [ret appendFormat:@"<div><h1>%@</h1>%@</div>", title, content];
-}
-
-- (NSString *)highlightText:(NSString *)text {
   NSMutableString *ret = [NSMutableString stringWithString:text];
   [kJaSpanRE replaceMatchesInString:ret
                             options:0
@@ -189,8 +225,9 @@ static NSRegularExpression *kJaSpanRE;
 
 #pragma mark - Setters
 
-- (void)setSubject:(WKSubject *)subject {
-  [self loadHTMLString:[self renderSubjectDetails:subject] baseURL:nil];
+- (void)updateWithSubject:(WKSubject *)subject studyMaterials:(WKStudyMaterials *)studyMaterials {
+  [self loadHTMLString:[self renderSubjectDetails:subject studyMaterials:studyMaterials]
+               baseURL:nil];
 }
 
 #pragma mark - WKNavigationDelegate

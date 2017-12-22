@@ -31,3 +31,9 @@
 @property (nonatomic, readonly) bool isReadyForReview;
 
 @end
+
+@interface WKProgress (Convenience)
+
+@property (nonatomic, readonly) NSString *formParameters;
+
+@end
