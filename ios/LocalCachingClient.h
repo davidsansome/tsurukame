@@ -18,6 +18,7 @@ extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 @interface LocalCachingClient : NSObject
 
 @property(nonatomic, getter=isBusy, readonly) bool busy;
+@property(nonatomic, readonly) NSDate *lastUpdated;
 @property(nonatomic) id<LocalCachingClientDelegate> delegate;
 
 - (instancetype)initWithClient:(Client *)client
