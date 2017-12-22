@@ -751,6 +751,7 @@ BOOL WKSubject_Type_IsValidValue(int32_t value__) {
 @dynamic hasAvailableAt, availableAt;
 @dynamic hasStartedAt, startedAt;
 @dynamic hasSrsStage, srsStage;
+@dynamic hasPassedAt, passedAt;
 
 typedef struct WKAssignment__storage_ {
   uint32_t _has_storage_[1];
@@ -761,6 +762,7 @@ typedef struct WKAssignment__storage_ {
   int32_t availableAt;
   int32_t startedAt;
   int32_t srsStage;
+  int32_t passedAt;
 } WKAssignment__storage_;
 
 // This method is threadsafe because it is initially called
@@ -836,6 +838,16 @@ typedef struct WKAssignment__storage_ {
         .core.number = WKAssignment_FieldNumber_SrsStage,
         .core.hasIndex = 6,
         .core.offset = (uint32_t)offsetof(WKAssignment__storage_, srsStage),
+        .core.flags = GPBFieldOptional,
+        .core.dataType = GPBDataTypeInt32,
+      },
+      {
+        .defaultValue.valueInt32 = 0,
+        .core.name = "passedAt",
+        .core.dataTypeSpecific.className = NULL,
+        .core.number = WKAssignment_FieldNumber_PassedAt,
+        .core.hasIndex = 7,
+        .core.offset = (uint32_t)offsetof(WKAssignment__storage_, passedAt),
         .core.flags = GPBFieldOptional,
         .core.dataType = GPBDataTypeInt32,
       },
