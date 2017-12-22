@@ -1,4 +1,5 @@
 #import "Client.h"
+#import "proto/Wanikani+Convenience.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -240,10 +241,7 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
     // Encode the data to send in the request.
     NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
     for (WKProgress *p in progress) {
-      [formParameters addObject:[NSString stringWithFormat:@"%d%%5B%%5D=%d", p.id_p, p.meaningWrong ? 1 : 0]];
-      if (p.hasReadingWrong) {
-        [formParameters addObject:[NSString stringWithFormat:@"%d%%5B%%5D=%d", p.id_p, p.readingWrong ? 1 : 0]];
-      }
+      [formParameters addObject:p.formParameters];
     }
     NSData *data = [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
     

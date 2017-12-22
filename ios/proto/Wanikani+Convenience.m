@@ -101,3 +101,13 @@
 }
 
 @end
+
+@implementation WKProgress (Convenience)
+
+- (NSString *)formParameters {
+  return [NSString stringWithFormat:@"%d%%5B%%5D=%@&%d%%5B%%5D=%@",
+          self.id_p, self.hasMeaningWrong ? (self.meaningWrong ? @"1" : @"0") : @"",
+          self.id_p, self.hasReadingWrong ? (self.readingWrong ? @"1" : @"0") : @""];
+}
+
+@end
