@@ -13,10 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface WKSubjectDetailsView : WKWebView <WKNavigationDelegate>
 
 @property (nonatomic) DataLoader *dataLoader;
-@property (nonatomic) WKSubject *subject;
 @property (nonatomic, weak) id<WKSubjectDetailsLinkHandler> linkHandler;
 
 @property (nonatomic, readonly) WKSubject *lastSubjectClicked;
+
+- (void)updateWithSubject:(WKSubject *)subject studyMaterials:(WKStudyMaterials *)studyMaterials;
 
 @end
 

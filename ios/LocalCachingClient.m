@@ -146,7 +146,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       ret = [WKStudyMaterials parseFromData:[r dataForColumnIndex:0] error:nil];
     }
   }];
-  return nil;
+  return ret;
 }
 
 - (WKUser * _Nullable)getUserInfo {

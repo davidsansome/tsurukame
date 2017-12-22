@@ -19,8 +19,9 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   _subjectDetailsView.dataLoader = _dataLoader;
-  _subjectDetailsView.subject = _subject;
   _subjectDetailsView.linkHandler = self;
+  WKStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
+  [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
   _subjectTitle.text = _subject.japanese;
   
   _gradientLayer = [CAGradientLayer layer];
@@ -47,6 +48,7 @@
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   vc.dataLoader = _dataLoader;
+  vc.localCachingClient = _localCachingClient;
   vc.subject = subject;
   [self.navigationController pushViewController:vc animated:YES];
 }

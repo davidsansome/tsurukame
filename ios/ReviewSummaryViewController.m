@@ -28,6 +28,7 @@
     ReviewSummaryCell *cell = (ReviewSummaryCell *)sender;
     SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
     vc.dataLoader = _dataLoader;
+    vc.localCachingClient = _localCachingClient;
     vc.subject = cell.subject;
   }
 }
@@ -51,6 +52,7 @@
         _incorrectReadings ++;
       }
       if (item.assignment.level == _currentLevel) {
+        NSLog(@"Adding %@, %@", [_dataLoader loadSubject:item.assignment.subjectId].japanese, item.answer);
         [_currentLevelItemsWrong addObject:item];
       }
     }
