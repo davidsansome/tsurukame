@@ -169,6 +169,11 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
             [[_dateFormatter dateFromString:d[@"data"][@"started_at"]] timeIntervalSince1970];
       }
       
+      if (d[@"data"][@"passed_at"] != [NSNull null]) {
+        assignment.passedAt =
+            [[_dateFormatter dateFromString:d[@"data"][@"passed_at"]] timeIntervalSince1970];
+      }
+      
       NSString *subjectType = d[@"data"][@"subject_type"];
       if ([subjectType isEqualToString:@"radical"]) {
         assignment.subjectType = WKSubject_Type_Radical;
