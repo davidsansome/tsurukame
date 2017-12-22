@@ -24,7 +24,7 @@
 }
 
 - (NSArray<WKReading *> *)alternateReadings {
-  return [self readingsFilteredByPrimary:YES];
+  return [self readingsFilteredByPrimary:NO];
 }
 
 - (NSArray<WKReading *> *)readingsFilteredByPrimary:(BOOL)primary {
