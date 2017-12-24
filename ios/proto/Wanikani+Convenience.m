@@ -93,7 +93,7 @@
 @implementation WKAssignment (Convenience)
 
 - (bool)isReadyForReview {
-  if (!self.hasAvailableAt || (!self.hasStartedAt && !self.hasPassedAt)) {
+  if (!self.hasAvailableAt || self.srsStage == 0) {
     return false;
   }
   NSDate *readyForReview = [NSDate dateWithTimeIntervalSince1970:self.availableAt];
