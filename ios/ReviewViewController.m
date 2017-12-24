@@ -10,6 +10,7 @@
 #import <WebKit/WebKit.h>
 
 static const int kActiveQueueSize = 5;
+static const NSTimeInterval kAnimationDuration = 0.5f;
 
 static NSArray<id> *kReadingGradient;
 static NSArray<id> *kMeaningGradient;
@@ -208,35 +209,35 @@ static void AddShadowToView(UIView *view) {
 }
 
 - (void)randomTask {
-  // Update the progress labels.
-  if (_tasksAnswered == 0) {
-    self.successRateLabel.text = @"100%";
-  } else {
-    self.successRateLabel.text = [NSString stringWithFormat:@"%d%%",
-                                  (int)((double)(_tasksAnsweredCorrectly) / _tasksAnswered * 100)];
-  }
-  int queueLength = (int)(_activeQueue.count + _reviewQueue.count);
-  self.doneLabel.text = [NSString stringWithFormat:@"%d", _reviewsCompleted];
-  self.queueLabel.text = [NSString stringWithFormat:@"%d", queueLength];
-  
-  // Update the progress bar.
-  int totalLength = queueLength + _reviewsCompleted;
-  if (totalLength == 0) {
-    self.progressBar.progress = 0.0;
-  } else {
-    self.progressBar.progress = (double)(_reviewsCompleted) / totalLength;
-  }
-  
-  // Hide the answer from last time.
-  _answerField.text = nil;
-  _answerField.enabled = YES;
-  _subjectDetailsView.hidden = YES;
-  
-  // Choose a random task from the active queue.
   if (_activeQueue.count == 0) {
     [self performSegueWithIdentifier:@"reviewSummary" sender:self];
     return;
   }
+  
+  // Update the progress labels.
+  NSString *successRateText;
+  if (_tasksAnswered == 0) {
+    successRateText = @"100%";
+  } else {
+    successRateText = [NSString stringWithFormat:@"%d%%",
+                       (int)((double)(_tasksAnsweredCorrectly) / _tasksAnswered * 100)];
+  }
+  int queueLength = (int)(_activeQueue.count + _reviewQueue.count);
+  NSString *doneText = [NSString stringWithFormat:@"%d", _reviewsCompleted];
+  NSString *queueText = [NSString stringWithFormat:@"%d", queueLength];
+  
+  // Update the progress bar.
+  int totalLength = queueLength + _reviewsCompleted;
+  if (totalLength == 0) {
+    [_progressBar setProgress:0.0 animated:YES];
+  } else {
+    [_progressBar setProgress:(double)(_reviewsCompleted) / totalLength animated:YES];
+  }
+  
+  // Hide the answer from last time.
+  _answerField.enabled = YES;
+  
+  // Choose a random task from the active queue.
   _activeTaskIndex = arc4random_uniform((uint32_t)_activeQueue.count);
   _activeTask = _activeQueue[_activeTaskIndex];
   _activeSubject = [_dataLoader loadSubject:_activeTask.assignment.subjectId];
@@ -290,14 +291,40 @@ static void AddShadowToView(UIView *view) {
                                         subjectTypePrompt, taskTypePrompt]];
   [prompt setAttributes:@{NSFontAttributeName: boldFont}
                   range:NSMakeRange(prompt.length - taskTypePrompt.length, taskTypePrompt.length)];
+
+  [CATransaction begin];
+  [CATransaction setAnimationDuration:kAnimationDuration];
   
-  [UIView animateWithDuration:0.2f animations:^{
-    [self.promptLabel setAttributedText:prompt];
-    [self.questionLabel setText:_activeSubject.japanese];
-    _questionGradient.colors = WKGradientForAssignment(_activeTask.assignment);
-    _promptGradient.colors = promptGradient;
-    _promptLabel.textColor = promptTextColor;
-  }];
+  // Animate the text labels.
+  UIViewAnimationOptions options = UIViewAnimationOptionTransitionCrossDissolve;
+  [UIView transitionWithView:self.successRateLabel duration:kAnimationDuration options:options animations:^{
+    _successRateLabel.text = successRateText;
+  } completion:nil];
+  [UIView transitionWithView:self.doneLabel duration:kAnimationDuration options:options animations:^{
+    _doneLabel.text = doneText;
+  } completion:nil];
+  [UIView transitionWithView:self.queueLabel duration:kAnimationDuration options:options animations:^{
+    _queueLabel.text = queueText;
+  } completion:nil];
+  [UIView transitionWithView:self.questionLabel duration:kAnimationDuration options:options animations:^{
+    self.questionLabel.text = _activeSubject.japanese;
+  } completion:nil];
+  [UIView transitionWithView:self.promptLabel duration:kAnimationDuration options:options animations:^{
+    self.promptLabel.attributedText = prompt;
+  } completion:nil];
+  [UIView transitionWithView:self.answerField duration:kAnimationDuration options:options animations:^{
+    self.answerField.text = nil;
+  } completion:nil];
+  
+  // Other properties.
+  _promptLabel.textColor = promptTextColor;
+  _subjectDetailsView.hidden = YES;
+  
+  // Background gradients.
+  _questionGradient.colors = WKGradientForAssignment(_activeTask.assignment);
+  _promptGradient.colors = promptGradient;
+  
+  [CATransaction commit];
   
   [_answerField becomeFirstResponder];
 }
