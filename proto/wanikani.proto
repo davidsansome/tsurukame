@@ -105,9 +105,10 @@ message Assignment {
 }
 
 message Progress {
-  optional int32 id = 1;
-  optional bool meaning_wrong = 2;
-  optional bool reading_wrong = 3;
+  optional int32 subject_id = 1;
+  optional int32 assignment_id = 2;
+  optional bool meaning_wrong = 3;
+  optional bool reading_wrong = 4;
 }
 
 message StudyMaterials {
