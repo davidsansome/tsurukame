@@ -115,7 +115,7 @@ static NSString *kHeader =
   if (subject.hasKanji) {
     [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
     [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray]];
-    [self addTextSectionTo:ret title:@"Related Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
+    [self addTextSectionTo:ret title:@"Radicals" content:[self renderComponents:subject.componentSubjectIdsArray]];
     [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.kanji.meaningMnemonic]];
     [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.kanji.readingMnemonic]];
     // TODO: context
@@ -123,10 +123,10 @@ static NSString *kHeader =
   if (subject.hasVocabulary) {
     [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
     [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray]];
-    [self addTextSectionTo:ret title:@"Part of Speech" content:subject.vocabulary.commaSeparatedPartsOfSpeech];
-    [self addTextSectionTo:ret title:@"Related Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
+    [self addTextSectionTo:ret title:@"Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
     [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.vocabulary.meaningExplanation]];
     [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.vocabulary.readingExplanation]];
+    [self addTextSectionTo:ret title:@"Part of Speech" content:subject.vocabulary.commaSeparatedPartsOfSpeech];
     // TODO: context
   }
   
