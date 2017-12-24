@@ -67,22 +67,23 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       "  assignments_updated_after TEXT,"
       "  study_materials_updated_after TEXT"
       ");"
-      "INSERT INTO sync (assignments_updated_after) VALUES (\"\");"
+      "INSERT INTO sync ("
+      "  assignments_updated_after,"
+      "  assignments_updated_after"
+      ") VALUES (\"\", \"\");"
       "CREATE TABLE assignments ("
       "  id INTEGER PRIMARY KEY,"
       "  pb BLOB"
       ");"
       "CREATE TABLE pending_progress ("
       "  id INTEGER PRIMARY KEY,"
-      "  wrong_meanings INTEGER,"
-      "  wrong_readings INTEGER"
+      "  pb BLOB"
       ");"
       "CREATE TABLE study_materials ("
       "  id INTEGER PRIMARY KEY,"
       "  pb BLOB"
-      ");",
-      
-      @"CREATE TABLE user ("
+      ");"
+      "CREATE TABLE user ("
       "  id INTEGER PRIMARY KEY CHECK (id = 0),"
       "  pb BLOB"
       ");",
@@ -161,8 +162,51 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
 }
 
 - (void)sendProgress:(NSArray<WKProgress *> *)progress handler:(ProgressHandler _Nullable)handler {
-  // TODO: store locally.
-  [_client sendProgress:progress handler:handler];
+  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+    for (WKProgress *p in progress) {
+      NSLog(@"Deleting assignment %d and storing progress for %d", p.assignmentId, p.subjectId);
+      // Delete the assignment.
+      CheckUpdate(db, @"DELETE FROM assignments WHERE id = ?", @(p.assignmentId));
+      
+      // Store the progress locally.
+      CheckUpdate(db, @"INSERT INTO pending_progress (id, pb) VALUES(?, ?)", @(p.subjectId), p.data);
+    }
+  }];
+  
+  [self sendPendingProgress:progress handler:^{
+    if (handler) {
+      handler(nil);
+    }
+  }];
+}
+
+- (void)sendAllPendingProgress:(void (^)(void))handler {
+  NSMutableArray<WKProgress *> *progress = [NSMutableArray array];
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    FMResultSet *results = [db executeQuery:@"SELECT pb FROM pending_progress"];
+    while ([results next]) {
+      [progress addObject:[WKProgress parseFromData:[results dataForColumnIndex:0] error:nil]];
+    }
+  }];
+  NSLog(@"Got %d pending progress", progress.count);
+  [self sendPendingProgress:progress handler:handler];
+}
+
+- (void)sendPendingProgress:(NSArray<WKProgress *> *)progress handler:(void (^)(void))handler {
+  [_client sendProgress:progress handler:^(NSError * _Nullable error) {
+    if (error) {
+      [self.delegate localCachingClientDidReportError:error];
+    } else {
+      // Delete the local pending progress.
+      [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+        for (WKProgress *p in progress) {
+          NSLog(@"Delering progress for %d", p.subjectId);
+          CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.subjectId));
+        }
+      }];
+    }
+    handler();
+  }];
 }
 
 - (void)update {
@@ -181,20 +225,25 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
     dispatch_group_t dispatchGroup = dispatch_group_create();
     
     dispatch_group_enter(dispatchGroup);
-    [self updateAssignments:^{
+    [self sendAllPendingProgress:^{
+      dispatch_group_enter(dispatchGroup);
+      [self updateAssignments:^{
+        dispatch_group_leave(dispatchGroup);
+      }];
+      
+      dispatch_group_enter(dispatchGroup);
+      [self updateStudyMaterials:^{
+        dispatch_group_leave(dispatchGroup);
+      }];
+      
+      dispatch_group_enter(dispatchGroup);
+      [self updateUserInfo:^{
+        dispatch_group_leave(dispatchGroup);
+      }];
+      
       dispatch_group_leave(dispatchGroup);
     }];
-    
-    dispatch_group_enter(dispatchGroup);
-    [self updateStudyMaterials:^{
-      dispatch_group_leave(dispatchGroup);
-    }];
-    
-    dispatch_group_enter(dispatchGroup);
-    [self updateUserInfo:^{
-      dispatch_group_leave(dispatchGroup);
-    }];
-    
+      
     dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), ^{
       @synchronized(self) {
         self.busy = false;

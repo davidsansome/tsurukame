@@ -366,16 +366,20 @@ typedef GPB_ENUM(WKAssignment_FieldNumber) {
 #pragma mark - WKProgress
 
 typedef GPB_ENUM(WKProgress_FieldNumber) {
-  WKProgress_FieldNumber_Id_p = 1,
-  WKProgress_FieldNumber_MeaningWrong = 2,
-  WKProgress_FieldNumber_ReadingWrong = 3,
+  WKProgress_FieldNumber_SubjectId = 1,
+  WKProgress_FieldNumber_AssignmentId = 2,
+  WKProgress_FieldNumber_MeaningWrong = 3,
+  WKProgress_FieldNumber_ReadingWrong = 4,
 };
 
 @interface WKProgress : GPBMessage
 
-@property(nonatomic, readwrite) int32_t id_p;
+@property(nonatomic, readwrite) int32_t subjectId;
 
-@property(nonatomic, readwrite) BOOL hasId_p;
+@property(nonatomic, readwrite) BOOL hasSubjectId;
+@property(nonatomic, readwrite) int32_t assignmentId;
+
+@property(nonatomic, readwrite) BOOL hasAssignmentId;
 @property(nonatomic, readwrite) BOOL meaningWrong;
 
 @property(nonatomic, readwrite) BOOL hasMeaningWrong;

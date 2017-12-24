@@ -237,6 +237,11 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
 
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
              handler:(ProgressHandler _Nullable)handler {
+  if (progress.count == 0) {
+    handler(nil);
+    return;
+  }
+  
   void (^makeRequest)(void) = ^() {
     // Encode the data to send in the request.
     NSMutableArray<NSString *> *formParameters = [NSMutableArray array];

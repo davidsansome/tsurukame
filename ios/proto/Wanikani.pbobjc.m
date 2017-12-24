@@ -872,13 +872,15 @@ typedef struct WKAssignment__storage_ {
 
 @implementation WKProgress
 
-@dynamic hasId_p, id_p;
+@dynamic hasSubjectId, subjectId;
+@dynamic hasAssignmentId, assignmentId;
 @dynamic hasMeaningWrong, meaningWrong;
 @dynamic hasReadingWrong, readingWrong;
 
 typedef struct WKProgress__storage_ {
   uint32_t _has_storage_[1];
-  int32_t id_p;
+  int32_t subjectId;
+  int32_t assignmentId;
 } WKProgress__storage_;
 
 // This method is threadsafe because it is initially called
@@ -888,11 +890,20 @@ typedef struct WKProgress__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "id_p",
+        .name = "subjectId",
         .dataTypeSpecific.className = NULL,
-        .number = WKProgress_FieldNumber_Id_p,
+        .number = WKProgress_FieldNumber_SubjectId,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(WKProgress__storage_, id_p),
+        .offset = (uint32_t)offsetof(WKProgress__storage_, subjectId),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "assignmentId",
+        .dataTypeSpecific.className = NULL,
+        .number = WKProgress_FieldNumber_AssignmentId,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(WKProgress__storage_, assignmentId),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
@@ -900,8 +911,8 @@ typedef struct WKProgress__storage_ {
         .name = "meaningWrong",
         .dataTypeSpecific.className = NULL,
         .number = WKProgress_FieldNumber_MeaningWrong,
-        .hasIndex = 1,
-        .offset = 2,  // Stored in _has_storage_ to save space.
+        .hasIndex = 2,
+        .offset = 3,  // Stored in _has_storage_ to save space.
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
       },
@@ -909,8 +920,8 @@ typedef struct WKProgress__storage_ {
         .name = "readingWrong",
         .dataTypeSpecific.className = NULL,
         .number = WKProgress_FieldNumber_ReadingWrong,
-        .hasIndex = 3,
-        .offset = 4,  // Stored in _has_storage_ to save space.
+        .hasIndex = 4,
+        .offset = 5,  // Stored in _has_storage_ to save space.
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
       },
