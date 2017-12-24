@@ -5,7 +5,7 @@
 
 #import <WebKit/WebKit.h>
 
-@interface SubjectDetailsViewController () <WKSubjectDetailsLinkHandler>
+@interface SubjectDetailsViewController () <WKSubjectDetailsDelegate>
 
 @property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
 @property (weak, nonatomic) IBOutlet UILabel *subjectTitle;
@@ -19,7 +19,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   _subjectDetailsView.dataLoader = _dataLoader;
-  _subjectDetailsView.linkHandler = self;
+  _subjectDetailsView.delegate = self;
   WKStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
   [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
   _subjectTitle.text = _subject.japanese;

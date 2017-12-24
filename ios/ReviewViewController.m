@@ -25,7 +25,7 @@ static void AddShadowToView(UIView *view) {
   view.clipsToBounds = NO;
 }
 
-@interface ReviewViewController () <UITextFieldDelegate, WKSubjectDetailsLinkHandler>
+@interface ReviewViewController () <UITextFieldDelegate, WKSubjectDetailsDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIView *questionBackground;
@@ -106,7 +106,7 @@ static void AddShadowToView(UIView *view) {
   [_promptBackground.layer addSublayer:_promptGradient];
   
   _subjectDetailsView.dataLoader = _dataLoader;
-  _subjectDetailsView.linkHandler = self;
+  _subjectDetailsView.delegate = self;
   
   _answerField.delegate = _kanaInput;
   
@@ -316,9 +316,15 @@ static void AddShadowToView(UIView *view) {
     self.answerField.text = nil;
   } completion:nil];
   
-  // Other properties.
+  // Subject details view.
+  [UIView animateWithDuration:kAnimationDuration animations:^{
+    _subjectDetailsView.alpha = 0.0f;
+  } completion:^(BOOL finished) {
+    _subjectDetailsView.hidden = YES;
+  }];
+  
+  // Text color.
   _promptLabel.textColor = promptTextColor;
-  _subjectDetailsView.hidden = YES;
   
   // Background gradients.
   _questionGradient.colors = WKGradientForAssignment(_activeTask.assignment);
@@ -420,10 +426,19 @@ static void AddShadowToView(UIView *view) {
   return YES;
 }
 
-#pragma mark - WKSubjectDetailsLinkHandler
+#pragma mark - WKSubjectDetailsDelegate
 
 - (void)openSubject:(WKSubject *)subject {
   [self performSegueWithIdentifier:@"subjectDetails" sender:self];
+}
+
+- (void)subjectDetailsView:(WKSubjectDetailsView *)view
+       didFinishNavigation:(WKNavigation *)navigation {
+  view.hidden = NO;
+  view.alpha = 0.0f;
+  [UIView animateWithDuration:kAnimationDuration animations:^{
+    view.alpha = 1.0f;
+  }];
 }
 
 @end
