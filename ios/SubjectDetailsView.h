@@ -8,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class WKSubjectDetailsView;
 
-@protocol WKSubjectDetailsDelegate
+@protocol WKSubjectDetailsDelegate <NSObject>
 @optional
 - (void)openSubject:(WKSubject *)subject;
 - (void)subjectDetailsView:(WKSubjectDetailsView *)view

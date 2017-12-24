@@ -244,13 +244,17 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
   if ([url.host isEqualToString:@"subject"]) {
     int subjectID = [[url.path substringFromIndex:1] intValue];
     _lastSubjectClicked = [_dataLoader loadSubject:subjectID];
-    [self.delegate openSubject:_lastSubjectClicked];
+    if ([self.delegate respondsToSelector:@selector(openSubject:)]) {
+      [self.delegate openSubject:_lastSubjectClicked];
+    }
   }
   decisionHandler(WKNavigationActionPolicyCancel);
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
-  [self.delegate subjectDetailsView:self didFinishNavigation:navigation];
+  if ([self.delegate respondsToSelector:@selector(subjectDetailsView:didFinishNavigation:)]) {
+    [self.delegate subjectDetailsView:self didFinishNavigation:navigation];
+  }
 }
 
 @end
