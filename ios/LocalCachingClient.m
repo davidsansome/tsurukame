@@ -164,7 +164,6 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
 - (void)sendProgress:(NSArray<WKProgress *> *)progress handler:(ProgressHandler _Nullable)handler {
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
     for (WKProgress *p in progress) {
-      NSLog(@"Deleting assignment %d and storing progress for %d", p.assignmentId, p.subjectId);
       // Delete the assignment.
       CheckUpdate(db, @"DELETE FROM assignments WHERE id = ?", @(p.assignmentId));
       
@@ -188,7 +187,6 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       [progress addObject:[WKProgress parseFromData:[results dataForColumnIndex:0] error:nil]];
     }
   }];
-  NSLog(@"Got %d pending progress", progress.count);
   [self sendPendingProgress:progress handler:handler];
 }
 
@@ -200,7 +198,6 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       // Delete the local pending progress.
       [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
         for (WKProgress *p in progress) {
-          NSLog(@"Delering progress for %d", p.subjectId);
           CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.subjectId));
         }
       }];
