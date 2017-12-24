@@ -10,7 +10,7 @@
 #import <WebKit/WebKit.h>
 
 static const int kActiveQueueSize = 5;
-static const NSTimeInterval kAnimationDuration = 0.5f;
+static const NSTimeInterval kAnimationDuration = 0.25f;
 
 static NSArray<id> *kReadingGradient;
 static NSArray<id> *kMeaningGradient;
