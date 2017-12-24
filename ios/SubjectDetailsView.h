@@ -6,14 +6,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol WKSubjectDetailsLinkHandler
+@class WKSubjectDetailsView;
+
+@protocol WKSubjectDetailsDelegate
+@optional
 - (void)openSubject:(WKSubject *)subject;
+- (void)subjectDetailsView:(WKSubjectDetailsView *)view
+       didFinishNavigation:(WKNavigation *)navigation;
 @end
 
 @interface WKSubjectDetailsView : WKWebView <WKNavigationDelegate>
 
 @property (nonatomic) DataLoader *dataLoader;
-@property (nonatomic, weak) id<WKSubjectDetailsLinkHandler> linkHandler;
+@property (nonatomic, weak) id<WKSubjectDetailsDelegate> delegate;
 
 @property (nonatomic, readonly) WKSubject *lastSubjectClicked;
 

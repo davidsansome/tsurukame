@@ -244,9 +244,13 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
   if ([url.host isEqualToString:@"subject"]) {
     int subjectID = [[url.path substringFromIndex:1] intValue];
     _lastSubjectClicked = [_dataLoader loadSubject:subjectID];
-    [self.linkHandler openSubject:_lastSubjectClicked];
+    [self.delegate openSubject:_lastSubjectClicked];
   }
   decisionHandler(WKNavigationActionPolicyCancel);
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
+  [self.delegate subjectDetailsView:self didFinishNavigation:navigation];
 }
 
 @end
