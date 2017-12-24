@@ -18,9 +18,9 @@ static UIColor *kMeaningTextColor;
 
 static void AddShadowToView(UIView *view) {
   view.layer.shadowColor = [UIColor blackColor].CGColor;
-  view.layer.shadowOffset = CGSizeMake(1, 1);
-  view.layer.shadowOpacity = 0.6;
-  view.layer.shadowRadius = 1.5;
+  view.layer.shadowOffset = CGSizeMake(0, 1);
+  view.layer.shadowOpacity = 0.2;
+  view.layer.shadowRadius = 4;
   view.clipsToBounds = NO;
 }
 
@@ -97,12 +97,7 @@ static void AddShadowToView(UIView *view) {
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  AddShadowToView(_successRateIcon);
-  AddShadowToView(_successRateLabel);
-  AddShadowToView(_doneIcon);
-  AddShadowToView(_doneLabel);
-  AddShadowToView(_queueIcon);
-  AddShadowToView(_queueLabel);
+  AddShadowToView(_questionLabel);
   
   _questionGradient = [CAGradientLayer layer];
   [_questionBackground.layer addSublayer:_questionGradient];

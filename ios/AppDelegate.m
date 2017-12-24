@@ -21,6 +21,7 @@
 
 @implementation AppDelegate {
   DataLoader *_dataLoader;
+  LocalCachingClient *_localCachingClient;
   Reachability *_reachability;
 }
 
@@ -32,14 +33,14 @@
   Client *client = [[Client alloc] initWithApiToken:@"(redacted in git history)"
                                              cookie:@"(redacted in git history)"];
   
-  LocalCachingClient *lcc = [[LocalCachingClient alloc] initWithClient:client reachability:_reachability];
-  lcc.delegate = self;
+  _localCachingClient = [[LocalCachingClient alloc] initWithClient:client reachability:_reachability];
+  _localCachingClient.delegate = self;
   
   MainViewController *vc = (MainViewController *)
       ((UINavigationController *)self.window.rootViewController).topViewController;
   vc.dataLoader = _dataLoader;
   vc.reachability = _reachability;
-  vc.localCachingClient = lcc;
+  vc.localCachingClient = _localCachingClient;
   
   return YES;
 }
@@ -60,6 +61,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   [_reachability startNotifier];
+  [_localCachingClient update];
 }
 
 
