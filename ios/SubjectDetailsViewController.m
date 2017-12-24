@@ -29,6 +29,11 @@
   [self.view.layer insertSublayer:_gradientLayer atIndex:0];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+  self.navigationController.navigationBarHidden = YES;
+}
+
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
   _gradientLayer.frame =

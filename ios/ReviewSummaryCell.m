@@ -1,4 +1,5 @@
 #import "ReviewSummaryCell.h"
+#import "Style.h"
 #import "proto/Wanikani+Convenience.h"
 
 @interface ReviewSummaryCell ()
@@ -8,10 +9,31 @@
 
 @end
 
-@implementation ReviewSummaryCell
+@implementation ReviewSummaryCell {
+  UIFont *_normalFont;
+  UIFont *_incorrectFont;
+  CAGradientLayer *_gradient;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+  self = [super initWithCoder:aDecoder];
+  if (self) {
+    _normalFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightThin];
+    _incorrectFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightBold];
+    _gradient = [CAGradientLayer layer];
+    [self.contentView.layer insertSublayer:_gradient atIndex:0];
+  }
+  return self;
+}
+
+- (void)layoutSubviews {
+  [super layoutSubviews];
+  _gradient.frame = self.contentView.bounds;
+}
 
 - (void)setSubject:(WKSubject *)subject {
   _subject = subject;
+  _gradient.colors = WKGradientForSubject(subject);
   self.subjectLabel.text = subject.japanese;
   if (subject.hasRadical) {
     [self.readingLabel setHidden:YES];
@@ -25,9 +47,8 @@
 
 - (void)setItem:(ReviewItem *)item {
   _item = item;
-  self.readingLabel.textColor = item.answer.readingWrong ? [UIColor redColor] : [UIColor blackColor];
-  self.meaningLabel.textColor = item.answer.meaningWrong ? [UIColor redColor] : [UIColor blackColor];
-  NSLog(@"%d %@, %d %@", item.answer.readingWrong, self.readingLabel.textColor, item.answer.meaningWrong, self.meaningLabel.textColor);
+  self.readingLabel.font = item.answer.readingWrong ? _incorrectFont : _normalFont;
+  self.meaningLabel.font = item.answer.meaningWrong ? _incorrectFont : _normalFont;
 }
 
 @end
