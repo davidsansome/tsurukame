@@ -5,6 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 static const char *kURLBase = "https://www.wanikani.com/api/v2";
 static const char *kProgressURL = "https://www.wanikani.com/json/progress";
+static const char *kStudyMaterialsURLBase = "https://www.wanikani.com/study_materials";
 static const char *kReviewSessionURL = "https://www.wanikani.com/review/session";
 
 NSErrorDomain WKClientErrorDomain = @"WKClientErrorDomain";
@@ -15,8 +16,8 @@ static NSError *MakeError(int code, NSString *msg) {
                          userInfo:@{NSLocalizedDescriptionKey:msg}];
 }
 
-static const NSTimeInterval kProgressTokenValidity = 2 * 60 * 60;  // 2 hours.
-static NSRegularExpression *kProgressTokenRE;
+static const NSTimeInterval kCSRFTokenValidity = 2 * 60 * 60;  // 2 hours.
+static NSRegularExpression *kCSRFTokenRE;
 
 typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable error);
 
@@ -25,16 +26,16 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
   NSString *_cookie;
   NSURLSession *_urlSession;
   NSDateFormatter *_dateFormatter;
-  NSString *_progressToken;
-  NSDate *_progressTokenUpdated;
+  NSString *_csrfToken;
+  NSDate *_csrfTokenUpdated;
 }
 
 - (instancetype)initWithApiToken:(NSString *)apiToken
                           cookie:(NSString *)cookie {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    kProgressTokenRE = [NSRegularExpression regularExpressionWithPattern:
-                        @"<meta name=\"csrf-token\" content=\"([^\"]*)" options:0 error:nil];
+    kCSRFTokenRE = [NSRegularExpression regularExpressionWithPattern:
+                    @"<meta name=\"csrf-token\" content=\"([^\"]*)" options:0 error:nil];
   });
   
   if (self = [super init]) {
@@ -192,7 +193,7 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
 
 #pragma mark - Progress
 
-- (void)fetchProgressToken:(ProgressHandler)handler {
+- (void)fetchCSRFToken:(ProgressHandler)handler {
   NSURLRequest *req = [self authorizeUserRequest:[NSURL URLWithString:@(kReviewSessionURL)]];
   NSURLSessionDataTask *task =
     [_urlSession dataTaskWithRequest:req
@@ -213,26 +214,35 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
     }
                                         
     NSString *body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSTextCheckingResult *result = [kProgressTokenRE firstMatchInString:body
-                                                                options:0
-                                                                  range:NSMakeRange(0, body.length)];
+    NSTextCheckingResult *result = [kCSRFTokenRE firstMatchInString:body
+                                                            options:0
+                                                              range:NSMakeRange(0, body.length)];
     if (!result || result.range.location == NSNotFound) {
       NSLog(@"Page contents: %@", body);
       handler(MakeError(0, @"Progress token not found in page"));
       return;
     }
                                                   
-    _progressToken = [body substringWithRange:[result rangeAtIndex:1]];
-    _progressTokenUpdated = [NSDate date];
-    NSLog(@"Got progress token %@", _progressToken);
+    _csrfToken = [body substringWithRange:[result rangeAtIndex:1]];
+    _csrfTokenUpdated = [NSDate date];
+    NSLog(@"Got CSRF token %@", _csrfToken);
     handler(nil);
   }];
   [task resume];
 }
 
-- (bool)isProgressTokenValid {
-  return _progressToken.length &&
-      - [_progressTokenUpdated timeIntervalSinceNow] < kProgressTokenValidity;
+- (bool)isCSRFTokenValid {
+  return _csrfToken.length &&
+      - [_csrfTokenUpdated timeIntervalSinceNow] < kCSRFTokenValidity;
+}
+
+- (void)ensureValidCSRFTokenAndThen:(void (^)(NSError * _Nullable))handler {
+  // Fetch a new CSRF token if it's invalid or expired.
+  if ([self isCSRFTokenValid]) {
+    handler(nil);
+  } else {
+    [self fetchCSRFToken:handler];
+  }
 }
 
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
@@ -242,7 +252,12 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
     return;
   }
   
-  void (^makeRequest)(void) = ^() {
+  [self ensureValidCSRFTokenAndThen:^(NSError * _Nullable error) {
+    if (error != nil) {
+      handler(error);
+      return;
+    }
+    
     // Encode the data to send in the request.
     NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
     for (WKProgress *p in progress) {
@@ -252,7 +267,7 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
     
     // Add the CSRF token and the data to the request.
     NSMutableURLRequest *req = [self authorizeUserRequest:[NSURL URLWithString:@(kProgressURL)]];
-    [req addValue:_progressToken forHTTPHeaderField:@"X-CSRF-Token"];
+    [req addValue:_csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
     [req addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     [req addValue:[@(data.length) stringValue] forHTTPHeaderField:@"Content-Length"];
     req.HTTPMethod = @"PUT";
@@ -270,20 +285,7 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
         }
     }];
     [task resume];
-  };
-
-  // Fetch a new progress token if it's invalid or expired.
-  if ([self isProgressTokenValid]) {
-    makeRequest();
-  } else {
-    [self fetchProgressToken:^(NSError *error) {
-      if (error != nil) {
-        handler(error);
-      } else {
-        makeRequest();
-      }
-    }];
-  }
+  }];
 }
 
 #pragma mark - Study Materials
@@ -314,6 +316,7 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
       WKStudyMaterials *studyMaterials = [[WKStudyMaterials alloc] init];
       studyMaterials.id_p = [d[@"id"] intValue];
       studyMaterials.subjectId = [d[@"data"][@"subject_id"] intValue];
+      studyMaterials.subjectType = d[@"data"][@"subject_type"];
 
       if (d[@"data"][@"meaning_note"] != [NSNull null]) {
         studyMaterials.meaningNote = d[@"data"][@"meaning_note"];
@@ -329,7 +332,47 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
   }];
 }
 
-#pragma mark - Study Materials
+- (void)updateStudyMaterial:(WKStudyMaterials *)material
+                    handler:(UpdateStudyMaterialHandler)handler {
+  [self ensureValidCSRFTokenAndThen:^(NSError * _Nullable error) {
+    if (error != nil) {
+      handler(error);
+      return;
+    }
+    
+    // Encode the data to send in the request.
+    NSMutableDictionary *payload = [NSMutableDictionary dictionary];
+    [payload setObject:@(material.subjectId) forKey:@"subject_id"];
+    [payload setObject:material.subjectType forKey:@"subject_type"];
+    [payload setObject:material.meaningSynonymsArray forKey:@"meaning_synonyms"];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:0 error:nil];
+    
+    // Add the CSRF token and the data to the request.
+    NSString *urlString = [NSString stringWithFormat:@"%s/%d",
+                           kStudyMaterialsURLBase, material.subjectId];
+    NSMutableURLRequest *req = [self authorizeUserRequest:[NSURL URLWithString:urlString]];
+    [req addValue:_csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
+    [req addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [req addValue:[@(data.length) stringValue] forHTTPHeaderField:@"Content-Length"];
+    req.HTTPMethod = @"PUT";
+    req.HTTPBody = data;
+    
+    // Start the request.
+    NSLog(@"PUT %@ to %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding], req.URL);
+    NSURLSessionDataTask *task =
+        [_urlSession dataTaskWithRequest:req
+                       completionHandler:^(NSData * _Nullable data,
+                                           NSURLResponse * _Nullable response,
+                                           NSError * _Nullable error) {
+                         if (handler) {
+                           handler(error);
+                         }
+                       }];
+    [task resume];
+  }];
+}
+
+#pragma mark - User Info
 
 - (void)getUserInfo:(UserInfoHandler)handler {
   NSURLComponents *url =

@@ -55,7 +55,7 @@ WKAnswerCheckerResult CheckAnswer(NSString *answer,
       }
       for (WKReading *reading in subject.alternateReadings) {
         if ([reading.reading isEqualToString:answer]) {
-          return kWKAnswerOtherKanjiReading;
+          return subject.hasKanji ? kWKAnswerOtherKanjiReading : kWKAnswerPrecise;
         }
       }
       break;

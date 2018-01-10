@@ -34,6 +34,7 @@ static void AddShadowToView(UIView *view) {
 @property (weak, nonatomic) IBOutlet UILabel *promptLabel;
 @property (weak, nonatomic) IBOutlet UITextField *answerField;
 @property (weak, nonatomic) IBOutlet UIButton *submitButton;
+@property (weak, nonatomic) IBOutlet UIButton *addSynonymButton;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 @property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
 
@@ -58,6 +59,7 @@ static void AddShadowToView(UIView *view) {
   WKTaskType _activeTaskType;
   ReviewItem *_activeTask;
   WKSubject *_activeSubject;
+  WKStudyMaterials *_activeStudyMaterials;
 
   int _reviewsCompleted;
   int _tasksAnsweredCorrectly;
@@ -241,6 +243,8 @@ static void AddShadowToView(UIView *view) {
   _activeTaskIndex = arc4random_uniform((uint32_t)_activeQueue.count);
   _activeTask = _activeQueue[_activeTaskIndex];
   _activeSubject = [_dataLoader loadSubject:_activeTask.assignment.subjectId];
+  _activeStudyMaterials =
+      [_localCachingClient getStudyMaterialForID:_activeTask.assignment.subjectId];
   
   // Choose whether to ask the meaning or the reading.
   if (_activeTask.answeredMeaning) {
@@ -323,6 +327,13 @@ static void AddShadowToView(UIView *view) {
     _subjectDetailsView.hidden = YES;
   }];
   
+  // Add synonym button.
+  [UIView animateWithDuration:kAnimationDuration animations:^{
+    _addSynonymButton.alpha = 0.0f;
+  } completion:^(BOOL finished) {
+    _addSynonymButton.hidden = YES;
+  }];
+  
   // Text color.
   _promptLabel.textColor = promptTextColor;
   
@@ -338,17 +349,15 @@ static void AddShadowToView(UIView *view) {
 #pragma mark - Answering
 
 - (void)submit {
-  WKStudyMaterials *studyMaterials =
-      [_localCachingClient getStudyMaterialForID:_activeTask.assignment.subjectId];
   WKAnswerCheckerResult result =
-      CheckAnswer(_answerField.text, _activeSubject, studyMaterials, _activeTaskType);
+      CheckAnswer(_answerField.text, _activeSubject, _activeStudyMaterials, _activeTaskType);
   switch (result) {
     case kWKAnswerPrecise:
     case kWKAnswerImprecise:
-      [self markAnswer:true studyMaterials:studyMaterials];
+      [self markAnswer:true];
       break;
     case kWKAnswerIncorrect:
-      [self markAnswer:false studyMaterials:studyMaterials];
+      [self markAnswer:false];
       break;
     case kWKAnswerOtherKanjiReading:
       [self shakeView:_answerField];
@@ -366,7 +375,7 @@ static void AddShadowToView(UIView *view) {
   } completion:nil];
 }
 
-- (void)markAnswer:(bool)correct studyMaterials:(WKStudyMaterials *)studyMaterials {
+- (void)markAnswer:(bool)correct {
   // Mark the task.
   switch (_activeTaskType) {
     case kWKTaskTypeMeaning:
@@ -408,9 +417,14 @@ static void AddShadowToView(UIView *view) {
   }
   
   // Otherwise show the correct answer.
-  [_subjectDetailsView updateWithSubject:_activeSubject studyMaterials:studyMaterials];
+  [_subjectDetailsView updateWithSubject:_activeSubject studyMaterials:_activeStudyMaterials];
   _subjectDetailsView.hidden = NO;
   _answerField.enabled = NO;
+  
+  _addSynonymButton.hidden = NO;
+  [UIView animateWithDuration:kAnimationDuration animations:^{
+    _addSynonymButton.alpha = 1.0f;
+  }];
 }
 
 - (IBAction)submitButtonPressed:(id)sender {
@@ -419,6 +433,56 @@ static void AddShadowToView(UIView *view) {
   } else {
     [self submit];
   }
+}
+
+- (void)ignoreIncorrectAnswer {
+  _activeTask.answer.meaningWrong = false;
+  _tasksAnswered --;
+  [self markAnswer:true];
+}
+
+- (void)ignoreIncorrectAnswerAndAddSynonym {
+  if (!_activeStudyMaterials) {
+    _activeStudyMaterials = [[WKStudyMaterials alloc] init];
+    _activeStudyMaterials.subjectId = _activeSubject.id_p;
+    _activeStudyMaterials.subjectType = _activeSubject.subjectType;
+  }
+  [_activeStudyMaterials.meaningSynonymsArray addObject:_answerField.text];
+  [_localCachingClient updateStudyMaterial:_activeStudyMaterials handler:nil];
+  
+  [self ignoreIncorrectAnswer];
+}
+
+- (IBAction)addSynonymButtonPressed:(id)sender {
+  __weak ReviewViewController *weakSelf = self;
+  
+  UIAlertController *c =
+      [UIAlertController alertControllerWithTitle:@"Ignore incorrect answer?"
+                                          message:@"Don't cheat!  Only use this if you promise you "
+                                                   "knew the correct answer."
+                                   preferredStyle:UIAlertControllerStyleActionSheet];
+  [c addAction:[UIAlertAction actionWithTitle:@"It was a typo I swear"
+                                        style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction * _Nonnull action) {
+                                        ReviewViewController *unsafeSelf = weakSelf;
+                                        if (unsafeSelf) {
+                                          [unsafeSelf ignoreIncorrectAnswer];
+                                        }
+                                      }]];
+  if (_activeTaskType == kWKTaskTypeMeaning) {
+    [c addAction:[UIAlertAction actionWithTitle:@"Add synonym"
+                                          style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * _Nonnull action) {
+                                          ReviewViewController *unsafeSelf = weakSelf;
+                                          if (unsafeSelf) {
+                                            [self ignoreIncorrectAnswerAndAddSynonym];
+                                          }
+                                        }]];
+  }
+  [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                        style:UIAlertActionStyleCancel
+                                      handler:nil]];
+  [self presentViewController:c animated:YES completion:nil];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {

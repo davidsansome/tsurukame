@@ -40,6 +40,10 @@ typedef void (^StudyMaterialsHandler)(NSError * _Nullable error,
 typedef void (^UserInfoHandler)(NSError * _Nullable error, WKUser * _Nullable user);
 - (void)getUserInfo:(UserInfoHandler)handler;
 
+typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
+- (void)updateStudyMaterial:(WKStudyMaterials *)material
+                    handler:(UpdateStudyMaterialHandler)handler;
+
 @end
 
 NS_ASSUME_NONNULL_END

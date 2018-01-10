@@ -276,7 +276,7 @@
                                     <action selector="backButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="PW3-Bb-gvB"/>
                                 </connections>
                             </button>
-                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CSt-zn-BtW" customClass="WKSubjectDetailsView">
+                            <wkWebView hidden="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CSt-zn-BtW" customClass="WKSubjectDetailsView">
                                 <rect key="frame" x="0.0" y="258.5" width="375" height="408.5"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <wkWebViewConfiguration key="configuration" allowsAirPlayForMediaPlayback="NO" allowsPictureInPictureMediaPlayback="NO">
@@ -285,6 +285,14 @@
                                     <wkPreferences key="preferences" javaScriptEnabled="NO"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <button hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fq3-oe-fWe">
+                                <rect key="frame" x="0.0" y="196.5" width="62" height="62"/>
+                                <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
+                                <state key="normal" image="add"/>
+                                <connections>
+                                    <action selector="addSynonymButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="4Ap-Ae-86d"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -310,6 +318,7 @@
                             <constraint firstItem="WG4-t0-dUV" firstAttribute="leading" secondItem="TgI-GY-kYL" secondAttribute="trailing" constant="6" id="bcz-3j-2X5"/>
                             <constraint firstItem="S3x-ei-BlA" firstAttribute="leading" secondItem="9gS-sh-cYw" secondAttribute="trailing" constant="6" id="cU4-k2-S4r"/>
                             <constraint firstItem="gdi-7v-770" firstAttribute="leading" secondItem="lqe-Ns-DBU" secondAttribute="leading" id="dU4-qc-dVz"/>
+                            <constraint firstItem="M27-Di-5Wg" firstAttribute="centerY" secondItem="Fq3-oe-fWe" secondAttribute="centerY" id="gB2-sQ-a5z"/>
                             <constraint firstItem="Nab-RQ-m49" firstAttribute="bottom" secondItem="TY8-JV-WfA" secondAttribute="bottom" id="gfc-36-hRE"/>
                             <constraint firstItem="WG4-t0-dUV" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="gnS-Fe-QAT"/>
                             <constraint firstItem="9gS-sh-cYw" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="hY3-dA-999"/>
@@ -319,6 +328,7 @@
                             <constraint firstItem="CSt-zn-BtW" firstAttribute="trailing" secondItem="EBu-6v-Hcw" secondAttribute="trailing" id="kiF-W8-1if"/>
                             <constraint firstItem="Jee-0P-imk" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="ljd-NO-w9T"/>
                             <constraint firstAttribute="trailing" secondItem="Nab-RQ-m49" secondAttribute="trailing" id="oyD-zi-Z0d"/>
+                            <constraint firstItem="Fq3-oe-fWe" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="oyI-I7-NWJ"/>
                             <constraint firstItem="Hl2-BP-AQQ" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" id="rEb-27-zRA"/>
                             <constraint firstItem="ctF-hm-AxT" firstAttribute="centerY" secondItem="M27-Di-5Wg" secondAttribute="centerY" id="rNU-ae-KIP"/>
                             <constraint firstItem="TgI-GY-kYL" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="rUl-Oy-n19"/>
@@ -332,6 +342,7 @@
                         <viewLayoutGuide key="safeArea" id="EBu-6v-Hcw"/>
                     </view>
                     <connections>
+                        <outlet property="addSynonymButton" destination="Fq3-oe-fWe" id="xLK-Ez-kg3"/>
                         <outlet property="answerField" destination="M27-Di-5Wg" id="tGd-Sg-Pxy"/>
                         <outlet property="backButton" destination="Hl2-BP-AQQ" id="Olm-G0-FHx"/>
                         <outlet property="doneIcon" destination="q5T-jg-CA5" id="1t5-oj-UVA"/>
@@ -353,7 +364,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tCW-sh-YGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="906" y="24"/>
+            <point key="canvasLocation" x="904.79999999999995" y="23.838080959520241"/>
         </scene>
         <!--Review Summary-->
         <scene sceneID="LjW-B3-4SP">
@@ -524,6 +535,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="add" width="22" height="22"/>
         <image name="back" width="20" height="20"/>
         <image name="confirm" width="28" height="27"/>
         <image name="inbox" width="24" height="24"/>
@@ -532,6 +544,6 @@
         <image name="tick" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="LcM-wy-hJZ"/>
+        <segue reference="ONv-x4-Pkd"/>
     </inferredMetricsTieBreakers>
 </document>
