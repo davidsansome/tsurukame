@@ -114,6 +114,7 @@ message Progress {
 message StudyMaterials {
   optional int32 id = 1;
   optional int32 subject_id = 2;
+  optional string subject_type = 6;
   optional string meaning_note = 3;
   optional string reading_note = 4;
   repeated string meaning_synonyms = 5;
