@@ -50,7 +50,9 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
     data = [_file readDataOfLength:length];
   }
   
-  return [WKSubject parseFromData:data error:nil];
+  WKSubject *ret = [WKSubject parseFromData:data error:nil];
+  ret.id_p = subjectID;
+  return ret;
 }
 
 @end

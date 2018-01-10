@@ -948,6 +948,7 @@ typedef struct WKProgress__storage_ {
 
 @dynamic hasId_p, id_p;
 @dynamic hasSubjectId, subjectId;
+@dynamic hasSubjectType, subjectType;
 @dynamic hasMeaningNote, meaningNote;
 @dynamic hasReadingNote, readingNote;
 @dynamic meaningSynonymsArray, meaningSynonymsArray_Count;
@@ -959,6 +960,7 @@ typedef struct WKStudyMaterials__storage_ {
   NSString *meaningNote;
   NSString *readingNote;
   NSMutableArray *meaningSynonymsArray;
+  NSString *subjectType;
 } WKStudyMaterials__storage_;
 
 // This method is threadsafe because it is initially called
@@ -989,7 +991,7 @@ typedef struct WKStudyMaterials__storage_ {
         .name = "meaningNote",
         .dataTypeSpecific.className = NULL,
         .number = WKStudyMaterials_FieldNumber_MeaningNote,
-        .hasIndex = 2,
+        .hasIndex = 3,
         .offset = (uint32_t)offsetof(WKStudyMaterials__storage_, meaningNote),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -998,7 +1000,7 @@ typedef struct WKStudyMaterials__storage_ {
         .name = "readingNote",
         .dataTypeSpecific.className = NULL,
         .number = WKStudyMaterials_FieldNumber_ReadingNote,
-        .hasIndex = 3,
+        .hasIndex = 4,
         .offset = (uint32_t)offsetof(WKStudyMaterials__storage_, readingNote),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -1010,6 +1012,15 @@ typedef struct WKStudyMaterials__storage_ {
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(WKStudyMaterials__storage_, meaningSynonymsArray),
         .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "subjectType",
+        .dataTypeSpecific.className = NULL,
+        .number = WKStudyMaterials_FieldNumber_SubjectType,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(WKStudyMaterials__storage_, subjectType),
+        .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };

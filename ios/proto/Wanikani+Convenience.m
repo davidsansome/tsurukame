@@ -10,6 +10,19 @@
 
 @implementation WKSubject (Convenience)
 
+- (NSString *)subjectType {
+  if (self.hasRadical) {
+    return @"radical";
+  }
+  if (self.hasKanji) {
+    return @"kanji";
+  }
+  if (self.hasVocabulary) {
+    return @"vocabulary";
+  }
+  return nil;
+}
+
 - (NSString *)primaryMeaning {
   for (WKMeaning *meaning in self.meaningsArray) {
     if (meaning.isPrimary) {

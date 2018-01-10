@@ -12,6 +12,7 @@
 
 @interface WKSubject (Convenience)
 
+@property (nonatomic, readonly) NSString *subjectType;
 @property (nonatomic, readonly) NSString *primaryMeaning;
 @property (nonatomic, readonly) NSArray<WKReading *> *primaryReadings;
 @property (nonatomic, readonly) NSArray<WKReading *> *alternateReadings;

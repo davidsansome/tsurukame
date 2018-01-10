@@ -396,6 +396,7 @@ typedef GPB_ENUM(WKStudyMaterials_FieldNumber) {
   WKStudyMaterials_FieldNumber_MeaningNote = 3,
   WKStudyMaterials_FieldNumber_ReadingNote = 4,
   WKStudyMaterials_FieldNumber_MeaningSynonymsArray = 5,
+  WKStudyMaterials_FieldNumber_SubjectType = 6,
 };
 
 @interface WKStudyMaterials : GPBMessage
@@ -406,6 +407,10 @@ typedef GPB_ENUM(WKStudyMaterials_FieldNumber) {
 @property(nonatomic, readwrite) int32_t subjectId;
 
 @property(nonatomic, readwrite) BOOL hasSubjectId;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *subjectType;
+/** Test to see if @c subjectType has been set. */
+@property(nonatomic, readwrite) BOOL hasSubjectType;
+
 @property(nonatomic, readwrite, copy, null_resettable) NSString *meaningNote;
 /** Test to see if @c meaningNote has been set. */
 @property(nonatomic, readwrite) BOOL hasMeaningNote;

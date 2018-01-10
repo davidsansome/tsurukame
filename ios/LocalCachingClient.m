@@ -87,6 +87,9 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       "  id INTEGER PRIMARY KEY CHECK (id = 0),"
       "  pb BLOB"
       ");",
+      @"CREATE TABLE pending_study_materials ("
+      "  id INTEGER PRIMARY KEY"
+      ");"
     ];
   });
   
@@ -206,6 +209,52 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   }];
 }
 
+- (void)sendAllPendingStudyMaterials:(void (^)(void))handler {
+  dispatch_group_t dispatchGroup = dispatch_group_create();
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    FMResultSet *results = [db executeQuery:@"SELECT s.pb FROM study_materials AS s, pending_study_materials AS p ON s.id = p.id"];
+    while ([results next]) {
+      WKStudyMaterials *material = [WKStudyMaterials parseFromData:[results dataForColumnIndex:0] error:nil];
+      NSLog(@"Sending pending study material update %@", [material description]);
+      
+      dispatch_group_enter(dispatchGroup);
+      [self sendPendingStudyMaterial:material handler:^{
+        dispatch_group_leave(dispatchGroup);
+      }];
+    }
+  }];
+  
+  dispatch_group_notify(dispatchGroup, _queue, handler);
+}
+
+- (void)sendPendingStudyMaterial:(WKStudyMaterials *)material handler:(void (^)(void))handler {
+  [_client updateStudyMaterial:material handler:^(NSError * _Nullable error) {
+    if (error) {
+      NSLog(@"Failed to send study material update: %@", error);
+    } else {
+      [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+        CheckUpdate(db, @"DELETE FROM pending_study_materials WHERE id = ?", @(material.subjectId));
+      }];
+    }
+    handler();
+  }];
+}
+
+- (void)updateStudyMaterial:(WKStudyMaterials *)material
+                    handler:(UpdateStudyMaterialHandler _Nullable)handler {
+  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+    // Store the study material locally.
+    CheckUpdate(db, @"INSERT INTO study_materials (id, pb) VALUES(?, ?)", @(material.subjectId), material.data);
+    CheckUpdate(db, @"INSERT INTO pending_study_materials (id) VALUES(?)", @(material.subjectId));
+  }];
+  
+  [self sendPendingStudyMaterial:material handler:^{
+    if (handler) {
+      handler(nil);
+    }
+  }];
+}
+
 - (void)update {
   if (!_reachability.isReachable) {
     return;
@@ -219,32 +268,38 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       self.busy = true;
     }
     
-    dispatch_group_t dispatchGroup = dispatch_group_create();
+    dispatch_group_t sendGroup = dispatch_group_create();
     
-    dispatch_group_enter(dispatchGroup);
+    dispatch_group_enter(sendGroup);
     [self sendAllPendingProgress:^{
-      dispatch_group_enter(dispatchGroup);
-      [self updateAssignments:^{
-        dispatch_group_leave(dispatchGroup);
-      }];
-      
-      dispatch_group_enter(dispatchGroup);
-      [self updateStudyMaterials:^{
-        dispatch_group_leave(dispatchGroup);
-      }];
-      
-      dispatch_group_enter(dispatchGroup);
-      [self updateUserInfo:^{
-        dispatch_group_leave(dispatchGroup);
-      }];
-      
-      dispatch_group_leave(dispatchGroup);
+      dispatch_group_leave(sendGroup);
     }];
+    dispatch_group_enter(sendGroup);
+    [self sendAllPendingStudyMaterials:^{
+      dispatch_group_leave(sendGroup);
+    }];
+    
+    dispatch_group_notify(sendGroup, _queue, ^{
+      dispatch_group_t updateGroup = dispatch_group_create();
+    
+      dispatch_group_enter(updateGroup);
+      [self updateAssignments:^{
+        dispatch_group_leave(updateGroup);
+      }];
+      dispatch_group_enter(updateGroup);
+      [self updateStudyMaterials:^{
+        dispatch_group_leave(updateGroup);
+      }];
+      dispatch_group_enter(updateGroup);
+      [self updateUserInfo:^{
+        dispatch_group_leave(updateGroup);
+      }];
       
-    dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), ^{
-      @synchronized(self) {
-        self.busy = false;
-      }
+      dispatch_group_notify(updateGroup, dispatch_get_main_queue(), ^{
+        @synchronized(self) {
+          self.busy = false;
+        }
+      });
     });
   });
 }

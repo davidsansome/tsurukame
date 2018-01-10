@@ -33,6 +33,8 @@ extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
              handler:(ProgressHandler _Nullable)handler;
+- (void)updateStudyMaterial:(WKStudyMaterials *)material
+                    handler:(UpdateStudyMaterialHandler _Nullable)handler;
 
 @end
 
