@@ -45,6 +45,9 @@ static void AddShadowToView(UIView *view) {
 @property (weak, nonatomic) IBOutlet UIImageView *doneIcon;
 @property (weak, nonatomic) IBOutlet UIImageView *queueIcon;
 
+@property (nonatomic) IBOutlet NSLayoutConstraint *answerFieldToBottomConstraint;
+@property (nonatomic) IBOutlet NSLayoutConstraint *answerFieldToSubjectDetailsViewConstraint;
+
 @end
 
 @implementation ReviewViewController {
@@ -67,6 +70,11 @@ static void AddShadowToView(UIView *view) {
 
   CAGradientLayer *_questionGradient;
   CAGradientLayer *_promptGradient;
+  bool _inAnimation;
+  
+  // We don't adjust the bottom constraint after the view appeared the first time - some keyboards
+  // (gboard) change size a lot.
+  bool _viewDidAppearOnce;
 }
 
 #pragma mark - Constructors
@@ -89,6 +97,8 @@ static void AddShadowToView(UIView *view) {
   return self;
 }
 
+#pragma mark - Public methods
+
 - (void)startReviewWithItems:(NSArray<ReviewItem *> *)items {
   NSLog(@"Starting review with %lu items", (unsigned long)items.count);
   _reviewQueue = [NSMutableArray arrayWithArray:items];
@@ -97,6 +107,8 @@ static void AddShadowToView(UIView *view) {
   
   [self refillActiveQueue];
 }
+
+#pragma mark - UIViewController
 
 - (void)viewDidLoad {
   [super viewDidLoad];
@@ -107,18 +119,58 @@ static void AddShadowToView(UIView *view) {
   _promptGradient = [CAGradientLayer layer];
   [_promptBackground.layer addSublayer:_promptGradient];
   
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  [nc addObserver:self
+         selector:@selector(keyboardWillShow:)
+             name:UIKeyboardWillShowNotification
+           object:nil];
+  
   _subjectDetailsView.dataLoader = _dataLoader;
   _subjectDetailsView.delegate = self;
   
   _answerField.delegate = _kanaInput;
   
+  [self viewDidLayoutSubviews];
   [self randomTask];
 }
 
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
-  _questionGradient.frame = _questionBackground.bounds;
+  
+  // Set the prompt's frame straight away - we don't care about animating it.
   _promptGradient.frame = _promptBackground.bounds;
+
+  // 'frame' is a derived property.  Set it so the CALayer calculates 'bounds' and 'position' for
+  // us, then animate those animatable properties from the old values to the new values.
+  CGRect oldBounds = _questionGradient.bounds;
+  CGPoint oldPosition = _questionGradient.position;
+  _questionGradient.frame = _questionBackground.bounds;
+  CGRect newBounds = _questionGradient.bounds;
+  CGPoint newPosition = _questionGradient.position;
+  
+  if (!_inAnimation) {
+    return;
+  }
+
+  // Animate bounds.  
+  CABasicAnimation *boundsAnimation = [CABasicAnimation animationWithKeyPath:@"bounds"];
+  boundsAnimation.duration = kAnimationDuration;
+  boundsAnimation.timingFunction =
+      [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+  boundsAnimation.fromValue = [NSValue valueWithCGRect:oldBounds];
+  boundsAnimation.toValue = [NSValue valueWithCGRect:newBounds];
+  [_questionGradient addAnimation:boundsAnimation forKey:nil];
+  
+  // Set position straight away with no animation.  Position is in some other
+  // non-screen space, so even though we're not moving it on screen, we need to
+  // jump to the new position immediately.
+  CABasicAnimation *positionAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
+  positionAnimation.duration = 0;
+  positionAnimation.timingFunction =
+      [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+  positionAnimation.fromValue = [NSValue valueWithCGPoint:oldPosition];
+  positionAnimation.toValue = [NSValue valueWithCGPoint:newPosition];
+  [_questionGradient addAnimation:positionAnimation forKey:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -127,47 +179,22 @@ static void AddShadowToView(UIView *view) {
   self.navigationController.navigationBarHidden = YES;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+  _viewDidAppearOnce = true;
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle {
   return UIStatusBarStyleLightContent;
 }
 
-- (IBAction)backButtonPressed:(id)sender {
-  __weak ReviewViewController *weakSelf = self;
-  
-  UIAlertController *c =
-      [UIAlertController alertControllerWithTitle:@"End review session?"
-                                          message:@"You'll lose progress on any half-answered reviews"
-                                   preferredStyle:UIAlertControllerStyleActionSheet];
-  [c addAction:[UIAlertAction actionWithTitle:@"End review session"
-                                        style:UIAlertActionStyleDestructive
-                                      handler:^(UIAlertAction * _Nonnull action) {
-                                          [self.navigationController popViewControllerAnimated:YES];
-                                        }]];
-  [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
-                                        style:UIAlertActionStyleCancel
-                                      handler:nil]];
-  if (_wrapUp) {
-    [c addAction:[UIAlertAction actionWithTitle:@"Cancel wrap up"
-                                          style:UIAlertActionStyleDefault
-                                        handler:^(UIAlertAction * _Nonnull action) {
-                                          ReviewViewController *self = weakSelf;
-                                          if (self) {
-                                            self->_wrapUp = false;
-                                            [self updateWrapUpButton];
-                                          }
-                                        }]];
-  } else {
-    [c addAction:[UIAlertAction actionWithTitle:@"Wrap up"
-                                          style:UIAlertActionStyleDefault
-                                        handler:^(UIAlertAction * _Nonnull action) {
-                                          ReviewViewController *self = weakSelf;
-                                          if (self) {
-                                            self->_wrapUp = true;
-                                            [self updateWrapUpButton];
-                                          }
-                                        }]];
+#pragma mark - Event handlers
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+  if (!_viewDidAppearOnce) {
+    CGFloat height = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    _answerFieldToBottomConstraint.constant = height + 6;
   }
-  [self presentViewController:c animated:YES completion:nil];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -236,9 +263,6 @@ static void AddShadowToView(UIView *view) {
     [_progressBar setProgress:(double)(_reviewsCompleted) / totalLength animated:YES];
   }
   
-  // Hide the answer from last time.
-  _answerField.enabled = YES;
-  
   // Choose a random task from the active queue.
   _activeTaskIndex = arc4random_uniform((uint32_t)_activeQueue.count);
   _activeTask = _activeQueue[_activeTaskIndex];
@@ -295,9 +319,6 @@ static void AddShadowToView(UIView *view) {
                                         subjectTypePrompt, taskTypePrompt]];
   [prompt setAttributes:@{NSFontAttributeName: boldFont}
                   range:NSMakeRange(prompt.length - taskTypePrompt.length, taskTypePrompt.length)];
-
-  [CATransaction begin];
-  [CATransaction setAnimationDuration:kAnimationDuration];
   
   // Animate the text labels.
   UIViewAnimationOptions options = UIViewAnimationOptionTransitionCrossDissolve;
@@ -311,42 +332,123 @@ static void AddShadowToView(UIView *view) {
     _queueLabel.text = queueText;
   } completion:nil];
   [UIView transitionWithView:self.questionLabel duration:kAnimationDuration options:options animations:^{
-    self.questionLabel.text = _activeSubject.japanese;
+    _questionLabel.text = _activeSubject.japanese;
   } completion:nil];
   [UIView transitionWithView:self.promptLabel duration:kAnimationDuration options:options animations:^{
-    self.promptLabel.attributedText = prompt;
+    _promptLabel.attributedText = prompt;
   } completion:nil];
   [UIView transitionWithView:self.answerField duration:kAnimationDuration options:options animations:^{
-    self.answerField.text = nil;
+    _answerField.text = nil;
   } completion:nil];
-  
-  // Subject details view.
-  [UIView animateWithDuration:kAnimationDuration animations:^{
-    _subjectDetailsView.alpha = 0.0f;
-  } completion:^(BOOL finished) {
-    _subjectDetailsView.hidden = YES;
-  }];
-  
-  // Add synonym button.
-  [UIView animateWithDuration:kAnimationDuration animations:^{
-    _addSynonymButton.alpha = 0.0f;
-  } completion:^(BOOL finished) {
-    _addSynonymButton.hidden = YES;
-  }];
   
   // Text color.
   _promptLabel.textColor = promptTextColor;
   
   // Background gradients.
+  [CATransaction begin];
+  [CATransaction setAnimationDuration:kAnimationDuration];
   _questionGradient.colors = WKGradientForAssignment(_activeTask.assignment);
   _promptGradient.colors = promptGradient;
-  
   [CATransaction commit];
+
+  [self animateSubjectDetailsViewShown:false];
   
   [_answerField becomeFirstResponder];
 }
 
-#pragma mark - Answering
+#pragma mark - Animation
+
+- (void)animateSubjectDetailsViewShown:(bool)shown {
+  _answerField.enabled = !shown;
+
+  if (shown) {
+    _subjectDetailsView.hidden = NO;
+    _addSynonymButton.hidden = NO;
+  }
+
+  [self.view layoutIfNeeded];
+  [UIView animateWithDuration:kAnimationDuration animations:^{
+    // Constraints.  Disable both first then enable the one we want.
+    _answerFieldToBottomConstraint.active = false;
+    _answerFieldToSubjectDetailsViewConstraint.active = false;
+    _answerFieldToBottomConstraint.active = !shown;
+    _answerFieldToSubjectDetailsViewConstraint.active = shown;
+
+    // Scale the text in the question label.
+    const float scale = shown ? 0.5 : 1.0;
+    _questionLabel.transform = CGAffineTransformMakeScale(scale, scale);
+
+    // Fade the controls.
+    _subjectDetailsView.alpha = shown ? 1.0 : 0.0;
+    _addSynonymButton.alpha = shown ? 1.0 : 0.0;
+
+    // We resize the gradient layers in viewDidLayoutSubviews.
+    _inAnimation = true;
+    [self.view layoutIfNeeded];
+    _inAnimation = false;
+  } completion:^(BOOL finished) {
+    if (!shown) {
+      _subjectDetailsView.hidden = YES;
+      _addSynonymButton.hidden = YES;
+    }
+  }];
+}
+
+#pragma mark - Back button
+
+- (IBAction)backButtonPressed:(id)sender {
+  __weak ReviewViewController *weakSelf = self;
+  
+  UIAlertController *c =
+      [UIAlertController alertControllerWithTitle:@"End review session?"
+                                          message:@"You'll lose progress on any half-answered reviews"
+                                   preferredStyle:UIAlertControllerStyleActionSheet];
+  [c addAction:[UIAlertAction actionWithTitle:@"End review session"
+                                        style:UIAlertActionStyleDestructive
+                                      handler:^(UIAlertAction * _Nonnull action) {
+                                          [self.navigationController popViewControllerAnimated:YES];
+                                        }]];
+  [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                        style:UIAlertActionStyleCancel
+                                      handler:nil]];
+  if (_wrapUp) {
+    [c addAction:[UIAlertAction actionWithTitle:@"Cancel wrap up"
+                                          style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * _Nonnull action) {
+                                          ReviewViewController *self = weakSelf;
+                                          if (self) {
+                                            self->_wrapUp = false;
+                                            [self updateWrapUpButton];
+                                          }
+                                        }]];
+  } else {
+    [c addAction:[UIAlertAction actionWithTitle:@"Wrap up"
+                                          style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * _Nonnull action) {
+                                          ReviewViewController *self = weakSelf;
+                                          if (self) {
+                                            self->_wrapUp = true;
+                                            [self updateWrapUpButton];
+                                          }
+                                        }]];
+  }
+  [self presentViewController:c animated:YES completion:nil];
+}
+
+#pragma mark - Submitting answers
+
+- (IBAction)submitButtonPressed:(id)sender {
+  if (!_answerField.enabled) {
+    [self randomTask];
+  } else {
+    [self submit];
+  }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+  [self submit];
+  return YES;
+}
 
 - (void)submit {
   WKAnswerCheckerResult result =
@@ -354,10 +456,10 @@ static void AddShadowToView(UIView *view) {
   switch (result) {
     case kWKAnswerPrecise:
     case kWKAnswerImprecise:
-      [self markAnswer:true];
+      [self markAnswer:true remark:false];
       break;
     case kWKAnswerIncorrect:
-      [self markAnswer:false];
+      [self markAnswer:false remark:false];
       break;
     case kWKAnswerOtherKanjiReading:
       [self shakeView:_answerField];
@@ -375,17 +477,17 @@ static void AddShadowToView(UIView *view) {
   } completion:nil];
 }
 
-- (void)markAnswer:(bool)correct {
+- (void)markAnswer:(bool)correct remark:(bool)remark {
   // Mark the task.
   switch (_activeTaskType) {
     case kWKTaskTypeMeaning:
-      if (!_activeTask.answer.hasMeaningWrong) {
+      if (remark || !_activeTask.answer.hasMeaningWrong) {
         _activeTask.answer.meaningWrong = !correct;
       }
       _activeTask.answeredMeaning = correct;
       break;
     case kWKTaskTypeReading:
-      if (!_activeTask.answer.hasReadingWrong) {
+      if (remark || !_activeTask.answer.hasReadingWrong) {
         _activeTask.answer.readingWrong = !correct;
       }
       _activeTask.answeredReading = correct;
@@ -396,7 +498,7 @@ static void AddShadowToView(UIView *view) {
   
   // Update stats.
   _tasksAnswered ++;
-  if (correct) {
+  if (correct && !remark) {
     _tasksAnsweredCorrectly ++;
   }
   
@@ -418,40 +520,14 @@ static void AddShadowToView(UIView *view) {
   
   // Otherwise show the correct answer.
   [_subjectDetailsView updateWithSubject:_activeSubject studyMaterials:_activeStudyMaterials];
-  _subjectDetailsView.hidden = NO;
-  _answerField.enabled = NO;
   
-  _addSynonymButton.hidden = NO;
-  [UIView animateWithDuration:kAnimationDuration animations:^{
-    _addSynonymButton.alpha = 1.0f;
-  }];
+  [CATransaction begin];
+  [CATransaction setAnimationDuration:kAnimationDuration];
+  [self animateSubjectDetailsViewShown:true];
+  [CATransaction commit];
 }
 
-- (IBAction)submitButtonPressed:(id)sender {
-  if (!_answerField.enabled) {
-    [self randomTask];
-  } else {
-    [self submit];
-  }
-}
-
-- (void)ignoreIncorrectAnswer {
-  _activeTask.answer.meaningWrong = false;
-  _tasksAnswered --;
-  [self markAnswer:true];
-}
-
-- (void)ignoreIncorrectAnswerAndAddSynonym {
-  if (!_activeStudyMaterials) {
-    _activeStudyMaterials = [[WKStudyMaterials alloc] init];
-    _activeStudyMaterials.subjectId = _activeSubject.id_p;
-    _activeStudyMaterials.subjectType = _activeSubject.subjectType;
-  }
-  [_activeStudyMaterials.meaningSynonymsArray addObject:_answerField.text];
-  [_localCachingClient updateStudyMaterial:_activeStudyMaterials handler:nil];
-  
-  [self ignoreIncorrectAnswer];
-}
+#pragma mark - Ignoring incorrect answers
 
 - (IBAction)addSynonymButtonPressed:(id)sender {
   __weak ReviewViewController *weakSelf = self;
@@ -466,7 +542,7 @@ static void AddShadowToView(UIView *view) {
                                       handler:^(UIAlertAction * _Nonnull action) {
                                         ReviewViewController *unsafeSelf = weakSelf;
                                         if (unsafeSelf) {
-                                          [unsafeSelf ignoreIncorrectAnswer];
+                                          [unsafeSelf markAnswer:true remark:true];
                                         }
                                       }]];
   if (_activeTaskType == kWKTaskTypeMeaning) {
@@ -475,7 +551,8 @@ static void AddShadowToView(UIView *view) {
                                         handler:^(UIAlertAction * _Nonnull action) {
                                           ReviewViewController *unsafeSelf = weakSelf;
                                           if (unsafeSelf) {
-                                            [self ignoreIncorrectAnswerAndAddSynonym];
+                                            [unsafeSelf addSynonym];
+                                            [unsafeSelf markAnswer:true remark:true];
                                           }
                                         }]];
   }
@@ -485,9 +562,14 @@ static void AddShadowToView(UIView *view) {
   [self presentViewController:c animated:YES completion:nil];
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-  [self submit];
-  return YES;
+- (void)addSynonym {
+  if (!_activeStudyMaterials) {
+    _activeStudyMaterials = [[WKStudyMaterials alloc] init];
+    _activeStudyMaterials.subjectId = _activeSubject.id_p;
+    _activeStudyMaterials.subjectType = _activeSubject.subjectType;
+  }
+  [_activeStudyMaterials.meaningSynonymsArray addObject:_answerField.text];
+  [_localCachingClient updateStudyMaterial:_activeStudyMaterials handler:nil];
 }
 
 #pragma mark - WKSubjectDetailsDelegate
