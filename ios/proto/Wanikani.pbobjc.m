@@ -205,6 +205,7 @@ BOOL WKReading_Type_IsValidValue(int32_t value__) {
 
 @dynamic hasCharacterImage, characterImage;
 @dynamic hasMnemonic, mnemonic;
+@dynamic hasHasCharacterImageFile, hasCharacterImageFile;
 
 typedef struct WKRadical__storage_ {
   uint32_t _has_storage_[1];
@@ -235,6 +236,15 @@ typedef struct WKRadical__storage_ {
         .offset = (uint32_t)offsetof(WKRadical__storage_, mnemonic),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "hasCharacterImageFile",
+        .dataTypeSpecific.className = NULL,
+        .number = WKRadical_FieldNumber_HasCharacterImageFile,
+        .hasIndex = 2,
+        .offset = 3,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
       },
     };
     GPBDescriptor *localDescriptor =

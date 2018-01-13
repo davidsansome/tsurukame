@@ -49,13 +49,13 @@ static NSString *kHeader =
      "span.meaning {"
      "  background-color: #eee;"
      "}"
-     "span.related.kanji {"
+     ".related.kanji {"
      "  background-color: #f0a;"
      "}"
-     "span.related.radical {"
+     ".related.radical {"
      "  background-color: #0af;"
      "}"
-     "span.related {"
+     ".related {"
      "  display: inline-block;"
      "  margin-right: 0.3em;"
      "  width: 1.8em;"
@@ -67,6 +67,10 @@ static NSString *kHeader =
      "  box-sizing: border-box;"
      "  border-radius: 3px;"
      "  box-shadow: 0 -3px 0 rgba(0,0,0,0.2) inset,0 0 10px rgba(255,255,255,0.5)"
+     "}"
+     "img.related.radical {"
+     "  vertical-align: middle;"
+     "  padding: 0.4em;"
      "}"
      "ul {"
      "  margin: 0;"
@@ -216,8 +220,15 @@ static NSString *kHeader =
       continue;
     }
     
-    [ret appendFormat:@"<li><a href=\"wk://subject/%d\"><span class=\"related %@\">%@</span>%@</a></li>",
-     subjectID, class, subject.japanese, subject.primaryMeaning];
+    if (!subject.hasRadical || !subject.radical.hasCharacterImageFile) {
+      [ret appendFormat:@"<li><a href=\"wk://subject/%d\"><span class=\"related %@\">%@</span>%@</a></li>",
+       subjectID, class, subject.japanese, subject.primaryMeaning];
+    } else {
+      UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"radical-%d", subject.id_p]];
+      NSString *base64 = [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:0];
+      [ret appendFormat:@"<li><a href=\"wk://subject/%d\"><img class=\"related %@\" src=\"data:image/png;base64, %@\" />%@</a></li>",
+       subjectID, class, base64, subject.primaryMeaning];
+    }
   }
   [ret appendString:@"</ul>"];
   return ret;

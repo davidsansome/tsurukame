@@ -34,7 +34,7 @@
 - (void)setSubject:(WKSubject *)subject {
   _subject = subject;
   _gradient.colors = WKGradientForSubject(subject);
-  self.subjectLabel.text = subject.japanese;
+  self.subjectLabel.attributedText = subject.japaneseText;
   if (subject.hasRadical) {
     [self.readingLabel setHidden:YES];
     self.meaningLabel.text = subject.commaSeparatedMeanings;

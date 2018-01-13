@@ -22,7 +22,7 @@
   _subjectDetailsView.delegate = self;
   WKStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
   [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
-  _subjectTitle.text = _subject.japanese;
+  _subjectTitle.attributedText = _subject.japaneseText;
   
   _gradientLayer = [CAGradientLayer layer];
   _gradientLayer.colors = WKGradientForSubject(_subject);

@@ -161,6 +161,7 @@ typedef GPB_ENUM(WKReading_FieldNumber) {
 typedef GPB_ENUM(WKRadical_FieldNumber) {
   WKRadical_FieldNumber_CharacterImage = 1,
   WKRadical_FieldNumber_Mnemonic = 2,
+  WKRadical_FieldNumber_HasCharacterImageFile = 3,
 };
 
 @interface WKRadical : GPBMessage
@@ -173,6 +174,9 @@ typedef GPB_ENUM(WKRadical_FieldNumber) {
 /** Test to see if @c mnemonic has been set. */
 @property(nonatomic, readwrite) BOOL hasMnemonic;
 
+@property(nonatomic, readwrite) BOOL hasCharacterImageFile;
+
+@property(nonatomic, readwrite) BOOL hasHasCharacterImageFile;
 @end
 
 #pragma mark - WKKanji
