@@ -375,7 +375,7 @@ static void AddShadowToView(UIView *view) {
     _answerFieldToSubjectDetailsViewConstraint.active = shown;
 
     // Scale the text in the question label.
-    const float scale = shown ? 0.5 : 1.0;
+    const float scale = shown ? 0.7 : 1.0;
     _questionLabel.transform = CGAffineTransformMakeScale(scale, scale);
 
     // Fade the controls.
