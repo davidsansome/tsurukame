@@ -332,7 +332,7 @@ static void AddShadowToView(UIView *view) {
     _queueLabel.text = queueText;
   } completion:nil];
   [UIView transitionWithView:self.questionLabel duration:kAnimationDuration options:options animations:^{
-    _questionLabel.text = _activeSubject.japanese;
+    _questionLabel.attributedText = _activeSubject.japaneseText;
   } completion:nil];
   [UIView transitionWithView:self.promptLabel duration:kAnimationDuration options:options animations:^{
     _promptLabel.attributedText = prompt;

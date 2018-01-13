@@ -1,14 +1,19 @@
-//
-//  Wanikani+Convenience.m
-//  wk
-//
-//  Created by David Sansome on 28/11/17.
-//  Copyright © 2017 David Sansome. All rights reserved.
-//
-
 #import "Wanikani+Convenience.h"
 
+#import <UIKit/UIKit.h>
+
 @implementation WKSubject (Convenience)
+
+- (NSAttributedString *)japaneseText {
+  if (!self.hasRadical || !self.radical.hasCharacterImageFile) {
+    return [[NSAttributedString alloc] initWithString:self.japanese];
+  }
+  
+  NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
+  imageAttachment.image = [UIImage imageNamed:[NSString stringWithFormat:@"radical-%d", self.id_p]];
+  imageAttachment.bounds = CGRectMake(0, 0, imageAttachment.image.size.width, imageAttachment.image.size.height);
+  return [NSAttributedString attributedStringWithAttachment:imageAttachment];
+}
 
 - (NSString *)subjectType {
   if (self.hasRadical) {
