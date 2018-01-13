@@ -52,6 +52,10 @@ func Combine() error {
 		// Remove fields we don't care about for the iOS app.
 		spb.DocumentUrl = nil
 		spb.Id = nil
+		if spb.Radical != nil && spb.Radical.CharacterImage != nil {
+			spb.Radical.CharacterImage = nil
+			spb.Radical.HasCharacterImageFile = proto.Bool(true)
+		}
 
 		data, err = proto.Marshal(&spb)
 		if err != nil {

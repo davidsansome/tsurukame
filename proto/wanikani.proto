@@ -24,6 +24,7 @@ message Reading {
 message Radical {
   optional string character_image = 1;
   optional string mnemonic = 2;
+  optional bool has_character_image_file = 3;
 }
 
 message Kanji {
