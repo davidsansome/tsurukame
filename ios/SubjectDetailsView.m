@@ -118,7 +118,7 @@ static NSString *kHeader =
   }
   if (subject.hasKanji) {
     [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
-    [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray]];
+    [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray primaryOnly:true]];
     [self addTextSectionTo:ret title:@"Radicals" content:[self renderComponents:subject.componentSubjectIdsArray]];
     [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.kanji.meaningMnemonic]];
     [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.kanji.readingMnemonic]];
@@ -126,7 +126,7 @@ static NSString *kHeader =
   }
   if (subject.hasVocabulary) {
     [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
-    [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray]];
+    [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray primaryOnly:false]];
     [self addTextSectionTo:ret title:@"Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
     [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.vocabulary.meaningExplanation]];
     [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.vocabulary.readingExplanation]];
@@ -156,16 +156,17 @@ static NSString *kHeader =
   return [ret componentsJoinedByString:@", "];
 }
 
-- (NSString *)renderReadings:(NSArray<WKReading *> *)readings {
-  NSMutableArray<NSString *> *ret = [NSMutableArray array];
+- (NSString *)renderReadings:(NSArray<WKReading *> *)readings primaryOnly:(bool)primaryOnly {
+  NSMutableArray<NSString *> *primary = [NSMutableArray array];
+  NSMutableArray<NSString *> *secondary = [NSMutableArray array];
   for (WKReading *reading in readings) {
     if (reading.isPrimary) {
-      [ret addObject:[NSString stringWithFormat:@"<span class=\"pri\">%@</span>", reading.reading]];
-    } else {
-      [ret addObject:[NSString stringWithFormat:@"<span class=\"alt\">%@</span>", reading.reading]];
+      [primary addObject:[NSString stringWithFormat:@"<span class=\"pri\">%@</span>", reading.reading]];
+    } else if (!primaryOnly) {
+      [secondary addObject:[NSString stringWithFormat:@"<span class=\"alt\">%@</span>", reading.reading]];
     }
   }
-  return [ret componentsJoinedByString:@", "];
+  return [[primary arrayByAddingObjectsFromArray:secondary] componentsJoinedByString:@", "];
 }
 
 - (void)addTextSectionTo:(NSMutableString *)ret
