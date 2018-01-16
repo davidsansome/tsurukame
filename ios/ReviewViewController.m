@@ -497,8 +497,10 @@ static void AddShadowToView(UIView *view) {
   }
   
   // Update stats.
-  _tasksAnswered ++;
-  if (correct && !remark) {
+  if (!remark) {
+    _tasksAnswered ++;
+  }
+  if (correct) {
     _tasksAnsweredCorrectly ++;
   }
   
