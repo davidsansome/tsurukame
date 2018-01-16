@@ -471,10 +471,14 @@ static void AddShadowToView(UIView *view) {
 }
 
 - (void)shakeView:(UIView *)view {
-  view.transform = CGAffineTransformMakeTranslation(20, 0);
-  [UIView animateWithDuration:0.8 delay:0.0 usingSpringWithDamping:0.2 initialSpringVelocity:2.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-    view.transform = CGAffineTransformIdentity;
-  } completion:nil];
+  CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position"];
+  animation.duration = 0.1f;
+  animation.repeatCount = 3;
+  animation.autoreverses = true;
+  animation.fromValue = [NSValue valueWithCGPoint:CGPointMake(view.center.x - 10, view.center.y)];
+  animation.toValue = [NSValue valueWithCGPoint:CGPointMake(view.center.x + 10, view.center.y)];
+  
+  [view.layer addAnimation:animation forKey:nil];
 }
 
 - (void)markAnswer:(bool)correct remark:(bool)remark {

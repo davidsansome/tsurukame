@@ -191,7 +191,7 @@
                                     <constraint firstAttribute="height" constant="16" id="pqx-CS-kAg"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg" customClass="LanguageSpecificTextField">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg" customClass="LanguageSpecificTextField">
                                 <rect key="frame" x="8" y="611" width="359" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="bHy-2g-dyk"/>
