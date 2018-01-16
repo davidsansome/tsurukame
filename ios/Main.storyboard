@@ -14,7 +14,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Or2-Qd-5D2">
             <objects>
-                <navigationController navigationBarHidden="YES" id="Whd-2S-WNr" sceneMemberID="viewController">
+                <navigationController navigationBarHidden="YES" id="Whd-2S-WNr" customClass="NavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YMU-8O-uJl">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -477,7 +477,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <wkWebView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="grI-h7-N4t" customClass="WKSubjectDetailsView">
+                            <wkWebView opaque="NO" contentMode="scaleToFill" allowsBackForwardNavigationGestures="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grI-h7-N4t" customClass="WKSubjectDetailsView">
                                 <rect key="frame" x="0.0" y="94" width="375" height="573"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <wkWebViewConfiguration key="configuration" allowsAirPlayForMediaPlayback="NO" allowsPictureInPictureMediaPlayback="NO">
