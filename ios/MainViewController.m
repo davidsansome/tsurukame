@@ -48,6 +48,7 @@
   [_localCachingClient update];
   
   [super viewWillAppear:animated];
+  self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)reachabilityChanged:(NSNotification *)notification {
