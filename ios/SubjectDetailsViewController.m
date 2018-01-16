@@ -1,3 +1,4 @@
+#import "NavigationController.h"
 #import "Style.h"
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
@@ -5,7 +6,7 @@
 
 #import <WebKit/WebKit.h>
 
-@interface SubjectDetailsViewController () <WKSubjectDetailsDelegate>
+@interface SubjectDetailsViewController () <WKSubjectDetailsDelegate, NavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
 @property (weak, nonatomic) IBOutlet UILabel *subjectTitle;
@@ -14,6 +15,10 @@
 
 @implementation SubjectDetailsViewController {
   CAGradientLayer *_gradientLayer;
+}
+
+- (bool)canSwipeToGoBack {
+  return true;
 }
 
 - (void)viewDidLoad {
