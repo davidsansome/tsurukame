@@ -406,7 +406,7 @@ static void AddShadowToView(UIView *view) {
   [c addAction:[UIAlertAction actionWithTitle:@"End review session"
                                         style:UIAlertActionStyleDestructive
                                       handler:^(UIAlertAction * _Nonnull action) {
-                                          [self.navigationController popViewControllerAnimated:YES];
+                                          [self performSegueWithIdentifier:@"reviewSummary" sender:self];
                                         }]];
   [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                         style:UIAlertActionStyleCancel
