@@ -2,7 +2,7 @@
 #import "ReviewSummaryViewController.h"
 #import "SubjectDetailsViewController.h"
 
-@interface ReviewSummaryViewController () <UITableViewDataSource>
+@interface ReviewSummaryViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @end
 
@@ -109,6 +109,15 @@
     cell.subject = subject;
   }
   return ret;
+}
+
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+  if ([cell isKindOfClass:[ReviewSummaryCell class]]) {
+    [self performSegueWithIdentifier:@"subjectDetails" sender:cell];
+    return indexPath;
+  }
+  return nil;
 }
 
 @end
