@@ -63,6 +63,9 @@ func convertMeanings(m []api.MeaningObject) []*pb.Meaning {
 func convertReadings(r []api.ReadingObject) []*pb.Reading {
 	var ret []*pb.Reading
 	for _, reading := range r {
+		if reading.Reading == "None" {
+			continue
+		}
 		rpb := &pb.Reading{
 			Reading:   proto.String(reading.Reading),
 			IsPrimary: proto.Bool(reading.Primary),
