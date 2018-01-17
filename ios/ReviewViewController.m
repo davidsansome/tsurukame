@@ -4,6 +4,7 @@
 #import "Style.h"
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
+#import "SuccessAnimation.h"
 #import "WKKanaInput.h"
 #import "proto/Wanikani+Convenience.h"
 
@@ -455,9 +456,10 @@ static void AddShadowToView(UIView *view) {
       CheckAnswer(_answerField.text, _activeSubject, _activeStudyMaterials, _activeTaskType);
   switch (result) {
     case kWKAnswerPrecise:
-    case kWKAnswerImprecise:
+    case kWKAnswerImprecise: {
       [self markAnswer:true remark:false];
       break;
+    }
     case kWKAnswerIncorrect:
       [self markAnswer:false remark:false];
       break;
@@ -509,7 +511,10 @@ static void AddShadowToView(UIView *view) {
   }
   
   // Remove it from the active queue if that was the last part.
-  if (_activeTask.answeredMeaning && (_activeSubject.hasRadical || _activeTask.answeredReading)) {
+  bool isSubjectFinished = _activeTask.answeredMeaning && (_activeSubject.hasRadical || _activeTask.answeredReading);
+  int newSrsStage = (!_activeTask.answer.readingWrong && !_activeTask.answer.meaningWrong) ?
+                        _activeTask.assignment.srsStage + 1 : _activeTask.assignment.srsStage;
+  if (isSubjectFinished) {
     [_localCachingClient sendProgress:@[_activeTask.answer] handler:nil];
     
     _reviewsCompleted ++;
@@ -520,6 +525,7 @@ static void AddShadowToView(UIView *view) {
   
   // Show a new task if it was correct.
   if (correct) {
+    RunSuccessAnimation(_submitButton, _doneLabel, isSubjectFinished, newSrsStage);
     [self randomTask];
     return;
   }
