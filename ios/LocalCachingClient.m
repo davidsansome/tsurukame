@@ -46,7 +46,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
     _reachability = reachability;
     _db = [self openDatabase];
     assert(_db);
-    _queue = dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0);
+    _queue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0);
   }
   return self;
 }

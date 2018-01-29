@@ -12,7 +12,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern const char *kWanikaniSessionCookieName;
 extern NSErrorDomain WKClientErrorDomain;
+
+typedef void (^ApiTokenHandler)(NSError * _Nullable error, NSString * _Nullable apiToken);
+typedef void (^AssignmentHandler)(NSError * _Nullable error,
+                                  NSArray<WKAssignment *> * _Nullable assignments);
+typedef void (^ProgressHandler)(NSError * _Nullable error);
+typedef void (^StudyMaterialsHandler)(NSError * _Nullable error,
+                                      NSArray<WKStudyMaterials *> * _Nullable studyMaterials);
+typedef void (^UserInfoHandler)(NSError * _Nullable error, WKUser * _Nullable user);
+typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
 
 @interface Client : NSObject
 
@@ -23,24 +33,15 @@ extern NSErrorDomain WKClientErrorDomain;
 @property (nonatomic, readonly) NSDateFormatter *dateFormatter;
 @property (nonatomic, readonly) NSString *currentISO8601Time;
 
-typedef void (^AssignmentHandler)(NSError * _Nullable error,
-                                  NSArray<WKAssignment *> * _Nullable assignments);
++ (void)getApiTokenForCookie:(NSString *)cookie
+                     handler:(ApiTokenHandler)handler;
 - (void)getAssignmentsModifiedAfter:(NSString *)date
                             handler:(AssignmentHandler)handler;
-
-typedef void (^ProgressHandler)(NSError * _Nullable error);
 - (void)sendProgress:(NSArray<WKProgress *> *)progress
              handler:(ProgressHandler _Nullable)handler;
-
-typedef void (^StudyMaterialsHandler)(NSError * _Nullable error,
-                                      NSArray<WKStudyMaterials *> * _Nullable studyMaterials);
 - (void)getStudyMaterialsModifiedAfter:(NSString *)date
                                handler:(StudyMaterialsHandler)handler;
-
-typedef void (^UserInfoHandler)(NSError * _Nullable error, WKUser * _Nullable user);
 - (void)getUserInfo:(UserInfoHandler)handler;
-
-typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
 - (void)updateStudyMaterial:(WKStudyMaterials *)material
                     handler:(UpdateStudyMaterialHandler)handler;
 

@@ -3,10 +3,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+const char *kWanikaniSessionCookieName = "_wanikani_session";
 static const char *kURLBase = "https://www.wanikani.com/api/v2";
 static const char *kProgressURL = "https://www.wanikani.com/json/progress";
 static const char *kStudyMaterialsURLBase = "https://www.wanikani.com/study_materials";
 static const char *kReviewSessionURL = "https://www.wanikani.com/review/session";
+static const char *kAccountURL = "https://www.wanikani.com/settings/account";
+
+static const char *kCSRFTokenREPattern = "<meta name=\"csrf-token\" content=\"([^\"]*)";
+static const char *kAPITokenREPattern = "<input value=\"([^\"]+)\"[^>]+name=\"user_api_key_v2\"";
 
 NSErrorDomain WKClientErrorDomain = @"WKClientErrorDomain";
 
@@ -34,8 +39,8 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
                           cookie:(NSString *)cookie {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    kCSRFTokenRE = [NSRegularExpression regularExpressionWithPattern:
-                    @"<meta name=\"csrf-token\" content=\"([^\"]*)" options:0 error:nil];
+    kCSRFTokenRE = [NSRegularExpression regularExpressionWithPattern:@(kCSRFTokenREPattern)
+                                                             options:0 error:nil];
   });
   
   if (self = [super init]) {
@@ -58,11 +63,16 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
   return req;
 }
 
-- (NSMutableURLRequest *)authorizeUserRequest:(NSURL *)url {
++ (NSMutableURLRequest *)authorizeUserRequest:(NSURL *)url
+                                   withCookie:(NSString *)cookie {
   NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
-  [req setValue:[NSString stringWithFormat:@"_wanikani_session=%@", _cookie]
-       forHTTPHeaderField:@"Cookie"];
+  [req setValue:[NSString stringWithFormat:@"%s=%@", kWanikaniSessionCookieName, cookie]
+      forHTTPHeaderField:@"Cookie"];
   return req;
+}
+
+- (NSMutableURLRequest *)authorizeUserRequest:(NSURL *)url {
+  return [Client authorizeUserRequest:url withCookie:_cookie];
 }
 
 #pragma mark - Query utilities
@@ -128,6 +138,54 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
   } else {
     handler(nil, nil);
   }
+}
+
+#pragma mark - API token
+
++ (void)getApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler {
+  static NSRegularExpression *sAPITokenRE;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    sAPITokenRE = [NSRegularExpression regularExpressionWithPattern:@(kAPITokenREPattern)
+                                                            options:0 error:nil];
+  });
+  
+  NSURLRequest *req = [Client authorizeUserRequest:[NSURL URLWithString:@(kAccountURL)]
+                                        withCookie:cookie];
+  NSURLSession *session = [NSURLSession sharedSession];
+  NSURLSessionDataTask *task =
+      [session dataTaskWithRequest:req
+                 completionHandler:^(NSData * _Nullable data,
+                                     NSURLResponse * _Nullable response,
+                                     NSError * _Nullable error) {
+                   if (error != nil) {
+                     handler(error, nil);
+                     return;
+                   }
+                   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                   if (httpResponse.statusCode != 200) {
+                     handler(MakeError((int)httpResponse.statusCode,
+                                       [NSString stringWithFormat:@"HTTP error %ld for %@",
+                                        (long)httpResponse.statusCode,
+                                        response.URL.absoluteString]), nil);
+                     return;
+                   }
+                   
+                   NSString *body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                   NSTextCheckingResult *result = [sAPITokenRE firstMatchInString:body
+                                                                          options:0
+                                                                            range:NSMakeRange(0, body.length)];
+                   if (!result || result.range.location == NSNotFound) {
+                     NSLog(@"Page contents: %@", body);
+                     handler(MakeError(0, @"API token not found in page"), nil);
+                     return;
+                   }
+                   
+                   NSString *token = [body substringWithRange:[result rangeAtIndex:1]];
+                   NSLog(@"Got API token %@", token);
+                   handler(nil, token);
+                 }];
+  [task resume];
 }
 
 #pragma mark - Assignments
