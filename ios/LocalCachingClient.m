@@ -171,7 +171,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       CheckUpdate(db, @"DELETE FROM assignments WHERE id = ?", @(p.assignmentId));
       
       // Store the progress locally.
-      CheckUpdate(db, @"INSERT INTO pending_progress (id, pb) VALUES(?, ?)", @(p.subjectId), p.data);
+      CheckUpdate(db, @"REPLACE INTO pending_progress (id, pb) VALUES(?, ?)", @(p.subjectId), p.data);
     }
   }];
   
@@ -244,8 +244,8 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
                     handler:(UpdateStudyMaterialHandler _Nullable)handler {
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
     // Store the study material locally.
-    CheckUpdate(db, @"INSERT INTO study_materials (id, pb) VALUES(?, ?)", @(material.subjectId), material.data);
-    CheckUpdate(db, @"INSERT INTO pending_study_materials (id) VALUES(?)", @(material.subjectId));
+    CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES(?, ?)", @(material.subjectId), material.data);
+    CheckUpdate(db, @"REPLACE INTO pending_study_materials (id) VALUES(?)", @(material.subjectId));
   }];
   
   [self sendPendingStudyMaterial:material handler:^{
