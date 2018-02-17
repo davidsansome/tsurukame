@@ -94,6 +94,14 @@
             </objects>
             <point key="canvasLocation" x="445" y="846"/>
         </scene>
+        <!--Lessons View Controller-->
+        <scene sceneID="Qyd-hs-Ruf">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="AcM-nc-4xT" customClass="LessonsViewController" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BsK-lV-QiF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="234" y="-528"/>
+        </scene>
         <!--Main View Controller-->
         <scene sceneID="ydl-qq-SrR">
             <objects>
@@ -128,6 +136,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="AcM-nc-4xT" kind="show" identifier="startLessons" id="wdx-4K-8iN"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="XZl-Cl-BHz" detailTextLabel="lcl-gI-1tp" style="IBUITableViewCellStyleValue1" id="GQA-UB-k55">
                                         <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
@@ -594,6 +605,7 @@
                     </view>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="backButton" destination="CbN-0R-8Ce" id="51M-TW-2TS"/>
                         <outlet property="subjectDetailsView" destination="grI-h7-N4t" id="NsQ-fP-dDq"/>
                         <outlet property="subjectTitle" destination="h4n-sy-iRy" id="d7g-Wr-uvJ"/>
                     </connections>
@@ -613,6 +625,6 @@
         <image name="tick" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="LcM-wy-hJZ"/>
+        <segue reference="ONv-x4-Pkd"/>
     </inferredMetricsTieBreakers>
 </document>

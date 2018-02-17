@@ -1,6 +1,9 @@
 #import "MainViewController.h"
+#import "LessonsViewController.h"
 #import "ReviewViewController.h"
 #import "proto/Wanikani+Convenience.h"
+
+static const NSInteger kItemsPerLesson = 5;
 
 @interface MainViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *syncTitle;
@@ -139,6 +142,25 @@
       }
       NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments];
       [vc startReviewWithItems:items];
+    }];
+  } else if ([segue.identifier isEqualToString:@"startLessons"]) {
+    LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;
+    vc.dataLoader = _dataLoader;
+    vc.localCachingClient = _localCachingClient;
+    
+    [_localCachingClient getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
+      if (error) {
+        NSLog(@"Failed to get assignments: %@", error);
+        return;
+      }
+      NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments];
+      if (items.count > kItemsPerLesson) {
+        items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
+      }
+      
+      dispatch_async(dispatch_get_main_queue(), ^{
+        vc.items = items;
+      });
     }];
   }
 }

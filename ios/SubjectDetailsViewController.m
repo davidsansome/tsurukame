@@ -10,6 +10,7 @@
 
 @property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
 @property (weak, nonatomic) IBOutlet UILabel *subjectTitle;
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
 
 @end
 
@@ -27,11 +28,19 @@
   _subjectDetailsView.delegate = self;
   WKStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
   [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
-  _subjectTitle.attributedText = _subject.japaneseText;
   
+  for (UIGestureRecognizer *recognizer in _subjectDetailsView.gestureRecognizers) {
+    [_subjectDetailsView removeGestureRecognizer:recognizer];
+  }
+  
+  _subjectTitle.attributedText = _subject.japaneseText;
   _gradientLayer = [CAGradientLayer layer];
   _gradientLayer.colors = WKGradientForSubject(_subject);
   [self.view.layer insertSublayer:_gradientLayer atIndex:0];
+  
+  if (_hideBackButton) {
+    [_backButton setHidden:YES];
+  }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
