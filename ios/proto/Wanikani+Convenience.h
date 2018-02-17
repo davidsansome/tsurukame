@@ -1,12 +1,4 @@
-//
-//  Wanikani+Convenience.h
-//  wk
-//
-//  Created by David Sansome on 28/11/17.
-//  Copyright © 2017 David Sansome. All rights reserved.
-//
-
-#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 #import "Wanikani.pbobjc.h"
 
@@ -19,6 +11,8 @@
 @property (nonatomic, readonly) NSString *commaSeparatedReadings;
 @property (nonatomic, readonly) NSString *commaSeparatedMeanings;
 @property (nonatomic, readonly) NSAttributedString *japaneseText;
+
+- (NSAttributedString *)japaneseTextWithImageSize:(CGFloat)imageSize;
 
 @end
 
