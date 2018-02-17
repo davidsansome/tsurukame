@@ -512,8 +512,8 @@ static void AddShadowToView(UIView *view) {
   
   // Remove it from the active queue if that was the last part.
   bool isSubjectFinished = _activeTask.answeredMeaning && (_activeSubject.hasRadical || _activeTask.answeredReading);
-  int newSrsStage = (!_activeTask.answer.readingWrong && !_activeTask.answer.meaningWrong) ?
-                        _activeTask.assignment.srsStage + 1 : _activeTask.assignment.srsStage;
+  bool didLevelUp = (!_activeTask.answer.readingWrong && !_activeTask.answer.meaningWrong);
+  int newSrsStage = didLevelUp ? _activeTask.assignment.srsStage + 1 : _activeTask.assignment.srsStage - 1;
   if (isSubjectFinished) {
     [_localCachingClient sendProgress:@[_activeTask.answer] handler:nil];
     
@@ -525,7 +525,7 @@ static void AddShadowToView(UIView *view) {
   
   // Show a new task if it was correct.
   if (correct) {
-    RunSuccessAnimation(_submitButton, _doneLabel, isSubjectFinished, newSrsStage);
+    RunSuccessAnimation(_submitButton, _doneLabel, isSubjectFinished, didLevelUp, newSrsStage);
     [self randomTask];
     return;
   }
