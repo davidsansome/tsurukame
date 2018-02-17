@@ -31,6 +31,7 @@
 @interface WKAssignment (Convenience)
 
 @property (nonatomic, readonly) bool isReadyForReview;
+@property (nonatomic, readonly) bool isReadyForLesson;
 
 @end
 

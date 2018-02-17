@@ -21,6 +21,16 @@
   return ret;
 }
 
++ (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<WKAssignment *> *)assignments {
+  NSMutableArray *ret = [NSMutableArray array];
+  for (WKAssignment *assignment in assignments) {
+    if (assignment.isReadyForLesson) {
+      [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
+    }
+  }
+  return ret;
+}
+
 - (instancetype)initFromAssignment:(WKAssignment *)assignment {
   if (self = [super init]) {
     _assignment = assignment;

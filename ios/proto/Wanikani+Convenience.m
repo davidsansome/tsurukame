@@ -118,6 +118,10 @@
   return [readyForReview timeIntervalSinceNow] < 0;
 }
 
+- (bool)isReadyForLesson {
+  return !self.hasAvailableAt && self.srsStage == 0;
+}
+
 @end
 
 @implementation WKProgress (Convenience)
