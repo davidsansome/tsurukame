@@ -5,13 +5,20 @@
 @implementation WKSubject (Convenience)
 
 - (NSAttributedString *)japaneseText {
+  return [self japaneseTextWithImageSize:0];
+}
+
+- (NSAttributedString *)japaneseTextWithImageSize:(CGFloat)imageSize {
   if (!self.hasRadical || !self.radical.hasCharacterImageFile) {
     return [[NSAttributedString alloc] initWithString:self.japanese];
   }
   
   NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
   imageAttachment.image = [UIImage imageNamed:[NSString stringWithFormat:@"radical-%d", self.id_p]];
-  imageAttachment.bounds = CGRectMake(0, 0, imageAttachment.image.size.width, imageAttachment.image.size.height);
+  if (imageSize == 0) {
+    imageSize = imageAttachment.image.size.width;
+  }
+  imageAttachment.bounds = CGRectMake(0, 0, imageSize, imageSize);
   return [NSAttributedString attributedStringWithAttachment:imageAttachment];
 }
 
