@@ -18,9 +18,6 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YMU-8O-uJl">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
-                    <connections>
-                        <segue destination="Y17-rT-A78" kind="relationship" relationship="rootViewController" id="a0x-By-qTh"/>
-                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AUY-rd-Kw3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
