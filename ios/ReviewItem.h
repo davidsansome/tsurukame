@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger, WKTaskType) {
 @interface ReviewItem : NSObject
 
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<WKAssignment *> *)assignments;
++ (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<WKAssignment *> *)assignments;
 
 - (instancetype)initFromAssignment:(WKAssignment *)assignment NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;

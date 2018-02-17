@@ -72,12 +72,16 @@
       return;
     }
     int reviews = 0;
+    int lessons = 0;
     for (WKAssignment *assignment in assignments) {
       if (assignment.isReadyForReview) {
         reviews ++;
       }
+      if (assignment.isReadyForLesson) {
+        lessons ++;
+      }
     }
-    [weakSelf updateLessonCount:0 reviewCount:reviews];
+    [weakSelf updateLessonCount:lessons reviewCount:reviews];
   }];
 }
 
