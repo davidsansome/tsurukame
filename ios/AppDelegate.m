@@ -37,6 +37,9 @@
   
   if (UserDefaults.userApiToken && UserDefaults.userCookie) {
     [self loginComplete:nil];
+  } else {
+    LoginViewController *loginViewController = [_storyboard instantiateViewControllerWithIdentifier:@"login"];
+    [_navigationController setViewControllers:@[loginViewController] animated:NO];
   }
   
   return YES;
@@ -55,8 +58,7 @@
   vc.localCachingClient = _localCachingClient;
   
   NSLog(@"Pushing main view controller %@ %@", _navigationController, self.window.rootViewController);
-  [_navigationController popToRootViewControllerAnimated:NO];
-  [_navigationController pushViewController:vc animated:(notification == nil) ? NO : YES];
+  [_navigationController setViewControllers:@[vc] animated:(notification == nil) ? NO : YES];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
