@@ -226,49 +226,51 @@ static void CreateExplosion(UIView *origin) {
 void RunSuccessAnimation(UIView *button,
                          UIView *doneLabel,
                          bool isSubjectFinished,
+                         bool didLevelUp,
                          int newSrsLevel) {
   CreateExplosion(button);
-  if (!isSubjectFinished) {
-    return;
+  
+  if (isSubjectFinished) {
+    CreateFlyingText(button,
+                     doneLabel,
+                     @"+1",
+                     [UIFont boldSystemFontOfSize:20.0],
+                     [UIColor whiteColor],
+                     0.75);  // Duration.
   }
   
-  CreateFlyingText(button,
-                   doneLabel,
-                   @"+1",
-                   [UIFont boldSystemFontOfSize:20.0],
-                   [UIColor whiteColor],
-                   0.75);  // Duration.
-  
-  NSString *srsLevelString;
-  UIColor *srsLevelColor;
-  switch (newSrsLevel) {
-    case 5:
-      srsLevelString = @"Guru";
-      srsLevelColor = [UIColor colorWithRed:0.533 green:0.176 blue:0.62 alpha:1]; // #882d9e
-      break;
-    case 7:
-      srsLevelString = @"Master";
-      srsLevelColor = [UIColor colorWithRed:0.161 green:0.302 blue:0.859 alpha:1]; // #294ddb
-      break;
-    case 8:
-      srsLevelString = @"Enlightened";
-      srsLevelColor = [UIColor colorWithRed:0 green:0.576 blue:0.867 alpha:1]; // #0093dd
-      break;
-    case 9:
-      srsLevelString = @"Burned";
-      srsLevelColor = [UIColor colorWithRed:0.263 green:0.263 blue:0.263 alpha:1]; // #434343
-      break;
-    default:
-      return;
+  if (isSubjectFinished && didLevelUp) {
+    NSString *srsLevelString;
+    UIColor *srsLevelColor;
+    switch (newSrsLevel) {
+      case 5:
+        srsLevelString = @"Guru";
+        srsLevelColor = [UIColor colorWithRed:0.533 green:0.176 blue:0.62 alpha:1]; // #882d9e
+        break;
+      case 7:
+        srsLevelString = @"Master";
+        srsLevelColor = [UIColor colorWithRed:0.161 green:0.302 blue:0.859 alpha:1]; // #294ddb
+        break;
+      case 8:
+        srsLevelString = @"Enlightened";
+        srsLevelColor = [UIColor colorWithRed:0 green:0.576 blue:0.867 alpha:1]; // #0093dd
+        break;
+      case 9:
+        srsLevelString = @"Burned";
+        srsLevelColor = [UIColor colorWithRed:0.263 green:0.263 blue:0.263 alpha:1]; // #434343
+        break;
+      default:
+        return;
+    }
+    
+    CreateSpringyBillboard(button, srsLevelString,
+                           [UIFont systemFontOfSize:16.0],
+                           [UIColor whiteColor],
+                           srsLevelColor,
+                           5.0,  // Border radius.
+                           6.0,  // Padding.
+                           50.0,  // Distance.
+                           - M_PI * 0.15,  // Angle.
+                           3.0);  // Duration.
   }
-  
-  CreateSpringyBillboard(button, srsLevelString,
-                         [UIFont systemFontOfSize:16.0],
-                         [UIColor whiteColor],
-                         srsLevelColor,
-                         5.0,  // Border radius.
-                         6.0,  // Padding.
-                         50.0,  // Distance.
-                         - M_PI * 0.15,  // Angle.
-                         3.0);  // Duration.
 }
