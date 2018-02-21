@@ -134,6 +134,7 @@ static const NSInteger kItemsPerLesson = 5;
     ReviewViewController *vc = (ReviewViewController *)segue.destinationViewController;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
+    vc.delegate = [[DefaultReviewViewControllerDelegate alloc] init];
     
     [_localCachingClient getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
       if (error) {

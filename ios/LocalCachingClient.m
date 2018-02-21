@@ -164,25 +164,27 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   return ret;
 }
 
-- (void)sendProgress:(NSArray<WKProgress *> *)progress handler:(ProgressHandler _Nullable)handler {
+- (void)sendReviewProgress:(NSArray<WKProgress *> *)progress
+                   handler:(ProgressHandler _Nullable)handler {
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
     for (WKProgress *p in progress) {
       // Delete the assignment.
       CheckUpdate(db, @"DELETE FROM assignments WHERE id = ?", @(p.assignmentId));
       
       // Store the progress locally.
-      CheckUpdate(db, @"REPLACE INTO pending_progress (id, pb) VALUES(?, ?)", @(p.subjectId), p.data);
+      CheckUpdate(db, @"REPLACE INTO pending_progress (id, pb) VALUES(?, ?)",
+                  @(p.subjectId), p.data);
     }
   }];
   
-  [self sendPendingProgress:progress handler:^{
+  [self sendPendingReviewProgress:progress handler:^{
     if (handler) {
       handler(nil);
     }
   }];
 }
 
-- (void)sendAllPendingProgress:(void (^)(void))handler {
+- (void)sendAllPendingReviewProgress:(void (^)(void))handler {
   NSMutableArray<WKProgress *> *progress = [NSMutableArray array];
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     FMResultSet *results = [db executeQuery:@"SELECT pb FROM pending_progress"];
@@ -190,11 +192,12 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       [progress addObject:[WKProgress parseFromData:[results dataForColumnIndex:0] error:nil]];
     }
   }];
-  [self sendPendingProgress:progress handler:handler];
+  [self sendPendingReviewProgress:progress handler:handler];
 }
 
-- (void)sendPendingProgress:(NSArray<WKProgress *> *)progress handler:(void (^)(void))handler {
-  [_client sendProgress:progress handler:^(NSError * _Nullable error) {
+- (void)sendPendingReviewProgress:(NSArray<WKProgress *> *)progress
+                          handler:(void (^)(void))handler {
+  [_client sendReviewProgress:progress handler:^(NSError * _Nullable error) {
     if (error) {
       [self.delegate localCachingClientDidReportError:error];
     } else {
@@ -271,7 +274,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
     dispatch_group_t sendGroup = dispatch_group_create();
     
     dispatch_group_enter(sendGroup);
-    [self sendAllPendingProgress:^{
+    [self sendAllPendingReviewProgress:^{
       dispatch_group_leave(sendGroup);
     }];
     dispatch_group_enter(sendGroup);

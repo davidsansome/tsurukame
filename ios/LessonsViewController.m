@@ -5,7 +5,7 @@
 #import "SubjectDetailsViewController.h"
 #import "proto/Wanikani+Convenience.h"
 
-@interface LessonsViewController ()
+@interface LessonsViewController () <ReviewViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet LessonsPageControl *pageControl;
 @end
 
@@ -108,6 +108,7 @@
           [self.storyboard instantiateViewControllerWithIdentifier:@"reviewViewController"];
       _reviewViewController.dataLoader = _dataLoader;
       _reviewViewController.localCachingClient = _localCachingClient;
+      _reviewViewController.delegate = self;
       [_reviewViewController startReviewWithItems:_items];
     }
     return _reviewViewController;
@@ -144,6 +145,26 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
       viewControllerBeforeViewController:(UIViewController *)viewController {
   return [self createViewControllerForIndex:[self indexOfViewController:viewController] - 1];
+}
+
+#pragma mark - ReviewViewControllerDelegate
+
+- (bool)reviewViewController:(ReviewViewController *)reviewViewController
+             allowsCheatsFor:(ReviewItem *)reviewItem {
+  return false;
+}
+
+- (void)reviewViewController:(ReviewViewController *)reviewViewController
+          finishedReviewItem:(ReviewItem *)reviewItem {
+  NSLog(@"Finished item!");
+}
+
+- (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
+  [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (void)reviewViewControllerTappedBackButton:(ReviewViewController *)reviewViewController {
+  [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end
