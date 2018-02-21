@@ -57,7 +57,6 @@ static void AddShadowToView(UIView *view) {
   NSMutableArray<ReviewItem *> *_activeQueue;
   NSMutableArray<ReviewItem *> *_reviewQueue;
   NSMutableArray<ReviewItem *> *_completedReviews;
-  bool _wrapUp;
 
   int _activeTaskIndex;  // An index into activeQueue;
   WKTaskType _activeTaskType;
@@ -215,7 +214,7 @@ static void AddShadowToView(UIView *view) {
 #pragma mark - Setup
 
 - (void)refillActiveQueue {
-  if (_wrapUp) {
+  if (_wrappingUp) {
     [self updateWrapUpButton];
     return;
   }
@@ -228,9 +227,14 @@ static void AddShadowToView(UIView *view) {
   }
 }
 
+- (void)setWrappingUp:(bool)wrappingUp {
+  _wrappingUp = wrappingUp;
+  [self updateWrapUpButton];
+}
+
 - (void)updateWrapUpButton {
   NSString *title;
-  if (_wrapUp) {
+  if (_wrappingUp) {
     title = [NSString stringWithFormat:@"Back (%lu)", (unsigned long)_activeQueue.count];
   } else {
     title = @"Back";
@@ -240,7 +244,7 @@ static void AddShadowToView(UIView *view) {
 
 - (void)randomTask {
   if (_activeQueue.count == 0) {
-    [self performSegueWithIdentifier:@"reviewSummary" sender:self];
+    [_delegate reviewViewControllerFinishedAllReviewItems:self];
     return;
   }
   
@@ -360,11 +364,14 @@ static void AddShadowToView(UIView *view) {
 #pragma mark - Animation
 
 - (void)animateSubjectDetailsViewShown:(bool)shown {
+  bool cheats = [_delegate reviewViewController:self allowsCheatsFor:_activeTask];
   _answerField.enabled = !shown;
 
   if (shown) {
     _subjectDetailsView.hidden = NO;
-    _addSynonymButton.hidden = NO;
+    if (cheats) {
+      _addSynonymButton.hidden = NO;
+    }
   }
 
   [self.view layoutIfNeeded];
@@ -381,7 +388,9 @@ static void AddShadowToView(UIView *view) {
 
     // Fade the controls.
     _subjectDetailsView.alpha = shown ? 1.0 : 0.0;
-    _addSynonymButton.alpha = shown ? 1.0 : 0.0;
+    if (cheats) {
+      _addSynonymButton.alpha = shown ? 1.0 : 0.0;
+    }
 
     // We resize the gradient layers in viewDidLayoutSubviews.
     _inAnimation = true;
@@ -390,7 +399,9 @@ static void AddShadowToView(UIView *view) {
   } completion:^(BOOL finished) {
     if (!shown) {
       _subjectDetailsView.hidden = YES;
-      _addSynonymButton.hidden = YES;
+      if (cheats) {
+        _addSynonymButton.hidden = YES;
+      }
     }
   }];
 }
@@ -398,42 +409,7 @@ static void AddShadowToView(UIView *view) {
 #pragma mark - Back button
 
 - (IBAction)backButtonPressed:(id)sender {
-  __weak ReviewViewController *weakSelf = self;
-  
-  UIAlertController *c =
-      [UIAlertController alertControllerWithTitle:@"End review session?"
-                                          message:@"You'll lose progress on any half-answered reviews"
-                                   preferredStyle:UIAlertControllerStyleActionSheet];
-  [c addAction:[UIAlertAction actionWithTitle:@"End review session"
-                                        style:UIAlertActionStyleDestructive
-                                      handler:^(UIAlertAction * _Nonnull action) {
-                                          [self performSegueWithIdentifier:@"reviewSummary" sender:self];
-                                        }]];
-  [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
-                                        style:UIAlertActionStyleCancel
-                                      handler:nil]];
-  if (_wrapUp) {
-    [c addAction:[UIAlertAction actionWithTitle:@"Cancel wrap up"
-                                          style:UIAlertActionStyleDefault
-                                        handler:^(UIAlertAction * _Nonnull action) {
-                                          ReviewViewController *self = weakSelf;
-                                          if (self) {
-                                            self->_wrapUp = false;
-                                            [self updateWrapUpButton];
-                                          }
-                                        }]];
-  } else {
-    [c addAction:[UIAlertAction actionWithTitle:@"Wrap up"
-                                          style:UIAlertActionStyleDefault
-                                        handler:^(UIAlertAction * _Nonnull action) {
-                                          ReviewViewController *self = weakSelf;
-                                          if (self) {
-                                            self->_wrapUp = true;
-                                            [self updateWrapUpButton];
-                                          }
-                                        }]];
-  }
-  [self presentViewController:c animated:YES completion:nil];
+  [_delegate reviewViewControllerTappedBackButton:self];
 }
 
 #pragma mark - Submitting answers
@@ -515,7 +491,7 @@ static void AddShadowToView(UIView *view) {
   bool didLevelUp = (!_activeTask.answer.readingWrong && !_activeTask.answer.meaningWrong);
   int newSrsStage = didLevelUp ? _activeTask.assignment.srsStage + 1 : _activeTask.assignment.srsStage - 1;
   if (isSubjectFinished) {
-    [_localCachingClient sendProgress:@[_activeTask.answer] handler:nil];
+    [_delegate reviewViewController:self finishedReviewItem:_activeTask];
     
     _reviewsCompleted ++;
     [_completedReviews addObject:_activeTask];
@@ -601,3 +577,53 @@ static void AddShadowToView(UIView *view) {
 
 @end
 
+
+@implementation DefaultReviewViewControllerDelegate
+
+- (bool)reviewViewController:(ReviewViewController *)reviewViewController
+             allowsCheatsFor:(ReviewItem *)reviewItem {
+  return true;
+}
+
+- (void)reviewViewControllerTappedBackButton:(ReviewViewController *)reviewViewController {
+  __weak ReviewViewController *weakController = reviewViewController;
+  
+  UIAlertController *c =
+      [UIAlertController alertControllerWithTitle:@"End review session?"
+                                          message:@"You'll lose progress on any half-answered reviews"
+                                   preferredStyle:UIAlertControllerStyleActionSheet];
+  [c addAction:[UIAlertAction actionWithTitle:@"End review session"
+                                        style:UIAlertActionStyleDestructive
+                                      handler:^(UIAlertAction * _Nonnull action) {
+                                        [weakController performSegueWithIdentifier:@"reviewSummary" sender:self];
+                                      }]];
+  [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                        style:UIAlertActionStyleCancel
+                                      handler:nil]];
+  if (reviewViewController.wrappingUp) {
+    [c addAction:[UIAlertAction actionWithTitle:@"Cancel wrap up"
+                                          style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * _Nonnull action) {
+                                          weakController.wrappingUp = false;
+                                        }]];
+  } else {
+    [c addAction:[UIAlertAction actionWithTitle:@"Wrap up"
+                                          style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * _Nonnull action) {
+                                          weakController.wrappingUp = true;
+                                        }]];
+  }
+  [reviewViewController presentViewController:c animated:YES completion:nil];
+}
+
+- (void)reviewViewController:(ReviewViewController *)reviewViewController
+          finishedReviewItem:(ReviewItem *)reviewItem {
+  [reviewViewController.localCachingClient sendReviewProgress:@[reviewItem.answer]
+                                                      handler:nil];
+}
+
+- (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
+  [reviewViewController performSegueWithIdentifier:@"reviewSummary" sender:reviewViewController];
+}
+
+@end
