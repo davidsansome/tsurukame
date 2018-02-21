@@ -94,14 +94,6 @@
             </objects>
             <point key="canvasLocation" x="445" y="846"/>
         </scene>
-        <!--Lessons View Controller-->
-        <scene sceneID="Qyd-hs-Ruf">
-            <objects>
-                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="AcM-nc-4xT" customClass="LessonsViewController" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="BsK-lV-QiF" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="234" y="-528"/>
-        </scene>
         <!--Main View Controller-->
         <scene sceneID="ydl-qq-SrR">
             <objects>
@@ -137,7 +129,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="AcM-nc-4xT" kind="show" identifier="startLessons" id="wdx-4K-8iN"/>
+                                            <segue destination="dLz-hZ-OJ5" kind="show" identifier="startLessons" id="nUk-IH-Lf8"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="XZl-Cl-BHz" detailTextLabel="lcl-gI-1tp" style="IBUITableViewCellStyleValue1" id="GQA-UB-k55">
@@ -242,10 +234,39 @@
             </objects>
             <point key="canvasLocation" x="29.600000000000001" y="175.86206896551727"/>
         </scene>
+        <!--Lessons View Controller-->
+        <scene sceneID="7xY-aI-FVw">
+            <objects>
+                <viewController id="dLz-hZ-OJ5" customClass="LessonsViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="o3G-Oa-y1B">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view verifyAmbiguity="ignoreSizes" contentMode="scaleToFill" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lL1-qw-PnD" customClass="LessonsPageControl">
+                                <rect key="frame" x="0.0" y="519" width="375" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="lL1-qw-PnD" firstAttribute="trailing" secondItem="J2G-4f-QDb" secondAttribute="trailing" id="T2M-mm-pM2"/>
+                            <constraint firstItem="lL1-qw-PnD" firstAttribute="leading" secondItem="J2G-4f-QDb" secondAttribute="leading" id="b9j-Y4-uXi"/>
+                            <constraint firstItem="J2G-4f-QDb" firstAttribute="bottom" secondItem="lL1-qw-PnD" secondAttribute="bottom" id="tTJ-Wg-wub"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="J2G-4f-QDb"/>
+                    </view>
+                    <connections>
+                        <outlet property="pageControl" destination="lL1-qw-PnD" id="MLC-d1-PGx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="K9R-0v-BC7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="197.59999999999999" y="-512.29385307346331"/>
+        </scene>
         <!--Review View Controller-->
         <scene sceneID="Raa-L5-aFt">
             <objects>
-                <viewController id="Mzz-hx-Bdo" customClass="ReviewViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="reviewViewController" id="Mzz-hx-Bdo" customClass="ReviewViewController" sceneMemberID="viewController">
                     <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="4jI-do-0VR" customClass="UIControl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -270,7 +291,7 @@
                                     <constraint firstAttribute="height" constant="16" id="pqx-CS-kAg"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg" customClass="LanguageSpecificTextField">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg">
                                 <rect key="frame" x="8" y="611" width="359" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="bHy-2g-dyk"/>
