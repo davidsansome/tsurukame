@@ -4,7 +4,7 @@
 #import "LocalCachingClient.h"
 #import "ReviewItem.h"
 
-@interface LessonsViewController : UIPageViewController <
+@interface LessonsViewController : UIViewController <
     UIPageViewControllerDataSource,
     UIPageViewControllerDelegate>
 

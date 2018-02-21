@@ -1,98 +1,89 @@
 #import "LessonsViewController.h"
 
-#import "Style.h"
+#import "LessonsPageControl.h"
+#import "ReviewViewController.h"
 #import "SubjectDetailsViewController.h"
 #import "proto/Wanikani+Convenience.h"
 
-static const CGSize kPageControlPageSize = {26.f, 26.f};
-static const UIEdgeInsets kPageControlLabelInsets = {1.f, 1.f, 1.f, 1.f};  // top, left, bottom, right
-static const CGFloat kPageControlSpacing = 8.f;
-static const CGFloat kPageControlPageCornerRadius = 8.f;
-
 @interface LessonsViewController ()
+@property (weak, nonatomic) IBOutlet LessonsPageControl *pageControl;
 @end
 
 @implementation LessonsViewController {
+  UIPageViewController *_pageController;
   NSInteger _currentPageIndex;
-  __weak UIPageControl *_pageControl;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-  self = [super initWithCoder:aDecoder];
-  if (self) {
-    _currentPageIndex = 0;
-    self.dataSource = self;
-    self.delegate = self;
-  }
-  return self;
 }
 
 - (void)viewDidLoad {
-  for (NSInteger i = 0; i < self.view.subviews.count; ++i) {
-    UIView *subview = self.view.subviews[i];
-    if ([subview isKindOfClass:UIPageControl.class]) {
-      _pageControl = (UIPageControl *)subview;
-      break;
-    }
-  }
+  [super viewDidLoad];
+  
+  // Create the page controller.
+  _pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+  _pageController.dataSource = self;
+  _pageController.delegate = self;
+  
+  // Add it as a child view controller.
+  [self addChildViewController:_pageController];
+  [self.view addSubview:_pageController.view];
+  [_pageController didMoveToParentViewController:self];
+  
+  // Hook up the page control.
+  [_pageControl addTarget:self
+                   action:@selector(pageChanged)
+         forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
   
-  [_pageControl layoutIfNeeded];
+  CGRect safeArea = UIEdgeInsetsInsetRect(self.view.frame, self.view.safeAreaInsets);
+  CGSize pageControlSize = _pageControl.intrinsicContentSize;
+  CGRect pageControlFrame = CGRectMake(CGRectGetMinX(safeArea),
+                                       CGRectGetMaxY(safeArea) - pageControlSize.height,
+                                       safeArea.size.width,
+                                       pageControlSize.height);
+  _pageControl.frame = pageControlFrame;
   
-  CGFloat totalWidth = _items.count * kPageControlPageSize.width +
-                       (_items.count - 1) * kPageControlSpacing;
-  CGRect pageFrame = CGRectMake((_pageControl.bounds.size.width - totalWidth) / 2,
-                                (_pageControl.bounds.size.height - kPageControlPageSize.height) / 2,
-                                kPageControlPageSize.width,
-                                kPageControlPageSize.height);
-  
-  // Remove all existing subviews (the little dots).
-  for (UIView *subview in _pageControl.subviews) {
-    [subview removeFromSuperview];
-  }
-  
-  // Add new kanji subviews.
-  for (NSInteger i = 0; i < _items.count; ++i) {
-    ReviewItem *item = _items[i];
-    WKSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
-    
-    CGRect gradientFrame = pageFrame;
-    CGRect labelFrame = UIEdgeInsetsInsetRect(pageFrame, kPageControlLabelInsets);
-    
-    UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-    label.minimumScaleFactor = 0.2;
-    label.adjustsFontSizeToFitWidth = YES;
-    label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-    label.attributedText = [subject japaneseTextWithImageSize:kPageControlPageSize.width];
-    label.textColor = [UIColor whiteColor];
-    
-    UIView *gradientView = [[UIView alloc] initWithFrame:gradientFrame];
-    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-    gradientLayer.frame = gradientView.bounds;
-    gradientLayer.cornerRadius = kPageControlPageCornerRadius;
-    gradientLayer.masksToBounds = YES;
-    gradientLayer.colors = WKGradientForSubject(subject);
-    [gradientView.layer insertSublayer:gradientLayer atIndex:0];
-    
-    [_pageControl addSubview:gradientView];
-    [_pageControl addSubview:label];
-    
-    pageFrame.origin.x += kPageControlPageSize.width + kPageControlSpacing;
-  }
-  [self setPageLabelAlpha];
+  CGRect pageControllerFrame = self.view.frame;
+  pageControllerFrame.size.height = pageControlFrame.origin.y;
+  _pageController.view.frame = pageControllerFrame;
 }
 
-- (void)setPageLabelAlpha {
-  for (NSInteger i = 0; i < _items.count; ++i) {
-    CGFloat alpha = (i == _currentPageIndex) ? 1.0 : 0.5;
-    UIView *gradientView = (UILabel *)_pageControl.subviews[i * 2];
-    UIView *label = (UILabel *)_pageControl.subviews[i * 2 + 1];
-    gradientView.alpha = alpha;
-    label.alpha = alpha;
+- (void)setItems:(NSArray<ReviewItem *> *)items {
+  _items = items;
+  
+  // Set the subjects on the page control.
+  NSMutableArray<WKSubject *> *subjects = [NSMutableArray array];
+  for (ReviewItem *item in items) {
+    WKSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
+    [subjects addObject:subject];
   }
+  _pageControl.subjects = subjects;
+  
+  // Load the first page.
+  [_pageController setViewControllers:@[[self createViewControllerForIndex:0]]
+                            direction:UIPageViewControllerNavigationDirectionForward
+                             animated:NO
+                           completion:nil];
+}
+
+#pragma mark - UIPageControl
+
+- (void)pageChanged {
+  NSInteger newPageIndex = _pageControl.currentPageIndex;
+  if (newPageIndex == _currentPageIndex) {
+    return;
+  }
+  
+  UIViewController *vc = [self createViewControllerForIndex:newPageIndex];
+  UIPageViewControllerNavigationDirection direction =
+      (newPageIndex > _currentPageIndex) ? UIPageViewControllerNavigationDirectionForward
+                                         : UIPageViewControllerNavigationDirectionReverse;
+  [_pageController setViewControllers:@[vc]
+                            direction:direction
+                             animated:YES
+                           completion:nil];
+  _currentPageIndex = newPageIndex;
 }
 
 #pragma mark - UIPageViewControllerDelegate
@@ -101,36 +92,26 @@ static const CGFloat kPageControlPageCornerRadius = 8.f;
         didFinishAnimating:(BOOL)finished
    previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers
        transitionCompleted:(BOOL)completed {
-  SubjectDetailsViewController *vc = (SubjectDetailsViewController *)self.viewControllers[0];
-  _currentPageIndex = vc.index;
-  [self setPageLabelAlpha];
+  NSInteger index = [self indexOfViewController:_pageController.viewControllers[0]];
+  _pageControl.currentPageIndex = index;
+  _currentPageIndex = index;
 }
 
 #pragma mark - UIPageViewControllerDataSource
 
-- (void)setItems:(NSArray<ReviewItem *> *)items {
-  assert([NSThread isMainThread]);
-  _items = items;
-  [self setViewControllers:@[[self createViewControllerForIndex:0]]
-                 direction:UIPageViewControllerNavigationDirectionForward
-                  animated:NO
-                completion:nil];
-}
-
-- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-  return _items.count;
-}
-
-- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
-  return _currentPageIndex;
-}
-
 - (UIViewController *)createViewControllerForIndex:(NSInteger)index {
-  if (index < 0 || index >= _items.count) {
+  if (index == _items.count) {
+    ReviewViewController *vc =
+        [self.storyboard instantiateViewControllerWithIdentifier:@"reviewViewController"];
+    vc.dataLoader = _dataLoader;
+    vc.localCachingClient = _localCachingClient;
+    [vc startReviewWithItems:_items];
+    return vc;
+  } else if (index < 0 || index > _items.count) {
     return nil;
   }
-  ReviewItem *item = _items[index];
   
+  ReviewItem *item = _items[index];
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   vc.dataLoader = _dataLoader;
@@ -140,22 +121,25 @@ static const CGFloat kPageControlPageCornerRadius = 8.f;
   return vc;
 }
 
+- (NSInteger)indexOfViewController:(UIViewController *)viewController {
+  if ([viewController.class isSubclassOfClass:[SubjectDetailsViewController class]]) {
+    SubjectDetailsViewController *subjectDetailsViewController =
+        (SubjectDetailsViewController *)viewController;
+    return subjectDetailsViewController.index;
+  } else if ([viewController.class isSubclassOfClass:[ReviewViewController class]]) {
+    return _items.count;
+  }
+  return 0;
+}
+
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
        viewControllerAfterViewController:(UIViewController *)viewController {
-  SubjectDetailsViewController *subjectDetailsViewController =
-      (SubjectDetailsViewController *)viewController;
-  NSInteger nextIndex = subjectDetailsViewController.index + 1;
-  
-  return [self createViewControllerForIndex:nextIndex];
+  return [self createViewControllerForIndex:[self indexOfViewController:viewController] + 1];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
       viewControllerBeforeViewController:(UIViewController *)viewController {
-  SubjectDetailsViewController *subjectDetailsViewController =
-      (SubjectDetailsViewController *)viewController;
-  NSInteger previousIndex = subjectDetailsViewController.index - 1;
-  
-  return [self createViewControllerForIndex:previousIndex];
+  return [self createViewControllerForIndex:[self indexOfViewController:viewController] - 1];
 }
 
 @end

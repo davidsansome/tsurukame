@@ -1,11 +1,3 @@
-//
-//  ReviewItem.h
-//  wk
-//
-//  Created by David Sansome on 28/11/17.
-//  Copyright © 2017 David Sansome. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 
 #import "proto/Wanikani.pbobjc.h"
