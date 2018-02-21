@@ -39,6 +39,8 @@ typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
                             handler:(AssignmentHandler)handler;
 - (void)sendReviewProgress:(NSArray<WKProgress *> *)progress
                    handler:(ProgressHandler _Nullable)handler;
+- (void)sendLessonProgress:(NSArray<WKProgress *> *)progress
+                   handler:(ProgressHandler _Nullable)handler;
 - (void)getStudyMaterialsModifiedAfter:(NSString *)date
                                handler:(StudyMaterialsHandler)handler;
 - (void)getUserInfo:(UserInfoHandler)handler;

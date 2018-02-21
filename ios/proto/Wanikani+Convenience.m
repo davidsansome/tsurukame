@@ -133,10 +133,14 @@
 
 @implementation WKProgress (Convenience)
 
-- (NSString *)formParameters {
+- (NSString *)reviewFormParameters {
   return [NSString stringWithFormat:@"%d%%5B%%5D=%@&%d%%5B%%5D=%@",
           self.subjectId, self.hasMeaningWrong ? (self.meaningWrong ? @"1" : @"0") : @"",
           self.subjectId, self.hasReadingWrong ? (self.readingWrong ? @"1" : @"0") : @""];
+}
+
+- (NSString *)lessonFormParameters {
+  return [NSString stringWithFormat:@"keys%5B%5D=%d", self.subjectId];
 }
 
 @end
