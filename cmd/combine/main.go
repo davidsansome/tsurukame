@@ -3,34 +3,30 @@ package main
 import (
 	"encoding/binary"
 	"flag"
-	"io/ioutil"
+	"fmt"
 	"os"
-	"path"
 
 	"github.com/golang/protobuf/proto"
 
+	"github.com/davidsansome/wk/fileencoding"
 	pb "github.com/davidsansome/wk/proto"
+	"github.com/davidsansome/wk/utils"
 )
 
 var (
-	directory = flag.String("directory", "data", "Directory to read data files from")
-	out       = flag.String("out", "data.bin", "Output file")
+	out = flag.String("out", "data.bin", "Output file")
 
 	order = binary.LittleEndian
 )
 
 func main() {
 	flag.Parse()
-
-	if err := Combine(); err != nil {
-		panic(err)
-	}
-
+	utils.Must(Combine())
 }
 
 func Combine() error {
 	// List files.
-	files, err := ioutil.ReadDir(*directory)
+	files, err := fileencoding.ListFilenames()
 	if err != nil {
 		return err
 	}
@@ -38,18 +34,13 @@ func Combine() error {
 	// Read everything into memory.
 	all := make([][]byte, len(files))
 	for _, f := range files {
-		data, err := ioutil.ReadFile(path.Join(*directory, f.Name()))
+		spb, err := fileencoding.ReadSubjectByFilename(f)
 		if err != nil {
 			return err
 		}
 
-		var spb pb.Subject
-		if err := proto.Unmarshal(data, &spb); err != nil {
-			return err
-		}
-		id := spb.GetId()
-
 		// Remove fields we don't care about for the iOS app.
+		id := spb.GetId()
 		spb.DocumentUrl = nil
 		spb.Id = nil
 		if spb.Radical != nil && spb.Radical.CharacterImage != nil {
@@ -57,7 +48,11 @@ func Combine() error {
 			spb.Radical.HasCharacterImageFile = proto.Bool(true)
 		}
 
-		data, err = proto.Marshal(&spb)
+		if err := ReorderComponentSubjectIDs(spb); err != nil {
+			return err
+		}
+
+		data, err := proto.Marshal(spb)
 		if err != nil {
 			return err
 		}
@@ -88,5 +83,40 @@ func Combine() error {
 		fh.Write(d)
 	}
 
+	return nil
+}
+
+func ReorderComponentSubjectIDs(spb *pb.Subject) error {
+	if spb.Vocabulary == nil {
+		return nil
+	}
+
+	characterToID := map[string]int32{}
+	for _, id := range spb.ComponentSubjectIds {
+		pb, err := fileencoding.ReadSubjectByID(id)
+		if err != nil {
+			return err
+		}
+		characterToID[pb.GetJapanese()] = id
+	}
+
+	var newComponentIDs []int32
+	seenComponentIDs := map[int32]struct{}{}
+	for _, char := range spb.GetJapanese() {
+		if id, ok := characterToID[string(char)]; ok {
+			if _, ok := seenComponentIDs[id]; ok {
+				continue
+			}
+			newComponentIDs = append(newComponentIDs, id)
+			seenComponentIDs[id] = struct{}{}
+		}
+	}
+
+	if len(newComponentIDs) != len(spb.ComponentSubjectIds) {
+		return fmt.Errorf("different length component subject ID lists for %s: %v vs. %v",
+			spb.GetJapanese(), spb.ComponentSubjectIds, newComponentIDs)
+	}
+
+	spb.ComponentSubjectIds = newComponentIDs
 	return nil
 }
