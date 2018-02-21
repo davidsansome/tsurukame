@@ -31,6 +31,7 @@
 
 @interface WKProgress (Convenience)
 
-@property (nonatomic, readonly) NSString *formParameters;
+@property (nonatomic, readonly) NSString *reviewFormParameters;
+@property (nonatomic, readonly) NSString *lessonFormParameters;
 
 @end

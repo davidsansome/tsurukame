@@ -5,7 +5,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 const char *kWanikaniSessionCookieName = "_wanikani_session";
 static const char *kURLBase = "https://www.wanikani.com/api/v2";
-static const char *kProgressURL = "https://www.wanikani.com/json/progress";
+static const char *kReviewProgressURL = "https://www.wanikani.com/json/progress";
+static const char *kLessonProgressURL = "https://www.wanikani.com/json/lesson/completed";
 static const char *kStudyMaterialsURLBase = "https://www.wanikani.com/study_materials";
 static const char *kReviewSessionURL = "https://www.wanikani.com/review/session";
 static const char *kAccountURL = "https://www.wanikani.com/settings/account";
@@ -319,12 +320,13 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
     // Encode the data to send in the request.
     NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
     for (WKProgress *p in progress) {
-      [formParameters addObject:p.formParameters];
+      [formParameters addObject:p.reviewFormParameters];
     }
     NSData *data = [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
     
     // Add the CSRF token and the data to the request.
-    NSMutableURLRequest *req = [self authorizeUserRequest:[NSURL URLWithString:@(kProgressURL)]];
+    NSMutableURLRequest *req =
+        [self authorizeUserRequest:[NSURL URLWithString:@(kReviewProgressURL)]];
     [req addValue:_csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
     [req addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     [req addValue:[@(data.length) stringValue] forHTTPHeaderField:@"Content-Length"];
@@ -342,6 +344,50 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
           handler(error);
         }
     }];
+    [task resume];
+  }];
+}
+
+- (void)sendLessonProgress:(NSArray<WKProgress *> *)progress
+                   handler:(ProgressHandler _Nullable)handler {
+  if (progress.count == 0) {
+    handler(nil);
+    return;
+  }
+  
+  [self ensureValidCSRFTokenAndThen:^(NSError * _Nullable error) {
+    if (error != nil) {
+      handler(error);
+      return;
+    }
+    
+    // Encode the data to send in the request.
+    NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
+    for (WKProgress *p in progress) {
+      [formParameters addObject:p.lessonFormParameters];
+    }
+    NSData *data = [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
+    
+    // Add the CSRF token and the data to the request.
+    NSMutableURLRequest *req =
+        [self authorizeUserRequest:[NSURL URLWithString:@(kLessonProgressURL)]];
+    [req addValue:_csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
+    [req addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [req addValue:[@(data.length) stringValue] forHTTPHeaderField:@"Content-Length"];
+    req.HTTPMethod = @"PUT";
+    req.HTTPBody = data;
+    
+    // Start the request.
+    NSLog(@"PUT %@ to %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding], req.URL);
+    NSURLSessionDataTask *task =
+        [_urlSession dataTaskWithRequest:req
+                       completionHandler:^(NSData * _Nullable data,
+                                           NSURLResponse * _Nullable response,
+                                           NSError * _Nullable error) {
+                         if (handler) {
+                           handler(error);
+                         }
+                       }];
     [task resume];
   }];
 }
