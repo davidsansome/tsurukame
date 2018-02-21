@@ -12,6 +12,8 @@
 @implementation LessonsViewController {
   UIPageViewController *_pageController;
   NSInteger _currentPageIndex;
+  
+  ReviewViewController *_reviewViewController;
 }
 
 - (void)viewDidLoad {
@@ -101,12 +103,14 @@
 
 - (UIViewController *)createViewControllerForIndex:(NSInteger)index {
   if (index == _items.count) {
-    ReviewViewController *vc =
-        [self.storyboard instantiateViewControllerWithIdentifier:@"reviewViewController"];
-    vc.dataLoader = _dataLoader;
-    vc.localCachingClient = _localCachingClient;
-    [vc startReviewWithItems:_items];
-    return vc;
+    if (_reviewViewController == nil) {
+      _reviewViewController =
+          [self.storyboard instantiateViewControllerWithIdentifier:@"reviewViewController"];
+      _reviewViewController.dataLoader = _dataLoader;
+      _reviewViewController.localCachingClient = _localCachingClient;
+      [_reviewViewController startReviewWithItems:_items];
+    }
+    return _reviewViewController;
   } else if (index < 0 || index > _items.count) {
     return nil;
   }
