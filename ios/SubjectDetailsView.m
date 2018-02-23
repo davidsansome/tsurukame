@@ -9,22 +9,24 @@ static NSString *kHeader =
     @"<meta name=\"viewport\" content=\"user-scalable=no, width=device-width\">"
      "<style>"
      "body {"
-     "  font-family: sans-serif;"
+     "  font-family: -apple-system;"
      "  font-size: 14px;"
+     "  background-color: #eeebef;"
+     "  margin: 0;"
      "}"
      "h1 {"
-     "  margin: 0 0 0.2em;"
-     "  padding-bottom: 0.2em;"
      "  color: #888888;"
      "  font-size: 1em;"
-     "  font-weight: normal;"
-     "  letter-spacing: -1px;"
-     "  line-height: 1em;"
-     "  border-bottom: 1px solid #eee;"
-     "  box-shadow: 1px 10px 9px -6px rgba(0,0,0,0.025);"
+     "  text-transform: uppercase;"
+     "  margin: 1.5em 1em 0.3em 1em;"
+     "  text-shadow: 1px 1px rgba(255,255,255,0.5);"
      "}"
      "div {"
-     "  margin-bottom: 20px;"
+     "  margin: 0;"
+     "  background-color: white;"
+     "  padding: 1em;"
+     "  border: solid #ddd;"
+     "  border-width: 1px 0 1px 0;"
      "}"
      "span.highlight {"
      "  padding: 0 0.3em 0.15px;"
@@ -172,7 +174,7 @@ static NSString *kHeader =
 - (void)addTextSectionTo:(NSMutableString *)ret
                    title:(NSString *)title
                  content:(NSString *)content {
-  [ret appendFormat:@"<div><h1>%@</h1>%@</div>", title, content];
+  [ret appendFormat:@"<h1>%@</h1><div>%@</div>", title, content];
 }
 
 - (NSString *)highlightText:(NSString *)text {
