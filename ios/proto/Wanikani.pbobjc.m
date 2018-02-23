@@ -886,6 +886,7 @@ typedef struct WKAssignment__storage_ {
 @dynamic hasAssignmentId, assignmentId;
 @dynamic hasMeaningWrong, meaningWrong;
 @dynamic hasReadingWrong, readingWrong;
+@dynamic hasIsLesson, isLesson;
 
 typedef struct WKProgress__storage_ {
   uint32_t _has_storage_[1];
@@ -932,6 +933,15 @@ typedef struct WKProgress__storage_ {
         .number = WKProgress_FieldNumber_ReadingWrong,
         .hasIndex = 4,
         .offset = 5,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "isLesson",
+        .dataTypeSpecific.className = NULL,
+        .number = WKProgress_FieldNumber_IsLesson,
+        .hasIndex = 6,
+        .offset = 7,  // Stored in _has_storage_ to save space.
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
       },

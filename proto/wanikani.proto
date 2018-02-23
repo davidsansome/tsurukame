@@ -110,6 +110,7 @@ message Progress {
   optional int32 assignment_id = 2;
   optional bool meaning_wrong = 3;
   optional bool reading_wrong = 4;
+  optional bool is_lesson = 5;
 }
 
 message StudyMaterials {

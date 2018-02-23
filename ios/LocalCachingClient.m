@@ -164,8 +164,8 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   return ret;
 }
 
-- (void)sendReviewProgress:(NSArray<WKProgress *> *)progress
-                   handler:(ProgressHandler _Nullable)handler {
+- (void)sendProgress:(NSArray<WKProgress *> *)progress
+             handler:(ProgressHandler _Nullable)handler {
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
     for (WKProgress *p in progress) {
       // Delete the assignment.
@@ -177,14 +177,14 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
     }
   }];
   
-  [self sendPendingReviewProgress:progress handler:^{
+  [self sendPendingProgress:progress handler:^{
     if (handler) {
       handler(nil);
     }
   }];
 }
 
-- (void)sendAllPendingReviewProgress:(void (^)(void))handler {
+- (void)sendAllPendingProgress:(void (^)(void))handler {
   NSMutableArray<WKProgress *> *progress = [NSMutableArray array];
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     FMResultSet *results = [db executeQuery:@"SELECT pb FROM pending_progress"];
@@ -192,12 +192,12 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       [progress addObject:[WKProgress parseFromData:[results dataForColumnIndex:0] error:nil]];
     }
   }];
-  [self sendPendingReviewProgress:progress handler:handler];
+  [self sendPendingProgress:progress handler:handler];
 }
 
-- (void)sendPendingReviewProgress:(NSArray<WKProgress *> *)progress
-                          handler:(void (^)(void))handler {
-  [_client sendReviewProgress:progress handler:^(NSError * _Nullable error) {
+- (void)sendPendingProgress:(NSArray<WKProgress *> *)progress
+                    handler:(void (^)(void))handler {
+  [_client sendProgress:progress handler:^(NSError * _Nullable error) {
     if (error) {
       [self.delegate localCachingClientDidReportError:error];
     } else {
@@ -274,7 +274,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
     dispatch_group_t sendGroup = dispatch_group_create();
     
     dispatch_group_enter(sendGroup);
-    [self sendAllPendingReviewProgress:^{
+    [self sendAllPendingProgress:^{
       dispatch_group_leave(sendGroup);
     }];
     dispatch_group_enter(sendGroup);
