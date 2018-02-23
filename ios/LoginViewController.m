@@ -58,7 +58,8 @@ static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
           [self.navigationController pushViewController:progressController animated:YES];
           
           [Client getApiTokenForCookie:cookie.value handler:^(NSError * _Nullable error,
-                                                              NSString * _Nullable apiToken) {
+                                                              NSString * _Nullable apiToken,
+                                                              NSString * _Nullable emailAddress) {
             dispatch_async(dispatch_get_main_queue(), ^{
               if (error) {
                 [self.navigationController popToRootViewControllerAnimated:YES];
@@ -68,6 +69,7 @@ static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
                 return;
               }
               
+              UserDefaults.userEmailAddress = emailAddress;
               UserDefaults.userApiToken = apiToken;
               
               [[NSNotificationCenter defaultCenter] postNotificationName:kLoginCompleteNotification

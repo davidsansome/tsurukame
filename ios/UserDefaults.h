@@ -6,6 +6,7 @@
 @interface UserDefaults : NSObject
 
 DECLARE_OBJECT(NSString, userCookie);
+DECLARE_OBJECT(NSString, userEmailAddress);
 DECLARE_OBJECT(NSString, userApiToken);
 
 @end

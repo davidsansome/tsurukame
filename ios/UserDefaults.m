@@ -11,6 +11,7 @@
 @implementation UserDefaults
 
 DEFINE_OBJECT(NSString, userCookie, setUserCookie);
+DEFINE_OBJECT(NSString, userEmailAddress, setUserEmailAddress);
 DEFINE_OBJECT(NSString, userApiToken, setUserApiToken);
 
 @end

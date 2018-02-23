@@ -15,7 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 extern const char *kWanikaniSessionCookieName;
 extern NSErrorDomain WKClientErrorDomain;
 
-typedef void (^ApiTokenHandler)(NSError * _Nullable error, NSString * _Nullable apiToken);
+typedef void (^ApiTokenHandler)(NSError * _Nullable error,
+                                NSString * _Nullable apiToken,
+                                NSString * _Nullable emailAddress);
 typedef void (^AssignmentHandler)(NSError * _Nullable error,
                                   NSArray<WKAssignment *> * _Nullable assignments);
 typedef void (^ProgressHandler)(NSError * _Nullable error);

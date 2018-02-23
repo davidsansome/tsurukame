@@ -35,3 +35,9 @@
 @property (nonatomic, readonly) NSString *lessonFormParameters;
 
 @end
+
+@interface WKUser (Convenience)
+
+@property (nonatomic, readonly) NSDate *startedAtDate;
+
+@end

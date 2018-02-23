@@ -1,6 +1,8 @@
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import "proto/Wanikani.pbobjc.h"
+
+extern UIColor *WKVocabularyColor(void);
 
 extern NSArray<id> *WKRadicalGradient(void);
 extern NSArray<id> *WKKanjiGradient(void);

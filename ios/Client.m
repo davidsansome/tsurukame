@@ -12,7 +12,8 @@ static const char *kReviewSessionURL = "https://www.wanikani.com/review/session"
 static const char *kAccountURL = "https://www.wanikani.com/settings/account";
 
 static const char *kCSRFTokenREPattern = "<meta name=\"csrf-token\" content=\"([^\"]*)";
-static const char *kAPITokenREPattern = "<input value=\"([^\"]+)\"[^>]+name=\"user_api_key_v2\"";
+static const char *kEmailAddressREPattern = "<input[^>]+value=\"([^\"]+)\"[^>]+id=\"user_email\"";
+static const char *kAPITokenREPattern = "<input[^>]+value=\"([^\"]+)\"[^>]+name=\"user_api_key_v2\"";
 
 static NSString *const kFormDataContentType = @"application/x-www-form-urlencoded";
 static NSString *const kJSONContentType = @"application/json";
@@ -173,9 +174,12 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
 #pragma mark - API token
 
 + (void)getApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler {
+  static NSRegularExpression *sEmailAddressRE;
   static NSRegularExpression *sAPITokenRE;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
+    sEmailAddressRE = [NSRegularExpression regularExpressionWithPattern:@(kEmailAddressREPattern)
+                                                                options:0 error:nil];
     sAPITokenRE = [NSRegularExpression regularExpressionWithPattern:@(kAPITokenREPattern)
                                                             options:0 error:nil];
   });
@@ -189,7 +193,7 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
                                      NSURLResponse * _Nullable response,
                                      NSError * _Nullable error) {
                    if (error != nil) {
-                     handler(error, nil);
+                     handler(error, nil, nil);
                      return;
                    }
                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
@@ -197,23 +201,32 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
                      handler(MakeError((int)httpResponse.statusCode,
                                        [NSString stringWithFormat:@"HTTP error %ld for %@",
                                         (long)httpResponse.statusCode,
-                                        response.URL.absoluteString]), nil);
+                                        response.URL.absoluteString]), nil, nil);
                      return;
                    }
                    
                    NSString *body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                   NSTextCheckingResult *result = [sAPITokenRE firstMatchInString:body
-                                                                          options:0
-                                                                            range:NSMakeRange(0, body.length)];
-                   if (!result || result.range.location == NSNotFound) {
+
+                   NSTextCheckingResult *apiTokenResult =
+                      [sAPITokenRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
+                   if (!apiTokenResult || apiTokenResult.range.location == NSNotFound) {
                      NSLog(@"Page contents: %@", body);
-                     handler(MakeError(0, @"API token not found in page"), nil);
+                     handler(MakeError(0, @"API token not found in page"), nil, nil);
+                     return;
+                   }
+
+                   NSTextCheckingResult *emailAddressResult =
+                      [sEmailAddressRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
+                   if (!emailAddressResult || emailAddressResult.range.location == NSNotFound) {
+                     NSLog(@"Page contents: %@", body);
+                     handler(MakeError(0, @"Email address not found in page"), nil, nil);
                      return;
                    }
                    
-                   NSString *token = [body substringWithRange:[result rangeAtIndex:1]];
-                   NSLog(@"Got API token %@", token);
-                   handler(nil, token);
+                   NSString *token = [body substringWithRange:[apiTokenResult rangeAtIndex:1]];
+                   NSString *emailAddress = [body substringWithRange:[emailAddressResult rangeAtIndex:1]];
+                   NSLog(@"Got API token %@, email %@", emailAddress, token);
+                   handler(nil, token, emailAddress);
                  }];
   [task resume];
 }
