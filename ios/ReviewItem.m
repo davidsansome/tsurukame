@@ -1,11 +1,3 @@
-//
-//  ReviewItem.m
-//  wk
-//
-//  Created by David Sansome on 28/11/17.
-//  Copyright © 2017 David Sansome. All rights reserved.
-//
-
 #import "ReviewItem.h"
 #import "proto/Wanikani+Convenience.h"
 
@@ -37,6 +29,7 @@
     _answer = [[WKProgress alloc] init];
     _answer.assignmentId = assignment.id_p;
     _answer.subjectId = assignment.subjectId;
+    _answer.isLesson = assignment.isReadyForLesson;
   }
   return self;
 }

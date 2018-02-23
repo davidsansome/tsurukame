@@ -374,6 +374,7 @@ typedef GPB_ENUM(WKProgress_FieldNumber) {
   WKProgress_FieldNumber_AssignmentId = 2,
   WKProgress_FieldNumber_MeaningWrong = 3,
   WKProgress_FieldNumber_ReadingWrong = 4,
+  WKProgress_FieldNumber_IsLesson = 5,
 };
 
 @interface WKProgress : GPBMessage
@@ -390,6 +391,9 @@ typedef GPB_ENUM(WKProgress_FieldNumber) {
 @property(nonatomic, readwrite) BOOL readingWrong;
 
 @property(nonatomic, readwrite) BOOL hasReadingWrong;
+@property(nonatomic, readwrite) BOOL isLesson;
+
+@property(nonatomic, readwrite) BOOL hasIsLesson;
 @end
 
 #pragma mark - WKStudyMaterials

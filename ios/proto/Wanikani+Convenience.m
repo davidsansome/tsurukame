@@ -140,7 +140,7 @@
 }
 
 - (NSString *)lessonFormParameters {
-  return [NSString stringWithFormat:@"keys%5B%5D=%d", self.subjectId];
+  return [NSString stringWithFormat:@"keys%%5B%%5D=%d", self.subjectId];
 }
 
 @end

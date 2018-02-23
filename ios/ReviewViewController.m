@@ -53,6 +53,7 @@ static void AddShadowToView(UIView *view) {
 
 @implementation ReviewViewController {
   WKKanaInput *_kanaInput;
+  id<ReviewViewControllerDelegate> _defaultDelegate;
 
   NSMutableArray<ReviewItem *> *_activeQueue;
   NSMutableArray<ReviewItem *> *_reviewQueue;
@@ -93,11 +94,20 @@ static void AddShadowToView(UIView *view) {
   self = [super initWithCoder:aDecoder];
   if (self) {
     _kanaInput = [[WKKanaInput alloc] initWithDelegate:self];
+    _defaultDelegate = [[DefaultReviewViewControllerDelegate alloc] init];
+    _delegate = _defaultDelegate;
   }
   return self;
 }
 
 #pragma mark - Public methods
+
+- (void)setDelegate:(id<ReviewViewControllerDelegate>)delegate {
+  if (delegate != _defaultDelegate) {
+    _defaultDelegate = nil;
+  }
+  _delegate = delegate;
+}
 
 - (void)startReviewWithItems:(NSArray<ReviewItem *> *)items {
   NSLog(@"Starting review with %lu items", (unsigned long)items.count);
@@ -618,8 +628,8 @@ static void AddShadowToView(UIView *view) {
 
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
           finishedReviewItem:(ReviewItem *)reviewItem {
-  [reviewViewController.localCachingClient sendReviewProgress:@[reviewItem.answer]
-                                                      handler:nil];
+  [reviewViewController.localCachingClient sendProgress:@[reviewItem.answer]
+                                                handler:nil];
 }
 
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {

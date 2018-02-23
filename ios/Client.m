@@ -14,6 +14,9 @@ static const char *kAccountURL = "https://www.wanikani.com/settings/account";
 static const char *kCSRFTokenREPattern = "<meta name=\"csrf-token\" content=\"([^\"]*)";
 static const char *kAPITokenREPattern = "<input value=\"([^\"]+)\"[^>]+name=\"user_api_key_v2\"";
 
+static NSString *const kFormDataContentType = @"application/x-www-form-urlencoded";
+static NSString *const kJSONContentType = @"application/json";
+
 NSErrorDomain WKClientErrorDomain = @"WKClientErrorDomain";
 
 static NSError *MakeError(int code, NSString *msg) {
@@ -26,6 +29,7 @@ static const NSTimeInterval kCSRFTokenValidity = 2 * 60 * 60;  // 2 hours.
 static NSRegularExpression *kCSRFTokenRE;
 
 typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable error);
+typedef void(^PUTResponseHandler)(NSError * _Nullable error);
 
 @implementation Client {
   NSString *_apiToken;
@@ -95,6 +99,31 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
                       error:error
                     handler:handler];
   }];
+  [task resume];
+}
+
+- (void)putWithCSRFToken:(NSURL *)url
+             contentType:(NSString *)contentType
+                    data:(NSData *)data
+                 handler:(PUTResponseHandler)handler {
+  NSMutableURLRequest *req = [self authorizeUserRequest:url];
+  [req addValue:_csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
+  [req addValue:contentType forHTTPHeaderField:@"Content-Type"];
+  [req addValue:[@(data.length) stringValue] forHTTPHeaderField:@"Content-Length"];
+  req.HTTPMethod = @"PUT";
+  req.HTTPBody = data;
+  
+  // Start the request.
+  NSLog(@"PUT %@ to %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding], req.URL);
+  NSURLSessionDataTask *task =
+      [_urlSession dataTaskWithRequest:req
+                     completionHandler:^(NSData * _Nullable data,
+                                         NSURLResponse * _Nullable response,
+                                         NSError * _Nullable error) {
+                       if (handler) {
+                         handler(error);
+                       }
+                     }];
   [task resume];
 }
 
@@ -304,11 +333,22 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
   }
 }
 
-- (void)sendReviewProgress:(NSArray<WKProgress *> *)progress
-                   handler:(ProgressHandler _Nullable)handler {
+- (void)sendProgress:(NSArray<WKProgress *> *)progress
+             handler:(ProgressHandler _Nullable)handler {
   if (progress.count == 0) {
     handler(nil);
     return;
+  }
+
+  // Split the progress array into reviews and lessons.
+  NSMutableArray<WKProgress *> *reviewProgress = [NSMutableArray array];
+  NSMutableArray<WKProgress *> *lessonProgress = [NSMutableArray array];
+  for (WKProgress *p in progress) {
+    if (p.isLesson) {
+      [lessonProgress addObject:p];
+    } else {
+      [reviewProgress addObject:p];
+    }
   }
   
   [self ensureValidCSRFTokenAndThen:^(NSError * _Nullable error) {
@@ -316,80 +356,64 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
       handler(error);
       return;
     }
-    
-    // Encode the data to send in the request.
-    NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
-    for (WKProgress *p in progress) {
-      [formParameters addObject:p.reviewFormParameters];
-    }
-    NSData *data = [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
-    
-    // Add the CSRF token and the data to the request.
-    NSMutableURLRequest *req =
-        [self authorizeUserRequest:[NSURL URLWithString:@(kReviewProgressURL)]];
-    [req addValue:_csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
-    [req addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [req addValue:[@(data.length) stringValue] forHTTPHeaderField:@"Content-Length"];
-    req.HTTPMethod = @"PUT";
-    req.HTTPBody = data;
 
-    // Start the request.
-    NSLog(@"PUT %@ to %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding], req.URL);
-    NSURLSessionDataTask *task =
-      [_urlSession dataTaskWithRequest:req
-                     completionHandler:^(NSData * _Nullable data,
-                                         NSURLResponse * _Nullable response,
-                                         NSError * _Nullable error) {
-        if (handler) {
-          handler(error);
-        }
-    }];
-    [task resume];
+    dispatch_group_t dispatchGroup = dispatch_group_create();
+    if (reviewProgress.count) {
+      dispatch_group_enter(dispatchGroup);
+      [self sendReviewProgress:reviewProgress
+                       handler:^(NSError *_Nullable error) {
+                         if (error != nil) {
+                           NSLog(@"Failed to send review progress: %@", error);
+                         }
+                         dispatch_group_leave(dispatchGroup);
+                       }];
+    }
+    if (lessonProgress.count) {
+      dispatch_group_enter(dispatchGroup);
+      [self sendLessonProgress:lessonProgress
+                       handler:^(NSError *_Nullable error) {
+                         if (error != nil) {
+                           NSLog(@"Failed to send lesson progress: %@", error);
+                         }
+                         dispatch_group_leave(dispatchGroup);
+                       }];
+    }
+
+    dispatch_queue_t queue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0);
+    dispatch_group_notify(dispatchGroup, queue, ^{
+      handler(nil);
+    });
   }];
+}
+
+- (void)sendReviewProgress:(NSArray<WKProgress *> *)progress
+                   handler:(ProgressHandler)handler {
+  // Encode the data to send in the request.
+  NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
+  for (WKProgress *p in progress) {
+    [formParameters addObject:p.reviewFormParameters];
+  }
+  NSData *data = [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
+  
+  [self putWithCSRFToken:[NSURL URLWithString:@(kReviewProgressURL)]
+             contentType:kFormDataContentType
+                    data:data
+                 handler:handler];
 }
 
 - (void)sendLessonProgress:(NSArray<WKProgress *> *)progress
                    handler:(ProgressHandler _Nullable)handler {
-  if (progress.count == 0) {
-    handler(nil);
-    return;
+  // Encode the data to send in the request.
+  NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
+  for (WKProgress *p in progress) {
+    [formParameters addObject:p.lessonFormParameters];
   }
+  NSData *data = [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
   
-  [self ensureValidCSRFTokenAndThen:^(NSError * _Nullable error) {
-    if (error != nil) {
-      handler(error);
-      return;
-    }
-    
-    // Encode the data to send in the request.
-    NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
-    for (WKProgress *p in progress) {
-      [formParameters addObject:p.lessonFormParameters];
-    }
-    NSData *data = [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
-    
-    // Add the CSRF token and the data to the request.
-    NSMutableURLRequest *req =
-        [self authorizeUserRequest:[NSURL URLWithString:@(kLessonProgressURL)]];
-    [req addValue:_csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
-    [req addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [req addValue:[@(data.length) stringValue] forHTTPHeaderField:@"Content-Length"];
-    req.HTTPMethod = @"PUT";
-    req.HTTPBody = data;
-    
-    // Start the request.
-    NSLog(@"PUT %@ to %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding], req.URL);
-    NSURLSessionDataTask *task =
-        [_urlSession dataTaskWithRequest:req
-                       completionHandler:^(NSData * _Nullable data,
-                                           NSURLResponse * _Nullable response,
-                                           NSError * _Nullable error) {
-                         if (handler) {
-                           handler(error);
-                         }
-                       }];
-    [task resume];
-  }];
+  [self putWithCSRFToken:[NSURL URLWithString:@(kLessonProgressURL)]
+             contentType:kFormDataContentType
+                    data:data
+                 handler:handler];
 }
 
 #pragma mark - Study Materials
@@ -450,29 +474,13 @@ typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable err
     [payload setObject:material.subjectType forKey:@"subject_type"];
     [payload setObject:material.meaningSynonymsArray forKey:@"meaning_synonyms"];
     NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:0 error:nil];
-    
-    // Add the CSRF token and the data to the request.
+
     NSString *urlString = [NSString stringWithFormat:@"%s/%d",
                            kStudyMaterialsURLBase, material.subjectId];
-    NSMutableURLRequest *req = [self authorizeUserRequest:[NSURL URLWithString:urlString]];
-    [req addValue:_csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
-    [req addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [req addValue:[@(data.length) stringValue] forHTTPHeaderField:@"Content-Length"];
-    req.HTTPMethod = @"PUT";
-    req.HTTPBody = data;
-    
-    // Start the request.
-    NSLog(@"PUT %@ to %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding], req.URL);
-    NSURLSessionDataTask *task =
-        [_urlSession dataTaskWithRequest:req
-                       completionHandler:^(NSData * _Nullable data,
-                                           NSURLResponse * _Nullable response,
-                                           NSError * _Nullable error) {
-                         if (handler) {
-                           handler(error);
-                         }
-                       }];
-    [task resume];
+    [self putWithCSRFToken:[NSURL URLWithString:urlString]
+               contentType:kJSONContentType
+                      data:data
+                   handler:handler];
   }];
 }
 

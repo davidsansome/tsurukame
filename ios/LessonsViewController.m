@@ -156,7 +156,7 @@
 
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
           finishedReviewItem:(ReviewItem *)reviewItem {
-  NSLog(@"Finished item!");
+  [_localCachingClient sendProgress:@[reviewItem.answer] handler:nil];
 }
 
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
