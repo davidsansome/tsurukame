@@ -144,3 +144,11 @@
 }
 
 @end
+
+@implementation WKUser (Convenience)
+
+- (NSDate *)startedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.startedAt];
+}
+
+@end

@@ -2,6 +2,10 @@
 
 #import <UIKit/UIKit.h>
 
+UIColor *WKVocabularyColor() {
+  return [UIColor colorWithRed:0.667f green:0.000f blue:1.000f alpha:1.0f];
+}
+
 NSArray<id> *WKRadicalGradient(void) {
   static NSArray<id> *ret;
   static dispatch_once_t onceToken;
@@ -27,7 +31,7 @@ NSArray<id> *WKVocabularyGradient(void) {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     ret = @[(id)[UIColor colorWithRed:0.667f green:0.000f blue:1.000f alpha:1.0f].CGColor,
-            (id)[UIColor colorWithRed:0.576f green:0.000f blue:0.867f alpha:1.0f].CGColor];
+            (id)WKVocabularyColor().CGColor];
   });
   return ret;
 }
