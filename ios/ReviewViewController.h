@@ -29,6 +29,7 @@
 @property(nonatomic, weak) id<ReviewViewControllerDelegate> delegate;
 
 @property(nonatomic) bool wrappingUp;
+@property(nonatomic, readonly) int reviewsCompleted;
 
 @end
 

@@ -58,7 +58,6 @@ static UIColor *kMeaningTextColor;
   WKSubject *_activeSubject;
   WKStudyMaterials *_activeStudyMaterials;
 
-  int _reviewsCompleted;
   int _tasksAnsweredCorrectly;
   int _tasksAnswered;
 
@@ -589,8 +588,12 @@ static UIColor *kMeaningTextColor;
 }
 
 - (void)reviewViewControllerTappedBackButton:(ReviewViewController *)reviewViewController {
-  __weak ReviewViewController *weakController = reviewViewController;
+  if (reviewViewController.reviewsCompleted == 0) {
+    [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
+    return;
+  }
   
+  __weak ReviewViewController *weakController = reviewViewController;
   UIAlertController *c =
       [UIAlertController alertControllerWithTitle:@"End review session?"
                                           message:@"You'll lose progress on any half-answered reviews"
