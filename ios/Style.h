@@ -2,6 +2,8 @@
 
 #import "proto/Wanikani.pbobjc.h"
 
+extern UIColor *WKRadicalColor(void);
+extern UIColor *WKKanjiColor(void);
 extern UIColor *WKVocabularyColor(void);
 
 extern NSArray<id> *WKRadicalGradient(void);

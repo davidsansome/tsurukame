@@ -117,16 +117,16 @@
 
 @implementation WKAssignment (Convenience)
 
-- (bool)isReadyForReview {
-  if (!self.hasAvailableAt || self.srsStage == 0) {
-    return false;
-  }
-  NSDate *readyForReview = [NSDate dateWithTimeIntervalSince1970:self.availableAt];
-  return [readyForReview timeIntervalSinceNow] < 0;
+- (bool)isLessonStage {
+  return !self.hasAvailableAt && self.srsStage == 0;
 }
 
-- (bool)isReadyForLesson {
-  return !self.hasAvailableAt && self.srsStage == 0;
+- (bool)isReviewStage {
+  return self.hasAvailableAt && self.srsStage != 0;
+}
+
+- (NSDate *)availableAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.availableAt];
 }
 
 @end

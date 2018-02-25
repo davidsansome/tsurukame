@@ -1,1 +1,0 @@
-../../../MaterialComponents/components/Themes/src/MDCColorScheme.h

@@ -208,6 +208,30 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Upcoming Reviews" id="wG8-7S-fii">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="120" id="90z-C9-Gml">
+                                        <rect key="frame" x="0.0" y="315" width="375" height="120"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="90z-C9-Gml" id="OpR-xy-yAP">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="119.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="naw-oH-UBc" customClass="CombinedChartView" customModule="Charts">
+                                                    <rect key="frame" x="16" y="11" width="343" height="98"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="naw-oH-UBc" firstAttribute="trailing" secondItem="OpR-xy-yAP" secondAttribute="trailingMargin" id="izd-vN-ZC3"/>
+                                                <constraint firstItem="naw-oH-UBc" firstAttribute="top" secondItem="OpR-xy-yAP" secondAttribute="topMargin" id="oft-gQ-rEl"/>
+                                                <constraint firstItem="naw-oH-UBc" firstAttribute="leading" secondItem="OpR-xy-yAP" secondAttribute="leadingMargin" id="pht-cm-g8p"/>
+                                                <constraint firstItem="naw-oH-UBc" firstAttribute="bottom" secondItem="OpR-xy-yAP" secondAttribute="bottomMargin" id="s0u-fQ-xrE"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="ByY-Kf-IzJ" id="ara-CS-qMB"/>
@@ -218,6 +242,7 @@
                     <connections>
                         <outlet property="lessonsCell" destination="cHi-TB-m7d" id="I2l-ag-Z07"/>
                         <outlet property="reviewsCell" destination="GQA-UB-k55" id="BDV-S7-dFy"/>
+                        <outlet property="upcomingReviewsChartView" destination="naw-oH-UBc" id="AkP-Bm-kCF"/>
                         <outlet property="userCell" destination="vQ7-DG-xmI" id="nCn-eH-bdv"/>
                         <outlet property="userImageView" destination="P7E-LP-y20" id="elv-oy-IN5"/>
                         <outlet property="userLevelLabel" destination="HxQ-YJ-MZb" id="HuT-JH-DHQ"/>

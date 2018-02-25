@@ -1,4 +1,7 @@
+use_frameworks!
+
 target 'wk' do
+  pod 'Charts'
   pod 'FMDB'
   pod 'MaterialComponents/Snackbar'
 end

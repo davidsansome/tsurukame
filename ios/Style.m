@@ -2,6 +2,14 @@
 
 #import <UIKit/UIKit.h>
 
+UIColor *WKRadicalColor() {
+  return [UIColor colorWithRed:0.000f green:0.576f blue:0.867f alpha:1.0f];
+}
+
+UIColor *WKKanjiColor() {
+  return [UIColor colorWithRed:0.867f green:0.000f blue:0.576f alpha:1.0f];
+}
+
 UIColor *WKVocabularyColor() {
   return [UIColor colorWithRed:0.667f green:0.000f blue:1.000f alpha:1.0f];
 }
@@ -11,7 +19,7 @@ NSArray<id> *WKRadicalGradient(void) {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     ret = @[(id)[UIColor colorWithRed:0.000f green:0.667f blue:1.000f alpha:1.0f].CGColor,
-            (id)[UIColor colorWithRed:0.000f green:0.576f blue:0.867f alpha:1.0f].CGColor];
+            (id)WKRadicalColor().CGColor];
   });
   return ret;
 }
@@ -21,7 +29,7 @@ NSArray<id> *WKKanjiGradient(void) {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     ret = @[(id)[UIColor colorWithRed:1.000f green:0.000f blue:0.667f alpha:1.0f].CGColor,
-            (id)[UIColor colorWithRed:0.867f green:0.000f blue:0.576f alpha:1.0f].CGColor];
+            (id)WKKanjiColor().CGColor];
   });
   return ret;
 }

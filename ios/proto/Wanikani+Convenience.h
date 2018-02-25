@@ -24,8 +24,9 @@
 
 @interface WKAssignment (Convenience)
 
-@property (nonatomic, readonly) bool isReadyForReview;
-@property (nonatomic, readonly) bool isReadyForLesson;
+@property (nonatomic, readonly) bool isLessonStage;
+@property (nonatomic, readonly) bool isReviewStage;
+@property (nonatomic, readonly) NSDate *availableAtDate;
 
 @end
 
