@@ -9,6 +9,8 @@
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 
+#import <UserNotifications/UserNotifications.h>
+
 @class CombinedChartView;
 
 static const NSInteger kItemsPerLesson = 5;
@@ -168,42 +170,82 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     int reviews = 0;
     
     NSDate *now = [NSDate date];
-    NSMutableArray<NSNumber *> *reviewsInHours = [NSMutableArray arrayWithCapacity:24];
+    
+    NSMutableArray<NSNumber *> *upcomingReviews = [NSMutableArray arrayWithCapacity:48];
     for (int i = 0; i < 24; i++) {
-      [reviewsInHours addObject:@(0)];
+      [upcomingReviews addObject:@(0)];
     }
     
     for (WKAssignment *assignment in assignments) {
       if (assignment.isLessonStage) {
         lessons ++;
       } else if (assignment.isReviewStage) {
-        NSTimeInterval interval = [assignment.availableAtDate timeIntervalSinceDate:now];
-        if (interval <= 0) {
+        NSTimeInterval availableInSeconds = [assignment.availableAtDate timeIntervalSinceDate:now];
+        if (availableInSeconds <= 0) {
           reviews ++;
           continue;
         }
-        
-        for (int hour = 0; hour < 24; hour++) {
-          if (interval < (hour + 1) * 60 * 60) {
-            [reviewsInHours setObject:[NSNumber numberWithInt:[reviewsInHours[hour] intValue] + 1]
-                   atIndexedSubscript:hour];
-            break;
-          }
+        int availableInHours = availableInSeconds / (60 * 60);
+        if (availableInHours < upcomingReviews.count) {
+          [upcomingReviews setObject:[NSNumber numberWithInt:[upcomingReviews[availableInHours] intValue] + 1]
+                  atIndexedSubscript:availableInHours];
         }
       }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
-      [weakSelf updateLessonCount:lessons reviewCount:reviews upcomingReviews:reviewsInHours];
+      [weakSelf updateLessonCount:lessons reviewCount:reviews upcomingReviews:upcomingReviews atDate:now];
     });
   });
 }
 
 - (void)updateLessonCount:(int)lessonCount
               reviewCount:(int)reviewCount
-          upcomingReviews:(NSArray<NSNumber *> *)upcomingReviews {
+          upcomingReviews:(NSArray<NSNumber *> *)upcomingReviews
+                   atDate:(NSDate *)date {
   SetTableViewCellCount(self.lessonsCell, lessonCount);
   SetTableViewCellCount(self.reviewsCell, reviewCount);
-  [_chartController update:upcomingReviews currentReviewCount:reviewCount];
+  [_chartController update:upcomingReviews currentReviewCount:reviewCount atDate:date];
+  [self updateAppIconBadgeCount:reviewCount upcomingReviews:upcomingReviews atDate:date];
+}
+
+- (void)updateAppIconBadgeCount:(int)reviewCount
+                upcomingReviews:(NSArray<NSNumber *> *)upcomingReviews
+                         atDate:(NSDate *)date {
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  void(^updateBlock)(void) = ^() {
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:reviewCount];
+    [center removeAllPendingNotificationRequests];
+    
+    NSDate *startDate = [[NSCalendar currentCalendar] nextDateAfterDate:date
+                                                           matchingUnit:NSCalendarUnitMinute
+                                                                  value:0
+                                                                options:NSCalendarMatchNextTime];
+    NSTimeInterval startInterval = [startDate timeIntervalSinceNow];
+    int cumulativeReviews = reviewCount;
+    for (int hour = 0; hour < upcomingReviews.count; hour++) {
+      int reviews = [upcomingReviews[hour] intValue];
+      if (reviews == 0) {
+        continue;
+      }
+      cumulativeReviews += reviews;
+      
+      NSTimeInterval triggerTimeInterval = startInterval + (hour * 60 * 60);
+      NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];
+      UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+      content.badge = @(cumulativeReviews);
+      UNNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:triggerTimeInterval repeats:NO];
+      UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];
+      [center addNotificationRequest:request withCompletionHandler:nil];
+    }
+  };
+  
+  [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge)
+                        completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                          if (!granted) {
+                            return;
+                          }
+                          dispatch_async(dispatch_get_main_queue(), updateBlock);
+                        }];
 }
 
 - (void)didPullToRefresh {

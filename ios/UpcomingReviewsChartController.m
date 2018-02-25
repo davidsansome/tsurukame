@@ -53,7 +53,9 @@
   return self;
 }
 
-- (void)update:(NSArray<NSNumber *> *)upcomingReviews currentReviewCount:(int)currentReviewCount {
+- (void)update:(NSArray<NSNumber *> *)upcomingReviews
+currentReviewCount:(int)currentReviewCount
+        atDate:(nonnull NSDate *)date {
   NSMutableArray<BarChartDataEntry *> *hourlyData = [NSMutableArray array];
   NSMutableArray<ChartDataEntry *> *cumulativeData = [NSMutableArray array];
   
@@ -87,7 +89,7 @@
   
   _view.data = data;
   _view.rightAxis.axisMaximum = barDataSet.yMax;
-  _view.xAxis.valueFormatter = [[UpcomingReviewsXAxisValueFormatter alloc] initWithStartTime:[NSDate date]];
+  _view.xAxis.valueFormatter = [[UpcomingReviewsXAxisValueFormatter alloc] initWithStartTime:date];
 }
 
 @end
