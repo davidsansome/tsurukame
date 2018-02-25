@@ -162,11 +162,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)updateLessonAndReviewCounts {
   __weak MainViewController *weakSelf = self;
-  [_localCachingClient getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
-    if (error) {
-      [weakSelf updateLessonCount:-1 reviewCount:-1 upcomingReviews:nil];
-      return;
-    }
+  dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+    NSArray<WKAssignment *> *assignments = [_localCachingClient getAllAssignments];
     int lessons = 0;
     int reviews = 0;
     
@@ -195,20 +192,18 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
         }
       }
     }
-    [weakSelf updateLessonCount:lessons reviewCount:reviews upcomingReviews:reviewsInHours];
-  }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [weakSelf updateLessonCount:lessons reviewCount:reviews upcomingReviews:reviewsInHours];
+    });
+  });
 }
 
 - (void)updateLessonCount:(int)lessonCount
               reviewCount:(int)reviewCount
           upcomingReviews:(NSArray<NSNumber *> *)upcomingReviews {
-  __weak MainViewController *weakSelf = self;
-  dispatch_async(dispatch_get_main_queue(), ^{
-    SetTableViewCellCount(weakSelf.lessonsCell, lessonCount);
-    SetTableViewCellCount(weakSelf.reviewsCell, reviewCount);
-    
-    [_chartController update:upcomingReviews currentReviewCount:reviewCount];
-  });
+  SetTableViewCellCount(self.lessonsCell, lessonCount);
+  SetTableViewCellCount(self.reviewsCell, reviewCount);
+  [_chartController update:upcomingReviews currentReviewCount:reviewCount];
 }
 
 - (void)didPullToRefresh {
@@ -225,33 +220,20 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
     
-    [_localCachingClient getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
-      if (error) {
-        NSLog(@"Failed to get assignments: %@", error);
-        return;
-      }
-      NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments];
-      [vc startReviewWithItems:items];
-    }];
+    NSArray<WKAssignment *> *assignments = [_localCachingClient getAllAssignments];
+    NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments];
+    vc.items = items;
   } else if ([segue.identifier isEqualToString:@"startLessons"]) {
     LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
     
-    [_localCachingClient getAllAssignments:^(NSError *error, NSArray<WKAssignment *> *assignments) {
-      if (error) {
-        NSLog(@"Failed to get assignments: %@", error);
-        return;
-      }
-      NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments];
-      if (items.count > kItemsPerLesson) {
-        items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
-      }
-      
-      dispatch_async(dispatch_get_main_queue(), ^{
-        vc.items = items;
-      });
-    }];
+    NSArray<WKAssignment *> *assignments = [_localCachingClient getAllAssignments];
+    NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments];
+    if (items.count > kItemsPerLesson) {
+      items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
+    }
+    vc.items = items;
   }
 }
 

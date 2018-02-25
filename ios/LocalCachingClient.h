@@ -27,7 +27,7 @@ extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 
 - (void)update;
 
-- (void)getAllAssignments:(AssignmentHandler)handler;
+- (NSArray<WKAssignment *> *)getAllAssignments;
 - (WKStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID;
 - (WKUser * _Nullable)getUserInfo;
 

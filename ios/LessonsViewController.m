@@ -113,7 +113,7 @@
       _reviewViewController.dataLoader = _dataLoader;
       _reviewViewController.localCachingClient = _localCachingClient;
       _reviewViewController.delegate = self;
-      [_reviewViewController startReviewWithItems:_items];
+      _reviewViewController.items = _items;
     }
     return _reviewViewController;
   } else if (index < 0 || index > _items.count) {
