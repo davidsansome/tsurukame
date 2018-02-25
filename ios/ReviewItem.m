@@ -6,7 +6,7 @@
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<WKAssignment *> *)assignments {
   NSMutableArray *ret = [NSMutableArray array];
   for (WKAssignment *assignment in assignments) {
-    if (!assignment.isLessonStage && assignment.availableAtDate.timeIntervalSinceNow < 0) {
+    if (assignment.isReviewStage && assignment.availableAtDate.timeIntervalSinceNow < 0) {
       [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
     }
   }
