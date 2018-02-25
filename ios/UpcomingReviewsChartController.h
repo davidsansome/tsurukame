@@ -11,7 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, readonly) CombinedChartView *view;
 
-- (void)update:(NSArray<NSNumber *> *)upcomingReviews currentReviewCount:(int)currentReviewCount;
+- (void)update:(NSArray<NSNumber *> *)upcomingReviews
+currentReviewCount:(int)currentReviewCount
+        atDate:(NSDate *)date;
 
 @end
 
