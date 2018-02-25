@@ -18,13 +18,6 @@ static NSArray<id> *kMeaningGradient;
 static UIColor *kReadingTextColor;
 static UIColor *kMeaningTextColor;
 
-static void AddShadowToView(UIView *view) {
-  view.layer.shadowColor = [UIColor blackColor].CGColor;
-  view.layer.shadowOffset = CGSizeMake(0, 1);
-  view.layer.shadowOpacity = 0.2;
-  view.layer.shadowRadius = 4;
-  view.clipsToBounds = NO;
-}
 
 @interface ReviewViewController () <UITextFieldDelegate, WKSubjectDetailsDelegate>
 
@@ -122,7 +115,7 @@ static void AddShadowToView(UIView *view) {
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  AddShadowToView(_questionLabel);
+  WKAddShadowToView(_questionLabel, 1, 0.2, 4);
   
   _questionGradient = [CAGradientLayer layer];
   [_questionBackground.layer addSublayer:_questionGradient];

@@ -2,6 +2,14 @@
 
 #import <UIKit/UIKit.h>
 
+void WKAddShadowToView(UIView *view, float offset, float opacity, float radius) {
+  view.layer.shadowColor = [UIColor blackColor].CGColor;
+  view.layer.shadowOffset = CGSizeMake(0, offset);
+  view.layer.shadowOpacity = opacity;
+  view.layer.shadowRadius = radius;
+  view.clipsToBounds = NO;
+}
+
 UIColor *WKRadicalColor() {
   return [UIColor colorWithRed:0.000f green:0.576f blue:0.867f alpha:1.0f];
 }
@@ -11,7 +19,7 @@ UIColor *WKKanjiColor() {
 }
 
 UIColor *WKVocabularyColor() {
-  return [UIColor colorWithRed:0.667f green:0.000f blue:1.000f alpha:1.0f];
+  return [UIColor colorWithRed:0.576f green:0.000f blue:1.000f alpha:1.0f];
 }
 
 NSArray<id> *WKRadicalGradient(void) {
