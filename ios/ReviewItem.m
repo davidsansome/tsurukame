@@ -6,7 +6,7 @@
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<WKAssignment *> *)assignments {
   NSMutableArray *ret = [NSMutableArray array];
   for (WKAssignment *assignment in assignments) {
-    if (assignment.isReadyForReview) {
+    if (!assignment.isLessonStage && assignment.availableAtDate.timeIntervalSinceNow < 0) {
       [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
     }
   }
@@ -16,7 +16,7 @@
 + (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<WKAssignment *> *)assignments {
   NSMutableArray *ret = [NSMutableArray array];
   for (WKAssignment *assignment in assignments) {
-    if (assignment.isReadyForLesson) {
+    if (assignment.isLessonStage) {
       [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
     }
   }
@@ -29,7 +29,7 @@
     _answer = [[WKProgress alloc] init];
     _answer.assignmentId = assignment.id_p;
     _answer.subjectId = assignment.subjectId;
-    _answer.isLesson = assignment.isReadyForLesson;
+    _answer.isLesson = assignment.isLessonStage;
   }
   return self;
 }
