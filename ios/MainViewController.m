@@ -31,6 +31,7 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
 @interface MainViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *userCell;
+@property (weak, nonatomic) IBOutlet UIView *userImageContainer;
 @property (weak, nonatomic) IBOutlet UIImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *userLevelLabel;
@@ -69,26 +70,38 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
                           action:@selector(didPullToRefresh)
                 forControlEvents:UIControlEventValueChanged];
   
-  UIColor *userImageBorderColor = WKRadicalColor();
-  CGFloat h,s,b;
-  [userImageBorderColor getHue:&h saturation:&s brightness:&b alpha:nil];
-  userImageBorderColor = [UIColor colorWithHue:h saturation:s brightness:b alpha:1.f];
-  
-  _userImageView.layer.masksToBounds = YES;
-  _userImageView.layer.cornerRadius = _userImageView.layer.bounds.size.height / 2 + 1;
-  _userImageView.layer.borderWidth = 3.f;
-  _userImageView.layer.borderColor = userImageBorderColor.CGColor;
-
+  WKAddShadowToView(_userImageContainer, 2, 0.4, 4);
   WKAddShadowToView(_userNameLabel, 1, 0.4, 4);
-  WKAddShadowToView(_userLevelLabel, 1, 0.4, 4);
-  
-  CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
-  userGradientLayer.frame = _userCell.bounds;
-  userGradientLayer.colors = WKRadicalGradient();
-  [_userCell.layer insertSublayer:userGradientLayer atIndex:0];
+  WKAddShadowToView(_userLevelLabel, 1, 0.2, 2);
   
   _chartController =
       [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
+}
+
+- (void)viewDidLayoutSubviews {
+  // Set rounded corners on the user image.
+  CGFloat cornerRadius = _userImageContainer.bounds.size.height / 2;
+  _userImageContainer.layer.cornerRadius = cornerRadius;
+  _userImageView.layer.cornerRadius = cornerRadius;
+  _userImageView.layer.masksToBounds = YES;
+  
+  // Set a gradient background for the user cell.
+  CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
+  userGradientLayer.frame = CGRectMake(0, -_userCell.frame.origin.y,
+                                       _userCell.bounds.size.width,
+                                       _userCell.bounds.size.height + _userCell.frame.origin.y);
+  userGradientLayer.colors = WKRadicalGradient();
+  [_userCell.layer insertSublayer:userGradientLayer atIndex:0];
+  _userCell.layer.masksToBounds = NO;
+  
+  // Try to remove the separators from the user cell.
+  for (UIView *subview in _userCell.contentView.superview.subviews) {
+    CGRect frame = subview.frame;
+    if (frame.origin.x == 0 && frame.origin.y == 0 && frame.size.height < 1.f) {
+      [subview removeFromSuperview];
+      break;
+    }
+  }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -98,6 +111,10 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
   
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = YES;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+  return UIStatusBarStyleLightContent;
 }
 
 - (void)clientBusyChanged:(NSNotification *)notification {
@@ -129,7 +146,7 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
   [task resume];
   
   _userNameLabel.text = user.username;
-  _userLevelLabel.text = [NSString stringWithFormat:@"Level %d \u00B7 joined %@",
+  _userLevelLabel.text = [NSString stringWithFormat:@"Level %d \u00B7 started %@",
                           user.level,
                           [user.startedAtDate timeAgoSinceNow:[NSDate date]]];
 }

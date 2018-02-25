@@ -51,6 +51,10 @@
   _pageController.view.frame = pageControllerFrame;
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+  return UIStatusBarStyleLightContent;
+}
+
 - (void)setItems:(NSArray<ReviewItem *> *)items {
   _items = items;
   
