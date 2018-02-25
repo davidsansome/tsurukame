@@ -2,6 +2,8 @@
 
 #import "proto/Wanikani.pbobjc.h"
 
+extern void WKAddShadowToView(UIView *view, float offset, float opacity, float radius);
+
 extern UIColor *WKRadicalColor(void);
 extern UIColor *WKKanjiColor(void);
 extern UIColor *WKVocabularyColor(void);

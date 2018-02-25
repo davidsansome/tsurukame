@@ -5,10 +5,11 @@
 #import "NSString+MD5.h"
 #import "ReviewViewController.h"
 #import "Style.h"
+#import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 
-@import Charts;
+@class CombinedChartView;
 
 static const NSInteger kItemsPerLesson = 5;
 
@@ -26,37 +27,6 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
                                hash, size, kDefaultProfileImageURL]];
 }
 
-@interface UpcomingReviewsXAxisValueFormatter : NSObject <IChartAxisValueFormatter>
-
-- (instancetype)initWithStartTime:(NSDate *)startTime;
-
-@end
-
-@implementation UpcomingReviewsXAxisValueFormatter {
-  NSDate *_startTime;
-  NSDateFormatter *_dateFormatter;
-}
-
-- (instancetype)initWithStartTime:(NSDate *)startTime {
-  self = [super init];
-  if (self) {
-    _startTime = startTime;
-    _dateFormatter = [[NSDateFormatter alloc] init];
-    [_dateFormatter setLocalizedDateFormatFromTemplate:@"ha"];
-  }
-  return self;
-}
-
-- (NSString * _Nonnull)stringForValue:(double)value
-                                 axis:(ChartAxisBase * _Nullable)axis {
-  if (value == 0) {
-    return @"";
-  }
-  NSDate *date = [_startTime dateByAddingTimeInterval:value * 60 * 60];
-  return [_dateFormatter stringFromDate:date];
-}
-
-@end
 
 @interface MainViewController ()
 
@@ -72,7 +42,9 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
 
 @end
 
-@implementation MainViewController
+@implementation MainViewController {
+  UpcomingReviewsChartController *_chartController;
+}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
@@ -97,29 +69,26 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
                           action:@selector(didPullToRefresh)
                 forControlEvents:UIControlEventValueChanged];
   
-  UIColor *userImageBorderColor = WKVocabularyColor();
+  UIColor *userImageBorderColor = WKRadicalColor();
   CGFloat h,s,b;
   [userImageBorderColor getHue:&h saturation:&s brightness:&b alpha:nil];
-  userImageBorderColor = [UIColor colorWithHue:h saturation:s/2.f brightness:b alpha:1.f];
+  userImageBorderColor = [UIColor colorWithHue:h saturation:s brightness:b alpha:1.f];
   
   _userImageView.layer.masksToBounds = YES;
   _userImageView.layer.cornerRadius = _userImageView.layer.bounds.size.height / 2 + 1;
-  _userImageView.layer.borderWidth = 4.f;
+  _userImageView.layer.borderWidth = 3.f;
   _userImageView.layer.borderColor = userImageBorderColor.CGColor;
+
+  WKAddShadowToView(_userNameLabel, 1, 0.4, 4);
+  WKAddShadowToView(_userLevelLabel, 1, 0.4, 4);
   
   CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
   userGradientLayer.frame = _userCell.bounds;
-  userGradientLayer.colors = WKVocabularyGradient();
+  userGradientLayer.colors = WKRadicalGradient();
   [_userCell.layer insertSublayer:userGradientLayer atIndex:0];
   
-  _upcomingReviewsChartView.leftAxis.axisMinimum = 0.f;
-  _upcomingReviewsChartView.rightAxis.axisMinimum = 0.f;
-  _upcomingReviewsChartView.rightAxis.enabled = NO;
-  _upcomingReviewsChartView.xAxis.labelPosition = XAxisLabelPositionBottom;
-  _upcomingReviewsChartView.xAxis.drawGridLinesEnabled = NO;
-  _upcomingReviewsChartView.legend.enabled = NO;
-  _upcomingReviewsChartView.chartDescription = nil;
-  _upcomingReviewsChartView.userInteractionEnabled = NO;
+  _chartController =
+      [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -212,41 +181,7 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
     weakSelf.lessonsCell.detailTextLabel.text = (lessonCount < 0) ? @"-" : [@(lessonCount) stringValue];
     weakSelf.reviewsCell.detailTextLabel.text = (reviewCount < 0) ? @"-" : [@(reviewCount) stringValue];
     
-    NSMutableArray<BarChartDataEntry *> *hourlyData = [NSMutableArray array];
-    NSMutableArray<ChartDataEntry *> *cumulativeData = [NSMutableArray array];
-    
-    // Add the reviews pending now.
-    [cumulativeData addObject:[[ChartDataEntry alloc] initWithX:0 y:reviewCount]];
-    
-    // Add upcoming hourly reviews.
-    int cumulativeReviews = reviewCount;
-    for (int i = 0; i < upcomingReviews.count; ++i) {
-      int x = i + 1;
-      int y = [upcomingReviews[i] intValue];
-      cumulativeReviews += y;
-      [hourlyData addObject:[[BarChartDataEntry alloc] initWithX:x y:y]];
-      [cumulativeData addObject:[[ChartDataEntry alloc] initWithX:x y:cumulativeReviews]];
-    }
-    
-    LineChartDataSet *lineDataSet = [[LineChartDataSet alloc] initWithValues:cumulativeData label:nil];
-    lineDataSet.drawValuesEnabled = NO;
-    lineDataSet.drawCircleHoleEnabled = NO;
-    lineDataSet.circleRadius = 1.5f;
-    lineDataSet.colors = @[WKVocabularyColor()];
-    lineDataSet.circleColors = @[WKVocabularyColor()];
-    
-    BarChartDataSet *barDataSet = [[BarChartDataSet alloc] initWithValues:hourlyData label:nil];
-    barDataSet.axisDependency = AxisDependencyRight;
-    barDataSet.colors = @[WKRadicalColor()];
-    
-    CombinedChartData *data = [[CombinedChartData alloc] init];
-    data.lineData = [[LineChartData alloc] initWithDataSet:lineDataSet];
-    data.barData = [[BarChartData alloc] initWithDataSet:barDataSet];
-    
-    _upcomingReviewsChartView.data = data;
-    _upcomingReviewsChartView.rightAxis.axisMaximum = barDataSet.yMax;
-    _upcomingReviewsChartView.xAxis.valueFormatter =
-        [[UpcomingReviewsXAxisValueFormatter alloc] initWithStartTime:[NSDate date]];
+    [_chartController update:upcomingReviews currentReviewCount:reviewCount];
   });
 }
 
