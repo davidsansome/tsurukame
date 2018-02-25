@@ -122,24 +122,22 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   });
 }
 
-- (void)getAllAssignments:(AssignmentHandler)handler {
-  dispatch_async(_queue, ^{
-    NSMutableArray<WKAssignment *> *ret = [NSMutableArray array];
-    __block NSError *err = nil;
-    
-    [_db inDatabase:^(FMDatabase * _Nonnull db) {
-      FMResultSet *r = [db executeQuery:@"SELECT pb FROM assignments"];
-      while ([r next]) {
-        WKAssignment *assignment = [WKAssignment parseFromData:[r dataForColumnIndex:0] error:&err];
-        if (err) {
-          [self.delegate localCachingClientDidReportError:err];
-          return;
-        }
-        [ret addObject:assignment];
+- (NSArray<WKAssignment *> *)getAllAssignments {
+  NSMutableArray<WKAssignment *> *ret = [NSMutableArray array];
+  
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    FMResultSet *r = [db executeQuery:@"SELECT pb FROM assignments"];
+    while ([r next]) {
+      NSError *error = nil;
+      WKAssignment *assignment = [WKAssignment parseFromData:[r dataForColumnIndex:0] error:&error];
+      if (error) {
+        [self.delegate localCachingClientDidReportError:error];
+        return;
       }
-    }];
-    handler(err, ret);
-  });
+      [ret addObject:assignment];
+    }
+  }];
+  return ret;
 }
 
 - (WKStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID {

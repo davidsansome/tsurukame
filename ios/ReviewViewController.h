@@ -24,7 +24,7 @@
 // Must set these prior to starting.
 @property(nonatomic, assign) DataLoader *dataLoader;
 @property(nonatomic, assign) LocalCachingClient *localCachingClient;
-- (void)startReviewWithItems:(NSArray<ReviewItem *> *)items;
+@property(nonatomic, copy) NSArray<ReviewItem *> *items;
 
 @property(nonatomic, weak) id<ReviewViewControllerDelegate> delegate;
 

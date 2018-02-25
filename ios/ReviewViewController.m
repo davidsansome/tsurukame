@@ -101,7 +101,7 @@ static UIColor *kMeaningTextColor;
   _delegate = delegate;
 }
 
-- (void)startReviewWithItems:(NSArray<ReviewItem *> *)items {
+- (void)setItems:(NSArray<ReviewItem *> *)items {
   NSLog(@"Starting review with %lu items", (unsigned long)items.count);
   _reviewQueue = [NSMutableArray arrayWithArray:items];
   _activeQueue = [NSMutableArray array];
