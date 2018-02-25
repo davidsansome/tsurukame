@@ -27,6 +27,15 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
                                hash, size, kDefaultProfileImageURL]];
 }
 
+static void SetTableViewCellCount(UITableViewCell *cell, int count) {
+  cell.detailTextLabel.text = (count < 0) ? @"-" : [@(count) stringValue];
+
+  BOOL enabled = count > 0;
+  cell.userInteractionEnabled = enabled;
+  cell.textLabel.enabled = enabled;
+  cell.detailTextLabel.enabled = enabled;
+}
+
 
 @interface MainViewController ()
 
@@ -195,8 +204,8 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
           upcomingReviews:(NSArray<NSNumber *> *)upcomingReviews {
   __weak MainViewController *weakSelf = self;
   dispatch_async(dispatch_get_main_queue(), ^{
-    weakSelf.lessonsCell.detailTextLabel.text = (lessonCount < 0) ? @"-" : [@(lessonCount) stringValue];
-    weakSelf.reviewsCell.detailTextLabel.text = (reviewCount < 0) ? @"-" : [@(reviewCount) stringValue];
+    SetTableViewCellCount(weakSelf.lessonsCell, lessonCount);
+    SetTableViewCellCount(weakSelf.reviewsCell, reviewCount);
     
     [_chartController update:upcomingReviews currentReviewCount:reviewCount];
   });
