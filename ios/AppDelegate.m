@@ -7,8 +7,6 @@
 #import "ReviewViewController.h"
 #import "UserDefaults.h"
 
-#import "MaterialSnackbar.h"
-
 @interface AppDelegate () <LocalCachingClientDelegate>
 
 @end
@@ -80,9 +78,7 @@
 }
 
 - (void)localCachingClientDidReportError:(NSError *)error {
-  MDCSnackbarMessage *message = [[MDCSnackbarMessage alloc] init];
-  message.text = error.localizedDescription;
-  [MDCSnackbarManager showMessage:message];
+  NSLog(@"Local caching client error: %@", error);
 }
 
 @end
