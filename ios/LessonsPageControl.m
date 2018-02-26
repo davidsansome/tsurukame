@@ -25,7 +25,7 @@ static CGFloat WidthOfItemText(NSAttributedString *item) {
   CGRect rect = [str boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, kLabelHeight)
                                   options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                   context:nil];
-  return rect.size.width;
+  return MAX(kPageHeight, rect.size.width);
 }
 
 @implementation LessonsPageControl {
@@ -60,6 +60,7 @@ static CGFloat WidthOfItemText(NSAttributedString *item) {
     label.attributedText = text;
     label.textColor = [UIColor whiteColor];
     label.userInteractionEnabled = NO;
+    label.textAlignment = NSTextAlignmentCenter;
     
     UIGestureRecognizer *gestureRecogniser =
         [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
