@@ -24,6 +24,14 @@
   _pageController.dataSource = self;
   _pageController.delegate = self;
   
+  // Set the subjects on the page control.
+  NSMutableArray<WKSubject *> *subjects = [NSMutableArray array];
+  for (ReviewItem *item in _items) {
+    WKSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
+    [subjects addObject:subject];
+  }
+  _pageControl.subjects = subjects;
+  
   // Add it as a child view controller.
   [self addChildViewController:_pageController];
   [self.view addSubview:_pageController.view];
@@ -33,6 +41,12 @@
   [_pageControl addTarget:self
                    action:@selector(pageChanged)
          forControlEvents:UIControlEventValueChanged];
+  
+  // Load the first page.
+  [_pageController setViewControllers:@[[self createViewControllerForIndex:0]]
+                            direction:UIPageViewControllerNavigationDirectionForward
+                             animated:NO
+                           completion:nil];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -53,24 +67,6 @@
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
   return UIStatusBarStyleLightContent;
-}
-
-- (void)setItems:(NSArray<ReviewItem *> *)items {
-  _items = items;
-  
-  // Set the subjects on the page control.
-  NSMutableArray<WKSubject *> *subjects = [NSMutableArray array];
-  for (ReviewItem *item in items) {
-    WKSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
-    [subjects addObject:subject];
-  }
-  _pageControl.subjects = subjects;
-  
-  // Load the first page.
-  [_pageController setViewControllers:@[[self createViewControllerForIndex:0]]
-                            direction:UIPageViewControllerNavigationDirectionForward
-                             animated:NO
-                           completion:nil];
 }
 
 #pragma mark - UIPageControl
