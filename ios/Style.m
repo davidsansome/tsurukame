@@ -2,6 +2,17 @@
 
 #import <UIKit/UIKit.h>
 
+static UIColor *UIColorFromHex(int32_t hexColor) {
+  CGFloat red   = (CGFloat)((hexColor & 0xFF0000) >> 16) / 255.f;
+  CGFloat green = (CGFloat)((hexColor & 0x00FF00) >> 8)  / 255.f;
+  CGFloat blue  = (CGFloat)((hexColor & 0x0000FF))       / 255.f;
+  return [UIColor colorWithRed:red green:green blue:blue alpha:1.0f];
+}
+
+static NSArray<id> *ArrayOfTwoColors(UIColor *first, UIColor *second) {
+  return @[(id)first.CGColor, (id)second.CGColor];
+}
+
 void WKAddShadowToView(UIView *view, float offset, float opacity, float radius) {
   view.layer.shadowColor = [UIColor blackColor].CGColor;
   view.layer.shadowOffset = CGSizeMake(0, offset);
@@ -10,46 +21,23 @@ void WKAddShadowToView(UIView *view, float offset, float opacity, float radius) 
   view.clipsToBounds = NO;
 }
 
-UIColor *WKRadicalColor() {
-  return [UIColor colorWithRed:0.000f green:0.576f blue:0.867f alpha:1.0f];
-}
-
-UIColor *WKKanjiColor() {
-  return [UIColor colorWithRed:0.867f green:0.000f blue:0.576f alpha:1.0f];
-}
-
-UIColor *WKVocabularyColor() {
-  return [UIColor colorWithRed:0.576f green:0.000f blue:1.000f alpha:1.0f];
-}
+UIColor *WKRadicalColor1()    { return UIColorFromHex(0x00AAFF); }
+UIColor *WKRadicalColor2()    { return UIColorFromHex(0x0093DD); }
+UIColor *WKKanjiColor1()      { return UIColorFromHex(0xFF00AA); }
+UIColor *WKKanjiColor2()      { return UIColorFromHex(0xDD0093); }
+UIColor *WKVocabularyColor1() { return UIColorFromHex(0xAA00FF); }
+UIColor *WKVocabularyColor2() { return UIColorFromHex(0x9300DD); }
 
 NSArray<id> *WKRadicalGradient(void) {
-  static NSArray<id> *ret;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    ret = @[(id)[UIColor colorWithRed:0.000f green:0.667f blue:1.000f alpha:1.0f].CGColor,
-            (id)WKRadicalColor().CGColor];
-  });
-  return ret;
+  return ArrayOfTwoColors(WKRadicalColor1(), WKRadicalColor2());
 }
 
 NSArray<id> *WKKanjiGradient(void) {
-  static NSArray<id> *ret;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    ret = @[(id)[UIColor colorWithRed:1.000f green:0.000f blue:0.667f alpha:1.0f].CGColor,
-            (id)WKKanjiColor().CGColor];
-  });
-  return ret;
+  return ArrayOfTwoColors(WKKanjiColor1(), WKKanjiColor2());
 }
 
 NSArray<id> *WKVocabularyGradient(void) {
-  static NSArray<id> *ret;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    ret = @[(id)[UIColor colorWithRed:0.667f green:0.000f blue:1.000f alpha:1.0f].CGColor,
-            (id)WKVocabularyColor().CGColor];
-  });
-  return ret;
+  return ArrayOfTwoColors(WKVocabularyColor1(), WKVocabularyColor2());
 }
 
 NSArray<id> *WKGradientForAssignment(WKAssignment *assignment) {
