@@ -4,9 +4,12 @@
 
 extern void WKAddShadowToView(UIView *view, float offset, float opacity, float radius);
 
-extern UIColor *WKRadicalColor(void);
-extern UIColor *WKKanjiColor(void);
-extern UIColor *WKVocabularyColor(void);
+extern UIColor *WKKanjiColor1(void);
+extern UIColor *WKKanjiColor2(void);
+extern UIColor *WKRadicalColor1(void);
+extern UIColor *WKRadicalColor2(void);
+extern UIColor *WKVocabularyColor1(void);
+extern UIColor *WKVocabularyColor2(void);
 
 extern NSArray<id> *WKRadicalGradient(void);
 extern NSArray<id> *WKKanjiGradient(void);
