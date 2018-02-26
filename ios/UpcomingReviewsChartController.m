@@ -2,7 +2,7 @@
 
 #import "Style.h"
 
-@import Charts;
+#import "wk-Swift.h"
 
 @interface UpcomingReviewsXAxisValueFormatter : NSObject <IChartAxisValueFormatter>
 - (instancetype)initWithStartTime:(NSDate *)startTime;
