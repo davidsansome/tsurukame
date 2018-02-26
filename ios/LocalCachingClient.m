@@ -1,6 +1,6 @@
 #import "LocalCachingClient.h"
 
-#import "FMDB/FMDB.h"
+#import "third_party/FMDB/FMDB.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
