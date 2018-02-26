@@ -3,8 +3,6 @@
 #import "Client.h"
 #import "UserDefaults.h"
 
-#import "MaterialSnackbar.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 NSNotificationName kLoginCompleteNotification = @"kLoginCompleteNotification";
@@ -63,9 +61,7 @@ static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
             dispatch_async(dispatch_get_main_queue(), ^{
               if (error) {
                 [self.navigationController popToRootViewControllerAnimated:YES];
-                MDCSnackbarMessage *message = [[MDCSnackbarMessage alloc] init];
-                message.text = error.localizedDescription;
-                [MDCSnackbarManager showMessage:message];
+                NSLog(@"Login error: %@", error);
                 return;
               }
               
