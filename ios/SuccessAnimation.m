@@ -57,14 +57,12 @@ static void CreateSpark(UIView *originView,
                    } completion:nil];
 }
 
-void CreateFlyingText(UIView *fromView,
-                      UIView *toView,
-                      NSString *text,
-                      UIFont *font,
-                      UIColor *color,
-                      CGFloat duration) {
-  assert(toView.superview == fromView.superview);
-  UIView *superview = fromView.superview;
+void CreatePlusOneText(UIView *toView,
+                       NSString *text,
+                       UIFont *font,
+                       UIColor *color,
+                       CGFloat duration) {
+  UIView *superview = toView.superview;
   
   UILabel *view = [[UILabel alloc] initWithFrame:CGRectZero];
   view.text = text;
@@ -72,46 +70,38 @@ void CreateFlyingText(UIView *fromView,
   view.textColor = color;
   view.alpha = 0.0;
   [view sizeToFit];
-  view.center = fromView.center;
+  view.center = CGPointMake(toView.center.x,
+                            toView.center.y + font.pointSize * 1.5);
+  view.transform = CGAffineTransformMakeScale(0.1, 0.1);
   [superview addSubview:view];
   [superview layoutIfNeeded];
   
   // Fade in.
-  [UIView animateWithDuration:duration * 0.2
+  [UIView animateWithDuration:duration * 0.1
                         delay:0
                       options:UIViewAnimationOptionCurveLinear
                    animations:^{
                      view.alpha = 1.0;
                    } completion:nil];
   
-  // Move to destination.
-  UIViewPropertyAnimator *positionAnimator =
-      [[UIViewPropertyAnimator alloc] initWithDuration:duration
-                                         controlPoint1:CGPointMake(0.0, 0.0)
-                                         controlPoint2:CGPointMake(0.0, 0.75)
-                                            animations:^{
-                                              view.center = toView.center;
-                                            }];
-  [positionAnimator addCompletion:^(UIViewAnimatingPosition finalPosition) {
-    [view removeFromSuperview];
-  }];
-  [positionAnimator startAnimation];
-  
-  // Get smaller.
-  [UIView animateWithDuration:duration * 0.5
-                        delay:duration * 0.5
-                      options:UIViewAnimationOptionCurveLinear
+  // Get bigger.
+  [UIView animateWithDuration:duration * 0.2
+                        delay:0.0
+       usingSpringWithDamping:0.5
+        initialSpringVelocity:1
+                      options:0
                    animations:^{
-                     view.transform = CGAffineTransformScale(view.transform, 0.5, 0.5);
-                     [superview layoutIfNeeded];
+                     view.transform = CGAffineTransformIdentity;
                    } completion:nil];
   
-  // Fade out.
+  // Move to destination and get smaller
   [UIView animateWithDuration:duration * 0.3
                         delay:duration * 0.7
-                      options:UIViewAnimationOptionCurveEaseOut
+                      options:UIViewAnimationOptionCurveLinear
                    animations:^{
-                     view.alpha = 0.2;
+                     view.center = toView.center;
+                     view.transform = CGAffineTransformMakeScale(0.1, 0.1);
+                     view.alpha = 0.1;
                    } completion:nil];
 }
 
@@ -231,12 +221,11 @@ void RunSuccessAnimation(UIView *button,
   CreateExplosion(button);
   
   if (isSubjectFinished) {
-    CreateFlyingText(button,
-                     doneLabel,
-                     @"+1",
-                     [UIFont boldSystemFontOfSize:20.0],
-                     [UIColor whiteColor],
-                     0.75);  // Duration.
+    CreatePlusOneText(doneLabel,
+                      @"+1",
+                      [UIFont boldSystemFontOfSize:20.0],
+                      [UIColor whiteColor],
+                      3.0);  // Duration.
   }
   
   if (isSubjectFinished && didLevelUp) {
