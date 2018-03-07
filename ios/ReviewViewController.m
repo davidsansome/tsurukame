@@ -503,7 +503,7 @@ static UIColor *kMeaningTextColor;
   
   // Show a new task if it was correct.
   if (correct) {
-    RunSuccessAnimation(_submitButton, _doneLabel, isSubjectFinished, didLevelUp, newSrsStage);
+    RunSuccessAnimation(_answerField, _doneLabel, isSubjectFinished, didLevelUp, newSrsStage);
     [self randomTask];
     return;
   }

@@ -1,15 +1,18 @@
 #import "SuccessAnimation.h"
 
-static void CreateSpark(UIView *originView,
+static CGFloat RandFloat(CGFloat min, CGFloat max) {
+  return ((CGFloat)arc4random()) / ((CGFloat)UINT32_MAX) * (max - min) + min;
+}
+
+static void CreateSpark(UIView *superview,
+                        CGPoint origin,
                         CGFloat size,
                         CGFloat distance,
                         CGFloat radians,
                         UIColor *color,
                         NSTimeInterval duration) {
-  UIView *superview = originView.superview;
-  
-  CGRect frame = CGRectMake(originView.center.x - size / 2,
-                            originView.center.y - size / 2,
+  CGRect frame = CGRectMake(origin.x - size / 2,
+                            origin.y - size / 2,
                             size, size);
   UIView *view = [[UIView alloc] initWithFrame:frame];
   view.backgroundColor = color;
@@ -32,8 +35,8 @@ static void CreateSpark(UIView *originView,
                         delay:0
                       options:UIViewAnimationOptionCurveEaseOut
                    animations:^{
-                     view.center = CGPointMake(view.center.x + distance * sin(radians),
-                                               view.center.y + distance * cos(radians));
+                     view.center = CGPointMake(view.center.x - distance * sin(radians),
+                                               view.center.y - distance * cos(radians));
                      [superview layoutIfNeeded];
                    } completion:nil];
   
@@ -113,8 +116,8 @@ void CreateSpringyBillboard(UIView *originView,
                             CGFloat cornerRadius,
                             CGFloat padding,
                             CGFloat distance,
-                            CGFloat angleRadians,
                             CGFloat duration) {
+  const CGFloat angleRadians = RandFloat(-M_PI * 0.1, M_PI * 0.1);
   UIView *superview = originView.superview;
   
   CGFloat hue, saturation, alpha;
@@ -180,19 +183,16 @@ void CreateSpringyBillboard(UIView *originView,
                      [label removeFromSuperview];
                    }];
 }
-                            
 
-static CGFloat RandFloat(CGFloat min, CGFloat max) {
-  return ((CGFloat)arc4random()) / ((CGFloat)UINT32_MAX) * (max - min) + min;
-}
-
-static void CreateExplosion(UIView *origin) {
+static void CreateExplosion(UIView *view) {
   const CGFloat kSizeMin = 9.0;
   const CGFloat kSizeMax = 11.0;
-  const CGFloat kDistanceMin = 15.0;
-  const CGFloat kDistanceMax = 45.0;
+  const CGFloat kDistanceMin = 60.0;
+  const CGFloat kDistanceMax = 150.0;
   const CGFloat kDurationMin = 0.5;
   const CGFloat kDurationMax = 0.7;
+  const CGFloat kOriginCenterOffsetRange = 0.25;
+  const CGFloat kAngleRange = M_PI * 0.3;
   static UIColor *color1;
   static UIColor *color2;
   
@@ -202,30 +202,35 @@ static void CreateExplosion(UIView *origin) {
     color2 = [UIColor colorWithRed:230.0/255 green:57.0/255 blue:91.0/255 alpha:1.0];
   });
   
-  for (int i = 0; i < 40; ++i) {
+  UIView *superview = view.superview;
+  for (int i = 0; i < 80; ++i) {
     CGFloat size = RandFloat(kSizeMin, kSizeMax);
     CGFloat distance = RandFloat(kDistanceMin, kDistanceMax);
     CGFloat duration = RandFloat(kDurationMin, kDurationMax);
-    CGFloat angle = RandFloat(-M_PI, M_PI);
+    CGFloat offset = RandFloat(-1.0, 1.0);
+    CGFloat angle = - kAngleRange * offset;
+    CGFloat originCenterOffset = kOriginCenterOffsetRange * offset;
     UIColor *color = arc4random_uniform(2) ? color1 : color2;
+    CGPoint origin = CGPointMake(view.center.x + originCenterOffset * view.bounds.size.width,
+                                 view.center.y);
     
-    CreateSpark(origin, size, distance, angle, color, duration);
+    CreateSpark(superview, origin, size, distance, angle, color, duration);
   }
 }
 
-void RunSuccessAnimation(UIView *button,
+void RunSuccessAnimation(UIView *answerField,
                          UIView *doneLabel,
                          bool isSubjectFinished,
                          bool didLevelUp,
                          int newSrsLevel) {
-  CreateExplosion(button);
+  CreateExplosion(answerField);
   
   if (isSubjectFinished) {
     CreatePlusOneText(doneLabel,
                       @"+1",
                       [UIFont boldSystemFontOfSize:20.0],
                       [UIColor whiteColor],
-                      3.0);  // Duration.
+                      1.5);  // Duration.
   }
   
   if (isSubjectFinished && didLevelUp) {
@@ -252,14 +257,13 @@ void RunSuccessAnimation(UIView *button,
         return;
     }
     
-    CreateSpringyBillboard(button, srsLevelString,
+    CreateSpringyBillboard(answerField, srsLevelString,
                            [UIFont systemFontOfSize:16.0],
                            [UIColor whiteColor],
                            srsLevelColor,
                            5.0,  // Border radius.
                            6.0,  // Padding.
-                           50.0,  // Distance.
-                           - M_PI * 0.15,  // Angle.
+                           100.0,  // Distance.
                            3.0);  // Duration.
   }
 }
