@@ -7,6 +7,8 @@
 #import "ReviewViewController.h"
 #import "UserDefaults.h"
 
+#import <UserNotifications/UserNotifications.h>
+
 @interface AppDelegate ()
 @end
 
@@ -20,6 +22,8 @@
 
 - (BOOL)application:(UIApplication *)application
       didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
+  
   _storyboard = self.window.rootViewController.storyboard;
   _navigationController = (UINavigationController *)self.window.rootViewController;
   
@@ -27,10 +31,11 @@
                                                                         withExtension:@"bin"]];
   _reachability = [Reachability reachabilityForInternetConnection];
   
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(loginComplete:)
-                                               name:kLoginCompleteNotification
-                                             object:nil];
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  [nc addObserver:self
+         selector:@selector(loginComplete:)
+             name:kLoginCompleteNotification
+           object:nil];
   
   if (UserDefaults.userApiToken && UserDefaults.userCookie) {
     [self loginComplete:nil];
@@ -53,26 +58,71 @@
   vc.reachability = _reachability;
   vc.localCachingClient = _localCachingClient;
   
-  NSLog(@"Pushing main view controller %@ %@", _navigationController, self.window.rootViewController);
   [_navigationController setViewControllers:@[vc] animated:(notification == nil) ? NO : YES];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+  [_reachability startNotifier];
+  [_localCachingClient sync:nil];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
   [_reachability stopNotifier];
+  [self updateAppBadgeCount];
 }
 
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
+- (void)application:(UIApplication *)application
+      performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+  if (!_localCachingClient) {
+    completionHandler(UIBackgroundFetchResultNoData);
+    return;
+  }
+  
+  __weak AppDelegate *weakSelf = self;
+  [_localCachingClient sync:^{
+    [weakSelf updateAppBadgeCount];
+    completionHandler(UIBackgroundFetchResultNewData);
+  }];
 }
 
+- (void)updateAppBadgeCount {
+  int reviewCount = _localCachingClient.availableReviewCount;
+  NSArray<NSNumber *> *upcomingReviews = _localCachingClient.upcomingReviews;
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-}
-
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-  [_reachability startNotifier];
-  [_localCachingClient sync];
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  void(^updateBlock)(void) = ^() {
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:reviewCount];
+    [center removeAllPendingNotificationRequests];
+    
+    NSDate *startDate = [[NSCalendar currentCalendar] nextDateAfterDate:[NSDate date]
+                                                           matchingUnit:NSCalendarUnitMinute
+                                                                  value:0
+                                                                options:NSCalendarMatchNextTime];
+    NSTimeInterval startInterval = [startDate timeIntervalSinceNow];
+    int cumulativeReviews = reviewCount;
+    for (int hour = 0; hour < upcomingReviews.count; hour++) {
+      int reviews = [upcomingReviews[hour] intValue];
+      if (reviews == 0) {
+        continue;
+      }
+      cumulativeReviews += reviews;
+      
+      NSTimeInterval triggerTimeInterval = startInterval + (hour * 60 * 60);
+      NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];
+      UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+      content.badge = @(cumulativeReviews);
+      UNNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:triggerTimeInterval repeats:NO];
+      UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];
+      [center addNotificationRequest:request withCompletionHandler:nil];
+    }
+  };
+  
+  [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge)
+                        completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                          if (granted) {
+                            dispatch_async(dispatch_get_main_queue(), updateBlock);
+                          }
+                        }];
 }
 
 @end

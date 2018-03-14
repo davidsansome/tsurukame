@@ -1,13 +1,14 @@
 #import "LocalCachingClient.h"
 
+#import "proto/Wanikani+Convenience.h"
 #import "third_party/FMDB/FMDB.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NSNotificationName kLocalCachingClientStateChangedNotification =
-    @"kLocalCachingClientStateChangedNotification";
-
-typedef void (^CompletionHandler)();
+NSNotificationName kLocalCachingClientAvailableItemsChangedNotification =
+    @"kLocalCachingClientAvailableItemsChangedNotification";
+NSNotificationName kLocalCachingClientPendingItemsChangedNotification = 
+    @"kLocalCachingClientPendingItemsChangedNotification";
 
 static void CheckUpdate(FMDatabase *db, NSString *sql, ...) {
   va_list args;
@@ -27,17 +28,22 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }
 }
 
-@interface LocalCachingClient ()
-
-@property(nonatomic, getter=isBusy) bool busy;
-
-@end
 
 @implementation LocalCachingClient {
   Client *_client;
   Reachability *_reachability;
   FMDatabaseQueue *_db;
   dispatch_queue_t _queue;
+  bool _busy;
+
+  int _cachedAvailableLessonCount;
+  int _cachedAvailableReviewCount;
+  NSArray<NSNumber *> *_cachedUpcomingReviews;
+  int _cachedPendingProgress;
+  int _cachedPendingStudyMaterials;
+  bool _isCachedAvailableSubjectCountsStale;
+  bool _isCachedPendingProgressStale;
+  bool _isCachedPendingStudyMaterialsStale;
 }
 
 #pragma mark - Initialisers
@@ -51,16 +57,19 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     _db = [self openDatabase];
     assert(_db);
     _queue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0);
+
+    _isCachedAvailableSubjectCountsStale = true;
+    _isCachedPendingProgressStale = true;
+    _isCachedPendingStudyMaterialsStale = true;
   }
   return self;
 }
 
 - (FMDatabaseQueue *)openDatabase {
   NSArray *paths =
-  NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+      NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString *fileName = [NSString stringWithFormat:@"%@/local-cache.db", paths[0]];
   
-  NSLog(@"Opening database %@", fileName);
   FMDatabaseQueue *ret = [FMDatabaseQueue databaseQueueWithPath:fileName];
 
   static NSArray<NSString *> *kSchemas;
@@ -112,21 +121,6 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     NSLog(@"Database updated to schema %lu", targetVersion);
   }];
   return ret;
-}
-
-- (void)setBusy:(bool)busy {
-  if (busy == _busy) {
-    return;
-  }
-  _busy = busy;
-  [self postStateChangedNotification];
-}
-
-- (void)postStateChangedNotification {
-  dispatch_async(dispatch_get_main_queue(), ^{
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc postNotificationName:kLocalCachingClientStateChangedNotification object:self];
-  });
 }
 
 #pragma mark - Local database getters
@@ -183,12 +177,122 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   return ret;
 }
 
+#pragma mark - Getting cached data
+
 - (int)pendingProgress {
-  return [self countRowsInTable:@"pending_progress"];
+  @synchronized(self) {
+    if (_isCachedPendingProgressStale) {
+      _cachedPendingProgress = [self countRowsInTable:@"pending_progress"];
+      _isCachedPendingProgressStale = false;
+    }
+    return _cachedPendingProgress;
+  }
 }
 
 - (int)pendingStudyMaterials {
-  return [self countRowsInTable:@"pending_study_materials"];
+  @synchronized(self) {
+    if (_isCachedPendingStudyMaterialsStale) {
+      _cachedPendingStudyMaterials = [self countRowsInTable:@"pending_study_materials"];
+      _isCachedPendingStudyMaterialsStale = false;
+    }
+    return _cachedPendingStudyMaterials;
+  }
+}
+
+- (int)availableReviewCount {
+  @synchronized(self) {
+    if (_isCachedAvailableSubjectCountsStale) {
+      [self updateAvailableSubjectCounts];
+      _isCachedAvailableSubjectCountsStale = false;
+    }
+    return _cachedAvailableReviewCount;
+  }
+}
+
+- (int)availableLessonCount {
+  @synchronized(self) {
+    if (_isCachedAvailableSubjectCountsStale) {
+      [self updateAvailableSubjectCounts];
+      _isCachedAvailableSubjectCountsStale = false;
+    }
+    return _cachedAvailableLessonCount;
+  }
+}
+
+- (NSArray<NSNumber *> *)upcomingReviews {
+  @synchronized(self) {
+    if (_isCachedAvailableSubjectCountsStale) {
+      [self updateAvailableSubjectCounts];
+      _isCachedAvailableSubjectCountsStale = false;
+    }
+    return _cachedUpcomingReviews;
+  }
+}
+
+- (void)updateAvailableSubjectCounts {
+  NSArray<WKAssignment *> *assignments = [self getAllAssignments];
+  int lessons = 0;
+  int reviews = 0;
+  
+  NSDate *now = [NSDate date];
+  
+  NSMutableArray<NSNumber *> *upcomingReviews = [NSMutableArray arrayWithCapacity:48];
+  for (int i = 0; i < 24; i++) {
+    [upcomingReviews addObject:@(0)];
+  }
+  
+  for (WKAssignment *assignment in assignments) {
+    if (assignment.isLessonStage) {
+      lessons ++;
+    } else if (assignment.isReviewStage) {
+      NSTimeInterval availableInSeconds = [assignment.availableAtDate timeIntervalSinceDate:now];
+      if (availableInSeconds <= 0) {
+        reviews ++;
+        continue;
+      }
+      int availableInHours = availableInSeconds / (60 * 60);
+      if (availableInHours < upcomingReviews.count) {
+        [upcomingReviews setObject:[NSNumber numberWithInt:[upcomingReviews[availableInHours] intValue] + 1]
+                atIndexedSubscript:availableInHours];
+      }
+    }
+  }
+
+  NSLog(@"Recalculated available items");
+  _cachedAvailableLessonCount = lessons;
+  _cachedAvailableReviewCount = reviews;
+  _cachedUpcomingReviews = upcomingReviews;
+}
+
+#pragma mark - Invalidating cached data
+
+- (void)postNotificationOnMainThread:(NSNotificationName)name {
+  NSLog(@"Posting on main thread: %@", name);
+  dispatch_async(dispatch_get_main_queue(), ^{
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc postNotificationName:name object:self];
+  });
+}
+
+- (void)invalidateCachedAvailableSubjectCounts {
+  @synchronized(self) {
+    _isCachedAvailableSubjectCountsStale = true;
+  }
+  [self postNotificationOnMainThread:kLocalCachingClientAvailableItemsChangedNotification];
+}
+
+- (void)invalidateCachedPendingProgress {
+  @synchronized(self) {
+    _isCachedPendingProgressStale = true;
+  }
+  [self postNotificationOnMainThread:kLocalCachingClientPendingItemsChangedNotification];
+}
+
+- (void)invalidateCachedPendingStudyMaterials {
+  @synchronized(self) {
+    _isCachedPendingStudyMaterialsStale = true;
+  }
+  [self postNotificationOnMainThread:kLocalCachingClientPendingItemsChangedNotification];
 }
 
 #pragma mark - Send progress
@@ -204,7 +308,8 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
                   @(p.subjectId), p.data);
     }
   }];
-  [self postStateChangedNotification];
+  [self invalidateCachedPendingProgress];
+  [self invalidateCachedAvailableSubjectCounts];
   
   [self sendPendingProgress:progress handler:nil];
 }
@@ -221,7 +326,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 }
 
 - (void)sendPendingProgress:(NSArray<WKProgress *> *)progress
-                    handler:(CompletionHandler)handler {
+                    handler:(CompletionHandler _Nullable)handler {
   [_client sendProgress:progress handler:^(NSError * _Nullable error) {
     if (error) {
       NSLog(@"sendProgress failed: %@", error);
@@ -232,7 +337,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
           CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.subjectId));
         }
       }];
-      [self postStateChangedNotification];
+      [self invalidateCachedPendingProgress];
     }
     if (handler) {
       handler();
@@ -248,7 +353,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES(?, ?)", @(material.subjectId), material.data);
     CheckUpdate(db, @"REPLACE INTO pending_study_materials (id) VALUES(?)", @(material.subjectId));
   }];
-  [self postStateChangedNotification];
+  [self invalidateCachedPendingStudyMaterials];
   
   [self sendPendingStudyMaterial:material handler:nil];
 }
@@ -271,7 +376,8 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   dispatch_group_notify(dispatchGroup, _queue, handler);
 }
 
-- (void)sendPendingStudyMaterial:(WKStudyMaterials *)material handler:(CompletionHandler)handler {
+- (void)sendPendingStudyMaterial:(WKStudyMaterials *)material
+                         handler:(CompletionHandler _Nullable)handler {
   [_client updateStudyMaterial:material handler:^(NSError * _Nullable error) {
     if (error) {
       NSLog(@"Failed to send study material update: %@", error);
@@ -279,7 +385,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
       [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
         CheckUpdate(db, @"DELETE FROM pending_study_materials WHERE id = ?", @(material.subjectId));
       }];
-      [self postStateChangedNotification];
+      [self invalidateCachedPendingStudyMaterials];
     }
     if (handler) {
       handler();
@@ -289,21 +395,25 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 
 #pragma mark - Sync
 
-- (void)sync {
+- (void)sync:(CompletionHandler _Nullable)completionHandler {
   if (!_reachability.isReachable) {
+    if (completionHandler) {
+      completionHandler();
+    }
     return;
   }
   
   dispatch_async(_queue, ^{
-    @synchronized(self) {
-      if (self.isBusy) {
-        return;
+    if (_busy) {
+      if (completionHandler) {
+        completionHandler();
       }
-      self.busy = true;
+      return;
     }
+    _busy = true;
     
     dispatch_group_t sendGroup = dispatch_group_create();
-    
+
     dispatch_group_enter(sendGroup);
     [self sendAllPendingProgress:^{
       dispatch_group_leave(sendGroup);
@@ -330,8 +440,10 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
       }];
       
       dispatch_group_notify(updateGroup, dispatch_get_main_queue(), ^{
-        @synchronized(self) {
-          self.busy = false;
+        _busy = false;
+        [self invalidateCachedAvailableSubjectCounts];
+        if (completionHandler) {
+          completionHandler();
         }
       });
     });

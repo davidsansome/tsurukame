@@ -78,7 +78,6 @@ WKAnswerCheckerResult CheckAnswer(NSString *answer,
         NSString *meaningText = FormattedString(meaning);
         int distance = [meaningText levenshteinDistanceTo:answer];
         int tolerance = DistanceTolerance(meaningText);
-        NSLog(@"'%@' '%@' distance %d tolerance %d", meaningText, answer, distance, tolerance);
         if (distance <= tolerance) {
           return kWKAnswerImprecise;
         }

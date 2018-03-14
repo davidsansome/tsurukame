@@ -9,8 +9,6 @@
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 
-#import <UserNotifications/UserNotifications.h>
-
 @class CombinedChartView;
 
 static const NSInteger kItemsPerLesson = 5;
@@ -81,10 +79,13 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
-         selector:@selector(clientStateChanged:)
-             name:kLocalCachingClientStateChangedNotification
+         selector:@selector(availableItemsChanged)
+             name:kLocalCachingClientAvailableItemsChangedNotification
            object:_localCachingClient];
-  [self clientStateChanged:nil];
+  [nc addObserver:self
+         selector:@selector(pendingItemsChanged)
+             name:kLocalCachingClientPendingItemsChangedNotification
+           object:_localCachingClient];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -115,8 +116,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)viewWillAppear:(BOOL)animated {
   [self updateUserInfo];
-  [self updateLessonAndReviewCounts];
-  [_localCachingClient sync];
+  [self updatePendingItems];
+  [self updateAvailableItems];
+  [_localCachingClient sync:nil];
   
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = YES;
@@ -126,34 +128,47 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   return UIStatusBarStyleLightContent;
 }
 
-- (void)clientStateChanged:(NSNotification *)notification {
-  dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
-    int pendingProgress = _localCachingClient.pendingProgress;
-    int pendingStudyMaterials = _localCachingClient.pendingStudyMaterials;
-    dispatch_async(dispatch_get_main_queue(), ^{
-      if (pendingProgress == 0 && pendingStudyMaterials == 0) {
-        _queuedItemsLabel.text = @"You're up to date!";
-        _queuedItemsSubtitleLabel.text = nil;
-        return;
-      }
-      NSMutableArray<NSString *> *sections = [NSMutableArray array];
-      if (pendingProgress != 0) {
-        [sections addObject:[NSString stringWithFormat:@"%d review progress",
-                             pendingProgress]];
-      }
-      if (pendingStudyMaterials != 0) {
-        [sections addObject:[NSString stringWithFormat:@"%d study material updates",
-                             pendingStudyMaterials]];
-      }
-      _queuedItemsLabel.text = [sections componentsJoinedByString:@", "];
-      _queuedItemsSubtitleLabel.text = @"These will be uploaded when you're back online";
-    });
-  });
-
-  // An update just finished - update the lesson and review counts.
-  if (!_localCachingClient.isBusy) {
-    [self updateLessonAndReviewCounts];
+- (void)pendingItemsChanged {
+  if (self.view.window) {
+    [self updatePendingItems];
   }
+}
+
+- (void)updatePendingItems {
+  int pendingProgress = _localCachingClient.pendingProgress;
+  int pendingStudyMaterials = _localCachingClient.pendingStudyMaterials;
+  if (pendingProgress == 0 && pendingStudyMaterials == 0) {
+    _queuedItemsLabel.text = @"You're up to date!";
+    _queuedItemsSubtitleLabel.text = nil;
+    return;
+  }
+  NSMutableArray<NSString *> *sections = [NSMutableArray array];
+  if (pendingProgress != 0) {
+    [sections addObject:[NSString stringWithFormat:@"%d review progress",
+                         pendingProgress]];
+  }
+  if (pendingStudyMaterials != 0) {
+    [sections addObject:[NSString stringWithFormat:@"%d study material updates",
+                         pendingStudyMaterials]];
+  }
+  _queuedItemsLabel.text = [sections componentsJoinedByString:@", "];
+  _queuedItemsSubtitleLabel.text = @"These will be uploaded when you're back online";
+}
+
+- (void)availableItemsChanged {
+  if (self.view.window) {
+    [self updatePendingItems];
+  }
+}
+
+- (void)updateAvailableItems {
+  int lessons = _localCachingClient.availableLessonCount;
+  int reviews = _localCachingClient.availableReviewCount;
+  NSArray<NSNumber *> *upcomingReviews = _localCachingClient.upcomingReviews;
+
+  SetTableViewCellCount(self.lessonsCell, lessons);
+  SetTableViewCellCount(self.reviewsCell, reviews);
+  [_chartController update:upcomingReviews currentReviewCount:reviews atDate:[NSDate date]];
 }
 
 - (void)updateUserInfo {
@@ -183,99 +198,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
                           [user.startedAtDate timeAgoSinceNow:[NSDate date]]];
 }
 
-- (void)updateLessonAndReviewCounts {
-  __weak MainViewController *weakSelf = self;
-  dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
-    NSArray<WKAssignment *> *assignments = [_localCachingClient getAllAssignments];
-    int lessons = 0;
-    int reviews = 0;
-    
-    NSDate *now = [NSDate date];
-    
-    NSMutableArray<NSNumber *> *upcomingReviews = [NSMutableArray arrayWithCapacity:48];
-    for (int i = 0; i < 24; i++) {
-      [upcomingReviews addObject:@(0)];
-    }
-    
-    for (WKAssignment *assignment in assignments) {
-      if (assignment.isLessonStage) {
-        lessons ++;
-      } else if (assignment.isReviewStage) {
-        NSTimeInterval availableInSeconds = [assignment.availableAtDate timeIntervalSinceDate:now];
-        if (availableInSeconds <= 0) {
-          reviews ++;
-          continue;
-        }
-        int availableInHours = availableInSeconds / (60 * 60);
-        if (availableInHours < upcomingReviews.count) {
-          [upcomingReviews setObject:[NSNumber numberWithInt:[upcomingReviews[availableInHours] intValue] + 1]
-                  atIndexedSubscript:availableInHours];
-        }
-      }
-    }
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [weakSelf updateLessonCount:lessons reviewCount:reviews upcomingReviews:upcomingReviews atDate:now];
-    });
-  });
-}
-
-- (void)updateLessonCount:(int)lessonCount
-              reviewCount:(int)reviewCount
-          upcomingReviews:(NSArray<NSNumber *> *)upcomingReviews
-                   atDate:(NSDate *)date {
-  SetTableViewCellCount(self.lessonsCell, lessonCount);
-  SetTableViewCellCount(self.reviewsCell, reviewCount);
-  [_chartController update:upcomingReviews currentReviewCount:reviewCount atDate:date];
-  [self updateAppIconBadgeCount:reviewCount upcomingReviews:upcomingReviews atDate:date];
-}
-
-- (void)updateAppIconBadgeCount:(int)reviewCount
-                upcomingReviews:(NSArray<NSNumber *> *)upcomingReviews
-                         atDate:(NSDate *)date {
-  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-  void(^updateBlock)(void) = ^() {
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:reviewCount];
-    [center removeAllPendingNotificationRequests];
-    
-    NSDate *startDate = [[NSCalendar currentCalendar] nextDateAfterDate:date
-                                                           matchingUnit:NSCalendarUnitMinute
-                                                                  value:0
-                                                                options:NSCalendarMatchNextTime];
-    NSTimeInterval startInterval = [startDate timeIntervalSinceNow];
-    int cumulativeReviews = reviewCount;
-    for (int hour = 0; hour < upcomingReviews.count; hour++) {
-      int reviews = [upcomingReviews[hour] intValue];
-      if (reviews == 0) {
-        continue;
-      }
-      cumulativeReviews += reviews;
-      
-      NSTimeInterval triggerTimeInterval = startInterval + (hour * 60 * 60);
-      NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];
-      UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-      content.badge = @(cumulativeReviews);
-      UNNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:triggerTimeInterval repeats:NO];
-      UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];
-      [center addNotificationRequest:request withCompletionHandler:nil];
-    }
-  };
-  
-  [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge)
-                        completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                          if (!granted) {
-                            return;
-                          }
-                          dispatch_async(dispatch_get_main_queue(), updateBlock);
-                        }];
-}
-
 - (void)didPullToRefresh {
   [self.refreshControl endRefreshing];
-  if (!_reachability.isReachable) {
-    return;
-  }
-  [self updateLessonAndReviewCounts];
-  [_localCachingClient sync];
+  [_localCachingClient sync:nil];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
