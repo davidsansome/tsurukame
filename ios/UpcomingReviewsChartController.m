@@ -82,6 +82,7 @@ currentReviewCount:(int)currentReviewCount
   BarChartDataSet *barDataSet = [[BarChartDataSet alloc] initWithValues:hourlyData label:nil];
   barDataSet.axisDependency = AxisDependencyRight;
   barDataSet.colors = @[WKRadicalColor2()];
+  barDataSet.valueFormatter = [[ChartDefaultValueFormatter alloc] initWithDecimals:0];
   
   CombinedChartData *data = [[CombinedChartData alloc] init];
   data.lineData = [[LineChartData alloc] initWithDataSet:lineDataSet];
