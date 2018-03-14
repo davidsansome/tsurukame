@@ -7,7 +7,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSNotificationName kLocalCachingClientBusyChangedNotification;
-extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 
 @protocol LocalCachingClientDelegate
 
