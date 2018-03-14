@@ -118,7 +118,7 @@
 @implementation WKAssignment (Convenience)
 
 - (bool)isLessonStage {
-  return !self.hasAvailableAt && self.srsStage == 0;
+  return !self.hasStartedAt && self.srsStage == 0;
 }
 
 - (bool)isReviewStage {
