@@ -305,15 +305,6 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   });
 }
 
-- (NSDate *)lastUpdated {
-  __block NSDate *ret = nil;
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
-    ret = [_client.dateFormatter
-           dateFromString:[db stringForQuery:@"SELECT assignments_updated_after FROM sync"]];
-  }];
-  return ret;
-}
-
 - (void)updateAssignments:(void (^)(void))handler {
   // Get the last assignment update time.
   __block NSString *lastDate;
