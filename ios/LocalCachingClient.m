@@ -4,6 +4,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (^CompletionHandler)();
+
 static void CheckUpdate(FMDatabase *db, NSString *sql, ...) {
   va_list args;
   va_start(args, sql);
@@ -162,8 +164,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   return ret;
 }
 
-- (void)sendProgress:(NSArray<WKProgress *> *)progress
-             handler:(ProgressHandler _Nullable)handler {
+- (void)sendProgress:(NSArray<WKProgress *> *)progress {
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
     for (WKProgress *p in progress) {
       // Delete the assignment.
@@ -175,14 +176,10 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
     }
   }];
   
-  [self sendPendingProgress:progress handler:^{
-    if (handler) {
-      handler(nil);
-    }
-  }];
+  [self sendPendingProgress:progress handler:nil];
 }
 
-- (void)sendAllPendingProgress:(void (^)(void))handler {
+- (void)sendAllPendingProgress:(CompletionHandler)handler {
   NSMutableArray<WKProgress *> *progress = [NSMutableArray array];
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     FMResultSet *results = [db executeQuery:@"SELECT pb FROM pending_progress"];
@@ -194,7 +191,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
 }
 
 - (void)sendPendingProgress:(NSArray<WKProgress *> *)progress
-                    handler:(void (^)(void))handler {
+                    handler:(CompletionHandler)handler {
   [_client sendProgress:progress handler:^(NSError * _Nullable error) {
     if (error) {
       [self.delegate localCachingClientDidReportError:error];
@@ -206,11 +203,13 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
         }
       }];
     }
-    handler();
+    if (handler) {
+      handler();
+    }
   }];
 }
 
-- (void)sendAllPendingStudyMaterials:(void (^)(void))handler {
+- (void)sendAllPendingStudyMaterials:(CompletionHandler)handler {
   dispatch_group_t dispatchGroup = dispatch_group_create();
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     FMResultSet *results = [db executeQuery:@"SELECT s.pb FROM study_materials AS s, pending_study_materials AS p ON s.id = p.id"];
@@ -228,7 +227,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   dispatch_group_notify(dispatchGroup, _queue, handler);
 }
 
-- (void)sendPendingStudyMaterial:(WKStudyMaterials *)material handler:(void (^)(void))handler {
+- (void)sendPendingStudyMaterial:(WKStudyMaterials *)material handler:(CompletionHandler)handler {
   [_client updateStudyMaterial:material handler:^(NSError * _Nullable error) {
     if (error) {
       NSLog(@"Failed to send study material update: %@", error);
@@ -237,23 +236,20 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
         CheckUpdate(db, @"DELETE FROM pending_study_materials WHERE id = ?", @(material.subjectId));
       }];
     }
-    handler();
+    if (handler) {
+      handler();
+    }
   }];
 }
 
-- (void)updateStudyMaterial:(WKStudyMaterials *)material
-                    handler:(UpdateStudyMaterialHandler _Nullable)handler {
+- (void)updateStudyMaterial:(WKStudyMaterials *)material {
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
     // Store the study material locally.
     CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES(?, ?)", @(material.subjectId), material.data);
     CheckUpdate(db, @"REPLACE INTO pending_study_materials (id) VALUES(?)", @(material.subjectId));
   }];
   
-  [self sendPendingStudyMaterial:material handler:^{
-    if (handler) {
-      handler(nil);
-    }
-  }];
+  [self sendPendingStudyMaterial:material handler:nil];
 }
 
 - (void)update {
@@ -305,7 +301,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   });
 }
 
-- (void)updateAssignments:(void (^)(void))handler {
+- (void)updateAssignments:(CompletionHandler)handler {
   // Get the last assignment update time.
   __block NSString *lastDate;
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
@@ -332,7 +328,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
                                }];
 }
 
-- (void)updateStudyMaterials:(void (^)(void))handler {
+- (void)updateStudyMaterials:(CompletionHandler)handler {
   // Get the last study materials update time.
   __block NSString *lastDate;
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
@@ -359,7 +355,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
                                  }];
 }
 
-- (void)updateUserInfo:(void (^)(void))handler {
+- (void)updateUserInfo:(CompletionHandler)handler {
   [_client getUserInfo:^(NSError * _Nullable error, WKUser * _Nullable user) {
     if (error) {
       [self.delegate localCachingClientDidReportError:error];
