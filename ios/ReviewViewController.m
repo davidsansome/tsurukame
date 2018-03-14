@@ -559,7 +559,7 @@ static UIColor *kMeaningTextColor;
     _activeStudyMaterials.subjectType = _activeSubject.subjectType;
   }
   [_activeStudyMaterials.meaningSynonymsArray addObject:_answerField.text];
-  [_localCachingClient updateStudyMaterial:_activeStudyMaterials handler:nil];
+  [_localCachingClient updateStudyMaterial:_activeStudyMaterials];
 }
 
 #pragma mark - WKSubjectDetailsDelegate
@@ -624,8 +624,7 @@ static UIColor *kMeaningTextColor;
 
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
           finishedReviewItem:(ReviewItem *)reviewItem {
-  [reviewViewController.localCachingClient sendProgress:@[reviewItem.answer]
-                                                handler:nil];
+  [reviewViewController.localCachingClient sendProgress:@[reviewItem.answer]];
 }
 
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
