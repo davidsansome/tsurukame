@@ -4,6 +4,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NSNotificationName kLocalCachingClientBusyChangedNotification =
+    @"kLocalCachingClientBusyChangedNotification";
+
 typedef void (^CompletionHandler)();
 
 static void CheckUpdate(FMDatabase *db, NSString *sql, ...) {
@@ -24,9 +27,6 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }
 }
 
-NSNotificationName kLocalCachingClientBusyChangedNotification =
-    @"kLocalCachingClientBusyChangedNotification";
-
 @interface LocalCachingClient ()
 
 @property(nonatomic, getter=isBusy) bool busy;
@@ -39,6 +39,8 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   FMDatabaseQueue *_db;
   dispatch_queue_t _queue;
 }
+
+#pragma mark - Initialisers
 
 - (instancetype)initWithClient:(Client *)client
                   reachability:(Reachability *)reachability {
@@ -124,6 +126,8 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   });
 }
 
+#pragma mark - Local database getters
+
 - (NSArray<WKAssignment *> *)getAllAssignments {
   NSMutableArray<WKAssignment *> *ret = [NSMutableArray array];
   
@@ -133,7 +137,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
       NSError *error = nil;
       WKAssignment *assignment = [WKAssignment parseFromData:[r dataForColumnIndex:0] error:&error];
       if (error) {
-        [self.delegate localCachingClientDidReportError:error];
+        NSLog(@"Parsing WKAssignment failed: %@", error);
         return;
       }
       [ret addObject:assignment];
@@ -163,6 +167,8 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   }];
   return ret;
 }
+
+#pragma mark - Send progress
 
 - (void)sendProgress:(NSArray<WKProgress *> *)progress {
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
@@ -194,7 +200,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
                     handler:(CompletionHandler)handler {
   [_client sendProgress:progress handler:^(NSError * _Nullable error) {
     if (error) {
-      [self.delegate localCachingClientDidReportError:error];
+      NSLog(@"sendProgress failed: %@", error);
     } else {
       // Delete the local pending progress.
       [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
@@ -208,6 +214,8 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
     }
   }];
 }
+
+#pragma mark - Send study materials
 
 - (void)sendAllPendingStudyMaterials:(CompletionHandler)handler {
   dispatch_group_t dispatchGroup = dispatch_group_create();
@@ -251,6 +259,8 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   
   [self sendPendingStudyMaterial:material handler:nil];
 }
+
+#pragma mark - Update
 
 - (void)update {
   if (!_reachability.isReachable) {
@@ -312,7 +322,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   [_client getAssignmentsModifiedAfter:lastDate
                                handler:^(NSError *error, NSArray<WKAssignment *> *assignments) {
                                  if (error) {
-                                   [self.delegate localCachingClientDidReportError:error];
+                                   NSLog(@"getAssignmentsModifiedAfter failed: %@", error);
                                  } else {
                                    NSString *date = _client.currentISO8601Time;
                                    [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -339,7 +349,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
   [_client getStudyMaterialsModifiedAfter:lastDate
                                  handler:^(NSError *error, NSArray<WKStudyMaterials *> *studyMaterials) {
                                    if (error) {
-                                     [self.delegate localCachingClientDidReportError:error];
+                                     NSLog(@"getStudyMaterialsModifiedAfter failed: %@", error);
                                    } else {
                                      NSString *date = _client.currentISO8601Time;
                                      [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -358,7 +368,7 @@ NSNotificationName kLocalCachingClientBusyChangedNotification =
 - (void)updateUserInfo:(CompletionHandler)handler {
   [_client getUserInfo:^(NSError * _Nullable error, WKUser * _Nullable user) {
     if (error) {
-      [self.delegate localCachingClientDidReportError:error];
+      NSLog(@"getUserInfo failed: %@", error);
     } else {
       [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
         CheckUpdate(db, @"REPLACE INTO user (id, pb) VALUES (0, ?)", user.data);

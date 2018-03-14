@@ -7,8 +7,7 @@
 #import "ReviewViewController.h"
 #import "UserDefaults.h"
 
-@interface AppDelegate () <LocalCachingClientDelegate>
-
+@interface AppDelegate ()
 @end
 
 @implementation AppDelegate {
@@ -48,7 +47,6 @@
                                              cookie:UserDefaults.userCookie];
   
   _localCachingClient = [[LocalCachingClient alloc] initWithClient:client reachability:_reachability];
-  _localCachingClient.delegate = self;
   
   MainViewController *vc = [_storyboard instantiateViewControllerWithIdentifier:@"main"];
   vc.dataLoader = _dataLoader;
@@ -75,10 +73,6 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   [_reachability startNotifier];
   [_localCachingClient update];
-}
-
-- (void)localCachingClientDidReportError:(NSError *)error {
-  NSLog(@"Local caching client error: %@", error);
 }
 
 @end
