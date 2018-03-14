@@ -72,7 +72,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   [_reachability startNotifier];
-  [_localCachingClient update];
+  [_localCachingClient sync];
 }
 
 @end
