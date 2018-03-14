@@ -50,24 +50,15 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 @property (weak, nonatomic) IBOutlet UITableViewCell *lessonsCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *reviewsCell;
 
+@property (weak, nonatomic) IBOutlet UILabel *queuedItemsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *queuedItemsSubtitleLabel;
+
 @property (weak, nonatomic) IBOutlet CombinedChartView *upcomingReviewsChartView;
 
 @end
 
 @implementation MainViewController {
   UpcomingReviewsChartController *_chartController;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-  self = [super initWithCoder:aDecoder];
-  if (self) {
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self
-           selector:@selector(clientBusyChanged:)
-               name:kLocalCachingClientBusyChangedNotification
-             object:_localCachingClient];
-  }
-  return self;
 }
 
 - (void)viewDidLoad {
@@ -87,6 +78,13 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   
   _chartController =
       [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
+  
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  [nc addObserver:self
+         selector:@selector(clientStateChanged:)
+             name:kLocalCachingClientStateChangedNotification
+           object:_localCachingClient];
+  [self clientStateChanged:nil];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -118,7 +116,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 - (void)viewWillAppear:(BOOL)animated {
   [self updateUserInfo];
   [self updateLessonAndReviewCounts];
-  [_localCachingClient update];
+  [_localCachingClient sync];
   
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = YES;
@@ -128,7 +126,30 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   return UIStatusBarStyleLightContent;
 }
 
-- (void)clientBusyChanged:(NSNotification *)notification {
+- (void)clientStateChanged:(NSNotification *)notification {
+  dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+    int pendingProgress = _localCachingClient.pendingProgress;
+    int pendingStudyMaterials = _localCachingClient.pendingStudyMaterials;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      if (pendingProgress == 0 && pendingStudyMaterials == 0) {
+        _queuedItemsLabel.text = @"You're up to date!";
+        _queuedItemsSubtitleLabel.text = nil;
+        return;
+      }
+      NSMutableArray<NSString *> *sections = [NSMutableArray array];
+      if (pendingProgress != 0) {
+        [sections addObject:[NSString stringWithFormat:@"%d review progress",
+                             pendingProgress]];
+      }
+      if (pendingStudyMaterials != 0) {
+        [sections addObject:[NSString stringWithFormat:@"%d study material updates",
+                             pendingStudyMaterials]];
+      }
+      _queuedItemsLabel.text = [sections componentsJoinedByString:@", "];
+      _queuedItemsSubtitleLabel.text = @"These will be uploaded when you're back online";
+    });
+  });
+
   // An update just finished - update the lesson and review counts.
   if (!_localCachingClient.isBusy) {
     [self updateLessonAndReviewCounts];
@@ -253,7 +274,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   if (!_reachability.isReachable) {
     return;
   }
-  [_localCachingClient update];
+  [self updateLessonAndReviewCounts];
+  [_localCachingClient sync];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

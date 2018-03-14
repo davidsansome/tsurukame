@@ -4,8 +4,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NSNotificationName kLocalCachingClientBusyChangedNotification =
-    @"kLocalCachingClientBusyChangedNotification";
+NSNotificationName kLocalCachingClientStateChangedNotification =
+    @"kLocalCachingClientStateChangedNotification";
 
 typedef void (^CompletionHandler)();
 
@@ -119,10 +119,13 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     return;
   }
   _busy = busy;
-  
+  [self postStateChangedNotification];
+}
+
+- (void)postStateChangedNotification {
   dispatch_async(dispatch_get_main_queue(), ^{
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc postNotificationName:kLocalCachingClientBusyChangedNotification object:self];
+    [nc postNotificationName:kLocalCachingClientStateChangedNotification object:self];
   });
 }
 
@@ -168,6 +171,26 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   return ret;
 }
 
+- (int)countRowsInTable:(NSString *)tableName {
+  __block int ret = 0;
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    NSString *sql = [NSString stringWithFormat:@"SELECT COUNT(*) FROM %@", tableName];
+    FMResultSet *r = [db executeQuery:sql];
+    while ([r next]) {
+      ret = [r intForColumnIndex:0];
+    }
+  }];
+  return ret;
+}
+
+- (int)pendingProgress {
+  return [self countRowsInTable:@"pending_progress"];
+}
+
+- (int)pendingStudyMaterials {
+  return [self countRowsInTable:@"pending_study_materials"];
+}
+
 #pragma mark - Send progress
 
 - (void)sendProgress:(NSArray<WKProgress *> *)progress {
@@ -181,6 +204,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
                   @(p.subjectId), p.data);
     }
   }];
+  [self postStateChangedNotification];
   
   [self sendPendingProgress:progress handler:nil];
 }
@@ -208,6 +232,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
           CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.subjectId));
         }
       }];
+      [self postStateChangedNotification];
     }
     if (handler) {
       handler();
@@ -216,6 +241,17 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 }
 
 #pragma mark - Send study materials
+
+- (void)updateStudyMaterial:(WKStudyMaterials *)material {
+  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+    // Store the study material locally.
+    CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES(?, ?)", @(material.subjectId), material.data);
+    CheckUpdate(db, @"REPLACE INTO pending_study_materials (id) VALUES(?)", @(material.subjectId));
+  }];
+  [self postStateChangedNotification];
+  
+  [self sendPendingStudyMaterial:material handler:nil];
+}
 
 - (void)sendAllPendingStudyMaterials:(CompletionHandler)handler {
   dispatch_group_t dispatchGroup = dispatch_group_create();
@@ -243,6 +279,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
       [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
         CheckUpdate(db, @"DELETE FROM pending_study_materials WHERE id = ?", @(material.subjectId));
       }];
+      [self postStateChangedNotification];
     }
     if (handler) {
       handler();
@@ -250,19 +287,9 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }];
 }
 
-- (void)updateStudyMaterial:(WKStudyMaterials *)material {
-  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
-    // Store the study material locally.
-    CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES(?, ?)", @(material.subjectId), material.data);
-    CheckUpdate(db, @"REPLACE INTO pending_study_materials (id) VALUES(?)", @(material.subjectId));
-  }];
-  
-  [self sendPendingStudyMaterial:material handler:nil];
-}
+#pragma mark - Sync
 
-#pragma mark - Update
-
-- (void)update {
+- (void)sync {
   if (!_reachability.isReachable) {
     return;
   }

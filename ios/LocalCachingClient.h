@@ -6,13 +6,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSNotificationName kLocalCachingClientBusyChangedNotification;
+extern NSNotificationName kLocalCachingClientStateChangedNotification;
 
 @interface LocalCachingClient : NSObject
 
-// Whether we're currently making network requests.  A kLocalCachingClientBusyChangedNotification
-// notification is sent when this changes.
+// Whether we're currently making network requests.
 @property(nonatomic, getter=isBusy, readonly) bool busy;
+
+// Number of items pending.  These will be sent automatically, or by sync.
+@property(nonatomic, readonly) int pendingProgress;
+@property(nonatomic, readonly) int pendingStudyMaterials;
 
 - (instancetype)initWithClient:(Client *)client
                   reachability:(Reachability *)reachability NS_DESIGNATED_INITIALIZER;
@@ -20,7 +23,7 @@ extern NSNotificationName kLocalCachingClientBusyChangedNotification;
 
 // Sends pending review progress and study material updates, fetches updates.
 // Returns immediately but sets busy=false when it's done.
-- (void)update;
+- (void)sync;
 
 // Getters: query the database and return data immediately, without making network requests.
 - (NSArray<WKAssignment *> *)getAllAssignments;
