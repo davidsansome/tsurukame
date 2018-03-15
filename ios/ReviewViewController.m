@@ -12,6 +12,7 @@
 
 static const int kActiveQueueSize = 5;
 static const NSTimeInterval kAnimationDuration = 0.25f;
+static const CGFloat kSpacingFromKeyboard = 6.f;
 
 static NSArray<id> *kReadingGradient;
 static NSArray<id> *kMeaningGradient;
@@ -194,8 +195,11 @@ static UIColor *kMeaningTextColor;
 
 - (void)keyboardWillShow:(NSNotification *)notification {
   if (!_viewDidAppearOnce) {
-    CGFloat height = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
-    _answerFieldToBottomConstraint.constant = height + 6;
+    CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect viewFrame = [self.view.superview convertRect:self.view.frame
+                                                 toView:self.view.window.rootViewController.view];
+    CGFloat offset = CGRectGetMaxY(viewFrame) - keyboardFrame.origin.y;
+    _answerFieldToBottomConstraint.constant = offset + kSpacingFromKeyboard;
   }
 }
 
