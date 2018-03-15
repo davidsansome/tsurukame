@@ -157,7 +157,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)availableItemsChanged {
   if (self.view.window) {
-    [self updatePendingItems];
+    [self updateAvailableItems];
   }
 }
 
