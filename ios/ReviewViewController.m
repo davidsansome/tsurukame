@@ -531,7 +531,7 @@ static UIColor *kMeaningTextColor;
                                           message:@"Don't cheat!  Only use this if you promise you "
                                                    "knew the correct answer."
                                    preferredStyle:UIAlertControllerStyleActionSheet];
-  [c addAction:[UIAlertAction actionWithTitle:@"It was a typo I swear"
+  [c addAction:[UIAlertAction actionWithTitle:@"Ignore typo"
                                         style:UIAlertActionStyleDefault
                                       handler:^(UIAlertAction * _Nonnull action) {
                                         ReviewViewController *unsafeSelf = weakSelf;
