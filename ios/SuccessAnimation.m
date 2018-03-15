@@ -105,7 +105,9 @@ void CreatePlusOneText(UIView *toView,
                      view.center = toView.center;
                      view.transform = CGAffineTransformMakeScale(0.1, 0.1);
                      view.alpha = 0.1;
-                   } completion:nil];
+                   } completion:^(BOOL finished) {
+                     [view removeFromSuperview];
+                   }];
 }
 
 void CreateSpringyBillboard(UIView *originView,
