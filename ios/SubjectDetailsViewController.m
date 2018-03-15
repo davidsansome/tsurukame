@@ -10,6 +10,7 @@
 
 @property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
 @property (weak, nonatomic) IBOutlet UILabel *subjectTitle;
+@property (weak, nonatomic) IBOutlet UILabel *subjectMeaning;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 
 @end
@@ -26,6 +27,7 @@
   [super viewDidLoad];
   _subjectDetailsView.dataLoader = _dataLoader;
   _subjectDetailsView.delegate = self;
+  _subjectDetailsView.style = _style;
   WKStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
   [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
   
@@ -34,6 +36,7 @@
   }
   
   _subjectTitle.attributedText = _subject.japaneseText;
+  _subjectMeaning.text = _subject.primaryMeaning;
   _gradientLayer = [CAGradientLayer layer];
   _gradientLayer.colors = WKGradientForSubject(_subject);
   [self.view.layer insertSublayer:_gradientLayer atIndex:0];
@@ -50,9 +53,10 @@
 
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
-  _gradientLayer.frame =
-      CGRectMake(0, 0, self.view.bounds.size.width,
-                 _subjectTitle.frame.origin.y + _subjectTitle.frame.size.height);
+  
+  CGRect gradientFrame = CGRectUnion(_subjectTitle.frame, _subjectMeaning.frame);
+  gradientFrame = CGRectInset(gradientFrame, 0, -gradientFrame.origin.y);
+  _gradientLayer.frame = gradientFrame;
 }
 
 - (IBAction)backButtonPressed:(id)sender {
@@ -69,6 +73,7 @@
   vc.dataLoader = _dataLoader;
   vc.localCachingClient = _localCachingClient;
   vc.subject = subject;
+  vc.style = _style;
   [self.navigationController pushViewController:vc animated:YES];
 }
 

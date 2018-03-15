@@ -105,6 +105,7 @@ static NSString *kHeader =
   self = [super initWithCoder:coder];
   if (self) {
     self.navigationDelegate = self;
+    self.style = WKSubjectDetailsViewStyleAllReviewSections;
   }
   return self;
 }
@@ -115,25 +116,45 @@ static NSString *kHeader =
                     studyMaterials:(WKStudyMaterials *)studyMaterials {
   NSMutableString *ret = [NSMutableString stringWithString:kHeader];
   if (subject.hasRadical) {
-    [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
-    [self addTextSectionTo:ret title:@"Mnemonic" content:[self highlightText:subject.radical.mnemonic]];
+    if (_style & WKSubjectDetailsViewStyleMeaning) {
+      [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
+      [self addTextSectionTo:ret title:@"Mnemonic" content:[self highlightText:subject.radical.mnemonic]];
+    }
   }
   if (subject.hasKanji) {
-    [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
-    [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray primaryOnly:true]];
-    [self addTextSectionTo:ret title:@"Radicals" content:[self renderComponents:subject.componentSubjectIdsArray]];
-    [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.kanji.meaningMnemonic]];
-    [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.kanji.readingMnemonic]];
-    // TODO: context
+    if (_style & WKSubjectDetailsViewStyleComponents) {
+      [self addTextSectionTo:ret title:@"Radicals" content:[self renderComponents:subject.componentSubjectIdsArray]];
+    }
+    if (_style & WKSubjectDetailsViewStyleMeaning) {
+      [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
+      [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.kanji.meaningMnemonic]];
+      if (_style & WKSubjectDetailsViewStyleHint) {
+        [self addTextSectionTo:ret title:@"Meaning Hint" content:[self highlightText:subject.kanji.meaningHint]];
+      }
+    }
+    if (_style & WKSubjectDetailsViewStyleReading) {
+      [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray primaryOnly:true]];
+      [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.kanji.readingMnemonic]];
+      if (_style & WKSubjectDetailsViewStyleHint) {
+        [self addTextSectionTo:ret title:@"Reading Hint" content:[self highlightText:subject.kanji.readingHint]];
+      }
+    }
+    // TODO: examples
   }
   if (subject.hasVocabulary) {
-    [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
-    [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray primaryOnly:false]];
-    [self addTextSectionTo:ret title:@"Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
-    [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.vocabulary.meaningExplanation]];
-    [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.vocabulary.readingExplanation]];
-    [self addTextSectionTo:ret title:@"Part of Speech" content:subject.vocabulary.commaSeparatedPartsOfSpeech];
-    // TODO: context
+    if (_style & WKSubjectDetailsViewStyleComponents) {
+      [self addTextSectionTo:ret title:@"Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
+    }
+    if (_style & WKSubjectDetailsViewStyleMeaning) {
+      [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
+      [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.vocabulary.meaningExplanation]];
+      [self addTextSectionTo:ret title:@"Part of Speech" content:subject.vocabulary.commaSeparatedPartsOfSpeech];
+    }
+    if (_style & WKSubjectDetailsViewStyleReading) {
+      [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray primaryOnly:false]];
+      [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.vocabulary.readingExplanation]];
+    }
+    // TODO: examples
   }
   
   return ret;

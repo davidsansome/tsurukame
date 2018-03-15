@@ -6,6 +6,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_OPTIONS(NSInteger, WKSubjectDetailsViewStyle) {
+  WKSubjectDetailsViewStyleComponents = 1 << 0,
+  WKSubjectDetailsViewStyleMeaning    = 1 << 1,
+  WKSubjectDetailsViewStyleReading    = 1 << 2,
+  WKSubjectDetailsViewStyleExamples   = 1 << 3,
+  
+  WKSubjectDetailsViewStyleHint       = 1 << 4,
+  
+  WKSubjectDetailsViewStyleAllReviewSections =
+      WKSubjectDetailsViewStyleComponents |
+      WKSubjectDetailsViewStyleMeaning |
+      WKSubjectDetailsViewStyleReading |
+      WKSubjectDetailsViewStyleExamples,
+};
+
 @class WKSubjectDetailsView;
 
 @protocol WKSubjectDetailsDelegate <NSObject>
@@ -19,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) DataLoader *dataLoader;
 @property (nonatomic, weak) id<WKSubjectDetailsDelegate> delegate;
+@property (nonatomic) WKSubjectDetailsViewStyle style;
 
 @property (nonatomic, readonly) WKSubject *lastSubjectClicked;
 

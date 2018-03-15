@@ -5,6 +5,27 @@
 #import "SubjectDetailsViewController.h"
 #import "proto/Wanikani+Convenience.h"
 
+@interface LessonsViewControllerPage : NSObject
+@property (nonatomic) WKSubject *subject;
+@property (nonatomic) WKSubjectDetailsViewStyle style;
+
+- (instancetype)initWithSubject:(WKSubject *)subject style:(WKSubjectDetailsViewStyle)style;
+@end
+
+@implementation LessonsViewControllerPage
+
+- (instancetype)initWithSubject:(WKSubject *)subject style:(WKSubjectDetailsViewStyle)style {
+  self = [super init];
+  if (self) {
+    _subject = subject;
+    _style = style;
+  }
+  return self;
+}
+
+@end
+
+
 @interface LessonsViewController () <ReviewViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet LessonsPageControl *pageControl;
 @end
@@ -12,6 +33,7 @@
 @implementation LessonsViewController {
   UIPageViewController *_pageController;
   NSInteger _currentPageIndex;
+  NSArray<LessonsViewControllerPage *> *_pages;
   
   ReviewViewController *_reviewViewController;
 }
@@ -26,11 +48,26 @@
   
   // Set the subjects on the page control.
   NSMutableArray<WKSubject *> *subjects = [NSMutableArray array];
+  NSMutableArray<LessonsViewControllerPage *> *pages = [NSMutableArray array];
   for (ReviewItem *item in _items) {
     WKSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
     [subjects addObject:subject];
+
+    if (subject.hasRadical) {
+      [pages addObject:[[LessonsViewControllerPage alloc]
+          initWithSubject:subject style:WKSubjectDetailsViewStyleMeaning]];
+    }
+    if (subject.hasKanji | subject.hasVocabulary) {
+      [pages addObject:[[LessonsViewControllerPage alloc]
+          initWithSubject:subject style:WKSubjectDetailsViewStyleComponents]];
+      [pages addObject:[[LessonsViewControllerPage alloc]
+          initWithSubject:subject style:WKSubjectDetailsViewStyleMeaning | WKSubjectDetailsViewStyleHint]];
+      [pages addObject:[[LessonsViewControllerPage alloc]
+          initWithSubject:subject style:WKSubjectDetailsViewStyleReading | WKSubjectDetailsViewStyleHint]];
+    }
   }
   _pageControl.subjects = subjects;
+  _pages = pages;
   
   // Add it as a child view controller.
   [self addChildViewController:_pageController];
@@ -102,7 +139,7 @@
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)createViewControllerForIndex:(NSInteger)index {
-  if (index == _items.count) {
+  if (index == _pages.count) {
     if (_reviewViewController == nil) {
       _reviewViewController =
           [self.storyboard instantiateViewControllerWithIdentifier:@"reviewViewController"];
@@ -112,16 +149,17 @@
       _reviewViewController.items = _items;
     }
     return _reviewViewController;
-  } else if (index < 0 || index > _items.count) {
+  } else if (index < 0 || index > _pages.count) {
     return nil;
   }
-  
-  ReviewItem *item = _items[index];
+
+  LessonsViewControllerPage *page = _pages[index];
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   vc.dataLoader = _dataLoader;
   vc.localCachingClient = _localCachingClient;
-  vc.subject = [_dataLoader loadSubject:item.assignment.subjectId];
+  vc.style = page.style;
+  vc.subject = page.subject;
   vc.index = index;
   return vc;
 }
@@ -132,7 +170,7 @@
         (SubjectDetailsViewController *)viewController;
     return subjectDetailsViewController.index;
   } else if ([viewController.class isSubclassOfClass:[ReviewViewController class]]) {
-    return _items.count;
+    return _pages.count;
   }
   return 0;
 }
