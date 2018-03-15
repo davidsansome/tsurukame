@@ -379,6 +379,8 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
       handler(error);
       return;
     }
+    
+    __block NSError *lastError = nil;
 
     dispatch_group_t dispatchGroup = dispatch_group_create();
     if (reviewProgress.count) {
@@ -386,6 +388,7 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
       [self sendReviewProgress:reviewProgress
                        handler:^(NSError *_Nullable error) {
                          if (error != nil) {
+                           lastError = error;
                            NSLog(@"Failed to send review progress: %@", error);
                          }
                          dispatch_group_leave(dispatchGroup);
@@ -396,6 +399,7 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
       [self sendLessonProgress:lessonProgress
                        handler:^(NSError *_Nullable error) {
                          if (error != nil) {
+                           lastError = error;
                            NSLog(@"Failed to send lesson progress: %@", error);
                          }
                          dispatch_group_leave(dispatchGroup);
@@ -404,7 +408,7 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
 
     dispatch_queue_t queue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0);
     dispatch_group_notify(dispatchGroup, queue, ^{
-      handler(nil);
+      handler(lastError);
     });
   }];
 }
