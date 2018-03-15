@@ -89,6 +89,11 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
 
 - (void)startPagedQueryFor:(NSURL *)url
                    handler:(PartialResponseHandler)handler {
+  if (self.pretendToBeOfflineForTesting) {
+    handler(nil, MakeError(42, @"I'm offline"));
+    return;
+  }
+  
   NSURLRequest *req = [self authorizeAPIRequest:url];
   NSLog(@"Request: %@", url);
   NSURLSessionDataTask *task =
@@ -107,6 +112,11 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
              contentType:(NSString *)contentType
                     data:(NSData *)data
                  handler:(PUTResponseHandler)handler {
+  if (self.pretendToBeOfflineForTesting) {
+    handler(MakeError(42, @"I'm offline"));
+    return;
+  }
+  
   NSMutableURLRequest *req = [self authorizeUserRequest:url];
   [req addValue:_csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
   [req addValue:contentType forHTTPHeaderField:@"Content-Type"];

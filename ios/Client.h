@@ -27,6 +27,8 @@ typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
 @property (nonatomic, readonly) NSDateFormatter *dateFormatter;
 @property (nonatomic, readonly) NSString *currentISO8601Time;
 
+@property (nonatomic) bool pretendToBeOfflineForTesting;
+
 + (void)getApiTokenForCookie:(NSString *)cookie
                      handler:(ApiTokenHandler)handler;
 - (void)getAssignmentsModifiedAfter:(NSString *)date
