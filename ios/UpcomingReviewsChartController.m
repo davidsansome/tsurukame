@@ -91,6 +91,8 @@ currentReviewCount:(int)currentReviewCount
   _view.data = data;
   _view.rightAxis.axisMaximum = barDataSet.yMax;
   _view.xAxis.valueFormatter = [[UpcomingReviewsXAxisValueFormatter alloc] initWithStartTime:date];
+  _view.xAxis.granularityEnabled = YES;
+  _view.leftAxis.granularityEnabled = YES;
 }
 
 @end
