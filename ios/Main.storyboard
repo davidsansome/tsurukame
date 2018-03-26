@@ -637,21 +637,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <wkWebView opaque="NO" contentMode="scaleToFill" allowsBackForwardNavigationGestures="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grI-h7-N4t" customClass="WKSubjectDetailsView">
+                                <rect key="frame" x="0.0" y="94" width="375" height="573"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <wkWebViewConfiguration key="configuration" allowsAirPlayForMediaPlayback="NO" allowsPictureInPictureMediaPlayback="NO">
+                                    <dataDetectorTypes key="dataDetectorTypes" none="YES"/>
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences" javaScriptEnabled="NO"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h4n-sy-iRy">
                                 <rect key="frame" x="0.0" y="20" width="375" height="74"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="74" id="cin-Yg-j4C"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JV7-V0-hkc">
-                                <rect key="frame" x="0.0" y="94" width="375" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="77l-nX-uT9"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -669,29 +669,17 @@
                                     <action selector="backButtonPressed:" destination="jdB-KF-QlJ" eventType="touchUpInside" id="mII-7n-x4T"/>
                                 </connections>
                             </button>
-                            <wkWebView opaque="NO" contentMode="scaleToFill" allowsBackForwardNavigationGestures="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grI-h7-N4t" customClass="WKSubjectDetailsView">
-                                <rect key="frame" x="0.0" y="144" width="375" height="523"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <wkWebViewConfiguration key="configuration" allowsAirPlayForMediaPlayback="NO" allowsPictureInPictureMediaPlayback="NO">
-                                    <dataDetectorTypes key="dataDetectorTypes" none="YES"/>
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
-                                    <wkPreferences key="preferences" javaScriptEnabled="NO"/>
-                                </wkWebViewConfiguration>
-                            </wkWebView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="grI-h7-N4t" firstAttribute="top" secondItem="h4n-sy-iRy" secondAttribute="bottom" id="3rq-lr-z24"/>
                             <constraint firstItem="h4n-sy-iRy" firstAttribute="top" secondItem="Gf0-8S-iQ7" secondAttribute="top" id="H1Y-XO-ELl"/>
                             <constraint firstItem="grI-h7-N4t" firstAttribute="leading" secondItem="Gf0-8S-iQ7" secondAttribute="leading" id="W83-BN-Avt"/>
                             <constraint firstItem="CbN-0R-8Ce" firstAttribute="top" secondItem="Gf0-8S-iQ7" secondAttribute="top" id="Ypd-Hg-SOO"/>
                             <constraint firstItem="CbN-0R-8Ce" firstAttribute="leading" secondItem="Gf0-8S-iQ7" secondAttribute="leading" id="aLi-55-oEf"/>
-                            <constraint firstItem="JV7-V0-hkc" firstAttribute="leading" secondItem="Gf0-8S-iQ7" secondAttribute="leading" id="cAk-Sb-OwF"/>
-                            <constraint firstItem="JV7-V0-hkc" firstAttribute="top" secondItem="h4n-sy-iRy" secondAttribute="bottom" id="kxS-uH-2v8"/>
                             <constraint firstItem="h4n-sy-iRy" firstAttribute="trailing" secondItem="Gf0-8S-iQ7" secondAttribute="trailing" id="ndz-L2-PJk"/>
-                            <constraint firstItem="grI-h7-N4t" firstAttribute="top" secondItem="JV7-V0-hkc" secondAttribute="bottom" id="oKl-HW-PQT"/>
                             <constraint firstItem="grI-h7-N4t" firstAttribute="trailing" secondItem="Gf0-8S-iQ7" secondAttribute="trailing" id="qXF-bP-5lp"/>
                             <constraint firstItem="Gf0-8S-iQ7" firstAttribute="bottom" secondItem="grI-h7-N4t" secondAttribute="bottom" id="sqC-9p-JRE"/>
-                            <constraint firstItem="Gf0-8S-iQ7" firstAttribute="trailing" secondItem="JV7-V0-hkc" secondAttribute="trailing" id="v9H-xL-zjR"/>
                             <constraint firstItem="h4n-sy-iRy" firstAttribute="leading" secondItem="Gf0-8S-iQ7" secondAttribute="leading" id="y1v-f5-4X9"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Gf0-8S-iQ7"/>
@@ -700,7 +688,6 @@
                     <connections>
                         <outlet property="backButton" destination="CbN-0R-8Ce" id="51M-TW-2TS"/>
                         <outlet property="subjectDetailsView" destination="grI-h7-N4t" id="NsQ-fP-dDq"/>
-                        <outlet property="subjectMeaning" destination="JV7-V0-hkc" id="ViW-Ca-g4y"/>
                         <outlet property="subjectTitle" destination="h4n-sy-iRy" id="d7g-Wr-uvJ"/>
                     </connections>
                 </viewController>
