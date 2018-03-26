@@ -32,26 +32,99 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="33B-AS-Lqx" customClass="LoginWebView">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                            <wkWebView contentMode="scaleToFill" allowsBackForwardNavigationGestures="YES" translatesAutoresizingMaskIntoConstraints="NO" id="33B-AS-Lqx" customClass="LoginWebView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iys-uf-CL9">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="68"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ZzH-6p-x9N">
+                                <rect key="frame" x="0.0" y="66" width="375" height="2"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="dXi-L8-Xsx"/>
+                                </constraints>
+                            </progressView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3YN-mF-8K8">
+                                <rect key="frame" x="8" y="20" width="32" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="GIl-gp-oUx"/>
+                                    <constraint firstAttribute="width" constant="32" id="Zug-cN-8D9"/>
+                                </constraints>
+                                <state key="normal" image="back"/>
+                                <connections>
+                                    <action selector="didTapBack:" destination="Y17-rT-A78" eventType="touchUpInside" id="NrN-Dd-2q0"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fXK-3c-2qE">
+                                <rect key="frame" x="48" y="20" width="32" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="0Bw-xK-8Sp"/>
+                                    <constraint firstAttribute="width" constant="32" id="NTw-7R-TUo"/>
+                                </constraints>
+                                <state key="normal" image="forward"/>
+                                <connections>
+                                    <action selector="didTapForward:" destination="Y17-rT-A78" eventType="touchUpInside" id="tBw-0b-XN0"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IcJ-wk-wig">
+                                <rect key="frame" x="335" y="20" width="32" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="32" id="HRs-tz-IqP"/>
+                                    <constraint firstAttribute="height" constant="48" id="Kry-5U-D7m"/>
+                                </constraints>
+                                <state key="normal" image="refresh"/>
+                                <connections>
+                                    <action selector="didTapRefresh:" destination="Y17-rT-A78" eventType="touchUpInside" id="WiV-tM-lMc"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rjI-NW-bF4">
+                                <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="Wey-l2-Px6"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="DaV-Sw-fCj" firstAttribute="trailing" secondItem="33B-AS-Lqx" secondAttribute="trailing" id="2Ap-eh-ItU"/>
-                            <constraint firstItem="DaV-Sw-fCj" firstAttribute="bottom" secondItem="33B-AS-Lqx" secondAttribute="bottom" id="sf6-ye-7pl"/>
-                            <constraint firstItem="33B-AS-Lqx" firstAttribute="leading" secondItem="DaV-Sw-fCj" secondAttribute="leading" id="xv1-eg-63Y"/>
-                            <constraint firstItem="33B-AS-Lqx" firstAttribute="top" secondItem="DaV-Sw-fCj" secondAttribute="top" id="zod-Sz-TrA"/>
+                            <constraint firstItem="33B-AS-Lqx" firstAttribute="bottom" secondItem="Y6X-Di-vSL" secondAttribute="bottom" id="0u1-zT-OJ9"/>
+                            <constraint firstItem="ZzH-6p-x9N" firstAttribute="top" secondItem="iys-uf-CL9" secondAttribute="bottom" constant="-2" id="40O-2C-qDf"/>
+                            <constraint firstItem="33B-AS-Lqx" firstAttribute="top" secondItem="iys-uf-CL9" secondAttribute="top" id="50M-nG-rYU"/>
+                            <constraint firstItem="iys-uf-CL9" firstAttribute="bottom" secondItem="rjI-NW-bF4" secondAttribute="bottom" id="9O4-zI-3Zq"/>
+                            <constraint firstItem="3YN-mF-8K8" firstAttribute="top" secondItem="DaV-Sw-fCj" secondAttribute="top" id="BXI-VV-gkE"/>
+                            <constraint firstItem="ZzH-6p-x9N" firstAttribute="leading" secondItem="Y6X-Di-vSL" secondAttribute="leading" id="Dqo-Gh-GWO"/>
+                            <constraint firstItem="33B-AS-Lqx" firstAttribute="leading" secondItem="DaV-Sw-fCj" secondAttribute="leading" id="Ftm-ky-hV6"/>
+                            <constraint firstItem="DaV-Sw-fCj" firstAttribute="trailing" secondItem="rjI-NW-bF4" secondAttribute="trailing" id="NpM-Qd-vLP"/>
+                            <constraint firstItem="fXK-3c-2qE" firstAttribute="top" secondItem="DaV-Sw-fCj" secondAttribute="top" id="OEF-dz-l0K"/>
+                            <constraint firstItem="iys-uf-CL9" firstAttribute="top" secondItem="Y6X-Di-vSL" secondAttribute="top" id="Pgf-FH-9fA"/>
+                            <constraint firstItem="iys-uf-CL9" firstAttribute="trailing" secondItem="DaV-Sw-fCj" secondAttribute="trailing" id="Rl1-5v-BJO"/>
+                            <constraint firstAttribute="trailing" secondItem="ZzH-6p-x9N" secondAttribute="trailing" id="Tza-JU-ypt"/>
+                            <constraint firstItem="rjI-NW-bF4" firstAttribute="top" secondItem="DaV-Sw-fCj" secondAttribute="top" id="Whc-Ex-AOV"/>
+                            <constraint firstItem="IcJ-wk-wig" firstAttribute="trailing" secondItem="DaV-Sw-fCj" secondAttribute="trailing" constant="-8" id="Yh2-Vh-GQW"/>
+                            <constraint firstItem="3YN-mF-8K8" firstAttribute="leading" secondItem="DaV-Sw-fCj" secondAttribute="leading" constant="8" id="hwt-E0-vlZ"/>
+                            <constraint firstItem="rjI-NW-bF4" firstAttribute="leading" secondItem="DaV-Sw-fCj" secondAttribute="leading" id="mj3-JJ-CjI"/>
+                            <constraint firstItem="33B-AS-Lqx" firstAttribute="trailing" secondItem="DaV-Sw-fCj" secondAttribute="trailing" id="mwl-3y-EnM"/>
+                            <constraint firstItem="iys-uf-CL9" firstAttribute="leading" secondItem="DaV-Sw-fCj" secondAttribute="leading" id="pe4-iC-BsR"/>
+                            <constraint firstItem="fXK-3c-2qE" firstAttribute="leading" secondItem="3YN-mF-8K8" secondAttribute="trailing" constant="8" id="tcV-r1-Ufq"/>
+                            <constraint firstItem="IcJ-wk-wig" firstAttribute="top" secondItem="DaV-Sw-fCj" secondAttribute="top" id="uGJ-Kt-8CR"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="DaV-Sw-fCj"/>
                     </view>
                     <navigationItem key="navigationItem" id="ufT-Sp-QW2"/>
                     <connections>
+                        <outlet property="backButton" destination="3YN-mF-8K8" id="7dc-x5-DIx"/>
+                        <outlet property="forwardButton" destination="fXK-3c-2qE" id="CnG-fu-T32"/>
+                        <outlet property="progressView" destination="ZzH-6p-x9N" id="aBd-Jb-Y2k"/>
+                        <outlet property="refreshButton" destination="IcJ-wk-wig" id="eQg-w6-oT3"/>
+                        <outlet property="titleLabel" destination="rjI-NW-bF4" id="kic-Ba-hGp"/>
                         <outlet property="webView" destination="33B-AS-Lqx" id="TEq-8o-K7r"/>
                     </connections>
                 </viewController>
@@ -441,7 +514,7 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hl2-BP-AQQ">
-                                <rect key="frame" x="0.0" y="25" width="66" height="40"/>
+                                <rect key="frame" x="0.0" y="25" width="70" height="44"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="contentEdgeInsets" minX="6" minY="10" maxX="6" maxY="10"/>
                                 <state key="normal" title="Back" image="back">
@@ -846,7 +919,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CbN-0R-8Ce">
-                                <rect key="frame" x="0.0" y="20" width="66" height="40"/>
+                                <rect key="frame" x="0.0" y="20" width="70" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="GPQ-1X-kOJ"/>
                                 </constraints>
@@ -888,10 +961,12 @@
     </scenes>
     <resources>
         <image name="add" width="22" height="22"/>
-        <image name="back" width="20" height="20"/>
+        <image name="back" width="24" height="24"/>
         <image name="confirm" width="28" height="27"/>
+        <image name="forward" width="24" height="24"/>
         <image name="ic_settings_white" width="24" height="24"/>
         <image name="inbox" width="24" height="24"/>
+        <image name="refresh" width="24" height="24"/>
         <image name="thumb" width="24" height="24"/>
         <image name="tick" width="24" height="24"/>
     </resources>

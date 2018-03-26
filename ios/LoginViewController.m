@@ -26,6 +26,11 @@ static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
 @interface LoginViewController () <WKNavigationDelegate>
 
 @property (weak, nonatomic) IBOutlet WKWebView *webView;
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property (weak, nonatomic) IBOutlet UIButton *forwardButton;
+@property (weak, nonatomic) IBOutlet UIButton *refreshButton;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 
 @end
 
@@ -38,8 +43,53 @@ static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
   _dataStore = _webView.configuration.websiteDataStore;
   _webView.navigationDelegate = self;
   _webView.translatesAutoresizingMaskIntoConstraints = NO;
+  
+  [_webView addObserver:self
+             forKeyPath:@"estimatedProgress"
+                options:NSKeyValueObservingOptionNew
+                context:nil];
+  [_webView addObserver:self
+             forKeyPath:@"loading"
+                options:NSKeyValueObservingOptionNew
+                context:nil];
+  
   [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kLoginURL]]];
 }
+
+- (IBAction)didTapBack:(id)sender {
+  [_webView goBack];
+}
+
+- (IBAction)didTapForward:(id)sender {
+  [_webView goForward];
+}
+
+- (IBAction)didTapRefresh:(id)sender {
+  [_webView reload];
+}
+
+- (void)updateNavigationButtons {
+  _backButton.enabled = _webView.canGoBack;
+  _forwardButton.enabled = _webView.canGoForward;
+}
+
+#pragma mark - Observers
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath
+                      ofObject:(nullable id)object
+                        change:(nullable NSDictionary<NSKeyValueChangeKey,id> *)change
+                       context:(nullable void *)context {
+  if ([keyPath isEqualToString:@"estimatedProgress"]) {
+    [_progressView setProgress:_webView.estimatedProgress animated:YES];
+  } else if ([keyPath isEqualToString:@"loading"]) {
+    [_progressView setHidden:!_webView.loading];
+    [self updateNavigationButtons];
+  } else {
+    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+  }
+}
+
+#pragma mark - WKNavigationDelegate
 
 - (void)webView:(WKWebView *)webView
     decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
@@ -80,6 +130,12 @@ static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
     return;
   }
   decisionHandler(WKNavigationActionPolicyAllow);
+}
+
+- (void)webView:(WKWebView *)webView
+didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation {
+  [_titleLabel setText:webView.URL.host];
+  [self updateNavigationButtons];
 }
 
 @end
