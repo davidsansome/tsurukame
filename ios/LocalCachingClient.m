@@ -10,6 +10,46 @@ NSNotificationName kLocalCachingClientAvailableItemsChangedNotification =
 NSNotificationName kLocalCachingClientPendingItemsChangedNotification = 
     @"kLocalCachingClientPendingItemsChangedNotification";
 
+static const char *kSchemaV1 =
+    "CREATE TABLE sync ("
+    "  assignments_updated_after TEXT,"
+    "  study_materials_updated_after TEXT"
+    ");"
+    "INSERT INTO sync ("
+    "  assignments_updated_after,"
+    "  study_materials_updated_after"
+    ") VALUES (\"\", \"\");"
+    "CREATE TABLE assignments ("
+    "  id INTEGER PRIMARY KEY,"
+    "  pb BLOB"
+    ");"
+    "CREATE TABLE pending_progress ("
+    "  id INTEGER PRIMARY KEY,"
+    "  pb BLOB"
+    ");"
+    "CREATE TABLE study_materials ("
+    "  id INTEGER PRIMARY KEY,"
+    "  pb BLOB"
+    ");"
+    "CREATE TABLE user ("
+    "  id INTEGER PRIMARY KEY CHECK (id = 0),"
+    "  pb BLOB"
+    ");"
+    "CREATE TABLE pending_study_materials ("
+    "  id INTEGER PRIMARY KEY"
+    ");";
+
+static const char *kClearAllData = 
+    "UPDATE sync SET"
+    "  assignments_updated_after = \"\","
+    "  study_materials_updated_after = \"\""
+    ";"
+    "DELETE FROM assignments;"
+    "DELETE FROM pending_progress;"
+    "DELETE FROM study_materials;"
+    "DELETE FROM user;"
+    "DELETE FROM pending_study_materials;";
+
 static void CheckUpdate(FMDatabase *db, NSString *sql, ...) {
   va_list args;
   va_start(args, sql);
@@ -76,33 +116,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   static dispatch_once_t once;
   dispatch_once(&once, ^(void) {
     kSchemas = @[
-      @"CREATE TABLE sync ("
-      "  assignments_updated_after TEXT,"
-      "  study_materials_updated_after TEXT"
-      ");"
-      "INSERT INTO sync ("
-      "  assignments_updated_after,"
-      "  assignments_updated_after"
-      ") VALUES (\"\", \"\");"
-      "CREATE TABLE assignments ("
-      "  id INTEGER PRIMARY KEY,"
-      "  pb BLOB"
-      ");"
-      "CREATE TABLE pending_progress ("
-      "  id INTEGER PRIMARY KEY,"
-      "  pb BLOB"
-      ");"
-      "CREATE TABLE study_materials ("
-      "  id INTEGER PRIMARY KEY,"
-      "  pb BLOB"
-      ");"
-      "CREATE TABLE user ("
-      "  id INTEGER PRIMARY KEY CHECK (id = 0),"
-      "  pb BLOB"
-      ");",
-      @"CREATE TABLE pending_study_materials ("
-      "  id INTEGER PRIMARY KEY"
-      ");"
+      @(kSchemaV1),
     ];
   });
   
@@ -515,6 +529,13 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
       NSLog(@"Got user info: %@", user);
     }
     handler();
+  }];
+}
+
+- (void)clearAllData {
+  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+    CheckExecuteStatements(db, @(kClearAllData));
+    NSLog(@"Database reset");
   }];
 }
 

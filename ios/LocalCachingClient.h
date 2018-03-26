@@ -36,6 +36,9 @@ typedef void (^CompletionHandler)(void);
 - (void)sendProgress:(NSArray<WKProgress *> *)progress;
 - (void)updateStudyMaterial:(WKStudyMaterials *)material;
 
+// Delete everything: use when a user logs out.
+- (void)clearAllData;
+
 @end
 
 NS_ASSUME_NONNULL_END

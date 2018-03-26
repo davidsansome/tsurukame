@@ -131,6 +131,7 @@
 		6319CB2F20442A5D00C31F87 /* IScatterChartDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6319CB2B20442A5C00C31F87 /* IScatterChartDataSet.swift */; };
 		6319CB3020442A5D00C31F87 /* IBubbleChartDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6319CB2C20442A5C00C31F87 /* IBubbleChartDataSet.swift */; };
 		6319CB3120442A5D00C31F87 /* ILineScatterCandleRadarChartDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6319CB2D20442A5C00C31F87 /* ILineScatterCandleRadarChartDataSet.swift */; };
+		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
 		633632EC201F3011006D582B /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EB201F3011006D582B /* LoginViewController.m */; };
 		633632EF201F3490006D582B /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* UserDefaults.m */; };
 		6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */; };
@@ -324,6 +325,8 @@
 		6319CB2B20442A5C00C31F87 /* IScatterChartDataSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IScatterChartDataSet.swift; path = third_party/Charts/IScatterChartDataSet.swift; sourceTree = SOURCE_ROOT; };
 		6319CB2C20442A5C00C31F87 /* IBubbleChartDataSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IBubbleChartDataSet.swift; path = third_party/Charts/IBubbleChartDataSet.swift; sourceTree = SOURCE_ROOT; };
 		6319CB2D20442A5C00C31F87 /* ILineScatterCandleRadarChartDataSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ILineScatterCandleRadarChartDataSet.swift; path = third_party/Charts/ILineScatterCandleRadarChartDataSet.swift; sourceTree = SOURCE_ROOT; };
+		6321E60F2068F3A9003460BC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		6321E6102068F3A9003460BC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		633632EA201F3011006D582B /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		633632EB201F3011006D582B /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		633632ED201F3490006D582B /* UserDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaults.h; sourceTree = "<group>"; };
@@ -504,6 +507,8 @@
 				63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */,
 				63EEFECA1FC45D800070C05F /* ReviewViewController.h */,
 				63EEFEC71FC45D800070C05F /* ReviewViewController.m */,
+				6321E60F2068F3A9003460BC /* SettingsViewController.h */,
+				6321E6102068F3A9003460BC /* SettingsViewController.m */,
 				63A2375C1FE9225700C48657 /* Style.h */,
 				63A2375D1FE9225700C48657 /* Style.m */,
 				6356E77F1FDFEFAB009CE7C1 /* SubjectDetailsView.h */,
@@ -519,9 +524,9 @@
 				6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */,
 				633632ED201F3490006D582B /* UserDefaults.h */,
 				633632EE201F3490006D582B /* UserDefaults.m */,
+				6319C9B520441DE200C31F87 /* wk.app */,
 				6356E7841FE14066009CE7C1 /* WKKanaInput.h */,
 				6356E7851FE14066009CE7C1 /* WKKanaInput.m */,
-				6319C9B520441DE200C31F87 /* wk.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -960,6 +965,7 @@
 				6319CAB12044203E00C31F87 /* ChartUtils.swift in Sources */,
 				6319CACB2044203E00C31F87 /* DefaultAxisValueFormatter.swift in Sources */,
 				6319CAD32044203E00C31F87 /* DefaultFillFormatter.swift in Sources */,
+				6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */,
 				6319CACF2044203E00C31F87 /* BarChartData.swift in Sources */,
 				6319CAB42044203E00C31F87 /* ZoomViewJob.swift in Sources */,
 				6319C9B120441D3800C31F87 /* FMDatabasePool.m in Sources */,
