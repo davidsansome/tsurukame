@@ -82,7 +82,16 @@ static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
   if ([keyPath isEqualToString:@"estimatedProgress"]) {
     [_progressView setProgress:_webView.estimatedProgress animated:YES];
   } else if ([keyPath isEqualToString:@"loading"]) {
-    [_progressView setHidden:!_webView.loading];
+    if (!_webView.loading != _progressView.isHidden) {
+      // Animate to the new state.
+      [UIView transitionWithView:_progressView
+                        duration:0.4
+                         options:UIViewAnimationOptionTransitionCrossDissolve
+                      animations:^{
+                        _progressView.hidden = !_webView.loading;
+                      }
+                      completion:nil];
+    }
     [self updateNavigationButtons];
   } else {
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
