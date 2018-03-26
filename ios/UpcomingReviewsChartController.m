@@ -42,10 +42,13 @@
   if (self) {
     _view = view;
     _view.leftAxis.axisMinimum = 0.f;
+    _view.leftAxis.granularityEnabled = YES;
     _view.rightAxis.axisMinimum = 0.f;
     _view.rightAxis.enabled = NO;
-    _view.xAxis.labelPosition = XAxisLabelPositionBottom;
+    _view.xAxis.avoidFirstLastClippingEnabled = YES;
     _view.xAxis.drawGridLinesEnabled = NO;
+    _view.xAxis.granularityEnabled = YES;
+    _view.xAxis.labelPosition = XAxisLabelPositionBottom;
     _view.legend.enabled = NO;
     _view.chartDescription = nil;
     _view.userInteractionEnabled = NO;
@@ -91,10 +94,8 @@ currentReviewCount:(int)currentReviewCount
   data.barData = [[BarChartData alloc] initWithDataSet:barDataSet];
   
   _view.data = data;
-  _view.rightAxis.axisMaximum = barDataSet.yMax;
   _view.xAxis.valueFormatter = [[UpcomingReviewsXAxisValueFormatter alloc] initWithStartTime:date];
-  _view.xAxis.granularityEnabled = YES;
-  _view.leftAxis.granularityEnabled = YES;
+  _view.rightAxis.axisMaximum = barDataSet.yMax * 1.1f;  // Leave a little room on top for labels.
 }
 
 @end
