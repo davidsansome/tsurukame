@@ -1,6 +1,7 @@
 #import "SettingsViewController.h"
 
 #import "LoginViewController.h"
+#import "UserDefaults.h"
 
 @interface SettingsViewController ()
 
@@ -13,8 +14,25 @@
 
 @implementation SettingsViewController
 
+- (void)viewDidLoad {
+  [super viewDidLoad];
+  
+  _particleExplosionSwitch.on = UserDefaults.animateParticleExplosion;
+  _levelUpPopupSwitch.on = UserDefaults.animateLevelUpPopup;
+  _plusOneSwitch.on = UserDefaults.animatePlusOne;
+  _enableCheatsSwitch.on = UserDefaults.enableCheats;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+  self.navigationController.navigationBarHidden = NO;
+}
+
 - (IBAction)switchValueChanged:(id)sender {
-  NSLog(@"Switch changed");
+  UserDefaults.animateParticleExplosion = _particleExplosionSwitch.on;
+  UserDefaults.animateLevelUpPopup = _levelUpPopupSwitch.on;
+  UserDefaults.animatePlusOne = _plusOneSwitch.on;
+  UserDefaults.enableCheats = _enableCheatsSwitch.on;
 }
 
 - (IBAction)didTapLogOut:(id)sender {
