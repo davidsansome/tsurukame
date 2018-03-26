@@ -123,7 +123,13 @@ static NSString *kHeader =
     [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray primaryOnly:true]];
     [self addTextSectionTo:ret title:@"Radicals" content:[self renderComponents:subject.componentSubjectIdsArray]];
     [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.kanji.meaningMnemonic]];
+    if (_showHints) {
+      [self addTextSectionTo:ret title:@"Meaning Hint" content:[self highlightText:subject.kanji.meaningHint]];
+    }
     [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.kanji.readingMnemonic]];
+    if (_showHints) {
+      [self addTextSectionTo:ret title:@"Reading Hint" content:[self highlightText:subject.kanji.readingHint]];
+    }
     // TODO: context
   }
   if (subject.hasVocabulary) {

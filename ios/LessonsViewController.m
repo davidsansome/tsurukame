@@ -121,6 +121,7 @@
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   vc.dataLoader = _dataLoader;
   vc.localCachingClient = _localCachingClient;
+  vc.showHints = true;
   vc.subject = [_dataLoader loadSubject:item.assignment.subjectId];
   vc.index = index;
   return vc;

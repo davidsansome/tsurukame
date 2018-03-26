@@ -14,6 +14,9 @@
 // If this is set to true before the view is loaded, the back button will be hidden.
 @property (nonatomic) bool hideBackButton;
 
+// If this is set to true before the view is loaded, kanji hints will be displayed.
+@property (nonatomic) bool showHints;
+
 // The index of this subject in some other collection.  Unused, for convenience only.
 @property (nonatomic) NSInteger index;
 
