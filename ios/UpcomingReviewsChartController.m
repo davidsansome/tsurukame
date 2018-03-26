@@ -68,8 +68,10 @@ currentReviewCount:(int)currentReviewCount
     int x = i + 1;
     int y = [upcomingReviews[i] intValue];
     cumulativeReviews += y;
-    [hourlyData addObject:[[BarChartDataEntry alloc] initWithX:x y:y]];
     [cumulativeData addObject:[[ChartDataEntry alloc] initWithX:x y:cumulativeReviews]];
+    if (y > 0) {
+      [hourlyData addObject:[[BarChartDataEntry alloc] initWithX:x y:y]];
+    }
   }
   
   LineChartDataSet *lineDataSet = [[LineChartDataSet alloc] initWithValues:cumulativeData label:nil];
