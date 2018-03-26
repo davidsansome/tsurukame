@@ -14,8 +14,6 @@
 // If this is set to true before the view is loaded, the back button will be hidden.
 @property (nonatomic) bool hideBackButton;
 
-@property (nonatomic) WKSubjectDetailsViewStyle style;
-
 // The index of this subject in some other collection.  Unused, for convenience only.
 @property (nonatomic) NSInteger index;
 
