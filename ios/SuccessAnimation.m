@@ -1,5 +1,7 @@
 #import "SuccessAnimation.h"
 
+#import "UserDefaults.h"
+
 static CGFloat RandFloat(CGFloat min, CGFloat max) {
   return ((CGFloat)arc4random()) / ((CGFloat)UINT32_MAX) * (max - min) + min;
 }
@@ -225,9 +227,11 @@ void RunSuccessAnimation(UIView *answerField,
                          bool isSubjectFinished,
                          bool didLevelUp,
                          int newSrsLevel) {
-  CreateExplosion(answerField);
+  if (UserDefaults.animateParticleExplosion) {
+    CreateExplosion(answerField);
+  }
   
-  if (isSubjectFinished) {
+  if (isSubjectFinished && UserDefaults.animatePlusOne) {
     CreatePlusOneText(doneLabel,
                       @"+1",
                       [UIFont boldSystemFontOfSize:20.0],
@@ -235,7 +239,7 @@ void RunSuccessAnimation(UIView *answerField,
                       1.5);  // Duration.
   }
   
-  if (isSubjectFinished && didLevelUp) {
+  if (isSubjectFinished && didLevelUp && UserDefaults.animateLevelUpPopup) {
     NSString *srsLevelString;
     UIColor *srsLevelColor;
     switch (newSrsLevel) {

@@ -5,6 +5,7 @@
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
 #import "SuccessAnimation.h"
+#import "UserDefaults.h"
 #import "WKKanaInput.h"
 #import "proto/Wanikani+Convenience.h"
 
@@ -588,7 +589,7 @@ static UIColor *kMeaningTextColor;
 
 - (bool)reviewViewController:(ReviewViewController *)reviewViewController
              allowsCheatsFor:(ReviewItem *)reviewItem {
-  return true;
+  return UserDefaults.enableCheats;
 }
 
 - (void)reviewViewControllerTappedBackButton:(ReviewViewController *)reviewViewController {

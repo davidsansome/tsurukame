@@ -56,6 +56,13 @@ static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
   [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kLoginURL]]];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+  self.navigationController.navigationBarHidden = YES;
+}
+
+#pragma mark - Actions
+
 - (IBAction)didTapBack:(id)sender {
   [_webView goBack];
 }
