@@ -36,15 +36,23 @@
          selector:@selector(loginComplete:)
              name:kLoginCompleteNotification
            object:nil];
+  [nc addObserver:self
+         selector:@selector(logout:)
+             name:kLogoutNotification
+           object:nil];
   
   if (UserDefaults.userApiToken && UserDefaults.userCookie) {
     [self loginComplete:nil];
   } else {
-    LoginViewController *loginViewController = [_storyboard instantiateViewControllerWithIdentifier:@"login"];
-    [_navigationController setViewControllers:@[loginViewController] animated:NO];
+    [self pushLoginViewController];
   }
   
   return YES;
+}
+
+- (void)pushLoginViewController {
+  LoginViewController *loginViewController = [_storyboard instantiateViewControllerWithIdentifier:@"login"];
+  [_navigationController setViewControllers:@[loginViewController] animated:NO];
 }
 
 - (void)loginComplete:(NSNotification *)notification {
@@ -59,6 +67,16 @@
   vc.localCachingClient = _localCachingClient;
   
   [_navigationController setViewControllers:@[vc] animated:(notification == nil) ? NO : YES];
+}
+
+- (void)logout:(NSNotification *)notification {
+  UserDefaults.userCookie = nil;
+  UserDefaults.userApiToken = nil;
+  UserDefaults.userEmailAddress = nil;
+  [_localCachingClient clearAllData];
+  _localCachingClient = nil;
+  
+  [self pushLoginViewController];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

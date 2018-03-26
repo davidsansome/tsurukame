@@ -4,6 +4,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSNotificationName kLoginCompleteNotification;
+extern NSNotificationName kLogoutNotification;
 
 @interface LoginWebView : WKWebView
 @end

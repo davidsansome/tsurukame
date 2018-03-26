@@ -6,6 +6,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NSNotificationName kLoginCompleteNotification = @"kLoginCompleteNotification";
+NSNotificationName kLogoutNotification = @"kLogoutNotification";
 
 static NSString *kLoginURL = @"https://www.wanikani.com/login";
 static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";

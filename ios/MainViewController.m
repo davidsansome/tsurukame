@@ -44,6 +44,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 @property (weak, nonatomic) IBOutlet UIImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *userLevelLabel;
+@property (weak, nonatomic) IBOutlet UIButton *settingsButton;
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *lessonsCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *reviewsCell;
