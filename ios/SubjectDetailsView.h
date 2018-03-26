@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) DataLoader *dataLoader;
 @property (nonatomic, weak) id<WKSubjectDetailsDelegate> delegate;
+@property (nonatomic) bool showHints;
 
 @property (nonatomic, readonly) WKSubject *lastSubjectClicked;
 
