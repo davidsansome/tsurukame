@@ -220,6 +220,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     
     NSArray<WKAssignment *> *assignments = [_localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments];
+    items = [items sortedArrayUsingSelector:@selector(compareForLessons:)];
     if (items.count > kItemsPerLesson) {
       items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
     }

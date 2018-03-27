@@ -22,4 +22,6 @@ typedef NS_ENUM(NSInteger, WKTaskType) {
 @property (nonatomic) bool answeredMeaning;
 @property (nonatomic) WKProgress *answer;
 
+- (NSComparisonResult)compareForLessons:(ReviewItem *)other;
+
 @end
