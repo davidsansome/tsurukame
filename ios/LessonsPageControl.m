@@ -44,44 +44,54 @@ static CGFloat WidthOfItemText(NSAttributedString *item) {
     [view removeFromSuperview];
   }
 
-  _subjects = subjects;
   _labels = [NSMutableArray array];
   _gradientViews = [NSMutableArray array];
 
   for (WKSubject *subject in subjects) {
-    NSAttributedString *text = [subject japaneseTextWithImageSize:kLabelHeight];
-    CGRect gradientFrame = CGRectMake(0, 0, WidthOfItemText(text), kPageHeight);
-    CGRect labelFrame = UIEdgeInsetsInsetRect(gradientFrame, kLabelEdgeInsets);
-    
-    UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-    label.minimumScaleFactor = 0.2;
-    label.adjustsFontSizeToFitWidth = YES;
-    label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-    label.attributedText = text;
-    label.textColor = [UIColor whiteColor];
-    label.userInteractionEnabled = NO;
-    label.textAlignment = NSTextAlignmentCenter;
-    
-    UIGestureRecognizer *gestureRecogniser =
-        [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    
-    UIView *gradientView = [[UIView alloc] initWithFrame:gradientFrame];
-    [gradientView addGestureRecognizer:gestureRecogniser];
-    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-    gradientLayer.frame = gradientView.bounds;
-    gradientLayer.cornerRadius = kPageCornerRadius;
-    gradientLayer.masksToBounds = YES;
-    gradientLayer.colors = WKGradientForSubject(subject);
-    [gradientView.layer insertSublayer:gradientLayer atIndex:0];
-
-    [_labels addObject:label];
-    [_gradientViews addObject:gradientView];
-    
-    [self addSubview:gradientView];
-    [self addSubview:label];
+    [self appendPageItem:[subject japaneseTextWithImageSize:kLabelHeight]
+               textColor:[UIColor whiteColor]
+              background:WKGradientForSubject(subject)];
   }
+  [self appendPageItem:[[NSAttributedString alloc] initWithString:@"Quiz"]
+             textColor:[UIColor darkGrayColor]
+            background:@[(id)WKGreyColor().CGColor, (id)WKGreyColor().CGColor]];
+  
   [self updateGradientAlpha];
   [self setNeedsLayout];
+}
+
+- (void)appendPageItem:(NSAttributedString *)text
+             textColor:(UIColor *)textColor
+            background:(NSArray<id> *)background {
+  CGRect gradientFrame = CGRectMake(0, 0, WidthOfItemText(text), kPageHeight);
+  CGRect labelFrame = UIEdgeInsetsInsetRect(gradientFrame, kLabelEdgeInsets);
+  
+  UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
+  label.minimumScaleFactor = 0.2;
+  label.adjustsFontSizeToFitWidth = YES;
+  label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+  label.attributedText = text;
+  label.textColor = textColor;
+  label.userInteractionEnabled = NO;
+  label.textAlignment = NSTextAlignmentCenter;
+  
+  UIGestureRecognizer *gestureRecogniser =
+      [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+  
+  UIView *gradientView = [[UIView alloc] initWithFrame:gradientFrame];
+  [gradientView addGestureRecognizer:gestureRecogniser];
+  CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+  gradientLayer.frame = gradientView.bounds;
+  gradientLayer.cornerRadius = kPageCornerRadius;
+  gradientLayer.masksToBounds = YES;
+  gradientLayer.colors = background;
+  [gradientView.layer insertSublayer:gradientLayer atIndex:0];
+  
+  [_labels addObject:label];
+  [_gradientViews addObject:gradientView];
+  
+  [self addSubview:gradientView];
+  [self addSubview:label];
 }
 
 - (void)setCurrentPageIndex:(NSInteger)index {
@@ -111,7 +121,7 @@ static CGFloat WidthOfItemText(NSAttributedString *item) {
   CGPoint pageOrigin = CGPointMake((self.bounds.size.width - contentSize.width) / 2,
                                    (self.bounds.size.height - contentSize.height) / 2);
   
-  for (NSInteger i = 0; i < _subjects.count; ++i) {
+  for (NSInteger i = 0; i < _gradientViews.count; ++i) {
     UIView *gradientView = _gradientViews[i];
     UILabel *label = _labels[i];
     

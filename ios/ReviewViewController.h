@@ -25,6 +25,7 @@
 @property(nonatomic, assign) DataLoader *dataLoader;
 @property(nonatomic, assign) LocalCachingClient *localCachingClient;
 @property(nonatomic, copy) NSArray<ReviewItem *> *items;
+@property(nonatomic) bool hideBackButton;
 
 @property(nonatomic, weak) id<ReviewViewControllerDelegate> delegate;
 
