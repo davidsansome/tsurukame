@@ -27,6 +27,7 @@ UIColor *WKKanjiColor1()      { return UIColorFromHex(0xFF00AA); }
 UIColor *WKKanjiColor2()      { return UIColorFromHex(0xDD0093); }
 UIColor *WKVocabularyColor1() { return UIColorFromHex(0xAA00FF); }
 UIColor *WKVocabularyColor2() { return UIColorFromHex(0x9300DD); }
+UIColor *WKGreyColor()        { return UIColorFromHex(0xC8C8C8); }
 
 NSArray<id> *WKRadicalGradient(void) {
   return ArrayOfTwoColors(WKRadicalColor1(), WKRadicalColor2());

@@ -7,6 +7,7 @@
 
 @interface LessonsViewController () <ReviewViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet LessonsPageControl *pageControl;
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
 @end
 
 @implementation LessonsViewController {
@@ -32,9 +33,9 @@
   }
   _pageControl.subjects = subjects;
   
-  // Add it as a child view controller.
+  // Add it as a child view controller, below the back button.
   [self addChildViewController:_pageController];
-  [self.view addSubview:_pageController.view];
+  [self.view insertSubview:_pageController.view belowSubview:_backButton];
   [_pageController didMoveToParentViewController:self];
   
   // Hook up the page control.
@@ -67,6 +68,10 @@
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
   return UIStatusBarStyleLightContent;
+}
+
+- (IBAction)didTapBackButton:(id)sender {
+  [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - UIPageControl
@@ -109,6 +114,7 @@
       _reviewViewController.dataLoader = _dataLoader;
       _reviewViewController.localCachingClient = _localCachingClient;
       _reviewViewController.delegate = self;
+      _reviewViewController.hideBackButton = true;
       _reviewViewController.items = _items;
     }
     return _reviewViewController;
@@ -122,6 +128,7 @@
   vc.dataLoader = _dataLoader;
   vc.localCachingClient = _localCachingClient;
   vc.showHints = true;
+  vc.hideBackButton = true;
   vc.subject = [_dataLoader loadSubject:item.assignment.subjectId];
   vc.index = index;
   return vc;

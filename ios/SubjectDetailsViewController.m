@@ -40,7 +40,7 @@
   [self.view.layer insertSublayer:_gradientLayer atIndex:0];
   
   if (_hideBackButton) {
-    [_backButton setHidden:YES];
+    _backButton.hidden = YES;
   }
 }
 

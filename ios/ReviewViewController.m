@@ -134,6 +134,10 @@ static UIColor *kMeaningTextColor;
   
   _answerField.delegate = _kanaInput;
   
+  if (_hideBackButton) {
+    _backButton.hidden = YES;
+  }
+  
   [self viewDidLayoutSubviews];
   [self randomTask];
 }

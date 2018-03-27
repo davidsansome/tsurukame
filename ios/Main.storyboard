@@ -408,16 +408,30 @@
                                 <rect key="frame" x="0.0" y="519" width="375" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tcr-27-sa4">
+                                <rect key="frame" x="0.0" y="20" width="70" height="44"/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <inset key="contentEdgeInsets" minX="6" minY="10" maxX="6" maxY="10"/>
+                                <state key="normal" title="Back" image="back">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTapBackButton:" destination="dLz-hZ-OJ5" eventType="touchUpInside" id="Coh-Oh-dGb"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="lL1-qw-PnD" firstAttribute="trailing" secondItem="J2G-4f-QDb" secondAttribute="trailing" id="T2M-mm-pM2"/>
+                            <constraint firstItem="Tcr-27-sa4" firstAttribute="leading" secondItem="J2G-4f-QDb" secondAttribute="leading" id="Xau-aQ-Qhp"/>
                             <constraint firstItem="lL1-qw-PnD" firstAttribute="leading" secondItem="J2G-4f-QDb" secondAttribute="leading" id="b9j-Y4-uXi"/>
+                            <constraint firstItem="Tcr-27-sa4" firstAttribute="top" secondItem="J2G-4f-QDb" secondAttribute="top" id="dRH-IA-nOk"/>
                             <constraint firstItem="J2G-4f-QDb" firstAttribute="bottom" secondItem="lL1-qw-PnD" secondAttribute="bottom" id="tTJ-Wg-wub"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="J2G-4f-QDb"/>
                     </view>
                     <connections>
+                        <outlet property="backButton" destination="Tcr-27-sa4" id="gta-G2-R6W"/>
                         <outlet property="pageControl" destination="lL1-qw-PnD" id="MLC-d1-PGx"/>
                     </connections>
                 </viewController>
