@@ -78,6 +78,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   _chartController =
       [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
   
+  UIImageView *backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"launch_image"]];
+  backgroundView.alpha = 0.25;
+  self.tableView.backgroundView = backgroundView;
+  
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
          selector:@selector(availableItemsChanged)
