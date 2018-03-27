@@ -52,6 +52,7 @@
                             </progressView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3YN-mF-8K8">
                                 <rect key="frame" x="8" y="20" width="32" height="48"/>
+                                <accessibility key="accessibilityConfiguration" label="Back"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="GIl-gp-oUx"/>
                                     <constraint firstAttribute="width" constant="32" id="Zug-cN-8D9"/>
@@ -63,6 +64,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fXK-3c-2qE">
                                 <rect key="frame" x="48" y="20" width="32" height="48"/>
+                                <accessibility key="accessibilityConfiguration" label="Forward"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="0Bw-xK-8Sp"/>
                                     <constraint firstAttribute="width" constant="32" id="NTw-7R-TUo"/>
@@ -74,6 +76,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IcJ-wk-wig">
                                 <rect key="frame" x="335" y="20" width="32" height="48"/>
+                                <accessibility key="accessibilityConfiguration" label="Refresh"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="32" id="HRs-tz-IqP"/>
                                     <constraint firstAttribute="height" constant="48" id="Kry-5U-D7m"/>
@@ -85,6 +88,9 @@
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rjI-NW-bF4">
                                 <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" staticText="YES" notEnabled="YES" header="YES"/>
+                                </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="Wey-l2-Px6"/>
                                 </constraints>
@@ -221,6 +227,7 @@
                                                 </view>
                                                 <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OWg-xT-QDr">
                                                     <rect key="frame" x="337" y="31" width="38" height="38"/>
+                                                    <accessibility key="accessibilityConfiguration" label="Settings"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="OWg-xT-QDr" secondAttribute="height" multiplier="1:1" id="9xv-7i-Rdr"/>
                                                     </constraints>
@@ -329,6 +336,10 @@
                                                 <constraint firstItem="naw-oH-UBc" firstAttribute="bottom" secondItem="OpR-xy-yAP" secondAttribute="bottomMargin" id="s0u-fQ-xrE"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <accessibility key="accessibilityConfiguration" label="Graph showing upcoming reviews">
+                                            <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -444,6 +455,7 @@
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg">
                                 <rect key="frame" x="8" y="611" width="359" height="50"/>
+                                <accessibility key="accessibilityConfiguration" label="Answer field"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="bHy-2g-dyk"/>
                                 </constraints>
@@ -462,6 +474,7 @@
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctF-hm-AxT">
                                 <rect key="frame" x="307" y="602.5" width="68" height="67"/>
+                                <accessibility key="accessibilityConfiguration" label="Confirm"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                 <state key="normal" image="confirm"/>
                                 <connections>
@@ -535,6 +548,7 @@
                             </wkWebView>
                             <button hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fq3-oe-fWe">
                                 <rect key="frame" x="0.0" y="605" width="62" height="62"/>
+                                <accessibility key="accessibilityConfiguration" label="Cheats"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                 <state key="normal" image="add"/>
                                 <connections>

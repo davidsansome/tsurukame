@@ -362,6 +362,14 @@ static UIColor *kMeaningTextColor;
   _questionGradient.colors = WKGradientForAssignment(_activeTask.assignment);
   _promptGradient.colors = promptGradient;
   [CATransaction commit];
+  
+  // Accessibility.
+  _successRateLabel.accessibilityLabel = [NSString stringWithFormat:@"%@ correct so far",
+                                          successRateText];
+  _doneLabel.accessibilityLabel = [NSString stringWithFormat:@"%@ done", doneText];
+  _queueLabel.accessibilityLabel = [NSString stringWithFormat:@"%@ remaining", queueText];
+  _questionLabel.accessibilityLabel = [NSString stringWithFormat:@"Japanese %@. Question",
+                                       subjectTypePrompt];
 
   [self animateSubjectDetailsViewShown:false];
   
