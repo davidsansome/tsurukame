@@ -34,4 +34,21 @@
   return self;
 }
 
+- (NSComparisonResult)compareForLessons:(ReviewItem *)other {
+  #define COMPARE(field) \
+    if (self.field < other.field) { \
+      return NSOrderedAscending; \
+    } \
+    if (self.field > other.field) { \
+      return NSOrderedDescending; \
+    }
+
+  COMPARE(assignment.subjectType);
+  COMPARE(assignment.level);
+  COMPARE(assignment.subjectId);
+  return NSOrderedSame;
+
+  #undef COMPARE
+}
+
 @end

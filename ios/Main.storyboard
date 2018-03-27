@@ -548,7 +548,7 @@
                             </wkWebView>
                             <button hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fq3-oe-fWe">
                                 <rect key="frame" x="0.0" y="605" width="62" height="62"/>
-                                <accessibility key="accessibilityConfiguration" label="Cheats"/>
+                                <accessibility key="accessibilityConfiguration" hint="Double tap to open a menu" label="Cheats"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                 <state key="normal" image="add"/>
                                 <connections>
@@ -992,6 +992,6 @@
         <image name="tick" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ONv-x4-Pkd"/>
+        <segue reference="LcM-wy-hJZ"/>
     </inferredMetricsTieBreakers>
 </document>
