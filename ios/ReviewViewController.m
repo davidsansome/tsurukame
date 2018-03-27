@@ -183,13 +183,15 @@ static UIColor *kMeaningTextColor;
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-  [_answerField becomeFirstResponder];
   self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
   _viewDidAppearOnce = true;
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [_answerField becomeFirstResponder];
+  });
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
