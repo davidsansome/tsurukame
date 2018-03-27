@@ -54,6 +54,15 @@ static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
                 context:nil];
   
   [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kLoginURL]]];
+  
+  self.view.accessibilityElements = @[
+      _backButton,
+      _forwardButton,
+      _titleLabel,
+      _refreshButton,
+      _progressView,
+      _webView,
+  ];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
