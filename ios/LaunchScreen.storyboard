@@ -18,18 +18,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loading" translatesAutoresizingMaskIntoConstraints="NO" id="oVT-sP-UkV">
-                                <rect key="frame" x="37" y="183.5" width="300" height="300"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="oG6-cW-bBb"/>
-                                    <constraint firstAttribute="height" constant="300" id="qYw-vO-grt"/>
-                                </constraints>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_image" translatesAutoresizingMaskIntoConstraints="NO" id="9Fo-CK-EuL">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="oVT-sP-UkV" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="j3D-Og-6o6"/>
-                            <constraint firstItem="oVT-sP-UkV" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="sJJ-u0-7KN"/>
+                            <constraint firstItem="9Fo-CK-EuL" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="XJU-UW-uki"/>
+                            <constraint firstItem="9Fo-CK-EuL" firstAttribute="bottom" secondItem="Bcu-3y-fUS" secondAttribute="bottom" id="dr1-Cn-obO"/>
+                            <constraint firstItem="9Fo-CK-EuL" firstAttribute="trailing" secondItem="Bcu-3y-fUS" secondAttribute="trailing" id="ugt-cp-VjM"/>
+                            <constraint firstItem="9Fo-CK-EuL" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" id="zag-o7-1lD"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                     </view>
@@ -40,6 +38,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="loading" width="600" height="600"/>
+        <image name="launch_image" width="1126" height="2436"/>
     </resources>
 </document>
