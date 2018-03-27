@@ -61,15 +61,20 @@
   
   _localCachingClient = [[LocalCachingClient alloc] initWithClient:client reachability:_reachability];
   
-  // Do a sync before pushing the main view controller.
-  [_localCachingClient sync:^{
+  void (^pushMainViewController)(void) = ^() {
     MainViewController *vc = [_storyboard instantiateViewControllerWithIdentifier:@"main"];
     vc.dataLoader = _dataLoader;
     vc.reachability = _reachability;
     vc.localCachingClient = _localCachingClient;
     
     [_navigationController setViewControllers:@[vc] animated:(notification == nil) ? NO : YES];
-  }];
+  };
+  // Do a sync before pushing the main view controller if this was a new login.
+  if (notification) {
+    [_localCachingClient sync:pushMainViewController];
+  } else {
+    pushMainViewController();
+  }
 }
 
 - (void)logout:(NSNotification *)notification {
