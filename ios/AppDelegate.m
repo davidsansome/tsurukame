@@ -89,7 +89,11 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   [_reachability startNotifier];
-  [_localCachingClient sync:nil];
+  
+  if ([_navigationController.topViewController isKindOfClass:MainViewController.class]) {
+    MainViewController *vc = (MainViewController *)_navigationController.topViewController;
+    [vc refresh];
+  }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

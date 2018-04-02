@@ -120,10 +120,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-  [self updateUserInfo];
-  [self updatePendingItems];
-  [self updateAvailableItems];
-  [_localCachingClient sync:nil];
+  [self refresh];
   
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = YES;
@@ -131,6 +128,13 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
   return UIStatusBarStyleLightContent;
+}
+
+- (void)refresh {
+  [self updateUserInfo];
+  [self updatePendingItems];
+  [self updateAvailableItems];
+  [_localCachingClient sync:nil];
 }
 
 - (void)pendingItemsChanged {
