@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) Reachability *reachability;
 @property(nonatomic) LocalCachingClient *localCachingClient;
 
+- (void)refresh;
+
 @end
 
 NS_ASSUME_NONNULL_END
