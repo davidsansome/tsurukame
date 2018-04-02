@@ -16,6 +16,8 @@ static const NSInteger kItemsPerLesson = 5;
 static const char *kDefaultProfileImageURL = "https://cdn.wanikani.com/default-avatar-300x300-20121121.png";
 static const int kProfileImageSize = 80;
 
+static const int kUpcomingReviewsSection = 2;
+
 static NSURL *UserProfileImageURL(NSString *emailAddress) {
   emailAddress = [emailAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
   emailAddress = [emailAddress lowercaseString];
@@ -62,6 +64,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
   self.refreshControl = [[UIRefreshControl alloc] init];
   self.refreshControl.tintColor = [UIColor darkGrayColor];
   self.refreshControl.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
@@ -128,6 +131,14 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
   return UIStatusBarStyleLightContent;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+  if (indexPath.section == kUpcomingReviewsSection) {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 360 : 120;
+  }
+  
+  return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
 
 - (void)refresh {
