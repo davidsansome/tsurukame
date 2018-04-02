@@ -171,7 +171,8 @@
   [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
 }
 
-- (void)reviewViewControllerTappedBackButton:(ReviewViewController *)reviewViewController {
+- (void)reviewViewController:(ReviewViewController *)reviewViewController
+            tappedBackButton:(UIButton *)button {
   [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
 }
 

@@ -39,7 +39,7 @@
   __weak SettingsViewController *weakSelf = self;
   UIAlertController *c = [UIAlertController alertControllerWithTitle:@"Are you sure?"
                                                              message:nil
-                                                      preferredStyle:UIAlertControllerStyleActionSheet];
+                                                      preferredStyle:UIAlertControllerStyleAlert];
   [c addAction:[UIAlertAction actionWithTitle:@"Log out"
                                         style:UIAlertActionStyleDestructive
                                       handler:^(UIAlertAction * _Nonnull action) {
