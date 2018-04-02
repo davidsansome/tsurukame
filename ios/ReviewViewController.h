@@ -11,7 +11,8 @@
 - (bool)reviewViewController:(ReviewViewController *)reviewViewController
              allowsCheatsFor:(ReviewItem *)reviewItem;
 
-- (void)reviewViewControllerTappedBackButton:(ReviewViewController *)reviewViewController;
+- (void)reviewViewController:(ReviewViewController *)reviewViewController
+            tappedBackButton:(UIButton *)backButton;
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
           finishedReviewItem:(ReviewItem *)reviewItem;
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController;

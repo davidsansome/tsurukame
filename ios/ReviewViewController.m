@@ -430,7 +430,7 @@ static UIColor *kMeaningTextColor;
 #pragma mark - Back button
 
 - (IBAction)backButtonPressed:(id)sender {
-  [_delegate reviewViewControllerTappedBackButton:self];
+  [_delegate reviewViewController:self tappedBackButton:_backButton];
 }
 
 #pragma mark - Submitting answers
@@ -546,6 +546,9 @@ static UIColor *kMeaningTextColor;
                                           message:@"Don't cheat!  Only use this if you promise you "
                                                    "knew the correct answer."
                                    preferredStyle:UIAlertControllerStyleActionSheet];
+  c.popoverPresentationController.sourceView = _addSynonymButton;
+  c.popoverPresentationController.sourceRect = _addSynonymButton.bounds;
+
   [c addAction:[UIAlertAction actionWithTitle:@"Ignore typo"
                                         style:UIAlertActionStyleDefault
                                       handler:^(UIAlertAction * _Nonnull action) {
@@ -606,7 +609,8 @@ static UIColor *kMeaningTextColor;
   return UserDefaults.enableCheats;
 }
 
-- (void)reviewViewControllerTappedBackButton:(ReviewViewController *)reviewViewController {
+- (void)reviewViewController:(ReviewViewController *)reviewViewController
+            tappedBackButton:(UIButton *)backButton {
   if (reviewViewController.reviewsCompleted == 0) {
     [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
     return;
@@ -617,6 +621,9 @@ static UIColor *kMeaningTextColor;
       [UIAlertController alertControllerWithTitle:@"End review session?"
                                           message:@"You'll lose progress on any half-answered reviews"
                                    preferredStyle:UIAlertControllerStyleActionSheet];
+  c.popoverPresentationController.sourceView = backButton;
+  c.popoverPresentationController.sourceRect = backButton.bounds;
+  
   [c addAction:[UIAlertAction actionWithTitle:@"End review session"
                                         style:UIAlertActionStyleDestructive
                                       handler:^(UIAlertAction * _Nonnull action) {
