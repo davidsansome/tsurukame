@@ -78,7 +78,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   _chartController =
       [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
   
-  UIImageView *backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"launchscreen.jpg"]];
+  UIImageView *backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"launch_screen"]];
   backgroundView.alpha = 0.25;
   self.tableView.backgroundView = backgroundView;
   
