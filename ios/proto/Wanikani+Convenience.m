@@ -78,6 +78,14 @@
   return [strings componentsJoinedByString:@", "];
 }
 
+- (NSString *)commaSeparatedPrimaryReadings {
+  NSMutableArray<NSString *>* strings = [NSMutableArray array];
+  for (WKReading *reading in self.primaryReadings) {
+    [strings addObject:reading.reading];
+  }
+  return [strings componentsJoinedByString:@", "];
+}
+
 @end
 
 @implementation WKVocabulary (Convenience)
