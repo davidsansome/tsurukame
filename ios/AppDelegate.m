@@ -61,6 +61,11 @@
   
   _localCachingClient = [[LocalCachingClient alloc] initWithClient:client reachability:_reachability];
   
+  // Ask for notification permissions.
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge)
+                        completionHandler:^(BOOL granted, NSError * _Nullable error) {}];
+  
   void (^pushMainViewController)(void) = ^() {
     MainViewController *vc = [_storyboard instantiateViewControllerWithIdentifier:@"main"];
     vc.dataLoader = _dataLoader;
@@ -147,12 +152,11 @@
     }
   };
   
-  [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge)
-                        completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                          if (granted) {
-                            dispatch_async(dispatch_get_main_queue(), updateBlock);
-                          }
-                        }];
+  [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *_Nonnull settings) {
+    if (settings.badgeSetting == UNNotificationSettingEnabled) {
+      dispatch_async(dispatch_get_main_queue(), updateBlock);
+    }
+  }];
 }
 
 @end
