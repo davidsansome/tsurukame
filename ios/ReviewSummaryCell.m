@@ -38,7 +38,11 @@
   if (subject.hasRadical) {
     [self.readingLabel setHidden:YES];
     self.meaningLabel.text = subject.commaSeparatedMeanings;
-  } else if (subject.hasKanji || subject.hasVocabulary) {
+  } else if (subject.hasKanji) {
+    [self.readingLabel setHidden:NO];
+    self.readingLabel.text = subject.commaSeparatedPrimaryReadings;
+    self.meaningLabel.text = subject.commaSeparatedMeanings;
+  } else if (subject.hasVocabulary) {
     [self.readingLabel setHidden:NO];
     self.readingLabel.text = subject.commaSeparatedReadings;
     self.meaningLabel.text = subject.commaSeparatedMeanings;

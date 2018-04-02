@@ -9,6 +9,7 @@
 @property (nonatomic, readonly) NSArray<WKReading *> *primaryReadings;
 @property (nonatomic, readonly) NSArray<WKReading *> *alternateReadings;
 @property (nonatomic, readonly) NSString *commaSeparatedReadings;
+@property (nonatomic, readonly) NSString *commaSeparatedPrimaryReadings;
 @property (nonatomic, readonly) NSString *commaSeparatedMeanings;
 @property (nonatomic, readonly) NSAttributedString *japaneseText;
 
