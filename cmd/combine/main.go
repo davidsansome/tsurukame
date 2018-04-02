@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/golang/protobuf/proto"
 
@@ -48,9 +49,11 @@ func Combine() error {
 			spb.Radical.HasCharacterImageFile = proto.Bool(true)
 		}
 
+		// Clean up the data.
 		if err := ReorderComponentSubjectIDs(spb); err != nil {
 			return err
 		}
+		UnsetEmptyFields(spb)
 
 		data, err := proto.Marshal(spb)
 		if err != nil {
@@ -119,4 +122,15 @@ func ReorderComponentSubjectIDs(spb *pb.Subject) error {
 
 	spb.ComponentSubjectIds = newComponentIDs
 	return nil
+}
+
+func UnsetEmptyFields(spb *pb.Subject) {
+	if spb.Kanji != nil {
+		if len(strings.TrimSpace(spb.Kanji.GetMeaningHint())) == 0 {
+			spb.Kanji.MeaningHint = nil
+		}
+		if len(strings.TrimSpace(spb.Kanji.GetReadingHint())) == 0 {
+			spb.Kanji.ReadingHint = nil
+		}
+	}
 }
