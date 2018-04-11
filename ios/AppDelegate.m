@@ -17,7 +17,6 @@
 #import "DataLoader.h"
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
-#import "MainSearchController.h"
 #import "MainViewController.h"
 #import "ReviewViewController.h"
 #import "UserDefaults.h"
@@ -85,7 +84,7 @@
                         completionHandler:^(BOOL granted, NSError * _Nullable error) {}];
   
   void (^pushMainViewController)(void) = ^() {
-    MainSearchController *vc = [_storyboard instantiateViewControllerWithIdentifier:@"main"];
+    MainViewController *vc = [_storyboard instantiateViewControllerWithIdentifier:@"main"];
     vc.dataLoader = _dataLoader;
     vc.reachability = _reachability;
     vc.localCachingClient = _localCachingClient;
@@ -113,9 +112,9 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   [_reachability startNotifier];
   
-  if ([_navigationController.topViewController isKindOfClass:MainSearchController.class]) {
-    MainSearchController *vc = (MainSearchController *)_navigationController.topViewController;
-    [vc.mainViewController refresh];
+  if ([_navigationController.topViewController isKindOfClass:MainViewController.class]) {
+    MainViewController *vc = (MainViewController *)_navigationController.topViewController;
+    [vc refresh];
   }
 }
 

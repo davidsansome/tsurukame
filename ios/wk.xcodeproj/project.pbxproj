@@ -182,7 +182,6 @@
 		63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */; };
 		63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.m */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
-		63EDA402207E2A0000382CE3 /* MainSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA401207E2A0000382CE3 /* MainSearchController.m */; };
 		63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */; };
 		63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEB61FC45C440070C05F /* AppDelegate.m */; };
 		63EEFEBF1FC45C440070C05F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEB81FC45C440070C05F /* main.m */; };
@@ -438,8 +437,6 @@
 		63CAAB121FD7FEA400E09DA1 /* LocalCachingClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalCachingClient.h; sourceTree = "<group>"; };
 		63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalCachingClient.m; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		63EDA400207E2A0000382CE3 /* MainSearchController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainSearchController.h; sourceTree = "<group>"; };
-		63EDA401207E2A0000382CE3 /* MainSearchController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainSearchController.m; sourceTree = "<group>"; };
 		63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchResultViewController.h; sourceTree = "<group>"; };
 		63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchResultViewController.m; sourceTree = "<group>"; };
 		63EEFEB61FC45C440070C05F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -471,8 +468,6 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
-				63EDA400207E2A0000382CE3 /* MainSearchController.h */,
-				63EDA401207E2A0000382CE3 /* MainSearchController.m */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -958,7 +953,6 @@
 				63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */,
 				6319CA8F2044203E00C31F87 /* Legend.swift in Sources */,
 				6319CAF22044203F00C31F87 /* IMarker.swift in Sources */,
-				63EDA402207E2A0000382CE3 /* MainSearchController.m in Sources */,
 				6319CB032044203F00C31F87 /* BarLineScatterCandleBubbleChartDataProvider.swift in Sources */,
 				63CAAACD1FC6E0BA00E09DA1 /* Any.pbobjc.m in Sources */,
 				6319CACD2044203E00C31F87 /* CombinedChartDataProvider.swift in Sources */,

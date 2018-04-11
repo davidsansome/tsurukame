@@ -18,6 +18,7 @@
 #import "NSDate+TimeAgo.h"
 #import "NSString+MD5.h"
 #import "ReviewViewController.h"
+#import "SearchResultViewController.h"
 #import "Style.h"
 #import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
@@ -74,10 +75,16 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 @implementation MainViewController {
   UpcomingReviewsChartController *_chartController;
+  UISearchController *_searchController;
+  __weak SearchResultViewController *_searchResultsViewController;
 }
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  UIImageView *backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"launch_screen"]];
+  backgroundView.alpha = 0.25;
+  self.tableView.backgroundView = backgroundView;
   
   self.refreshControl = [[UIRefreshControl alloc] init];
   self.refreshControl.tintColor = [UIColor darkGrayColor];
@@ -88,8 +95,15 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
                           action:@selector(didPullToRefresh)
                 forControlEvents:UIControlEventValueChanged];
   
-  self.tableView.backgroundView = nil;
-  self.tableView.backgroundColor = nil;
+  SearchResultViewController *searchResultsViewController =
+      [self.storyboard instantiateViewControllerWithIdentifier:@"searchResults"];
+  searchResultsViewController.dataLoader = _dataLoader;
+  searchResultsViewController.localCachingClient = _localCachingClient;
+  _searchResultsViewController = searchResultsViewController;
+  
+  _searchController = [[UISearchController alloc] initWithSearchResultsController:searchResultsViewController];
+  _searchController.searchResultsUpdater = searchResultsViewController;
+  self.tableView.tableHeaderView = _searchController.searchBar;
   
   WKAddShadowToView(_userImageContainer, 2, 0.4, 4);
   WKAddShadowToView(_userNameLabel, 1, 0.4, 4);
