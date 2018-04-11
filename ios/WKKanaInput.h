@@ -16,6 +16,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString *WKConvertKanaText(NSString *text);
+
 @interface WKKanaInput : NSObject <UITextFieldDelegate>
 
 - (instancetype)initWithDelegate:(id<UITextFieldDelegate>)delegate NS_DESIGNATED_INITIALIZER;

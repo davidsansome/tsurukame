@@ -24,5 +24,6 @@
 - (instancetype)init NS_UNAVAILABLE;
 
 - (WKSubject *)loadSubject:(int)subjectID;
+- (NSArray<WKSubject *> *)loadAllSubjects;
 
 @end

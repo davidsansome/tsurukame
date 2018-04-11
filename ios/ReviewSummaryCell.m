@@ -17,6 +17,7 @@
 #import "proto/Wanikani+Convenience.h"
 
 @interface ReviewSummaryCell ()
+@property (weak, nonatomic) IBOutlet UILabel *levelLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subjectLabel;
 @property (weak, nonatomic) IBOutlet UILabel *readingLabel;
 @property (weak, nonatomic) IBOutlet UILabel *meaningLabel;
@@ -26,7 +27,7 @@
 @implementation ReviewSummaryCell {
   UIFont *_normalFont;
   UIFont *_incorrectFont;
-  CAGradientLayer *_gradient;
+  __weak CAGradientLayer *_gradient;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -34,8 +35,9 @@
   if (self) {
     _normalFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightThin];
     _incorrectFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightBold];
-    _gradient = [CAGradientLayer layer];
-    [self.contentView.layer insertSublayer:_gradient atIndex:0];
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    _gradient = gradientLayer;
+    [self.contentView.layer insertSublayer:gradientLayer atIndex:0];
   }
   return self;
 }
@@ -48,6 +50,7 @@
 - (void)setSubject:(WKSubject *)subject {
   _subject = subject;
   _gradient.colors = WKGradientForSubject(subject);
+  self.levelLabel.text = [NSString stringWithFormat:@"%d", subject.level];
   self.subjectLabel.attributedText = subject.japaneseText;
   if (subject.hasRadical) {
     [self.readingLabel setHidden:YES];
