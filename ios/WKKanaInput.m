@@ -367,8 +367,6 @@ NSString *WKConvertKanaText(NSString *input) {
       break;
     }
   }
-  
-  NSLog(@"%@ -> %@", input, ret);
   return ret;
 }
 

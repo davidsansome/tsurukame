@@ -21,6 +21,8 @@
   
   _searchController = [[UISearchController alloc] initWithSearchResultsController:searchResultsViewController];
   _searchController.searchResultsUpdater = searchResultsViewController;
+  _searchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
+  _searchController.searchBar.barStyle = UIBarStyleBlack;
   
   [self.view addSubview:_searchController.searchBar];
 }

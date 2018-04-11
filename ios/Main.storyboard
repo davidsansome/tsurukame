@@ -181,6 +181,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.25" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_screen" translatesAutoresizingMaskIntoConstraints="NO" id="5fq-xf-5Jg">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wVk-o4-6pO">
                                 <rect key="frame" x="0.0" y="76" width="375" height="591"/>
                                 <connections>
@@ -190,7 +193,11 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="5fq-xf-5Jg" firstAttribute="trailing" secondItem="WOu-0R-Uxs" secondAttribute="trailing" id="8w1-RX-xqD"/>
+                            <constraint firstItem="5fq-xf-5Jg" firstAttribute="bottom" secondItem="ZG7-Cl-nW2" secondAttribute="bottom" id="9p7-qY-mYD"/>
+                            <constraint firstItem="5fq-xf-5Jg" firstAttribute="top" secondItem="ZG7-Cl-nW2" secondAttribute="top" id="AnU-kF-jcc"/>
                             <constraint firstItem="wVk-o4-6pO" firstAttribute="leading" secondItem="WOu-0R-Uxs" secondAttribute="leading" id="EK5-LH-lrD"/>
+                            <constraint firstItem="5fq-xf-5Jg" firstAttribute="leading" secondItem="WOu-0R-Uxs" secondAttribute="leading" id="Wuk-cH-Krz"/>
                             <constraint firstItem="wVk-o4-6pO" firstAttribute="bottom" secondItem="WOu-0R-Uxs" secondAttribute="bottom" id="aJO-5D-amb"/>
                             <constraint firstItem="wVk-o4-6pO" firstAttribute="top" secondItem="WOu-0R-Uxs" secondAttribute="top" constant="56" id="ibr-OH-DZF"/>
                             <constraint firstItem="wVk-o4-6pO" firstAttribute="trailing" secondItem="WOu-0R-Uxs" secondAttribute="trailing" id="jdf-Ng-0xv"/>
@@ -209,7 +216,7 @@
         <scene sceneID="ydl-qq-SrR">
             <objects>
                 <tableViewController storyboardIdentifier="mainEmbedded" id="ByY-Kf-IzJ" customClass="MainViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" contentViewInsetsToSafeArea="NO" id="f6b-3A-D9O">
+                    <tableView key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" contentViewInsetsToSafeArea="NO" id="f6b-3A-D9O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="591"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -1127,6 +1134,7 @@
         <image name="forward" width="24" height="24"/>
         <image name="ic_settings_white" width="24" height="24"/>
         <image name="inbox" width="24" height="24"/>
+        <image name="launch_screen" width="1126" height="2436"/>
         <image name="refresh" width="24" height="24"/>
         <image name="thumb" width="24" height="24"/>
         <image name="tick" width="24" height="24"/>
