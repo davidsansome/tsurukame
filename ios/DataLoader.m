@@ -22,6 +22,10 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
   return *(uint32_t *)(data.bytes);
 }
 
+static uint32_t ReadSubjectOffset(NSFileHandle *file, int subjectID) {
+  return ReadUint32(file, (subjectID + 1) * 4);
+}
+
 @implementation DataLoader {
   NSFileHandle *_file;
 }
@@ -41,7 +45,7 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
   NSAssert(subjectID < _count && subjectID >= 0,
            @"Tried to read subject %d outside 0-%d", subjectID, (int)_count);
   
-  const uint32_t offset = ReadUint32(_file, (subjectID + 1) * 4);
+  const uint32_t offset = ReadSubjectOffset(_file, subjectID);
   
   NSData *data = nil;
   if (subjectID == _count - 1) {
@@ -49,7 +53,7 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
     data = [_file readDataToEndOfFile];
   } else {
     // Read the offset of the next subject and compare to determine the length.
-    const uint32_t nextOffset = ReadUint32(_file, (subjectID + 2) * 4);
+    const uint32_t nextOffset = ReadSubjectOffset(_file, subjectID + 1);
     const uint32_t length = nextOffset - offset;
     
     [_file seekToFileOffset:offset];
@@ -58,6 +62,14 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
   
   WKSubject *ret = [WKSubject parseFromData:data error:nil];
   ret.id_p = subjectID;
+  return ret;
+}
+
+- (NSArray<WKSubject *> *)loadAllSubjects {
+  NSMutableArray<WKSubject *> *ret = [NSMutableArray array];
+  for (int subjectID = 1; subjectID < _count; ++subjectID) {
+    [ret addObject:[self loadSubject:subjectID]];
+  }
   return ret;
 }
 
