@@ -81,12 +81,15 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   
   self.refreshControl = [[UIRefreshControl alloc] init];
   self.refreshControl.tintColor = [UIColor darkGrayColor];
-  self.refreshControl.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+  self.refreshControl.backgroundColor = nil;
   NSAttributedString *title = [[NSAttributedString alloc] initWithString:@"Pull to refresh..."];
   self.refreshControl.attributedTitle = title;
   [self.refreshControl addTarget:self
                           action:@selector(didPullToRefresh)
                 forControlEvents:UIControlEventValueChanged];
+  
+  self.tableView.backgroundView = nil;
+  self.tableView.backgroundColor = nil;
   
   WKAddShadowToView(_userImageContainer, 2, 0.4, 4);
   WKAddShadowToView(_userNameLabel, 1, 0.4, 4);
@@ -94,10 +97,6 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   
   _chartController =
       [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
-  
-  UIImageView *backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"launch_screen"]];
-  backgroundView.alpha = 0.25;
-  self.tableView.backgroundView = backgroundView;
   
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
@@ -119,9 +118,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   
   // Set a gradient background for the user cell.
   CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
-  userGradientLayer.frame = CGRectMake(0, -_userCell.frame.origin.y,
-                                       _userCell.bounds.size.width,
-                                       _userCell.bounds.size.height + _userCell.frame.origin.y);
+  userGradientLayer.frame = _userCell.bounds;
   userGradientLayer.colors = WKRadicalGradient();
   [_userCell.layer insertSublayer:userGradientLayer atIndex:0];
   _userCell.layer.masksToBounds = NO;
