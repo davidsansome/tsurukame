@@ -16,6 +16,27 @@
 
 #import <UIKit/UIKit.h>
 
+NSString *WKSRSLevelName(int srsLevel) {
+  switch (srsLevel) {
+    case 1:
+      return @"Novice";
+    case 2:
+    case 3:
+    case 4:
+      return @"Apprentice";
+    case 5:
+    case 6:
+      return @"Guru";
+    case 7:
+      return @"Master";
+    case 8:
+      return @"Enlightened";
+    case 9:
+      return @"Burned";
+  }
+  return nil;
+}
+
 @implementation WKSubject (Convenience)
 
 - (NSAttributedString *)japaneseText {
@@ -149,6 +170,14 @@
 
 - (NSDate *)availableAtDate {
   return [NSDate dateWithTimeIntervalSince1970:self.availableAt];
+}
+
+- (NSDate *)startedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.startedAt];
+}
+
+- (NSDate *)passedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.passedAt];
 }
 
 @end

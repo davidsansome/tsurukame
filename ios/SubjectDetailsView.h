@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateWithSubject:(WKSubject *)subject
            studyMaterials:(WKStudyMaterials *)studyMaterials
-               assignment:(_Nullable WKAssignment *)assignment;
+               assignment:(WKAssignment *_Nullable)assignment;
 
 @end
 

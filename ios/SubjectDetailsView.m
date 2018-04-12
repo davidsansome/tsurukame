@@ -26,7 +26,7 @@ static NSString *kHeader =
      "  font-family: -apple-system;"
      "  font-size: 14px;"
      "  background-color: #eeebef;"
-     "  margin: 0;"
+     "  margin: 0 0 1em 0;"
      "}"
      "h1 {"
      "  color: #888888;"
@@ -64,6 +64,11 @@ static NSString *kHeader =
      "}"
      "span.meaning {"
      "  background-color: #eee;"
+     "}"
+     "span.value {"
+     "  font-weight: bold;"
+     "  display: inline-block;"
+     "  float: right;"
      "}"
      ".related.kanji {"
      "  background-color: #f0a;"
@@ -113,12 +118,22 @@ static NSString *kHeader =
      "span.user { color: #3B99FC; }"
      "</style>";
 
-@implementation WKSubjectDetailsView
+@implementation WKSubjectDetailsView {
+  NSDateFormatter *_availableDateFormatter;
+  NSDateFormatter *_startedDateFormatter;
+}
 
 - (nullable instancetype)initWithCoder:(NSCoder *)coder {
   self = [super initWithCoder:coder];
   if (self) {
     self.navigationDelegate = self;
+    _availableDateFormatter = [[NSDateFormatter alloc] init];
+    _availableDateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    _availableDateFormatter.timeStyle = NSDateFormatterMediumStyle;
+    
+    _startedDateFormatter = [[NSDateFormatter alloc] init];
+    _startedDateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    _startedDateFormatter.timeStyle = NSDateFormatterNoStyle;
   }
   return self;
 }
@@ -158,7 +173,27 @@ static NSString *kHeader =
   }
   
   if (assignment) {
-    [self addTextSectionTo:ret title:@"My progress" content:[NSString stringWithFormat:@"%@", assignment]];
+    [self addHeaderTo:ret title:@"Your progress"];
+    [self addNameValueRowTo:ret
+                       name:@"SRS level"
+                      value:[NSString stringWithFormat:@"%@ (%d)",
+                             WKSRSLevelName(assignment.srsStage),
+                             assignment.srsStage]];
+    if (assignment.hasAvailableAt && assignment.availableAt != 0) {
+      [self addNameValueRowTo:ret
+                         name:@"Next review"
+                        value:[_availableDateFormatter stringFromDate:assignment.availableAtDate]];
+    }
+    if (assignment.hasStartedAt && assignment.startedAt != 0) {
+      [self addNameValueRowTo:ret
+                         name:@"First started"
+                        value:[_startedDateFormatter stringFromDate:assignment.startedAtDate]];
+    }
+    if (assignment.hasPassedAt && assignment.passedAt != 0) {
+      [self addNameValueRowTo:ret
+                         name:@"Reached Guru"
+                        value:[_startedDateFormatter stringFromDate:assignment.passedAtDate]];
+    }
   }
   
   return ret;
@@ -200,6 +235,17 @@ static NSString *kHeader =
                    title:(NSString *)title
                  content:(NSString *)content {
   [ret appendFormat:@"<h1>%@</h1><div>%@</div>", title, content];
+}
+
+- (void)addHeaderTo:(NSMutableString *)ret
+              title:(NSString *)title {
+  [ret appendFormat:@"<h1>%@</h1>", title];
+}
+
+- (void)addNameValueRowTo:(NSMutableString *)ret
+                     name:(NSString *)name
+                    value:(NSString *)value {
+  [ret appendFormat:@"<div>%@:<span class=\"value\">%@</span></div>", name, value];
 }
 
 - (NSString *)highlightText:(NSString *)text {
@@ -266,7 +312,7 @@ static NSString *kHeader =
 
 - (void)updateWithSubject:(WKSubject *)subject
            studyMaterials:(WKStudyMaterials *)studyMaterials
-               assignment:(WKAssignment *)assignment {
+               assignment:(WKAssignment *_Nullable)assignment {
   [self loadHTMLString:[self renderSubjectDetails:subject
                                    studyMaterials:studyMaterials
                                        assignment:assignment]
