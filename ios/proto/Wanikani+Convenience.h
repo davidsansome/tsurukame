@@ -16,6 +16,8 @@
 
 #import "Wanikani.pbobjc.h"
 
+extern NSString *WKSRSLevelName(int srsLevel);
+
 @interface WKSubject (Convenience)
 
 @property (nonatomic, readonly) NSString *subjectType;
@@ -42,6 +44,8 @@
 @property (nonatomic, readonly) bool isLessonStage;
 @property (nonatomic, readonly) bool isReviewStage;
 @property (nonatomic, readonly) NSDate *availableAtDate;
+@property (nonatomic, readonly) NSDate *startedAtDate;
+@property (nonatomic, readonly) NSDate *passedAtDate;
 
 @end
 

@@ -15,6 +15,7 @@
 #import "SuccessAnimation.h"
 
 #import "UserDefaults.h"
+#import "proto/Wanikani+Convenience.h"
 
 static CGFloat RandFloat(CGFloat min, CGFloat max) {
   return ((CGFloat)arc4random()) / ((CGFloat)UINT32_MAX) * (max - min) + min;
@@ -254,28 +255,24 @@ void RunSuccessAnimation(UIView *answerField,
   }
   
   if (isSubjectFinished && didLevelUp && UserDefaults.animateLevelUpPopup) {
-    NSString *srsLevelString;
     UIColor *srsLevelColor;
     switch (newSrsLevel) {
       case 5:
-        srsLevelString = @"Guru";
         srsLevelColor = [UIColor colorWithRed:0.533 green:0.176 blue:0.62 alpha:1]; // #882d9e
         break;
       case 7:
-        srsLevelString = @"Master";
         srsLevelColor = [UIColor colorWithRed:0.161 green:0.302 blue:0.859 alpha:1]; // #294ddb
         break;
       case 8:
-        srsLevelString = @"Enlightened";
         srsLevelColor = [UIColor colorWithRed:0 green:0.576 blue:0.867 alpha:1]; // #0093dd
         break;
       case 9:
-        srsLevelString = @"Burned";
         srsLevelColor = [UIColor colorWithRed:0.263 green:0.263 blue:0.263 alpha:1]; // #434343
         break;
       default:
         return;
     }
+    NSString *srsLevelString = WKSRSLevelName(newSrsLevel);
     
     CreateSpringyBillboard(answerField, srsLevelString,
                            [UIFont systemFontOfSize:16.0],
