@@ -20,6 +20,7 @@
 #import "ReviewViewController.h"
 #import "SearchResultViewController.h"
 #import "Style.h"
+#import "SubjectDetailsViewController.h"
 #import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
@@ -54,7 +55,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 
-@interface MainViewController ()
+@interface MainViewController () <SearchResultViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *userCell;
 @property (weak, nonatomic) IBOutlet UIView *userImageContainer;
@@ -98,7 +99,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   SearchResultViewController *searchResultsViewController =
       [self.storyboard instantiateViewControllerWithIdentifier:@"searchResults"];
   searchResultsViewController.dataLoader = _dataLoader;
-  searchResultsViewController.localCachingClient = _localCachingClient;
+  searchResultsViewController.delegate = self;
   _searchResultsViewController = searchResultsViewController;
   
   _searchController = [[UISearchController alloc] initWithSearchResultsController:searchResultsViewController];
@@ -270,6 +271,16 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     }
     vc.items = items;
   }
+}
+
+- (void)searchResultSelected:(WKSubject *)subject {
+  SubjectDetailsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
+  vc.dataLoader = _dataLoader;
+  vc.localCachingClient = _localCachingClient;
+  vc.subject = subject;
+  [_searchController dismissViewControllerAnimated:YES completion:^{
+    [self.navigationController pushViewController:vc animated:YES];
+  }];
 }
 
 @end

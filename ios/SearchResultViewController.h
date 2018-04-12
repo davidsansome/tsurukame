@@ -1,11 +1,17 @@
 #import <UIKit/UIKit.h>
 
 @class DataLoader;
-@class LocalCachingClient;
+@class WKSubject;
+
+@protocol SearchResultViewControllerDelegate <NSObject>
+
+- (void)searchResultSelected:(WKSubject *)subject;
+
+@end
 
 @interface SearchResultViewController : UITableViewController <UISearchResultsUpdating>
 
 @property(nonatomic) DataLoader *dataLoader;
-@property(nonatomic) LocalCachingClient *localCachingClient;
+@property(nonatomic, weak) id<SearchResultViewControllerDelegate> delegate;
 
 @end

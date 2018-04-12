@@ -36,7 +36,7 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
   return false;
 }
 
-@interface SearchResultViewController () <UITableViewDataSource>
+@interface SearchResultViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @end
 
@@ -54,6 +54,7 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
   
   [super viewDidLoad];
   self.tableView.dataSource = self;
+  self.tableView.delegate = self;
 }
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
@@ -101,14 +102,8 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
   return cell;
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-  if ([segue.identifier isEqualToString:@"resultDetails"]) {
-    ReviewSummaryCell *cell = (ReviewSummaryCell *)sender;
-    SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
-    vc.dataLoader = _dataLoader;
-    vc.localCachingClient = _localCachingClient;
-    vc.subject = cell.subject;
-  }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  [_delegate searchResultSelected:_results[indexPath.row]];
 }
 
 @end
