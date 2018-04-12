@@ -322,7 +322,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   // Include any pending progress assignments in the max level list.
   for (WKProgress *progress in [self getAllPendingProgress]) {
     if (progress.assignment.level == maxLevel) {
-      if (!progress.readingWrong && !progress.meaningWrong) {
+      if (progress.isLesson || (!progress.readingWrong && !progress.meaningWrong)) {
         progress.assignment.srsStage ++;
       }
       [maxLevelAssignments addObject:progress.assignment];
