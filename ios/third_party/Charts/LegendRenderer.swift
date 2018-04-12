@@ -88,6 +88,71 @@ open class LegendRenderer: Renderer
                         )
                     }
                 }
+                else if dataSet is IPieChartDataSet
+                {
+                    let pds = dataSet as! IPieChartDataSet
+                    
+                    for j in 0..<min(clrs.count, entryCount)
+                    {
+                        entries.append(
+                            LegendEntry(
+                                label: (pds.entryForIndex(j) as? PieChartDataEntry)?.label,
+                                form: dataSet.form,
+                                formSize: dataSet.formSize,
+                                formLineWidth: dataSet.formLineWidth,
+                                formLineDashPhase: dataSet.formLineDashPhase,
+                                formLineDashLengths: dataSet.formLineDashLengths,
+                                formColor: clrs[j]
+                            )
+                        )
+                    }
+                    
+                    if dataSet.label != nil
+                    {
+                        // add the legend description label
+                        
+                        entries.append(
+                            LegendEntry(
+                                label: dataSet.label,
+                                form: .none,
+                                formSize: CGFloat.nan,
+                                formLineWidth: CGFloat.nan,
+                                formLineDashPhase: 0.0,
+                                formLineDashLengths: nil,
+                                formColor: nil
+                            )
+                        )
+                    }
+                }
+                else if dataSet is ICandleChartDataSet &&
+                    (dataSet as! ICandleChartDataSet).decreasingColor != nil
+                {
+                    let candleDataSet = dataSet as! ICandleChartDataSet
+                    
+                    entries.append(
+                        LegendEntry(
+                            label: nil,
+                            form: dataSet.form,
+                            formSize: dataSet.formSize,
+                            formLineWidth: dataSet.formLineWidth,
+                            formLineDashPhase: dataSet.formLineDashPhase,
+                            formLineDashLengths: dataSet.formLineDashLengths,
+                            formColor: candleDataSet.decreasingColor
+                        )
+                    )
+                    
+                    entries.append(
+                        LegendEntry(
+                            label: dataSet.label,
+                            form: dataSet.form,
+                            formSize: dataSet.formSize,
+                            formLineWidth: dataSet.formLineWidth,
+                            formLineDashPhase: dataSet.formLineDashPhase,
+                            formLineDashLengths: dataSet.formLineDashLengths,
+                            formColor: candleDataSet.increasingColor
+                        )
+                    )
+                }
                 else
                 { // all others
                     
