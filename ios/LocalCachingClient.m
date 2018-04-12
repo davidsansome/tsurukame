@@ -172,6 +172,17 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   return ret;
 }
 
+- (NSArray<WKProgress *> *)getAllPendingProgress {
+  NSMutableArray<WKProgress *> *progress = [NSMutableArray array];
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    FMResultSet *results = [db executeQuery:@"SELECT pb FROM pending_progress"];
+    while ([results next]) {
+      [progress addObject:[WKProgress parseFromData:[results dataForColumnIndex:0] error:nil]];
+    }
+  }];
+  return progress;
+}
+
 - (WKStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID {
   __block WKStudyMaterials *ret = nil;
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
@@ -307,6 +318,16 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
       }
     }
   }
+  
+  // Include any pending progress assignments in the max level list.
+  for (WKProgress *progress in [self getAllPendingProgress]) {
+    if (progress.assignment.level == maxLevel) {
+      if (!progress.readingWrong && !progress.meaningWrong) {
+        progress.assignment.srsStage ++;
+      }
+      [maxLevelAssignments addObject:progress.assignment];
+    }
+  }
 
   NSLog(@"Recalculated available items");
   _cachedAvailableLessonCount = lessons;
@@ -352,11 +373,11 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
     for (WKProgress *p in progress) {
       // Delete the assignment.
-      CheckUpdate(db, @"DELETE FROM assignments WHERE id = ?", @(p.assignmentId));
+      CheckUpdate(db, @"DELETE FROM assignments WHERE id = ?", @(p.assignment.id_p));
       
       // Store the progress locally.
       CheckUpdate(db, @"REPLACE INTO pending_progress (id, pb) VALUES(?, ?)",
-                  @(p.subjectId), p.data);
+                  @(p.assignment.subjectId), p.data);
     }
   }];
   [self invalidateCachedPendingProgress];
@@ -366,13 +387,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 }
 
 - (void)sendAllPendingProgress:(CompletionHandler)handler {
-  NSMutableArray<WKProgress *> *progress = [NSMutableArray array];
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
-    FMResultSet *results = [db executeQuery:@"SELECT pb FROM pending_progress"];
-    while ([results next]) {
-      [progress addObject:[WKProgress parseFromData:[results dataForColumnIndex:0] error:nil]];
-    }
-  }];
+  NSArray<WKProgress *> *progress = [self getAllPendingProgress];
   [self sendPendingProgress:progress handler:handler];
 }
 
@@ -385,7 +400,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
       // Delete the local pending progress.
       [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
         for (WKProgress *p in progress) {
-          CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.subjectId));
+          CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
         }
       }];
       [self invalidateCachedPendingProgress];

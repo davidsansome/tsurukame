@@ -120,11 +120,12 @@ message Assignment {
 }
 
 message Progress {
-  optional int32 subject_id = 1;
-  optional int32 assignment_id = 2;
+  reserved 1;
+  reserved 2;
   optional bool meaning_wrong = 3;
   optional bool reading_wrong = 4;
   optional bool is_lesson = 5;
+  optional Assignment assignment = 6;
 }
 
 message StudyMaterials {

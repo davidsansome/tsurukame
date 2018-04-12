@@ -882,16 +882,14 @@ typedef struct WKAssignment__storage_ {
 
 @implementation WKProgress
 
-@dynamic hasSubjectId, subjectId;
-@dynamic hasAssignmentId, assignmentId;
 @dynamic hasMeaningWrong, meaningWrong;
 @dynamic hasReadingWrong, readingWrong;
 @dynamic hasIsLesson, isLesson;
+@dynamic hasAssignment, assignment;
 
 typedef struct WKProgress__storage_ {
   uint32_t _has_storage_[1];
-  int32_t subjectId;
-  int32_t assignmentId;
+  WKAssignment *assignment;
 } WKProgress__storage_;
 
 // This method is threadsafe because it is initially called
@@ -901,29 +899,11 @@ typedef struct WKProgress__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "subjectId",
-        .dataTypeSpecific.className = NULL,
-        .number = WKProgress_FieldNumber_SubjectId,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(WKProgress__storage_, subjectId),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt32,
-      },
-      {
-        .name = "assignmentId",
-        .dataTypeSpecific.className = NULL,
-        .number = WKProgress_FieldNumber_AssignmentId,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(WKProgress__storage_, assignmentId),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt32,
-      },
-      {
         .name = "meaningWrong",
         .dataTypeSpecific.className = NULL,
         .number = WKProgress_FieldNumber_MeaningWrong,
-        .hasIndex = 2,
-        .offset = 3,  // Stored in _has_storage_ to save space.
+        .hasIndex = 0,
+        .offset = 1,  // Stored in _has_storage_ to save space.
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
       },
@@ -931,8 +911,8 @@ typedef struct WKProgress__storage_ {
         .name = "readingWrong",
         .dataTypeSpecific.className = NULL,
         .number = WKProgress_FieldNumber_ReadingWrong,
-        .hasIndex = 4,
-        .offset = 5,  // Stored in _has_storage_ to save space.
+        .hasIndex = 2,
+        .offset = 3,  // Stored in _has_storage_ to save space.
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
       },
@@ -940,10 +920,19 @@ typedef struct WKProgress__storage_ {
         .name = "isLesson",
         .dataTypeSpecific.className = NULL,
         .number = WKProgress_FieldNumber_IsLesson,
-        .hasIndex = 6,
-        .offset = 7,  // Stored in _has_storage_ to save space.
+        .hasIndex = 4,
+        .offset = 5,  // Stored in _has_storage_ to save space.
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "assignment",
+        .dataTypeSpecific.className = GPBStringifySymbol(WKAssignment),
+        .number = WKProgress_FieldNumber_Assignment,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(WKProgress__storage_, assignment),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
       },
     };
     GPBDescriptor *localDescriptor =
