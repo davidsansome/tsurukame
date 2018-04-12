@@ -1,5 +1,6 @@
 #import "CurrentLevelChartController.h"
 
+#import "DataLoader.h"
 #import "Style.h"
 #import "proto/Wanikani+Convenience.h"
 
@@ -56,13 +57,17 @@ static void UnsetAllLabels(ChartViewBase *view) {
 @interface CurrentLevelChartController () <ChartViewDelegate>
 @end
 
-@implementation CurrentLevelChartController
+@implementation CurrentLevelChartController {
+  DataLoader *_dataLoader;
+}
 
 - (instancetype)initWithChartView:(PieChartView *)view
-                      subjectType:(WKSubject_Type)subjectType {
+                      subjectType:(WKSubject_Type)subjectType
+                       dataLoader:(nonnull DataLoader *)dataLoader {
   self = [super init];
   if (self) {
     _subjectType = subjectType;
+    _dataLoader = dataLoader;
     _view = view;
     _view.chartDescription = nil;
     _view.legend.enabled = NO;
@@ -74,6 +79,7 @@ static void UnsetAllLabels(ChartViewBase *view) {
 
 - (void)update:(NSArray<WKAssignment *> *)maxLevelAssignments {
   int sliceSizes[PieSlice_Count] = {0};
+  int total = 0;
   for (WKAssignment *assignment in maxLevelAssignments) {
     if (assignment.subjectType != _subjectType) {
       continue;
@@ -81,7 +87,7 @@ static void UnsetAllLabels(ChartViewBase *view) {
     enum PieSlice slice = LockedPieSlice;
     if (assignment.isLessonStage) {
       slice = LessonPieSlice;
-    } else if (assignment.srsStage == 0) {
+    } else if (assignment.srsStage <= 1) {
       slice = NovicePieSlice;
     } else if (assignment.srsStage < 5) {
       slice = ApprenticePieSlice;
@@ -89,7 +95,10 @@ static void UnsetAllLabels(ChartViewBase *view) {
       slice = GuruPieSlice;
     }
     sliceSizes[slice] ++;
+    total ++;
   }
+  sliceSizes[LockedPieSlice] = [_dataLoader subjectsByLevel:maxLevelAssignments[0].srsStage
+                                                     byType:_subjectType] - total;
   
   UIColor *baseColor = WKColor2ForSubjectType(_subjectType);
   NSMutableArray<PieChartDataEntry *> *values = [NSMutableArray array];

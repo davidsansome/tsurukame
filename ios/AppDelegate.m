@@ -55,9 +55,6 @@
              name:kLogoutNotification
            object:nil];
   
-  UserDefaults.userApiToken = @"test";
-  UserDefaults.userCookie = @"test";
-  
   if (UserDefaults.userApiToken && UserDefaults.userCookie) {
     [self loginComplete:nil];
   } else {

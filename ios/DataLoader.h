@@ -26,4 +26,6 @@
 - (WKSubject *)loadSubject:(int)subjectID;
 - (NSArray<WKSubject *> *)loadAllSubjects;
 
+- (int)subjectsByLevel:(int)srsLevel byType:(WKSubject_Type)type;
+
 @end
