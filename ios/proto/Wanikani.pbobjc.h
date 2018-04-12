@@ -27,6 +27,7 @@
 
 CF_EXTERN_C_BEGIN
 
+@class WKAssignment;
 @class WKKanji;
 @class WKMeaning;
 @class WKRadical;
@@ -370,21 +371,14 @@ typedef GPB_ENUM(WKAssignment_FieldNumber) {
 #pragma mark - WKProgress
 
 typedef GPB_ENUM(WKProgress_FieldNumber) {
-  WKProgress_FieldNumber_SubjectId = 1,
-  WKProgress_FieldNumber_AssignmentId = 2,
   WKProgress_FieldNumber_MeaningWrong = 3,
   WKProgress_FieldNumber_ReadingWrong = 4,
   WKProgress_FieldNumber_IsLesson = 5,
+  WKProgress_FieldNumber_Assignment = 6,
 };
 
 @interface WKProgress : GPBMessage
 
-@property(nonatomic, readwrite) int32_t subjectId;
-
-@property(nonatomic, readwrite) BOOL hasSubjectId;
-@property(nonatomic, readwrite) int32_t assignmentId;
-
-@property(nonatomic, readwrite) BOOL hasAssignmentId;
 @property(nonatomic, readwrite) BOOL meaningWrong;
 
 @property(nonatomic, readwrite) BOOL hasMeaningWrong;
@@ -394,6 +388,10 @@ typedef GPB_ENUM(WKProgress_FieldNumber) {
 @property(nonatomic, readwrite) BOOL isLesson;
 
 @property(nonatomic, readwrite) BOOL hasIsLesson;
+@property(nonatomic, readwrite, strong, null_resettable) WKAssignment *assignment;
+/** Test to see if @c assignment has been set. */
+@property(nonatomic, readwrite) BOOL hasAssignment;
+
 @end
 
 #pragma mark - WKStudyMaterials

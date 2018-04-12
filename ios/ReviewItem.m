@@ -41,8 +41,7 @@
   if (self = [super init]) {
     _assignment = assignment;
     _answer = [[WKProgress alloc] init];
-    _answer.assignmentId = assignment.id_p;
-    _answer.subjectId = assignment.subjectId;
+    _answer.assignment = assignment;
     _answer.isLesson = assignment.isLessonStage;
   }
   return self;

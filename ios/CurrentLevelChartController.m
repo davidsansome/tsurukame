@@ -34,7 +34,7 @@ static UIColor *PieSliceColor(enum PieSlice slice, UIColor *baseColor) {
   CGFloat brightnessMod = 1.f;
   switch (slice) {
     case LockedPieSlice: return [UIColor colorWithWhite:0.8f alpha:1];
-    case LessonPieSlice: saturationMod = 0.2f; break;
+    case LessonPieSlice: return [UIColor colorWithWhite:0.6f alpha:1];
     case NovicePieSlice: saturationMod = 0.4f; break;
     case ApprenticePieSlice: saturationMod = 0.6f; break;
     default: break;
