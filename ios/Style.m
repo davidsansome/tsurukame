@@ -43,6 +43,17 @@ UIColor *WKVocabularyColor1() { return UIColorFromHex(0xAA00FF); }
 UIColor *WKVocabularyColor2() { return UIColorFromHex(0x9300DD); }
 UIColor *WKGreyColor()        { return UIColorFromHex(0xC8C8C8); }
 
+UIColor *WKColor2ForSubjectType(WKSubject_Type subjectType) {
+  switch (subjectType) {
+    case WKSubject_Type_Radical:
+      return WKRadicalColor2();
+    case WKSubject_Type_Kanji:
+      return WKKanjiColor2();
+    case WKSubject_Type_Vocabulary:
+      return WKVocabularyColor2();
+  }
+}
+
 NSArray<id> *WKRadicalGradient(void) {
   return ArrayOfTwoColors(WKRadicalColor1(), WKRadicalColor2());
 }

@@ -25,6 +25,7 @@ extern UIColor *WKRadicalColor2(void);
 extern UIColor *WKVocabularyColor1(void);
 extern UIColor *WKVocabularyColor2(void);
 extern UIColor *WKGreyColor(void);
+extern UIColor *WKColor2ForSubjectType(WKSubject_Type subjectType);
 
 extern NSArray<id> *WKRadicalGradient(void);
 extern NSArray<id> *WKKanjiGradient(void);

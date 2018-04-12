@@ -349,10 +349,47 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="This level" id="KPs-Qv-sgm">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="120" id="RUC-Be-doU">
+                                        <rect key="frame" x="0.0" y="431.5" width="375" height="120"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RUC-Be-doU" id="X6Q-XI-Yau">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="119.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="X01-sa-dhj">
+                                                    <rect key="frame" x="16" y="11" width="343" height="98"/>
+                                                    <subviews>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TPS-zV-AWU" customClass="PieChartView" customModule="wk" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="109" height="98"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q21-KY-dgl" customClass="PieChartView" customModule="wk" customModuleProvider="target">
+                                                            <rect key="frame" x="117" y="0.0" width="109" height="98"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2D9-xR-5vE" customClass="PieChartView" customModule="wk" customModuleProvider="target">
+                                                            <rect key="frame" x="234" y="0.0" width="109" height="98"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </view>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="X01-sa-dhj" secondAttribute="trailing" id="0pZ-te-dvT"/>
+                                                <constraint firstItem="X01-sa-dhj" firstAttribute="top" secondItem="X6Q-XI-Yau" secondAttribute="topMargin" id="IDM-su-Stl"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="X01-sa-dhj" secondAttribute="bottom" id="M06-dG-ge7"/>
+                                                <constraint firstItem="X01-sa-dhj" firstAttribute="leading" secondItem="X6Q-XI-Yau" secondAttribute="leadingMargin" id="tgs-ix-cMv"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                             <tableViewSection headerTitle="Queued updates" id="OPJ-yt-ZTf">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="snw-uk-PKz" detailTextLabel="7fE-95-hWX" style="IBUITableViewCellStyleSubtitle" id="BXS-p2-524">
-                                        <rect key="frame" x="0.0" y="431.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="607.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BXS-p2-524" id="hi6-Ez-Tfa">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -385,6 +422,9 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="49W-hQ-Zo2"/>
                     <connections>
+                        <outlet property="currentLevelKanjiPieChartView" destination="q21-KY-dgl" id="SPK-4h-Hk8"/>
+                        <outlet property="currentLevelRadicalsPieChartView" destination="TPS-zV-AWU" id="lQ6-3p-umh"/>
+                        <outlet property="currentLevelVocabularyPieChartView" destination="2D9-xR-5vE" id="SRs-YF-UIk"/>
                         <outlet property="lessonsCell" destination="cHi-TB-m7d" id="I2l-ag-Z07"/>
                         <outlet property="queuedItemsLabel" destination="snw-uk-PKz" id="3zG-vp-nAx"/>
                         <outlet property="queuedItemsSubtitleLabel" destination="7fE-95-hWX" id="Dde-Fa-IyL"/>

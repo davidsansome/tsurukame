@@ -14,6 +14,7 @@
 
 #import "MainViewController.h"
 
+#import "CurrentLevelChartController.h"
 #import "LessonsViewController.h"
 #import "NSDate+TimeAgo.h"
 #import "NSString+MD5.h"
@@ -26,6 +27,7 @@
 #import "proto/Wanikani+Convenience.h"
 
 @class CombinedChartView;
+@class PieChartView;
 
 static const NSInteger kItemsPerLesson = 5;
 
@@ -75,11 +77,17 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 @property (weak, nonatomic) IBOutlet UILabel *queuedItemsSubtitleLabel;
 
 @property (weak, nonatomic) IBOutlet CombinedChartView *upcomingReviewsChartView;
+@property (weak, nonatomic) IBOutlet PieChartView *currentLevelRadicalsPieChartView;
+@property (weak, nonatomic) IBOutlet PieChartView *currentLevelKanjiPieChartView;
+@property (weak, nonatomic) IBOutlet PieChartView *currentLevelVocabularyPieChartView;
 
 @end
 
 @implementation MainViewController {
-  UpcomingReviewsChartController *_chartController;
+  UpcomingReviewsChartController *_upcomingReviewsChartController;
+  CurrentLevelChartController *_currentLevelRadicalsChartController;
+  CurrentLevelChartController *_currentLevelKanjiChartController;
+  CurrentLevelChartController *_currentLevelVocabularyChartController;
   UISearchController *_searchController;
   __weak SearchResultViewController *_searchResultsViewController;
 }
@@ -127,8 +135,17 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   WKAddShadowToView(_userNameLabel, 1, 0.4, 4);
   WKAddShadowToView(_userLevelLabel, 1, 0.2, 2);
   
-  _chartController =
+  _upcomingReviewsChartController =
       [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
+  _currentLevelRadicalsChartController =
+      [[CurrentLevelChartController alloc] initWithChartView:_currentLevelRadicalsPieChartView
+                                                 subjectType:WKSubject_Type_Radical];
+  _currentLevelKanjiChartController =
+      [[CurrentLevelChartController alloc] initWithChartView:_currentLevelKanjiPieChartView
+                                                 subjectType:WKSubject_Type_Kanji];
+  _currentLevelVocabularyChartController =
+      [[CurrentLevelChartController alloc] initWithChartView:_currentLevelVocabularyPieChartView
+                                                 subjectType:WKSubject_Type_Vocabulary];
   
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
@@ -224,10 +241,14 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   int lessons = _localCachingClient.availableLessonCount;
   int reviews = _localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _localCachingClient.upcomingReviews;
+  NSArray<WKAssignment *> *maxLevelAssignments = _localCachingClient.maxLevelAssignments;
 
   SetTableViewCellCount(self.lessonsCell, lessons);
   SetTableViewCellCount(self.reviewsCell, reviews);
-  [_chartController update:upcomingReviews currentReviewCount:reviews atDate:[NSDate date]];
+  [_upcomingReviewsChartController update:upcomingReviews currentReviewCount:reviews atDate:[NSDate date]];
+  [_currentLevelRadicalsChartController update:maxLevelAssignments];
+  [_currentLevelKanjiChartController update:maxLevelAssignments];
+  [_currentLevelVocabularyChartController update:maxLevelAssignments];
 }
 
 - (void)updateUserInfo {

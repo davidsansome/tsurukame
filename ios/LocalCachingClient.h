@@ -32,6 +32,7 @@ typedef void (^CompletionHandler)(void);
 @property(nonatomic, readonly) NSArray<NSNumber *> *upcomingReviews;
 @property(nonatomic, readonly) int pendingProgress;
 @property(nonatomic, readonly) int pendingStudyMaterials;
+@property(nonatomic, readonly) NSArray<WKAssignment *> *maxLevelAssignments;
 
 - (instancetype)initWithClient:(Client *)client
                   reachability:(Reachability *)reachability NS_DESIGNATED_INITIALIZER;
