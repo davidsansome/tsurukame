@@ -34,7 +34,7 @@ static const int kProfileImageSize = 80;
 
 static const int kUpcomingReviewsSection = 1;
 
-static const NSTimeInterval kSearchBarAnimationDuration = 0.2f;
+static const NSTimeInterval kSearchBarAnimationDuration = 0.1f;
 
 static NSURL *UserProfileImageURL(NSString *emailAddress) {
   emailAddress = [emailAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -87,10 +87,12 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 - (void)viewDidLoad {
   [super viewDidLoad];
   
+  // Show a background image.
   UIImageView *backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"launch_screen"]];
   backgroundView.alpha = 0.25;
   self.tableView.backgroundView = backgroundView;
   
+  // Add a refresh control for when the user pulls down.
   self.refreshControl = [[UIRefreshControl alloc] init];
   self.refreshControl.tintColor = [UIColor darkGrayColor];
   self.refreshControl.backgroundColor = nil;
@@ -100,20 +102,27 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
                           action:@selector(didPullToRefresh)
                 forControlEvents:UIControlEventValueChanged];
   
+  // Create the search results view controller.
   SearchResultViewController *searchResultsViewController =
       [self.storyboard instantiateViewControllerWithIdentifier:@"searchResults"];
   searchResultsViewController.dataLoader = _dataLoader;
   searchResultsViewController.delegate = self;
   _searchResultsViewController = searchResultsViewController;
   
+  // Create the search controller.
   _searchController = [[UISearchController alloc] initWithSearchResultsController:searchResultsViewController];
   _searchController.searchResultsUpdater = searchResultsViewController;
   _searchController.delegate = self;
-  [_userContainer addSubview:_searchController.searchBar];
-  _searchController.searchBar.alpha = 0.f;
-  _searchController.searchBar.barTintColor = WKRadicalColor2();
-  _searchController.searchBar.tintColor = [UIColor whiteColor];
   
+  // Configure the search bar.
+  UISearchBar *searchBar = _searchController.searchBar;
+  searchBar.alpha = 0.f;
+  searchBar.barTintColor = WKRadicalColor2();
+  searchBar.tintColor = [UIColor whiteColor];
+  searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+  [_userContainer addSubview:searchBar];
+  
+  // Add shadows to things in the user info view.
   WKAddShadowToView(_userImageContainer, 2, 0.4, 4);
   WKAddShadowToView(_userNameLabel, 1, 0.4, 4);
   WKAddShadowToView(_userLevelLabel, 1, 0.2, 2);
@@ -280,12 +289,15 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 - (IBAction)didTapSearchButton:(id)sender {
   UISearchBar *searchBar = _searchController.searchBar;
   searchBar.alpha = 0.f;
-  
   [UIView animateWithDuration:kSearchBarAnimationDuration animations:^{
     searchBar.alpha = 1.f;
   } completion:^(BOOL finished) {
     _searchController.active = YES;
   }];
+}
+
+- (void)didPresentSearchController:(UISearchController *)searchController {
+  [_searchController.searchBar becomeFirstResponder];
 }
 
 - (void)didDismissSearchController:(UISearchController *)searchController {
