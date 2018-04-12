@@ -139,13 +139,16 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
       [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
   _currentLevelRadicalsChartController =
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelRadicalsPieChartView
-                                                 subjectType:WKSubject_Type_Radical];
+                                                 subjectType:WKSubject_Type_Radical
+                                                  dataLoader:_dataLoader];
   _currentLevelKanjiChartController =
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelKanjiPieChartView
-                                                 subjectType:WKSubject_Type_Kanji];
+                                                 subjectType:WKSubject_Type_Kanji
+                                                  dataLoader:_dataLoader];
   _currentLevelVocabularyChartController =
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelVocabularyPieChartView
-                                                 subjectType:WKSubject_Type_Vocabulary];
+                                                 subjectType:WKSubject_Type_Vocabulary
+                                                  dataLoader:_dataLoader];
   
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
