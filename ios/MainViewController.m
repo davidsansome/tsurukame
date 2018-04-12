@@ -124,11 +124,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   
   // Configure the search bar.
   UISearchBar *searchBar = _searchController.searchBar;
-  searchBar.alpha = 0.f;
   searchBar.barTintColor = WKRadicalColor2();
   searchBar.tintColor = [UIColor whiteColor];
   searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
-  [_userContainer addSubview:searchBar];
   
   // Add shadows to things in the user info view.
   WKAddShadowToView(_userImageContainer, 2, 0.4, 4);
@@ -311,23 +309,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (IBAction)didTapSearchButton:(id)sender {
-  UISearchBar *searchBar = _searchController.searchBar;
-  searchBar.alpha = 0.f;
-  [UIView animateWithDuration:kSearchBarAnimationDuration animations:^{
-    searchBar.alpha = 1.f;
-  } completion:^(BOOL finished) {
-    _searchController.active = YES;
-  }];
-}
-
-- (void)didPresentSearchController:(UISearchController *)searchController {
-  [_searchController.searchBar becomeFirstResponder];
-}
-
-- (void)didDismissSearchController:(UISearchController *)searchController {
-  [UIView animateWithDuration:kSearchBarAnimationDuration animations:^{
-    _searchController.searchBar.alpha = 0.f;
-  }];
+  [self presentViewController:_searchController animated:YES completion:nil];
 }
 
 - (void)searchResultSelected:(WKSubject *)subject {
