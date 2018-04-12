@@ -93,6 +93,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   int _cachedAvailableLessonCount;
   int _cachedAvailableReviewCount;
   NSArray<NSNumber *> *_cachedUpcomingReviews;
+  NSArray<WKAssignment *> *_cachedMaxLevelAssignments;
   int _cachedPendingProgress;
   int _cachedPendingStudyMaterials;
   bool _isCachedAvailableSubjectCountsStale;
@@ -257,6 +258,16 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }
 }
 
+- (NSArray<WKAssignment *> *)maxLevelAssignments {
+  @synchronized(self) {
+    if (_isCachedAvailableSubjectCountsStale) {
+      [self updateAvailableSubjectCounts];
+      _isCachedAvailableSubjectCountsStale = false;
+    }
+    return _cachedMaxLevelAssignments;
+  }
+}
+
 - (void)updateAvailableSubjectCounts {
   NSArray<WKAssignment *> *assignments = [self getAllAssignments];
   int lessons = 0;
@@ -269,7 +280,18 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     [upcomingReviews addObject:@(0)];
   }
   
+  int maxLevel = 0;
+  NSMutableArray<WKAssignment *> *maxLevelAssignments = [NSMutableArray array];
+  
   for (WKAssignment *assignment in assignments) {
+    if (assignment.level > maxLevel) {
+      [maxLevelAssignments removeAllObjects];
+      maxLevel = assignment.level;
+    }
+    if (assignment.level == maxLevel) {
+      [maxLevelAssignments addObject:assignment];
+    }
+    
     if (assignment.isLessonStage) {
       lessons ++;
     } else if (assignment.isReviewStage) {
@@ -290,6 +312,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   _cachedAvailableLessonCount = lessons;
   _cachedAvailableReviewCount = reviews;
   _cachedUpcomingReviews = upcomingReviews;
+  _cachedMaxLevelAssignments = maxLevelAssignments;
 }
 
 #pragma mark - Invalidating cached data
