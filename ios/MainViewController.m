@@ -32,7 +32,9 @@ static const NSInteger kItemsPerLesson = 5;
 static const char *kDefaultProfileImageURL = "https://cdn.wanikani.com/default-avatar-300x300-20121121.png";
 static const int kProfileImageSize = 80;
 
-static const int kUpcomingReviewsSection = 2;
+static const int kUpcomingReviewsSection = 1;
+
+static const NSTimeInterval kSearchBarAnimationDuration = 0.2f;
 
 static NSURL *UserProfileImageURL(NSString *emailAddress) {
   emailAddress = [emailAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -55,13 +57,15 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 
-@interface MainViewController () <SearchResultViewControllerDelegate>
+@interface MainViewController () <SearchResultViewControllerDelegate,
+    UISearchControllerDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableViewCell *userCell;
+@property (weak, nonatomic) IBOutlet UIView *userContainer;
 @property (weak, nonatomic) IBOutlet UIView *userImageContainer;
 @property (weak, nonatomic) IBOutlet UIImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *userLevelLabel;
+@property (weak, nonatomic) IBOutlet UIButton *searchButton;
 @property (weak, nonatomic) IBOutlet UIButton *settingsButton;
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *lessonsCell;
@@ -104,7 +108,11 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   
   _searchController = [[UISearchController alloc] initWithSearchResultsController:searchResultsViewController];
   _searchController.searchResultsUpdater = searchResultsViewController;
-  self.tableView.tableHeaderView = _searchController.searchBar;
+  _searchController.delegate = self;
+  [_userContainer addSubview:_searchController.searchBar];
+  _searchController.searchBar.alpha = 0.f;
+  _searchController.searchBar.barTintColor = WKRadicalColor2();
+  _searchController.searchBar.tintColor = [UIColor whiteColor];
   
   WKAddShadowToView(_userImageContainer, 2, 0.4, 4);
   WKAddShadowToView(_userNameLabel, 1, 0.4, 4);
@@ -132,20 +140,16 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   _userImageView.layer.masksToBounds = YES;
   
   // Set a gradient background for the user cell.
-  CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
-  userGradientLayer.frame = _userCell.bounds;
-  userGradientLayer.colors = WKRadicalGradient();
-  [_userCell.layer insertSublayer:userGradientLayer atIndex:0];
-  _userCell.layer.masksToBounds = NO;
+  CGRect userGradientFrame = _userContainer.bounds;
+  CGFloat yModifier = self.tableView.bounds.origin.y;
+  userGradientFrame.origin.y += yModifier;
+  userGradientFrame.size.height -= yModifier;
   
-  // Try to remove the separators from the user cell.
-  for (UIView *subview in _userCell.contentView.superview.subviews) {
-    CGRect frame = subview.frame;
-    if (frame.origin.x == 0 && frame.origin.y == 0 && frame.size.height < 1.f) {
-      [subview removeFromSuperview];
-      break;
-    }
-  }
+  CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
+  userGradientLayer.frame = userGradientFrame;
+  userGradientLayer.colors = WKRadicalGradient();
+  [_userContainer.layer insertSublayer:userGradientLayer atIndex:0];
+  _userContainer.layer.masksToBounds = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -271,6 +275,23 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     }
     vc.items = items;
   }
+}
+
+- (IBAction)didTapSearchButton:(id)sender {
+  UISearchBar *searchBar = _searchController.searchBar;
+  searchBar.alpha = 0.f;
+  
+  [UIView animateWithDuration:kSearchBarAnimationDuration animations:^{
+    searchBar.alpha = 1.f;
+  } completion:^(BOOL finished) {
+    _searchController.active = YES;
+  }];
+}
+
+- (void)didDismissSearchController:(UISearchController *)searchController {
+  [UIView animateWithDuration:kSearchBarAnimationDuration animations:^{
+    _searchController.searchBar.alpha = 0.f;
+  }];
 }
 
 - (void)searchResultSelected:(WKSubject *)subject {
