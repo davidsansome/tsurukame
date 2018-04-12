@@ -41,7 +41,7 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
 @end
 
 @implementation SearchResultViewController {
-  NSArray<WKSubject *> *_subjects;
+  NSArray<WKSubject *> *_allSubjects;
   NSArray<WKSubject *> *_results;
   dispatch_queue_t _queue;
 }
@@ -49,7 +49,9 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
 - (void)viewDidLoad {
   _queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0);
   dispatch_async(_queue, ^{
-    _subjects = [_dataLoader loadAllSubjects];
+    @synchronized(self) {
+      [self ensureAllSubjectsLoaded];
+    }
   });
   
   [super viewDidLoad];
@@ -57,17 +59,39 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
   self.tableView.delegate = self;
 }
 
+- (void)ensureAllSubjectsLoaded {
+  if (_allSubjects == nil) {
+    _allSubjects = [_dataLoader loadAllSubjects];
+  }
+}
+
+- (void)didReceiveMemoryWarning {
+  [super didReceiveMemoryWarning];
+  _allSubjects = nil;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+  [super viewWillDisappear:animated];
+  _allSubjects = nil;
+}
+
+#pragma mark - UISearchResultsUpdating
+
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
   NSString *query = [searchController.searchBar.text lowercaseString];
   dispatch_async(_queue, ^{
     NSString *kanaQuery = WKConvertKanaText(query);
     NSMutableArray<WKSubject *> *results = [NSMutableArray array];
-    for (WKSubject *subject in _subjects) {
-      if (SubjectMatchesQuery(subject, query, kanaQuery)) {
-        [results addObject:subject];
-      }
-      if (results.count > kMaxResults) {
-        break;
+    
+    @synchronized(self) {
+      [self ensureAllSubjectsLoaded];
+      for (WKSubject *subject in _allSubjects) {
+        if (SubjectMatchesQuery(subject, query, kanaQuery)) {
+          [results addObject:subject];
+        }
+        if (results.count > kMaxResults) {
+          break;
+        }
       }
     }
     [results sortUsingComparator:^NSComparisonResult(WKSubject *a, WKSubject *b) {
@@ -87,6 +111,8 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
   });
 }
 
+#pragma mark - UITableViewDataSource
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return 1;
 }
@@ -101,6 +127,8 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
   cell.subject = subject;
   return cell;
 }
+
+#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [_delegate searchResultSelected:_results[indexPath.row]];
