@@ -641,7 +641,8 @@ static UIColor *kMeaningTextColor;
   [c addAction:[UIAlertAction actionWithTitle:@"End review session"
                                         style:UIAlertActionStyleDestructive
                                       handler:^(UIAlertAction * _Nonnull action) {
-                                        [weakController performSegueWithIdentifier:@"reviewSummary" sender:self];
+                                        [weakController performSegueWithIdentifier:@"reviewSummary"
+                                                                            sender:weakController];
                                       }]];
   [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                         style:UIAlertActionStyleCancel
