@@ -223,7 +223,7 @@
                                         <constraint firstAttribute="width" secondItem="9xb-Y6-h0m" secondAttribute="height" multiplier="1:1" id="dya-2T-5Q1"/>
                                     </constraints>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <state key="normal" image="add">
+                                    <state key="normal" image="ic_search_white">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
@@ -1128,6 +1128,7 @@
         <image name="back" width="24" height="24"/>
         <image name="confirm" width="28" height="27"/>
         <image name="forward" width="24" height="24"/>
+        <image name="ic_search_white" width="24" height="24"/>
         <image name="ic_settings_white" width="24" height="24"/>
         <image name="inbox" width="24" height="24"/>
         <image name="refresh" width="24" height="24"/>
