@@ -126,7 +126,8 @@ static NSString *kHeader =
 #pragma mark - Rendering
 
 - (NSString *)renderSubjectDetails:(WKSubject *)subject
-                    studyMaterials:(WKStudyMaterials *)studyMaterials {
+                    studyMaterials:(WKStudyMaterials *)studyMaterials
+                        assignment:(WKAssignment *)assignment {
   NSMutableString *ret = [NSMutableString stringWithString:kHeader];
   if (subject.hasRadical) {
     [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
@@ -154,6 +155,10 @@ static NSString *kHeader =
     [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.vocabulary.readingExplanation]];
     [self addTextSectionTo:ret title:@"Part of Speech" content:subject.vocabulary.commaSeparatedPartsOfSpeech];
     // TODO: context
+  }
+  
+  if (assignment) {
+    [self addTextSectionTo:ret title:@"My progress" content:[NSString stringWithFormat:@"%@", assignment]];
   }
   
   return ret;
@@ -259,8 +264,12 @@ static NSString *kHeader =
 
 #pragma mark - Setters
 
-- (void)updateWithSubject:(WKSubject *)subject studyMaterials:(WKStudyMaterials *)studyMaterials {
-  [self loadHTMLString:[self renderSubjectDetails:subject studyMaterials:studyMaterials]
+- (void)updateWithSubject:(WKSubject *)subject
+           studyMaterials:(WKStudyMaterials *)studyMaterials
+               assignment:(WKAssignment *)assignment {
+  [self loadHTMLString:[self renderSubjectDetails:subject
+                                   studyMaterials:studyMaterials
+                                       assignment:assignment]
                baseURL:nil];
 }
 

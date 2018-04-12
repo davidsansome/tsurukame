@@ -40,6 +40,7 @@
   if ([segue.identifier isEqualToString:@"subjectDetails"]) {
     ReviewSummaryCell *cell = (ReviewSummaryCell *)sender;
     SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
+    vc.showUserProgress = true;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
     vc.subject = cell.subject;

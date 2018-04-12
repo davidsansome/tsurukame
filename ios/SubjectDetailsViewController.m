@@ -42,7 +42,13 @@
   _subjectDetailsView.delegate = self;
   _subjectDetailsView.showHints = _showHints;
   WKStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
-  [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
+  WKAssignment *assignment = nil;
+  if (_showUserProgress) {
+    assignment = [_localCachingClient getAssignmentForID:_subject.id_p];
+  }
+  [_subjectDetailsView updateWithSubject:_subject
+                          studyMaterials:studyMaterials
+                              assignment:assignment];
   
   for (UIGestureRecognizer *recognizer in _subjectDetailsView.gestureRecognizers) {
     [_subjectDetailsView removeGestureRecognizer:recognizer];

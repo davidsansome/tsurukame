@@ -217,6 +217,22 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   return ret;
 }
 
+- (WKAssignment *)getAssignmentForID:(int)subjectID {
+  // TODO: make this more efficient.
+  for (WKAssignment *assignment in [self getAllAssignments]) {
+    if (assignment.subjectId == subjectID) {
+      return assignment;
+    }
+  }
+  
+  for (WKProgress *progress in [self getAllPendingProgress]) {
+    if (progress.assignment.subjectId == subjectID) {
+      return progress.assignment;
+    }
+  }
+  return nil;
+}
+
 #pragma mark - Getting cached data
 
 - (int)pendingProgress {

@@ -232,6 +232,7 @@ static UIColor *kMeaningTextColor;
     vc.items = _completedReviews;
   } else if ([segue.identifier isEqualToString:@"subjectDetails"]) {
     SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
+    vc.showUserProgress = true;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
     vc.subject = _subjectDetailsView.lastSubjectClicked;
@@ -542,7 +543,9 @@ static UIColor *kMeaningTextColor;
   }
   
   // Otherwise show the correct answer.
-  [_subjectDetailsView updateWithSubject:_activeSubject studyMaterials:_activeStudyMaterials];
+  [_subjectDetailsView updateWithSubject:_activeSubject
+                          studyMaterials:_activeStudyMaterials
+                              assignment:nil];
   
   [CATransaction begin];
   [CATransaction setAnimationDuration:kAnimationDuration];
