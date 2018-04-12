@@ -37,7 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) WKSubject *lastSubjectClicked;
 
-- (void)updateWithSubject:(WKSubject *)subject studyMaterials:(WKStudyMaterials *)studyMaterials;
+- (void)updateWithSubject:(WKSubject *)subject
+           studyMaterials:(WKStudyMaterials *)studyMaterials
+               assignment:(_Nullable WKAssignment *)assignment;
 
 @end
 

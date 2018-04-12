@@ -47,6 +47,7 @@ typedef void (^CompletionHandler)(void);
 - (WKStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID;
 - (WKUser * _Nullable)getUserInfo;
 - (NSArray<WKProgress *> *)getAllPendingProgress;
+- (WKAssignment *)getAssignmentForID:(int)subjectID;
 
 // Setters: save the data to the database and return immediately, make network requests in the
 // background.
