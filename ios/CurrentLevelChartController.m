@@ -97,7 +97,7 @@ static void UnsetAllLabels(ChartViewBase *view) {
     sliceSizes[slice] ++;
     total ++;
   }
-  sliceSizes[LockedPieSlice] = [_dataLoader subjectsByLevel:maxLevelAssignments[0].srsStage
+  sliceSizes[LockedPieSlice] = [_dataLoader subjectsByLevel:maxLevelAssignments[0].level
                                                      byType:_subjectType] - total;
   
   UIColor *baseColor = WKColor2ForSubjectType(_subjectType);
