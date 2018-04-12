@@ -766,7 +766,7 @@
                         <outlet property="submitButton" destination="ctF-hm-AxT" id="x0c-jE-ztx"/>
                         <outlet property="successRateIcon" destination="9gS-sh-cYw" id="GEi-xa-MAB"/>
                         <outlet property="successRateLabel" destination="S3x-ei-BlA" id="3gf-jQ-C32"/>
-                        <segue destination="EMo-56-STG" kind="showDetail" identifier="reviewSummary" id="nNz-lB-472"/>
+                        <segue destination="EMo-56-STG" kind="show" identifier="reviewSummary" id="nNz-lB-472"/>
                         <segue destination="jdB-KF-QlJ" kind="show" identifier="subjectDetails" id="ONv-x4-Pkd"/>
                     </connections>
                 </viewController>
