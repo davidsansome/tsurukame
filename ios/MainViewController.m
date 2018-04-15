@@ -36,8 +36,6 @@ static const int kProfileImageSize = 80;
 
 static const int kUpcomingReviewsSection = 1;
 
-static const NSTimeInterval kSearchBarAnimationDuration = 0.1f;
-
 static NSURL *UserProfileImageURL(NSString *emailAddress) {
   emailAddress = [emailAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
   emailAddress = [emailAddress lowercaseString];

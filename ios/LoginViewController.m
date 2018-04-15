@@ -15,6 +15,7 @@
 #import "LoginViewController.h"
 
 #import "Client.h"
+#import "Style.h"
 #import "UserDefaults.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,61 +23,41 @@ NS_ASSUME_NONNULL_BEGIN
 NSNotificationName kLoginCompleteNotification = @"kLoginCompleteNotification";
 NSNotificationName kLogoutNotification = @"kLogoutNotification";
 
-static NSString *kLoginURL = @"https://www.wanikani.com/login";
-static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
+static NSString *const kPrivacyPolicyURL =
+    @"https://github.com/davidsansome/tsurukame/blob/master/privacy.md";
 
-@implementation LoginWebView
+@interface LoginViewController () <UITextFieldDelegate>
 
-- (nullable instancetype)initWithCoder:(NSCoder *)coder {
-  CGRect frame = [[UIScreen mainScreen] bounds];
-  WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-  config.websiteDataStore = [WKWebsiteDataStore nonPersistentDataStore];
-  
-  return [super initWithFrame:frame configuration:config];
-}
-
-@end
-
-@interface LoginViewController () <WKNavigationDelegate>
-
-@property (weak, nonatomic) IBOutlet WKWebView *webView;
-@property (weak, nonatomic) IBOutlet UIButton *backButton;
-@property (weak, nonatomic) IBOutlet UIButton *forwardButton;
-@property (weak, nonatomic) IBOutlet UIButton *refreshButton;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
+@property (weak, nonatomic) IBOutlet UILabel *signInLabel;
+@property (weak, nonatomic) IBOutlet UITextField *usernameField;
+@property (weak, nonatomic) IBOutlet UITextField *passwordField;
+@property (weak, nonatomic) IBOutlet UIButton *signInButton;
+@property (weak, nonatomic) IBOutlet UILabel *privacyPolicyLabel;
+@property (weak, nonatomic) IBOutlet UIButton *privacyPolicyButton;
+@property (weak, nonatomic) IBOutlet UIView *activityIndicatorOverlay;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @end
 
-@implementation LoginViewController {
-  WKWebsiteDataStore *_dataStore;
-}
+@implementation LoginViewController
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  _dataStore = _webView.configuration.websiteDataStore;
-  _webView.navigationDelegate = self;
-  _webView.translatesAutoresizingMaskIntoConstraints = NO;
   
-  [_webView addObserver:self
-             forKeyPath:@"estimatedProgress"
-                options:NSKeyValueObservingOptionNew
-                context:nil];
-  [_webView addObserver:self
-             forKeyPath:@"loading"
-                options:NSKeyValueObservingOptionNew
-                context:nil];
+  WKAddShadowToView(_signInLabel, 0.f, 1.f, 5.f);
+  WKAddShadowToView(_privacyPolicyLabel, 0.f, 1.f, 2.f);
+  WKAddShadowToView(_privacyPolicyButton, 0.f, 1.f, 2.f);
   
-  [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kLoginURL]]];
+  _usernameField.delegate = self;
+  _passwordField.delegate = self;
   
-  self.view.accessibilityElements = @[
-      _backButton,
-      _forwardButton,
-      _titleLabel,
-      _refreshButton,
-      _progressView,
-      _webView,
-  ];
+  [_usernameField addTarget:self
+                     action:@selector(textFieldDidChange:)
+           forControlEvents:UIControlEventEditingChanged];
+  [_passwordField addTarget:self
+                     action:@selector(textFieldDidChange:)
+           forControlEvents:UIControlEventEditingChanged];
+  [self textFieldDidChange:_usernameField];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -84,97 +65,105 @@ static NSString *kDashboardURL = @"https://www.wanikani.com/dashboard";
   self.navigationController.navigationBarHidden = YES;
 }
 
-#pragma mark - Actions
+#pragma mark - UITextFieldDelegate
 
-- (IBAction)didTapBack:(id)sender {
-  [_webView goBack];
-}
-
-- (IBAction)didTapForward:(id)sender {
-  [_webView goForward];
-}
-
-- (IBAction)didTapRefresh:(id)sender {
-  [_webView reload];
-}
-
-- (void)updateNavigationButtons {
-  _backButton.enabled = _webView.canGoBack;
-  _forwardButton.enabled = _webView.canGoForward;
-}
-
-#pragma mark - Observers
-
-- (void)observeValueForKeyPath:(nullable NSString *)keyPath
-                      ofObject:(nullable id)object
-                        change:(nullable NSDictionary<NSKeyValueChangeKey,id> *)change
-                       context:(nullable void *)context {
-  if ([keyPath isEqualToString:@"estimatedProgress"]) {
-    [_progressView setProgress:_webView.estimatedProgress animated:YES];
-  } else if ([keyPath isEqualToString:@"loading"]) {
-    if (!_webView.loading != _progressView.isHidden) {
-      // Animate to the new state.
-      [UIView transitionWithView:_progressView
-                        duration:0.4
-                         options:UIViewAnimationOptionTransitionCrossDissolve
-                      animations:^{
-                        _progressView.hidden = !_webView.loading;
-                      }
-                      completion:nil];
-    }
-    [self updateNavigationButtons];
-  } else {
-    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+  if (textField == _usernameField) {
+    [_passwordField becomeFirstResponder];
+  } else if (textField == _passwordField) {
+    [self didTapSignInButton:self];
   }
+  return YES;
 }
 
-#pragma mark - WKNavigationDelegate
+- (void)textFieldDidChange:(UITextField *)textField {
+  bool enabled = _usernameField.text.length != 0 &&
+                 _passwordField.text.length != 0;
+  _signInButton.enabled = enabled;
+  _signInButton.backgroundColor = enabled ? WKRadicalColor2()
+                                          : [UIColor darkGrayColor];
+}
 
-- (void)webView:(WKWebView *)webView
-    decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
-                    decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-  if ([navigationAction.request.URL.absoluteString isEqualToString:kDashboardURL]) {
-    [_dataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookies) {
-      for (NSHTTPCookie *cookie in cookies) {
-        if ([cookie.name isEqualToString:@(kWanikaniSessionCookieName)]) {
-          // Store the user cookie.
-          UserDefaults.userCookie = cookie.value;
-          
-          // Show a progress page while we steal the API token.
-          UIViewController *progressController =
-              [self.storyboard instantiateViewControllerWithIdentifier:@"loginProgress"];
-          [self.navigationController pushViewController:progressController animated:YES];
-          
-          [Client getApiTokenForCookie:cookie.value handler:^(NSError * _Nullable error,
-                                                              NSString * _Nullable apiToken,
-                                                              NSString * _Nullable emailAddress) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-              if (error) {
-                [self.navigationController popToRootViewControllerAnimated:YES];
-                NSLog(@"Login error: %@", error);
-                return;
-              }
-              
-              UserDefaults.userEmailAddress = emailAddress;
-              UserDefaults.userApiToken = apiToken;
-              
-              [[NSNotificationCenter defaultCenter] postNotificationName:kLoginCompleteNotification
-                                                                  object:self];
-            });
-          }];
-        }
-      }
-    }];
-    decisionHandler(WKNavigationActionPolicyCancel);
+#pragma mark - Sign In flow
+
+- (IBAction)didTapSignInButton:(id)sender {
+  if (!_signInButton.enabled) {
     return;
   }
-  decisionHandler(WKNavigationActionPolicyAllow);
+  [self showActivityIndicatorOverlay:true];
+  
+  __weak LoginViewController *weakSelf = self;
+  [Client getCookieForUsername:_usernameField.text
+                      password:_passwordField.text
+                       handler:^(NSError * _Nullable error, NSString * _Nullable cookie) {
+                         [weakSelf handleCookieResponse:error cookie:cookie];
+                       }];
 }
 
-- (void)webView:(WKWebView *)webView
-didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation {
-  [_titleLabel setText:webView.URL.host];
-  [self updateNavigationButtons];
+- (void)handleCookieResponse:(NSError *)error cookie:(NSString *)cookie {
+  if (error != nil) {
+    if (error.domain == kWKClientErrorDomain && error.code == kWKLoginErrorCode) {
+      [self showLoginError:@"Your username or password were incorrect"];
+    } else {
+      [self showLoginError:@"An unknown error occurred"];
+    }
+    return;
+  }
+  
+  UserDefaults.userCookie = cookie;
+  
+  __weak LoginViewController *weakSelf = self;
+  [Client getApiTokenForCookie:cookie handler:^(NSError * _Nullable error, NSString * _Nullable apiToken, NSString * _Nullable emailAddress) {
+    [weakSelf handleApiTokenResponse:error apiToken:apiToken emailAddress:emailAddress];
+  }];
+}
+
+- (void)handleApiTokenResponse:(NSError *)error
+                      apiToken:(NSString *)apiToken
+                  emailAddress:(NSString *)emailAddress {
+  if (error != nil) {
+    [self showLoginError:@"An error occurred fetching your API key"];
+    return;
+  }
+  
+  UserDefaults.userEmailAddress = emailAddress;
+  UserDefaults.userApiToken = apiToken;
+  
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kLoginCompleteNotification
+                                                        object:self];
+  });
+}
+
+#pragma mark - Errors and competion
+
+- (void)showLoginError:(NSString *)message {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    UIAlertController *c = [UIAlertController alertControllerWithTitle:@"Error"
+                                                               message:message
+                                                        preferredStyle:UIAlertControllerStyleAlert];
+    [c addAction:[UIAlertAction actionWithTitle:@"Close" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:c animated:YES completion:nil];
+    [self showActivityIndicatorOverlay:false];
+  });
+}
+
+- (void)showActivityIndicatorOverlay:(bool)visible {
+  _activityIndicatorOverlay.hidden = !visible;
+  _activityIndicator.hidden = !visible;
+  if (visible) {
+    [_activityIndicator startAnimating];
+  } else {
+    [_activityIndicator stopAnimating];
+  }
+}
+
+#pragma mark - Privacy policy
+
+- (IBAction)didTapPrivacyPolicyButton:(id)sender {
+  NSURL *url = [NSURL URLWithString:kPrivacyPolicyURL];
+  NSDictionary<NSString *, id> *options = [NSDictionary dictionary];
+  [[UIApplication sharedApplication] openURL:url options:options completionHandler:nil];
 }
 
 @end

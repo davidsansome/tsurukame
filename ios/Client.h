@@ -19,8 +19,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern const char *kWanikaniSessionCookieName;
-extern NSErrorDomain WKClientErrorDomain;
+extern NSErrorDomain const kWKClientErrorDomain;
+extern const int kWKLoginErrorCode;
 
+typedef void (^CookieHandler)(NSError * _Nullable error,
+                              NSString * _Nullable cookie);
 typedef void (^ApiTokenHandler)(NSError * _Nullable error,
                                 NSString * _Nullable apiToken,
                                 NSString * _Nullable emailAddress);
@@ -43,6 +46,9 @@ typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
 
 @property (nonatomic) bool pretendToBeOfflineForTesting;
 
++ (void)getCookieForUsername:(NSString *)username
+                    password:(NSString *)password
+                     handler:(CookieHandler)handler;
 + (void)getApiTokenForCookie:(NSString *)cookie
                      handler:(ApiTokenHandler)handler;
 - (void)getAssignmentsModifiedAfter:(NSString *)date
