@@ -149,6 +149,7 @@ static NSString *const kPrivacyPolicyURL =
 }
 
 - (void)showActivityIndicatorOverlay:(bool)visible {
+  [self.view endEditing:YES];
   _activityIndicatorOverlay.hidden = !visible;
   _activityIndicator.hidden = !visible;
   if (visible) {
