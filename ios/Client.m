@@ -24,6 +24,8 @@ static const char *kLessonProgressURL = "https://www.wanikani.com/json/lesson/co
 static const char *kStudyMaterialsURLBase = "https://www.wanikani.com/study_materials";
 static const char *kReviewSessionURL = "https://www.wanikani.com/review/session";
 static const char *kAccountURL = "https://www.wanikani.com/settings/account";
+static const char *kLoginURL = "https://www.wanikani.com/login";
+static const char *kDashboardURL = "https://www.wanikani.com/dashboard";
 
 static const char *kCSRFTokenREPattern = "<meta name=\"csrf-token\" content=\"([^\"]*)";
 static const char *kEmailAddressREPattern = "<input[^>]+value=\"([^\"]+)\"[^>]+id=\"user_email\"";
@@ -32,19 +34,89 @@ static const char *kAPITokenREPattern = "<input[^>]+value=\"([^\"]+)\"[^>]+name=
 static NSString *const kFormDataContentType = @"application/x-www-form-urlencoded";
 static NSString *const kJSONContentType = @"application/json";
 
-NSErrorDomain WKClientErrorDomain = @"WKClientErrorDomain";
+NSErrorDomain const kWKClientErrorDomain = @"kWKClientErrorDomain";
+const int kWKLoginErrorCode = 403;
 
 static NSError *MakeError(int code, NSString *msg) {
-  return [NSError errorWithDomain:WKClientErrorDomain
+  return [NSError errorWithDomain:kWKClientErrorDomain
                              code:code
                          userInfo:@{NSLocalizedDescriptionKey:msg}];
 }
 
 static const NSTimeInterval kCSRFTokenValidity = 2 * 60 * 60;  // 2 hours.
-static NSRegularExpression *kCSRFTokenRE;
+static NSRegularExpression *sCSRFTokenRE;
+static NSRegularExpression *sEmailAddressRE;
+static NSRegularExpression *sAPITokenRE;
 
 typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable error);
 typedef void(^PUTResponseHandler)(NSError * _Nullable error);
+
+static void EnsureInitialised() {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    sCSRFTokenRE = [NSRegularExpression regularExpressionWithPattern:@(kCSRFTokenREPattern)
+                                                             options:0 error:nil];
+    sEmailAddressRE = [NSRegularExpression regularExpressionWithPattern:@(kEmailAddressREPattern)
+                                                                options:0 error:nil];
+    sAPITokenRE = [NSRegularExpression regularExpressionWithPattern:@(kAPITokenREPattern)
+                                                            options:0 error:nil];
+  });
+}
+
+static NSString *ParseCSRFTokenFromResponse(NSData * _Nullable data,
+                                            NSURLResponse * _Nullable response,
+                                            NSError ** _Nullable error) {
+  NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+  if (httpResponse.statusCode != 200) {
+    if (error) {
+      *error = MakeError((int)httpResponse.statusCode,
+                         [NSString stringWithFormat:@"HTTP error %ld for %@",
+                          (long)httpResponse.statusCode,
+                          response.URL.absoluteString]);
+    }
+    return nil;
+  }
+  
+  NSString *body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+  NSTextCheckingResult *result = [sCSRFTokenRE firstMatchInString:body
+                                                          options:0
+                                                            range:NSMakeRange(0, body.length)];
+  if (!result || result.range.location == NSNotFound) {
+    if (error) {
+      *error = MakeError(0, @"Progress token not found in page");
+    }
+    return nil;
+  }
+  
+  return [body substringWithRange:[result rangeAtIndex:1]];
+}
+
+static NSData *EncodeQueryString(NSDictionary<NSString *, NSString *> *keyValues) {
+  static NSCharacterSet *allowedCharacters;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSMutableCharacterSet *set = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
+    [set removeCharactersInString:@"?&=@+/'"];
+    allowedCharacters = set;
+  });
+  
+  NSMutableArray<NSString *> *parts = [NSMutableArray array];
+  for (NSString *key in keyValues) {
+    [parts addObject:[NSString stringWithFormat:@"%@=%@",
+                      [key stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacters],
+                      [keyValues[key] stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacters]]];
+  }
+  return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+static NSString *GetSessionCookie(NSURLSession *session) {
+  for (NSHTTPCookie *cookie in session.configuration.HTTPCookieStorage.cookies) {
+    if ([cookie.name isEqualToString:@(kWanikaniSessionCookieName)]) {
+      return cookie.value;
+    }
+  }
+  return nil;
+}
 
 @implementation Client {
   NSString *_apiToken;
@@ -57,11 +129,7 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
 
 - (instancetype)initWithApiToken:(NSString *)apiToken
                           cookie:(NSString *)cookie {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    kCSRFTokenRE = [NSRegularExpression regularExpressionWithPattern:@(kCSRFTokenREPattern)
-                                                             options:0 error:nil];
-  });
+  EnsureInitialised();
   
   if (self = [super init]) {
     _apiToken = apiToken;
@@ -109,7 +177,6 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
   }
   
   NSURLRequest *req = [self authorizeAPIRequest:url];
-  NSLog(@"Request: %@", url);
   NSURLSessionDataTask *task =
       [_urlSession dataTaskWithRequest:req
                      completionHandler:^(NSData * _Nullable data,
@@ -197,16 +264,85 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
 
 #pragma mark - API token
 
++ (void)getCookieForUsername:(NSString *)username
+                    password:(NSString *)password
+                     handler:(CookieHandler)handler {
+  EnsureInitialised();
+  
+  NSURL *url = [NSURL URLWithString:@(kLoginURL)];
+  NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+  NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+
+  __block NSString *csrfToken = nil;
+  __block NSString *originalCookie = nil;
+  void (^secondHandler)(NSData * _Nullable data,
+                        NSURLResponse * _Nullable response,
+                        NSError * _Nullable error) = ^void(NSData * _Nullable data,
+                                                           NSURLResponse * _Nullable response,
+                                                           NSError * _Nullable error) {
+    if (error != nil) {
+      handler(error, nil);
+      return;
+    }
+    
+    NSString *newCookie = GetSessionCookie(session);
+    if ([newCookie isEqualToString:originalCookie]) {
+      handler(MakeError(kWKLoginErrorCode, @"Bad credentials"), nil);
+      return;
+    } else if ([response.URL.absoluteString isEqualToString:@(kDashboardURL)]) {
+      handler(nil, newCookie);
+      return;
+    }
+    
+    handler(MakeError(0, @"Unknown error"), nil);
+  };
+  
+  void (^firstHandler)(NSData * _Nullable data,
+                       NSURLResponse * _Nullable response,
+                       NSError * _Nullable error) = ^void(NSData * _Nullable data,
+                                                          NSURLResponse * _Nullable response,
+                                                          NSError * _Nullable error) {
+    if (error != nil) {
+      handler(error, nil);
+      return;
+    }
+    csrfToken = ParseCSRFTokenFromResponse(data, response, &error);
+    if (error != nil) {
+      handler(error, nil);
+      return;
+    }
+    
+    originalCookie = GetSessionCookie(session);
+    
+    NSMutableDictionary<NSString *, NSString *> *postData = [NSMutableDictionary dictionary];
+    postData[@"user[login]"] = username;
+    postData[@"user[password]"] = password;
+    postData[@"user[remember_me]"] = @"0";
+    postData[@"authenticity_token"] = csrfToken;
+    postData[@"utf8"] = @"✓";
+    NSData *postDataBytes = EncodeQueryString(postData);
+    
+    NSMutableURLRequest *post = [NSMutableURLRequest requestWithURL:url];
+    post.HTTPBody = postDataBytes;
+    post.HTTPShouldHandleCookies = YES;
+    post.HTTPMethod = @"POST";
+    [post addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [post addValue:[@(postDataBytes.length) stringValue] forHTTPHeaderField:@"Content-Length"];
+    
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:post
+                                            completionHandler:secondHandler];
+    [task resume];
+  };
+  
+  NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+  req.HTTPShouldHandleCookies = YES;
+  NSURLSessionDataTask *task = [session dataTaskWithRequest:req
+                                          completionHandler:firstHandler];
+  [task resume];
+}
+
 + (void)getApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler {
-  static NSRegularExpression *sEmailAddressRE;
-  static NSRegularExpression *sAPITokenRE;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    sEmailAddressRE = [NSRegularExpression regularExpressionWithPattern:@(kEmailAddressREPattern)
-                                                                options:0 error:nil];
-    sAPITokenRE = [NSRegularExpression regularExpressionWithPattern:@(kAPITokenREPattern)
-                                                            options:0 error:nil];
-  });
+  EnsureInitialised();
   
   NSURLRequest *req = [Client authorizeUserRequest:[NSURL URLWithString:@(kAccountURL)]
                                         withCookie:cookie];
@@ -234,7 +370,6 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
                    NSTextCheckingResult *apiTokenResult =
                       [sAPITokenRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
                    if (!apiTokenResult || apiTokenResult.range.location == NSNotFound) {
-                     NSLog(@"Page contents: %@", body);
                      handler(MakeError(0, @"API token not found in page"), nil, nil);
                      return;
                    }
@@ -242,14 +377,12 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
                    NSTextCheckingResult *emailAddressResult =
                       [sEmailAddressRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
                    if (!emailAddressResult || emailAddressResult.range.location == NSNotFound) {
-                     NSLog(@"Page contents: %@", body);
                      handler(MakeError(0, @"Email address not found in page"), nil, nil);
                      return;
                    }
                    
                    NSString *token = [body substringWithRange:[apiTokenResult rangeAtIndex:1]];
                    NSString *emailAddress = [body substringWithRange:[emailAddressResult rangeAtIndex:1]];
-                   NSLog(@"Got API token %@, email %@", emailAddress, token);
                    handler(nil, token, emailAddress);
                  }];
   [task resume];
@@ -329,29 +462,11 @@ typedef void(^PUTResponseHandler)(NSError * _Nullable error);
       handler(error);
       return;
     }
-    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-    if (httpResponse.statusCode != 200) {
-      handler(MakeError((int)httpResponse.statusCode,
-                        [NSString stringWithFormat:@"HTTP error %ld for %@",
-                         (long)httpResponse.statusCode,
-                         response.URL.absoluteString]));
-      return;
+    _csrfToken = ParseCSRFTokenFromResponse(data, response, &error);
+    if (!error) {
+      _csrfTokenUpdated = [NSDate date];
     }
-                                        
-    NSString *body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSTextCheckingResult *result = [kCSRFTokenRE firstMatchInString:body
-                                                            options:0
-                                                              range:NSMakeRange(0, body.length)];
-    if (!result || result.range.location == NSNotFound) {
-      NSLog(@"Page contents: %@", body);
-      handler(MakeError(0, @"Progress token not found in page"));
-      return;
-    }
-                                                  
-    _csrfToken = [body substringWithRange:[result rangeAtIndex:1]];
-    _csrfTokenUpdated = [NSDate date];
-    NSLog(@"Got CSRF token %@", _csrfToken);
-    handler(nil);
+    handler(error);
   }];
   [task resume];
 }
