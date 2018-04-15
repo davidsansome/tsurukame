@@ -92,6 +92,10 @@ static void UnsetAllLabels(ChartViewBase *view) {
 }
 
 - (void)update:(NSArray<WKAssignment *> *)maxLevelAssignments {
+  if (maxLevelAssignments.count == 0) {
+    return;
+  }
+  
   int sliceSizes[PieSlice_Count] = {0};
   int total = 0;
   for (WKAssignment *assignment in maxLevelAssignments) {
