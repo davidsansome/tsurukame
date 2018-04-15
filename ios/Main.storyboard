@@ -238,14 +238,14 @@
                                     </connections>
                                 </button>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B5Y-ae-4Hd">
-                                    <rect key="frame" x="8" y="8" width="40" height="40"/>
+                                    <rect key="frame" x="16" y="8" width="40" height="40"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="B5Y-ae-4Hd" secondAttribute="height" multiplier="1:1" id="bgM-su-6ZE"/>
                                     </constraints>
                                 </view>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="P7E-LP-y20">
-                                    <rect key="frame" x="8" y="8" width="40" height="40"/>
+                                    <rect key="frame" x="16" y="8" width="40" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="P7E-LP-y20" secondAttribute="height" multiplier="1:1" id="rOY-tT-rvI"/>
                                     </constraints>
@@ -256,14 +256,14 @@
                                 <constraint firstItem="OWg-xT-QDr" firstAttribute="top" secondItem="DFp-7L-jLg" secondAttribute="topMargin" id="3Vh-V2-fCH"/>
                                 <constraint firstItem="OWg-xT-QDr" firstAttribute="leading" secondItem="9xb-Y6-h0m" secondAttribute="trailing" constant="8" id="4Pc-Qq-3WV"/>
                                 <constraint firstItem="9xb-Y6-h0m" firstAttribute="top" secondItem="DFp-7L-jLg" secondAttribute="topMargin" id="4q3-eD-gt8"/>
-                                <constraint firstItem="szf-80-l6K" firstAttribute="leading" secondItem="P7E-LP-y20" secondAttribute="trailing" constant="16" id="Csp-fE-pU2"/>
+                                <constraint firstItem="szf-80-l6K" firstAttribute="leading" secondItem="P7E-LP-y20" secondAttribute="trailing" constant="8" id="Csp-fE-pU2"/>
                                 <constraint firstAttribute="bottom" secondItem="szf-80-l6K" secondAttribute="bottom" id="H5r-gq-fdT"/>
                                 <constraint firstItem="9xb-Y6-h0m" firstAttribute="bottom" secondItem="DFp-7L-jLg" secondAttribute="bottomMargin" id="OHq-AW-ZWr"/>
                                 <constraint firstAttribute="bottomMargin" secondItem="B5Y-ae-4Hd" secondAttribute="bottom" id="Y7n-hT-lh7"/>
-                                <constraint firstItem="P7E-LP-y20" firstAttribute="leading" secondItem="DFp-7L-jLg" secondAttribute="leadingMargin" id="caq-vV-oJ5"/>
+                                <constraint firstItem="P7E-LP-y20" firstAttribute="leading" secondItem="DFp-7L-jLg" secondAttribute="leadingMargin" constant="8" id="caq-vV-oJ5"/>
                                 <constraint firstAttribute="bottomMargin" secondItem="OWg-xT-QDr" secondAttribute="bottom" id="g3X-E3-GmL"/>
                                 <constraint firstItem="szf-80-l6K" firstAttribute="top" secondItem="DFp-7L-jLg" secondAttribute="top" id="k3h-nG-aTA"/>
-                                <constraint firstItem="B5Y-ae-4Hd" firstAttribute="leading" secondItem="DFp-7L-jLg" secondAttribute="leadingMargin" id="l0w-s0-Xzc"/>
+                                <constraint firstItem="B5Y-ae-4Hd" firstAttribute="leading" secondItem="DFp-7L-jLg" secondAttribute="leadingMargin" constant="8" id="l0w-s0-Xzc"/>
                                 <constraint firstAttribute="bottomMargin" secondItem="P7E-LP-y20" secondAttribute="bottom" id="sIL-h9-7tj"/>
                                 <constraint firstAttribute="trailingMargin" secondItem="OWg-xT-QDr" secondAttribute="trailing" id="ybf-js-RR4"/>
                                 <constraint firstItem="P7E-LP-y20" firstAttribute="top" secondItem="DFp-7L-jLg" secondAttribute="topMargin" id="yyS-JJ-0Fd"/>
