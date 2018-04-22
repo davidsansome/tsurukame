@@ -30,8 +30,13 @@ func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
 		Level:       proto.Int32(int32(o.Data.Level)),
 		Slug:        proto.String(o.Data.Slug),
 		DocumentUrl: proto.String(o.Data.DocumentURL),
-		Japanese:    proto.String(o.Data.Character),
 		Meanings:    convertMeanings(o.Data.Meanings),
+	}
+
+	if len(o.Data.Character) != 0 {
+		ret.Japanese = proto.String(o.Data.Character)
+	} else {
+		ret.Japanese = proto.String(o.Data.Characters)
 	}
 
 	if o.Object == "kanji" || o.Object == "vocabulary" {
