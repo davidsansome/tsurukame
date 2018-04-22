@@ -29,6 +29,7 @@ import (
 
 var (
 	directory = flag.String("directory", "data", "Directory to read data files from")
+	all       = flag.Bool("all", false, "Dump everything instead of listing IDs")
 )
 
 func main() {
@@ -73,7 +74,11 @@ func ListAll() error {
 			return err
 		}
 
-		fmt.Printf("%d. %s\n", spb.GetId(), spb.GetSlug())
+		if *all {
+			fmt.Println(proto.MarshalTextString(&spb))
+		} else {
+			fmt.Printf("%d. %s\n", spb.GetId(), spb.GetSlug())
+		}
 	}
 	return nil
 }
