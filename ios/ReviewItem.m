@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "DataLoader.h"
 #import "ReviewItem.h"
 #import "proto/Wanikani+Convenience.h"
 
@@ -27,9 +28,17 @@
   return ret;
 }
 
-+ (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<WKAssignment *> *)assignments {
++ (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<WKAssignment *> *)assignments
+                                          dataLoader:(DataLoader *)dataLoader {
   NSMutableArray *ret = [NSMutableArray array];
   for (WKAssignment *assignment in assignments) {
+    // Protect against new subjects getting added to WaniKani.  This will assert in developer builds
+    // but should just skip new subjects in release builds.
+    if (![dataLoader isValidSubjectID:assignment.subjectId]) {
+      NSAssert(false, @"Invalid subject ID in assignment: %@", assignment);
+      continue;
+    }
+    
     if (assignment.isLessonStage) {
       [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
     }

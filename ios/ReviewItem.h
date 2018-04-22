@@ -16,6 +16,8 @@
 
 #import "proto/Wanikani.pbobjc.h"
 
+@class DataLoader;
+
 typedef NS_ENUM(NSInteger, WKTaskType) {
   kWKTaskTypeReading,
   kWKTaskTypeMeaning,
@@ -26,7 +28,8 @@ typedef NS_ENUM(NSInteger, WKTaskType) {
 @interface ReviewItem : NSObject
 
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<WKAssignment *> *)assignments;
-+ (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<WKAssignment *> *)assignments;
++ (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<WKAssignment *> *)assignments
+                                          dataLoader:(DataLoader *)dataLoader;
 
 - (instancetype)initFromAssignment:(WKAssignment *)assignment NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;

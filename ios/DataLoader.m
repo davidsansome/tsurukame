@@ -44,8 +44,12 @@ static uint32_t ReadSubjectOffset(NSFileHandle *file, int subjectID) {
   return self;
 }
 
+- (bool)isValidSubjectID:(int)subjectID {
+  return subjectID < _count && subjectID >= 0;
+}
+
 - (WKSubject *)loadSubject:(int)subjectID {
-  NSAssert(subjectID < _count && subjectID >= 0,
+  NSAssert([self isValidSubjectID:subjectID],
            @"Tried to read subject %d outside 0-%d", subjectID, (int)_count);
   
   const uint32_t offset = ReadSubjectOffset(_file, subjectID);

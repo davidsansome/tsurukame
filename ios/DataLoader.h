@@ -23,6 +23,7 @@
 - (instancetype)initFromURL:(NSURL *)url NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
+- (bool)isValidSubjectID:(int)subjectID;
 - (WKSubject *)loadSubject:(int)subjectID;
 - (NSArray<WKSubject *> *)loadAllSubjects;
 
