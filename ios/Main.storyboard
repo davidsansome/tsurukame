@@ -888,10 +888,37 @@
                             </tableViewSection>
                             <tableViewSection id="7wJ-uc-ZZK">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="1sp-pw-NOS" style="IBUITableViewCellStyleDefault" id="wOd-2D-c61" userLabel="Log Out Cell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="8cl-NP-31I" detailTextLabel="ufF-Sz-I5q" style="IBUITableViewCellStyleSubtitle" id="xig-1r-Cvo" userLabel="Share bug report Cell">
                                         <rect key="frame" x="0.0" y="335.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wOd-2D-c61" id="73a-Ea-ryW">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xig-1r-Cvo" id="S0y-lE-5HC" userLabel="Share bug report content view">
+                                            <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Export local database" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8cl-NP-31I">
+                                                    <rect key="frame" x="16" y="5" width="165.5" height="20.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="To attach to bug reports or email to the developer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ufF-Sz-I5q">
+                                                    <rect key="frame" x="16" y="25.5" width="281.5" height="14.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <connections>
+                                                <outletCollection property="gestureRecognizers" destination="DlX-tB-H3g" appends="YES" id="Frg-zd-O3Z"/>
+                                            </connections>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="1sp-pw-NOS" style="IBUITableViewCellStyleDefault" id="wOd-2D-c61" userLabel="Log Out Cell">
+                                        <rect key="frame" x="0.0" y="379.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wOd-2D-c61" id="73a-Ea-ryW" userLabel="Log Out content view">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -903,6 +930,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <gestureRecognizers/>
                                             <connections>
                                                 <outletCollection property="gestureRecognizers" destination="ibh-Mh-KAK" appends="YES" id="Dwm-aR-BAu"/>
                                             </connections>
@@ -955,6 +983,11 @@
                 <tapGestureRecognizer id="ibh-Mh-KAK">
                     <connections>
                         <action selector="didTapLogOut:" destination="thM-jC-nT8" id="qWE-Ii-G1B"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="DlX-tB-H3g">
+                    <connections>
+                        <action selector="didTapSendBugReport:" destination="thM-jC-nT8" id="Q05-h3-KwW"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

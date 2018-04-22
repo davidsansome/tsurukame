@@ -34,6 +34,8 @@ typedef void (^CompletionHandler)(void);
 @property(nonatomic, readonly) int pendingStudyMaterials;
 @property(nonatomic, readonly) NSArray<WKAssignment *> *maxLevelAssignments;
 
++ (NSURL *)databaseFileUrl;
+
 - (instancetype)initWithClient:(Client *)client
                   reachability:(Reachability *)reachability NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
