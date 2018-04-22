@@ -131,7 +131,7 @@ func ReorderComponentSubjectIDs(spb *pb.Subject) error {
 
 	if len(newComponentIDs) != len(spb.ComponentSubjectIds) {
 		return fmt.Errorf("different length component subject ID lists for %s: %v vs. %v",
-			spb.GetJapanese(), spb.ComponentSubjectIds, newComponentIDs)
+			spb, spb.ComponentSubjectIds, newComponentIDs)
 	}
 
 	spb.ComponentSubjectIds = newComponentIDs

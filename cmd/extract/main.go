@@ -44,7 +44,7 @@ func Extract() error {
 		return err
 	}
 
-	for i := uint32(0); i < r.Count(); i++ {
+	for i := uint32(1); i < r.Count(); i++ {
 		data, err := r.ReadSubjectBytes(i)
 		if err != nil {
 			return err
