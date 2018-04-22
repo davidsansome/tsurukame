@@ -14,6 +14,7 @@
 
 #import "SettingsViewController.h"
 
+#import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "UserDefaults.h"
 
@@ -61,6 +62,13 @@
     [nc postNotificationName:kLogoutNotification object:weakSelf];
   }]];
   [c addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+  [self presentViewController:c animated:YES completion:nil];
+}
+
+- (IBAction)didTapSendBugReport:(id)sender {
+  NSURL *url = [LocalCachingClient databaseFileUrl];
+  UIActivityViewController *c = [[UIActivityViewController alloc] initWithActivityItems:@[url]
+                                                                  applicationActivities:nil];
   [self presentViewController:c animated:YES completion:nil];
 }
 

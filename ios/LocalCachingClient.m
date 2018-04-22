@@ -120,12 +120,16 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   return self;
 }
 
-- (FMDatabaseQueue *)openDatabase {
++ (NSURL *)databaseFileUrl {
   NSArray *paths =
       NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString *fileName = [NSString stringWithFormat:@"%@/local-cache.db", paths[0]];
   
-  FMDatabaseQueue *ret = [FMDatabaseQueue databaseQueueWithPath:fileName];
+  return [NSURL fileURLWithPath:fileName];
+}
+
+- (FMDatabaseQueue *)openDatabase {
+  FMDatabaseQueue *ret = [FMDatabaseQueue databaseQueueWithURL:[LocalCachingClient databaseFileUrl]];
 
   static NSArray<NSString *> *kSchemas;
   static dispatch_once_t once;
