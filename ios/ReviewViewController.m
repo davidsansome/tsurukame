@@ -27,7 +27,7 @@
 
 static const int kActiveQueueSize = 5;
 static const NSTimeInterval kAnimationDuration = 0.25f;
-static const CGFloat kSpacingFromKeyboard = 6.f;
+static const CGFloat kSpacingFromKeyboard = 0.f;
 
 static NSArray<id> *kReadingGradient;
 static NSArray<id> *kMeaningGradient;
