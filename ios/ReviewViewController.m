@@ -147,6 +147,9 @@ static UIColor *kMeaningTextColor;
   _subjectDetailsView.delegate = self;
   
   _answerField.delegate = _kanaInput;
+  [_answerField addTarget:self
+                   action:@selector(answerFieldValueDidChange)
+         forControlEvents:UIControlEventEditingChanged];
   
   if (_hideBackButton) {
     _backButton.hidden = YES;
@@ -377,6 +380,9 @@ static UIColor *kMeaningTextColor;
   // Text color.
   _promptLabel.textColor = promptTextColor;
   
+  // Submit button.
+  _submitButton.enabled = false;
+  
   // Background gradients.
   [CATransaction begin];
   [CATransaction setAnimationDuration:kAnimationDuration];
@@ -449,6 +455,21 @@ static UIColor *kMeaningTextColor;
 }
 
 #pragma mark - Submitting answers
+
+- (void)answerFieldValueDidChange {
+  NSString *text = _answerField.text;
+  text = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+  _submitButton.enabled = text.length != 0;
+}
+
+- (BOOL)textField:(UITextField *)textField
+    shouldChangeCharactersInRange:(NSRange)range
+    replacementString:(NSString *)string {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self answerFieldValueDidChange];
+  });
+  return YES;
+}
 
 - (IBAction)submitButtonPressed:(id)sender {
   if (!_answerField.enabled) {

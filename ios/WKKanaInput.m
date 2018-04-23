@@ -388,6 +388,7 @@ NSString *WKConvertKanaText(NSString *input) {
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
+  [_delegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
   if (!_enabled || range.length != 0) {
     return YES;
   }
