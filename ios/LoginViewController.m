@@ -24,7 +24,7 @@ NSNotificationName kLoginCompleteNotification = @"kLoginCompleteNotification";
 NSNotificationName kLogoutNotification = @"kLogoutNotification";
 
 static NSString *const kPrivacyPolicyURL =
-    @"https://github.com/davidsansome/tsurukame/blob/master/privacy.md";
+    @"https://github.com/davidsansome/tsurukame/wiki/Privacy-Policy";
 
 @interface LoginViewController () <UITextFieldDelegate>
 
