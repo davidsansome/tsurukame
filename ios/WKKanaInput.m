@@ -393,8 +393,8 @@ replacementString:(NSString *)string {
     return YES;
   }
   
-  unichar newChar = [string characterAtIndex:0];
-  if (range.location > 0) {
+  if (range.location > 0 && string.length == 1) {
+    unichar newChar = [string characterAtIndex:0];
     unichar lastChar = [textField.text characterAtIndex:range.location - 1];
   
     // Test for sokuon.
