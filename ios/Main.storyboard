@@ -604,10 +604,10 @@
                                 </constraints>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg">
-                                <rect key="frame" x="8" y="611" width="359" height="50"/>
+                                <rect key="frame" x="0.0" y="603" width="375" height="64"/>
                                 <accessibility key="accessibilityConfiguration" label="Answer field"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="bHy-2g-dyk"/>
+                                    <constraint firstAttribute="height" constant="64" id="bHy-2g-dyk"/>
                                 </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
@@ -623,7 +623,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctF-hm-AxT">
-                                <rect key="frame" x="307" y="602.5" width="68" height="67"/>
+                                <rect key="frame" x="307" y="601.5" width="68" height="67"/>
                                 <accessibility key="accessibilityConfiguration" label="Confirm"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                 <state key="normal" image="confirm"/>
@@ -697,7 +697,7 @@
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <button hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fq3-oe-fWe">
-                                <rect key="frame" x="0.0" y="605" width="62" height="62"/>
+                                <rect key="frame" x="0.0" y="604" width="62" height="62"/>
                                 <accessibility key="accessibilityConfiguration" hint="Double tap to open a menu" label="Cheats"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                 <state key="normal" image="add"/>
@@ -712,17 +712,17 @@
                             <constraint firstItem="lqe-Ns-DBU" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="13b-3r-nEp"/>
                             <constraint firstItem="CSt-zn-BtW" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" id="20c-9Q-aFt"/>
                             <constraint firstItem="TgI-GY-kYL" firstAttribute="leading" secondItem="sr9-jm-3e3" secondAttribute="trailing" constant="12" id="2CS-5j-iPA"/>
-                            <constraint firstItem="M27-Di-5Wg" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" constant="8" id="31d-hA-cMU"/>
-                            <constraint firstItem="CSt-zn-BtW" firstAttribute="top" secondItem="M27-Di-5Wg" secondAttribute="bottom" constant="6" id="AzB-Jc-8ht"/>
+                            <constraint firstItem="M27-Di-5Wg" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="31d-hA-cMU"/>
+                            <constraint firstItem="CSt-zn-BtW" firstAttribute="top" secondItem="M27-Di-5Wg" secondAttribute="bottom" id="AzB-Jc-8ht"/>
                             <constraint firstItem="TY8-JV-WfA" firstAttribute="top" secondItem="4jI-do-0VR" secondAttribute="top" id="ElS-qt-vAo"/>
                             <constraint firstAttribute="trailing" secondItem="lqe-Ns-DBU" secondAttribute="trailing" id="IqJ-Fy-ygo"/>
                             <constraint firstItem="gdi-7v-770" firstAttribute="trailing" secondItem="lqe-Ns-DBU" secondAttribute="trailing" id="ItC-mQ-UG6"/>
                             <constraint firstItem="sr9-jm-3e3" firstAttribute="leading" secondItem="q5T-jg-CA5" secondAttribute="trailing" constant="6" id="JZ8-hj-iUO"/>
                             <constraint firstItem="lqe-Ns-DBU" firstAttribute="top" secondItem="Nab-RQ-m49" secondAttribute="bottom" id="LYD-kF-MuB"/>
                             <constraint firstAttribute="trailing" secondItem="WG4-t0-dUV" secondAttribute="trailing" constant="12" id="Lj5-J7-q4z"/>
-                            <constraint firstItem="M27-Di-5Wg" firstAttribute="top" secondItem="lqe-Ns-DBU" secondAttribute="bottom" constant="8" id="N0Y-l6-Q3x"/>
+                            <constraint firstItem="M27-Di-5Wg" firstAttribute="top" secondItem="lqe-Ns-DBU" secondAttribute="bottom" id="N0Y-l6-Q3x"/>
                             <constraint firstItem="Hl2-BP-AQQ" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" id="Pgn-1l-5G4"/>
-                            <constraint firstAttribute="trailing" secondItem="M27-Di-5Wg" secondAttribute="trailing" constant="8" id="QMg-yd-Jpe"/>
+                            <constraint firstAttribute="trailing" secondItem="M27-Di-5Wg" secondAttribute="trailing" id="QMg-yd-Jpe"/>
                             <constraint firstItem="gdi-7v-770" firstAttribute="bottom" secondItem="lqe-Ns-DBU" secondAttribute="bottom" id="U8c-84-ebp"/>
                             <constraint firstItem="sr9-jm-3e3" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="UAa-Gn-zh6"/>
                             <constraint firstItem="q5T-jg-CA5" firstAttribute="leading" secondItem="S3x-ei-BlA" secondAttribute="trailing" constant="12" id="WHW-tc-LED"/>
@@ -749,7 +749,7 @@
                             <constraint firstItem="S3x-ei-BlA" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="vXr-eI-eku"/>
                             <constraint firstItem="Jee-0P-imk" firstAttribute="top" secondItem="EBu-6v-Hcw" secondAttribute="top" id="w6F-Tb-Vrq"/>
                             <constraint firstItem="TY8-JV-WfA" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" id="whG-W0-ldl"/>
-                            <constraint firstAttribute="bottom" secondItem="M27-Di-5Wg" secondAttribute="bottom" constant="6" id="y4K-ca-rw0"/>
+                            <constraint firstAttribute="bottom" secondItem="M27-Di-5Wg" secondAttribute="bottom" id="y4K-ca-rw0"/>
                             <constraint firstItem="gdi-7v-770" firstAttribute="top" secondItem="lqe-Ns-DBU" secondAttribute="top" id="zT8-CO-8Fs"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="EBu-6v-Hcw"/>
