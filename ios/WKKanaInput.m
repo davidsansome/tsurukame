@@ -316,7 +316,7 @@ static void EnsureInitialised() {
                       @"zyu": @"\u3058\u3085",
                       };
     
-    kConsonants = [NSCharacterSet characterSetWithCharactersInString:@"bcdfghiklmnpqrstvwxyz"];
+    kConsonants = [NSCharacterSet characterSetWithCharactersInString:@"bcdfghjklmnpqrstvwxyz"];
     kN = [NSCharacterSet characterSetWithCharactersInString:@"nm"];
     kCanFollowN = [NSCharacterSet characterSetWithCharactersInString:@"aiueony"];
   });
