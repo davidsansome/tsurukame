@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 static NSDictionary<NSString *, NSString *> *kReplacements;
 static NSCharacterSet *kConsonants;
 static NSCharacterSet *kN;
+static NSCharacterSet *kCanFollowN;
 static dispatch_once_t sOnceToken;
 
 static void EnsureInitialised() {
@@ -315,8 +316,9 @@ static void EnsureInitialised() {
                       @"zyu": @"\u3058\u3085",
                       };
     
-    kConsonants = [NSCharacterSet characterSetWithCharactersInString:@"bcdfghjklmnpqrstvwxyz"];
+    kConsonants = [NSCharacterSet characterSetWithCharactersInString:@"bcdfghiklmnpqrstvwxyz"];
     kN = [NSCharacterSet characterSetWithCharactersInString:@"nm"];
+    kCanFollowN = [NSCharacterSet characterSetWithCharactersInString:@"aiueony"];
   });
 }
 
@@ -390,15 +392,28 @@ replacementString:(NSString *)string {
     return YES;
   }
   
-  // Test for sokuon.
-  if (range.location > 0 &&
-      ![string isEqualToString:@"n"] &&
-      [string characterAtIndex:0] == [textField.text characterAtIndex:range.location - 1] &&
-      [kConsonants characterIsMember:[string characterAtIndex:0]] &&
-      [kConsonants characterIsMember:[textField.text characterAtIndex:range.location - 1]]) {
-    textField.text = [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
-                                                             withString:@"っ"];
-    return YES;
+  unichar newChar = [string characterAtIndex:0];
+  if (range.location > 0) {
+    unichar lastChar = [textField.text characterAtIndex:range.location - 1];
+  
+    // Test for sokuon.
+    if (![kN characterIsMember:newChar] &&
+        newChar == lastChar &&
+        [kConsonants characterIsMember:newChar] &&
+        [kConsonants characterIsMember:lastChar]) {
+      textField.text = [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
+                                                               withString:@"っ"];
+      return YES;
+    }
+  
+    // Replace n followed by a consonant.
+    if (![kN characterIsMember:newChar] &&
+        [kN characterIsMember:lastChar] &&
+        ![kCanFollowN characterIsMember:newChar]) {
+      textField.text = [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
+                                                               withString:@"ん"];
+      return YES;
+    }
   }
   
   // Test for replacements.
