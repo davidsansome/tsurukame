@@ -134,6 +134,10 @@
 		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
 		633632EC201F3011006D582B /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EB201F3011006D582B /* LoginViewController.m */; };
 		633632EF201F3490006D582B /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* UserDefaults.m */; };
+		633DE92F2094CA2C00AC25F4 /* StaticHideableTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE92E2094CA2C00AC25F4 /* StaticHideableTableViewController.m */; };
+		633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */; };
+		633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */; };
+		633DE9382094DDA900AC25F4 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */; };
 		6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */; };
 		6356E7831FDFF0EA009CE7C1 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6356E7821FDFF0E3009CE7C1 /* WebKit.framework */; };
 		6356E7861FE14066009CE7C1 /* WKKanaInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356E7851FE14066009CE7C1 /* WKKanaInput.m */; };
@@ -351,6 +355,14 @@
 		633632EB201F3011006D582B /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		633632ED201F3490006D582B /* UserDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaults.h; sourceTree = "<group>"; };
 		633632EE201F3490006D582B /* UserDefaults.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
+		633DE92D2094CA2C00AC25F4 /* StaticHideableTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaticHideableTableViewController.h; sourceTree = "<group>"; };
+		633DE92E2094CA2C00AC25F4 /* StaticHideableTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StaticHideableTableViewController.m; sourceTree = "<group>"; };
+		633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewOrderViewController.h; sourceTree = "<group>"; };
+		633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewOrderViewController.m; sourceTree = "<group>"; };
+		633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewTaskOrderViewController.h; sourceTree = "<group>"; };
+		633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewTaskOrderViewController.m; sourceTree = "<group>"; };
+		633DE9362094DDA900AC25F4 /* NSMutableArray+Shuffle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Shuffle.h"; sourceTree = "<group>"; };
+		633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Shuffle.m"; sourceTree = "<group>"; };
 		6356E77F1FDFEFAB009CE7C1 /* SubjectDetailsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectDetailsView.h; sourceTree = "<group>"; };
 		6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectDetailsView.m; sourceTree = "<group>"; };
 		6356E7821FDFF0E3009CE7C1 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -514,6 +526,8 @@
 				63EEFEBC1FC45C440070C05F /* Assets.xcassets */,
 				63EEFED71FC46E720070C05F /* Client.h */,
 				63EEFED81FC46E720070C05F /* Client.m */,
+				63EDA42A207F38BE00382CE3 /* CurrentLevelChartController.h */,
+				63EDA42B207F38BE00382CE3 /* CurrentLevelChartController.m */,
 				63CAAAF91FC6EADC00E09DA1 /* data.bin */,
 				63CAAAF61FC6E23300E09DA1 /* DataLoader.h */,
 				63CAAAF71FC6E23300E09DA1 /* DataLoader.m */,
@@ -530,12 +544,12 @@
 				633632EB201F3011006D582B /* LoginViewController.m */,
 				63EEFEB81FC45C440070C05F /* main.m */,
 				63E903C51FE643BF00D73C3A /* Main.storyboard */,
-				63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */,
-				63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */,
 				63EEFED11FC45E810070C05F /* MainViewController.h */,
 				63EEFED21FC45E810070C05F /* MainViewController.m */,
 				63BDA9A5200E04E500D75DA2 /* NavigationController.h */,
 				63BDA9A6200E04E500D75DA2 /* NavigationController.m */,
+				633DE9362094DDA900AC25F4 /* NSMutableArray+Shuffle.h */,
+				633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */,
 				63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */,
 				63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */,
 				6319C99E204015B900C31F87 /* NSString+MD5.h */,
@@ -545,14 +559,22 @@
 				63CAAB0C1FD7FA5D00E09DA1 /* Reachability.m */,
 				63CAAAFB1FCD693500E09DA1 /* ReviewItem.h */,
 				63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */,
+				633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */,
+				633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */,
 				63B1DE3C1FE7CF5E00FAB9C2 /* ReviewSummaryCell.h */,
 				63B1DE3D1FE7CF5E00FAB9C2 /* ReviewSummaryCell.m */,
 				63B1DE391FE7BCDA00FAB9C2 /* ReviewSummaryViewController.h */,
 				63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */,
+				633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */,
+				633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */,
 				63EEFECA1FC45D800070C05F /* ReviewViewController.h */,
 				63EEFEC71FC45D800070C05F /* ReviewViewController.m */,
+				63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */,
+				63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */,
 				6321E60F2068F3A9003460BC /* SettingsViewController.h */,
 				6321E6102068F3A9003460BC /* SettingsViewController.m */,
+				633DE92D2094CA2C00AC25F4 /* StaticHideableTableViewController.h */,
+				633DE92E2094CA2C00AC25F4 /* StaticHideableTableViewController.m */,
 				63A2375C1FE9225700C48657 /* Style.h */,
 				63A2375D1FE9225700C48657 /* Style.m */,
 				6356E77F1FDFEFAB009CE7C1 /* SubjectDetailsView.h */,
@@ -565,8 +587,6 @@
 				63A2375F1FE9264300C48657 /* UIColor+HexString.h */,
 				63A237601FE9264300C48657 /* UIColor+HexString.m */,
 				6319C9A120426EBA00C31F87 /* UpcomingReviewsChartController.h */,
-				63EDA42A207F38BE00382CE3 /* CurrentLevelChartController.h */,
-				63EDA42B207F38BE00382CE3 /* CurrentLevelChartController.m */,
 				6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */,
 				633632ED201F3490006D582B /* UserDefaults.h */,
 				633632EE201F3490006D582B /* UserDefaults.m */,
@@ -975,6 +995,7 @@
 				63EDA41B207F335500382CE3 /* PieChartDataSet.swift in Sources */,
 				6319CACA2044203E00C31F87 /* Transformer.swift in Sources */,
 				6319CAD82044203E00C31F87 /* ChevronDownShapeRenderer.swift in Sources */,
+				633DE92F2094CA2C00AC25F4 /* StaticHideableTableViewController.m in Sources */,
 				6319CAEA2044203E00C31F87 /* Description.swift in Sources */,
 				63CAAAF31FC6E1D400E09DA1 /* GPBWellKnownTypes.m in Sources */,
 				6319CB1A204429E200C31F87 /* BubbleChartData.swift in Sources */,
@@ -1000,6 +1021,7 @@
 				6319CB2E20442A5D00C31F87 /* ICandleChartDataSet.swift in Sources */,
 				6319CB18204429E200C31F87 /* CandleChartDataProvider.swift in Sources */,
 				6319CAC62044203E00C31F87 /* BarHighlighter.swift in Sources */,
+				633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */,
 				6319CAF52044203F00C31F87 /* CircleShapeRenderer.swift in Sources */,
 				6319CAB92044203E00C31F87 /* AnimatedMoveViewJob.swift in Sources */,
 				6319CA902044203E00C31F87 /* ChartColorTemplates.swift in Sources */,
@@ -1016,6 +1038,7 @@
 				6319CAF72044203F00C31F87 /* ChartData.swift in Sources */,
 				6319CA962044203E00C31F87 /* LineScatterCandleRadarChartDataSet.swift in Sources */,
 				63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */,
+				633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */,
 				6319CA8F2044203E00C31F87 /* Legend.swift in Sources */,
 				6319CAF22044203F00C31F87 /* IMarker.swift in Sources */,
 				6319CB032044203F00C31F87 /* BarLineScatterCandleBubbleChartDataProvider.swift in Sources */,
@@ -1035,6 +1058,7 @@
 				6319CAB12044203E00C31F87 /* ChartUtils.swift in Sources */,
 				6319CACB2044203E00C31F87 /* DefaultAxisValueFormatter.swift in Sources */,
 				6319CAD32044203E00C31F87 /* DefaultFillFormatter.swift in Sources */,
+				633DE9382094DDA900AC25F4 /* NSMutableArray+Shuffle.m in Sources */,
 				6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */,
 				6319CACF2044203E00C31F87 /* BarChartData.swift in Sources */,
 				6319CAB42044203E00C31F87 /* ZoomViewJob.swift in Sources */,

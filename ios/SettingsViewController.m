@@ -18,36 +18,76 @@
 #import "LoginViewController.h"
 #import "UserDefaults.h"
 
+static const int kReviewsSectionIndex = 1;
+static const int kMeaningReadingOrderRowIndex = 2;
+
 @interface SettingsViewController ()
 
 @property (strong, nonatomic) IBOutlet UISwitch *particleExplosionSwitch;
 @property (strong, nonatomic) IBOutlet UISwitch *levelUpPopupSwitch;
 @property (strong, nonatomic) IBOutlet UISwitch *plusOneSwitch;
+@property (strong, nonatomic) IBOutlet UISwitch *groupMeaningReadingSwitch;
 @property (strong, nonatomic) IBOutlet UISwitch *enableCheatsSwitch;
+
+@property (weak, nonatomic) IBOutlet UILabel *reviewOrderSubtitle;
+@property (weak, nonatomic) IBOutlet UILabel *taskOrderSubtitle;
 
 @end
 
-@implementation SettingsViewController
+@implementation SettingsViewController {
+  NSIndexPath *_groupMeaningReadingIndexPath;
+}
 
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  _particleExplosionSwitch.on = UserDefaults.animateParticleExplosion;
-  _levelUpPopupSwitch.on = UserDefaults.animateLevelUpPopup;
-  _plusOneSwitch.on = UserDefaults.animatePlusOne;
-  _enableCheatsSwitch.on = UserDefaults.enableCheats;
+  _groupMeaningReadingIndexPath =
+      [NSIndexPath indexPathForRow:kMeaningReadingOrderRowIndex
+                         inSection:kReviewsSectionIndex];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = NO;
+  
+  _particleExplosionSwitch.on = UserDefaults.animateParticleExplosion;
+  _levelUpPopupSwitch.on = UserDefaults.animateLevelUpPopup;
+  _plusOneSwitch.on = UserDefaults.animatePlusOne;
+  _enableCheatsSwitch.on = UserDefaults.enableCheats;
+  
+  _groupMeaningReadingSwitch.on = UserDefaults.groupMeaningReading;
+  _enableCheatsSwitch.on = UserDefaults.enableCheats;
+  
+  switch (UserDefaults.reviewOrder) {
+    case ReviewOrder_Random:
+      [_reviewOrderSubtitle setText:@"Random"];
+      break;
+    case ReviewOrder_BySRSLevel:
+      [_reviewOrderSubtitle setText:@"SRS level"];
+      break;
+    case ReviewOrder_CurrentLevelFirst:
+      [_reviewOrderSubtitle setText:@"Current level first"];
+      break;
+  }
+  
+  if (UserDefaults.meaningFirst) {
+    [_taskOrderSubtitle setText:@"Meaning first"];
+  } else {
+    [_taskOrderSubtitle setText:@"Reading first"];
+  }
+  
+  [self setIndexPath:_groupMeaningReadingIndexPath isHidden:!_groupMeaningReadingSwitch.on];
 }
 
 - (IBAction)switchValueChanged:(id)sender {
   UserDefaults.animateParticleExplosion = _particleExplosionSwitch.on;
   UserDefaults.animateLevelUpPopup = _levelUpPopupSwitch.on;
   UserDefaults.animatePlusOne = _plusOneSwitch.on;
+  
+  UserDefaults.groupMeaningReading = _groupMeaningReadingSwitch.on;
   UserDefaults.enableCheats = _enableCheatsSwitch.on;
+  
+  [self setIndexPath:_groupMeaningReadingIndexPath isHidden:!_groupMeaningReadingSwitch.on];
 }
 
 - (IBAction)didTapLogOut:(id)sender {
