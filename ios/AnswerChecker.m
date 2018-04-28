@@ -57,6 +57,7 @@ WKAnswerCheckerResult CheckAnswer(NSString *answer,
   
   switch (taskType) {
     case kWKTaskTypeReading:
+      answer = [answer stringByReplacingOccurrencesOfString:@"n" withString:@"ん"];
       if (IsAsciiPresent(answer)) {
         return kWKAnswerContainsInvalidCharacters;
       }
