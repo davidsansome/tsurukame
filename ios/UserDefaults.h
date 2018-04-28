@@ -17,8 +17,17 @@
 #define DECLARE_OBJECT(type, name) \
 @property(class, nonatomic, copy) type *name;
 
+#define DECLARE_ENUM(type, name) \
+@property(class, nonatomic) type name;
+
 #define DECLARE_BOOL(name) \
 @property(class, nonatomic) BOOL name;
+
+typedef enum : NSUInteger {
+  ReviewOrder_Random = 1,
+  ReviewOrder_BySRSLevel = 2,
+  ReviewOrder_CurrentLevelFirst = 3,
+} ReviewOrder;
 
 @interface UserDefaults : NSObject
 
@@ -30,6 +39,9 @@ DECLARE_BOOL(animateParticleExplosion);
 DECLARE_BOOL(animateLevelUpPopup);
 DECLARE_BOOL(animatePlusOne);
 
+DECLARE_ENUM(ReviewOrder, reviewOrder);
+DECLARE_BOOL(groupMeaningReading);
+DECLARE_BOOL(meaningFirst);
 DECLARE_BOOL(enableCheats);
 
 @end

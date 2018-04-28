@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "AnswerChecker.h"
+#import "NSMutableArray+Shuffle.h"
 #import "ReviewSummaryViewController.h"
 #import "ReviewViewController.h"
 #import "Style.h"
@@ -25,7 +26,6 @@
 
 #import <WebKit/WebKit.h>
 
-static const int kActiveQueueSize = 5;
 static const NSTimeInterval kAnimationDuration = 0.25f;
 static const CGFloat kSpacingFromKeyboard = 0.f;
 
@@ -69,6 +69,7 @@ static UIColor *kDefaultButtonTintColor;
   NSMutableArray<ReviewItem *> *_activeQueue;
   NSMutableArray<ReviewItem *> *_reviewQueue;
   NSMutableArray<ReviewItem *> *_completedReviews;
+  int _activeQueueSize;
 
   int _activeTaskIndex;  // An index into activeQueue;
   WKTaskType _activeTaskType;
@@ -122,10 +123,40 @@ static UIColor *kDefaultButtonTintColor;
 }
 
 - (void)setItems:(NSArray<ReviewItem *> *)items {
-  NSLog(@"Starting review with %lu items", (unsigned long)items.count);
   _reviewQueue = [NSMutableArray arrayWithArray:items];
   _activeQueue = [NSMutableArray array];
   _completedReviews = [NSMutableArray array];
+  
+  if (UserDefaults.groupMeaningReading) {
+    _activeQueueSize = 1;
+  } else {
+    // TODO: Make this configurable.
+    _activeQueueSize = 5;
+  }
+  
+  [_reviewQueue shuffle];
+  switch (UserDefaults.reviewOrder) {
+    case ReviewOrder_Random:
+      break;
+    case ReviewOrder_BySRSLevel:
+      [_reviewQueue sortUsingComparator:^NSComparisonResult(ReviewItem *a, ReviewItem *b) {
+        if (a.assignment.srsStage < b.assignment.srsStage) return NSOrderedAscending;
+        if (a.assignment.srsStage > b.assignment.srsStage) return NSOrderedDescending;
+        if (a.assignment.subjectType < b.assignment.subjectType) return NSOrderedAscending;
+        if (a.assignment.subjectType > b.assignment.subjectType) return NSOrderedDescending;
+        return NSOrderedSame;
+      }];
+      break;
+    case ReviewOrder_CurrentLevelFirst:
+      [_reviewQueue sortUsingComparator:^NSComparisonResult(ReviewItem *a, ReviewItem *b) {
+        if (a.assignment.level < b.assignment.level) return NSOrderedDescending;
+        if (a.assignment.level > b.assignment.level) return NSOrderedAscending;
+        if (a.assignment.subjectType < b.assignment.subjectType) return NSOrderedAscending;
+        if (a.assignment.subjectType > b.assignment.subjectType) return NSOrderedDescending;
+        return NSOrderedSame;
+      }];
+      break;
+  }
   
   [self refillActiveQueue];
 }
@@ -253,11 +284,10 @@ static UIColor *kDefaultButtonTintColor;
     [self updateWrapUpButton];
     return;
   }
-  while (_activeQueue.count < kActiveQueueSize &&
+  while (_activeQueue.count < _activeQueueSize &&
          _reviewQueue.count != 0) {
-    const NSUInteger i = arc4random_uniform((uint32_t)_reviewQueue.count);
-    ReviewItem * item = [_reviewQueue objectAtIndex:i];
-    [_reviewQueue removeObjectAtIndex:i];
+    ReviewItem *item = [_reviewQueue firstObject];
+    [_reviewQueue removeObjectAtIndex:0];
     [_activeQueue addObject:item];
   }
 }
@@ -315,6 +345,8 @@ static UIColor *kDefaultButtonTintColor;
     _activeTaskType = kWKTaskTypeReading;
   } else if (_activeTask.answeredReading || _activeSubject.hasRadical) {
     _activeTaskType = kWKTaskTypeMeaning;
+  } else if (UserDefaults.groupMeaningReading) {
+    _activeTaskType = UserDefaults.meaningFirst ? kWKTaskTypeMeaning : kWKTaskTypeReading;
   } else {
     _activeTaskType = (WKTaskType)arc4random_uniform(kWKTaskType_Max);
   }

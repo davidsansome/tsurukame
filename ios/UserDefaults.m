@@ -22,6 +22,18 @@
   [[NSUserDefaults standardUserDefaults] setObject:value forKey:@#name]; \
 }
 
+#define DEFINE_ENUM(type, name, setterName, defaultValue) \
++ (type)name { \
+  NSUserDefaults *ud = [NSUserDefaults standardUserDefaults]; \
+  if ([ud integerForKey:@#name] == 0) { \
+    return defaultValue; \
+  } \
+  return [ud integerForKey:@#name]; \
+} \
++ (void)setterName:(type)value { \
+  [[NSUserDefaults standardUserDefaults] setInteger:value forKey:@#name]; \
+}
+
 #define DEFINE_BOOL(name, setterName, defaultValue) \
 + (BOOL)name { \
   NSUserDefaults *ud = [NSUserDefaults standardUserDefaults]; \
@@ -44,6 +56,9 @@ DEFINE_BOOL(animateParticleExplosion, setAnimateParticleExplosion, YES);
 DEFINE_BOOL(animateLevelUpPopup, setAnimateLevelUpPopup, YES);
 DEFINE_BOOL(animatePlusOne, setAnimatePlusOne, YES);
 
+DEFINE_ENUM(ReviewOrder, reviewOrder, setReviewOrder, ReviewOrder_Random);
+DEFINE_BOOL(groupMeaningReading, setGroupMeaningReading, NO);
+DEFINE_BOOL(meaningFirst, setMeaningFirst, YES);
 DEFINE_BOOL(enableCheats, setEnableCheats, YES);
 
 @end
