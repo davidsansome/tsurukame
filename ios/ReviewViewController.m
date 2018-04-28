@@ -87,6 +87,8 @@ static UIColor *kDefaultButtonTintColor;
   // We don't adjust the bottom constraint after the view appeared the first time - some keyboards
   // (gboard) change size a lot.
   bool _viewDidAppearOnce;
+  
+  UIImpactFeedbackGenerator *_hapticGenerator;
 }
 
 #pragma mark - Constructors
@@ -109,6 +111,8 @@ static UIColor *kDefaultButtonTintColor;
     _kanaInput = [[WKKanaInput alloc] initWithDelegate:self];
     _defaultDelegate = [[DefaultReviewViewControllerDelegate alloc] init];
     _delegate = _defaultDelegate;
+    _hapticGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
+    [_hapticGenerator prepare];
   }
   return self;
 }
@@ -559,6 +563,11 @@ static UIColor *kDefaultButtonTintColor;
 }
 
 - (void)markAnswer:(bool)correct remark:(bool)remark {
+  if (correct) {
+    [_hapticGenerator impactOccurred];
+    [_hapticGenerator prepare];
+  }
+  
   // Mark the task.
   switch (_activeTaskType) {
     case kWKTaskTypeMeaning:
