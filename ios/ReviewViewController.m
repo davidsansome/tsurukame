@@ -102,7 +102,7 @@ static UIColor *kDefaultButtonTintColor;
                          (id)[UIColor colorWithRed:0.882f green:0.882f blue:0.882f alpha:1.0f].CGColor];
     kReadingTextColor = [UIColor whiteColor];
     kMeaningTextColor = [UIColor colorWithRed:0.333f green:0.333f blue:0.333f alpha:1.0f];
-    kIncorrectBackgroundColor = [UIColor colorWithRed:1.00 green:0.00 blue:0.20 alpha:1.0];
+    kIncorrectBackgroundColor = [UIColor colorWithRed:1.f green:0.f blue:0.f alpha:0.1f];
     kDefaultButtonTintColor = [[[UIButton alloc] init] tintColor];
   });
   
@@ -476,9 +476,6 @@ static UIColor *kDefaultButtonTintColor;
     
     // Change the background color of the answer field.
     _answerField.backgroundColor = shown ? kIncorrectBackgroundColor : [UIColor clearColor];
-    _answerField.textColor = shown ? [UIColor whiteColor] : [UIColor blackColor];
-    _submitButton.tintColor = shown ? [UIColor whiteColor] : kDefaultButtonTintColor;
-    _addSynonymButton.tintColor = shown ? [UIColor whiteColor] : kDefaultButtonTintColor;
 
     // We resize the gradient layers in viewDidLayoutSubviews.
     _inAnimation = true;
