@@ -36,6 +36,9 @@ static const int kProfileImageSize = 80;
 
 static const int kUpcomingReviewsSection = 1;
 
+static const CGFloat kUserGradientYOffset = 450;
+static const CGFloat kUserGradientStartPoint = 0.8f;
+
 static NSURL *UserProfileImageURL(NSString *emailAddress) {
   emailAddress = [emailAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
   emailAddress = [emailAddress lowercaseString];
@@ -108,6 +111,18 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
                           action:@selector(didPullToRefresh)
                 forControlEvents:UIControlEventValueChanged];
   
+  // Set a gradient background for the user cell.
+  CGRect userGradientFrame = _userContainer.bounds;
+  userGradientFrame.origin.y -= kUserGradientYOffset;
+  userGradientFrame.size.height += kUserGradientYOffset;
+  
+  CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
+  userGradientLayer.frame = userGradientFrame;
+  userGradientLayer.colors = WKRadicalGradient();
+  userGradientLayer.startPoint = CGPointMake(0.5f, kUserGradientStartPoint);
+  [_userContainer.layer insertSublayer:userGradientLayer atIndex:0];
+  _userContainer.layer.masksToBounds = NO;
+  
   // Create the search results view controller.
   SearchResultViewController *searchResultsViewController =
       [self.storyboard instantiateViewControllerWithIdentifier:@"searchResults"];
@@ -130,6 +145,12 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   WKAddShadowToView(_userImageContainer, 2, 0.4, 4);
   WKAddShadowToView(_userNameLabel, 1, 0.4, 4);
   WKAddShadowToView(_userLevelLabel, 1, 0.2, 2);
+  
+  // Set rounded corners on the user image.
+  CGFloat cornerRadius = _userImageContainer.bounds.size.height / 2;
+  _userImageContainer.layer.cornerRadius = cornerRadius;
+  _userImageView.layer.cornerRadius = cornerRadius;
+  _userImageView.layer.masksToBounds = YES;
   
   _upcomingReviewsChartController =
       [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
@@ -155,26 +176,6 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
          selector:@selector(pendingItemsChanged)
              name:kLocalCachingClientPendingItemsChangedNotification
            object:_localCachingClient];
-}
-
-- (void)viewDidLayoutSubviews {
-  // Set rounded corners on the user image.
-  CGFloat cornerRadius = _userImageContainer.bounds.size.height / 2;
-  _userImageContainer.layer.cornerRadius = cornerRadius;
-  _userImageView.layer.cornerRadius = cornerRadius;
-  _userImageView.layer.masksToBounds = YES;
-  
-  // Set a gradient background for the user cell.
-  CGRect userGradientFrame = _userContainer.bounds;
-  CGFloat yModifier = self.tableView.bounds.origin.y;
-  userGradientFrame.origin.y += yModifier;
-  userGradientFrame.size.height -= yModifier;
-  
-  CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
-  userGradientLayer.frame = userGradientFrame;
-  userGradientLayer.colors = WKRadicalGradient();
-  [_userContainer.layer insertSublayer:userGradientLayer atIndex:0];
-  _userContainer.layer.masksToBounds = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
