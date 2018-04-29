@@ -53,6 +53,10 @@ static const char *kSchemaV1 =
     "  id INTEGER PRIMARY KEY"
     ");";
 
+static const char *kSchemaV2 =
+    "ALTER TABLE assignments ADD COLUMN subject_id;"
+    "CREATE INDEX idx_subject_id ON assignments (subject_id);";
+
 static const char *kClearAllData = 
     "UPDATE sync SET"
     "  assignments_updated_after = \"\","
@@ -136,6 +140,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   dispatch_once(&once, ^(void) {
     kSchemas = @[
       @(kSchemaV1),
+      @(kSchemaV2),
     ];
   });
   
@@ -149,6 +154,14 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     }
     for (; currentVersion < targetVersion; ++currentVersion) {
       CheckExecuteStatements(db, kSchemas[currentVersion]);
+      
+      // One-off update for kSchemaV2.
+      if (currentVersion == 1) {
+        for (WKAssignment *assignment in [self getAllAssignmentsInTransaction:db]) {
+          CheckUpdate(db, [NSString stringWithFormat:@"UPDATE assignments SET subject_id = %d WHERE id = %d",
+                           assignment.subjectId, assignment.id_p]);
+        }
+      }
     }
     CheckUpdate(db, [NSString stringWithFormat:@"PRAGMA user_version = %lu", (unsigned long)targetVersion]);
     NSLog(@"Database updated to schema %lu", targetVersion);
@@ -159,20 +172,27 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 #pragma mark - Local database getters
 
 - (NSArray<WKAssignment *> *)getAllAssignments {
+  __block NSArray<WKAssignment *> *ret = nil;
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    ret = [self getAllAssignmentsInTransaction:db];
+  }];
+  return ret;
+}
+
+- (NSArray<WKAssignment *> *)getAllAssignmentsInTransaction:(FMDatabase *)db {
   NSMutableArray<WKAssignment *> *ret = [NSMutableArray array];
   
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
-    FMResultSet *r = [db executeQuery:@"SELECT pb FROM assignments"];
-    while ([r next]) {
-      NSError *error = nil;
-      WKAssignment *assignment = [WKAssignment parseFromData:[r dataForColumnIndex:0] error:&error];
-      if (error) {
-        NSLog(@"Parsing WKAssignment failed: %@", error);
-        return;
-      }
-      [ret addObject:assignment];
+  FMResultSet *r = [db executeQuery:@"SELECT pb FROM assignments"];
+  while ([r next]) {
+    NSError *error = nil;
+    WKAssignment *assignment = [WKAssignment parseFromData:[r dataForColumnIndex:0] error:&error];
+    if (error) {
+      NSLog(@"Parsing WKAssignment failed: %@", error);
+      break;
     }
-  }];
+    [ret addObject:assignment];
+  }
+  
   return ret;
 }
 
@@ -222,19 +242,31 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 }
 
 - (WKAssignment *)getAssignmentForID:(int)subjectID {
-  // TODO: make this more efficient.
-  for (WKAssignment *assignment in [self getAllAssignments]) {
-    if (assignment.subjectId == subjectID) {
-      return assignment;
+  __block WKAssignment *ret = nil;
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    FMResultSet *r = [db executeQuery:@"SELECT pb FROM assignments WHERE subject_id = ?", @(subjectID)];
+    if ([r next]) {
+      NSError *error = nil;
+      ret = [WKAssignment parseFromData:[r dataForColumnIndex:0] error:&error];
+      if (error) {
+        NSLog(@"Parsing WKAssignment failed: %@", error);
+      }
+      [r close];
+      return;
     }
-  }
-  
-  for (WKProgress *progress in [self getAllPendingProgress]) {
-    if (progress.assignment.subjectId == subjectID) {
-      return progress.assignment;
+    
+    r = [db executeQuery:@"SELECT pb FROM pending_progress WHERE id = ?", @(subjectID)];
+    if ([r next]) {
+      NSError *error = nil;
+      WKProgress *progress = [WKProgress parseFromData:[r dataForColumnIndex:0] error:&error];
+      if (error) {
+        NSLog(@"Parsing WKProgress failed: %@", error);
+      }
+      ret = progress.assignment;
+      [r close];
     }
-  }
-  return nil;
+  }];
+  return ret;
 }
 
 #pragma mark - Getting cached data
@@ -552,8 +584,8 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
                                    NSString *date = _client.currentISO8601Time;
                                    [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
                                      for (WKAssignment *assignment in assignments) {
-                                       CheckUpdate(db, @"REPLACE INTO assignments (id, pb) VALUES (?, ?)",
-                                                   @(assignment.id_p), assignment.data);
+                                       CheckUpdate(db, @"REPLACE INTO assignments (id, pb, subject_id) VALUES (?, ?, ?)",
+                                                   @(assignment.id_p), assignment.data, @(assignment.subjectId));
                                      }
                                      CheckUpdate(db, @"UPDATE sync SET assignments_updated_after = ?", date);
                                    }];
