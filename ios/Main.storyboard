@@ -676,6 +676,15 @@
                                     <action selector="revealAnswerButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="cKB-bi-Zr1"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GZq-HC-Qg5">
+                                <rect key="frame" x="16" y="517" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="rhJ-ad-91J"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="previousSubjectButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="jx5-jO-Bcc"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -684,12 +693,14 @@
                             <constraint firstItem="CSt-zn-BtW" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" id="20c-9Q-aFt"/>
                             <constraint firstItem="TgI-GY-kYL" firstAttribute="leading" secondItem="sr9-jm-3e3" secondAttribute="trailing" constant="12" id="2CS-5j-iPA"/>
                             <constraint firstItem="M27-Di-5Wg" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="31d-hA-cMU"/>
+                            <constraint firstItem="GZq-HC-Qg5" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" constant="16" id="6cK-KD-YsT"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="trailing" secondItem="Zyq-WW-fbd" secondAttribute="trailing" id="AGF-fk-KLj"/>
                             <constraint firstItem="CSt-zn-BtW" firstAttribute="top" secondItem="M27-Di-5Wg" secondAttribute="bottom" id="AzB-Jc-8ht"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="top" secondItem="Zyq-WW-fbd" secondAttribute="top" id="C9E-Lq-hm6"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="leading" secondItem="Zyq-WW-fbd" secondAttribute="leading" id="CU7-2i-Zct"/>
                             <constraint firstItem="TY8-JV-WfA" firstAttribute="top" secondItem="4jI-do-0VR" secondAttribute="top" id="ElS-qt-vAo"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="bottom" secondItem="Zyq-WW-fbd" secondAttribute="bottom" id="GaD-Hs-M2L"/>
+                            <constraint firstItem="gdi-7v-770" firstAttribute="top" secondItem="GZq-HC-Qg5" secondAttribute="bottom" constant="16" id="HR3-s1-Yet"/>
                             <constraint firstAttribute="trailing" secondItem="lqe-Ns-DBU" secondAttribute="trailing" id="IqJ-Fy-ygo"/>
                             <constraint firstItem="gdi-7v-770" firstAttribute="trailing" secondItem="lqe-Ns-DBU" secondAttribute="trailing" id="ItC-mQ-UG6"/>
                             <constraint firstItem="sr9-jm-3e3" firstAttribute="leading" secondItem="q5T-jg-CA5" secondAttribute="trailing" constant="6" id="JZ8-hj-iUO"/>
@@ -737,6 +748,8 @@
                         <outlet property="backButton" destination="Hl2-BP-AQQ" id="Olm-G0-FHx"/>
                         <outlet property="doneIcon" destination="q5T-jg-CA5" id="1t5-oj-UVA"/>
                         <outlet property="doneLabel" destination="sr9-jm-3e3" id="goZ-ah-xxh"/>
+                        <outlet property="previousSubjectButton" destination="GZq-HC-Qg5" id="bch-Uc-FQy"/>
+                        <outlet property="previousSubjectButtonWidthConstraint" destination="rhJ-ad-91J" id="ulQ-x5-nI7"/>
                         <outlet property="progressBar" destination="Jee-0P-imk" id="jnu-m8-srf"/>
                         <outlet property="promptBackground" destination="gdi-7v-770" id="FBU-j9-wcR"/>
                         <outlet property="promptLabel" destination="lqe-Ns-DBU" id="GFV-8A-R0R"/>
@@ -755,7 +768,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tCW-sh-YGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-92" y="835.23238380809596"/>
+            <point key="canvasLocation" x="-92" y="834.33283358320841"/>
         </scene>
         <!--Settings-->
         <scene sceneID="3hY-tc-sfR">

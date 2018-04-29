@@ -29,6 +29,10 @@
 static const NSTimeInterval kAnimationDuration = 0.25f;
 static const CGFloat kSpacingFromKeyboard = 0.f;
 
+static const CGFloat kPreviousSubjectScale = 0.25f;
+static const CGFloat kPreviousSubjectButtonPadding = 6.f;
+static const CGFloat kPreviousSubjectAnimationDuration = 0.3f;
+
 static NSArray<id> *kReadingGradient;
 static NSArray<id> *kMeaningGradient;
 static UIColor *kReadingTextColor;
@@ -49,6 +53,7 @@ static UIColor *kDefaultButtonTintColor;
 @property (weak, nonatomic) IBOutlet UIButton *revealAnswerButton;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 @property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
+@property (weak, nonatomic) IBOutlet UIButton *previousSubjectButton;
 
 @property (weak, nonatomic) IBOutlet UILabel *successRateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *doneLabel;
@@ -59,6 +64,7 @@ static UIColor *kDefaultButtonTintColor;
 
 @property (nonatomic) IBOutlet NSLayoutConstraint *answerFieldToBottomConstraint;
 @property (nonatomic) IBOutlet NSLayoutConstraint *answerFieldToSubjectDetailsViewConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previousSubjectButtonWidthConstraint;
 
 @end
 
@@ -82,10 +88,14 @@ static UIColor *kDefaultButtonTintColor;
 
   CAGradientLayer *_questionGradient;
   CAGradientLayer *_promptGradient;
+  CAGradientLayer *_previousSubjectGradient;
   bool _inAnimation;
   
   UIImage *_tickImage;
   UIImage *_forwardArrowImage;
+  
+  WKSubject *_previousSubject;
+  UILabel *_previousSubjectLabel;
   
   // We don't adjust the bottom constraint after the view appeared the first time - some keyboards
   // (gboard) change size a lot.
@@ -180,11 +190,15 @@ static UIColor *kDefaultButtonTintColor;
 - (void)viewDidLoad {
   [super viewDidLoad];
   WKAddShadowToView(_questionLabel, 1, 0.2, 4);
+  WKAddShadowToView(_previousSubjectButton, 0, 0.7, 4);
   
   _questionGradient = [CAGradientLayer layer];
   [_questionBackground.layer addSublayer:_questionGradient];
   _promptGradient = [CAGradientLayer layer];
   [_promptBackground.layer addSublayer:_promptGradient];
+  _previousSubjectGradient = [CAGradientLayer layer];
+  _previousSubjectGradient.cornerRadius = 4.f;
+  [_previousSubjectButton.layer addSublayer:_previousSubjectGradient];
   
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
@@ -213,6 +227,7 @@ static UIColor *kDefaultButtonTintColor;
   
   // Set the prompt's frame straight away - we don't care about animating it.
   _promptGradient.frame = _promptBackground.bounds;
+  _previousSubjectGradient.frame = _previousSubjectButton.bounds;
 
   // 'frame' is a derived property.  Set it so the CALayer calculates 'bounds' and 'position' for
   // us, then animate those animatable properties from the old values to the new values.
@@ -287,7 +302,7 @@ static UIColor *kDefaultButtonTintColor;
     vc.showUserProgress = true;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
-    vc.subject = _subjectDetailsView.lastSubjectClicked;
+    vc.subject = (WKSubject *)sender;
   }
 }
 
@@ -506,6 +521,65 @@ static UIColor *kDefaultButtonTintColor;
   }];
 }
 
+#pragma mark - Previous subject button
+
+- (UILabel *)copyQuestionLabel {
+  UILabel *previousSubjectLabel = [[UILabel alloc] initWithFrame:_questionLabel.frame];
+  previousSubjectLabel.transform = _questionLabel.transform;
+  previousSubjectLabel.attributedText = _questionLabel.attributedText;
+  previousSubjectLabel.font = _questionLabel.font;
+  previousSubjectLabel.textColor = _questionLabel.textColor;
+  previousSubjectLabel.textAlignment = _questionLabel.textAlignment;
+  [self.view addSubview:previousSubjectLabel];
+  return previousSubjectLabel;
+}
+
+- (void)animateLabelToPreviousSubjectButton:(UILabel *)label {
+  CGPoint oldLabelCenter = label.center;
+  CGRect labelBounds;
+  labelBounds.origin = CGPointZero;
+  labelBounds.size = [label sizeThatFits:CGSizeMake(0, 0)];
+  label.bounds = labelBounds;
+  label.center = oldLabelCenter;
+  
+  CGPoint newLabelCenter = _previousSubjectButton.frame.origin;
+  newLabelCenter.x += kPreviousSubjectButtonPadding +
+                      labelBounds.size.width * kPreviousSubjectScale / 2.f;
+  newLabelCenter.y += kPreviousSubjectButtonPadding +
+                      labelBounds.size.height * kPreviousSubjectScale / 2.f;
+  
+  CGFloat newButtonWidth = kPreviousSubjectButtonPadding * 2 +
+                           labelBounds.size.width * kPreviousSubjectScale;
+  
+  NSArray<id> *newGradient = WKGradientForSubject(_previousSubject);
+  
+  [UIView animateWithDuration:kPreviousSubjectAnimationDuration
+                        delay:0.f
+                      options:UIViewAnimationOptionCurveEaseOut
+                   animations:^{
+                     label.transform = CGAffineTransformMakeScale(kPreviousSubjectScale,
+                                                                  kPreviousSubjectScale);
+                     label.center = newLabelCenter;
+                     
+                     _previousSubjectButtonWidthConstraint.constant = newButtonWidth;
+                     [self.view layoutIfNeeded];
+                     
+                     _previousSubjectGradient.colors = newGradient;
+                     _previousSubjectGradient.frame = _previousSubjectButton.bounds;
+                     _previousSubjectButton.alpha = 1.f;
+                     
+                     _previousSubjectLabel.transform = CGAffineTransformMakeScale(0.01, 0.01);
+                     _previousSubjectLabel.alpha = 0.01;
+                   } completion:^(BOOL finished) {
+                     [_previousSubjectLabel removeFromSuperview];
+                     _previousSubjectLabel = label;
+                   }];
+}
+
+- (IBAction)previousSubjectButtonPressed:(id)sender {
+  [self performSegueWithIdentifier:@"subjectDetails" sender:_previousSubject];
+}
+
 #pragma mark - Back button
 
 - (IBAction)backButtonPressed:(id)sender {
@@ -631,8 +705,11 @@ static UIColor *kDefaultButtonTintColor;
   
   // Show a new task if it was correct.
   if (correct) {
+    UILabel *previousSubjectLabel = [self copyQuestionLabel];
+    _previousSubject = _activeSubject;
     [self randomTask];
     RunSuccessAnimation(_answerField, _doneLabel, isSubjectFinished, didLevelUp, newSrsStage);
+    [self animateLabelToPreviousSubjectButton:previousSubjectLabel];
     return;
   }
   
@@ -711,7 +788,7 @@ static UIColor *kDefaultButtonTintColor;
 #pragma mark - WKSubjectDetailsDelegate
 
 - (void)openSubject:(WKSubject *)subject {
-  [self performSegueWithIdentifier:@"subjectDetails" sender:self];
+  [self performSegueWithIdentifier:@"subjectDetails" sender:subject];
 }
 
 - (void)subjectDetailsView:(WKSubjectDetailsView *)view
