@@ -110,7 +110,12 @@ static UIColor *kDefaultButtonTintColor;
     _defaultDelegate = [[DefaultReviewViewControllerDelegate alloc] init];
     _delegate = _defaultDelegate;
     _hapticGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
-    [_hapticGenerator prepare];
+    
+    UIKeyCommand *enterCommand =
+        [UIKeyCommand keyCommandWithInput:@"\r"
+                            modifierFlags:0
+                                   action:@selector(enterKeyPressed)];
+    [self addKeyCommand:enterCommand];
   }
   return self;
 }
@@ -513,6 +518,13 @@ static UIColor *kDefaultButtonTintColor;
 }
 
 - (IBAction)submitButtonPressed:(id)sender {
+  [self enterKeyPressed];
+}
+
+- (void)enterKeyPressed {
+  if (!_submitButton.enabled) {
+    return;
+  }
   if (!_answerField.enabled) {
     [self randomTask];
   } else {
