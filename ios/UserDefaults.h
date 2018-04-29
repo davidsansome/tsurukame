@@ -31,17 +31,21 @@ typedef enum : NSUInteger {
 
 @interface UserDefaults : NSObject
 
+// User credentials.
 DECLARE_OBJECT(NSString, userCookie);
 DECLARE_OBJECT(NSString, userEmailAddress);
 DECLARE_OBJECT(NSString, userApiToken);
 
+// Animation settings.
 DECLARE_BOOL(animateParticleExplosion);
 DECLARE_BOOL(animateLevelUpPopup);
 DECLARE_BOOL(animatePlusOne);
 
+// Review settings.
 DECLARE_ENUM(ReviewOrder, reviewOrder);
 DECLARE_BOOL(groupMeaningReading);
 DECLARE_BOOL(meaningFirst);
+DECLARE_BOOL(showAnswerImmediately);
 DECLARE_BOOL(enableCheats);
 
 @end

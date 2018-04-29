@@ -46,6 +46,7 @@ static UIColor *kDefaultButtonTintColor;
 @property (weak, nonatomic) IBOutlet UITextField *answerField;
 @property (weak, nonatomic) IBOutlet UIButton *submitButton;
 @property (weak, nonatomic) IBOutlet UIButton *addSynonymButton;
+@property (weak, nonatomic) IBOutlet UIButton *revealAnswerButton;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 @property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
 
@@ -464,6 +465,7 @@ static UIColor *kDefaultButtonTintColor;
       _addSynonymButton.hidden = NO;
     }
   }
+  _revealAnswerButton.hidden = YES;
 
   [self.view layoutIfNeeded];
   [UIView animateWithDuration:kAnimationDuration animations:^{
@@ -586,15 +588,18 @@ static UIColor *kDefaultButtonTintColor;
   }
   
   // Mark the task.
+  bool firstTimeWrong = true;
   switch (_activeTaskType) {
     case kWKTaskTypeMeaning:
-      if (remark || !_activeTask.answer.hasMeaningWrong) {
+      firstTimeWrong = !_activeTask.answer.hasMeaningWrong;
+      if (remark || firstTimeWrong) {
         _activeTask.answer.meaningWrong = !correct;
       }
       _activeTask.answeredMeaning = correct;
       break;
     case kWKTaskTypeReading:
-      if (remark || !_activeTask.answer.hasReadingWrong) {
+      firstTimeWrong = !_activeTask.answer.hasReadingWrong;
+      if (remark || firstTimeWrong) {
         _activeTask.answer.readingWrong = !correct;
       }
       _activeTask.answeredReading = correct;
@@ -632,6 +637,19 @@ static UIColor *kDefaultButtonTintColor;
   }
   
   // Otherwise show the correct answer.
+  if (!UserDefaults.showAnswerImmediately && firstTimeWrong) {
+    [UIView animateWithDuration:kAnimationDuration animations:^{
+      _answerField.textColor = [UIColor redColor];
+      _answerField.enabled = NO;
+      _revealAnswerButton.hidden = NO;
+      [_submitButton setImage:_forwardArrowImage forState:UIControlStateNormal];
+    }];
+  } else {
+    [self revealAnswerButtonPressed:nil];
+  }
+}
+
+- (IBAction)revealAnswerButtonPressed:(id)sender {
   [_subjectDetailsView updateWithSubject:_activeSubject
                           studyMaterials:_activeStudyMaterials
                               assignment:nil];
