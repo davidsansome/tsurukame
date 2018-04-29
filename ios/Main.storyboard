@@ -669,6 +669,13 @@
                                     <action selector="addSynonymButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="4Ap-Ae-86d"/>
                                 </connections>
                             </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zyq-WW-fbd">
+                                <rect key="frame" x="0.0" y="604" width="62" height="62"/>
+                                <state key="normal" title="Reveal"/>
+                                <connections>
+                                    <action selector="revealAnswerButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="cKB-bi-Zr1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -677,8 +684,12 @@
                             <constraint firstItem="CSt-zn-BtW" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" id="20c-9Q-aFt"/>
                             <constraint firstItem="TgI-GY-kYL" firstAttribute="leading" secondItem="sr9-jm-3e3" secondAttribute="trailing" constant="12" id="2CS-5j-iPA"/>
                             <constraint firstItem="M27-Di-5Wg" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="31d-hA-cMU"/>
+                            <constraint firstItem="Fq3-oe-fWe" firstAttribute="trailing" secondItem="Zyq-WW-fbd" secondAttribute="trailing" id="AGF-fk-KLj"/>
                             <constraint firstItem="CSt-zn-BtW" firstAttribute="top" secondItem="M27-Di-5Wg" secondAttribute="bottom" id="AzB-Jc-8ht"/>
+                            <constraint firstItem="Fq3-oe-fWe" firstAttribute="top" secondItem="Zyq-WW-fbd" secondAttribute="top" id="C9E-Lq-hm6"/>
+                            <constraint firstItem="Fq3-oe-fWe" firstAttribute="leading" secondItem="Zyq-WW-fbd" secondAttribute="leading" id="CU7-2i-Zct"/>
                             <constraint firstItem="TY8-JV-WfA" firstAttribute="top" secondItem="4jI-do-0VR" secondAttribute="top" id="ElS-qt-vAo"/>
+                            <constraint firstItem="Fq3-oe-fWe" firstAttribute="bottom" secondItem="Zyq-WW-fbd" secondAttribute="bottom" id="GaD-Hs-M2L"/>
                             <constraint firstAttribute="trailing" secondItem="lqe-Ns-DBU" secondAttribute="trailing" id="IqJ-Fy-ygo"/>
                             <constraint firstItem="gdi-7v-770" firstAttribute="trailing" secondItem="lqe-Ns-DBU" secondAttribute="trailing" id="ItC-mQ-UG6"/>
                             <constraint firstItem="sr9-jm-3e3" firstAttribute="leading" secondItem="q5T-jg-CA5" secondAttribute="trailing" constant="6" id="JZ8-hj-iUO"/>
@@ -733,6 +744,7 @@
                         <outlet property="questionLabel" destination="Nab-RQ-m49" id="Q7Z-qe-FGQ"/>
                         <outlet property="queueIcon" destination="TgI-GY-kYL" id="bQh-Zu-fUi"/>
                         <outlet property="queueLabel" destination="WG4-t0-dUV" id="UZV-i3-In8"/>
+                        <outlet property="revealAnswerButton" destination="Zyq-WW-fbd" id="5WQ-60-SBe"/>
                         <outlet property="subjectDetailsView" destination="CSt-zn-BtW" id="3Df-EW-Ksg"/>
                         <outlet property="submitButton" destination="ctF-hm-AxT" id="x0c-jE-ztx"/>
                         <outlet property="successRateIcon" destination="9gS-sh-cYw" id="GEi-xa-MAB"/>
@@ -743,7 +755,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tCW-sh-YGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-92" y="836"/>
+            <point key="canvasLocation" x="-92" y="835.23238380809596"/>
         </scene>
         <!--Settings-->
         <scene sceneID="3hY-tc-sfR">
@@ -902,21 +914,41 @@
                                             <segue destination="7Tc-3C-9Vx" kind="show" id="fwo-fL-IkV"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="NYm-Hr-Eqo" detailTextLabel="Ztq-nS-9gv" style="IBUITableViewCellStyleSubtitle" id="HYy-DZ-VNa">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="NYm-Hr-Eqo" style="IBUITableViewCellStyleDefault" id="HYy-DZ-VNa">
                                         <rect key="frame" x="0.0" y="387.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HYy-DZ-VNa" id="alH-bO-Q7a">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Allow cheating" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NYm-Hr-Eqo">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Reveal answer automatically" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NYm-Hr-Eqo">
+                                                    <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="accessoryView" destination="E4F-nL-gdx" id="h1w-Ls-4FL"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="lW0-fN-eaz" detailTextLabel="5fY-VC-cYn" style="IBUITableViewCellStyleSubtitle" id="LJO-X7-jW8">
+                                        <rect key="frame" x="0.0" y="431.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LJO-X7-jW8" id="yAF-Ru-HOZ">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Allow cheating" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lW0-fN-eaz">
                                                     <rect key="frame" x="16" y="5" width="112" height="20.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Ignore Typos and Add Synonym" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ztq-nS-9gv">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Ignore Typos and Add Synonym" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5fY-VC-cYn">
                                                     <rect key="frame" x="16" y="25.5" width="179" height="14.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -926,7 +958,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="accessoryView" destination="KAZ-xP-3hI" id="Kae-xK-roD"/>
+                                            <outlet property="accessoryView" destination="KAZ-xP-3hI" id="WKX-tk-9en"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -934,7 +966,7 @@
                             <tableViewSection id="7wJ-uc-ZZK">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="8cl-NP-31I" detailTextLabel="ufF-Sz-I5q" style="IBUITableViewCellStyleSubtitle" id="xig-1r-Cvo" userLabel="Share bug report Cell">
-                                        <rect key="frame" x="0.0" y="467.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="511.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xig-1r-Cvo" id="S0y-lE-5HC" userLabel="Share bug report content view">
                                             <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
@@ -961,7 +993,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="1sp-pw-NOS" style="IBUITableViewCellStyleDefault" id="wOd-2D-c61" userLabel="Log Out Cell">
-                                        <rect key="frame" x="0.0" y="511.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="555.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wOd-2D-c61" id="73a-Ea-ryW" userLabel="Log Out content view">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -996,10 +1028,18 @@
                         <outlet property="particleExplosionSwitch" destination="pJ8-aN-y5f" id="zBy-2O-fLt"/>
                         <outlet property="plusOneSwitch" destination="amb-Rk-MSw" id="4jC-2r-CtY"/>
                         <outlet property="reviewOrderSubtitle" destination="Gqu-7n-RIB" id="9Hw-Lv-AM9"/>
+                        <outlet property="showAnswerImmediatelySwitch" destination="E4F-nL-gdx" id="vIa-7c-pr4"/>
                         <outlet property="taskOrderSubtitle" destination="8n1-Yt-QZw" id="nSF-ot-zIb"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFO-Ke-JcM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="E4F-nL-gdx">
+                    <rect key="frame" x="0.0" y="0.0" width="51" height="31"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <connections>
+                        <action selector="switchValueChanged:" destination="thM-jC-nT8" eventType="valueChanged" id="obg-xs-5BM"/>
+                    </connections>
+                </switch>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="pJ8-aN-y5f">
                     <rect key="frame" x="0.0" y="0.0" width="51" height="31"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1363,6 +1403,6 @@
         <image name="tick" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="LcM-wy-hJZ"/>
+        <segue reference="ONv-x4-Pkd"/>
     </inferredMetricsTieBreakers>
 </document>

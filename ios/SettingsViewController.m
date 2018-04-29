@@ -27,6 +27,7 @@ static const int kMeaningReadingOrderRowIndex = 2;
 @property (strong, nonatomic) IBOutlet UISwitch *levelUpPopupSwitch;
 @property (strong, nonatomic) IBOutlet UISwitch *plusOneSwitch;
 @property (strong, nonatomic) IBOutlet UISwitch *groupMeaningReadingSwitch;
+@property (strong, nonatomic) IBOutlet UISwitch *showAnswerImmediatelySwitch;
 @property (strong, nonatomic) IBOutlet UISwitch *enableCheatsSwitch;
 
 @property (weak, nonatomic) IBOutlet UILabel *reviewOrderSubtitle;
@@ -53,6 +54,7 @@ static const int kMeaningReadingOrderRowIndex = 2;
   _particleExplosionSwitch.on = UserDefaults.animateParticleExplosion;
   _levelUpPopupSwitch.on = UserDefaults.animateLevelUpPopup;
   _plusOneSwitch.on = UserDefaults.animatePlusOne;
+  _showAnswerImmediatelySwitch.on = UserDefaults.showAnswerImmediately;
   _enableCheatsSwitch.on = UserDefaults.enableCheats;
   
   _groupMeaningReadingSwitch.on = UserDefaults.groupMeaningReading;
@@ -85,6 +87,7 @@ static const int kMeaningReadingOrderRowIndex = 2;
   UserDefaults.animatePlusOne = _plusOneSwitch.on;
   
   UserDefaults.groupMeaningReading = _groupMeaningReadingSwitch.on;
+  UserDefaults.showAnswerImmediately = _showAnswerImmediatelySwitch.on;
   UserDefaults.enableCheats = _enableCheatsSwitch.on;
   
   [self setIndexPath:_groupMeaningReadingIndexPath isHidden:!_groupMeaningReadingSwitch.on];

@@ -59,6 +59,7 @@ DEFINE_BOOL(animatePlusOne, setAnimatePlusOne, YES);
 DEFINE_ENUM(ReviewOrder, reviewOrder, setReviewOrder, ReviewOrder_Random);
 DEFINE_BOOL(groupMeaningReading, setGroupMeaningReading, NO);
 DEFINE_BOOL(meaningFirst, setMeaningFirst, YES);
+DEFINE_BOOL(showAnswerImmediately, setShowAnswerImmediately, YES);
 DEFINE_BOOL(enableCheats, setEnableCheats, YES);
 
 @end
