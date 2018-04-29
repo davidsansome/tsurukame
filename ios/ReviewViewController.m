@@ -83,6 +83,9 @@ static UIColor *kDefaultButtonTintColor;
   CAGradientLayer *_promptGradient;
   bool _inAnimation;
   
+  UIImage *_tickImage;
+  UIImage *_forwardArrowImage;
+  
   // We don't adjust the bottom constraint after the view appeared the first time - some keyboards
   // (gboard) change size a lot.
   bool _viewDidAppearOnce;
@@ -110,6 +113,9 @@ static UIColor *kDefaultButtonTintColor;
     _defaultDelegate = [[DefaultReviewViewControllerDelegate alloc] init];
     _delegate = _defaultDelegate;
     _hapticGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
+    
+    _tickImage = [UIImage imageNamed:@"confirm"];
+    _forwardArrowImage = [UIImage imageNamed:@"ic_arrow_forward_white"];
     
     UIKeyCommand *enterCommand =
         [UIKeyCommand keyCommandWithInput:@"\r"
@@ -479,6 +485,10 @@ static UIColor *kDefaultButtonTintColor;
     
     // Change the background color of the answer field.
     _answerField.textColor = shown ? [UIColor redColor] : [UIColor blackColor];
+    
+    // Change the submit button icon.
+    UIImage *submitButtonImage = shown ? _forwardArrowImage : _tickImage;
+    [_submitButton setImage:submitButtonImage forState:UIControlStateNormal];
     
     // We resize the gradient layers in viewDidLayoutSubviews.
     _inAnimation = true;
