@@ -24,6 +24,7 @@
 
 - (bool)reviewViewController:(ReviewViewController *)reviewViewController
              allowsCheatsFor:(ReviewItem *)reviewItem;
+- (bool)reviewViewControllerShowsSubjectHistory:(ReviewViewController *)reviewViewController;
 
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
             tappedBackButton:(UIButton *)backButton;

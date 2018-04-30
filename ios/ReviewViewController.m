@@ -706,7 +706,7 @@ static UIColor *kDefaultButtonTintColor;
   // Show a new task if it was correct.
   if (correct) {
     UILabel *previousSubjectLabel = nil;
-    if (isSubjectFinished) {
+    if (isSubjectFinished && [_delegate reviewViewControllerShowsSubjectHistory:self]) {
       previousSubjectLabel = [self copyQuestionLabel];
       _previousSubject = _activeSubject;
     }
@@ -813,6 +813,10 @@ static UIColor *kDefaultButtonTintColor;
 - (bool)reviewViewController:(ReviewViewController *)reviewViewController
              allowsCheatsFor:(ReviewItem *)reviewItem {
   return UserDefaults.enableCheats;
+}
+
+- (bool)reviewViewControllerShowsSubjectHistory:(ReviewViewController *)reviewViewController {
+  return true;
 }
 
 - (void)reviewViewController:(ReviewViewController *)reviewViewController

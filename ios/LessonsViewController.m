@@ -176,6 +176,10 @@
   return false;
 }
 
+- (bool)reviewViewControllerShowsSubjectHistory:(ReviewViewController *)reviewViewController {
+  return false;
+}
+
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
           finishedReviewItem:(ReviewItem *)reviewItem {
   [_localCachingClient sendProgress:@[reviewItem.answer]];
