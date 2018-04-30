@@ -705,11 +705,16 @@ static UIColor *kDefaultButtonTintColor;
   
   // Show a new task if it was correct.
   if (correct) {
-    UILabel *previousSubjectLabel = [self copyQuestionLabel];
-    _previousSubject = _activeSubject;
+    UILabel *previousSubjectLabel = nil;
+    if (isSubjectFinished) {
+      previousSubjectLabel = [self copyQuestionLabel];
+      _previousSubject = _activeSubject;
+    }
     [self randomTask];
     RunSuccessAnimation(_answerField, _doneLabel, isSubjectFinished, didLevelUp, newSrsStage);
-    [self animateLabelToPreviousSubjectButton:previousSubjectLabel];
+    if (previousSubjectLabel != nil) {
+      [self animateLabelToPreviousSubjectButton:previousSubjectLabel];
+    }
     return;
   }
   
