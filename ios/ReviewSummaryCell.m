@@ -16,6 +16,8 @@
 #import "Style.h"
 #import "proto/Wanikani+Convenience.h"
 
+static const CGFloat kJapaneseTextImageSize = 26.f;
+
 @interface ReviewSummaryCell ()
 @property (weak, nonatomic) IBOutlet UILabel *levelLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subjectLabel;
@@ -51,7 +53,7 @@
   _subject = subject;
   _gradient.colors = WKGradientForSubject(subject);
   self.levelLabel.text = [NSString stringWithFormat:@"%d", subject.level];
-  self.subjectLabel.attributedText = subject.japaneseText;
+  self.subjectLabel.attributedText = [subject japaneseTextWithImageSize:kJapaneseTextImageSize];
   if (subject.hasRadical) {
     [self.readingLabel setHidden:YES];
     self.meaningLabel.text = subject.commaSeparatedMeanings;
