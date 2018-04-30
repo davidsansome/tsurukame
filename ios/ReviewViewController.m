@@ -556,6 +556,7 @@ static UIColor *kDefaultButtonTintColor;
   
   NSArray<id> *newGradient = WKGradientForSubject(_previousSubject);
   
+  [self.view layoutIfNeeded];
   [UIView animateWithDuration:kPreviousSubjectAnimationDuration
                         delay:0.f
                       options:UIViewAnimationOptionCurveEaseOut
