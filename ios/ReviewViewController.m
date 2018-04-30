@@ -551,12 +551,6 @@ static UIColor *kDefaultButtonTintColor;
   label.bounds = labelBounds;
   label.center = oldLabelCenter;
   
-  CGPoint newLabelCenter = _previousSubjectButton.frame.origin;
-  newLabelCenter.x += kPreviousSubjectButtonPadding +
-                      labelBounds.size.width * kPreviousSubjectScale / 2.f;
-  newLabelCenter.y += kPreviousSubjectButtonPadding +
-                      labelBounds.size.height * kPreviousSubjectScale / 2.f;
-  
   CGFloat newButtonWidth = kPreviousSubjectButtonPadding * 2 +
                            labelBounds.size.width * kPreviousSubjectScale;
   
@@ -568,7 +562,25 @@ static UIColor *kDefaultButtonTintColor;
                    animations:^{
                      label.transform = CGAffineTransformMakeScale(kPreviousSubjectScale,
                                                                   kPreviousSubjectScale);
-                     label.center = newLabelCenter;
+                     
+                     label.translatesAutoresizingMaskIntoConstraints = NO;
+                     NSLayoutConstraint *centerYConstraint =
+                         [NSLayoutConstraint constraintWithItem:label
+                                                      attribute:NSLayoutAttributeCenterY
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:_previousSubjectButton
+                                                      attribute:NSLayoutAttributeCenterY
+                                                     multiplier:1.f
+                                                       constant:0];
+                     NSLayoutConstraint *centerXConstraint =
+                         [NSLayoutConstraint constraintWithItem:label
+                                                      attribute:NSLayoutAttributeCenterX
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:_previousSubjectButton
+                                                      attribute:NSLayoutAttributeCenterX
+                                                     multiplier:1.f
+                                                       constant:0];
+                     [self.view addConstraints:@[centerXConstraint, centerYConstraint]];
                      
                      _previousSubjectButtonWidthConstraint.constant = newButtonWidth;
                      [self.view layoutIfNeeded];
