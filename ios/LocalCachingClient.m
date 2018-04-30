@@ -148,7 +148,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     // Get the current version.
     NSUInteger targetVersion = kSchemas.count;
     NSUInteger currentVersion = db.userVersion;
-    if (currentVersion == targetVersion) {
+    if (currentVersion >= targetVersion) {
       NSLog(@"Database up to date (version %lu)", (unsigned long)currentVersion);
       return;
     }
