@@ -741,10 +741,11 @@ static UIColor *kDefaultButtonTintColor;
   
   // Otherwise show the correct answer.
   if (!UserDefaults.showAnswerImmediately && firstTimeWrong) {
+    _revealAnswerButton.hidden = NO;
     [UIView animateWithDuration:kAnimationDuration animations:^{
       _answerField.textColor = [UIColor redColor];
       _answerField.enabled = NO;
-      _revealAnswerButton.hidden = NO;
+      _revealAnswerButton.alpha = 1.0;
       [_submitButton setImage:_forwardArrowImage forState:UIControlStateNormal];
     }];
   } else {
