@@ -479,8 +479,10 @@ static UIColor *kDefaultButtonTintColor;
     if (cheats) {
       _addSynonymButton.hidden = NO;
     }
+  } else {
+    _previousSubjectLabel.hidden = NO;
+    _previousSubjectButton.hidden = NO;
   }
-  _revealAnswerButton.hidden = YES;
   
   // Change the submit button icon.
   UIImage *submitButtonImage = shown ? _forwardArrowImage : _tickImage;
@@ -503,6 +505,9 @@ static UIColor *kDefaultButtonTintColor;
     if (cheats) {
       _addSynonymButton.alpha = shown ? 1.0 : 0.0;
     }
+    _revealAnswerButton.alpha = 0.0;
+    _previousSubjectLabel.alpha = shown ? 0.0 : 1.0;
+    _previousSubjectButton.alpha = shown ? 0.0 : 1.0;
     
     // Change the background color of the answer field.
     _answerField.textColor = shown ? [UIColor redColor] : [UIColor blackColor];
@@ -512,7 +517,11 @@ static UIColor *kDefaultButtonTintColor;
     [self.view layoutIfNeeded];
     _inAnimation = false;
   } completion:^(BOOL finished) {
-    if (!shown) {
+    _revealAnswerButton.hidden = YES;
+    if (shown) {
+      _previousSubjectLabel.hidden = YES;
+      _previousSubjectButton.hidden = YES;
+    } else {
       _subjectDetailsView.hidden = YES;
       if (cheats) {
         _addSynonymButton.hidden = YES;
