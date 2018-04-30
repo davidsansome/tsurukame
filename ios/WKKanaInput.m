@@ -314,6 +314,7 @@ static void EnsureInitialised() {
                       @"zyi": @"\u3058\u3043",
                       @"zyo": @"\u3058\u3087",
                       @"zyu": @"\u3058\u3085",
+                      @"-": @"ー",
                       };
     
     kConsonants = [NSCharacterSet characterSetWithCharactersInString:@"bcdfghjklmnpqrstvwxyz"];
