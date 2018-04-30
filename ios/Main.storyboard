@@ -669,9 +669,8 @@
                                     <action selector="addSynonymButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="4Ap-Ae-86d"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zyq-WW-fbd">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zyq-WW-fbd">
                                 <rect key="frame" x="0.0" y="604" width="62" height="62"/>
-                                <state key="normal" title="Reveal"/>
                                 <connections>
                                     <action selector="revealAnswerButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="cKB-bi-Zr1"/>
                                 </connections>
