@@ -224,7 +224,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
                          pendingProgress]];
   }
   if (pendingStudyMaterials != 0) {
-    [sections addObject:[NSString stringWithFormat:@"%d study material updates",
+    [sections addObject:[NSString stringWithFormat:@"%d synonym updates",
                          pendingStudyMaterials]];
   }
   _queuedItemsLabel.text = [sections componentsJoinedByString:@", "];
