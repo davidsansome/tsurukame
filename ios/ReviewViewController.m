@@ -481,6 +481,10 @@ static UIColor *kDefaultButtonTintColor;
     }
   }
   _revealAnswerButton.hidden = YES;
+  
+  // Change the submit button icon.
+  UIImage *submitButtonImage = shown ? _forwardArrowImage : _tickImage;
+  [_submitButton setImage:submitButtonImage forState:UIControlStateNormal];
 
   [self.view layoutIfNeeded];
   [UIView animateWithDuration:kAnimationDuration animations:^{
@@ -502,10 +506,6 @@ static UIColor *kDefaultButtonTintColor;
     
     // Change the background color of the answer field.
     _answerField.textColor = shown ? [UIColor redColor] : [UIColor blackColor];
-    
-    // Change the submit button icon.
-    UIImage *submitButtonImage = shown ? _forwardArrowImage : _tickImage;
-    [_submitButton setImage:submitButtonImage forState:UIControlStateNormal];
     
     // We resize the gradient layers in viewDidLayoutSubviews.
     _inAnimation = true;
