@@ -54,6 +54,8 @@ static const char *kSchemaV1 =
     ");";
 
 static const char *kSchemaV2 =
+    "DELETE FROM assignments;"
+    "UPDATE sync SET assignments_updated_after = \"\";"
     "ALTER TABLE assignments ADD COLUMN subject_id;"
     "CREATE INDEX idx_subject_id ON assignments (subject_id);";
 
@@ -154,14 +156,6 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     }
     for (; currentVersion < targetVersion; ++currentVersion) {
       CheckExecuteStatements(db, kSchemas[currentVersion]);
-      
-      // One-off update for kSchemaV2.
-      if (currentVersion == 1) {
-        for (WKAssignment *assignment in [self getAllAssignmentsInTransaction:db]) {
-          CheckUpdate(db, [NSString stringWithFormat:@"UPDATE assignments SET subject_id = %d WHERE id = %d",
-                           assignment.subjectId, assignment.id_p]);
-        }
-      }
     }
     CheckUpdate(db, [NSString stringWithFormat:@"PRAGMA user_version = %lu", (unsigned long)targetVersion]);
     NSLog(@"Database updated to schema %lu", targetVersion);
