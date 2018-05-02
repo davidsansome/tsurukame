@@ -629,6 +629,11 @@ static UIColor *kDefaultButtonTintColor;
   [self enterKeyPressed];
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+  [self enterKeyPressed];
+  return YES;
+}
+
 - (void)enterKeyPressed {
   if (!_submitButton.enabled) {
     return;
@@ -638,11 +643,6 @@ static UIColor *kDefaultButtonTintColor;
   } else {
     [self submit];
   }
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-  [self submit];
-  return YES;
 }
 
 - (void)submit {
