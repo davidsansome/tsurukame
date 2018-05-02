@@ -397,11 +397,13 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   NSURLComponents *url =
       [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/assignments",
                                              kURLBase]];
+  NSMutableArray<NSURLQueryItem *> *queryItems = [NSMutableArray array];
+  [queryItems addObject:[NSURLQueryItem queryItemWithName:@"unlocked" value:@"true"]];
+  [queryItems addObject:[NSURLQueryItem queryItemWithName:@"hidden" value:@"false"]];
   if (date && date.length) {
-    [url setQueryItems:@[
-        [NSURLQueryItem queryItemWithName:@"updated_after" value:date],
-    ]];
+    [queryItems addObject:[NSURLQueryItem queryItemWithName:@"updated_after" value:date]];
   }
+  [url setQueryItems:queryItems];
   
   [self startPagedQueryFor:url.URL handler:^(NSArray *data, NSError *error) {
     if (error) {
