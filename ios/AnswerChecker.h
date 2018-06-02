@@ -16,6 +16,8 @@
 
 #import "ReviewItem.h"
 
+@class DataLoader;
+
 typedef NS_ENUM(NSInteger, WKAnswerCheckerResult) {
   kWKAnswerPrecise,
   kWKAnswerImprecise,
@@ -27,4 +29,5 @@ typedef NS_ENUM(NSInteger, WKAnswerCheckerResult) {
 extern WKAnswerCheckerResult CheckAnswer(NSString *answer,
                                          WKSubject *subject,
                                          WKStudyMaterials *studyMaterials,
-                                         WKTaskType taskType);
+                                         WKTaskType taskType,
+                                         DataLoader *dataLoader);

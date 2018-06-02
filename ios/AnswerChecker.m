@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "AnswerChecker.h"
+#import "DataLoader.h"
 #import "NSString+LevenshteinDistance.h"
 #import "proto/Wanikani+Convenience.h"
 
@@ -52,7 +53,8 @@ static int DistanceTolerance(NSString *answer) {
 WKAnswerCheckerResult CheckAnswer(NSString *answer,
                                   WKSubject *subject,
                                   WKStudyMaterials *studyMaterials,
-                                  WKTaskType taskType) {
+                                  WKTaskType taskType,
+                                  DataLoader *dataLoader) {
   answer = FormattedString(answer);
   
   switch (taskType) {
@@ -70,6 +72,16 @@ WKAnswerCheckerResult CheckAnswer(NSString *answer,
       for (WKReading *reading in subject.alternateReadings) {
         if ([reading.reading isEqualToString:answer]) {
           return subject.hasKanji ? kWKAnswerOtherKanjiReading : kWKAnswerPrecise;
+        }
+      }
+      if (subject.hasVocabulary && subject.japanese.length == 1 &&
+          subject.componentSubjectIdsArray_Count == 1) {
+        // If the vocabulary is made up of only one Kanji, check whether the user wrote the Kanji
+        // reading instead of the vocabulary reading.
+        WKSubject *kanji = [dataLoader loadSubject:[subject.componentSubjectIdsArray valueAtIndex:0]];
+        WKAnswerCheckerResult kanjiResult = CheckAnswer(answer, kanji, nil, taskType, dataLoader);
+        if (kanjiResult == kWKAnswerPrecise) {
+          return kWKAnswerOtherKanjiReading;
         }
       }
       break;
