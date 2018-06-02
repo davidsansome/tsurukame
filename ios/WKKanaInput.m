@@ -409,7 +409,7 @@ replacementString:(NSString *)string {
     }
   
     // Replace n followed by a consonant.
-    if (![kN characterIsMember:newChar] &&
+    if (newChar != 'n' &&
         [kN characterIsMember:lastChar] &&
         ![kCanFollowN characterIsMember:newChar]) {
       textField.text = [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
