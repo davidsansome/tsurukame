@@ -15,23 +15,21 @@
 package main
 
 import (
-	"encoding/binary"
 	"flag"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/golang/protobuf/proto"
 
-	"github.com/davidsansome/wk/fileencoding"
-	pb "github.com/davidsansome/wk/proto"
+	"github.com/davidsansome/wk/encoding"
 	"github.com/davidsansome/wk/utils"
+
+	pb "github.com/davidsansome/wk/proto"
 )
 
 var (
-	out = flag.String("out", "data.bin", "Output file")
-
-	order = binary.LittleEndian
+	inputDir   = flag.String("in", "data", "Input directory")
+	outputFile = flag.String("out", "data.bin", "Output file")
 )
 
 func main() {
@@ -40,77 +38,47 @@ func main() {
 }
 
 func Combine() error {
-	// List files.
-	files, err := fileencoding.ListFilenames()
-	if err != nil {
-		return err
-	}
+	reader, err := encoding.OpenDirectory(*inputDir)
+	utils.Must(err)
 
-	// Read everything into memory.
-	all := make([][]byte, len(files))
-	for _, f := range files {
-		spb, err := fileencoding.ReadSubjectByFilename(f)
-		if err != nil {
-			return err
-		}
+	writer, err := encoding.OpenFileWriter(*outputFile)
+	utils.Must(err)
 
+	if err := encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
 		// Remove fields we don't care about for the iOS app.
-		id := spb.GetId()
 		spb.DocumentUrl = nil
-		spb.Id = nil
 		if spb.Radical != nil && spb.Radical.CharacterImage != nil {
 			spb.Radical.CharacterImage = nil
-			spb.Radical.HasCharacterImageFile = proto.Bool(true)
+			if spb.GetJapanese() == "" {
+				spb.Radical.HasCharacterImageFile = proto.Bool(true)
+			}
+		}
+		if spb.Vocabulary != nil {
+			spb.Vocabulary.Audio = nil
 		}
 
 		// Clean up the data.
-		if err := ReorderComponentSubjectIDs(spb); err != nil {
+		if err := ReorderComponentSubjectIDs(reader, spb); err != nil {
 			return err
 		}
 		UnsetEmptyFields(spb)
 
-		data, err := proto.Marshal(spb)
-		if err != nil {
-			return err
-		}
-
-		// Make space in the array for this ID.
-		for len(all) <= int(id) {
-			all = append(all, nil)
-		}
-		all[id] = data
-	}
-
-	fh, err := os.Create(*out)
-	if err != nil {
+		return writer.WriteSubject(id, spb)
+	}); err != nil {
 		return err
 	}
-	defer fh.Close()
 
-	// Write the index.
-	binary.Write(fh, order, uint32(len(all)))
-	offset := 4 + 4*len(all)
-	for _, d := range all {
-		binary.Write(fh, order, uint32(offset))
-		offset += len(d)
-	}
-
-	// Write each encoded protobuf.
-	for _, d := range all {
-		fh.Write(d)
-	}
-
-	return nil
+	return writer.Close()
 }
 
-func ReorderComponentSubjectIDs(spb *pb.Subject) error {
+func ReorderComponentSubjectIDs(reader encoding.Reader, spb *pb.Subject) error {
 	if spb.Vocabulary == nil {
 		return nil
 	}
 
 	characterToID := map[string]int32{}
 	for _, id := range spb.ComponentSubjectIds {
-		pb, err := fileencoding.ReadSubjectByID(id)
+		pb, err := reader.ReadSubject(int(id))
 		if err != nil {
 			return err
 		}

@@ -17,22 +17,22 @@ package main
 import (
 	"flag"
 	"fmt"
-	"image/png"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"path"
+	"os/exec"
+	"strconv"
 
-	"github.com/golang/protobuf/proto"
-	"github.com/nfnt/resize"
+	"github.com/davidsansome/wk/encoding"
+	"github.com/davidsansome/wk/utils"
 
 	pb "github.com/davidsansome/wk/proto"
 )
 
 var (
-	directory = flag.String("directory", "data", "Directory to read data files from")
+	inputPath = flag.String("in", "data", "Input file/directory")
 	out       = flag.String("out", "character_images", "Output file")
-	pointSize = flag.Uint("point-size", 60, "Size (in pt) of font images to create")
+	pointSize = flag.Int("point-size", 60, "Size (in pt) of font images to create")
 )
 
 const contentsJsonTemplate = `{
@@ -60,68 +60,75 @@ const contentsJsonTemplate = `{
 }
 `
 
-func Must(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
 func main() {
 	flag.Parse()
-	Must(Scrape())
+	utils.Must(Scrape())
 }
 
 func Scrape() error {
-	// List files.
-	files, err := ioutil.ReadDir(*directory)
-	Must(err)
+	reader, err := encoding.Open(*inputPath)
+	utils.Must(err)
 
 	// Create output directory.
-	Must(os.MkdirAll(*out, 0755))
+	utils.Must(os.MkdirAll(*out, 0755))
 
-	for _, f := range files {
-		// Read the proto.
-		pbData, err := ioutil.ReadFile(path.Join(*directory, f.Name()))
-		Must(err)
-
-		var spb pb.Subject
-		Must(proto.Unmarshal(pbData, &spb))
-
-		if spb.Radical == nil || spb.Radical.CharacterImage == nil {
-			continue
+	return encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
+		if spb.Radical == nil || spb.Radical.CharacterImage == nil || spb.GetJapanese() != "" {
+			return nil
 		}
 
 		// Fetch the radical image.
-		resp, err := http.Get(spb.Radical.GetCharacterImage())
-		Must(err)
+		url := spb.Radical.GetCharacterImage()
+		fmt.Println("Fetching", url)
+		resp, err := http.Get(url)
+		utils.Must(err)
 		defer resp.Body.Close()
 		if resp.StatusCode != http.StatusOK {
 			return fmt.Errorf("HTTP %d from %s", resp.StatusCode, resp.Request.URL)
 		}
 
-		img, err := png.Decode(resp.Body)
-		Must(err)
+		imgData, err := ioutil.ReadAll(resp.Body)
+		utils.Must(err)
 
 		dir := fmt.Sprintf("%s/radical-%d.imageset", *out, spb.GetId())
-		Must(os.MkdirAll(dir, 0755))
+		utils.Must(os.MkdirAll(dir, 0755))
 
 		// Write each size.
-		for _, x := range []uint{1, 2, 3} {
+		for _, x := range []int{1, 2, 3} {
 			px := *pointSize * x
 
-			resizedImg := resize.Resize(px, px, img, resize.Lanczos3)
-
-			// Write the new image.
 			path := fmt.Sprintf("%s/radical-%d-%dx.png", dir, spb.GetId(), x)
-			fh, err := os.Create(path)
-			Must(err)
-			defer fh.Close()
-			Must(png.Encode(fh, resizedImg))
+			utils.Must(ScaleSVGData(imgData, path, px))
+			fmt.Println("Saved", path)
 		}
 
 		// Write the Contents.json.
 		path := fmt.Sprintf("%s/Contents.json", dir)
-		Must(ioutil.WriteFile(path, []byte(fmt.Sprintf(contentsJsonTemplate, spb.GetId(), spb.GetId(), spb.GetId())), 0644))
+		utils.Must(ioutil.WriteFile(path, []byte(fmt.Sprintf(contentsJsonTemplate, spb.GetId(), spb.GetId(), spb.GetId())), 0644))
+		return nil
+	})
+}
+
+func ScaleSVG(svg, png string, size int) error {
+	sizeString := strconv.Itoa(size)
+	cmd := exec.Command("inkscape", "-z", "-e", png, "-w", sizeString, "-h", sizeString, svg)
+	return cmd.Run()
+}
+
+func ScaleSVGData(svg []byte, png string, size int) error {
+	tmpfile, err := ioutil.TempFile("", "tsurukame-svg")
+	if err != nil {
+		return err
 	}
-	return nil
+
+	defer os.Remove(tmpfile.Name())
+
+	if _, err := tmpfile.Write(svg); err != nil {
+		return err
+	}
+	if err := tmpfile.Close(); err != nil {
+		return err
+	}
+
+	return ScaleSVG(tmpfile.Name(), png, size)
 }

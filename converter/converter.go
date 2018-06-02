@@ -41,14 +41,18 @@ func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
 
 	if o.Object == "kanji" || o.Object == "vocabulary" {
 		ret.Readings = convertReadings(o.Data.Readings)
-		ret.ComponentSubjectIds = convertComponentSubjectIDs(o.Data.ComponentSubjectIDs)
+		ret.ComponentSubjectIds = convertSubjectIDArray(o.Data.ComponentSubjectIDs)
+	}
+	if o.Object == "radical" || o.Object == "kanji" {
+		ret.AmalgamationSubjectIds = convertSubjectIDArray(o.Data.AmalgamationSubjectIDs)
 	}
 
 	switch o.Object {
 	case "radical":
 		ret.Radical = &pb.Radical{}
 		if len(o.Data.CharacterImages) >= 1 {
-			ret.Radical.CharacterImage = proto.String(o.Data.CharacterImages[0].URL)
+			ret.Radical.CharacterImage =
+				proto.String(bestCharacterImageURL(o.ID, o.Data.CharacterImages))
 		}
 
 	case "kanji":
@@ -66,6 +70,15 @@ func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
 	}
 
 	return &ret, nil
+}
+
+func bestCharacterImageURL(id int, images []api.CharacterImage) string {
+	for _, i := range images {
+		if i.ContentType == "image/svg+xml" && i.Metadata.InlineStyles {
+			return i.URL
+		}
+	}
+	panic(fmt.Sprintf("No SVG found for radical %d", id))
 }
 
 func convertMeanings(m []api.MeaningObject) []*pb.Meaning {
@@ -102,7 +115,7 @@ func convertReadings(r []api.ReadingObject) []*pb.Reading {
 	return ret
 }
 
-func convertComponentSubjectIDs(c []int) []int32 {
+func convertSubjectIDArray(c []int) []int32 {
 	var ret []int32
 	for _, id := range c {
 		ret = append(ret, int32(id))
