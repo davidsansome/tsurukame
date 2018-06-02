@@ -646,8 +646,8 @@ static UIColor *kDefaultButtonTintColor;
 }
 
 - (void)submit {
-  WKAnswerCheckerResult result =
-      CheckAnswer(_answerField.text, _activeSubject, _activeStudyMaterials, _activeTaskType);
+  WKAnswerCheckerResult result = CheckAnswer(_answerField.text, _activeSubject,
+                                             _activeStudyMaterials, _activeTaskType, _dataLoader);
   switch (result) {
     case kWKAnswerPrecise:
     case kWKAnswerImprecise: {
