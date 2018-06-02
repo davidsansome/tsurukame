@@ -36,7 +36,7 @@ message Reading {
 }
 
 message Radical {
-  optional string character_image = 1;
+  optional string character_image = 1;  // Not present in final data.
   optional string mnemonic = 2;
   optional bool has_character_image_file = 3;
 }
@@ -95,6 +95,7 @@ message Subject {
   repeated Reading readings = 6;  // Does not apply to radicals.
   repeated Meaning meanings = 7;
   repeated int32 component_subject_ids = 8;  // Does not apply to radicals.
+  repeated int32 amalgamation_subject_ids = 12;  // Does not apply to vocabulary.
 
   optional Radical radical = 9;
   optional Kanji kanji = 10;

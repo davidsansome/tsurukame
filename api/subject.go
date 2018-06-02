@@ -28,29 +28,41 @@ type SubjectObject struct {
 	ID     int    `'json:"id"`
 	Object string `json:"object"`
 	Data   struct {
-		Level           int    `json:"level"`
-		Slug            string `json:"slug"`
-		DocumentURL     string `json:"document_url"`
-		Character       string `json:"character"`
-		Characters      string `json:"characters"`
-		CharacterImages []struct {
-			ContentType string `json:"content_type"`
-			URL         string `json:"url"`
-		} `json:"character_images"`
-		Meanings            []MeaningObject
-		Readings            []ReadingObject
-		ComponentSubjectIDs []int    `json:"component_subject_ids"`
-		PartsOfSpeech       []string `json:"parts_of_speech"`
+		Level                  int              `json:"level"`
+		Slug                   string           `json:"slug"`
+		HiddenAt               string           `json:"hidden_at"`
+		DocumentURL            string           `json:"document_url"`
+		Character              string           `json:"character"`
+		Characters             string           `json:"characters"`
+		CharacterImages        []CharacterImage `json:"character_images"`
+		Meanings               []MeaningObject
+		Readings               []ReadingObject
+		ComponentSubjectIDs    []int    `json:"component_subject_ids"`
+		AmalgamationSubjectIDs []int    `json:"amalgamation_subject_ids"`
+		PartsOfSpeech          []string `json:"parts_of_speech"`
 	} `json:"data"`
 }
 
+type CharacterImage struct {
+	ContentType string `json:"content_type"`
+	URL         string `json:"url"`
+	Metadata    struct {
+		Color        string `json:"color"`
+		Dimensions   string `json:"dimensions"`
+		StyleName    string `json:"style_name"`
+		InlineStyles bool   `json:"inline_styles"`
+	}
+}
+
 type MeaningObject struct {
-	Meaning string `json:"meaning"`
-	Primary bool   `json:"primary"`
+	Meaning        string `json:"meaning"`
+	Primary        bool   `json:"primary"`
+	AcceptedAnswer bool   `json:"accepted_answer"`
 }
 
 type ReadingObject struct {
-	Type    string `json:"type"`
-	Primary bool   `json:"primary"`
-	Reading string `json:"reading"`
+	Type           string `json:"type"`
+	Primary        bool   `json:"primary"`
+	Reading        string `json:"reading"`
+	AcceptedAnswer bool   `json:"accepted_answer"`
 }

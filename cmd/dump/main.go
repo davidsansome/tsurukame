@@ -17,83 +17,60 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
-	"path"
-	"sort"
 	"strconv"
 
 	"github.com/golang/protobuf/proto"
+
+	"github.com/davidsansome/wk/encoding"
+	"github.com/davidsansome/wk/utils"
 
 	pb "github.com/davidsansome/wk/proto"
 )
 
 var (
-	directory = flag.String("directory", "data", "Directory to read data files from")
-	all       = flag.Bool("all", false, "Dump everything instead of listing IDs")
+	all = flag.Bool("all", false, "Dump everything instead of listing IDs")
 )
 
 func main() {
 	flag.Parse()
 
-	var err error
-	if len(flag.Args()) == 1 {
-		id, err := strconv.Atoi(flag.Args()[0])
-		if err != nil {
-			panic(err)
-		}
-		err = DumpOne(id)
-	} else {
-		err = ListAll()
+	if len(flag.Args()) == 0 {
+		flag.Usage()
+		return
 	}
 
-	if err != nil {
-		panic(err)
+	path := flag.Args()[0]
+	reader, err := encoding.Open(path)
+	utils.Must(err)
+
+	if len(flag.Args()) == 2 {
+		id, err := strconv.Atoi(flag.Args()[1])
+		utils.Must(err)
+		err = DumpOne(reader, id)
+	} else {
+		err = ListAll(reader)
 	}
+
+	utils.Must(err)
 }
 
-func ListAll() error {
-	files, err := ioutil.ReadDir(*directory)
-	if err != nil {
-		return err
-	}
-
-	sort.Slice(files, func(i, j int) bool {
-		in, _ := strconv.Atoi(files[i].Name())
-		jn, _ := strconv.Atoi(files[j].Name())
-		return in < jn
-	})
-
-	for _, f := range files {
-		data, err := ioutil.ReadFile(path.Join(*directory, f.Name()))
-		if err != nil {
-			return err
-		}
-
-		var spb pb.Subject
-		if err := proto.Unmarshal(data, &spb); err != nil {
-			return err
-		}
-
+func ListAll(reader encoding.Reader) error {
+	return encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
 		if *all {
-			fmt.Println(proto.MarshalTextString(&spb))
+			fmt.Println(proto.MarshalTextString(spb))
 		} else {
 			fmt.Printf("%d. %s\n", spb.GetId(), spb.GetSlug())
 		}
-	}
-	return nil
+		return nil
+	})
 }
 
-func DumpOne(id int) error {
-	data, err := ioutil.ReadFile(path.Join(*directory, strconv.Itoa(id)))
+func DumpOne(reader encoding.Reader, id int) error {
+	data, err := reader.ReadSubject(id)
 	if err != nil {
 		return err
 	}
 
-	var spb pb.Subject
-	if err := proto.Unmarshal(data, &spb); err != nil {
-		return err
-	}
-
-	fmt.Println(proto.MarshalTextString(&spb))
+	fmt.Println(proto.MarshalTextString(data))
 	return nil
 }

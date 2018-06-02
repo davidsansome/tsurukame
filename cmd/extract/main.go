@@ -17,44 +17,34 @@ package main
 import (
 	"encoding/binary"
 	"flag"
-	"fmt"
-	"io/ioutil"
 
-	"github.com/davidsansome/wk/indexedencoding"
+	"github.com/davidsansome/wk/encoding"
+	"github.com/davidsansome/wk/utils"
+
+	pb "github.com/davidsansome/wk/proto"
 )
 
 var (
-	directory     = flag.String("directory", "data", "Output directory")
-	inputFilename = flag.String("input_filename", "data.bin", "Input file")
+	inputFile = flag.String("in", "data.bin", "Input file")
+	outputDir = flag.String("out", "data", "Output directory")
 
 	order = binary.LittleEndian
 )
 
 func main() {
 	flag.Parse()
-
-	if err := Extract(); err != nil {
-		panic(err)
-	}
+	utils.Must(Extract())
 }
 
 func Extract() error {
-	r, err := indexedencoding.NewReader(*inputFilename)
-	if err != nil {
-		return err
-	}
+	reader, err := encoding.OpenFileReader(*inputFile)
+	utils.Must(err)
 
-	for i := uint32(1); i < r.Count(); i++ {
-		data, err := r.ReadSubjectBytes(i)
-		if err != nil {
-			return err
-		}
+	writer, err := encoding.OpenDirectory(*outputDir)
+	utils.Must(err)
+	defer writer.Close()
 
-		outputFilename := fmt.Sprintf("%s/%d", *directory, i)
-		fmt.Println("Writing", outputFilename)
-		if err := ioutil.WriteFile(outputFilename, data, 0644); err != nil {
-			return err
-		}
-	}
-	return nil
+	return encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
+		return writer.WriteSubject(id, spb)
+	})
 }
