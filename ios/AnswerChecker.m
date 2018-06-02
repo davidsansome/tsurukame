@@ -17,6 +17,29 @@
 #import "NSString+LevenshteinDistance.h"
 #import "proto/Wanikani+Convenience.h"
 
+static const char *kKanaCharacters =
+    "あいうえお"
+    "かきくけこがぎぐげご"
+    "さしすせそざじずぜぞ"
+    "たちつてとだぢづでど"
+    "なにぬねの"
+    "はひふへほばびぶべぼぱぴぷぺぽ"
+    "まみむめも"
+    "らりるれろ"
+    "やゆよゃゅょぃっ"
+    "わをん"
+    "アイウエオ"
+    "カキクケコガギグゲゴ"
+    "サシスセソザジズゼゾ"
+    "タチツテトダヂヅデド"
+    "ナニヌネノ"
+    "ハヒフヘホバビブベボパピプペポ"
+    "マミムメモ"
+    "ラリルレロ"
+    "ヤユトャュョィッ"
+    "ワヲン";
+
+
 static NSString *FormattedString(NSString *s) {
   s = [s stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
   s = [s lowercaseString];
@@ -48,6 +71,42 @@ static int DistanceTolerance(NSString *answer) {
     return 2;
   }
   return 2 + 1 * floor((double)(answer.length) / 7);
+}
+
+static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
+  static dispatch_once_t onceToken;
+  static NSCharacterSet *kKanaCharacterSet;
+  dispatch_once(&onceToken, ^{
+    kKanaCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@(kKanaCharacters)];
+  });
+  
+  if (answer.length < japanese.length) {
+    return NO;
+  }
+  
+  for (int i = 0; i < japanese.length; ++i) {
+    unichar japaneseChar = [japanese characterAtIndex:i];
+    if (![kKanaCharacterSet characterIsMember:japaneseChar]) {
+      break;
+    }
+    unichar answerChar = [answer characterAtIndex:i];
+    if (japaneseChar != answerChar) {
+      return YES;
+    }
+  }
+  
+  for (int i = 0; i < japanese.length; ++i) {
+    unichar japaneseChar = [japanese characterAtIndex:japanese.length - i];
+    if (![kKanaCharacterSet characterIsMember:japaneseChar]) {
+      break;
+    }
+    unichar answerChar = [answer characterAtIndex:answer.length - i];
+    if (japaneseChar != answerChar) {
+      return YES;
+    }
+  }
+  
+  return NO;
 }
 
 WKAnswerCheckerResult CheckAnswer(NSString *answer,
@@ -83,6 +142,9 @@ WKAnswerCheckerResult CheckAnswer(NSString *answer,
         if (kanjiResult == kWKAnswerPrecise) {
           return kWKAnswerOtherKanjiReading;
         }
+      }
+      if (subject.hasVocabulary && MismatchingOkurigana(answer, subject.japanese)) {
+        return kWKAnswerOtherKanjiReading;
       }
       break;
       
