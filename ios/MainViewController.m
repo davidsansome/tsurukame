@@ -141,8 +141,16 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   // Configure the search bar.
   UISearchBar *searchBar = _searchController.searchBar;
   searchBar.barTintColor = WKRadicalColor2();
-  searchBar.tintColor = [UIColor whiteColor];
   searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+  
+  UIColor *originalSearchBarTintColor = searchBar.tintColor;
+  searchBar.tintColor = [UIColor whiteColor];  // Make the button white.
+  
+  for (UIView *view in _searchController.searchBar.subviews.firstObject.subviews) {
+    if ([view isKindOfClass:UITextField.class]) {
+      view.tintColor = originalSearchBarTintColor;  // Make the input field cursor dark blue.
+    }
+  }
   
   // Add shadows to things in the user info view.
   WKAddShadowToView(_userImageContainer, 2, 0.4, 4);
