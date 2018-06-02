@@ -17,83 +17,162 @@
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "UserDefaults.h"
-
-static const int kReviewsSectionIndex = 1;
-static const int kMeaningReadingOrderRowIndex = 2;
+#import "Tables/WKTableModel.h"
+#import "Tables/WKSwitchModelItem.h"
 
 @interface SettingsViewController ()
-
-@property (strong, nonatomic) IBOutlet UISwitch *particleExplosionSwitch;
-@property (strong, nonatomic) IBOutlet UISwitch *levelUpPopupSwitch;
-@property (strong, nonatomic) IBOutlet UISwitch *plusOneSwitch;
-@property (strong, nonatomic) IBOutlet UISwitch *groupMeaningReadingSwitch;
-@property (strong, nonatomic) IBOutlet UISwitch *showAnswerImmediatelySwitch;
-@property (strong, nonatomic) IBOutlet UISwitch *enableCheatsSwitch;
-
-@property (weak, nonatomic) IBOutlet UILabel *reviewOrderSubtitle;
-@property (weak, nonatomic) IBOutlet UILabel *taskOrderSubtitle;
-
 @end
 
 @implementation SettingsViewController {
+  WKTableModel *_model;
   NSIndexPath *_groupMeaningReadingIndexPath;
 }
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+}
+
+- (void)rerender {
+  WKMutableTableModel *model = [[WKMutableTableModel alloc] initWithTableView:self.tableView];
   
+  [model addSection:@"Animations"
+             footer:@"You can turn off any animations you find distracting"];
+  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                    title:@"Particle explosion"
+                                                 subtitle:nil
+                                                       on:UserDefaults.animateParticleExplosion
+                                                   target:self
+                                                   action:@selector(animateParticleExplosionSwitchChanged:)]];
+  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                    title:@"Level up popup"
+                                                 subtitle:nil
+                                                       on:UserDefaults.animateLevelUpPopup
+                                                   target:self
+                                                   action:@selector(animateLevelUpPopupSwitchChanged:)]];
+  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                    title:@"+1"
+                                                 subtitle:nil
+                                                       on:UserDefaults.animatePlusOne
+                                                   target:self
+                                                   action:@selector(animatePlusOneSwitchChanged:)]];
+  
+  [model addSection:@"Reviews"];
+  [model addItem:[[WKBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                   title:@"Review order"
+                                                subtitle:self.reviewOrderValueText
+                                           accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                  target:self
+                                                  action:@selector(didTapReviewOrder:)]];
+  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                    title:@"Back-to-back"
+                                                 subtitle:@"Group Meaning and Reading together"
+                                                       on:UserDefaults.groupMeaningReading
+                                                   target:self
+                                                   action:@selector(groupMeaningReadingSwitchChanged:)]];
   _groupMeaningReadingIndexPath =
-      [NSIndexPath indexPathForRow:kMeaningReadingOrderRowIndex
-                         inSection:kReviewsSectionIndex];
+      [model addItem:[[WKBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                       title:@"Back-to-back order"
+                                                    subtitle:self.taskOrderValueText
+                                               accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                      target:self
+                                                      action:@selector(didTapTaskOrder:)]
+              hidden:!UserDefaults.groupMeaningReading];
+  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                    title:@"Reveal answer automatically"
+                                                 subtitle:nil
+                                                       on:UserDefaults.showAnswerImmediately
+                                                   target:self
+                                                   action:@selector(showAnswerImmediatelySwitchChanged:)]];
+  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                    title:@"Allow cheating"
+                                                 subtitle:@"Ignore Typos and Add Synonym"
+                                                       on:UserDefaults.enableCheats
+                                                   target:self
+                                                   action:@selector(enableCheatsSwitchChanged:)]];
+  
+  [model addSection];
+  [model addItem:[[WKBasicModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                   title:@"Export local database"
+                                                subtitle:@"To attach to bug reports or email to the developer"
+                                           accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                  target:self
+                                                  action:@selector(didTapSendBugReport:)]];
+  
+  WKBasicModelItem *logOutItem = [[WKBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                                   title:@"Log out"
+                                                                subtitle:nil
+                                                           accessoryType:UITableViewCellAccessoryNone
+                                                                  target:self
+                                                                  action:@selector(didTapLogOut:)];
+  logOutItem.textColor = [UIColor redColor];
+  [model addItem:logOutItem];
+  
+  _model = model;
+  [model reloadTable];
+}
+
+- (NSString *)reviewOrderValueText {
+  switch (UserDefaults.reviewOrder) {
+    case ReviewOrder_Random:
+      return @"Random";
+    case ReviewOrder_BySRSLevel:
+      return @"SRS level";
+    case ReviewOrder_CurrentLevelFirst:
+      return @"Current level first";
+  }
+  return nil;
+}
+
+- (NSString *)taskOrderValueText {
+  if (UserDefaults.meaningFirst) {
+    return @"Meaning first";
+  } else {
+    return @"Reading first";
+  }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = NO;
   
-  _particleExplosionSwitch.on = UserDefaults.animateParticleExplosion;
-  _levelUpPopupSwitch.on = UserDefaults.animateLevelUpPopup;
-  _plusOneSwitch.on = UserDefaults.animatePlusOne;
-  _showAnswerImmediatelySwitch.on = UserDefaults.showAnswerImmediately;
-  _enableCheatsSwitch.on = UserDefaults.enableCheats;
-  
-  _groupMeaningReadingSwitch.on = UserDefaults.groupMeaningReading;
-  _enableCheatsSwitch.on = UserDefaults.enableCheats;
-  
-  switch (UserDefaults.reviewOrder) {
-    case ReviewOrder_Random:
-      [_reviewOrderSubtitle setText:@"Random"];
-      break;
-    case ReviewOrder_BySRSLevel:
-      [_reviewOrderSubtitle setText:@"SRS level"];
-      break;
-    case ReviewOrder_CurrentLevelFirst:
-      [_reviewOrderSubtitle setText:@"Current level first"];
-      break;
-  }
-  
-  if (UserDefaults.meaningFirst) {
-    [_taskOrderSubtitle setText:@"Meaning first"];
-  } else {
-    [_taskOrderSubtitle setText:@"Reading first"];
-  }
-  
-  [self setIndexPath:_groupMeaningReadingIndexPath isHidden:!_groupMeaningReadingSwitch.on];
+  [self rerender];
 }
 
-- (IBAction)switchValueChanged:(id)sender {
-  UserDefaults.animateParticleExplosion = _particleExplosionSwitch.on;
-  UserDefaults.animateLevelUpPopup = _levelUpPopupSwitch.on;
-  UserDefaults.animatePlusOne = _plusOneSwitch.on;
-  
-  UserDefaults.groupMeaningReading = _groupMeaningReadingSwitch.on;
-  UserDefaults.showAnswerImmediately = _showAnswerImmediatelySwitch.on;
-  UserDefaults.enableCheats = _enableCheatsSwitch.on;
-  
-  [self setIndexPath:_groupMeaningReadingIndexPath isHidden:!_groupMeaningReadingSwitch.on];
+- (void)animateParticleExplosionSwitchChanged:(UISwitch *)switchView {
+  NSLog(@"Toggled");
+  UserDefaults.animateParticleExplosion = switchView.on;
 }
 
-- (IBAction)didTapLogOut:(id)sender {
+- (void)animateLevelUpPopupSwitchChanged:(UISwitch *)switchView {
+  UserDefaults.animateLevelUpPopup = switchView.on;
+}
+
+- (void)animatePlusOneSwitchChanged:(UISwitch *)switchView {
+  UserDefaults.animatePlusOne = switchView.on;
+}
+  
+- (void)groupMeaningReadingSwitchChanged:(UISwitch *)switchView {
+  UserDefaults.groupMeaningReading = switchView.on;
+  [_model setIndexPath:_groupMeaningReadingIndexPath isHidden:!switchView.on];
+}
+
+- (void)showAnswerImmediatelySwitchChanged:(UISwitch *)switchView {
+  UserDefaults.showAnswerImmediately = switchView.on;
+}
+
+- (void)enableCheatsSwitchChanged:(UISwitch *)switchView {
+  UserDefaults.enableCheats = switchView.on;
+}
+
+- (void)didTapReviewOrder:(WKBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"reviewOrder" sender:self];
+}
+
+- (void)didTapTaskOrder:(WKBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"taskOrder" sender:self];
+}
+
+- (void)didTapLogOut:(id)sender {
   __weak SettingsViewController *weakSelf = self;
   UIAlertController *c = [UIAlertController alertControllerWithTitle:@"Are you sure?"
                                                              message:nil
@@ -108,7 +187,7 @@ static const int kMeaningReadingOrderRowIndex = 2;
   [self presentViewController:c animated:YES completion:nil];
 }
 
-- (IBAction)didTapSendBugReport:(id)sender {
+- (void)didTapSendBugReport:(id)sender {
   NSURL *url = [LocalCachingClient databaseFileUrl];
   UIActivityViewController *c = [[UIActivityViewController alloc] initWithActivityItems:@[url]
                                                                   applicationActivities:nil];

@@ -12,15 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import "WKModelItem.h"
 
-@interface StaticHideableTableViewController : UITableViewController
+void WKSafePerformSelector(id target, SEL selector, id object) {
+  if (![target respondsToSelector:selector]) {
+    return;
+  }
+  ((void (*)(id, SEL, id))[target methodForSelector:selector])(target, selector, object);
+}
 
-- (void)setIndexPath:(NSIndexPath *)index
-            isHidden:(BOOL)hidden;
-- (void)setIndexPath:(NSIndexPath *)index
-            isHidden:(BOOL)hidden
-    withRowAnimation:(UITableViewRowAnimation)animation;
-- (BOOL)isIndexPathHidden:(NSIndexPath *)index;
+
+@implementation WKModelCell : UITableViewCell
+
+- (void)updateWithItem:(id<WKModelItem>)item {
+  _item = item;
+}
+
+- (void)didSelectCell {
+}
 
 @end
