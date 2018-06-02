@@ -20,6 +20,10 @@
 	<string>1.3</string>
 	<key>CFBundleVersion</key>
 	<string>2</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>googlechromes</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIBackgroundModes</key>

@@ -24,6 +24,7 @@
 #import "SubjectDetailsViewController.h"
 #import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
+#import "WKOpenURL.h"
 #import "proto/Wanikani+Convenience.h"
 
 @class CombinedChartView;
@@ -38,6 +39,8 @@ static const int kUpcomingReviewsSection = 1;
 
 static const CGFloat kUserGradientYOffset = 450;
 static const CGFloat kUserGradientStartPoint = 0.8f;
+
+static const char *kDashboardURL = "https://www.wanikani.com/dashboard";
 
 static NSURL *UserProfileImageURL(NSString *emailAddress) {
   emailAddress = [emailAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -321,6 +324,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   [_searchController dismissViewControllerAnimated:YES completion:^{
     [self.navigationController pushViewController:vc animated:YES];
   }];
+}
+
+- (IBAction)didTapOpenDashboard:(id)sender {
+  WKOpenURL([NSURL URLWithString:@(kDashboardURL)]);
 }
 
 @end

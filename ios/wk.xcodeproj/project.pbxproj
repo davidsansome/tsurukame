@@ -138,6 +138,7 @@
 		633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */; };
 		633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */; };
 		633DE9382094DDA900AC25F4 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */; };
+		633DE93B20C24CFD00AC25F4 /* WKOpenURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE93A20C24CFD00AC25F4 /* WKOpenURL.m */; };
 		6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */; };
 		6356E7831FDFF0EA009CE7C1 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6356E7821FDFF0E3009CE7C1 /* WebKit.framework */; };
 		6356E7861FE14066009CE7C1 /* WKKanaInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356E7851FE14066009CE7C1 /* WKKanaInput.m */; };
@@ -363,6 +364,8 @@
 		633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewTaskOrderViewController.m; sourceTree = "<group>"; };
 		633DE9362094DDA900AC25F4 /* NSMutableArray+Shuffle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Shuffle.h"; sourceTree = "<group>"; };
 		633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Shuffle.m"; sourceTree = "<group>"; };
+		633DE93920C24CFD00AC25F4 /* WKOpenURL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WKOpenURL.h; sourceTree = "<group>"; };
+		633DE93A20C24CFD00AC25F4 /* WKOpenURL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKOpenURL.m; sourceTree = "<group>"; };
 		6356E77F1FDFEFAB009CE7C1 /* SubjectDetailsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectDetailsView.h; sourceTree = "<group>"; };
 		6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectDetailsView.m; sourceTree = "<group>"; };
 		6356E7821FDFF0E3009CE7C1 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -519,6 +522,8 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				633DE93920C24CFD00AC25F4 /* WKOpenURL.h */,
+				633DE93A20C24CFD00AC25F4 /* WKOpenURL.m */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -962,6 +967,7 @@
 				6319CA9E2044203E00C31F87 /* IFillFormatter.swift in Sources */,
 				63CAAAD91FC6E0CB00E09DA1 /* Wanikani.pbobjc.m in Sources */,
 				6319CAB22044203E00C31F87 /* HorizontalBarChartRenderer.swift in Sources */,
+				633DE93B20C24CFD00AC25F4 /* WKOpenURL.m in Sources */,
 				63EDA426207F335500382CE3 /* RadarChartDataSet.swift in Sources */,
 				6319CB002044203F00C31F87 /* AnimatedViewPortJob.swift in Sources */,
 				63CAAAE91FC6E1D400E09DA1 /* GPBRootObject.m in Sources */,

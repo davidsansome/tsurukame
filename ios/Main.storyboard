@@ -357,24 +357,49 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Queued updates" id="OPJ-yt-ZTf">
+                            <tableViewSection headerTitle="Wanikani website" id="OPJ-yt-ZTf">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="snw-uk-PKz" detailTextLabel="7fE-95-hWX" style="IBUITableViewCellStyleSubtitle" id="BXS-p2-524">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="snw-uk-PKz" style="IBUITableViewCellStyleDefault" id="BXS-p2-524">
                                         <rect key="frame" x="0.0" y="607.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BXS-p2-524" id="hi6-Ez-Tfa">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="You're up to date!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" id="snw-uk-PKz">
-                                                    <rect key="frame" x="16" y="5" width="135" height="20.5"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Dashboard" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="snw-uk-PKz">
+                                                    <rect key="frame" x="16" y="0.0" width="324" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" id="7fE-95-hWX">
-                                                    <rect key="frame" x="16" y="25.5" width="44" height="14.5"/>
+                                            </subviews>
+                                            <gestureRecognizers/>
+                                            <connections>
+                                                <outletCollection property="gestureRecognizers" destination="frF-FC-Bqf" appends="YES" id="sUG-OQ-4lp"/>
+                                            </connections>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Queued updates" id="d6d-VV-C0G">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="ZMS-Lu-tge" detailTextLabel="DCZ-py-fGX" style="IBUITableViewCellStyleSubtitle" id="nHm-ep-Nic">
+                                        <rect key="frame" x="0.0" y="707.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nHm-ep-Nic" id="M7S-MF-koV">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="You're up to date!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" id="ZMS-Lu-tge">
+                                                    <rect key="frame" x="15" y="5" width="135" height="20.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" id="DCZ-py-fGX">
+                                                    <rect key="frame" x="15" y="25.5" width="44" height="14.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
@@ -397,8 +422,6 @@
                         <outlet property="currentLevelRadicalsPieChartView" destination="TPS-zV-AWU" id="lQ6-3p-umh"/>
                         <outlet property="currentLevelVocabularyPieChartView" destination="2D9-xR-5vE" id="SRs-YF-UIk"/>
                         <outlet property="lessonsCell" destination="cHi-TB-m7d" id="I2l-ag-Z07"/>
-                        <outlet property="queuedItemsLabel" destination="snw-uk-PKz" id="3zG-vp-nAx"/>
-                        <outlet property="queuedItemsSubtitleLabel" destination="7fE-95-hWX" id="Dde-Fa-IyL"/>
                         <outlet property="reviewsCell" destination="GQA-UB-k55" id="BDV-S7-dFy"/>
                         <outlet property="searchButton" destination="9xb-Y6-h0m" id="5ay-Pl-LKZ"/>
                         <outlet property="settingsButton" destination="OWg-xT-QDr" id="PEr-ig-hIJ"/>
@@ -411,6 +434,11 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dob-5V-x24" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="frF-FC-Bqf">
+                    <connections>
+                        <action selector="didTapOpenDashboard:" destination="ByY-Kf-IzJ" id="4z9-VV-RdB"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-92" y="176"/>
         </scene>
