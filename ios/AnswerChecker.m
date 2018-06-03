@@ -95,7 +95,7 @@ static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
     }
   }
   
-  for (int i = 0; i < japanese.length; ++i) {
+  for (int i = 1; i <= japanese.length; ++i) {
     unichar japaneseChar = [japanese characterAtIndex:japanese.length - i];
     if (![kKanaCharacterSet characterIsMember:japaneseChar]) {
       break;
