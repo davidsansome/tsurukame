@@ -65,8 +65,8 @@
       return NSOrderedDescending; \
     }
 
-  COMPARE(assignment.subjectType);
   COMPARE(assignment.level);
+  COMPARE(assignment.subjectType);
   COMPARE(assignment.subjectId);
   return NSOrderedSame;
 
