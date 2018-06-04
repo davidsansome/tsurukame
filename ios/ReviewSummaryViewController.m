@@ -118,7 +118,7 @@
   } else {
     ret = [tableView dequeueReusableCellWithIdentifier:@"reviewCell"];
     ReviewItem *item = _incorrectItems[indexPath.section - 1][indexPath.row];
-    WKSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
+    TKMSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
     ReviewSummaryCell *cell = (ReviewSummaryCell *)ret;
     cell.item = item;
     cell.subject = subject;

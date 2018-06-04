@@ -18,26 +18,26 @@
 
 @class DataLoader;
 
-typedef NS_ENUM(NSInteger, WKTaskType) {
-  kWKTaskTypeReading,
-  kWKTaskTypeMeaning,
+typedef NS_ENUM(NSInteger, TKMTaskType) {
+  kTKMTaskTypeReading,
+  kTKMTaskTypeMeaning,
   
-  kWKTaskType_Max,
+  kTKMTaskType_Max,
 };
 
 @interface ReviewItem : NSObject
 
-+ (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<WKAssignment *> *)assignments;
-+ (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<WKAssignment *> *)assignments
++ (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments;
++ (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<TKMAssignment *> *)assignments
                                           dataLoader:(DataLoader *)dataLoader;
 
-- (instancetype)initFromAssignment:(WKAssignment *)assignment NS_DESIGNATED_INITIALIZER;
+- (instancetype)initFromAssignment:(TKMAssignment *)assignment NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-@property (nonatomic, readonly) WKAssignment *assignment;
+@property (nonatomic, readonly) TKMAssignment *assignment;
 @property (nonatomic) bool answeredReading;
 @property (nonatomic) bool answeredMeaning;
-@property (nonatomic) WKProgress *answer;
+@property (nonatomic) TKMProgress *answer;
 
 - (NSComparisonResult)compareForLessons:(ReviewItem *)other;
 

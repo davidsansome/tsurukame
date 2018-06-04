@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "WKSwitchModelItem.h"
+#import "TKMSwitchModelItem.h"
 
-@interface WKSwitchModelCell : WKBasicModelCell
+@interface TKMSwitchModelCell : TKMBasicModelCell
 @end
 
-@implementation WKSwitchModelItem
+@implementation TKMSwitchModelItem
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
                         title:(NSString *)title
@@ -38,12 +38,12 @@
 }
 
 - (Class)cellClass {
-  return WKSwitchModelCell.class;
+  return TKMSwitchModelCell.class;
 }
 
 @end
 
-@implementation WKSwitchModelCell
+@implementation TKMSwitchModelCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
               reuseIdentifier:(NSString *)reuseIdentifier {
@@ -58,7 +58,7 @@
   return (UISwitch *)self.accessoryView;
 }
 
-- (void)updateWithItem:(WKSwitchModelItem *)item {
+- (void)updateWithItem:(TKMSwitchModelItem *)item {
   [self.switchView removeTarget:nil action:nil forControlEvents:UIControlEventValueChanged];
   
   [super updateWithItem:item];

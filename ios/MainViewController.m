@@ -24,7 +24,7 @@
 #import "SubjectDetailsViewController.h"
 #import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
-#import "WKOpenURL.h"
+#import "TKMOpenURL.h"
 #import "proto/Wanikani+Convenience.h"
 
 @class CombinedChartView;
@@ -121,7 +121,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   
   CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
   userGradientLayer.frame = userGradientFrame;
-  userGradientLayer.colors = WKRadicalGradient();
+  userGradientLayer.colors = TKMRadicalGradient();
   userGradientLayer.startPoint = CGPointMake(0.5f, kUserGradientStartPoint);
   [_userContainer.layer insertSublayer:userGradientLayer atIndex:0];
   _userContainer.layer.masksToBounds = NO;
@@ -140,7 +140,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   
   // Configure the search bar.
   UISearchBar *searchBar = _searchController.searchBar;
-  searchBar.barTintColor = WKRadicalColor2();
+  searchBar.barTintColor = TKMRadicalColor2();
   searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
   
   UIColor *originalSearchBarTintColor = searchBar.tintColor;
@@ -153,9 +153,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   }
   
   // Add shadows to things in the user info view.
-  WKAddShadowToView(_userImageContainer, 2, 0.4, 4);
-  WKAddShadowToView(_userNameLabel, 1, 0.4, 4);
-  WKAddShadowToView(_userLevelLabel, 1, 0.2, 2);
+  TKMAddShadowToView(_userImageContainer, 2, 0.4, 4);
+  TKMAddShadowToView(_userNameLabel, 1, 0.4, 4);
+  TKMAddShadowToView(_userLevelLabel, 1, 0.2, 2);
   
   // Set rounded corners on the user image.
   CGFloat cornerRadius = _userImageContainer.bounds.size.height / 2;
@@ -167,15 +167,15 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
       [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
   _currentLevelRadicalsChartController =
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelRadicalsPieChartView
-                                                 subjectType:WKSubject_Type_Radical
+                                                 subjectType:TKMSubject_Type_Radical
                                                   dataLoader:_dataLoader];
   _currentLevelKanjiChartController =
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelKanjiPieChartView
-                                                 subjectType:WKSubject_Type_Kanji
+                                                 subjectType:TKMSubject_Type_Kanji
                                                   dataLoader:_dataLoader];
   _currentLevelVocabularyChartController =
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelVocabularyPieChartView
-                                                 subjectType:WKSubject_Type_Vocabulary
+                                                 subjectType:TKMSubject_Type_Vocabulary
                                                   dataLoader:_dataLoader];
   
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -252,7 +252,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   int lessons = _localCachingClient.availableLessonCount;
   int reviews = _localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _localCachingClient.upcomingReviews;
-  NSArray<WKAssignment *> *maxLevelAssignments = _localCachingClient.maxLevelAssignments;
+  NSArray<TKMAssignment *> *maxLevelAssignments = _localCachingClient.maxLevelAssignments;
 
   SetTableViewCellCount(self.lessonsCell, lessons);
   SetTableViewCellCount(self.reviewsCell, reviews);
@@ -263,7 +263,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)updateUserInfo {
-  WKUser *user = _localCachingClient.getUserInfo;
+  TKMUser *user = _localCachingClient.getUserInfo;
   
   NSURLSession *session = [NSURLSession sharedSession];
   NSURLRequest *req = [NSURLRequest requestWithURL:UserProfileImageURL([UserDefaults userEmailAddress])];
@@ -300,7 +300,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
     
-    NSArray<WKAssignment *> *assignments = [_localCachingClient getAllAssignments];
+    NSArray<TKMAssignment *> *assignments = [_localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments];
     vc.items = items;
   } else if ([segue.identifier isEqualToString:@"startLessons"]) {
@@ -308,7 +308,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
     
-    NSArray<WKAssignment *> *assignments = [_localCachingClient getAllAssignments];
+    NSArray<TKMAssignment *> *assignments = [_localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments
                                                               dataLoader:_dataLoader];
     items = [items sortedArrayUsingSelector:@selector(compareForLessons:)];
@@ -323,7 +323,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   [self presentViewController:_searchController animated:YES completion:nil];
 }
 
-- (void)searchResultSelected:(WKSubject *)subject {
+- (void)searchResultSelected:(TKMSubject *)subject {
   SubjectDetailsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   vc.showUserProgress = true;
   vc.dataLoader = _dataLoader;
@@ -335,7 +335,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (IBAction)didTapOpenDashboard:(id)sender {
-  WKOpenURL([NSURL URLWithString:@(kDashboardURL)]);
+  TKMOpenURL([NSURL URLWithString:@(kDashboardURL)]);
 }
 
 @end

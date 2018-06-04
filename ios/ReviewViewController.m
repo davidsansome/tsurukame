@@ -21,7 +21,7 @@
 #import "SubjectDetailsViewController.h"
 #import "SuccessAnimation.h"
 #import "UserDefaults.h"
-#import "WKKanaInput.h"
+#import "TKMKanaInput.h"
 #import "proto/Wanikani+Convenience.h"
 
 #import <WebKit/WebKit.h>
@@ -40,7 +40,7 @@ static UIColor *kMeaningTextColor;
 static UIColor *kDefaultButtonTintColor;
 
 
-@interface ReviewViewController () <UITextFieldDelegate, WKSubjectDetailsDelegate>
+@interface ReviewViewController () <UITextFieldDelegate, TKMSubjectDetailsDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIView *questionBackground;
@@ -52,7 +52,7 @@ static UIColor *kDefaultButtonTintColor;
 @property (weak, nonatomic) IBOutlet UIButton *addSynonymButton;
 @property (weak, nonatomic) IBOutlet UIButton *revealAnswerButton;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
-@property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
+@property (weak, nonatomic) IBOutlet TKMSubjectDetailsView *subjectDetailsView;
 @property (weak, nonatomic) IBOutlet UIButton *previousSubjectButton;
 
 @property (weak, nonatomic) IBOutlet UILabel *successRateLabel;
@@ -69,7 +69,7 @@ static UIColor *kDefaultButtonTintColor;
 @end
 
 @implementation ReviewViewController {
-  WKKanaInput *_kanaInput;
+  TKMKanaInput *_kanaInput;
   id<ReviewViewControllerDelegate> _defaultDelegate;
 
   NSMutableArray<ReviewItem *> *_activeQueue;
@@ -78,10 +78,10 @@ static UIColor *kDefaultButtonTintColor;
   int _activeQueueSize;
 
   int _activeTaskIndex;  // An index into activeQueue;
-  WKTaskType _activeTaskType;
+  TKMTaskType _activeTaskType;
   ReviewItem *_activeTask;
-  WKSubject *_activeSubject;
-  WKStudyMaterials *_activeStudyMaterials;
+  TKMSubject *_activeSubject;
+  TKMStudyMaterials *_activeStudyMaterials;
 
   int _tasksAnsweredCorrectly;
   int _tasksAnswered;
@@ -94,7 +94,7 @@ static UIColor *kDefaultButtonTintColor;
   UIImage *_tickImage;
   UIImage *_forwardArrowImage;
   
-  WKSubject *_previousSubject;
+  TKMSubject *_previousSubject;
   UILabel *_previousSubjectLabel;
   
   // We don't adjust the bottom constraint after the view appeared the first time - some keyboards
@@ -120,7 +120,7 @@ static UIColor *kDefaultButtonTintColor;
   
   self = [super initWithCoder:aDecoder];
   if (self) {
-    _kanaInput = [[WKKanaInput alloc] initWithDelegate:self];
+    _kanaInput = [[TKMKanaInput alloc] initWithDelegate:self];
     _defaultDelegate = [[DefaultReviewViewControllerDelegate alloc] init];
     _delegate = _defaultDelegate;
     _hapticGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
@@ -189,8 +189,8 @@ static UIColor *kDefaultButtonTintColor;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  WKAddShadowToView(_questionLabel, 1, 0.2, 4);
-  WKAddShadowToView(_previousSubjectButton, 0, 0.7, 4);
+  TKMAddShadowToView(_questionLabel, 1, 0.2, 4);
+  TKMAddShadowToView(_previousSubjectButton, 0, 0.7, 4);
   
   _questionGradient = [CAGradientLayer layer];
   [_questionBackground.layer addSublayer:_questionGradient];
@@ -302,7 +302,7 @@ static UIColor *kDefaultButtonTintColor;
     vc.showUserProgress = true;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
-    vc.subject = (WKSubject *)sender;
+    vc.subject = (TKMSubject *)sender;
   }
 }
 
@@ -371,13 +371,13 @@ static UIColor *kDefaultButtonTintColor;
   
   // Choose whether to ask the meaning or the reading.
   if (_activeTask.answeredMeaning) {
-    _activeTaskType = kWKTaskTypeReading;
+    _activeTaskType = kTKMTaskTypeReading;
   } else if (_activeTask.answeredReading || _activeSubject.hasRadical) {
-    _activeTaskType = kWKTaskTypeMeaning;
+    _activeTaskType = kTKMTaskTypeMeaning;
   } else if (UserDefaults.groupMeaningReading) {
-    _activeTaskType = UserDefaults.meaningFirst ? kWKTaskTypeMeaning : kWKTaskTypeReading;
+    _activeTaskType = UserDefaults.meaningFirst ? kTKMTaskTypeMeaning : kTKMTaskTypeReading;
   } else {
-    _activeTaskType = (WKTaskType)arc4random_uniform(kWKTaskType_Max);
+    _activeTaskType = (TKMTaskType)arc4random_uniform(kTKMTaskType_Max);
   }
   
   // Fill the question labels.
@@ -387,30 +387,30 @@ static UIColor *kDefaultButtonTintColor;
   UIColor *promptTextColor;
   
   switch (_activeTask.assignment.subjectType) {
-    case WKSubject_Type_Kanji:
+    case TKMSubject_Type_Kanji:
       subjectTypePrompt = @"Kanji";
       break;
-    case WKSubject_Type_Radical:
+    case TKMSubject_Type_Radical:
       subjectTypePrompt = @"Radical";
       break;
-    case WKSubject_Type_Vocabulary:
+    case TKMSubject_Type_Vocabulary:
       subjectTypePrompt = @"Vocabulary";
       break;
   }
   switch (_activeTaskType) {
-    case kWKTaskTypeMeaning:
+    case kTKMTaskTypeMeaning:
       _kanaInput.enabled = false;
       taskTypePrompt = @"Meaning";
       promptGradient = kMeaningGradient;
       promptTextColor = kMeaningTextColor;
       break;
-    case kWKTaskTypeReading:
+    case kTKMTaskTypeReading:
       _kanaInput.enabled = true;
       taskTypePrompt = @"Reading";
       promptGradient = kReadingGradient;
       promptTextColor = kReadingTextColor;
       break;
-    case kWKTaskType_Max:
+    case kTKMTaskType_Max:
       assert(false);
   }
   
@@ -451,7 +451,7 @@ static UIColor *kDefaultButtonTintColor;
   // Background gradients.
   [CATransaction begin];
   [CATransaction setAnimationDuration:kAnimationDuration];
-  _questionGradient.colors = WKGradientForAssignment(_activeTask.assignment);
+  _questionGradient.colors = TKMGradientForAssignment(_activeTask.assignment);
   _promptGradient.colors = promptGradient;
   [CATransaction commit];
   
@@ -554,7 +554,7 @@ static UIColor *kDefaultButtonTintColor;
   CGFloat newButtonWidth = kPreviousSubjectButtonPadding * 2 +
                            labelBounds.size.width * kPreviousSubjectScale;
   
-  NSArray<id> *newGradient = WKGradientForSubject(_previousSubject);
+  NSArray<id> *newGradient = TKMGradientForSubject(_previousSubject);
   
   [self.view layoutIfNeeded];
   [UIView animateWithDuration:kPreviousSubjectAnimationDuration
@@ -646,21 +646,21 @@ static UIColor *kDefaultButtonTintColor;
 }
 
 - (void)submit {
-  WKAnswerCheckerResult result = CheckAnswer(_answerField.text, _activeSubject,
+  TKMAnswerCheckerResult result = CheckAnswer(_answerField.text, _activeSubject,
                                              _activeStudyMaterials, _activeTaskType, _dataLoader);
   switch (result) {
-    case kWKAnswerPrecise:
-    case kWKAnswerImprecise: {
+    case kTKMAnswerPrecise:
+    case kTKMAnswerImprecise: {
       [self markAnswer:true remark:false];
       break;
     }
-    case kWKAnswerIncorrect:
+    case kTKMAnswerIncorrect:
       [self markAnswer:false remark:false];
       break;
-    case kWKAnswerOtherKanjiReading:
+    case kTKMAnswerOtherKanjiReading:
       [self shakeView:_answerField];
       break;
-    case kWKAnswerContainsInvalidCharacters:
+    case kTKMAnswerContainsInvalidCharacters:
       [self shakeView:_answerField];
       break;
   }
@@ -686,21 +686,21 @@ static UIColor *kDefaultButtonTintColor;
   // Mark the task.
   bool firstTimeWrong = true;
   switch (_activeTaskType) {
-    case kWKTaskTypeMeaning:
+    case kTKMTaskTypeMeaning:
       firstTimeWrong = !_activeTask.answer.hasMeaningWrong;
       if (remark || firstTimeWrong) {
         _activeTask.answer.meaningWrong = !correct;
       }
       _activeTask.answeredMeaning = correct;
       break;
-    case kWKTaskTypeReading:
+    case kTKMTaskTypeReading:
       firstTimeWrong = !_activeTask.answer.hasReadingWrong;
       if (remark || firstTimeWrong) {
         _activeTask.answer.readingWrong = !correct;
       }
       _activeTask.answeredReading = correct;
       break;
-    case kWKTaskType_Max:
+    case kTKMTaskType_Max:
       abort();
   }
   
@@ -786,7 +786,7 @@ static UIColor *kDefaultButtonTintColor;
                                           [unsafeSelf markAnswer:true remark:true];
                                         }
                                       }]];
-  if (_activeTaskType == kWKTaskTypeMeaning) {
+  if (_activeTaskType == kTKMTaskTypeMeaning) {
     [c addAction:[UIAlertAction actionWithTitle:@"Add synonym"
                                           style:UIAlertActionStyleDefault
                                         handler:^(UIAlertAction * _Nonnull action) {
@@ -805,7 +805,7 @@ static UIColor *kDefaultButtonTintColor;
 
 - (void)addSynonym {
   if (!_activeStudyMaterials) {
-    _activeStudyMaterials = [[WKStudyMaterials alloc] init];
+    _activeStudyMaterials = [[TKMStudyMaterials alloc] init];
     _activeStudyMaterials.subjectId = _activeSubject.id_p;
     _activeStudyMaterials.subjectType = _activeSubject.subjectType;
   }
@@ -813,13 +813,13 @@ static UIColor *kDefaultButtonTintColor;
   [_localCachingClient updateStudyMaterial:_activeStudyMaterials];
 }
 
-#pragma mark - WKSubjectDetailsDelegate
+#pragma mark - TKMSubjectDetailsDelegate
 
-- (void)openSubject:(WKSubject *)subject {
+- (void)openSubject:(TKMSubject *)subject {
   [self performSegueWithIdentifier:@"subjectDetails" sender:subject];
 }
 
-- (void)subjectDetailsView:(WKSubjectDetailsView *)view
+- (void)subjectDetailsView:(TKMSubjectDetailsView *)view
        didFinishNavigation:(WKNavigation *)navigation {
   view.hidden = NO;
   view.alpha = 0.0f;

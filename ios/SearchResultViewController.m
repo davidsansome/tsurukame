@@ -17,18 +17,18 @@
 #import "DataLoader.h"
 #import "ReviewSummaryCell.h"
 #import "SubjectDetailsViewController.h"
-#import "WKKanaInput.h"
+#import "TKMKanaInput.h"
 #import "proto/Wanikani.pbobjc.h"
 
 static const int kMaxResults = 50;
 
-static bool SubjectMatchesQuery(WKSubject *subject, NSString *query, NSString *kanaQuery) {
-  for (WKMeaning *meaning in subject.meaningsArray) {
+static bool SubjectMatchesQuery(TKMSubject *subject, NSString *query, NSString *kanaQuery) {
+  for (TKMMeaning *meaning in subject.meaningsArray) {
     if ([[meaning.meaning lowercaseString] hasPrefix:query]) {
       return true;
     }
   }
-  for (WKReading *reading in subject.readingsArray) {
+  for (TKMReading *reading in subject.readingsArray) {
     if ([reading.reading hasPrefix:kanaQuery]) {
       return true;
     }
@@ -36,13 +36,13 @@ static bool SubjectMatchesQuery(WKSubject *subject, NSString *query, NSString *k
   return false;
 }
 
-static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSString *kanaQuery) {
-  for (WKMeaning *meaning in subject.meaningsArray) {
+static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSString *kanaQuery) {
+  for (TKMMeaning *meaning in subject.meaningsArray) {
     if ([[meaning.meaning lowercaseString] isEqualToString:query]) {
       return true;
     }
   }
-  for (WKReading *reading in subject.readingsArray) {
+  for (TKMReading *reading in subject.readingsArray) {
     if ([reading.reading isEqualToString:kanaQuery]) {
       return true;
     }
@@ -55,8 +55,8 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
 @end
 
 @implementation SearchResultViewController {
-  NSArray<WKSubject *> *_allSubjects;
-  NSArray<WKSubject *> *_results;
+  NSArray<TKMSubject *> *_allSubjects;
+  NSArray<TKMSubject *> *_results;
   dispatch_queue_t _queue;
 }
 
@@ -94,12 +94,12 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
   NSString *query = [searchController.searchBar.text lowercaseString];
   dispatch_async(_queue, ^{
-    NSString *kanaQuery = WKConvertKanaText(query);
-    NSMutableArray<WKSubject *> *results = [NSMutableArray array];
+    NSString *kanaQuery = TKMConvertKanaText(query);
+    NSMutableArray<TKMSubject *> *results = [NSMutableArray array];
     
     @synchronized(self) {
       [self ensureAllSubjectsLoaded];
-      for (WKSubject *subject in _allSubjects) {
+      for (TKMSubject *subject in _allSubjects) {
         if (SubjectMatchesQuery(subject, query, kanaQuery)) {
           [results addObject:subject];
         }
@@ -108,7 +108,7 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
         }
       }
     }
-    [results sortUsingComparator:^NSComparisonResult(WKSubject *a, WKSubject *b) {
+    [results sortUsingComparator:^NSComparisonResult(TKMSubject *a, TKMSubject *b) {
       bool aMatchesExactly = SubjectMatchesQueryExactly(a, query, kanaQuery);
       bool bMatchesExactly = SubjectMatchesQueryExactly(b, query, kanaQuery);
       if (aMatchesExactly && !bMatchesExactly) { return NSOrderedAscending; }
@@ -137,7 +137,7 @@ static bool SubjectMatchesQueryExactly(WKSubject *subject, NSString *query, NSSt
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   ReviewSummaryCell *cell = [tableView dequeueReusableCellWithIdentifier:@"resultCell"];
-  WKSubject *subject = _results[indexPath.row];
+  TKMSubject *subject = _results[indexPath.row];
   cell.subject = subject;
   return cell;
 }

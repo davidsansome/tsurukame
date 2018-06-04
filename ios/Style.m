@@ -27,7 +27,7 @@ static NSArray<id> *ArrayOfTwoColors(UIColor *first, UIColor *second) {
   return @[(id)first.CGColor, (id)second.CGColor];
 }
 
-void WKAddShadowToView(UIView *view, float offset, float opacity, float radius) {
+void TKMAddShadowToView(UIView *view, float offset, float opacity, float radius) {
   view.layer.shadowColor = [UIColor blackColor].CGColor;
   view.layer.shadowOffset = CGSizeMake(0, offset);
   view.layer.shadowOpacity = opacity;
@@ -35,55 +35,55 @@ void WKAddShadowToView(UIView *view, float offset, float opacity, float radius) 
   view.clipsToBounds = NO;
 }
 
-UIColor *WKRadicalColor1()    { return UIColorFromHex(0x00AAFF); }
-UIColor *WKRadicalColor2()    { return UIColorFromHex(0x0093DD); }
-UIColor *WKKanjiColor1()      { return UIColorFromHex(0xFF00AA); }
-UIColor *WKKanjiColor2()      { return UIColorFromHex(0xDD0093); }
-UIColor *WKVocabularyColor1() { return UIColorFromHex(0xAA00FF); }
-UIColor *WKVocabularyColor2() { return UIColorFromHex(0x9300DD); }
-UIColor *WKGreyColor()        { return UIColorFromHex(0xC8C8C8); }
+UIColor *TKMRadicalColor1()    { return UIColorFromHex(0x00AAFF); }
+UIColor *TKMRadicalColor2()    { return UIColorFromHex(0x0093DD); }
+UIColor *TKMKanjiColor1()      { return UIColorFromHex(0xFF00AA); }
+UIColor *TKMKanjiColor2()      { return UIColorFromHex(0xDD0093); }
+UIColor *TKMVocabularyColor1() { return UIColorFromHex(0xAA00FF); }
+UIColor *TKMVocabularyColor2() { return UIColorFromHex(0x9300DD); }
+UIColor *TKMGreyColor()        { return UIColorFromHex(0xC8C8C8); }
 
-UIColor *WKColor2ForSubjectType(WKSubject_Type subjectType) {
+UIColor *TKMColor2ForSubjectType(TKMSubject_Type subjectType) {
   switch (subjectType) {
-    case WKSubject_Type_Radical:
-      return WKRadicalColor2();
-    case WKSubject_Type_Kanji:
-      return WKKanjiColor2();
-    case WKSubject_Type_Vocabulary:
-      return WKVocabularyColor2();
+    case TKMSubject_Type_Radical:
+      return TKMRadicalColor2();
+    case TKMSubject_Type_Kanji:
+      return TKMKanjiColor2();
+    case TKMSubject_Type_Vocabulary:
+      return TKMVocabularyColor2();
   }
 }
 
-NSArray<id> *WKRadicalGradient(void) {
-  return ArrayOfTwoColors(WKRadicalColor1(), WKRadicalColor2());
+NSArray<id> *TKMRadicalGradient(void) {
+  return ArrayOfTwoColors(TKMRadicalColor1(), TKMRadicalColor2());
 }
 
-NSArray<id> *WKKanjiGradient(void) {
-  return ArrayOfTwoColors(WKKanjiColor1(), WKKanjiColor2());
+NSArray<id> *TKMKanjiGradient(void) {
+  return ArrayOfTwoColors(TKMKanjiColor1(), TKMKanjiColor2());
 }
 
-NSArray<id> *WKVocabularyGradient(void) {
-  return ArrayOfTwoColors(WKVocabularyColor1(), WKVocabularyColor2());
+NSArray<id> *TKMVocabularyGradient(void) {
+  return ArrayOfTwoColors(TKMVocabularyColor1(), TKMVocabularyColor2());
 }
 
-NSArray<id> *WKGradientForAssignment(WKAssignment *assignment) {
+NSArray<id> *TKMGradientForAssignment(TKMAssignment *assignment) {
   switch (assignment.subjectType) {
-    case WKSubject_Type_Radical:
-      return WKRadicalGradient();
-    case WKSubject_Type_Kanji:
-      return WKKanjiGradient();
-    case WKSubject_Type_Vocabulary:
-      return WKVocabularyGradient();
+    case TKMSubject_Type_Radical:
+      return TKMRadicalGradient();
+    case TKMSubject_Type_Kanji:
+      return TKMKanjiGradient();
+    case TKMSubject_Type_Vocabulary:
+      return TKMVocabularyGradient();
   }
 }
 
-NSArray<id> *WKGradientForSubject(WKSubject *subject) {
+NSArray<id> *TKMGradientForSubject(TKMSubject *subject) {
   if (subject.hasRadical) {
-    return WKRadicalGradient();
+    return TKMRadicalGradient();
   } else if (subject.hasKanji) {
-    return WKKanjiGradient();
+    return TKMKanjiGradient();
   } else if (subject.hasVocabulary) {
-    return WKVocabularyGradient();
+    return TKMVocabularyGradient();
   }
   return nil;
 }

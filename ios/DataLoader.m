@@ -109,7 +109,7 @@ static uint32_t ReadSubjectOffset(NSFileHandle *file, int subjectID) {
   return subjectID < _count && subjectID >= 0;
 }
 
-- (WKSubject *)loadSubject:(int)subjectID {
+- (TKMSubject *)loadSubject:(int)subjectID {
   NSAssert([self isValidSubjectID:subjectID],
            @"Tried to read subject %d outside 0-%d", subjectID, (int)_count);
   
@@ -128,20 +128,20 @@ static uint32_t ReadSubjectOffset(NSFileHandle *file, int subjectID) {
     data = [_file readDataOfLength:length];
   }
   
-  WKSubject *ret = [WKSubject parseFromData:data error:nil];
+  TKMSubject *ret = [TKMSubject parseFromData:data error:nil];
   ret.id_p = subjectID;
   return ret;
 }
 
-- (NSArray<WKSubject *> *)loadAllSubjects {
-  NSMutableArray<WKSubject *> *ret = [NSMutableArray array];
+- (NSArray<TKMSubject *> *)loadAllSubjects {
+  NSMutableArray<TKMSubject *> *ret = [NSMutableArray array];
   for (int subjectID = 1; subjectID < _count; ++subjectID) {
     [ret addObject:[self loadSubject:subjectID]];
   }
   return ret;
 }
 
-- (int)subjectsByLevel:(int)srsLevel byType:(WKSubject_Type)type {
+- (int)subjectsByLevel:(int)srsLevel byType:(TKMSubject_Type)type {
   return kSubjectsByLevel[srsLevel - 1][type - 1];
 }
 

@@ -14,7 +14,7 @@
 
 syntax = "proto2";
 
-option objc_class_prefix = "WK";
+option objc_class_prefix = "TKM";
 
 package proto;
 

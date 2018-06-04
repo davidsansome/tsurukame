@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "WKTableModel.h"
+#import "TKMTableModel.h"
 
-@interface WKTableModelSection : NSObject
+@interface TKMTableModelSection : NSObject
 
 @property(nonatomic) NSString *headerTitle;
 @property(nonatomic) NSString *footerTitle;
-@property(nonatomic) NSMutableArray<id<WKModelItem> > *items;
+@property(nonatomic) NSMutableArray<id<TKMModelItem> > *items;
 @property(nonatomic) NSMutableIndexSet *hiddenItems;
 
 @end
 
-@implementation WKTableModelSection
+@implementation TKMTableModelSection
 
 - (instancetype)init {
   self = [super init];
@@ -36,13 +36,13 @@
 
 @end
 
-@interface WKTableModel ()
+@interface TKMTableModel ()
 
-@property(nonatomic) NSMutableArray<WKTableModelSection *> *sections;
+@property(nonatomic) NSMutableArray<TKMTableModelSection *> *sections;
 
 @end
 
-@implementation WKTableModel {
+@implementation TKMTableModel {
   BOOL _isInitialised;
 }
 
@@ -91,7 +91,7 @@
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView
                  cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-  WKTableModelSection *section = _sections[indexPath.section];
+  TKMTableModelSection *section = _sections[indexPath.section];
   __block NSInteger row = indexPath.row;
   [section.hiddenItems enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
     if (idx <= row) {
@@ -102,7 +102,7 @@
   return [self cellForItem:section.items[row]];
 }
 
-- (nonnull UITableViewCell *)cellForItem:(id<WKModelItem>)item {
+- (nonnull UITableViewCell *)cellForItem:(id<TKMModelItem>)item {
   Class cellClass = item.cellClass;
   
   NSString *reuseIdentifier;
@@ -112,7 +112,7 @@
     reuseIdentifier = @(object_getClassName(cellClass));
   }
   
-  WKModelCell *cell = [_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+  TKMModelCell *cell = [_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
   if (!cell) {
     if ([item respondsToSelector:@selector(createCell)]) {
       cell = [item createCell];
@@ -141,20 +141,20 @@
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
-  WKTableModelSection *s = _sections[section];
+  TKMTableModelSection *s = _sections[section];
   return s.items.count - s.hiddenItems.count;
 }
 
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  WKModelCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+  TKMModelCell *cell = [tableView cellForRowAtIndexPath:indexPath];
   [cell didSelectCell];
 }
 
 @end
 
-@implementation WKMutableTableModel
+@implementation TKMMutableTableModel
 
 - (void)addSection {
   [self addSection:nil footer:nil];
@@ -165,19 +165,19 @@
 }
 
 - (void)addSection:(NSString *)title footer:(NSString *)footer {
-  WKTableModelSection *section = [[WKTableModelSection alloc] init];
+  TKMTableModelSection *section = [[TKMTableModelSection alloc] init];
   section.headerTitle = title;
   section.footerTitle = footer;
   [self.sections addObject:section];
 }
 
-- (NSIndexPath *)addItem:(id<WKModelItem>)item {
+- (NSIndexPath *)addItem:(id<TKMModelItem>)item {
   [self.sections.lastObject.items addObject:item];
   return [NSIndexPath indexPathForRow:self.sections.lastObject.items.count - 1
                             inSection:self.sections.count - 1];
 }
 
-- (NSIndexPath *)addItem:(id<WKModelItem>)item hidden:(bool)hidden {
+- (NSIndexPath *)addItem:(id<TKMModelItem>)item hidden:(bool)hidden {
   NSIndexPath *indexPath = [self addItem:item];
   if (hidden) {
     [self setIndexPath:indexPath isHidden:YES];

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "WKKanaInput.h"
+#import "TKMKanaInput.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -323,7 +323,7 @@ static void EnsureInitialised() {
   });
 }
 
-NSString *WKConvertKanaText(NSString *input) {
+NSString *TKMConvertKanaText(NSString *input) {
   EnsureInitialised();
   
   NSMutableString *ret = [NSMutableString stringWithString:input];
@@ -373,7 +373,7 @@ NSString *WKConvertKanaText(NSString *input) {
   return ret;
 }
 
-@implementation WKKanaInput {
+@implementation TKMKanaInput {
   __weak id<UITextFieldDelegate> _delegate;
 }
 

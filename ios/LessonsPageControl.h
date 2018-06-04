@@ -18,7 +18,7 @@
 
 @interface LessonsPageControl : UIControl
 
-@property(nonatomic, copy) NSArray<WKSubject *> *subjects;
+@property(nonatomic, copy) NSArray<TKMSubject *> *subjects;
 @property(nonatomic) NSInteger currentPageIndex;
 
 @end

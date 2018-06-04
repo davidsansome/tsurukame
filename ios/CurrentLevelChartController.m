@@ -76,7 +76,7 @@ static void UnsetAllLabels(ChartViewBase *view) {
 }
 
 - (instancetype)initWithChartView:(PieChartView *)view
-                      subjectType:(WKSubject_Type)subjectType
+                      subjectType:(TKMSubject_Type)subjectType
                        dataLoader:(nonnull DataLoader *)dataLoader {
   self = [super init];
   if (self) {
@@ -91,14 +91,14 @@ static void UnsetAllLabels(ChartViewBase *view) {
   return self;
 }
 
-- (void)update:(NSArray<WKAssignment *> *)maxLevelAssignments {
+- (void)update:(NSArray<TKMAssignment *> *)maxLevelAssignments {
   if (maxLevelAssignments.count == 0) {
     return;
   }
   
   int sliceSizes[PieSlice_Count] = {0};
   int total = 0;
-  for (WKAssignment *assignment in maxLevelAssignments) {
+  for (TKMAssignment *assignment in maxLevelAssignments) {
     if (assignment.subjectType != _subjectType) {
       continue;
     }
@@ -118,7 +118,7 @@ static void UnsetAllLabels(ChartViewBase *view) {
   sliceSizes[LockedPieSlice] = [_dataLoader subjectsByLevel:maxLevelAssignments[0].level
                                                      byType:_subjectType] - total;
   
-  UIColor *baseColor = WKColor2ForSubjectType(_subjectType);
+  UIColor *baseColor = TKMColor2ForSubjectType(_subjectType);
   NSMutableArray<PieChartDataEntry *> *values = [NSMutableArray array];
   NSMutableArray<UIColor *> *colors = [NSMutableArray array];
   for (int i = 0; i < PieSlice_Count; ++i) {

@@ -44,9 +44,9 @@ static NSString *const kPrivacyPolicyURL =
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  WKAddShadowToView(_signInLabel, 0.f, 1.f, 5.f);
-  WKAddShadowToView(_privacyPolicyLabel, 0.f, 1.f, 2.f);
-  WKAddShadowToView(_privacyPolicyButton, 0.f, 1.f, 2.f);
+  TKMAddShadowToView(_signInLabel, 0.f, 1.f, 5.f);
+  TKMAddShadowToView(_privacyPolicyLabel, 0.f, 1.f, 2.f);
+  TKMAddShadowToView(_privacyPolicyButton, 0.f, 1.f, 2.f);
   
   _usernameField.delegate = self;
   _passwordField.delegate = self;
@@ -80,7 +80,7 @@ static NSString *const kPrivacyPolicyURL =
   bool enabled = _usernameField.text.length != 0 &&
                  _passwordField.text.length != 0;
   _signInButton.enabled = enabled;
-  _signInButton.backgroundColor = enabled ? WKRadicalColor2()
+  _signInButton.backgroundColor = enabled ? TKMRadicalColor2()
                                           : [UIColor darkGrayColor];
 }
 
@@ -102,7 +102,7 @@ static NSString *const kPrivacyPolicyURL =
 
 - (void)handleCookieResponse:(NSError *)error cookie:(NSString *)cookie {
   if (error != nil) {
-    if (error.domain == kWKClientErrorDomain && error.code == kWKLoginErrorCode) {
+    if (error.domain == kTKMClientErrorDomain && error.code == kTKMLoginErrorCode) {
       [self showLoginError:@"Your username or password were incorrect"];
     } else {
       [self showLoginError:@"An unknown error occurred"];

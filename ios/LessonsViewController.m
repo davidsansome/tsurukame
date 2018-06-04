@@ -40,9 +40,9 @@
   _pageController.delegate = self;
   
   // Set the subjects on the page control.
-  NSMutableArray<WKSubject *> *subjects = [NSMutableArray array];
+  NSMutableArray<TKMSubject *> *subjects = [NSMutableArray array];
   for (ReviewItem *item in _items) {
-    WKSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
+    TKMSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
     [subjects addObject:subject];
   }
   _pageControl.subjects = subjects;

@@ -109,57 +109,57 @@ static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
   return NO;
 }
 
-WKAnswerCheckerResult CheckAnswer(NSString *answer,
-                                  WKSubject *subject,
-                                  WKStudyMaterials *studyMaterials,
-                                  WKTaskType taskType,
+TKMAnswerCheckerResult CheckAnswer(NSString *answer,
+                                  TKMSubject *subject,
+                                  TKMStudyMaterials *studyMaterials,
+                                  TKMTaskType taskType,
                                   DataLoader *dataLoader) {
   answer = FormattedString(answer);
   
   switch (taskType) {
-    case kWKTaskTypeReading:
+    case kTKMTaskTypeReading:
       answer = [answer stringByReplacingOccurrencesOfString:@"n" withString:@"ん"];
       if (IsAsciiPresent(answer)) {
-        return kWKAnswerContainsInvalidCharacters;
+        return kTKMAnswerContainsInvalidCharacters;
       }
       
-      for (WKReading *reading in subject.primaryReadings) {
+      for (TKMReading *reading in subject.primaryReadings) {
         if ([reading.reading isEqualToString:answer]) {
-          return kWKAnswerPrecise;
+          return kTKMAnswerPrecise;
         }
       }
-      for (WKReading *reading in subject.alternateReadings) {
+      for (TKMReading *reading in subject.alternateReadings) {
         if ([reading.reading isEqualToString:answer]) {
-          return subject.hasKanji ? kWKAnswerOtherKanjiReading : kWKAnswerPrecise;
+          return subject.hasKanji ? kTKMAnswerOtherKanjiReading : kTKMAnswerPrecise;
         }
       }
       if (subject.hasVocabulary && subject.japanese.length == 1 &&
           subject.componentSubjectIdsArray_Count == 1) {
         // If the vocabulary is made up of only one Kanji, check whether the user wrote the Kanji
         // reading instead of the vocabulary reading.
-        WKSubject *kanji = [dataLoader loadSubject:[subject.componentSubjectIdsArray valueAtIndex:0]];
-        WKAnswerCheckerResult kanjiResult = CheckAnswer(answer, kanji, nil, taskType, dataLoader);
-        if (kanjiResult == kWKAnswerPrecise) {
-          return kWKAnswerOtherKanjiReading;
+        TKMSubject *kanji = [dataLoader loadSubject:[subject.componentSubjectIdsArray valueAtIndex:0]];
+        TKMAnswerCheckerResult kanjiResult = CheckAnswer(answer, kanji, nil, taskType, dataLoader);
+        if (kanjiResult == kTKMAnswerPrecise) {
+          return kTKMAnswerOtherKanjiReading;
         }
       }
       if (subject.hasVocabulary && MismatchingOkurigana(answer, subject.japanese)) {
-        return kWKAnswerOtherKanjiReading;
+        return kTKMAnswerOtherKanjiReading;
       }
       break;
       
-    case kWKTaskTypeMeaning: {
+    case kTKMTaskTypeMeaning: {
       NSMutableArray<NSString *> *meaningTexts =
           [NSMutableArray arrayWithArray:studyMaterials.meaningSynonymsArray];
       
-      for (WKMeaning *meaning in subject.meaningsArray) {
+      for (TKMMeaning *meaning in subject.meaningsArray) {
         [meaningTexts addObject:meaning.meaning];
       }
       
       for (NSString *meaning in meaningTexts) {
         NSString *meaningText = FormattedString(meaning);
         if ([meaningText isEqualToString:answer]) {
-          return kWKAnswerPrecise;
+          return kTKMAnswerPrecise;
         }
       }
       for (NSString *meaning in meaningTexts) {
@@ -167,14 +167,14 @@ WKAnswerCheckerResult CheckAnswer(NSString *answer,
         int distance = [meaningText levenshteinDistanceTo:answer];
         int tolerance = DistanceTolerance(meaningText);
         if (distance <= tolerance) {
-          return kWKAnswerImprecise;
+          return kTKMAnswerImprecise;
         }
       }
       break;
     }
       
-    case kWKTaskType_Max:
+    case kTKMTaskType_Max:
       assert(false);
   }
-  return kWKAnswerIncorrect;
+  return kTKMAnswerIncorrect;
 }

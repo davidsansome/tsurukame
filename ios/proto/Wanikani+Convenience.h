@@ -16,14 +16,14 @@
 
 #import "Wanikani.pbobjc.h"
 
-extern NSString *WKSRSLevelName(int srsLevel);
+extern NSString *TKMSRSLevelName(int srsLevel);
 
-@interface WKSubject (Convenience)
+@interface TKMSubject (Convenience)
 
 @property (nonatomic, readonly) NSString *subjectType;
 @property (nonatomic, readonly) NSString *primaryMeaning;
-@property (nonatomic, readonly) NSArray<WKReading *> *primaryReadings;
-@property (nonatomic, readonly) NSArray<WKReading *> *alternateReadings;
+@property (nonatomic, readonly) NSArray<TKMReading *> *primaryReadings;
+@property (nonatomic, readonly) NSArray<TKMReading *> *alternateReadings;
 @property (nonatomic, readonly) NSString *commaSeparatedReadings;
 @property (nonatomic, readonly) NSString *commaSeparatedPrimaryReadings;
 @property (nonatomic, readonly) NSString *commaSeparatedMeanings;
@@ -33,13 +33,13 @@ extern NSString *WKSRSLevelName(int srsLevel);
 
 @end
 
-@interface WKVocabulary (Convenience)
+@interface TKMVocabulary (Convenience)
 
 @property (nonatomic, readonly) NSString *commaSeparatedPartsOfSpeech;
 
 @end
 
-@interface WKAssignment (Convenience)
+@interface TKMAssignment (Convenience)
 
 @property (nonatomic, readonly) bool isLessonStage;
 @property (nonatomic, readonly) bool isReviewStage;
@@ -49,14 +49,14 @@ extern NSString *WKSRSLevelName(int srsLevel);
 
 @end
 
-@interface WKProgress (Convenience)
+@interface TKMProgress (Convenience)
 
 @property (nonatomic, readonly) NSString *reviewFormParameters;
 @property (nonatomic, readonly) NSString *lessonFormParameters;
 
 @end
 
-@interface WKUser (Convenience)
+@interface TKMUser (Convenience)
 
 @property (nonatomic, readonly) NSDate *startedAtDate;
 

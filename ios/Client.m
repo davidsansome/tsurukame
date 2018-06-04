@@ -34,11 +34,11 @@ static const char *kAPITokenREPattern = "<input[^>]+value=\"([^\"]+)\"[^>]+name=
 static NSString *const kFormDataContentType = @"application/x-www-form-urlencoded";
 static NSString *const kJSONContentType = @"application/json";
 
-NSErrorDomain const kWKClientErrorDomain = @"kWKClientErrorDomain";
-const int kWKLoginErrorCode = 403;
+NSErrorDomain const kTKMClientErrorDomain = @"kTKMClientErrorDomain";
+const int kTKMLoginErrorCode = 403;
 
 static NSError *MakeError(int code, NSString *msg) {
-  return [NSError errorWithDomain:kWKClientErrorDomain
+  return [NSError errorWithDomain:kTKMClientErrorDomain
                              code:code
                          userInfo:@{NSLocalizedDescriptionKey:msg}];
 }
@@ -287,7 +287,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     
     NSString *newCookie = GetSessionCookie(session);
     if ([newCookie isEqualToString:originalCookie]) {
-      handler(MakeError(kWKLoginErrorCode, @"Bad credentials"), nil);
+      handler(MakeError(kTKMLoginErrorCode, @"Bad credentials"), nil);
       return;
     } else if ([response.URL.absoluteString isEqualToString:@(kDashboardURL)]) {
       handler(nil, newCookie);
@@ -392,7 +392,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 - (void)getAssignmentsModifiedAfter:(NSString *)date
                             handler:(AssignmentHandler)handler {
-  NSMutableArray<WKAssignment *> *ret = [NSMutableArray array];
+  NSMutableArray<TKMAssignment *> *ret = [NSMutableArray array];
 
   NSURLComponents *url =
       [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/assignments",
@@ -415,7 +415,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     }
     
     for (NSDictionary *d in data) {
-      WKAssignment *assignment = [[WKAssignment alloc] init];
+      TKMAssignment *assignment = [[TKMAssignment alloc] init];
       assignment.id_p = [d[@"id"] intValue];
       assignment.level = [d[@"data"][@"level"] intValue];
       assignment.subjectId = [d[@"data"][@"subject_id"] intValue];
@@ -438,11 +438,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
       
       NSString *subjectType = d[@"data"][@"subject_type"];
       if ([subjectType isEqualToString:@"radical"]) {
-        assignment.subjectType = WKSubject_Type_Radical;
+        assignment.subjectType = TKMSubject_Type_Radical;
       } else if ([subjectType isEqualToString:@"kanji"]) {
-        assignment.subjectType = WKSubject_Type_Kanji;
+        assignment.subjectType = TKMSubject_Type_Kanji;
       } else if ([subjectType isEqualToString:@"vocabulary"]) {
-        assignment.subjectType = WKSubject_Type_Vocabulary;
+        assignment.subjectType = TKMSubject_Type_Vocabulary;
       } else {
         NSAssert(false, @"Unknown subject type %@", subjectType);
       }
@@ -487,7 +487,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   }
 }
 
-- (void)sendProgress:(NSArray<WKProgress *> *)progress
+- (void)sendProgress:(NSArray<TKMProgress *> *)progress
              handler:(ProgressHandler _Nullable)handler {
   if (progress.count == 0) {
     handler(nil);
@@ -495,9 +495,9 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   }
 
   // Split the progress array into reviews and lessons.
-  NSMutableArray<WKProgress *> *reviewProgress = [NSMutableArray array];
-  NSMutableArray<WKProgress *> *lessonProgress = [NSMutableArray array];
-  for (WKProgress *p in progress) {
+  NSMutableArray<TKMProgress *> *reviewProgress = [NSMutableArray array];
+  NSMutableArray<TKMProgress *> *lessonProgress = [NSMutableArray array];
+  for (TKMProgress *p in progress) {
     if (p.isLesson) {
       [lessonProgress addObject:p];
     } else {
@@ -544,11 +544,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   }];
 }
 
-- (void)sendReviewProgress:(NSArray<WKProgress *> *)progress
+- (void)sendReviewProgress:(NSArray<TKMProgress *> *)progress
                    handler:(ProgressHandler)handler {
   // Encode the data to send in the request.
   NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
-  for (WKProgress *p in progress) {
+  for (TKMProgress *p in progress) {
     [formParameters addObject:p.reviewFormParameters];
   }
   NSData *data = [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
@@ -559,11 +559,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                  handler:handler];
 }
 
-- (void)sendLessonProgress:(NSArray<WKProgress *> *)progress
+- (void)sendLessonProgress:(NSArray<TKMProgress *> *)progress
                    handler:(ProgressHandler _Nullable)handler {
   // Encode the data to send in the request.
   NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
-  for (WKProgress *p in progress) {
+  for (TKMProgress *p in progress) {
     [formParameters addObject:p.lessonFormParameters];
   }
   NSData *data = [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
@@ -578,7 +578,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 - (void)getStudyMaterialsModifiedAfter:(NSString *)date
                                handler:(StudyMaterialsHandler)handler {
-  NSMutableArray<WKStudyMaterials *> *ret = [NSMutableArray array];
+  NSMutableArray<TKMStudyMaterials *> *ret = [NSMutableArray array];
 
   NSURLComponents *url =
       [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/study_materials",
@@ -599,7 +599,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     }
     
     for (NSDictionary *d in data) {
-      WKStudyMaterials *studyMaterials = [[WKStudyMaterials alloc] init];
+      TKMStudyMaterials *studyMaterials = [[TKMStudyMaterials alloc] init];
       studyMaterials.id_p = [d[@"id"] intValue];
       studyMaterials.subjectId = [d[@"data"][@"subject_id"] intValue];
       studyMaterials.subjectType = d[@"data"][@"subject_type"];
@@ -618,7 +618,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   }];
 }
 
-- (void)updateStudyMaterial:(WKStudyMaterials *)material
+- (void)updateStudyMaterial:(TKMStudyMaterials *)material
                     handler:(UpdateStudyMaterialHandler)handler {
   [self ensureValidCSRFTokenAndThen:^(NSError * _Nullable error) {
     if (error != nil) {
@@ -654,7 +654,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
       return;
     }
     
-    WKUser *ret = [[WKUser alloc] init];
+    TKMUser *ret = [[TKMUser alloc] init];
     ret.username = data[@"username"];
     ret.level = [data[@"level"] intValue];
     ret.maxLevelGrantedBySubscription = [data[@"max_level_granted_by_subscription"] intValue];

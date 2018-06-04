@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "WKModelItem.h"
+#import "TKMModelItem.h"
 
-void WKSafePerformSelector(id target, SEL selector, id object) {
+void TKMSafePerformSelector(id target, SEL selector, id object) {
   if (![target respondsToSelector:selector]) {
     return;
   }
@@ -22,9 +22,9 @@ void WKSafePerformSelector(id target, SEL selector, id object) {
 }
 
 
-@implementation WKModelCell : UITableViewCell
+@implementation TKMModelCell : UITableViewCell
 
-- (void)updateWithItem:(id<WKModelItem>)item {
+- (void)updateWithItem:(id<TKMModelItem>)item {
   _item = item;
 }
 

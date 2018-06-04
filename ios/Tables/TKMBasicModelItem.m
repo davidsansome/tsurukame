@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "WKBasicModelItem.h"
+#import "TKMBasicModelItem.h"
 
-@implementation WKBasicModelItem
+@implementation TKMBasicModelItem
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
                         title:(NSString *)title
@@ -56,7 +56,7 @@
 }
 
 - (Class)cellClass {
-  return WKBasicModelCell.class;
+  return TKMBasicModelCell.class;
 }
 
 - (NSString *)cellReuseIdentifier {
@@ -65,15 +65,15 @@
           (long)_style];
 }
 
-- (WKModelCell *)createCell {
+- (TKMModelCell *)createCell {
   return [[self.cellClass alloc] initWithStyle:_style reuseIdentifier:self.cellReuseIdentifier];
 }
 
 @end
 
-@implementation WKBasicModelCell
+@implementation TKMBasicModelCell
 
-- (void)updateWithItem:(WKBasicModelItem *)item {
+- (void)updateWithItem:(TKMBasicModelItem *)item {
   [super updateWithItem:item];
   
   self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -85,8 +85,8 @@
 }
 
 - (void)didSelectCell {
-  WKBasicModelItem *item = (WKBasicModelItem *)self.item;
-  WKSafePerformSelector(item.target, item.action, item);
+  TKMBasicModelItem *item = (TKMBasicModelItem *)self.item;
+  TKMSafePerformSelector(item.target, item.action, item);
 }
 
 @end

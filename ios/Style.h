@@ -16,20 +16,20 @@
 
 #import "proto/Wanikani.pbobjc.h"
 
-extern void WKAddShadowToView(UIView *view, float offset, float opacity, float radius);
+extern void TKMAddShadowToView(UIView *view, float offset, float opacity, float radius);
 
-extern UIColor *WKKanjiColor1(void);
-extern UIColor *WKKanjiColor2(void);
-extern UIColor *WKRadicalColor1(void);
-extern UIColor *WKRadicalColor2(void);
-extern UIColor *WKVocabularyColor1(void);
-extern UIColor *WKVocabularyColor2(void);
-extern UIColor *WKGreyColor(void);
-extern UIColor *WKColor2ForSubjectType(WKSubject_Type subjectType);
+extern UIColor *TKMKanjiColor1(void);
+extern UIColor *TKMKanjiColor2(void);
+extern UIColor *TKMRadicalColor1(void);
+extern UIColor *TKMRadicalColor2(void);
+extern UIColor *TKMVocabularyColor1(void);
+extern UIColor *TKMVocabularyColor2(void);
+extern UIColor *TKMGreyColor(void);
+extern UIColor *TKMColor2ForSubjectType(TKMSubject_Type subjectType);
 
-extern NSArray<id> *WKRadicalGradient(void);
-extern NSArray<id> *WKKanjiGradient(void);
-extern NSArray<id> *WKVocabularyGradient(void);
-extern NSArray<id> *WKGradientForAssignment(WKAssignment *assignment);
-extern NSArray<id> *WKGradientForSubject(WKSubject *subject);
+extern NSArray<id> *TKMRadicalGradient(void);
+extern NSArray<id> *TKMKanjiGradient(void);
+extern NSArray<id> *TKMVocabularyGradient(void);
+extern NSArray<id> *TKMGradientForAssignment(TKMAssignment *assignment);
+extern NSArray<id> *TKMGradientForSubject(TKMSubject *subject);
 

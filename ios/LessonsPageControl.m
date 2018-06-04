@@ -49,7 +49,7 @@ static CGFloat WidthOfItemText(NSAttributedString *item) {
 
 #pragma mark - Layout
 
-- (void)setSubjects:(NSArray<WKSubject *> *)subjects {
+- (void)setSubjects:(NSArray<TKMSubject *> *)subjects {
   // Remove the old subviews, if any.
   for (UILabel *label in _labels) {
     [label removeFromSuperview];
@@ -61,14 +61,14 @@ static CGFloat WidthOfItemText(NSAttributedString *item) {
   _labels = [NSMutableArray array];
   _gradientViews = [NSMutableArray array];
 
-  for (WKSubject *subject in subjects) {
+  for (TKMSubject *subject in subjects) {
     [self appendPageItem:[subject japaneseTextWithImageSize:kLabelHeight]
                textColor:[UIColor whiteColor]
-              background:WKGradientForSubject(subject)];
+              background:TKMGradientForSubject(subject)];
   }
   [self appendPageItem:[[NSAttributedString alloc] initWithString:@"Quiz"]
              textColor:[UIColor darkGrayColor]
-            background:@[(id)WKGreyColor().CGColor, (id)WKGreyColor().CGColor]];
+            background:@[(id)TKMGreyColor().CGColor, (id)TKMGreyColor().CGColor]];
   
   [self updateGradientAlpha];
   [self setNeedsLayout];

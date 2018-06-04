@@ -272,7 +272,7 @@ void RunSuccessAnimation(UIView *answerField,
       default:
         return;
     }
-    NSString *srsLevelString = WKSRSLevelName(newSrsLevel);
+    NSString *srsLevelString = TKMSRSLevelName(newSrsLevel);
     
     CreateSpringyBillboard(answerField, srsLevelString,
                            [UIFont systemFontOfSize:16.0],

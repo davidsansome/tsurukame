@@ -14,4 +14,4 @@
 
 #import <UIKit/UIKit.h>
 
-extern void WKOpenURL(NSURL *url);
+extern void TKMOpenURL(NSURL *url);

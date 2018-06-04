@@ -12,29 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@class WKModelCell;
+#import "TKMBasicModelItem.h"
 
-extern void WKSafePerformSelector(id target, SEL selector, id object);
+@interface TKMSwitchModelItem : TKMBasicModelItem
 
-@protocol WKModelItem <NSObject>
+- (instancetype)initWithStyle:(UITableViewCellStyle)style
+                        title:(NSString *)title
+                     subtitle:(NSString *)subtitle
+                           on:(BOOL)on
+                       target:(id)target
+                       action:(SEL)action NS_DESIGNATED_INITIALIZER;
 
-@required
-- (Class)cellClass;
+TKM_BASIC_MODEL_ITEM_INITIALISERS_UNAVAILABLE;
 
-@optional
-- (NSString *)cellReuseIdentifier;
-- (WKModelCell *)createCell;
-
-@end
-
-@interface WKModelCell : UITableViewCell
-
-@property(nonatomic, readonly, weak) id<WKModelItem> item;
-
-- (void)updateWithItem:(id<WKModelItem>)item;
-
-- (void)didSelectCell;
+@property(nonatomic) BOOL on;
 
 @end

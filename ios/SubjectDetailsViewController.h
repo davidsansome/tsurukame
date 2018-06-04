@@ -23,7 +23,7 @@
 
 @property (nonatomic) DataLoader *dataLoader;
 @property (nonatomic) LocalCachingClient *localCachingClient;
-@property (nonatomic) WKSubject *subject;
+@property (nonatomic) TKMSubject *subject;
 
 // If this is set to true before the view is loaded, the back button will be hidden.
 @property (nonatomic) bool hideBackButton;

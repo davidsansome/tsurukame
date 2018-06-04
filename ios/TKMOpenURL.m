@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "WKOpenURL.h"
+#import "TKMOpenURL.h"
 
 static NSString * const kGoogleChromeHTTPScheme = @"googlechrome:";
 static NSString * const kGoogleChromeHTTPSScheme = @"googlechromes:";
@@ -50,7 +50,7 @@ static BOOL OpenInChrome(NSURL *url) {
   return NO;
 }
 
-void WKOpenURL(NSURL *url) {
+void TKMOpenURL(NSURL *url) {
   if (!OpenInChrome(url)) {
     [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
   }

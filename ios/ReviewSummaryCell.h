@@ -19,6 +19,6 @@
 @interface ReviewSummaryCell : UITableViewCell
 
 @property(nonatomic) ReviewItem *item;
-@property(nonatomic) WKSubject *subject;
+@property(nonatomic) TKMSubject *subject;
 
 @end

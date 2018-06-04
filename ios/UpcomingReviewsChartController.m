@@ -95,12 +95,12 @@ currentReviewCount:(int)currentReviewCount
   lineDataSet.drawValuesEnabled = NO;
   lineDataSet.drawCircleHoleEnabled = NO;
   lineDataSet.circleRadius = 1.5f;
-  lineDataSet.colors = @[WKVocabularyColor2()];
-  lineDataSet.circleColors = @[WKVocabularyColor2()];
+  lineDataSet.colors = @[TKMVocabularyColor2()];
+  lineDataSet.circleColors = @[TKMVocabularyColor2()];
   
   BarChartDataSet *barDataSet = [[BarChartDataSet alloc] initWithValues:hourlyData label:nil];
   barDataSet.axisDependency = AxisDependencyRight;
-  barDataSet.colors = @[WKRadicalColor2()];
+  barDataSet.colors = @[TKMRadicalColor2()];
   barDataSet.valueFormatter = [[ChartDefaultValueFormatter alloc] initWithDecimals:0];
   
   CombinedChartData *data = [[CombinedChartData alloc] init];
