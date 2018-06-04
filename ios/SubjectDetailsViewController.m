@@ -20,9 +20,9 @@
 
 #import <WebKit/WebKit.h>
 
-@interface SubjectDetailsViewController () <WKSubjectDetailsDelegate, NavigationControllerDelegate>
+@interface SubjectDetailsViewController () <TKMSubjectDetailsDelegate, NavigationControllerDelegate>
 
-@property (weak, nonatomic) IBOutlet WKSubjectDetailsView *subjectDetailsView;
+@property (weak, nonatomic) IBOutlet TKMSubjectDetailsView *subjectDetailsView;
 @property (weak, nonatomic) IBOutlet UILabel *subjectTitle;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 
@@ -41,8 +41,8 @@
   _subjectDetailsView.dataLoader = _dataLoader;
   _subjectDetailsView.delegate = self;
   _subjectDetailsView.showHints = _showHints;
-  WKStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
-  WKAssignment *assignment = nil;
+  TKMStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
+  TKMAssignment *assignment = nil;
   if (_showUserProgress) {
     assignment = [_localCachingClient getAssignmentForID:_subject.id_p];
   }
@@ -56,7 +56,7 @@
   
   _subjectTitle.attributedText = _subject.japaneseText;
   _gradientLayer = [CAGradientLayer layer];
-  _gradientLayer.colors = WKGradientForSubject(_subject);
+  _gradientLayer.colors = TKMGradientForSubject(_subject);
   [self.view.layer insertSublayer:_gradientLayer atIndex:0];
   
   if (_hideBackButton) {
@@ -84,7 +84,7 @@
   return UIStatusBarStyleLightContent;
 }
 
-- (void)openSubject:(WKSubject *)subject {
+- (void)openSubject:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   vc.dataLoader = _dataLoader;

@@ -49,9 +49,9 @@ static const CGFloat kJapaneseTextImageSize = 26.f;
   _gradient.frame = self.contentView.bounds;
 }
 
-- (void)setSubject:(WKSubject *)subject {
+- (void)setSubject:(TKMSubject *)subject {
   _subject = subject;
-  _gradient.colors = WKGradientForSubject(subject);
+  _gradient.colors = TKMGradientForSubject(subject);
   self.levelLabel.text = [NSString stringWithFormat:@"%d", subject.level];
   self.subjectLabel.attributedText = [subject japaneseTextWithImageSize:kJapaneseTextImageSize];
   if (subject.hasRadical) {

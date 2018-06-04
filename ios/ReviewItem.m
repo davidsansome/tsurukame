@@ -18,9 +18,9 @@
 
 @implementation ReviewItem
 
-+ (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<WKAssignment *> *)assignments {
++ (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments {
   NSMutableArray *ret = [NSMutableArray array];
-  for (WKAssignment *assignment in assignments) {
+  for (TKMAssignment *assignment in assignments) {
     if (assignment.isReviewStage && assignment.availableAtDate.timeIntervalSinceNow < 0) {
       [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
     }
@@ -28,10 +28,10 @@
   return ret;
 }
 
-+ (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<WKAssignment *> *)assignments
++ (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<TKMAssignment *> *)assignments
                                           dataLoader:(DataLoader *)dataLoader {
   NSMutableArray *ret = [NSMutableArray array];
-  for (WKAssignment *assignment in assignments) {
+  for (TKMAssignment *assignment in assignments) {
     // Protect against new subjects getting added to WaniKani.  This will assert in developer builds
     // but should just skip new subjects in release builds.
     if (![dataLoader isValidSubjectID:assignment.subjectId]) {
@@ -46,10 +46,10 @@
   return ret;
 }
 
-- (instancetype)initFromAssignment:(WKAssignment *)assignment {
+- (instancetype)initFromAssignment:(TKMAssignment *)assignment {
   if (self = [super init]) {
     _assignment = assignment;
-    _answer = [[WKProgress alloc] init];
+    _answer = [[TKMProgress alloc] init];
     _answer.assignment = assignment;
     _answer.isLesson = assignment.isLessonStage;
   }

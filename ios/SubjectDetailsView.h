@@ -20,26 +20,26 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class WKSubjectDetailsView;
+@class TKMSubjectDetailsView;
 
-@protocol WKSubjectDetailsDelegate <NSObject>
+@protocol TKMSubjectDetailsDelegate <NSObject>
 @optional
-- (void)openSubject:(WKSubject *)subject;
-- (void)subjectDetailsView:(WKSubjectDetailsView *)view
+- (void)openSubject:(TKMSubject *)subject;
+- (void)subjectDetailsView:(TKMSubjectDetailsView *)view
        didFinishNavigation:(WKNavigation *)navigation;
 @end
 
-@interface WKSubjectDetailsView : WKWebView <WKNavigationDelegate>
+@interface TKMSubjectDetailsView : WKWebView <WKNavigationDelegate>
 
 @property (nonatomic) DataLoader *dataLoader;
-@property (nonatomic, weak) id<WKSubjectDetailsDelegate> delegate;
+@property (nonatomic, weak) id<TKMSubjectDetailsDelegate> delegate;
 @property (nonatomic) bool showHints;
 
-@property (nonatomic, readonly) WKSubject *lastSubjectClicked;
+@property (nonatomic, readonly) TKMSubject *lastSubjectClicked;
 
-- (void)updateWithSubject:(WKSubject *)subject
-           studyMaterials:(WKStudyMaterials *)studyMaterials
-               assignment:(WKAssignment *_Nullable)assignment;
+- (void)updateWithSubject:(TKMSubject *)subject
+           studyMaterials:(TKMStudyMaterials *)studyMaterials
+               assignment:(TKMAssignment *_Nullable)assignment;
 
 @end
 

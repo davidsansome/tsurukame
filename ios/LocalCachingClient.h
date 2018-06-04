@@ -32,7 +32,7 @@ typedef void (^CompletionHandler)(void);
 @property(nonatomic, readonly) NSArray<NSNumber *> *upcomingReviews;
 @property(nonatomic, readonly) int pendingProgress;
 @property(nonatomic, readonly) int pendingStudyMaterials;
-@property(nonatomic, readonly) NSArray<WKAssignment *> *maxLevelAssignments;
+@property(nonatomic, readonly) NSArray<TKMAssignment *> *maxLevelAssignments;
 
 + (NSURL *)databaseFileUrl;
 
@@ -45,16 +45,16 @@ typedef void (^CompletionHandler)(void);
 - (void)sync:(CompletionHandler _Nullable)completionHandler;
 
 // Getters: query the database and return data immediately, without making network requests.
-- (NSArray<WKAssignment *> *)getAllAssignments;
-- (WKStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID;
-- (WKUser * _Nullable)getUserInfo;
-- (NSArray<WKProgress *> *)getAllPendingProgress;
-- (WKAssignment *)getAssignmentForID:(int)subjectID;
+- (NSArray<TKMAssignment *> *)getAllAssignments;
+- (TKMStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID;
+- (TKMUser * _Nullable)getUserInfo;
+- (NSArray<TKMProgress *> *)getAllPendingProgress;
+- (TKMAssignment *)getAssignmentForID:(int)subjectID;
 
 // Setters: save the data to the database and return immediately, make network requests in the
 // background.
-- (void)sendProgress:(NSArray<WKProgress *> *)progress;
-- (void)updateStudyMaterial:(WKStudyMaterials *)material;
+- (void)sendProgress:(NSArray<TKMProgress *> *)progress;
+- (void)updateStudyMaterial:(TKMStudyMaterials *)material;
 
 // Delete everything: use when a user logs out.
 - (void)clearAllData;

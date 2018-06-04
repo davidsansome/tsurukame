@@ -14,9 +14,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "WKModelItem.h"
+#import "TKMModelItem.h"
 
-@interface WKTableModel : NSObject <UITableViewDataSource,
+@interface TKMTableModel : NSObject <UITableViewDataSource,
                                     UITableViewDelegate>
 
 @property(nonatomic, readonly, weak) UITableView *tableView;
@@ -29,13 +29,13 @@
 
 @end
 
-@interface WKMutableTableModel : WKTableModel
+@interface TKMMutableTableModel : TKMTableModel
 
 - (void)addSection;
 - (void)addSection:(NSString *)title;
 - (void)addSection:(NSString *)title footer:(NSString *)footer;
-- (NSIndexPath *)addItem:(id<WKModelItem>)item;
-- (NSIndexPath *)addItem:(id<WKModelItem>)item hidden:(bool)hidden;
+- (NSIndexPath *)addItem:(id<TKMModelItem>)item;
+- (NSIndexPath *)addItem:(id<TKMModelItem>)item hidden:(bool)hidden;
 
 - (void)reloadTable;
 

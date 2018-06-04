@@ -17,14 +17,14 @@
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "UserDefaults.h"
-#import "Tables/WKTableModel.h"
-#import "Tables/WKSwitchModelItem.h"
+#import "Tables/TKMTableModel.h"
+#import "Tables/TKMSwitchModelItem.h"
 
 @interface SettingsViewController ()
 @end
 
 @implementation SettingsViewController {
-  WKTableModel *_model;
+  TKMTableModel *_model;
   NSIndexPath *_groupMeaningReadingIndexPath;
 }
 
@@ -33,23 +33,23 @@
 }
 
 - (void)rerender {
-  WKMutableTableModel *model = [[WKMutableTableModel alloc] initWithTableView:self.tableView];
+  TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
   
   [model addSection:@"Animations"
              footer:@"You can turn off any animations you find distracting"];
-  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                     title:@"Particle explosion"
                                                  subtitle:nil
                                                        on:UserDefaults.animateParticleExplosion
                                                    target:self
                                                    action:@selector(animateParticleExplosionSwitchChanged:)]];
-  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                     title:@"Level up popup"
                                                  subtitle:nil
                                                        on:UserDefaults.animateLevelUpPopup
                                                    target:self
                                                    action:@selector(animateLevelUpPopupSwitchChanged:)]];
-  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                     title:@"+1"
                                                  subtitle:nil
                                                        on:UserDefaults.animatePlusOne
@@ -57,33 +57,33 @@
                                                    action:@selector(animatePlusOneSwitchChanged:)]];
   
   [model addSection:@"Reviews"];
-  [model addItem:[[WKBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
                                                    title:@"Review order"
                                                 subtitle:self.reviewOrderValueText
                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                   target:self
                                                   action:@selector(didTapReviewOrder:)]];
-  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                     title:@"Back-to-back"
                                                  subtitle:@"Group Meaning and Reading together"
                                                        on:UserDefaults.groupMeaningReading
                                                    target:self
                                                    action:@selector(groupMeaningReadingSwitchChanged:)]];
   _groupMeaningReadingIndexPath =
-      [model addItem:[[WKBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+      [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
                                                        title:@"Back-to-back order"
                                                     subtitle:self.taskOrderValueText
                                                accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                       target:self
                                                       action:@selector(didTapTaskOrder:)]
               hidden:!UserDefaults.groupMeaningReading];
-  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                     title:@"Reveal answer automatically"
                                                  subtitle:nil
                                                        on:UserDefaults.showAnswerImmediately
                                                    target:self
                                                    action:@selector(showAnswerImmediatelySwitchChanged:)]];
-  [model addItem:[[WKSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                     title:@"Allow cheating"
                                                  subtitle:@"Ignore Typos and Add Synonym"
                                                        on:UserDefaults.enableCheats
@@ -91,14 +91,14 @@
                                                    action:@selector(enableCheatsSwitchChanged:)]];
   
   [model addSection];
-  [model addItem:[[WKBasicModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                    title:@"Export local database"
                                                 subtitle:@"To attach to bug reports or email to the developer"
                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                   target:self
                                                   action:@selector(didTapSendBugReport:)]];
   
-  WKBasicModelItem *logOutItem = [[WKBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+  TKMBasicModelItem *logOutItem = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                                    title:@"Log out"
                                                                 subtitle:nil
                                                            accessoryType:UITableViewCellAccessoryNone
@@ -164,11 +164,11 @@
   UserDefaults.enableCheats = switchView.on;
 }
 
-- (void)didTapReviewOrder:(WKBasicModelItem *)item {
+- (void)didTapReviewOrder:(TKMBasicModelItem *)item {
   [self performSegueWithIdentifier:@"reviewOrder" sender:self];
 }
 
-- (void)didTapTaskOrder:(WKBasicModelItem *)item {
+- (void)didTapTaskOrder:(TKMBasicModelItem *)item {
   [self performSegueWithIdentifier:@"taskOrder" sender:self];
 }
 

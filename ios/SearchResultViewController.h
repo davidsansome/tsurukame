@@ -15,11 +15,11 @@
 #import <UIKit/UIKit.h>
 
 @class DataLoader;
-@class WKSubject;
+@class TKMSubject;
 
 @protocol SearchResultViewControllerDelegate <NSObject>
 
-- (void)searchResultSelected:(WKSubject *)subject;
+- (void)searchResultSelected:(TKMSubject *)subject;
 
 @end
 

@@ -24,14 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CurrentLevelChartController : NSObject
 
 - (instancetype)initWithChartView:(PieChartView *)view
-                      subjectType:(WKSubject_Type)subjectType
+                      subjectType:(TKMSubject_Type)subjectType
                        dataLoader:(DataLoader *)dataLoader NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic, readonly) PieChartView *view;
-@property(nonatomic) WKSubject_Type subjectType;
+@property(nonatomic) TKMSubject_Type subjectType;
 
-- (void)update:(NSArray<WKAssignment *> *)maxLevelAssignments;
+- (void)update:(NSArray<TKMAssignment *> *)maxLevelAssignments;
 
 @end
 

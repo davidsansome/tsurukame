@@ -16,7 +16,7 @@
 
 #import <UIKit/UIKit.h>
 
-NSString *WKSRSLevelName(int srsLevel) {
+NSString *TKMSRSLevelName(int srsLevel) {
   switch (srsLevel) {
     case 1:
       return @"Novice";
@@ -37,7 +37,7 @@ NSString *WKSRSLevelName(int srsLevel) {
   return nil;
 }
 
-@implementation WKSubject (Convenience)
+@implementation TKMSubject (Convenience)
 
 - (NSAttributedString *)japaneseText {
   return [self japaneseTextWithImageSize:0];
@@ -71,7 +71,7 @@ NSString *WKSRSLevelName(int srsLevel) {
 }
 
 - (NSString *)primaryMeaning {
-  for (WKMeaning *meaning in self.meaningsArray) {
+  for (TKMMeaning *meaning in self.meaningsArray) {
     if (meaning.isPrimary) {
       return meaning.meaning;
     }
@@ -79,17 +79,17 @@ NSString *WKSRSLevelName(int srsLevel) {
   return nil;
 }
 
-- (NSArray<WKReading *> *)primaryReadings {
+- (NSArray<TKMReading *> *)primaryReadings {
   return [self readingsFilteredByPrimary:YES];
 }
 
-- (NSArray<WKReading *> *)alternateReadings {
+- (NSArray<TKMReading *> *)alternateReadings {
   return [self readingsFilteredByPrimary:NO];
 }
 
-- (NSArray<WKReading *> *)readingsFilteredByPrimary:(BOOL)primary {
-  NSMutableArray<WKReading *> *ret = [NSMutableArray array];
-  for (WKReading *reading in self.readingsArray) {
+- (NSArray<TKMReading *> *)readingsFilteredByPrimary:(BOOL)primary {
+  NSMutableArray<TKMReading *> *ret = [NSMutableArray array];
+  for (TKMReading *reading in self.readingsArray) {
     if (reading.isPrimary == primary) {
       [ret addObject:reading];
     }
@@ -99,7 +99,7 @@ NSString *WKSRSLevelName(int srsLevel) {
 
 - (NSString *)commaSeparatedMeanings {
   NSMutableArray<NSString *>* strings = [NSMutableArray array];
-  for (WKMeaning *meaning in self.meaningsArray) {
+  for (TKMMeaning *meaning in self.meaningsArray) {
     [strings addObject:meaning.meaning];
   }
   return [strings componentsJoinedByString:@", "];
@@ -107,7 +107,7 @@ NSString *WKSRSLevelName(int srsLevel) {
 
 - (NSString *)commaSeparatedReadings {
   NSMutableArray<NSString *>* strings = [NSMutableArray array];
-  for (WKReading *reading in self.readingsArray) {
+  for (TKMReading *reading in self.readingsArray) {
     [strings addObject:reading.reading];
   }
   return [strings componentsJoinedByString:@", "];
@@ -115,7 +115,7 @@ NSString *WKSRSLevelName(int srsLevel) {
 
 - (NSString *)commaSeparatedPrimaryReadings {
   NSMutableArray<NSString *>* strings = [NSMutableArray array];
-  for (WKReading *reading in self.primaryReadings) {
+  for (TKMReading *reading in self.primaryReadings) {
     [strings addObject:reading.reading];
   }
   return [strings componentsJoinedByString:@", "];
@@ -123,33 +123,33 @@ NSString *WKSRSLevelName(int srsLevel) {
 
 @end
 
-@implementation WKVocabulary (Convenience)
+@implementation TKMVocabulary (Convenience)
 
 - (NSString *)commaSeparatedPartsOfSpeech {
   NSMutableArray<NSString *> *parts = [NSMutableArray array];
   [self.partsOfSpeechArray enumerateValuesWithBlock:^(int32_t value, NSUInteger idx, BOOL * _Nonnull stop) {
     NSString *str;
-    switch ((WKVocabulary_PartOfSpeech)value) {
-      case WKVocabulary_PartOfSpeech_Noun:             str = @"Noun";              break;
-      case WKVocabulary_PartOfSpeech_Numeral:          str = @"Numeral";           break;
-      case WKVocabulary_PartOfSpeech_IntransitiveVerb: str = @"Intransitive Verb"; break;
-      case WKVocabulary_PartOfSpeech_IchidanVerb:      str = @"Ichidan Verb";      break;
-      case WKVocabulary_PartOfSpeech_TransitiveVerb:   str = @"Transitive Verb";   break;
-      case WKVocabulary_PartOfSpeech_NoAdjective:      str = @"No Adjective";      break;
-      case WKVocabulary_PartOfSpeech_GodanVerb:        str = @"Godan Verb";        break;
-      case WKVocabulary_PartOfSpeech_NaAdjective:      str = @"Na Adjective";      break;
-      case WKVocabulary_PartOfSpeech_IAdjective:       str = @"I Adjective";       break;
-      case WKVocabulary_PartOfSpeech_Suffix:           str = @"Suffix";            break;
-      case WKVocabulary_PartOfSpeech_Adverb:           str = @"Adverb";            break;
-      case WKVocabulary_PartOfSpeech_SuruVerb:         str = @"Suru Verb";         break;
-      case WKVocabulary_PartOfSpeech_Prefix:           str = @"Prefix";            break;
-      case WKVocabulary_PartOfSpeech_ProperNoun:       str = @"Proper Noun";       break;
-      case WKVocabulary_PartOfSpeech_Expression:       str = @"Expression";        break;
-      case WKVocabulary_PartOfSpeech_Adjective:        str = @"Adjective";         break;
-      case WKVocabulary_PartOfSpeech_Interjection:     str = @"Interjection";      break;
-      case WKVocabulary_PartOfSpeech_Counter:          str = @"Counter";           break;
-      case WKVocabulary_PartOfSpeech_Pronoun:          str = @"Pronoun";           break;
-      case WKVocabulary_PartOfSpeech_Conjunction:      str = @"Conjunction";       break;
+    switch ((TKMVocabulary_PartOfSpeech)value) {
+      case TKMVocabulary_PartOfSpeech_Noun:             str = @"Noun";              break;
+      case TKMVocabulary_PartOfSpeech_Numeral:          str = @"Numeral";           break;
+      case TKMVocabulary_PartOfSpeech_IntransitiveVerb: str = @"Intransitive Verb"; break;
+      case TKMVocabulary_PartOfSpeech_IchidanVerb:      str = @"Ichidan Verb";      break;
+      case TKMVocabulary_PartOfSpeech_TransitiveVerb:   str = @"Transitive Verb";   break;
+      case TKMVocabulary_PartOfSpeech_NoAdjective:      str = @"No Adjective";      break;
+      case TKMVocabulary_PartOfSpeech_GodanVerb:        str = @"Godan Verb";        break;
+      case TKMVocabulary_PartOfSpeech_NaAdjective:      str = @"Na Adjective";      break;
+      case TKMVocabulary_PartOfSpeech_IAdjective:       str = @"I Adjective";       break;
+      case TKMVocabulary_PartOfSpeech_Suffix:           str = @"Suffix";            break;
+      case TKMVocabulary_PartOfSpeech_Adverb:           str = @"Adverb";            break;
+      case TKMVocabulary_PartOfSpeech_SuruVerb:         str = @"Suru Verb";         break;
+      case TKMVocabulary_PartOfSpeech_Prefix:           str = @"Prefix";            break;
+      case TKMVocabulary_PartOfSpeech_ProperNoun:       str = @"Proper Noun";       break;
+      case TKMVocabulary_PartOfSpeech_Expression:       str = @"Expression";        break;
+      case TKMVocabulary_PartOfSpeech_Adjective:        str = @"Adjective";         break;
+      case TKMVocabulary_PartOfSpeech_Interjection:     str = @"Interjection";      break;
+      case TKMVocabulary_PartOfSpeech_Counter:          str = @"Counter";           break;
+      case TKMVocabulary_PartOfSpeech_Pronoun:          str = @"Pronoun";           break;
+      case TKMVocabulary_PartOfSpeech_Conjunction:      str = @"Conjunction";       break;
     }
     [parts addObject:str];
   }];
@@ -158,7 +158,7 @@ NSString *WKSRSLevelName(int srsLevel) {
 
 @end
 
-@implementation WKAssignment (Convenience)
+@implementation TKMAssignment (Convenience)
 
 - (bool)isLessonStage {
   return !self.hasStartedAt && self.srsStage == 0;
@@ -182,7 +182,7 @@ NSString *WKSRSLevelName(int srsLevel) {
 
 @end
 
-@implementation WKProgress (Convenience)
+@implementation TKMProgress (Convenience)
 
 - (NSString *)reviewFormParameters {
   return [NSString stringWithFormat:@"%d%%5B%%5D=%@&%d%%5B%%5D=%@",
@@ -196,7 +196,7 @@ NSString *WKSRSLevelName(int srsLevel) {
 
 @end
 
-@implementation WKUser (Convenience)
+@implementation TKMUser (Convenience)
 
 - (NSDate *)startedAtDate {
   return [NSDate dateWithTimeIntervalSince1970:self.startedAt];

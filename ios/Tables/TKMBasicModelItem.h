@@ -14,12 +14,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "WKModelItem.h"
+#import "TKMModelItem.h"
 
-@interface WKBasicModelCell : WKModelCell
+@interface TKMBasicModelCell : TKMModelCell
 @end
 
-@interface WKBasicModelItem : NSObject <WKModelItem>
+@interface TKMBasicModelItem : NSObject <TKMModelItem>
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
                         title:(NSString *)title
@@ -50,7 +50,7 @@
 
 @end
 
-#define WK_BASIC_MODEL_ITEM_INITIALISERS_UNAVAILABLE \
+#define TKM_BASIC_MODEL_ITEM_INITIALISERS_UNAVAILABLE \
   - (instancetype)initWithStyle:(UITableViewCellStyle)style \
                           title:(NSString *)title \
                        subtitle:(NSString *)subtitle \

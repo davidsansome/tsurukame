@@ -118,7 +118,7 @@ static NSString *kHeader =
      "span.user { color: #3B99FC; }"
      "</style>";
 
-@implementation WKSubjectDetailsView {
+@implementation TKMSubjectDetailsView {
   NSDateFormatter *_availableDateFormatter;
   NSDateFormatter *_startedDateFormatter;
 }
@@ -140,9 +140,9 @@ static NSString *kHeader =
 
 #pragma mark - Rendering
 
-- (NSString *)renderSubjectDetails:(WKSubject *)subject
-                    studyMaterials:(WKStudyMaterials *)studyMaterials
-                        assignment:(WKAssignment *)assignment {
+- (NSString *)renderSubjectDetails:(TKMSubject *)subject
+                    studyMaterials:(TKMStudyMaterials *)studyMaterials
+                        assignment:(TKMAssignment *)assignment {
   NSMutableString *ret = [NSMutableString stringWithString:kHeader];
   if (subject.hasRadical) {
     [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
@@ -177,7 +177,7 @@ static NSString *kHeader =
     [self addNameValueRowTo:ret
                        name:@"SRS level"
                       value:[NSString stringWithFormat:@"%@ (%d)",
-                             WKSRSLevelName(assignment.srsStage),
+                             TKMSRSLevelName(assignment.srsStage),
                              assignment.srsStage]];
     if (assignment.hasAvailableAt && assignment.availableAt != 0) {
       [self addNameValueRowTo:ret
@@ -199,10 +199,10 @@ static NSString *kHeader =
   return ret;
 }
 
-- (NSString *)renderMeanings:(NSArray<WKMeaning *> *)meanings
-              studyMaterials:(WKStudyMaterials *)studyMaterials {
+- (NSString *)renderMeanings:(NSArray<TKMMeaning *> *)meanings
+              studyMaterials:(TKMStudyMaterials *)studyMaterials {
   NSMutableArray<NSString *> *ret = [NSMutableArray array];
-  for (WKMeaning *meaning in meanings) {
+  for (TKMMeaning *meaning in meanings) {
     if (meaning.isPrimary) {
       [ret addObject:[NSString stringWithFormat:@"<span class=\"pri\">%@</span>", meaning.meaning]];
     }
@@ -210,7 +210,7 @@ static NSString *kHeader =
   for (NSString *meaning in studyMaterials.meaningSynonymsArray) {
     [ret addObject:[NSString stringWithFormat:@"<span class=\"user\">%@</span>", meaning]];
   }
-  for (WKMeaning *meaning in meanings) {
+  for (TKMMeaning *meaning in meanings) {
     if (!meaning.isPrimary) {
       [ret addObject:[NSString stringWithFormat:@"<span class=\"alt\">%@</span>", meaning.meaning]];
     }
@@ -218,10 +218,10 @@ static NSString *kHeader =
   return [ret componentsJoinedByString:@", "];
 }
 
-- (NSString *)renderReadings:(NSArray<WKReading *> *)readings primaryOnly:(bool)primaryOnly {
+- (NSString *)renderReadings:(NSArray<TKMReading *> *)readings primaryOnly:(bool)primaryOnly {
   NSMutableArray<NSString *> *primary = [NSMutableArray array];
   NSMutableArray<NSString *> *secondary = [NSMutableArray array];
-  for (WKReading *reading in readings) {
+  for (TKMReading *reading in readings) {
     if (reading.isPrimary) {
       [primary addObject:[NSString stringWithFormat:@"<span class=\"pri\">%@</span>", reading.reading]];
     } else if (!primaryOnly) {
@@ -280,7 +280,7 @@ static NSString *kHeader =
   [ret appendString:@"<ul>"];
   for (int i = 0; i < components.count; ++i) {
     int subjectID = [components valueAtIndex:i];
-    WKSubject *subject = [_dataLoader loadSubject:subjectID];
+    TKMSubject *subject = [_dataLoader loadSubject:subjectID];
     if (!subject) {
       continue;
     }
@@ -310,16 +310,16 @@ static NSString *kHeader =
 
 #pragma mark - Setters
 
-- (void)updateWithSubject:(WKSubject *)subject
-           studyMaterials:(WKStudyMaterials *)studyMaterials
-               assignment:(WKAssignment *_Nullable)assignment {
+- (void)updateWithSubject:(TKMSubject *)subject
+           studyMaterials:(TKMStudyMaterials *)studyMaterials
+               assignment:(TKMAssignment *_Nullable)assignment {
   [self loadHTMLString:[self renderSubjectDetails:subject
                                    studyMaterials:studyMaterials
                                        assignment:assignment]
                baseURL:nil];
 }
 
-#pragma mark - WKNavigationDelegate
+#pragma mark - TKMNavigationDelegate
 
 - (void)webView:(WKWebView *)webView
 decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction

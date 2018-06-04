@@ -18,16 +18,16 @@
 
 @class DataLoader;
 
-typedef NS_ENUM(NSInteger, WKAnswerCheckerResult) {
-  kWKAnswerPrecise,
-  kWKAnswerImprecise,
-  kWKAnswerOtherKanjiReading,
-  kWKAnswerContainsInvalidCharacters,
-  kWKAnswerIncorrect,
+typedef NS_ENUM(NSInteger, TKMAnswerCheckerResult) {
+  kTKMAnswerPrecise,
+  kTKMAnswerImprecise,
+  kTKMAnswerOtherKanjiReading,
+  kTKMAnswerContainsInvalidCharacters,
+  kTKMAnswerIncorrect,
 };
 
-extern WKAnswerCheckerResult CheckAnswer(NSString *answer,
-                                         WKSubject *subject,
-                                         WKStudyMaterials *studyMaterials,
-                                         WKTaskType taskType,
+extern TKMAnswerCheckerResult CheckAnswer(NSString *answer,
+                                         TKMSubject *subject,
+                                         TKMStudyMaterials *studyMaterials,
+                                         TKMTaskType taskType,
                                          DataLoader *dataLoader);

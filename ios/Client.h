@@ -19,8 +19,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern const char *kWanikaniSessionCookieName;
-extern NSErrorDomain const kWKClientErrorDomain;
-extern const int kWKLoginErrorCode;
+extern NSErrorDomain const kTKMClientErrorDomain;
+extern const int kTKMLoginErrorCode;
 
 typedef void (^CookieHandler)(NSError * _Nullable error,
                               NSString * _Nullable cookie);
@@ -28,11 +28,11 @@ typedef void (^ApiTokenHandler)(NSError * _Nullable error,
                                 NSString * _Nullable apiToken,
                                 NSString * _Nullable emailAddress);
 typedef void (^AssignmentHandler)(NSError * _Nullable error,
-                                  NSArray<WKAssignment *> * _Nullable assignments);
+                                  NSArray<TKMAssignment *> * _Nullable assignments);
 typedef void (^ProgressHandler)(NSError * _Nullable error);
 typedef void (^StudyMaterialsHandler)(NSError * _Nullable error,
-                                      NSArray<WKStudyMaterials *> * _Nullable studyMaterials);
-typedef void (^UserInfoHandler)(NSError * _Nullable error, WKUser * _Nullable user);
+                                      NSArray<TKMStudyMaterials *> * _Nullable studyMaterials);
+typedef void (^UserInfoHandler)(NSError * _Nullable error, TKMUser * _Nullable user);
 typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
 
 @interface Client : NSObject
@@ -53,12 +53,12 @@ typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
                      handler:(ApiTokenHandler)handler;
 - (void)getAssignmentsModifiedAfter:(NSString *)date
                             handler:(AssignmentHandler)handler;
-- (void)sendProgress:(NSArray<WKProgress *> *)progress
+- (void)sendProgress:(NSArray<TKMProgress *> *)progress
              handler:(ProgressHandler _Nullable)handler;
 - (void)getStudyMaterialsModifiedAfter:(NSString *)date
                                handler:(StudyMaterialsHandler)handler;
 - (void)getUserInfo:(UserInfoHandler)handler;
-- (void)updateStudyMaterial:(WKStudyMaterials *)material
+- (void)updateStudyMaterial:(TKMStudyMaterials *)material
                     handler:(UpdateStudyMaterialHandler)handler;
 
 @end

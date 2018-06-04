@@ -99,7 +99,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   int _cachedAvailableLessonCount;
   int _cachedAvailableReviewCount;
   NSArray<NSNumber *> *_cachedUpcomingReviews;
-  NSArray<WKAssignment *> *_cachedMaxLevelAssignments;
+  NSArray<TKMAssignment *> *_cachedMaxLevelAssignments;
   int _cachedPendingProgress;
   int _cachedPendingStudyMaterials;
   bool _isCachedAvailableSubjectCountsStale;
@@ -165,23 +165,23 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 
 #pragma mark - Local database getters
 
-- (NSArray<WKAssignment *> *)getAllAssignments {
-  __block NSArray<WKAssignment *> *ret = nil;
+- (NSArray<TKMAssignment *> *)getAllAssignments {
+  __block NSArray<TKMAssignment *> *ret = nil;
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     ret = [self getAllAssignmentsInTransaction:db];
   }];
   return ret;
 }
 
-- (NSArray<WKAssignment *> *)getAllAssignmentsInTransaction:(FMDatabase *)db {
-  NSMutableArray<WKAssignment *> *ret = [NSMutableArray array];
+- (NSArray<TKMAssignment *> *)getAllAssignmentsInTransaction:(FMDatabase *)db {
+  NSMutableArray<TKMAssignment *> *ret = [NSMutableArray array];
   
   FMResultSet *r = [db executeQuery:@"SELECT pb FROM assignments"];
   while ([r next]) {
     NSError *error = nil;
-    WKAssignment *assignment = [WKAssignment parseFromData:[r dataForColumnIndex:0] error:&error];
+    TKMAssignment *assignment = [TKMAssignment parseFromData:[r dataForColumnIndex:0] error:&error];
     if (error) {
-      NSLog(@"Parsing WKAssignment failed: %@", error);
+      NSLog(@"Parsing TKMAssignment failed: %@", error);
       break;
     }
     [ret addObject:assignment];
@@ -190,34 +190,34 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   return ret;
 }
 
-- (NSArray<WKProgress *> *)getAllPendingProgress {
-  NSMutableArray<WKProgress *> *progress = [NSMutableArray array];
+- (NSArray<TKMProgress *> *)getAllPendingProgress {
+  NSMutableArray<TKMProgress *> *progress = [NSMutableArray array];
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     FMResultSet *results = [db executeQuery:@"SELECT pb FROM pending_progress"];
     while ([results next]) {
-      [progress addObject:[WKProgress parseFromData:[results dataForColumnIndex:0] error:nil]];
+      [progress addObject:[TKMProgress parseFromData:[results dataForColumnIndex:0] error:nil]];
     }
   }];
   return progress;
 }
 
-- (WKStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID {
-  __block WKStudyMaterials *ret = nil;
+- (TKMStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID {
+  __block TKMStudyMaterials *ret = nil;
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     FMResultSet *r = [db executeQuery:@"SELECT pb FROM study_materials WHERE id = ?", @(subjectID)];
     while ([r next]) {
-      ret = [WKStudyMaterials parseFromData:[r dataForColumnIndex:0] error:nil];
+      ret = [TKMStudyMaterials parseFromData:[r dataForColumnIndex:0] error:nil];
     }
   }];
   return ret;
 }
 
-- (WKUser * _Nullable)getUserInfo {
-  __block WKUser *ret = nil;
+- (TKMUser * _Nullable)getUserInfo {
+  __block TKMUser *ret = nil;
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     FMResultSet *r = [db executeQuery:@"SELECT pb FROM user"];
     while ([r next]) {
-      ret = [WKUser parseFromData:[r dataForColumnIndex:0] error:nil];
+      ret = [TKMUser parseFromData:[r dataForColumnIndex:0] error:nil];
     }
   }];
   return ret;
@@ -235,15 +235,15 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   return ret;
 }
 
-- (WKAssignment *)getAssignmentForID:(int)subjectID {
-  __block WKAssignment *ret = nil;
+- (TKMAssignment *)getAssignmentForID:(int)subjectID {
+  __block TKMAssignment *ret = nil;
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     FMResultSet *r = [db executeQuery:@"SELECT pb FROM assignments WHERE subject_id = ?", @(subjectID)];
     if ([r next]) {
       NSError *error = nil;
-      ret = [WKAssignment parseFromData:[r dataForColumnIndex:0] error:&error];
+      ret = [TKMAssignment parseFromData:[r dataForColumnIndex:0] error:&error];
       if (error) {
-        NSLog(@"Parsing WKAssignment failed: %@", error);
+        NSLog(@"Parsing TKMAssignment failed: %@", error);
       }
       [r close];
       return;
@@ -252,9 +252,9 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     r = [db executeQuery:@"SELECT pb FROM pending_progress WHERE id = ?", @(subjectID)];
     if ([r next]) {
       NSError *error = nil;
-      WKProgress *progress = [WKProgress parseFromData:[r dataForColumnIndex:0] error:&error];
+      TKMProgress *progress = [TKMProgress parseFromData:[r dataForColumnIndex:0] error:&error];
       if (error) {
-        NSLog(@"Parsing WKProgress failed: %@", error);
+        NSLog(@"Parsing TKMProgress failed: %@", error);
       }
       ret = progress.assignment;
       [r close];
@@ -315,7 +315,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }
 }
 
-- (NSArray<WKAssignment *> *)maxLevelAssignments {
+- (NSArray<TKMAssignment *> *)maxLevelAssignments {
   @synchronized(self) {
     if (_isCachedAvailableSubjectCountsStale) {
       [self updateAvailableSubjectCounts];
@@ -326,7 +326,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 }
 
 - (void)updateAvailableSubjectCounts {
-  NSArray<WKAssignment *> *assignments = [self getAllAssignments];
+  NSArray<TKMAssignment *> *assignments = [self getAllAssignments];
   int lessons = 0;
   int reviews = 0;
   
@@ -338,9 +338,9 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }
   
   int maxLevel = 0;
-  NSMutableArray<WKAssignment *> *maxLevelAssignments = [NSMutableArray array];
+  NSMutableArray<TKMAssignment *> *maxLevelAssignments = [NSMutableArray array];
   
-  for (WKAssignment *assignment in assignments) {
+  for (TKMAssignment *assignment in assignments) {
     if (assignment.level > maxLevel) {
       [maxLevelAssignments removeAllObjects];
       maxLevel = assignment.level;
@@ -366,7 +366,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }
   
   // Include any pending progress assignments in the max level list.
-  for (WKProgress *progress in [self getAllPendingProgress]) {
+  for (TKMProgress *progress in [self getAllPendingProgress]) {
     if (progress.assignment.level == maxLevel) {
       if (progress.isLesson || (!progress.readingWrong && !progress.meaningWrong)) {
         progress.assignment.srsStage ++;
@@ -415,9 +415,9 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 
 #pragma mark - Send progress
 
-- (void)sendProgress:(NSArray<WKProgress *> *)progress {
+- (void)sendProgress:(NSArray<TKMProgress *> *)progress {
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
-    for (WKProgress *p in progress) {
+    for (TKMProgress *p in progress) {
       // Delete the assignment.
       CheckUpdate(db, @"DELETE FROM assignments WHERE id = ?", @(p.assignment.id_p));
       
@@ -433,11 +433,11 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 }
 
 - (void)sendAllPendingProgress:(CompletionHandler)handler {
-  NSArray<WKProgress *> *progress = [self getAllPendingProgress];
+  NSArray<TKMProgress *> *progress = [self getAllPendingProgress];
   [self sendPendingProgress:progress handler:handler];
 }
 
-- (void)sendPendingProgress:(NSArray<WKProgress *> *)progress
+- (void)sendPendingProgress:(NSArray<TKMProgress *> *)progress
                     handler:(CompletionHandler _Nullable)handler {
   [_client sendProgress:progress handler:^(NSError * _Nullable error) {
     if (error) {
@@ -445,7 +445,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     } else {
       // Delete the local pending progress.
       [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
-        for (WKProgress *p in progress) {
+        for (TKMProgress *p in progress) {
           CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
         }
       }];
@@ -459,7 +459,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 
 #pragma mark - Send study materials
 
-- (void)updateStudyMaterial:(WKStudyMaterials *)material {
+- (void)updateStudyMaterial:(TKMStudyMaterials *)material {
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
     // Store the study material locally.
     CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES(?, ?)", @(material.subjectId), material.data);
@@ -475,7 +475,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     FMResultSet *results = [db executeQuery:@"SELECT s.pb FROM study_materials AS s, pending_study_materials AS p ON s.id = p.id"];
     while ([results next]) {
-      WKStudyMaterials *material = [WKStudyMaterials parseFromData:[results dataForColumnIndex:0] error:nil];
+      TKMStudyMaterials *material = [TKMStudyMaterials parseFromData:[results dataForColumnIndex:0] error:nil];
       NSLog(@"Sending pending study material update %@", [material description]);
       
       dispatch_group_enter(dispatchGroup);
@@ -488,7 +488,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   dispatch_group_notify(dispatchGroup, _queue, handler);
 }
 
-- (void)sendPendingStudyMaterial:(WKStudyMaterials *)material
+- (void)sendPendingStudyMaterial:(TKMStudyMaterials *)material
                          handler:(CompletionHandler _Nullable)handler {
   [_client updateStudyMaterial:material handler:^(NSError * _Nullable error) {
     if (error) {
@@ -571,13 +571,13 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   
   NSLog(@"Getting all assignments modified after %@", lastDate);
   [_client getAssignmentsModifiedAfter:lastDate
-                               handler:^(NSError *error, NSArray<WKAssignment *> *assignments) {
+                               handler:^(NSError *error, NSArray<TKMAssignment *> *assignments) {
                                  if (error) {
                                    NSLog(@"getAssignmentsModifiedAfter failed: %@", error);
                                  } else {
                                    NSString *date = _client.currentISO8601Time;
                                    [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
-                                     for (WKAssignment *assignment in assignments) {
+                                     for (TKMAssignment *assignment in assignments) {
                                        CheckUpdate(db, @"REPLACE INTO assignments (id, pb, subject_id) VALUES (?, ?, ?)",
                                                    @(assignment.id_p), assignment.data, @(assignment.subjectId));
                                      }
@@ -598,13 +598,13 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   
   NSLog(@"Getting all study materials modified after %@", lastDate);
   [_client getStudyMaterialsModifiedAfter:lastDate
-                                 handler:^(NSError *error, NSArray<WKStudyMaterials *> *studyMaterials) {
+                                 handler:^(NSError *error, NSArray<TKMStudyMaterials *> *studyMaterials) {
                                    if (error) {
                                      NSLog(@"getStudyMaterialsModifiedAfter failed: %@", error);
                                    } else {
                                      NSString *date = _client.currentISO8601Time;
                                      [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
-                                       for (WKStudyMaterials *studyMaterial in studyMaterials) {
+                                       for (TKMStudyMaterials *studyMaterial in studyMaterials) {
                                          CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES (?, ?)",
                                                      @(studyMaterial.subjectId), studyMaterial.data);
                                        }
@@ -617,7 +617,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 }
 
 - (void)updateUserInfo:(CompletionHandler)handler {
-  [_client getUserInfo:^(NSError * _Nullable error, WKUser * _Nullable user) {
+  [_client getUserInfo:^(NSError * _Nullable error, TKMUser * _Nullable user) {
     if (error) {
       NSLog(@"getUserInfo failed: %@", error);
     } else {
