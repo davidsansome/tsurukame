@@ -20,7 +20,7 @@
 
 #import <WebKit/WebKit.h>
 
-@interface SubjectDetailsViewController () <TKMSubjectDetailsDelegate, NavigationControllerDelegate>
+@interface SubjectDetailsViewController () <TKMSubjectDelegate, NavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet TKMSubjectDetailsView *subjectDetailsView;
 @property (weak, nonatomic) IBOutlet UILabel *subjectTitle;
@@ -39,7 +39,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   _subjectDetailsView.dataLoader = _dataLoader;
-  _subjectDetailsView.delegate = self;
+  _subjectDetailsView.subjectDelegate = self;
   _subjectDetailsView.showHints = _showHints;
   TKMStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
   TKMAssignment *assignment = nil;
@@ -49,10 +49,6 @@
   [_subjectDetailsView updateWithSubject:_subject
                           studyMaterials:studyMaterials
                               assignment:assignment];
-  
-  for (UIGestureRecognizer *recognizer in _subjectDetailsView.gestureRecognizers) {
-    [_subjectDetailsView removeGestureRecognizer:recognizer];
-  }
   
   _subjectTitle.attributedText = _subject.japaneseText;
   _gradientLayer = [CAGradientLayer layer];
@@ -84,7 +80,9 @@
   return UIStatusBarStyleLightContent;
 }
 
-- (void)openSubject:(TKMSubject *)subject {
+#pragma mark - TKMSubjectDelegate
+
+- (void)didTapSubject:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   vc.dataLoader = _dataLoader;

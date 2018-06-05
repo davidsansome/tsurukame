@@ -28,10 +28,12 @@
 CF_EXTERN_C_BEGIN
 
 @class TKMAssignment;
+@class TKMFormattedText;
 @class TKMKanji;
 @class TKMMeaning;
 @class TKMRadical;
 @class TKMReading;
+@class TKMSubject;
 @class TKMVocabulary;
 @class TKMVocabulary_Sentence;
 
@@ -102,6 +104,24 @@ GPBEnumDescriptor *TKMSubject_Type_EnumDescriptor(void);
  **/
 BOOL TKMSubject_Type_IsValidValue(int32_t value);
 
+#pragma mark - Enum TKMFormattedText_Format
+
+typedef GPB_ENUM(TKMFormattedText_Format) {
+  TKMFormattedText_Format_Radical = 1,
+  TKMFormattedText_Format_Kanji = 2,
+  TKMFormattedText_Format_Japanese = 3,
+  TKMFormattedText_Format_Reading = 4,
+  TKMFormattedText_Format_Vocabulary = 5,
+};
+
+GPBEnumDescriptor *TKMFormattedText_Format_EnumDescriptor(void);
+
+/**
+ * Checks to see if the given value is defined by the enum or was not known at
+ * the time this source was generated.
+ **/
+BOOL TKMFormattedText_Format_IsValidValue(int32_t value);
+
 #pragma mark - TKMWanikaniRoot
 
 /**
@@ -163,6 +183,7 @@ typedef GPB_ENUM(TKMRadical_FieldNumber) {
   TKMRadical_FieldNumber_CharacterImage = 1,
   TKMRadical_FieldNumber_Mnemonic = 2,
   TKMRadical_FieldNumber_HasCharacterImageFile = 3,
+  TKMRadical_FieldNumber_FormattedMnemonicArray = 4,
 };
 
 @interface TKMRadical : GPBMessage
@@ -179,6 +200,10 @@ typedef GPB_ENUM(TKMRadical_FieldNumber) {
 @property(nonatomic, readwrite) BOOL hasCharacterImageFile;
 
 @property(nonatomic, readwrite) BOOL hasHasCharacterImageFile;
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedMnemonicArray;
+/** The number of items in @c formattedMnemonicArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger formattedMnemonicArray_Count;
+
 @end
 
 #pragma mark - TKMKanji
@@ -188,6 +213,10 @@ typedef GPB_ENUM(TKMKanji_FieldNumber) {
   TKMKanji_FieldNumber_MeaningHint = 2,
   TKMKanji_FieldNumber_ReadingMnemonic = 3,
   TKMKanji_FieldNumber_ReadingHint = 4,
+  TKMKanji_FieldNumber_FormattedMeaningMnemonicArray = 5,
+  TKMKanji_FieldNumber_FormattedMeaningHintArray = 6,
+  TKMKanji_FieldNumber_FormattedReadingMnemonicArray = 7,
+  TKMKanji_FieldNumber_FormattedReadingHintArray = 8,
 };
 
 @interface TKMKanji : GPBMessage
@@ -208,6 +237,22 @@ typedef GPB_ENUM(TKMKanji_FieldNumber) {
 /** Test to see if @c readingHint has been set. */
 @property(nonatomic, readwrite) BOOL hasReadingHint;
 
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedMeaningMnemonicArray;
+/** The number of items in @c formattedMeaningMnemonicArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger formattedMeaningMnemonicArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedMeaningHintArray;
+/** The number of items in @c formattedMeaningHintArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger formattedMeaningHintArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedReadingMnemonicArray;
+/** The number of items in @c formattedReadingMnemonicArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger formattedReadingMnemonicArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedReadingHintArray;
+/** The number of items in @c formattedReadingHintArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger formattedReadingHintArray_Count;
+
 @end
 
 #pragma mark - TKMVocabulary
@@ -218,6 +263,8 @@ typedef GPB_ENUM(TKMVocabulary_FieldNumber) {
   TKMVocabulary_FieldNumber_SentencesArray = 3,
   TKMVocabulary_FieldNumber_PartsOfSpeechArray = 4,
   TKMVocabulary_FieldNumber_Audio = 5,
+  TKMVocabulary_FieldNumber_FormattedMeaningExplanationArray = 6,
+  TKMVocabulary_FieldNumber_FormattedReadingExplanationArray = 7,
 };
 
 @interface TKMVocabulary : GPBMessage
@@ -229,6 +276,14 @@ typedef GPB_ENUM(TKMVocabulary_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *readingExplanation;
 /** Test to see if @c readingExplanation has been set. */
 @property(nonatomic, readwrite) BOOL hasReadingExplanation;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedMeaningExplanationArray;
+/** The number of items in @c formattedMeaningExplanationArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger formattedMeaningExplanationArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedReadingExplanationArray;
+/** The number of items in @c formattedReadingExplanationArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger formattedReadingExplanationArray_Count;
 
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMVocabulary_Sentence*> *sentencesArray;
 /** The number of items in @c sentencesArray without causing the array to be created. */
@@ -471,6 +526,40 @@ typedef GPB_ENUM(TKMUser_FieldNumber) {
 @property(nonatomic, readwrite) BOOL subscribed;
 
 @property(nonatomic, readwrite) BOOL hasSubscribed;
+@end
+
+#pragma mark - TKMSubjectOverrides
+
+typedef GPB_ENUM(TKMSubjectOverrides_FieldNumber) {
+  TKMSubjectOverrides_FieldNumber_SubjectArray = 1,
+};
+
+@interface TKMSubjectOverrides : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMSubject*> *subjectArray;
+/** The number of items in @c subjectArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger subjectArray_Count;
+
+@end
+
+#pragma mark - TKMFormattedText
+
+typedef GPB_ENUM(TKMFormattedText_FieldNumber) {
+  TKMFormattedText_FieldNumber_FormatArray = 1,
+  TKMFormattedText_FieldNumber_Text = 2,
+};
+
+@interface TKMFormattedText : GPBMessage
+
+// |formatArray| contains |TKMFormattedText_Format|
+@property(nonatomic, readwrite, strong, null_resettable) GPBEnumArray *formatArray;
+/** The number of items in @c formatArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger formatArray_Count;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *text;
+/** Test to see if @c text has been set. */
+@property(nonatomic, readwrite) BOOL hasText;
+
 @end
 
 NS_ASSUME_NONNULL_END

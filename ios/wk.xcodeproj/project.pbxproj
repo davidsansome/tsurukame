@@ -143,10 +143,15 @@
 		633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95420C5634A00AC25F4 /* TKMModelItem.m */; };
 		633DE95D20C5635A00AC25F4 /* TKMKanaInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95920C5635900AC25F4 /* TKMKanaInput.m */; };
 		633DE95E20C5635A00AC25F4 /* TKMOpenURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95C20C5635900AC25F4 /* TKMOpenURL.m */; };
+		633DE96120C5656B00AC25F4 /* TKMMarkupModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE96020C5656B00AC25F4 /* TKMMarkupModelItem.m */; };
 		6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */; };
 		6356E7831FDFF0EA009CE7C1 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6356E7821FDFF0E3009CE7C1 /* WebKit.framework */; };
 		637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12D7203847BE009E92DB /* LessonsViewController.m */; };
 		637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12DD203D779D009E92DB /* LessonsPageControl.m */; };
+		6392DB9F20CCE29E003019EB /* TKMAttributedModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */; };
+		6392DBA220D130F0003019EB /* TKMSubjectModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA120D130F0003019EB /* TKMSubjectModelItem.m */; };
+		6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */; };
+		6392DBA720D14915003019EB /* TKMSubjectChip.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA620D14915003019EB /* TKMSubjectChip.m */; };
 		63A2375E1FE9225700C48657 /* Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A2375D1FE9225700C48657 /* Style.m */; };
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */; };
@@ -377,6 +382,8 @@
 		633DE95A20C5635900AC25F4 /* TKMOpenURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMOpenURL.h; sourceTree = "<group>"; };
 		633DE95B20C5635900AC25F4 /* TKMKanaInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMKanaInput.h; sourceTree = "<group>"; };
 		633DE95C20C5635900AC25F4 /* TKMOpenURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMOpenURL.m; sourceTree = "<group>"; };
+		633DE95F20C5656B00AC25F4 /* TKMMarkupModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMMarkupModelItem.h; sourceTree = "<group>"; };
+		633DE96020C5656B00AC25F4 /* TKMMarkupModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMMarkupModelItem.m; sourceTree = "<group>"; };
 		6356E77F1FDFEFAB009CE7C1 /* SubjectDetailsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectDetailsView.h; sourceTree = "<group>"; };
 		6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectDetailsView.m; sourceTree = "<group>"; };
 		6356E7821FDFF0E3009CE7C1 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -384,6 +391,14 @@
 		637C12D7203847BE009E92DB /* LessonsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LessonsViewController.m; sourceTree = "<group>"; };
 		637C12DC203D779D009E92DB /* LessonsPageControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LessonsPageControl.h; sourceTree = "<group>"; };
 		637C12DD203D779D009E92DB /* LessonsPageControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LessonsPageControl.m; sourceTree = "<group>"; };
+		6392DB9D20CCE29E003019EB /* TKMAttributedModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMAttributedModelItem.h; sourceTree = "<group>"; };
+		6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMAttributedModelItem.m; sourceTree = "<group>"; };
+		6392DBA020D130F0003019EB /* TKMSubjectModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMSubjectModelItem.h; sourceTree = "<group>"; };
+		6392DBA120D130F0003019EB /* TKMSubjectModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMSubjectModelItem.m; sourceTree = "<group>"; };
+		6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMSubjectModelItem.xib; sourceTree = "<group>"; };
+		6392DBA520D14915003019EB /* TKMSubjectChip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMSubjectChip.h; sourceTree = "<group>"; };
+		6392DBA620D14915003019EB /* TKMSubjectChip.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMSubjectChip.m; sourceTree = "<group>"; };
+		6392DBA820D14997003019EB /* TKMSubjectDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMSubjectDelegate.h; sourceTree = "<group>"; };
 		63A2375C1FE9225700C48657 /* Style.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Style.h; sourceTree = "<group>"; };
 		63A2375D1FE9225700C48657 /* Style.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Style.m; sourceTree = "<group>"; };
 		63A2375F1FE9264300C48657 /* UIColor+HexString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
@@ -531,6 +546,9 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				6392DBA820D14997003019EB /* TKMSubjectDelegate.h */,
+				6392DBA520D14915003019EB /* TKMSubjectChip.h */,
+				6392DBA620D14915003019EB /* TKMSubjectChip.m */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -780,6 +798,13 @@
 				633DE95020C5634A00AC25F4 /* TKMSwitchModelItem.m */,
 				633DE94E20C5634A00AC25F4 /* TKMTableModel.h */,
 				633DE95120C5634A00AC25F4 /* TKMTableModel.m */,
+				633DE95F20C5656B00AC25F4 /* TKMMarkupModelItem.h */,
+				633DE96020C5656B00AC25F4 /* TKMMarkupModelItem.m */,
+				6392DB9D20CCE29E003019EB /* TKMAttributedModelItem.h */,
+				6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */,
+				6392DBA020D130F0003019EB /* TKMSubjectModelItem.h */,
+				6392DBA120D130F0003019EB /* TKMSubjectModelItem.m */,
+				6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */,
 			);
 			path = Tables;
 			sourceTree = "<group>";
@@ -967,6 +992,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63CAAAFA1FC6EADD00E09DA1 /* data.bin in Resources */,
+				6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */,
 				63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */,
 				63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */,
 				63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */,
@@ -1046,6 +1072,8 @@
 				6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */,
 				6319CB2E20442A5D00C31F87 /* ICandleChartDataSet.swift in Sources */,
 				6319CB18204429E200C31F87 /* CandleChartDataProvider.swift in Sources */,
+				6392DBA220D130F0003019EB /* TKMSubjectModelItem.m in Sources */,
+				6392DB9F20CCE29E003019EB /* TKMAttributedModelItem.m in Sources */,
 				6319CAC62044203E00C31F87 /* BarHighlighter.swift in Sources */,
 				633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */,
 				6319CAF52044203F00C31F87 /* CircleShapeRenderer.swift in Sources */,
@@ -1075,6 +1103,7 @@
 				63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */,
 				6319CA812044203E00C31F87 /* BarChartDataSet.swift in Sources */,
 				6319CAEF2044203F00C31F87 /* BarChartView.swift in Sources */,
+				633DE96120C5656B00AC25F4 /* TKMMarkupModelItem.m in Sources */,
 				6319CA8C2044203E00C31F87 /* LineChartData.swift in Sources */,
 				6319CB1E204429E200C31F87 /* CandleChartData.swift in Sources */,
 				6319CAE92044203E00C31F87 /* Animator.swift in Sources */,
@@ -1107,6 +1136,7 @@
 				6319CADC2044203E00C31F87 /* Range.swift in Sources */,
 				6319CAFE2044203F00C31F87 /* DefaultValueFormatter.swift in Sources */,
 				6319CAAF2044203E00C31F87 /* CrossShapeRenderer.swift in Sources */,
+				6392DBA720D14915003019EB /* TKMSubjectChip.m in Sources */,
 				63CAAAD01FC6E0BA00E09DA1 /* Struct.pbobjc.m in Sources */,
 				63EDA427207F335500382CE3 /* PieHighlighter.swift in Sources */,
 				63EEFED91FC46E720070C05F /* Client.m in Sources */,

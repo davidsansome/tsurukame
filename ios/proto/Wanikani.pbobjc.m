@@ -206,11 +206,13 @@ BOOL TKMReading_Type_IsValidValue(int32_t value__) {
 @dynamic hasCharacterImage, characterImage;
 @dynamic hasMnemonic, mnemonic;
 @dynamic hasHasCharacterImageFile, hasCharacterImageFile;
+@dynamic formattedMnemonicArray, formattedMnemonicArray_Count;
 
 typedef struct TKMRadical__storage_ {
   uint32_t _has_storage_[1];
   NSString *characterImage;
   NSString *mnemonic;
+  NSMutableArray *formattedMnemonicArray;
 } TKMRadical__storage_;
 
 // This method is threadsafe because it is initially called
@@ -246,6 +248,15 @@ typedef struct TKMRadical__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
       },
+      {
+        .name = "formattedMnemonicArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .number = TKMRadical_FieldNumber_FormattedMnemonicArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMRadical__storage_, formattedMnemonicArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[TKMRadical class]
@@ -271,6 +282,10 @@ typedef struct TKMRadical__storage_ {
 @dynamic hasMeaningHint, meaningHint;
 @dynamic hasReadingMnemonic, readingMnemonic;
 @dynamic hasReadingHint, readingHint;
+@dynamic formattedMeaningMnemonicArray, formattedMeaningMnemonicArray_Count;
+@dynamic formattedMeaningHintArray, formattedMeaningHintArray_Count;
+@dynamic formattedReadingMnemonicArray, formattedReadingMnemonicArray_Count;
+@dynamic formattedReadingHintArray, formattedReadingHintArray_Count;
 
 typedef struct TKMKanji__storage_ {
   uint32_t _has_storage_[1];
@@ -278,6 +293,10 @@ typedef struct TKMKanji__storage_ {
   NSString *meaningHint;
   NSString *readingMnemonic;
   NSString *readingHint;
+  NSMutableArray *formattedMeaningMnemonicArray;
+  NSMutableArray *formattedMeaningHintArray;
+  NSMutableArray *formattedReadingMnemonicArray;
+  NSMutableArray *formattedReadingHintArray;
 } TKMKanji__storage_;
 
 // This method is threadsafe because it is initially called
@@ -322,6 +341,42 @@ typedef struct TKMKanji__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "formattedMeaningMnemonicArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .number = TKMKanji_FieldNumber_FormattedMeaningMnemonicArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedMeaningMnemonicArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "formattedMeaningHintArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .number = TKMKanji_FieldNumber_FormattedMeaningHintArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedMeaningHintArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "formattedReadingMnemonicArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .number = TKMKanji_FieldNumber_FormattedReadingMnemonicArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedReadingMnemonicArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "formattedReadingHintArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .number = TKMKanji_FieldNumber_FormattedReadingHintArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedReadingHintArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[TKMKanji class]
@@ -345,6 +400,8 @@ typedef struct TKMKanji__storage_ {
 
 @dynamic hasMeaningExplanation, meaningExplanation;
 @dynamic hasReadingExplanation, readingExplanation;
+@dynamic formattedMeaningExplanationArray, formattedMeaningExplanationArray_Count;
+@dynamic formattedReadingExplanationArray, formattedReadingExplanationArray_Count;
 @dynamic sentencesArray, sentencesArray_Count;
 @dynamic partsOfSpeechArray, partsOfSpeechArray_Count;
 @dynamic hasAudio, audio;
@@ -356,6 +413,8 @@ typedef struct TKMVocabulary__storage_ {
   NSMutableArray *sentencesArray;
   GPBEnumArray *partsOfSpeechArray;
   NSString *audio;
+  NSMutableArray *formattedMeaningExplanationArray;
+  NSMutableArray *formattedReadingExplanationArray;
 } TKMVocabulary__storage_;
 
 // This method is threadsafe because it is initially called
@@ -408,6 +467,24 @@ typedef struct TKMVocabulary__storage_ {
         .offset = (uint32_t)offsetof(TKMVocabulary__storage_, audio),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "formattedMeaningExplanationArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .number = TKMVocabulary_FieldNumber_FormattedMeaningExplanationArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMVocabulary__storage_, formattedMeaningExplanationArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "formattedReadingExplanationArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .number = TKMVocabulary_FieldNumber_FormattedReadingExplanationArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMVocabulary__storage_, formattedReadingExplanationArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -1161,6 +1238,144 @@ typedef struct TKMUser__storage_ {
 }
 
 @end
+
+#pragma mark - TKMSubjectOverrides
+
+@implementation TKMSubjectOverrides
+
+@dynamic subjectArray, subjectArray_Count;
+
+typedef struct TKMSubjectOverrides__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *subjectArray;
+} TKMSubjectOverrides__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "subjectArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMSubject),
+        .number = TKMSubjectOverrides_FieldNumber_SubjectArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMSubjectOverrides__storage_, subjectArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMSubjectOverrides class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMSubjectOverrides__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - TKMFormattedText
+
+@implementation TKMFormattedText
+
+@dynamic formatArray, formatArray_Count;
+@dynamic hasText, text;
+
+typedef struct TKMFormattedText__storage_ {
+  uint32_t _has_storage_[1];
+  GPBEnumArray *formatArray;
+  NSString *text;
+} TKMFormattedText__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "formatArray",
+        .dataTypeSpecific.enumDescFunc = TKMFormattedText_Format_EnumDescriptor,
+        .number = TKMFormattedText_FieldNumber_FormatArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMFormattedText__storage_, formatArray),
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldHasEnumDescriptor),
+        .dataType = GPBDataTypeEnum,
+      },
+      {
+        .name = "text",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMFormattedText_FieldNumber_Text,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMFormattedText__storage_, text),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMFormattedText class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMFormattedText__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - Enum TKMFormattedText_Format
+
+GPBEnumDescriptor *TKMFormattedText_Format_EnumDescriptor(void) {
+  static GPBEnumDescriptor *descriptor = NULL;
+  if (!descriptor) {
+    static const char *valueNames =
+        "Radical\000Kanji\000Japanese\000Reading\000Vocabular"
+        "y\000";
+    static const int32_t values[] = {
+        TKMFormattedText_Format_Radical,
+        TKMFormattedText_Format_Kanji,
+        TKMFormattedText_Format_Japanese,
+        TKMFormattedText_Format_Reading,
+        TKMFormattedText_Format_Vocabulary,
+    };
+    GPBEnumDescriptor *worker =
+        [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(TKMFormattedText_Format)
+                                       valueNames:valueNames
+                                           values:values
+                                            count:(uint32_t)(sizeof(values) / sizeof(int32_t))
+                                     enumVerifier:TKMFormattedText_Format_IsValidValue];
+    if (!OSAtomicCompareAndSwapPtrBarrier(nil, worker, (void * volatile *)&descriptor)) {
+      [worker release];
+    }
+  }
+  return descriptor;
+}
+
+BOOL TKMFormattedText_Format_IsValidValue(int32_t value__) {
+  switch (value__) {
+    case TKMFormattedText_Format_Radical:
+    case TKMFormattedText_Format_Kanji:
+    case TKMFormattedText_Format_Japanese:
+    case TKMFormattedText_Format_Reading:
+    case TKMFormattedText_Format_Vocabulary:
+      return YES;
+    default:
+      return NO;
+  }
+}
 
 
 #pragma clang diagnostic pop

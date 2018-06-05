@@ -17,16 +17,18 @@
 @implementation TKMBasicModelItem
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
-                        title:(NSString *)title
-                     subtitle:(NSString *)subtitle
+                        title:(nullable NSString *)title
+                     subtitle:(nullable NSString *)subtitle
                 accessoryType:(UITableViewCellAccessoryType)accessoryType
-                       target:(id)target
-                       action:(SEL)action {
+                       target:(nullable id)target
+                       action:(nullable SEL)action {
   self = [super init];
   if (self) {
     _style = style;
     _title = title;
+    _numberOfTitleLines = 1;
     _subtitle = subtitle;
+    _numberOfSubtitleLines = 1;
     _accessoryType = accessoryType;
     _target = target;
     _action = action;
@@ -35,8 +37,8 @@
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
-                        title:(NSString *)title
-                     subtitle:(NSString *)subtitle
+                        title:(nullable NSString *)title
+                     subtitle:(nullable NSString *)subtitle
                 accessoryType:(UITableViewCellAccessoryType)accessoryType {
   return [self initWithStyle:style
                        title:title
@@ -47,8 +49,8 @@
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
-                        title:(NSString *)title
-                     subtitle:(NSString *)subtitle {
+                        title:(nullable NSString *)title
+                     subtitle:(nullable NSString *)subtitle {
   return [self initWithStyle:style
                        title:title
                     subtitle:subtitle
@@ -79,7 +81,13 @@
   self.selectionStyle = UITableViewCellSelectionStyleNone;
   
   self.textLabel.text = item.title;
+  self.textLabel.font = item.titleFont;
+  self.textLabel.textColor = item.titleTextColor;
+  self.textLabel.numberOfLines = item.numberOfTitleLines;
   self.detailTextLabel.text = item.subtitle;
+  self.detailTextLabel.font = item.subtitleFont;
+  self.detailTextLabel.textColor = item.subtitleTextColor;
+  self.detailTextLabel.numberOfLines = item.numberOfSubtitleLines;
   self.accessoryType = item.accessoryType;
   self.textLabel.textColor = item.textColor;
 }

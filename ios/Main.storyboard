@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Whd-2S-WNr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Whd-2S-WNr">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -679,15 +679,11 @@
                                     <action selector="backButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="PW3-Bb-gvB"/>
                                 </connections>
                             </button>
-                            <wkWebView hidden="YES" alpha="0.0" contentMode="scaleToFill" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="CSt-zn-BtW" customClass="WKSubjectDetailsView">
+                            <tableView hidden="YES" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wFr-RK-iSqq" customClass="TKMSubjectDetailsView">
                                 <rect key="frame" x="0.0" y="667" width="375" height="0.0"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <wkWebViewConfiguration key="configuration" allowsAirPlayForMediaPlayback="NO" allowsPictureInPictureMediaPlayback="NO">
-                                    <dataDetectorTypes key="dataDetectorTypes" none="YES"/>
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
-                                    <wkPreferences key="preferences" javaScriptEnabled="NO"/>
-                                </wkWebViewConfiguration>
-                            </wkWebView>
+                            </tableView>
                             <button hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fq3-oe-fWe">
                                 <rect key="frame" x="0.0" y="604" width="62" height="62"/>
                                 <accessibility key="accessibilityConfiguration" hint="Double tap to open a menu" label="Cheats"/>
@@ -717,12 +713,12 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Jee-0P-imk" secondAttribute="trailing" id="0Pg-uy-3Ek"/>
                             <constraint firstItem="lqe-Ns-DBU" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="13b-3r-nEp"/>
-                            <constraint firstItem="CSt-zn-BtW" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" id="20c-9Q-aFt"/>
+                            <constraint firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" id="20c-9Q-aFt"/>
                             <constraint firstItem="TgI-GY-kYL" firstAttribute="leading" secondItem="sr9-jm-3e3" secondAttribute="trailing" constant="12" id="2CS-5j-iPA"/>
                             <constraint firstItem="M27-Di-5Wg" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="31d-hA-cMU"/>
                             <constraint firstItem="GZq-HC-Qg5" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" constant="16" id="6cK-KD-YsT"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="trailing" secondItem="Zyq-WW-fbd" secondAttribute="trailing" id="AGF-fk-KLj"/>
-                            <constraint firstItem="CSt-zn-BtW" firstAttribute="top" secondItem="M27-Di-5Wg" secondAttribute="bottom" id="AzB-Jc-8ht"/>
+                            <constraint firstAttribute="top" secondItem="M27-Di-5Wg" secondAttribute="bottom" id="AzB-Jc-8ht"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="top" secondItem="Zyq-WW-fbd" secondAttribute="top" id="C9E-Lq-hm6"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="leading" secondItem="Zyq-WW-fbd" secondAttribute="leading" id="CU7-2i-Zct"/>
                             <constraint firstItem="TY8-JV-WfA" firstAttribute="top" secondItem="4jI-do-0VR" secondAttribute="top" id="ElS-qt-vAo"/>
@@ -750,7 +746,7 @@
                             <constraint firstItem="q5T-jg-CA5" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="jBu-Vm-cWg"/>
                             <constraint firstItem="Nab-RQ-m49" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="jOP-ra-UQp"/>
                             <constraint firstItem="TY8-JV-WfA" firstAttribute="trailing" secondItem="EBu-6v-Hcw" secondAttribute="trailing" id="joD-sB-LiO"/>
-                            <constraint firstItem="CSt-zn-BtW" firstAttribute="trailing" secondItem="EBu-6v-Hcw" secondAttribute="trailing" id="kiF-W8-1if"/>
+                            <constraint firstAttribute="trailing" secondItem="EBu-6v-Hcw" secondAttribute="trailing" id="kiF-W8-1if"/>
                             <constraint firstItem="Jee-0P-imk" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="ljd-NO-w9T"/>
                             <constraint firstAttribute="trailing" secondItem="Nab-RQ-m49" secondAttribute="trailing" id="oyD-zi-Z0d"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="oyI-I7-NWJ"/>
@@ -758,7 +754,7 @@
                             <constraint firstItem="ctF-hm-AxT" firstAttribute="centerY" secondItem="M27-Di-5Wg" secondAttribute="centerY" id="rNU-ae-KIP"/>
                             <constraint firstItem="TgI-GY-kYL" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="rUl-Oy-n19"/>
                             <constraint firstAttribute="trailing" secondItem="ctF-hm-AxT" secondAttribute="trailing" id="s4d-2D-nAL"/>
-                            <constraint firstItem="CSt-zn-BtW" firstAttribute="bottom" secondItem="EBu-6v-Hcw" secondAttribute="bottom" id="vCF-K7-jHy"/>
+                            <constraint firstAttribute="bottom" secondItem="EBu-6v-Hcw" secondAttribute="bottom" id="vCF-K7-jHy"/>
                             <constraint firstItem="S3x-ei-BlA" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="vXr-eI-eku"/>
                             <constraint firstItem="Jee-0P-imk" firstAttribute="top" secondItem="EBu-6v-Hcw" secondAttribute="top" id="w6F-Tb-Vrq"/>
                             <constraint firstItem="TY8-JV-WfA" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" id="whG-W0-ldl"/>
@@ -785,7 +781,6 @@
                         <outlet property="queueIcon" destination="TgI-GY-kYL" id="bQh-Zu-fUi"/>
                         <outlet property="queueLabel" destination="WG4-t0-dUV" id="UZV-i3-In8"/>
                         <outlet property="revealAnswerButton" destination="Zyq-WW-fbd" id="5WQ-60-SBe"/>
-                        <outlet property="subjectDetailsView" destination="CSt-zn-BtW" id="3Df-EW-Ksg"/>
                         <outlet property="submitButton" destination="ctF-hm-AxT" id="x0c-jE-ztx"/>
                         <outlet property="successRateIcon" destination="9gS-sh-cYw" id="GEi-xa-MAB"/>
                         <outlet property="successRateLabel" destination="S3x-ei-BlA" id="3gf-jQ-C32"/>
@@ -1066,15 +1061,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <wkWebView opaque="NO" contentMode="scaleToFill" allowsBackForwardNavigationGestures="YES" translatesAutoresizingMaskIntoConstraints="NO" id="grI-h7-N4t" customClass="WKSubjectDetailsView">
-                                <rect key="frame" x="0.0" y="94" width="375" height="573"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <wkWebViewConfiguration key="configuration" allowsAirPlayForMediaPlayback="NO" allowsPictureInPictureMediaPlayback="NO">
-                                    <dataDetectorTypes key="dataDetectorTypes" none="YES"/>
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
-                                    <wkPreferences key="preferences" javaScriptEnabled="NO"/>
-                                </wkWebViewConfiguration>
-                            </wkWebView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h4n-sy-iRy">
                                 <rect key="frame" x="0.0" y="20" width="375" height="74"/>
                                 <constraints>
@@ -1098,17 +1084,22 @@
                                     <action selector="backButtonPressed:" destination="jdB-KF-QlJ" eventType="touchUpInside" id="mII-7n-x4T"/>
                                 </connections>
                             </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="wFr-RK-iSq" customClass="TKMSubjectDetailsView">
+                                <rect key="frame" x="0.0" y="94" width="375" height="573"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <sections/>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="grI-h7-N4t" firstAttribute="top" secondItem="h4n-sy-iRy" secondAttribute="bottom" id="3rq-lr-z24"/>
                             <constraint firstItem="h4n-sy-iRy" firstAttribute="top" secondItem="Gf0-8S-iQ7" secondAttribute="top" id="H1Y-XO-ELl"/>
-                            <constraint firstItem="grI-h7-N4t" firstAttribute="leading" secondItem="Gf0-8S-iQ7" secondAttribute="leading" id="W83-BN-Avt"/>
+                            <constraint firstItem="wFr-RK-iSq" firstAttribute="top" secondItem="h4n-sy-iRy" secondAttribute="bottom" id="Lz1-g7-9Qs"/>
+                            <constraint firstItem="wFr-RK-iSq" firstAttribute="leading" secondItem="Gf0-8S-iQ7" secondAttribute="leading" id="Ovg-9x-bQH"/>
+                            <constraint firstAttribute="bottom" secondItem="wFr-RK-iSq" secondAttribute="bottom" id="Qfm-AA-5RG"/>
                             <constraint firstItem="CbN-0R-8Ce" firstAttribute="top" secondItem="Gf0-8S-iQ7" secondAttribute="top" id="Ypd-Hg-SOO"/>
                             <constraint firstItem="CbN-0R-8Ce" firstAttribute="leading" secondItem="Gf0-8S-iQ7" secondAttribute="leading" id="aLi-55-oEf"/>
                             <constraint firstItem="h4n-sy-iRy" firstAttribute="trailing" secondItem="Gf0-8S-iQ7" secondAttribute="trailing" id="ndz-L2-PJk"/>
-                            <constraint firstItem="grI-h7-N4t" firstAttribute="trailing" secondItem="Gf0-8S-iQ7" secondAttribute="trailing" id="qXF-bP-5lp"/>
-                            <constraint firstItem="Gf0-8S-iQ7" firstAttribute="bottom" secondItem="grI-h7-N4t" secondAttribute="bottom" id="sqC-9p-JRE"/>
+                            <constraint firstItem="Gf0-8S-iQ7" firstAttribute="trailing" secondItem="wFr-RK-iSq" secondAttribute="trailing" id="nvy-bh-sCt"/>
                             <constraint firstItem="h4n-sy-iRy" firstAttribute="leading" secondItem="Gf0-8S-iQ7" secondAttribute="leading" id="y1v-f5-4X9"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Gf0-8S-iQ7"/>
@@ -1116,7 +1107,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="backButton" destination="CbN-0R-8Ce" id="51M-TW-2TS"/>
-                        <outlet property="subjectDetailsView" destination="grI-h7-N4t" id="NsQ-fP-dDq"/>
+                        <outlet property="subjectDetailsView" destination="wFr-RK-iSq" id="IFf-Q6-FjB"/>
                         <outlet property="subjectTitle" destination="h4n-sy-iRy" id="d7g-Wr-uvJ"/>
                     </connections>
                 </viewController>
@@ -1137,6 +1128,6 @@
         <image name="tick" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ONv-x4-Pkd"/>
+        <segue reference="LcM-wy-hJZ"/>
     </inferredMetricsTieBreakers>
 </document>
