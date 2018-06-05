@@ -16,35 +16,47 @@
 
 #import "TKMModelItem.h"
 
+NS_ASSUME_NONNULL_BEGIN;
+
 @interface TKMBasicModelCell : TKMModelCell
 @end
 
 @interface TKMBasicModelItem : NSObject <TKMModelItem>
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
-                        title:(NSString *)title
-                     subtitle:(NSString *)subtitle
+                        title:(nullable NSString *)title
+                     subtitle:(nullable NSString *)subtitle
                 accessoryType:(UITableViewCellAccessoryType)accessoryType
-                       target:(id)target
-                       action:(SEL)action NS_DESIGNATED_INITIALIZER;
+                       target:(nullable id)target
+                       action:(nullable SEL)action NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
-                        title:(NSString *)title
-                     subtitle:(NSString *)subtitle
+                        title:(nullable NSString *)title
+                     subtitle:(nullable NSString *)subtitle
                 accessoryType:(UITableViewCellAccessoryType)accessoryType;
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
-                        title:(NSString *)title
-                     subtitle:(NSString *)subtitle;
+                        title:(nullable NSString *)title
+                     subtitle:(nullable NSString *)subtitle;
 
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic) UITableViewCellStyle style;
-@property(nonatomic) NSString *title;
-@property(nonatomic) NSString *subtitle;
+
+@property(nonatomic, nullable) NSString *title;
+@property(nonatomic, nullable) UIFont *titleFont;
+@property(nonatomic, nullable) UIColor *titleTextColor;
+@property(nonatomic) int numberOfTitleLines;
+
+@property(nonatomic, nullable) NSString *subtitle;
+@property(nonatomic, nullable) UIFont *subtitleFont;
+@property(nonatomic, nullable) UIColor *subtitleTextColor;
+@property(nonatomic) int numberOfSubtitleLines;
+
 @property(nonatomic) UITableViewCellAccessoryType accessoryType;
-@property(nonatomic, weak) id target;
-@property(nonatomic) SEL action;
+
+@property(nonatomic, nullable, weak) id target;
+@property(nonatomic, nullable) SEL action;
 
 @property(nonatomic) UIColor *textColor;
 
@@ -65,3 +77,5 @@
                           title:(NSString *)title \
                        subtitle:(NSString *)subtitle NS_UNAVAILABLE; \
   - (instancetype)init NS_UNAVAILABLE;
+
+NS_ASSUME_NONNULL_END;

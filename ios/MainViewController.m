@@ -329,6 +329,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   vc.dataLoader = _dataLoader;
   vc.localCachingClient = _localCachingClient;
   vc.subject = subject;
+  vc.showHints = YES;
   [_searchController dismissViewControllerAnimated:YES completion:^{
     [self.navigationController pushViewController:vc animated:YES];
   }];

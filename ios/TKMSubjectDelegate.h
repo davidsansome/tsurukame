@@ -12,30 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@class TKMModelCell;
+@class TKMSubject;
 
-extern void TKMSafePerformSelector(id target, SEL selector, id object);
+@protocol TKMSubjectDelegate <NSObject>
 
-@protocol TKMModelItem <NSObject>
-
-@optional
-- (Class)cellClass;
-
-- (NSString *)cellNibName;
-
-- (NSString *)cellReuseIdentifier;
-- (TKMModelCell *)createCell;
-
-@end
-
-@interface TKMModelCell : UITableViewCell
-
-@property(nonatomic, readonly, weak) id<TKMModelItem> item;
-
-- (void)updateWithItem:(id<TKMModelItem>)item;
-
-- (void)didSelectCell;
+- (void)didTapSubject:(TKMSubject *)subject;
 
 @end

@@ -12,34 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
-#import <WebKit/WebKit.h>
+#import <UIKit/UIKit.h>
 
 #import "DataLoader.h"
 #import "proto/Wanikani.pbobjc.h"
+#import "Tables/TKMSubjectModelItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class TKMSubjectDetailsView;
-
-@protocol TKMSubjectDetailsDelegate <NSObject>
-@optional
-- (void)openSubject:(TKMSubject *)subject;
-- (void)subjectDetailsView:(TKMSubjectDetailsView *)view
-       didFinishNavigation:(WKNavigation *)navigation;
-@end
-
-@interface TKMSubjectDetailsView : WKWebView <WKNavigationDelegate>
+@interface TKMSubjectDetailsView : UITableView
 
 @property (nonatomic) DataLoader *dataLoader;
-@property (nonatomic, weak) id<TKMSubjectDetailsDelegate> delegate;
+@property (nonatomic, weak) id<TKMSubjectDelegate> subjectDelegate;
 @property (nonatomic) bool showHints;
 
 @property (nonatomic, readonly) TKMSubject *lastSubjectClicked;
 
 - (void)updateWithSubject:(TKMSubject *)subject
            studyMaterials:(TKMStudyMaterials *)studyMaterials
-               assignment:(TKMAssignment *_Nullable)assignment;
+               assignment:(nullable TKMAssignment *)assignment;
 
 @end
 

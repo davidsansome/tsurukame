@@ -16,6 +16,7 @@
 
 #import "ReviewItem.h"
 
+// TODO: remove this class.
 @interface ReviewSummaryCell : UITableViewCell
 
 @property(nonatomic) ReviewItem *item;

@@ -103,22 +103,32 @@
 }
 
 - (nonnull UITableViewCell *)cellForItem:(id<TKMModelItem>)item {
-  Class cellClass = item.cellClass;
-  
   NSString *reuseIdentifier;
   if ([item respondsToSelector:@selector(cellReuseIdentifier)]) {
     reuseIdentifier = [item cellReuseIdentifier];
   } else {
-    reuseIdentifier = @(object_getClassName(cellClass));
+    reuseIdentifier = @(object_getClassName(item.class));
   }
   
   TKMModelCell *cell = [_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
   if (!cell) {
     if ([item respondsToSelector:@selector(createCell)]) {
       cell = [item createCell];
-    } else {
+    } else if ([item respondsToSelector:@selector(cellNibName)]) {
+      cell = [_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+      if (!cell) {
+        UINib *nib = [UINib nibWithNibName:item.cellNibName bundle:nil];
+        [_tableView registerNib:nib forCellReuseIdentifier:reuseIdentifier];
+        cell = [_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+      }
+    } else if ([item respondsToSelector:@selector(cellClass)]) {
+      Class cellClass = [item cellClass];
       cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault
                               reuseIdentifier:reuseIdentifier];
+    } else {
+      NSAssert(false,
+               @"Item class %@ should respond to either createCell, cellNibName or cellClass",
+               reuseIdentifier);
     }
   }
   

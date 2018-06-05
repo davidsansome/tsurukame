@@ -16,117 +16,97 @@
 #import "SubjectDetailsViewController.h"
 #import "UIColor+HexString.h"
 #import "proto/Wanikani+Convenience.h"
+#import "Tables/TKMAttributedModelItem.h"
+#import "Tables/TKMMarkupModelItem.h"
+#import "Tables/TKMTableModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString *kHeader =
-    @"<meta name=\"viewport\" content=\"user-scalable=no, width=device-width\">"
-     "<style>"
-     "body {"
-     "  font-family: -apple-system;"
-     "  font-size: 14px;"
-     "  background-color: #eeebef;"
-     "  margin: 0 0 1em 0;"
-     "}"
-     "h1 {"
-     "  color: #888888;"
-     "  font-size: 12px;"
-     "  text-transform: uppercase;"
-     "  margin: 18px 12px 4px 12px;"
-     "  text-shadow: 1px 1px rgba(255,255,255,0.5);"
-     "}"
-     "div {"
-     "  margin: 0;"
-     "  background-color: white;"
-     "  padding: 12px;"
-     "  border: solid #ddd;"
-     "  border-width: 1px 0 1px 0;"
-     "}"
-     "span.highlight {"
-     "  padding: 0 0.3em 0.15px;"
-     "  text-shadow: 0 1px 0 rgba(255,255,255,0.5);"
-     "  white-space: nowrap;"
-     "  border-radius: 3px;"
-     "}"
-     "span.kanji {"
-     "  background-color: #ffd6f1;"
-     "}"
-     "span.radical {"
-     "  background-color: #d6f1ff;"
-     "}"
-     "span.vocabulary {"
-     "  background-color: #f1d6ff;"
-     "}"
-     "span.reading {"
-     "  background-color: #555;"
-     "  color: #fff;"
-     "  text-shadow: 0 1px 0 #000;"
-     "}"
-     "span.meaning {"
-     "  background-color: #eee;"
-     "}"
-     "span.value {"
-     "  font-weight: bold;"
-     "  display: inline-block;"
-     "  float: right;"
-     "}"
-     ".related.kanji {"
-     "  background-color: #f0a;"
-     "}"
-     ".related.radical {"
-     "  background-color: #0af;"
-     "}"
-     ".related {"
-     "  display: inline-block;"
-     "  margin-right: 0.3em;"
-     "  width: 1.8em;"
-     "  height: 1.8em;"
-     "  color: #fff;"
-     "  line-height: 1.7em;"
-     "  text-align: center;"
-     "  text-shadow: 0 1px 0 rgba(0,0,0,0.3);"
-     "  box-sizing: border-box;"
-     "  border-radius: 3px;"
-     "  box-shadow: 0 -3px 0 rgba(0,0,0,0.2) inset,0 0 10px rgba(255,255,255,0.5)"
-     "}"
-     "img.related.radical {"
-     "  vertical-align: middle;"
-     "  padding: 0.4em;"
-     "}"
-     "ul {"
-     "  margin: 0;"
-     "  padding: 0;"
-     "}"
-     "li {"
-     "  display: inline-block;"
-     "}"
-     "li:after {"
-     "  content: \"+\";"
-     "  margin: 0 0.8em;"
-     "  color: #d5d5d5;"
-     "  font-weight: bold;"
-     "}"
-     "li:last-child:after {"
-     "  content: none;"
-     "}"
-     "a {"
-     "  text-decoration: none;"
-     "  color: black;"
-     "}"
-     "span.pri { font-weight: normal; }"
-     "span.alt { font-weight: lighter; }"
-     "span.user { color: #3B99FC; }"
-     "</style>";
+static const CGFloat kSectionHeaderHeight = 38.f;
+static const CGFloat kSectionFooterHeight = 0.f;
+
+static UIColor *kMeaningSynonymColor;
+static UIFont *kFont;
+static UIColor *kHintTextColor;
+
+static NSAttributedString *JoinAttributedStringArray(NSArray<NSAttributedString *> *strings,
+                                                     NSString *join) {
+  NSMutableAttributedString *ret = [[NSMutableAttributedString alloc] init];
+  const NSUInteger count = strings.count;
+  for (NSUInteger i = 0; i < count; ++i) {
+    [ret appendAttributedString:strings[i]];
+    if (i != count - 1) {
+      [ret appendAttributedString:[[NSAttributedString alloc] initWithString:join]];
+    }
+  }
+  return ret;
+}
+
+static NSAttributedString *RenderMeanings(NSArray<TKMMeaning *> *meanings,
+                                          TKMStudyMaterials *studyMaterials) {
+  NSMutableArray<NSAttributedString *> *strings = [NSMutableArray array];
+  for (TKMMeaning *meaning in meanings) {
+    if (meaning.isPrimary) {
+      [strings addObject:[[NSAttributedString alloc] initWithString:meaning.meaning]];
+    }
+  }
+  for (NSString *meaning in studyMaterials.meaningSynonymsArray) {
+    NSDictionary<NSAttributedStringKey, id> *attributes = @{
+        NSForegroundColorAttributeName: kMeaningSynonymColor,
+    };
+    [strings addObject:[[NSAttributedString alloc] initWithString:meaning
+                                                       attributes:attributes]];
+  }
+  for (TKMMeaning *meaning in meanings) {
+    if (!meaning.isPrimary) {
+      UIFont *font = [UIFont systemFontOfSize:kFont.pointSize weight:UIFontWeightLight];
+      NSDictionary<NSAttributedStringKey, id> *attributes = @{
+          NSFontAttributeName: font,
+      };
+      [strings addObject:[[NSAttributedString alloc] initWithString:meaning.meaning
+                                                         attributes:attributes]];
+    }
+  }
+  return JoinAttributedStringArray(strings, @", ");
+}
+
+static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool primaryOnly) {
+  NSMutableArray<NSAttributedString *> *strings = [NSMutableArray array];
+  for (TKMReading *reading in readings) {
+    if (reading.isPrimary) {
+      [strings addObject:[[NSAttributedString alloc] initWithString:reading.reading]];
+    }
+  }
+  for (TKMReading *reading in readings) {
+    if (!primaryOnly && !reading.isPrimary) {
+      UIFont *font = [UIFont systemFontOfSize:kFont.pointSize weight:UIFontWeightLight];
+      NSDictionary<NSAttributedStringKey, id> *attributes = @{
+          NSFontAttributeName: font,
+      };
+      [strings addObject:[[NSAttributedString alloc] initWithString:reading.reading
+                                                         attributes:attributes]];
+    }
+  }
+  return JoinAttributedStringArray(strings, @", ");
+}
 
 @implementation TKMSubjectDetailsView {
   NSDateFormatter *_availableDateFormatter;
   NSDateFormatter *_startedDateFormatter;
+  
+  TKMTableModel *_tableModel;
 }
 
 - (nullable instancetype)initWithCoder:(NSCoder *)coder {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    kMeaningSynonymColor = [UIColor colorWithRed:0.231 green:0.6 blue:0.988 alpha:1]; // #3b99fc
+    kFont = [UIFont systemFontOfSize:14.f];
+    kHintTextColor = [UIColor colorWithWhite:0.3f alpha:1.f];
+  });
+  
   self = [super initWithCoder:coder];
   if (self) {
-    self.navigationDelegate = self;
     _availableDateFormatter = [[NSDateFormatter alloc] init];
     _availableDateFormatter.dateStyle = NSDateFormatterMediumStyle;
     _availableDateFormatter.timeStyle = NSDateFormatterMediumStyle;
@@ -134,216 +114,147 @@ static NSString *kHeader =
     _startedDateFormatter = [[NSDateFormatter alloc] init];
     _startedDateFormatter.dateStyle = NSDateFormatterMediumStyle;
     _startedDateFormatter.timeStyle = NSDateFormatterNoStyle;
+    
+    self.sectionHeaderHeight = kSectionHeaderHeight;
+    self.estimatedSectionHeaderHeight = kSectionHeaderHeight;
+    self.sectionFooterHeight = kSectionFooterHeight;
+    self.estimatedSectionFooterHeight = kSectionFooterHeight;
   }
   return self;
 }
 
-#pragma mark - Rendering
-
-- (NSString *)renderSubjectDetails:(TKMSubject *)subject
-                    studyMaterials:(TKMStudyMaterials *)studyMaterials
-                        assignment:(TKMAssignment *)assignment {
-  NSMutableString *ret = [NSMutableString stringWithString:kHeader];
-  if (subject.hasRadical) {
-    [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
-    [self addTextSectionTo:ret title:@"Mnemonic" content:[self highlightText:subject.radical.mnemonic]];
-  }
-  if (subject.hasKanji) {
-    [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
-    [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray primaryOnly:true]];
-    [self addTextSectionTo:ret title:@"Radicals" content:[self renderComponents:subject.componentSubjectIdsArray]];
-    [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.kanji.meaningMnemonic]];
-    if (_showHints) {
-      [self addTextSectionTo:ret title:@"Meaning Hint" content:[self highlightText:subject.kanji.meaningHint]];
-    }
-    [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.kanji.readingMnemonic]];
-    if (_showHints) {
-      [self addTextSectionTo:ret title:@"Reading Hint" content:[self highlightText:subject.kanji.readingHint]];
-    }
-    // TODO: context
-  }
-  if (subject.hasVocabulary) {
-    [self addTextSectionTo:ret title:@"Meaning" content:[self renderMeanings:subject.meaningsArray studyMaterials:studyMaterials]];
-    [self addTextSectionTo:ret title:@"Reading" content:[self renderReadings:subject.readingsArray primaryOnly:false]];
-    [self addTextSectionTo:ret title:@"Kanji" content:[self renderComponents:subject.componentSubjectIdsArray]];
-    [self addTextSectionTo:ret title:@"Meaning Explanation" content:[self highlightText:subject.vocabulary.meaningExplanation]];
-    [self addTextSectionTo:ret title:@"Reading Explanation" content:[self highlightText:subject.vocabulary.readingExplanation]];
-    [self addTextSectionTo:ret title:@"Part of Speech" content:subject.vocabulary.commaSeparatedPartsOfSpeech];
-    // TODO: context
-  }
+- (void)addMeanings:(TKMSubject *)subject
+     studyMaterials:(TKMStudyMaterials *)studyMaterials
+            toModel:(TKMMutableTableModel *)model {
+  NSAttributedString *text = RenderMeanings(subject.meaningsArray, studyMaterials);
+  TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
+  item.font = kFont;
   
-  if (assignment) {
-    [self addHeaderTo:ret title:@"Your progress"];
-    [self addNameValueRowTo:ret
-                       name:@"SRS level"
-                      value:[NSString stringWithFormat:@"%@ (%d)",
-                             TKMSRSLevelName(assignment.srsStage),
-                             assignment.srsStage]];
-    if (assignment.hasAvailableAt && assignment.availableAt != 0) {
-      [self addNameValueRowTo:ret
-                         name:@"Next review"
-                        value:[_availableDateFormatter stringFromDate:assignment.availableAtDate]];
-    }
-    if (assignment.hasStartedAt && assignment.startedAt != 0) {
-      [self addNameValueRowTo:ret
-                         name:@"First started"
-                        value:[_startedDateFormatter stringFromDate:assignment.startedAtDate]];
-    }
-    if (assignment.hasPassedAt && assignment.passedAt != 0) {
-      [self addNameValueRowTo:ret
-                         name:@"Reached Guru"
-                        value:[_startedDateFormatter stringFromDate:assignment.passedAtDate]];
-    }
-  }
+  [model addSection:@"Meaning"];
+  [model addItem:item];
+}
+
+- (void)addReadings:(TKMSubject *)subject
+            toModel:(TKMMutableTableModel *)model {
+  bool primaryOnly = subject.hasKanji;
+  NSAttributedString *text = RenderReadings(subject.readingsArray, primaryOnly);
+  TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
+  item.font = kFont;
   
-  return ret;
+  [model addSection:@"Reading"];
+  [model addItem:item];
 }
 
-- (NSString *)renderMeanings:(NSArray<TKMMeaning *> *)meanings
-              studyMaterials:(TKMStudyMaterials *)studyMaterials {
-  NSMutableArray<NSString *> *ret = [NSMutableArray array];
-  for (TKMMeaning *meaning in meanings) {
-    if (meaning.isPrimary) {
-      [ret addObject:[NSString stringWithFormat:@"<span class=\"pri\">%@</span>", meaning.meaning]];
-    }
+- (void)addComponents:(TKMSubject *)subject
+                title:(NSString *)title
+              toModel:(TKMMutableTableModel *)model {
+  TKMSubjectCollectionModelItem *item = [[TKMSubjectCollectionModelItem alloc]
+      initWithSubjects:subject.componentSubjectIdsArray
+            dataLoader:_dataLoader
+              delegate:_subjectDelegate];
+  item.font = kFont;
+  
+  [model addSection:title];
+  [model addItem:item];
+}
+
+- (void)addAmalgamationSubjects:(TKMSubject *)subject
+                        toModel:(TKMMutableTableModel *)model {
+  if (!subject.amalgamationSubjectIdsArray.count) {
+    return;
   }
-  for (NSString *meaning in studyMaterials.meaningSynonymsArray) {
-    [ret addObject:[NSString stringWithFormat:@"<span class=\"user\">%@</span>", meaning]];
-  }
-  for (TKMMeaning *meaning in meanings) {
-    if (!meaning.isPrimary) {
-      [ret addObject:[NSString stringWithFormat:@"<span class=\"alt\">%@</span>", meaning.meaning]];
-    }
-  }
-  return [ret componentsJoinedByString:@", "];
-}
-
-- (NSString *)renderReadings:(NSArray<TKMReading *> *)readings primaryOnly:(bool)primaryOnly {
-  NSMutableArray<NSString *> *primary = [NSMutableArray array];
-  NSMutableArray<NSString *> *secondary = [NSMutableArray array];
-  for (TKMReading *reading in readings) {
-    if (reading.isPrimary) {
-      [primary addObject:[NSString stringWithFormat:@"<span class=\"pri\">%@</span>", reading.reading]];
-    } else if (!primaryOnly) {
-      [secondary addObject:[NSString stringWithFormat:@"<span class=\"alt\">%@</span>", reading.reading]];
-    }
-  }
-  return [[primary arrayByAddingObjectsFromArray:secondary] componentsJoinedByString:@", "];
-}
-
-- (void)addTextSectionTo:(NSMutableString *)ret
-                   title:(NSString *)title
-                 content:(NSString *)content {
-  [ret appendFormat:@"<h1>%@</h1><div>%@</div>", title, content];
-}
-
-- (void)addHeaderTo:(NSMutableString *)ret
-              title:(NSString *)title {
-  [ret appendFormat:@"<h1>%@</h1>", title];
-}
-
-- (void)addNameValueRowTo:(NSMutableString *)ret
-                     name:(NSString *)name
-                    value:(NSString *)value {
-  [ret appendFormat:@"<div>%@:<span class=\"value\">%@</span></div>", name, value];
-}
-
-- (NSString *)highlightText:(NSString *)text {
-  static NSRegularExpression *kHighlightRE;
-  static NSRegularExpression *kJaSpanRE;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    kHighlightRE = [NSRegularExpression regularExpressionWithPattern:
-                    @"\\[(kanji|radical|vocabulary|reading|meaning)\\]"
-                    "([^\\[]+)"
-                    "\\[\\/[^\\]]+\\]" options:0 error:nil];
-    kJaSpanRE = [NSRegularExpression regularExpressionWithPattern:
-                 @"\\[ja\\]"
-                 "([^\\[]+)"
-                 "\\[\\/[^\\]]+\\]" options:0 error:nil];
-  });
-
-  NSMutableString *ret = [NSMutableString stringWithString:text];
-  [kJaSpanRE replaceMatchesInString:ret
-                            options:0
-                              range:NSMakeRange(0, ret.length)
-                       withTemplate:@"$1"];
-  [kHighlightRE replaceMatchesInString:ret
-                               options:0
-                                 range:NSMakeRange(0, ret.length)
-                          withTemplate:@"<span class=\"highlight $1\">$2</span>"];
-  return ret;
-}
-
-- (NSString *)renderComponents:(GPBInt32Array *)components {
-  NSMutableString *ret = [NSMutableString string];
-  [ret appendString:@"<ul>"];
-  for (int i = 0; i < components.count; ++i) {
-    int subjectID = [components valueAtIndex:i];
+  [model addSection:@"Used in"];
+  for (int i = 0; i < subject.amalgamationSubjectIdsArray.count; ++i) {
+    int subjectID = [subject.amalgamationSubjectIdsArray valueAtIndex:i];
     TKMSubject *subject = [_dataLoader loadSubject:subjectID];
-    if (!subject) {
-      continue;
-    }
-    
-    NSString *class;
-    if (subject.hasKanji) {
-      class = @"kanji";
-    } else if (subject.hasRadical) {
-      class = @"radical";
-    } else {
-      continue;
-    }
-    
-    if (!subject.hasRadical || !subject.radical.hasCharacterImageFile) {
-      [ret appendFormat:@"<li><a href=\"wk://subject/%d\"><span class=\"related %@\">%@</span>%@</a></li>",
-       subjectID, class, subject.japanese, subject.primaryMeaning];
-    } else {
-      UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"radical-%d", subject.id_p]];
-      NSString *base64 = [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:0];
-      [ret appendFormat:@"<li><a href=\"wk://subject/%d\"><img class=\"related %@\" src=\"data:image/png;base64, %@\" />%@</a></li>",
-       subjectID, class, base64, subject.primaryMeaning];
-    }
+    [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject delegate:_subjectDelegate]];
   }
-  [ret appendString:@"</ul>"];
-  return ret;
 }
 
-#pragma mark - Setters
-
-- (void)updateWithSubject:(TKMSubject *)subject
-           studyMaterials:(TKMStudyMaterials *)studyMaterials
-               assignment:(TKMAssignment *_Nullable)assignment {
-  [self loadHTMLString:[self renderSubjectDetails:subject
-                                   studyMaterials:studyMaterials
-                                       assignment:assignment]
-               baseURL:nil];
-}
-
-#pragma mark - TKMNavigationDelegate
-
-- (void)webView:(WKWebView *)webView
-decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
-decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-  NSURL *url = navigationAction.request.URL;
-  if (![url.scheme isEqualToString:@"wk"]) {
-    decisionHandler(WKNavigationActionPolicyAllow);
+- (void)addFormattedText:(NSArray<TKMFormattedText*> *)formattedText
+                  isHint:(bool)isHint
+                 toModel:(TKMMutableTableModel *)model {
+  if (isHint && !_showHints) {
     return;
   }
   
-  if ([url.host isEqualToString:@"subject"]) {
-    int subjectID = [[url.path substringFromIndex:1] intValue];
-    _lastSubjectClicked = [_dataLoader loadSubject:subjectID];
-    if ([self.delegate respondsToSelector:@selector(openSubject:)]) {
-      [self.delegate openSubject:_lastSubjectClicked];
-    }
+  TKMAttributedModelItem *item = TKMFormattedTextModelItem(formattedText);
+  item.font = kFont;
+  if (isHint) {
+    item.textColor = kHintTextColor;
   }
-  decisionHandler(WKNavigationActionPolicyCancel);
+  
+  [model addItem:item];
 }
 
-- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
-  if ([self.delegate respondsToSelector:@selector(subjectDetailsView:didFinishNavigation:)]) {
-    [self.delegate subjectDetailsView:self didFinishNavigation:navigation];
+- (void)addContextSentences:(TKMSubject *)subject
+                    toModel:(TKMMutableTableModel *)model {
+  if (!subject.vocabulary.sentencesArray.count) {
+    return;
   }
+  
+  [model addSection:@"Context Sentences"];
+  for (TKMVocabulary_Sentence *sentence in subject.vocabulary.sentencesArray) {
+    TKMBasicModelItem *item = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                                 title:sentence.japanese
+                                                              subtitle:sentence.english];
+    item.titleFont = kFont;
+    item.subtitleFont = kFont;
+    item.numberOfTitleLines = 0;
+    item.numberOfSubtitleLines = 0;
+    [model addItem:item];
+  }
+}
+
+- (void)updateWithSubject:(TKMSubject *)subject
+           studyMaterials:(TKMStudyMaterials *)studyMaterials
+               assignment:(nullable TKMAssignment *)assignment {
+  TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self];
+  
+  if (subject.hasRadical) {
+    [self addMeanings:subject studyMaterials:studyMaterials toModel:model];
+
+    [model addSection:@"Mnemonic"];
+    [self addFormattedText:subject.radical.formattedMnemonicArray isHint:false toModel:model];
+    
+    [self addAmalgamationSubjects:subject toModel:model];
+  }
+  if (subject.hasKanji) {
+    [self addMeanings:subject studyMaterials:studyMaterials toModel:model];
+    [self addReadings:subject toModel:model];
+    [self addComponents:subject title:@"Radicals" toModel:model];
+    
+    [model addSection:@"Meaning Explanation"];
+    [self addFormattedText:subject.kanji.formattedMeaningMnemonicArray isHint:false toModel:model];
+    [self addFormattedText:subject.kanji.formattedMeaningHintArray isHint:true toModel:model];
+    
+    [model addSection:@"Reading Explanation"];
+    [self addFormattedText:subject.kanji.formattedReadingMnemonicArray isHint:false toModel:model];
+    [self addFormattedText:subject.kanji.formattedReadingHintArray isHint:true toModel:model];
+    
+    [self addAmalgamationSubjects:subject toModel:model];
+  }
+  if (subject.hasVocabulary) {
+    [self addMeanings:subject studyMaterials:studyMaterials toModel:model];
+    [self addReadings:subject toModel:model];
+    [self addComponents:subject title:@"Kanji" toModel:model];
+    
+    [model addSection:@"Meaning Explanation"];
+    [self addFormattedText:subject.vocabulary.formattedMeaningExplanationArray isHint:false toModel:model];
+    
+    [model addSection:@"Reading Explanation"];
+    [self addFormattedText:subject.vocabulary.formattedReadingExplanationArray isHint:false toModel:model];
+    
+    [self addContextSentences:subject toModel:model];
+    
+    // TODO: part of speech
+    
+  }
+  
+  // TODO: Your progress, SRS level, next review, first started, reached guru
+  
+  _tableModel = model;
+  [model reloadTable];
 }
 
 @end

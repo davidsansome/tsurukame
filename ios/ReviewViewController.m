@@ -40,7 +40,7 @@ static UIColor *kMeaningTextColor;
 static UIColor *kDefaultButtonTintColor;
 
 
-@interface ReviewViewController () <UITextFieldDelegate, TKMSubjectDetailsDelegate>
+@interface ReviewViewController () <UITextFieldDelegate, TKMSubjectDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIView *questionBackground;
@@ -207,7 +207,7 @@ static UIColor *kDefaultButtonTintColor;
            object:nil];
   
   _subjectDetailsView.dataLoader = _dataLoader;
-  _subjectDetailsView.delegate = self;
+  _subjectDetailsView.subjectDelegate = self;
   
   _answerField.delegate = _kanaInput;
   [_answerField addTarget:self
@@ -813,19 +813,10 @@ static UIColor *kDefaultButtonTintColor;
   [_localCachingClient updateStudyMaterial:_activeStudyMaterials];
 }
 
-#pragma mark - TKMSubjectDetailsDelegate
+#pragma mark - TKMSubjectDelegate
 
-- (void)openSubject:(TKMSubject *)subject {
+- (void)didTapSubject:(TKMSubject *)subject {
   [self performSegueWithIdentifier:@"subjectDetails" sender:subject];
-}
-
-- (void)subjectDetailsView:(TKMSubjectDetailsView *)view
-       didFinishNavigation:(WKNavigation *)navigation {
-  view.hidden = NO;
-  view.alpha = 0.0f;
-  [UIView animateWithDuration:kAnimationDuration animations:^{
-    view.alpha = 1.0f;
-  }];
 }
 
 @end
