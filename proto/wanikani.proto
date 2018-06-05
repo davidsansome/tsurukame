@@ -46,11 +46,19 @@ message Kanji {
   optional string meaning_hint = 2;
   optional string reading_mnemonic = 3;
   optional string reading_hint = 4;
+
+  repeated FormattedText formatted_meaning_mnemonic = 5;
+  repeated FormattedText formatted_meaning_hint = 6;
+  repeated FormattedText formatted_reading_mnemonic = 7;
+  repeated FormattedText formatted_reading_hint = 8;
 }
 
 message Vocabulary {
   optional string meaning_explanation = 1;
   optional string reading_explanation = 2;
+
+  repeated FormattedText formatted_meaning_explanation = 6;
+  repeated FormattedText formatted_reading_explanation = 7;
 
   message Sentence {
     optional string japanese = 1;
@@ -151,3 +159,14 @@ message SubjectOverrides {
   repeated Subject subject = 1;
 }
 
+message FormattedText {
+  enum Format {
+    RADICAL = 1;
+    KANJI = 2;
+    JAPANESE = 3;
+    READING = 4;
+    VOCABULARY = 5;
+  }
+  repeated Format format = 1;
+  optional string text = 2;
+}

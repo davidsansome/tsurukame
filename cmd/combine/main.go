@@ -23,6 +23,7 @@ import (
 	"github.com/golang/protobuf/proto"
 
 	"github.com/davidsansome/wk/encoding"
+	"github.com/davidsansome/wk/markup"
 	"github.com/davidsansome/wk/utils"
 
 	pb "github.com/davidsansome/wk/proto"
@@ -79,6 +80,24 @@ func Combine() error {
 		// Override fields.
 		if override, ok := overrides[id]; ok {
 			proto.Merge(spb, override)
+		}
+
+		// Format the markup.
+		if spb.Kanji != nil {
+			spb.Kanji.FormattedMeaningMnemonic = markup.FormatText(spb.Kanji.GetMeaningMnemonic())
+			spb.Kanji.FormattedMeaningHint = markup.FormatText(spb.Kanji.GetMeaningHint())
+			spb.Kanji.FormattedReadingMnemonic = markup.FormatText(spb.Kanji.GetReadingMnemonic())
+			spb.Kanji.FormattedReadingHint = markup.FormatText(spb.Kanji.GetReadingHint())
+			spb.Kanji.MeaningMnemonic = nil
+			spb.Kanji.MeaningHint = nil
+			spb.Kanji.ReadingMnemonic = nil
+			spb.Kanji.ReadingHint = nil
+		}
+		if spb.Vocabulary != nil {
+			spb.Vocabulary.FormattedMeaningExplanation = markup.FormatText(spb.Vocabulary.GetMeaningExplanation())
+			spb.Vocabulary.FormattedReadingExplanation = markup.FormatText(spb.Vocabulary.GetReadingExplanation())
+			spb.Vocabulary.MeaningExplanation = nil
+			spb.Vocabulary.ReadingExplanation = nil
 		}
 
 		return writer.WriteSubject(id, spb)
