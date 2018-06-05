@@ -53,7 +53,6 @@ func Diff(a, b encoding.Reader) error {
 	}
 
 	dmp := diffmatchpatch.New()
-
 	for i := 0; i < aCount && i < bCount; i++ {
 		var astr, bstr string
 		if spb, err := a.ReadSubject(i); err == nil {
