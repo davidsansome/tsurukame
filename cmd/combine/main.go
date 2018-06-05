@@ -17,6 +17,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"strings"
 
 	"github.com/golang/protobuf/proto"
@@ -28,8 +29,9 @@ import (
 )
 
 var (
-	inputDir   = flag.String("in", "data", "Input directory")
-	outputFile = flag.String("out", "data.bin", "Output file")
+	inputDir      = flag.String("in", "data", "Input directory")
+	outputFile    = flag.String("out", "data.bin", "Output file")
+	overridesFile = flag.String("overrides", "overrides.txt", "Overrides text proto")
 )
 
 func main() {
@@ -43,6 +45,17 @@ func Combine() error {
 
 	writer, err := encoding.OpenFileWriter(*outputFile)
 	utils.Must(err)
+
+	overrides := map[int]*pb.Subject{}
+	if len(*overridesFile) != 0 {
+		data, err := ioutil.ReadFile(*overridesFile)
+		utils.Must(err)
+		var overridesProto pb.SubjectOverrides
+		utils.Must(proto.UnmarshalText(string(data), &overridesProto))
+		for _, overrideProto := range overridesProto.Subject {
+			overrides[int(overrideProto.GetId())] = overrideProto
+		}
+	}
 
 	if err := encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
 		// Remove fields we don't care about for the iOS app.
@@ -62,6 +75,11 @@ func Combine() error {
 			return err
 		}
 		UnsetEmptyFields(spb)
+
+		// Override fields.
+		if override, ok := overrides[id]; ok {
+			proto.Merge(spb, override)
+		}
 
 		return writer.WriteSubject(id, spb)
 	}); err != nil {

@@ -1,0 +1,349 @@
+subject: <
+  id: 458
+  kanji: <
+    reading_mnemonic: "So now you have this sweet [kanji]katana[/kanji] in your hands and you're swinging it around like an idiot. Feel free to make \"whooshing\" noises as you swing it around. To become a master katana wielder, you decide to travel to [reading]To[/reading]kyo ([ja]\343\201\250\343\201\206[/ja]). Tokyo has the best katana schools in the world, so it makes sense to travel to Tokyo."
+  >
+>
+subject: <
+  id: 464
+  kanji: <
+    reading_mnemonic: "Who is spreading these nails on the street? That is Mrs. [reading]Chou[/reading] ([ja]\343\201\241\343\202\207\343\201\206[/ja]), who will be popping up from time to time in the future as well (so be sure to get a good image of her in your head)."
+  >
+>
+subject: <
+  id: 470
+  kanji: <
+    reading_mnemonic: "What do you have [kanji]five[/kanji] of? The thing that comes to most people's minds is fingers (or toes). With these five fingers, you can do anything. Most notably, though, you can play the game \"[reading]go[/reading]\" ([ja]\343\201\224[/ja])- a popular strategy board game in Japan. "
+  >
+>
+subject: <
+  id: 569
+  kanji: <
+    meaning_mnemonic: "There's a [radical]mouth[/radical] inside a [radical]mouth[/radical]. But, if you look even closer (not actually, but we're pretending) you can see another mouth inside that mouth... and another one inside of that one! It keeps going and going. Can you count the number of [kanji]times[/kanji] there's a mouth inside a mouth? This kanji also means [kanji]revolve[/kanji], too. Think of each \"time\" a thing happens, it loops back around and comes back to the beginning, revolving around again for another time."
+  >
+>
+subject: <
+  id: 589
+  kanji: <
+    meaning_mnemonic: "You discover something strange about a [radical]lantern[/radical]. It's totally covered in [radical]hair[/radical] which is arranged in a very strange [kanji]shape[/kanji]."
+  >
+>
+subject: <
+  id: 608
+  kanji: <
+    reading_mnemonic: "When we need to remember the reading \343\201\241 we use the word \"cheese\" - You keep digging until you're surrounded by [kanji]earth[/kanji]. You are digging down into the giant alligator's throat now, and in its throat you find a huge, rotting  chunk of [reading]chee[/reading]se (\343\201\241)."
+  >
+>
+subject: <
+  id: 685
+  kanji: <
+    meaning_mnemonic: "You're [radical]loitering[/radical] around in [radical]Ikea[/radical], just waiting for someone to help you. What's up with this terrible [kanji]service[/kanji]? It's their [kanji]duty[/kanji] to serve and they're failing terribly."
+  >
+>
+subject: <
+  id: 850
+  kanji: <
+    meaning_mnemonic: "The [radical]life[/radical] radical and the [kanji]life[/kanji] kanji are the same, so hopefully you now just know them both."
+  >
+>
+subject: <
+  id: 874
+  kanji: <
+    reading_mnemonic: "The train pulls into the station. They walk up to the train doors, but they don't open. \"Perhaps \"[reading]a key[/reading] ([ja]\343\201\210\343\201\215[/ja]) would help?\" asks the station master, as he goes and opens the door to the train."
+  >
+>
+subject: <
+  id: 886
+  kanji: <
+    reading_mnemonic: "Suddenly, a fifth option appears! A [reading]cen[/reading]taur ([ja]\343\201\233\343\202\223[/ja]). So now you must [kanji]choose[/kanji] between the mythical centaur creature, a water slide, some cobras, swim fins, or blackjack."
+  >
+>
+subject: <
+  id: 925
+  kanji: <
+    reading_mnemonic: "Actually, the person she's being [kanji]gentle[/kanji] with is her [reading]da[/reading]d ([ja]\343\201\240[/ja]). No one would ever want to hurt their dad, especially if he's asked you to walk gently on his back as a way of giving him a massage."
+  >
+>
+subject: <
+  id: 932
+  kanji: <
+    reading_mnemonic: "At [kanji]noon[/kanji], the shrimp also puts on its high [reading]heel[/reading]s (\343\201\262\343\202\213) to get ready for the evening, where it wants to make sure it looks good for the other shrimp he/she meets later on."
+  >
+>
+subject: <
+  id: 1282
+  kanji: <
+    reading_mnemonic: "While you're smashing your student with the nailbat, you hear a strange sipping sound. You look away from the crumpled mass of student you were beating, and see a student sipping on a small [reading]ju[/reading]ice ([ja]\343\201\230\343\202\205[/ja]) box. The nerve. You are meant to [kanji]instruct[/kanji] these students, not let them sip juice loudly. You turn towards him, nailbat raised, \"Do you have enough for everyone?\" Still sipping, the student opens his bag to reveal it's full of little juice boxes."
+  >
+>
+subject: <
+  id: 1514
+  kanji: <
+    reading_mnemonic: "On the other side of the [kanji]closed[/kanji] gates there is still a line of people that want the genius's advice. They decide to keep waiting until morning and gather together some [reading]hay[/reading] ([ja]\343\201\270\343\201\204[/ja]) so that sleeping outside won't be so awful."
+  >
+>
+subject: <
+  id: 1869
+  kanji: <
+    meaning_mnemonic: "A (fresh water) [radical]tsunami[/radical]. Some [radical]horns[/radical]. The [radical]ground[/radical]. A bunch of [radical]poop[/radical]. Combine these together and let them decompose a while. You'll have yourself some very [kanji]nourishing[/kanji] soil."
+  >
+>
+subject: <
+  id: 2088
+  kanji: <
+    reading_mnemonic: "And, believe it or not, you wear it outside and everyone sees it. Overnight, it's a huge fad in [ja][reading]\343\201\250\343\201\206[/reading]\343\201\215\343\202\207\343\201\206[/ja] ([ja]\343\201\250\343\201\206[/ja]). "
+  >
+>
+subject: <
+  id: 2393
+  kanji: <
+    reading_mnemonic: "If you don't recognize the tree's [kanji]greatness[/kanji] the leader will throw [reading]ketsu[/reading]p ([ja]\343\201\221\343\201\244[/ja]) all over you (it's a special mix of ketchup and catsup). It's ketsup because it looks like blood. Tree blood."
+  >
+>
+subject: <
+  id: 3001
+  vocabulary: <
+    meaning_explanation: "You've seen [ja]\345\244\247\345\255\246[/ja] to mean \"college.\" So take the [ja]\345\244\247[/ja] and put it with [kanji]medicine[/kanji] to create \"medicine college,\" or [vocabulary]medical university[/vocabulary]."
+  >
+>
+subject: <
+  id: 3157
+  vocabulary: <
+    meaning_explanation: "The [kanji]temporary[/kanji] [kanji]name[/kanji]s. These are the [vocabulary]kana[/vocabulary] (that's hiragana and katakana). Why are the \"temporary names\" kana, though? Perhaps they were never meant to be a main way to write the names of the kanji... They are just a temporary way to write the name of kanji you don't know how to write the \"correct\" way (aka kanji)? That's just a guess, but it should help you to remember that this word means \"kana,\" at least."
+  >
+>
+subject: <
+  id: 3443
+  vocabulary: <
+    meaning_explanation: "You've seen that [ja]\344\273\243\343\202\217\343\202\213[/ja] means \"to substitute for\" or \"to replace.\" This is the noun version of that (no [ja]\343\201\206[/ja] sound on the end). So, what is the noun version of those verb words? It would be [vocabulary]substitute[/vocabulary] or [vocabulary]replacement[/vocabulary]."
+  >
+>
+subject: <
+  id: 3597
+  vocabulary: <
+    reading_explanation: "Since this word consists of a kanji with hiragana attached, you can bet that it will use the kun'yomi reading. You didn't learn that reading with this kanji, so here's a mnemonic to help you: You're thrown into something [vocabulary]dark[/vocabulary] and small. A lid is closed on top of you, and you are confused. What have you been thrown in? You find out you've been thrown in a [reading]cooler[/reading] ([ja]\343\201\217\343\202\211[/ja]). Feel afraid like you would be if you were thrown in such a dark cooler like this. Is it cold?"
+  >
+>
+subject: <
+  id: 3691
+  vocabulary: <
+    meaning_explanation: "You [kanji]take[/kanji] [kanji]lumber[/kanji] and you pile it up. This is all because you are [vocabulary]covering an event[/vocabulary] on the dangerous chemicals and bugs that are inside the lumber that goes into your house! You're [vocabulary]collecting data[/vocabulary] so that you can have a good, solid story to cover."
+  >
+>
+subject: <
+  id: 3889
+  vocabulary: <
+    meaning_explanation: "You've seen [ja]\350\265\267\343\201\215\343\202\213[/ja] which is \"to wake up.\" This is similar, except you are doing the waking up, which makes the meaning of this word [vocabulary]to wake someone up[/vocabulary]. How do you differentiate between this and [ja]\350\265\267\343\201\215\343\202\213[/ja]? Because of the [ja]\343\201\231[/ja] on the end. You wake someone up violently, wrenching their neck. They turn around and [reading]sue[/reading] ([ja]\343\201\231[/ja]) you, making you wish you never woke them up."
+  >
+>
+subject: <
+  id: 4052
+  vocabulary: <
+    meaning_explanation: "Remember [ja]\345\244\247\351\230\252[/ja] (Osaka)? This is the [kanji]dialect[/kanji] they speak, making this word [vocabulary]Osaka dialect[/vocabulary]."
+  >
+>
+subject: <
+  id: 4110
+  vocabulary: <
+    meaning_explanation: "You know that [ja]\346\236\232[/ja] is a [kanji]flat objects counter[/kanji]. So, now we're counting! You have [vocabulary]five flat objects[/vocabulary]."
+  >
+>
+subject: <
+  id: 4131
+  vocabulary: <
+    reading_explanation: "Since this word consists of a kanji with hiragana attached, you can bet that it will use the kun'yomi reading. You didn't learn that reading with this kanji, so here's a mnemonic to help you: What should be equal above all things? I think each person ([reading][ja]\343\201\262\343\201\250[/ja][/reading]) should be equal!"
+  >
+>
+subject: <
+  id: 4163
+  vocabulary: <
+    reading_explanation: "This is a jukugo word, which usually means on'yomi readings from the kanji. When we learned the reading for [ja]\345\217\227[/ja] before, we learned the kun'yomi. Let's use a mnemonic to remember the on'yomi reading for this vocab. When you [vocabulary]take an exam[/vocabulary] you need complete silence, but the person behind you has a small [reading]ju[/reading]ice ([ja]\343\201\230\343\202\205[/ja]) box that she keeps sipping. It's so loud. You can't concentrate on the test in front of you because it's all you can hear."
+  >
+>
+subject: <
+  id: 4181
+  vocabulary: <
+    meaning_explanation: "This word consists of kanji with hiragana attached. Because the hiragana ends with an [ja]\343\201\206[/ja] sound, you know this word is a verb. The kanji itself means [kanji]distressed[/kanji] and [kanji]troubled[/kanji]. The  verb version of those are [vocabulary]to be distressed[/vocabulary] and [vocabulary]to be troubled[/vocabulary]. "
+  >
+>
+subject: <
+  id: 4225
+  vocabulary: <
+    meaning_explanation: "This word consists of kanji with hiragana attached. Because the hiragana ends with an [ja]\343\201\206[/ja] sound, you know this word is a verb. The kanji itself means [kanji]entangle[/kanji] so the verb vocab version is [vocabulary]to be entangled[/vocabulary]. This is when something is entangled on its own (you're not directly doing the entangling). You can remember this because of the [ja]\343\202\200[/ja], which is you saying [reading]mo[/reading]ve ([ja]\343\202\200[/ja]) out of the way, I have to take care of this entanglement mess that just happened on its own."
+  >
+>
+subject: <
+  id: 4226
+  vocabulary: <
+    meaning_explanation: "This word consists of kanji with hiragana attached. Because the hiragana ends with an [ja]\343\201\206[/ja] sound, you know this word is a verb. The kanji itself means [kanji]continue[/kanji] so the verb vocab version is [vocabulary]to continue[/vocabulary]. Please continue."
+  >
+>
+subject: <
+  id: 4472
+  vocabulary: <
+    meaning_explanation: "Because the hiragana ends with an [ja]\343\201\206[/ja] sound, you know this word is a verb. The kanji itself means [kanji]recognize[/kanji] so the verb vocab version is [vocabulary]to recognize[/vocabulary]."
+  >
+>
+subject: <
+  id: 4602
+  vocabulary: <
+    reading_explanation: "Since this word is made up of a single kanji, it probably uses the kun'yomi reading. You did not learn this meaning, so here's a mnemonic to help you to remember: [vocabulary]Demon[/vocabulary]s are mean. This particular demon bites you on the knee, creating an \"O\" shape on your knee. He tells you he has cursed you with the [vocabulary]\"O\" knee[/vocabulary] ([ja]\343\201\212\343\201\253[/ja])."
+  >
+>
+subject: <
+  id: 4741
+  vocabulary: <
+    meaning_explanation: "Because the hiragana ends with an [ja]\343\201\206[/ja] sound, you know this word is a verb. The kanji itself means [kanji]mention[/kanji] so the verb vocab version is [vocabulary]to mention[/vocabulary]."
+  >
+>
+subject: <
+  id: 4915
+  vocabulary: <
+    meaning_explanation: "[kanji]Restore[/kanji] what you [kanji]learn[/kanji]ed with [reading]review[/reading]s. That's what you do on WaniKani, right?"
+  >
+>
+subject: <
+  id: 5199
+  vocabulary: <
+    meaning_explanation: "A [ja]\345\212\271\346\236\234[/ja] is an [kanji]effect[/kanji]. So, the [kanji]reverse[/kanji] of said effect is the [vocabulary]opposite effect[/vocabulary] that you were shooting for. Whoops."
+  >
+>
+subject: <
+  id: 5256
+  vocabulary: <
+    meaning_explanation: "[kanji]Conserve[/kanji] those letters with [kanji]abbreviation[/kanji]. That will allow you to [vocabulary]abbreviate[/vocabulary] and [vocabulary]leave out[/vocabulary] things from the word (or anything, really)."
+  >
+>
+subject: <
+  id: 5282
+  vocabulary: <
+    meaning_explanation: "Because the hiragana ends with an [ja]\343\201\206[/ja] sound, you know this word is a verb. The kanji itself means [kanji]stuffed[/kanji], this word means [vocabulary]to stuff in[/vocabulary], as in you're doing the stuffing. You know that this is the case because when it comes to the [reading]mail[/reading] ([ja]\343\202\201\343\202\213[/ja]), you stuff that mail into the garbage as hard as you can (it's all junk)."
+  >
+>
+subject: <
+  id: 5295
+  vocabulary: <
+    meaning_explanation: "With the [ja]\346\227\245[/ja] of [ja]\346\227\245\346\234\254[/ja], the [ja]\346\227\245[/ja] means [kanji]Japan[/kanji]. Then, you add [kanji]Korea[/kanji] into the mix and you have Japan + Korea. This word means [vocabulary]Japan and South Korea[/vocabulary] or [kanji]South Korea and Japan[/kanji] (depending on where you're from, I guess)."
+  >
+>
+subject: <
+  id: 5389
+  vocabulary: <
+    reading_explanation: "Since this word is made up of a single kanji, it should use the kun'yomi reading. When learning the kanji, you didn't learn that reading, so here's a mnemonic to help you with this word:\r\n\r\nThere's something inside and you wanna get to what's within. Look inside. [reading]Ooh, chee[/reading]se ([ja]\343\201\206\343\201\241[/ja])! Your favorite. Ooh cheese, how I love you."
+  >
+>
+subject: <
+  id: 5415
+  vocabulary: <
+    reading_explanation: "The reading is [ja]\345\243\212\343\202\214\343\202\213[/ja] and [ja]\347\211\251[/ja] put together."
+  >
+>
+subject: <
+  id: 5608
+  vocabulary: <
+    meaning_explanation: "If [ja]\346\274\217\343\202\214\343\202\213[/ja] is \"to leak,\" then this is when you do the leaking yourself. The reason this thing is leaking, though (and it shouldn't be), is because you [reading]rush[/reading]ed ([ja]\343\202\211\343\201\231[/ja]) the job (because you did it yourself), which is why you know this is [vocabulary]to leak something[/vocabulary]."
+  >
+>
+subject: <
+  id: 5678
+  vocabulary: <
+    reading_explanation: "Something is so [vocabulary]remarkable[/vocabulary] you let out [reading]one jeer[/reading] ([ja]\343\201\204\343\201\241\343\201\230\343\202\213[/ja]) at the opposing team. Just one, because you're not that mean."
+  >
+>
+subject: <
+  id: 5761
+  vocabulary: <
+    meaning_explanation: "A [kanji]bake[/kanji]d [kanji]potato[/kanji] is a [vocabulary]baked potato[/vocabulary] (or [kanji]roast potato[/kanji])."
+  >
+>
+subject: <
+  id: 6441
+  vocabulary: <
+    meaning_explanation: "Because the hiragana ends with an [ja]\343\201\206[/ja] sound, you know this word is a verb. The kanji itself means [kanji]praise[/kanji] and the verb vocab version is [vocabulary]to praise[/vocabulary]."
+  >
+>
+subject: <
+  id: 7047
+  vocabulary: <
+    reading_explanation: "A bunch of [vocabulary]sack[/vocabulary]s or [vocabulary]straw bag[/vocabulary]s are stacked upon each other to make a [reading]tower[/reading] ([ja]\343\201\237\343\202\217\343\202\211[/ja]). Imagine walking into this sack tower and wonder how it's all held together. Such poor architecture."
+  >
+>
+subject: <
+  id: 7534
+  vocabulary: <
+    reading_explanation: "This is a place name and it uses the kun'yomi. You haven't learned kun'yomi for [ja]\345\215\203[/ja] yet, so here's a mnemonic to help you remember it:\r\n\r\nWhile you're admiring all of the leaves in [vocabulary]Chiba[/vocabulary], you realize you're craving something. What goes well with watching leaves? Why, [reading]chee[/reading]se ([ja]\343\201\241[/ja]) of course. Delicious Chiba cheese."
+  >
+>
+subject: <
+  id: 7540
+  vocabulary: <
+    reading_explanation: "The readings are from the words [ja]\350\246\213[/ja] and [ja]\350\277\224\343\201\231[/ja] put together."
+  >
+>
+subject: <
+  id: 7592
+  vocabulary: <
+    meaning_explanation: "When you [kanji]announce[/kanji] something to [kanji]warn[/kanji] somebody, you're [vocabulary]warning[/vocabulary] them. Sometimes you're just trying to give them some helpful [vocabulary]advice[/vocabulary]."
+  >
+>
+subject: <
+  id: 7623
+  vocabulary: <
+    meaning_explanation: "You've seen how [ja]\345\275\223\343\201\237\343\202\212[/ja] means success. If you've experienced success [kanji]before[/kanji], everything after that seems to be pretty [vocabulary]obvious[/vocabulary]."
+  >
+>
+subject: <
+  id: 7631
+  vocabulary: <
+    meaning_explanation: "Remember how you learned that [ja]\344\273\256\345\220\215[/ja] means \"kana?\" Well this is [kanji]flat[/kanji] kana. Flat kana is just [vocabulary]hiragana[/vocabulary]."
+  >
+>
+subject: <
+  id: 7655
+  vocabulary: <
+    meaning_explanation: "If you come across a [kanji]suspicious[/kanji] [kanji]thing[/kanji] it's probably a [vocabulary]monster[/vocabulary]! Run away!"
+  >
+>
+subject: <
+  id: 7723
+  vocabulary: <
+    reading_explanation: "Since this word consists of a kanji with hiragana attached, you can bet that it will use the kun'yomi reading. You didn't learn that reading with this kanji, so here's a mnemonic to help you: \r\n\r\nWhen you make a [vocabulary]mistake[/vocabulary], you need admit to it. When someone asks, \"Who's responsible for this mistake?\" You say, \"[reading]I am[/reading] ([ja]\343\201\202\343\202\204\343\201\276[/ja]).\""
+  >
+>
+subject: <
+  id: 7788
+  vocabulary: <
+    meaning_explanation: "If you [kanji]scream[/kanji] [kanji]wake up[/kanji]! at someone you can bet they're going to [vocabulary]awaken[/vocabulary]. Screaming anything at a sleeping person would probably [vocabulary]rouse[/vocabulary] them. They'll probably be mad at you though."
+  >
+>
+subject: <
+  id: 8112
+  vocabulary: <
+    meaning_explanation: "You already learned that [ja]\347\212\240\347\211\262[/ja] means \"victim,\" so when you add [kanji]someone[/kanji] to that, it still means [vocabulary]victim[/vocabulary]."
+  >
+>
+subject: <
+  id: 8180
+  vocabulary: <
+    meaning_explanation: "[kanji]Bow[/kanji] as you [kanji]descend[/kanji] into enemy territory. This is how you have to [vocabulary]surrender[/vocabulary] if you want to live. Keep your head nice and low and descend into their ranks."
+  >
+>
+subject: <
+  id: 8235
+  vocabulary: <
+    reading_explanation: "Since this word is made up of a single kanji, it probably uses the kun'yomi reading. You did not learn this meaning, so here's a mnemonic to help you to remember: \r\n\r\nThe worst thing to see as a [vocabulary]captive[/vocabulary] is a [ja]\351\263\245\345\255\220[/ja] ([reading][ja]\343\201\250\343\202\212\343\201\223[/ja][/reading]), a bird child. Imagine seeing a baby bird held captive in a cage. So sad!"
+  >
+>
+subject: <
+  id: 8270
+  vocabulary: <
+    meaning_explanation: "The [kanji]big[/kanji] [kanji]military officer[/kanji] is in charge of everyone else. He's the [vocabulary]captain[/vocabulary]. You can tell because he wears a really big captain hat."
+  >
+>
+subject: <
+  id: 8292
+  vocabulary: <
+    meaning_explanation: "Some things happen outside of [kanji]reason[/kanji]. They happen [kanji]in addition[/kanji] to it. That's called [vocabulary]divine providence[/vocabulary]. You can't explain it, but something outside of reason definitely influenced the things around you."
+  >
+>
+
