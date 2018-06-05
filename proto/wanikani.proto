@@ -147,3 +147,7 @@ message User {
   optional bool subscribed = 6;
 }
 
+message SubjectOverrides {
+  repeated Subject subject = 1;
+}
+

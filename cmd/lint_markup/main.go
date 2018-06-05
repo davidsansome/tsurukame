@@ -19,10 +19,16 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/golang/protobuf/proto"
+
 	"github.com/davidsansome/wk/encoding"
 	"github.com/davidsansome/wk/utils"
 
 	pb "github.com/davidsansome/wk/proto"
+)
+
+var (
+	outputProto = flag.Bool("output-proto", false, "Output a overrides text proto")
 )
 
 func main() {
@@ -41,35 +47,72 @@ func main() {
 }
 
 func Lint(reader encoding.Reader) error {
-	return encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
+	overrides := []*pb.Subject{}
+
+	encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
+		override := &pb.Subject{}
+		override.Kanji = &pb.Kanji{}
+		override.Vocabulary = &pb.Vocabulary{}
+
 		if spb.Kanji != nil {
-			LintText(id, "meaning mnemonic", spb.Kanji.GetMeaningMnemonic())
-			LintText(id, "meaning hint", spb.Kanji.GetMeaningHint())
-			LintText(id, "reading mnemonic", spb.Kanji.GetReadingMnemonic())
-			LintText(id, "reading hint", spb.Kanji.GetReadingHint())
+			if !LintText(id, "meaning mnemonic", spb.Kanji.GetMeaningMnemonic()) {
+				override.Kanji.MeaningMnemonic = spb.Kanji.MeaningMnemonic
+			}
+			if !LintText(id, "meaning hint", spb.Kanji.GetMeaningHint()) {
+				override.Kanji.MeaningHint = spb.Kanji.MeaningHint
+			}
+			if !LintText(id, "reading mnemonic", spb.Kanji.GetReadingMnemonic()) {
+				override.Kanji.ReadingMnemonic = spb.Kanji.ReadingMnemonic
+			}
+			if !LintText(id, "reading hint", spb.Kanji.GetReadingHint()) {
+				override.Kanji.ReadingHint = spb.Kanji.ReadingHint
+			}
 		}
 		if spb.Vocabulary != nil {
-			LintText(id, "meaning explanation", spb.Vocabulary.GetMeaningExplanation())
-			LintText(id, "reading explanation", spb.Vocabulary.GetReadingExplanation())
+			if !LintText(id, "meaning explanation", spb.Vocabulary.GetMeaningExplanation()) {
+				override.Vocabulary.MeaningExplanation = spb.Vocabulary.MeaningExplanation
+			}
+			if !LintText(id, "reading explanation", spb.Vocabulary.GetReadingExplanation()) {
+				override.Vocabulary.ReadingExplanation = spb.Vocabulary.ReadingExplanation
+			}
 		}
+
+		if proto.Size(override.Kanji) == 0 {
+			override.Kanji = nil
+		}
+		if proto.Size(override.Vocabulary) == 0 {
+			override.Vocabulary = nil
+		}
+		if proto.Size(override) != 0 {
+			override.Id = spb.Id
+			overrides = append(overrides, override)
+		}
+
 		return nil
 	})
+
+	if *outputProto {
+		overridesProto := pb.SubjectOverrides{}
+		overridesProto.Subject = overrides
+		fmt.Println(proto.MarshalTextString(&overridesProto))
+	}
+	return nil
 }
 
-func LintText(id int, field, completeText string) {
+func LintText(id int, field, completeText string) bool {
 	text := completeText
 	var stack []string
 	for {
 		pos := strings.Index(text, "[")
 		if pos == -1 {
-			break
+			return true
 		}
 
 		text = text[pos+1:]
 		endPos := strings.Index(text, "]")
 		if endPos == -1 {
 			ReportError(id, field, completeText, "Missing end bracket")
-			break
+			return false
 		}
 
 		tag := text[0:endPos]
@@ -81,19 +124,23 @@ func LintText(id int, field, completeText string) {
 		if len(stack) == 0 {
 			ReportError(id, field, completeText,
 				fmt.Sprintf("Closing tag [/%s] without opening tag", tag))
-			break
+			return false
 		}
 		topTag := stack[len(stack)-1]
 		stack = stack[0 : len(stack)-1]
 		if tag != topTag {
 			ReportError(id, field, completeText,
 				fmt.Sprintf("Mismatching closing tag [/%s] for opening tag [%s]", tag, topTag))
-			break
+			return false
 		}
 	}
+	return true
 }
 
 func ReportError(id int, field, completeText, reason string) {
+	if *outputProto {
+		return
+	}
 	lines := strings.Split(completeText, "\n")
 	completeText = strings.Join(lines, "\n  ")
 	fmt.Printf("%d %s\n%s\n  %s\n\n", id, field, reason, completeText)
