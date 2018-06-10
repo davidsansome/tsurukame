@@ -42,7 +42,9 @@ func FormatText(completeText string) []*pb.FormattedText {
 
 		// Add this text.
 		if len(text) != 0 {
-			ret = append(ret, &pb.FormattedText{Format: formatStack, Text: proto.String(text)})
+			formatStackCopy := make([]pb.FormattedText_Format, len(formatStack))
+			copy(formatStackCopy, formatStack)
+			ret = append(ret, &pb.FormattedText{Format: formatStackCopy, Text: proto.String(text)})
 		}
 
 		// Add the next format tag.
