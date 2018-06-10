@@ -50,11 +50,14 @@ func Combine() error {
 	overrides := map[int]*pb.Subject{}
 	if len(*overridesFile) != 0 {
 		data, err := ioutil.ReadFile(*overridesFile)
-		utils.Must(err)
-		var overridesProto pb.SubjectOverrides
-		utils.Must(proto.UnmarshalText(string(data), &overridesProto))
-		for _, overrideProto := range overridesProto.Subject {
-			overrides[int(overrideProto.GetId())] = overrideProto
+		if err != nil {
+			fmt.Printf("Error opening %s: %s\n", *overridesFile, err)
+		} else {
+			var overridesProto pb.SubjectOverrides
+			utils.Must(proto.UnmarshalText(string(data), &overridesProto))
+			for _, overrideProto := range overridesProto.Subject {
+				overrides[int(overrideProto.GetId())] = overrideProto
+			}
 		}
 	}
 
