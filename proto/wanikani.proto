@@ -39,6 +39,8 @@ message Radical {
   optional string character_image = 1;  // Not present in final data.
   optional string mnemonic = 2;
   optional bool has_character_image_file = 3;
+
+  repeated FormattedText formatted_mnemonic = 4;
 }
 
 message Kanji {
