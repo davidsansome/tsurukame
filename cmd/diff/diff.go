@@ -19,7 +19,7 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/sergi/go-diff/diffmatchpatch"
+	"github.com/pmezard/go-difflib/difflib"
 
 	"github.com/davidsansome/wk/encoding"
 	"github.com/davidsansome/wk/utils"
@@ -33,15 +33,18 @@ func main() {
 		return
 	}
 
-	a, err := encoding.Open(flag.Args()[0])
+	aName := flag.Args()[0]
+	bName := flag.Args()[1]
+
+	a, err := encoding.Open(aName)
 	utils.Must(err)
-	b, err := encoding.Open(flag.Args()[1])
+	b, err := encoding.Open(bName)
 	utils.Must(err)
 
-	utils.Must(Diff(a, b))
+	utils.Must(Diff(a, b, aName, bName))
 }
 
-func Diff(a, b encoding.Reader) error {
+func Diff(a, b encoding.Reader, aName, bName string) error {
 	aCount, err := a.SubjectCount()
 	if err != nil {
 		return err
@@ -52,7 +55,6 @@ func Diff(a, b encoding.Reader) error {
 		return err
 	}
 
-	dmp := diffmatchpatch.New()
 	for i := 0; i < aCount && i < bCount; i++ {
 		var astr, bstr string
 		if spb, err := a.ReadSubject(i); err == nil {
@@ -62,21 +64,23 @@ func Diff(a, b encoding.Reader) error {
 			bstr = proto.MarshalTextString(spb)
 		}
 
-		diffs := dmp.DiffMain(astr, bstr, false)
-		if AreAllDiffsEqual(diffs) {
+		aFile := fmt.Sprintf("%d %s", i, aName)
+		bFile := fmt.Sprintf("%d %s", i, bName)
+
+		ud := difflib.UnifiedDiff{
+			A:        difflib.SplitLines(astr),
+			B:        difflib.SplitLines(bstr),
+			FromFile: aFile,
+			ToFile:   bFile,
+			Context:  3,
+			Eol:      "\n",
+		}
+
+		diffString, _ := difflib.GetUnifiedDiffString(ud)
+		if len(diffString) == 0 {
 			continue
 		}
-		fmt.Printf("\n===== %d =====\n\n", i)
-		fmt.Println(dmp.DiffPrettyText(diffs))
+		fmt.Println(diffString)
 	}
 	return nil
-}
-
-func AreAllDiffsEqual(diffs []diffmatchpatch.Diff) bool {
-	for _, diff := range diffs {
-		if diff.Type != diffmatchpatch.DiffEqual {
-			return false
-		}
-	}
-	return true
 }

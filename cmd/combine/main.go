@@ -86,6 +86,10 @@ func Combine() error {
 		}
 
 		// Format the markup.
+		if spb.Radical != nil {
+			spb.Radical.FormattedMnemonic = markup.FormatText(spb.Radical.GetMnemonic())
+			spb.Radical.Mnemonic = nil
+		}
 		if spb.Kanji != nil {
 			spb.Kanji.FormattedMeaningMnemonic = markup.FormatText(spb.Kanji.GetMeaningMnemonic())
 			spb.Kanji.FormattedMeaningHint = markup.FormatText(spb.Kanji.GetMeaningHint())
