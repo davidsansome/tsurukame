@@ -94,6 +94,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   CurrentLevelChartController *_currentLevelVocabularyChartController;
   UISearchController *_searchController;
   __weak SearchResultViewController *_searchResultsViewController;
+  __weak CAGradientLayer *_userGradientLayer;
 }
 
 - (void)viewDidLoad {
@@ -115,15 +116,11 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
                 forControlEvents:UIControlEventValueChanged];
   
   // Set a gradient background for the user cell.
-  CGRect userGradientFrame = _userContainer.bounds;
-  userGradientFrame.origin.y -= kUserGradientYOffset;
-  userGradientFrame.size.height += kUserGradientYOffset;
-  
   CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
-  userGradientLayer.frame = userGradientFrame;
   userGradientLayer.colors = TKMRadicalGradient();
   userGradientLayer.startPoint = CGPointMake(0.5f, kUserGradientStartPoint);
   [_userContainer.layer insertSublayer:userGradientLayer atIndex:0];
+  _userGradientLayer = userGradientLayer;
   _userContainer.layer.masksToBounds = NO;
   
   // Create the search results view controller.
@@ -206,6 +203,15 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   }
   
   return [super tableView:tableView heightForRowAtIndexPath:indexPath];
+}
+
+- (void)viewWillLayoutSubviews {
+  [super viewWillLayoutSubviews];
+  
+  CGRect userGradientFrame = _userContainer.bounds;
+  userGradientFrame.origin.y -= kUserGradientYOffset;
+  userGradientFrame.size.height += kUserGradientYOffset;
+  _userGradientLayer.frame = userGradientFrame;
 }
 
 - (void)refresh {
