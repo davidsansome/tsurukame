@@ -679,10 +679,9 @@
                                     <action selector="backButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="PW3-Bb-gvB"/>
                                 </connections>
                             </button>
-                            <tableView hidden="YES" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wFr-RK-iSqq" customClass="TKMSubjectDetailsView">
+                            <tableView hidden="YES" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="wFr-RK-iSqq" customClass="TKMSubjectDetailsView">
                                 <rect key="frame" x="0.0" y="667" width="375" height="0.0"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </tableView>
                             <button hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fq3-oe-fWe">
                                 <rect key="frame" x="0.0" y="604" width="62" height="62"/>
@@ -718,7 +717,7 @@
                             <constraint firstItem="M27-Di-5Wg" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="31d-hA-cMU"/>
                             <constraint firstItem="GZq-HC-Qg5" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" constant="16" id="6cK-KD-YsT"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="trailing" secondItem="Zyq-WW-fbd" secondAttribute="trailing" id="AGF-fk-KLj"/>
-                            <constraint firstAttribute="top" secondItem="M27-Di-5Wg" secondAttribute="bottom" id="AzB-Jc-8ht"/>
+                            <constraint firstItem="wFr-RK-iSqq" firstAttribute="top" secondItem="M27-Di-5Wg" secondAttribute="bottom" id="AzB-Jc-8ht"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="top" secondItem="Zyq-WW-fbd" secondAttribute="top" id="C9E-Lq-hm6"/>
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="leading" secondItem="Zyq-WW-fbd" secondAttribute="leading" id="CU7-2i-Zct"/>
                             <constraint firstItem="TY8-JV-WfA" firstAttribute="top" secondItem="4jI-do-0VR" secondAttribute="top" id="ElS-qt-vAo"/>
@@ -730,6 +729,8 @@
                             <constraint firstItem="lqe-Ns-DBU" firstAttribute="top" secondItem="Nab-RQ-m49" secondAttribute="bottom" id="LYD-kF-MuB"/>
                             <constraint firstAttribute="trailing" secondItem="WG4-t0-dUV" secondAttribute="trailing" constant="12" id="Lj5-J7-q4z"/>
                             <constraint firstItem="M27-Di-5Wg" firstAttribute="top" secondItem="lqe-Ns-DBU" secondAttribute="bottom" id="N0Y-l6-Q3x"/>
+                            <constraint firstAttribute="trailing" secondItem="wFr-RK-iSqq" secondAttribute="trailing" id="OZr-5h-xBU"/>
+                            <constraint firstItem="wFr-RK-iSqq" firstAttribute="bottom" secondItem="4jI-do-0VR" secondAttribute="bottom" id="OhI-AV-7Cr"/>
                             <constraint firstItem="Hl2-BP-AQQ" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" id="Pgn-1l-5G4"/>
                             <constraint firstAttribute="trailing" secondItem="M27-Di-5Wg" secondAttribute="trailing" id="QMg-yd-Jpe"/>
                             <constraint firstItem="gdi-7v-770" firstAttribute="bottom" secondItem="lqe-Ns-DBU" secondAttribute="bottom" id="U8c-84-ebp"/>
@@ -758,6 +759,7 @@
                             <constraint firstItem="S3x-ei-BlA" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="vXr-eI-eku"/>
                             <constraint firstItem="Jee-0P-imk" firstAttribute="top" secondItem="EBu-6v-Hcw" secondAttribute="top" id="w6F-Tb-Vrq"/>
                             <constraint firstItem="TY8-JV-WfA" firstAttribute="leading" secondItem="EBu-6v-Hcw" secondAttribute="leading" id="whG-W0-ldl"/>
+                            <constraint firstItem="wFr-RK-iSqq" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="wrE-hd-GIw"/>
                             <constraint firstAttribute="bottom" secondItem="M27-Di-5Wg" secondAttribute="bottom" id="y4K-ca-rw0"/>
                             <constraint firstItem="gdi-7v-770" firstAttribute="top" secondItem="lqe-Ns-DBU" secondAttribute="top" id="zT8-CO-8Fs"/>
                         </constraints>
@@ -781,6 +783,7 @@
                         <outlet property="queueIcon" destination="TgI-GY-kYL" id="bQh-Zu-fUi"/>
                         <outlet property="queueLabel" destination="WG4-t0-dUV" id="UZV-i3-In8"/>
                         <outlet property="revealAnswerButton" destination="Zyq-WW-fbd" id="5WQ-60-SBe"/>
+                        <outlet property="subjectDetailsView" destination="wFr-RK-iSqq" id="o6J-AO-Aii"/>
                         <outlet property="submitButton" destination="ctF-hm-AxT" id="x0c-jE-ztx"/>
                         <outlet property="successRateIcon" destination="9gS-sh-cYw" id="GEi-xa-MAB"/>
                         <outlet property="successRateLabel" destination="S3x-ei-BlA" id="3gf-jQ-C32"/>
@@ -1128,6 +1131,6 @@
         <image name="tick" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="LcM-wy-hJZ"/>
+        <segue reference="ONv-x4-Pkd"/>
     </inferredMetricsTieBreakers>
 </document>
