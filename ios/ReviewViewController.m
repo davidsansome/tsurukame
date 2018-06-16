@@ -191,7 +191,7 @@ static UIColor *kDefaultButtonTintColor;
   [super viewDidLoad];
   TKMAddShadowToView(_questionLabel, 1, 0.2, 4);
   TKMAddShadowToView(_previousSubjectButton, 0, 0.7, 4);
-  
+    
   _questionGradient = [CAGradientLayer layer];
   [_questionBackground.layer addSublayer:_questionGradient];
   _promptGradient = [CAGradientLayer layer];
@@ -260,6 +260,9 @@ static UIColor *kDefaultButtonTintColor;
   positionAnimation.fromValue = [NSValue valueWithCGPoint:oldPosition];
   positionAnimation.toValue = [NSValue valueWithCGPoint:newPosition];
   [_questionGradient addAnimation:positionAnimation forKey:nil];
+  
+  // Fix the extra inset at the top of the subject details view.
+  _subjectDetailsView.contentInset = UIEdgeInsetsMake(-self.view.safeAreaInsets.top, 0, 0, 0);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
