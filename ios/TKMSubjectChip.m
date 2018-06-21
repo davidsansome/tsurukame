@@ -44,11 +44,12 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
                            font:(UIFont *)font
                     showMeaning:(bool)showMeaning
                        delegate:(id<TKMSubjectDelegate>)delegate {
+  NSAttributedString *japaneseText = [subject japaneseTextWithImageSize:kLabelHeight];
   if (showMeaning) {
     NSAttributedString *sideText = [[NSAttributedString alloc] initWithString:subject.primaryMeaning];
     return [self initWithSubject:subject
                             font:font
-                        chipText:subject.japaneseText
+                        chipText:japaneseText
                         sideText:sideText
                    chipTextColor:[UIColor whiteColor]
                     chipGradient:TKMGradientForSubject(subject)
@@ -56,7 +57,7 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
   } else {
     return [self initWithSubject:subject
                             font:font
-                        chipText:subject.japaneseText
+                        chipText:japaneseText
                         sideText:nil
                    chipTextColor:[UIColor whiteColor]
                     chipGradient:TKMGradientForSubject(subject)
