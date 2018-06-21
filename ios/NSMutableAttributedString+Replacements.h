@@ -14,6 +14,16 @@
 
 #import <UIKit/UIKit.h>
 
-#import "proto/Wanikani.pbobjc.h"
+@interface NSMutableAttributedString (Replacements)
 
-extern NSMutableAttributedString *TKMRenderFormattedText(NSArray<TKMFormattedText *> *formattedText);
+- (void)replaceFontSize:(CGFloat)newSize;
+- (void)replaceTextColor:(UIColor *)newColor;
+
+@end
+
+@interface NSAttributedString (Replacements)
+
+- (NSAttributedString *)stringWithFontSize:(CGFloat)newSize;
+- (NSAttributedString *)stringWithTextColor:(UIColor *)newColor;
+
+@end

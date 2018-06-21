@@ -152,6 +152,7 @@
 		6392DBA220D130F0003019EB /* TKMSubjectModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA120D130F0003019EB /* TKMSubjectModelItem.m */; };
 		6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */; };
 		6392DBA720D14915003019EB /* TKMSubjectChip.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA620D14915003019EB /* TKMSubjectChip.m */; };
+		6392DBAB20DBB841003019EB /* NSMutableAttributedString+Replacements.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */; };
 		63A2375E1FE9225700C48657 /* Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A2375D1FE9225700C48657 /* Style.m */; };
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */; };
@@ -399,6 +400,8 @@
 		6392DBA520D14915003019EB /* TKMSubjectChip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMSubjectChip.h; sourceTree = "<group>"; };
 		6392DBA620D14915003019EB /* TKMSubjectChip.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMSubjectChip.m; sourceTree = "<group>"; };
 		6392DBA820D14997003019EB /* TKMSubjectDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMSubjectDelegate.h; sourceTree = "<group>"; };
+		6392DBA920DBB841003019EB /* NSMutableAttributedString+Replacements.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+Replacements.h"; sourceTree = "<group>"; };
+		6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+Replacements.m"; sourceTree = "<group>"; };
 		63A2375C1FE9225700C48657 /* Style.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Style.h; sourceTree = "<group>"; };
 		63A2375D1FE9225700C48657 /* Style.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Style.m; sourceTree = "<group>"; };
 		63A2375F1FE9264300C48657 /* UIColor+HexString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
@@ -607,6 +610,8 @@
 				63A2375D1FE9225700C48657 /* Style.m */,
 				6356E77F1FDFEFAB009CE7C1 /* SubjectDetailsView.h */,
 				6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */,
+				6392DBA920DBB841003019EB /* NSMutableAttributedString+Replacements.h */,
+				6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */,
 				63B1DE3F1FE7D81600FAB9C2 /* SubjectDetailsViewController.h */,
 				63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */,
 				63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */,
@@ -1148,6 +1153,7 @@
 				63EDA423207F335500382CE3 /* PieChartView.swift in Sources */,
 				63CAAB031FCD755300E09DA1 /* Wanikani+Convenience.m in Sources */,
 				6319CA8D2044203E00C31F87 /* AxisBase.swift in Sources */,
+				6392DBAB20DBB841003019EB /* NSMutableAttributedString+Replacements.m in Sources */,
 				6319C9B320441D3800C31F87 /* FMDatabase.m in Sources */,
 				63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */,
 				6319CAD22044203E00C31F87 /* ComponentBase.swift in Sources */,

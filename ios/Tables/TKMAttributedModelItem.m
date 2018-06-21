@@ -43,8 +43,6 @@
   
   self.textLabel.attributedText = item.text;
   self.textLabel.numberOfLines = item.numberOfLines;
-  self.textLabel.font = item.font;
-  self.textLabel.textColor = item.textColor;
 }
 
 @end
