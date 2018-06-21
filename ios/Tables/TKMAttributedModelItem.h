@@ -21,8 +21,6 @@
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic) NSAttributedString *text;
-@property(nonatomic) UIFont *font;
-@property(nonatomic) UIColor *textColor;
 @property(nonatomic) int numberOfLines;
 
 @end

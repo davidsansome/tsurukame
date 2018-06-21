@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "NSMutableAttributedString+Replacements.h"
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
 #import "UIColor+HexString.h"
@@ -24,10 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 static const CGFloat kSectionHeaderHeight = 38.f;
 static const CGFloat kSectionFooterHeight = 0.f;
+static const CGFloat kFontSize = 14.f;
 
 static UIColor *kMeaningSynonymColor;
-static UIFont *kFont;
 static UIColor *kHintTextColor;
+static UIFont *kFont;
 
 static NSAttributedString *JoinAttributedStringArray(NSArray<NSAttributedString *> *strings,
                                                      NSString *join) {
@@ -101,8 +103,8 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     kMeaningSynonymColor = [UIColor colorWithRed:0.231 green:0.6 blue:0.988 alpha:1]; // #3b99fc
-    kFont = [UIFont systemFontOfSize:14.f];
     kHintTextColor = [UIColor colorWithWhite:0.3f alpha:1.f];
+    kFont = [UIFont systemFontOfSize:kFontSize];
   });
   
   self = [super initWithCoder:coder];
@@ -127,8 +129,8 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
      studyMaterials:(TKMStudyMaterials *)studyMaterials
             toModel:(TKMMutableTableModel *)model {
   NSAttributedString *text = RenderMeanings(subject.meaningsArray, studyMaterials);
+  text = [text stringWithFontSize:kFontSize];
   TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
-  item.font = kFont;
   
   [model addSection:@"Meaning"];
   [model addItem:item];
@@ -138,8 +140,8 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
             toModel:(TKMMutableTableModel *)model {
   bool primaryOnly = subject.hasKanji;
   NSAttributedString *text = RenderReadings(subject.readingsArray, primaryOnly);
+  text = [text stringWithFontSize:kFontSize];
   TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
-  item.font = kFont;
   
   [model addSection:@"Reading"];
   [model addItem:item];
@@ -178,13 +180,13 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     return;
   }
   
-  TKMAttributedModelItem *item = TKMFormattedTextModelItem(formattedText);
-  item.font = kFont;
+  NSMutableAttributedString *text = TKMRenderFormattedText(formattedText);
+  [text replaceFontSize:kFontSize];
   if (isHint) {
-    item.textColor = kHintTextColor;
+    [text replaceTextColor:kHintTextColor];
   }
   
-  [model addItem:item];
+  [model addItem:[[TKMAttributedModelItem alloc] initWithText:text]];
 }
 
 - (void)addContextSentences:(TKMSubject *)subject

@@ -44,7 +44,7 @@ static NSAttributedString *AttributedStringForFormattedText(TKMFormattedText *fo
   return [[NSAttributedString alloc] initWithString:formattedText.text attributes:attributes];
 }
 
-TKMAttributedModelItem *TKMFormattedTextModelItem(NSArray<TKMFormattedText *> *formattedText) {
+NSMutableAttributedString *TKMRenderFormattedText(NSArray<TKMFormattedText *> *formattedText) {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     kRadicalBackgroundColor = [UIColor colorWithRed:0.839 green:0.945 blue:1 alpha:1]; // #d6f1ff
@@ -56,6 +56,5 @@ TKMAttributedModelItem *TKMFormattedTextModelItem(NSArray<TKMFormattedText *> *f
   for (TKMFormattedText *part in formattedText) {
     [text appendAttributedString:AttributedStringForFormattedText(part)];
   }
-  TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
-  return item;
+  return text;
 }
