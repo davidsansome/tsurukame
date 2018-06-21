@@ -519,6 +519,9 @@ static UIColor *kDefaultButtonTintColor;
     _inAnimation = true;
     [self.view layoutIfNeeded];
     _inAnimation = false;
+    
+    // Scroll to the top.
+    [_subjectDetailsView setContentOffset:CGPointMake(0, -_subjectDetailsView.contentInset.top)];
   } completion:^(BOOL finished) {
     _revealAnswerButton.hidden = YES;
     if (shown) {
