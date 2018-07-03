@@ -20,10 +20,6 @@
 
 static const CGFloat kJapaneseTextImageSize = 26.f;
 
-static const UIEdgeInsets kCollectionViewEdgeInsets = {8.f, 16.f, 8.f, 16.f};
-static const CGFloat kChipHorizontalSpacing = 16.f;
-static const CGFloat kChipVerticalSpacing = 3.f;
-
 static UIFont *kNormalFont;
 static UIFont *kIncorrectFont;
 
@@ -141,27 +137,6 @@ static UIFont *kIncorrectFont;
 
 @end
 
-static NSArray<NSValue *> *CalculateChipFrames(NSArray<TKMSubjectChip *> *chips,
-                                               CGFloat width) {
-  NSMutableArray<NSValue *> *chipFrames = [NSMutableArray array];
-  
-  CGPoint origin = CGPointMake(kCollectionViewEdgeInsets.left, kCollectionViewEdgeInsets.top);
-  for (TKMSubjectChip *chip in chips) {
-    CGRect chipFrame = chip.frame;
-    chipFrame.origin = origin;
-    
-    if (CGRectGetMaxX(chipFrame) > width - kCollectionViewEdgeInsets.right) {
-      chipFrame.origin.y += chipFrame.size.height + kChipVerticalSpacing;
-      chipFrame.origin.x = kCollectionViewEdgeInsets.left;
-    }
-    
-    [chipFrames addObject:[NSValue valueWithCGRect:chipFrame]];
-    origin = CGPointMake(CGRectGetMaxX(chipFrame) + kChipHorizontalSpacing,
-                         chipFrame.origin.y);
-  }
-  return chipFrames;
-}
-
 @implementation TKMSubjectCollectionModelView {
   NSMutableArray<TKMSubjectChip *> *_chips;
 }
@@ -201,7 +176,8 @@ static NSArray<NSValue *> *CalculateChipFrames(NSArray<TKMSubjectChip *> *chips,
 }
 
 - (void)layoutSubviews {
-  NSArray<NSValue *> *chipFrames = CalculateChipFrames(_chips, self.frame.size.width);
+  NSArray<NSValue *> *chipFrames = TKMCalculateSubjectChipFrames(_chips, self.frame.size.width,
+                                                                 NSTextAlignmentLeft);
   for (int i = 0; i < _chips.count; ++i) {
     _chips[i].frame = [chipFrames[i] CGRectValue];
   }
@@ -211,9 +187,10 @@ static NSArray<NSValue *> *CalculateChipFrames(NSArray<TKMSubjectChip *> *chips,
   if (!_chips.count) {
     return size;
   }
-  NSArray<NSValue *> *chipFrames = CalculateChipFrames(_chips, size.width);
+  NSArray<NSValue *> *chipFrames = TKMCalculateSubjectChipFrames(_chips, size.width,
+                                                                 NSTextAlignmentLeft);
   return CGSizeMake(size.width,
-                    CGRectGetMaxY([chipFrames.lastObject CGRectValue]) + kCollectionViewEdgeInsets.bottom);
+                    CGRectGetMaxY([chipFrames.lastObject CGRectValue]) + kTKMSubjectChipCollectionEdgeInsets.bottom);
 }
 
 @end
