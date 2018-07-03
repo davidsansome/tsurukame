@@ -92,7 +92,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   return JoinAttributedStringArray(strings, @", ");
 }
 
-@interface TKMSubjectDetailsView ()
+@interface TKMSubjectDetailsView () <TKMSubjectChipDelegate>
 @end
 
 @implementation TKMSubjectDetailsView {
@@ -100,6 +100,8 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   NSDateFormatter *_startedDateFormatter;
   
   TKMTableModel *_tableModel;
+  
+  __weak TKMSubjectChip *_lastSubjectChipTapped;
 }
 
 - (nullable instancetype)initWithCoder:(NSCoder *)coder {
@@ -156,7 +158,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   TKMSubjectCollectionModelItem *item = [[TKMSubjectCollectionModelItem alloc]
       initWithSubjects:subject.componentSubjectIdsArray
             dataLoader:_dataLoader
-              delegate:_subjectDelegate];
+              delegate:self];
   item.font = kFont;
   
   [model addSection:title];
@@ -260,6 +262,19 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   
   _tableModel = model;
   [model reloadTable];
+}
+
+- (void)deselectLastSubjectChipTapped {
+  _lastSubjectChipTapped.selected = false;
+}
+
+#pragma mark - TKMSubjectChipDelegate
+
+- (void)didTapSubjectChip:(TKMSubjectChip *)chip {
+  _lastSubjectChipTapped = chip;
+  
+  _lastSubjectChipTapped.selected = true;
+  [_subjectDelegate didTapSubject:_lastSubjectChipTapped.subject];
 }
 
 @end

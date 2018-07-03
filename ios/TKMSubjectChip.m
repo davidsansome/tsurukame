@@ -36,14 +36,13 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
 }
 
 @implementation TKMSubjectChip {
-  TKMSubject *_subject;
-  __weak id<TKMSubjectDelegate> _delegate;
+  __weak id<TKMSubjectChipDelegate> _delegate;
 }
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
                            font:(UIFont *)font
                     showMeaning:(bool)showMeaning
-                       delegate:(id<TKMSubjectDelegate>)delegate {
+                       delegate:(id<TKMSubjectChipDelegate>)delegate {
   NSAttributedString *japaneseText = [subject japaneseTextWithImageSize:kLabelHeight];
   if (showMeaning) {
     NSAttributedString *sideText = [[NSAttributedString alloc] initWithString:subject.primaryMeaning];
@@ -71,7 +70,7 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
                        sideText:(NSAttributedString *)sideText
                   chipTextColor:(UIColor *)chipTextColor
                    chipGradient:(NSArray<id> *)chipGradient
-                       delegate:(id<TKMSubjectDelegate>)delegate {
+                       delegate:(id<TKMSubjectChipDelegate>)delegate {
   UIFont *chipFont = [UIFont systemFontOfSize:kLabelHeight];
   CGRect chipGradientFrame = CGRectMake(0, 0, TextWidth(chipText, chipFont), kChipHeight);
   CGRect chipLabelFrame = UIEdgeInsetsInsetRect(chipGradientFrame, kLabelEdgeInsets);
@@ -127,7 +126,15 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
 }
 
 - (void)handleTap:(UIGestureRecognizer *)gestureRecogniser {
-  [_delegate didTapSubject:_subject];
+  [_delegate didTapSubjectChip:self];
+}
+
+- (void)setSelected:(bool)selected {
+  self.backgroundColor = selected ? [UIColor colorWithWhite:0.9f alpha:1.f] : nil;
+}
+
+- (bool)isSelected {
+  return self.backgroundColor != nil;
 }
 
 @end
