@@ -20,7 +20,7 @@
 
 #import <WebKit/WebKit.h>
 
-@interface SubjectDetailsViewController () <TKMSubjectDelegate, NavigationControllerDelegate>
+@interface SubjectDetailsViewController () <TKMSubjectDelegate, TKMViewController>
 
 @property (weak, nonatomic) IBOutlet TKMSubjectDetailsView *subjectDetailsView;
 @property (weak, nonatomic) IBOutlet UILabel *subjectTitle;
