@@ -23,6 +23,9 @@
 static const int kMaxResults = 50;
 
 static bool SubjectMatchesQuery(TKMSubject *subject, NSString *query, NSString *kanaQuery) {
+  if ([subject.japanese hasPrefix:query]) {
+    return true;
+  }
   for (TKMMeaning *meaning in subject.meaningsArray) {
     if ([[meaning.meaning lowercaseString] hasPrefix:query]) {
       return true;
