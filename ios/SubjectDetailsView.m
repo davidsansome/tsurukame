@@ -265,7 +265,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 }
 
 - (void)deselectLastSubjectChipTapped {
-  _lastSubjectChipTapped.selected = false;
+  _lastSubjectChipTapped.backgroundColor = nil;
 }
 
 #pragma mark - TKMSubjectChipDelegate
@@ -273,7 +273,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 - (void)didTapSubjectChip:(TKMSubjectChip *)chip {
   _lastSubjectChipTapped = chip;
   
-  _lastSubjectChipTapped.selected = true;
+  _lastSubjectChipTapped.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.f];
   [_subjectDelegate didTapSubject:_lastSubjectChipTapped.subject];
 }
 

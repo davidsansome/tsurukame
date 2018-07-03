@@ -15,152 +15,87 @@
 #import "LessonsPageControl.h"
 
 #import "Style.h"
+#import "TKMSubjectChip.h"
 #import "proto/Wanikani+Convenience.h"
 
-// Properties of the individual page icons.
-static const CGFloat kPageHeight = 28.f;
-static const CGFloat kLabelInset = 4.f;
-static const UIEdgeInsets kLabelEdgeInsets = {kLabelInset, kLabelInset, kLabelInset, kLabelInset};
-static const CGFloat kLabelHeight = kPageHeight - kLabelInset*2;
-static const CGFloat kPageCornerRadius = 6.f;
-
-// Spacing between pages.
-static const CGFloat kPageSpacing = 8.f;
-
-// Overall size of the control.
-static const UIEdgeInsets kEdgeInsets = {8.f, 0.f, 4.f, 0.f};  // top, left, bottom, right
-
-static CGFloat WidthOfItemText(NSAttributedString *item) {
-  UIFont *font = [UIFont systemFontOfSize:kLabelHeight];
-  NSMutableAttributedString *str =
-      [[NSMutableAttributedString alloc] initWithAttributedString:item];
-  [str addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, str.length)];
-
-  CGRect rect = [str boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, kLabelHeight)
-                                  options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                  context:nil];
-  return MAX(kPageHeight, rect.size.width);
-}
+@interface LessonsPageControl () <TKMSubjectChipDelegate>
+@end
 
 @implementation LessonsPageControl {
-  NSMutableArray<UILabel *> *_labels;
-  NSMutableArray<UIView *> *_gradientViews;
+  NSMutableArray<TKMSubjectChip *> *_chips;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+  self = [super initWithCoder:aDecoder];
+  if (self) {
+    _chips = [NSMutableArray array];
+  }
+  return self;
 }
 
 #pragma mark - Layout
 
 - (void)setSubjects:(NSArray<TKMSubject *> *)subjects {
-  // Remove the old subviews, if any.
-  for (UILabel *label in _labels) {
-    [label removeFromSuperview];
+  // Remove all existing chips.
+  for (TKMSubjectChip *chip in _chips) {
+    [chip removeFromSuperview];
   }
-  for (UIView *view in _gradientViews) {
-    [view removeFromSuperview];
-  }
-
-  _labels = [NSMutableArray array];
-  _gradientViews = [NSMutableArray array];
-
+  [_chips removeAllObjects];
+  
+  // Create a chip for each subject.
   for (TKMSubject *subject in subjects) {
-    [self appendPageItem:[subject japaneseTextWithImageSize:kLabelHeight]
-               textColor:[UIColor whiteColor]
-              background:TKMGradientForSubject(subject)];
+    TKMSubjectChip *chip = [[TKMSubjectChip alloc] initWithSubject:subject
+                                                              font:nil
+                                                       showMeaning:false
+                                                          delegate:self];
+    [self addSubview:chip];
+    [_chips addObject:chip];
   }
-  [self appendPageItem:[[NSAttributedString alloc] initWithString:@"Quiz"]
-             textColor:[UIColor darkGrayColor]
-            background:@[(id)TKMGreyColor().CGColor, (id)TKMGreyColor().CGColor]];
   
-  [self updateGradientAlpha];
+  // Create the quiz chip.
+  NSAttributedString *quizText = [[NSAttributedString alloc] initWithString:@"Quiz"];
+  NSArray *chipGradient = @[(id)TKMGreyColor().CGColor, (id)TKMGreyColor().CGColor];
+  TKMSubjectChip *quizChip = [[TKMSubjectChip alloc] initWithSubject:nil
+                                                                font:nil
+                                                            chipText:quizText
+                                                            sideText:nil
+                                                       chipTextColor:[UIColor whiteColor]
+                                                        chipGradient:chipGradient
+                                                            delegate:self];
+  [self addSubview:quizChip];
+  [_chips addObject:quizChip];
+  
   [self setNeedsLayout];
-}
-
-- (void)appendPageItem:(NSAttributedString *)text
-             textColor:(UIColor *)textColor
-            background:(NSArray<id> *)background {
-  CGRect gradientFrame = CGRectMake(0, 0, WidthOfItemText(text), kPageHeight);
-  CGRect labelFrame = UIEdgeInsetsInsetRect(gradientFrame, kLabelEdgeInsets);
-  
-  UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-  label.minimumScaleFactor = 0.2;
-  label.adjustsFontSizeToFitWidth = YES;
-  label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-  label.attributedText = text;
-  label.textColor = textColor;
-  label.userInteractionEnabled = NO;
-  label.textAlignment = NSTextAlignmentCenter;
-  
-  UIGestureRecognizer *gestureRecogniser =
-      [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-  
-  UIView *gradientView = [[UIView alloc] initWithFrame:gradientFrame];
-  [gradientView addGestureRecognizer:gestureRecogniser];
-  CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-  gradientLayer.frame = gradientView.bounds;
-  gradientLayer.cornerRadius = kPageCornerRadius;
-  gradientLayer.masksToBounds = YES;
-  gradientLayer.colors = background;
-  [gradientView.layer insertSublayer:gradientLayer atIndex:0];
-  
-  [_labels addObject:label];
-  [_gradientViews addObject:gradientView];
-  
-  [self addSubview:gradientView];
-  [self addSubview:label];
 }
 
 - (void)setCurrentPageIndex:(NSInteger)index {
   _currentPageIndex = index;
-  [self updateGradientAlpha];
-}
-
-- (CGSize)intrinsicContentSizeWithoutPadding {
-  CGFloat width = kPageSpacing * (_gradientViews.count - 1);
-  for (UIView *view in _gradientViews) {
-    width += view.frame.size.width;
-  }
-  return CGSizeMake(width, kPageHeight);
-}
-
-- (CGSize)intrinsicContentSize {
-  CGSize size = self.intrinsicContentSizeWithoutPadding;
-  size.width += kEdgeInsets.left + kEdgeInsets.right;
-  size.height += kEdgeInsets.bottom + kEdgeInsets.top;
-  return size;
 }
 
 - (void)layoutSubviews {
-  [super layoutSubviews];
-
-  CGSize contentSize = self.intrinsicContentSizeWithoutPadding;
-  CGPoint pageOrigin = CGPointMake((self.bounds.size.width - contentSize.width) / 2,
-                                   (self.bounds.size.height - contentSize.height) / 2);
-  
-  for (NSInteger i = 0; i < _gradientViews.count; ++i) {
-    UIView *gradientView = _gradientViews[i];
-    UILabel *label = _labels[i];
-    
-    CGRect gradientFrame = {pageOrigin, gradientView.bounds.size};
-    CGRect labelFrame = UIEdgeInsetsInsetRect(gradientFrame, kLabelEdgeInsets);
-    
-    gradientView.frame = gradientFrame;
-    label.frame = labelFrame;
-
-    pageOrigin.x += gradientFrame.size.width + kPageSpacing;
+  NSArray<NSValue *> *chipFrames = TKMCalculateSubjectChipFrames(_chips, self.frame.size.width,
+                                                                 NSTextAlignmentCenter);
+  for (int i = 0; i < _chips.count; ++i) {
+    _chips[i].frame = [chipFrames[i] CGRectValue];
   }
 }
 
-- (void)updateGradientAlpha {
-  for (NSInteger i = 0; i < _gradientViews.count; ++i) {
-    CGFloat alpha = (i == _currentPageIndex) ? 1.0 : 0.5;
-    _gradientViews[i].alpha = alpha;
+- (CGSize)sizeThatFits:(CGSize)size {
+  if (!_chips.count) {
+    return size;
   }
+  NSArray<NSValue *> *chipFrames = TKMCalculateSubjectChipFrames(_chips, size.width,
+                                                                 NSTextAlignmentCenter);
+  return CGSizeMake(size.width,
+                    CGRectGetMaxY([chipFrames.lastObject CGRectValue]) + kTKMSubjectChipCollectionEdgeInsets.bottom);
 }
 
-- (void)handleTap:(UIGestureRecognizer *)gestureRecogniser {
-  for (NSInteger i = 0; i < _gradientViews.count; ++i) {
-    if (_gradientViews[i] == gestureRecogniser.view) {
+#pragma mark - TKMSubjectChipDelegate
+
+- (void)didTapSubjectChip:(TKMSubjectChip *)chip {
+  for (int i = 0; i < _chips.count; ++i) {
+    if (_chips[i] == chip) {
       _currentPageIndex = i;
-      [self updateGradientAlpha];
       [self sendActionsForControlEvents:UIControlEventValueChanged];
       break;
     }

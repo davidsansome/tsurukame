@@ -18,6 +18,12 @@
 
 @class TKMSubjectChip;
 
+NS_ASSUME_NONNULL_BEGIN;
+
+extern const UIEdgeInsets kTKMSubjectChipCollectionEdgeInsets;
+NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chips, CGFloat width,
+                                                  NSTextAlignment alignment);
+
 @protocol TKMSubjectChipDelegate <NSObject>
 
 - (void)didTapSubjectChip:(TKMSubjectChip *)chip;
@@ -27,23 +33,24 @@
 @interface TKMSubjectChip : UIView
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
-                           font:(UIFont *)font
+                           font:(nullable UIFont *)font
                     showMeaning:(bool)showMeaning
                        delegate:(id<TKMSubjectChipDelegate>)delegate;
 
-- (instancetype)initWithSubject:(TKMSubject *)subject
-                           font:(UIFont *)font
+- (instancetype)initWithSubject:(nullable TKMSubject *)subject
+                           font:(nullable UIFont *)font
                        chipText:(NSAttributedString *)chipText
-                        sideText:(NSAttributedString *)sideText
-                   chipTextColor:(UIColor *)chipTextColor
-                    chipGradient:(NSArray<id> *)chipGradient
-                        delegate:(id<TKMSubjectChipDelegate>)delegate NS_DESIGNATED_INITIALIZER;
+                       sideText:(nullable NSAttributedString *)sideText
+                  chipTextColor:(UIColor *)chipTextColor
+                   chipGradient:(NSArray<id> *)chipGradient
+                       delegate:(id<TKMSubjectChipDelegate>)delegate NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 - (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 
-@property(nonatomic, readonly) TKMSubject *subject;
-@property(nonatomic, getter=isSelected) bool selected;
+@property(nonatomic, readonly, nullable) TKMSubject *subject;
 
 @end
+
+NS_ASSUME_NONNULL_END;

@@ -17,12 +17,14 @@
 #import "proto/Wanikani+Convenience.h"
 
 static const CGFloat kChipHeight = 28.f;
-static const CGFloat kLabelInset = 4.f;
-static const UIEdgeInsets kLabelEdgeInsets = {kLabelInset, kLabelInset, kLabelInset, kLabelInset};
+static const CGFloat kLabelInset = 6.f;
 static const CGFloat kLabelHeight = kChipHeight - kLabelInset*2;
 static const CGFloat kChipCornerRadius = 6.f;
 
-static const CGFloat kChipSpacing = 8.f;
+static const CGFloat kChipHorizontalSpacing = 8.f;
+
+const UIEdgeInsets kTKMSubjectChipCollectionEdgeInsets = {8.f, 16.f, 8.f, 16.f};
+static const CGFloat kChipVerticalSpacing = 3.f;
 
 static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
   NSMutableAttributedString *str =
@@ -32,7 +34,50 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
   CGRect rect = [str boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, kLabelHeight)
                                   options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                   context:nil];
-  return MAX(kChipHeight, rect.size.width);
+  return MAX(kLabelHeight, rect.size.width);
+}
+
+static void AlignChipFrames(NSMutableArray<NSValue *> *chipFrames, CGFloat width,
+                            NSUInteger *unalignedFrameIndex, NSTextAlignment alignment) {
+  if (alignment != NSTextAlignmentCenter) {
+    return;
+  }
+  CGFloat totalWidth = width - kTKMSubjectChipCollectionEdgeInsets.left * 2;
+  CGFloat chipTotalWidth = CGRectGetMaxX([chipFrames.lastObject CGRectValue]) -
+                           kTKMSubjectChipCollectionEdgeInsets.left;
+  CGFloat offset = (totalWidth - chipTotalWidth) / 2;
+  
+  for (NSUInteger i = *unalignedFrameIndex; i < chipFrames.count; ++i) {
+    CGRect rect = [chipFrames[i] CGRectValue];
+    rect.origin.x += offset;
+    [chipFrames replaceObjectAtIndex:i withObject:[NSValue valueWithCGRect:rect]];
+  }
+  *unalignedFrameIndex = chipFrames.count;
+}
+
+NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chips, CGFloat width,
+                                                  NSTextAlignment alignment) {
+  NSMutableArray<NSValue *> *chipFrames = [NSMutableArray array];
+  NSUInteger unalignedFrameIndex = 0;
+  
+  CGPoint origin = CGPointMake(kTKMSubjectChipCollectionEdgeInsets.left,
+                               kTKMSubjectChipCollectionEdgeInsets.top);
+  for (TKMSubjectChip *chip in chips) {
+    CGRect chipFrame = chip.frame;
+    chipFrame.origin = origin;
+    
+    if (CGRectGetMaxX(chipFrame) > width - kTKMSubjectChipCollectionEdgeInsets.right) {
+      AlignChipFrames(chipFrames, width, &unalignedFrameIndex, alignment);
+      chipFrame.origin.y += chipFrame.size.height + kChipVerticalSpacing;
+      chipFrame.origin.x = kTKMSubjectChipCollectionEdgeInsets.left;
+    }
+    
+    [chipFrames addObject:[NSValue valueWithCGRect:chipFrame]];
+    origin = CGPointMake(CGRectGetMaxX(chipFrame) + kChipHorizontalSpacing,
+                         chipFrame.origin.y);
+  }
+  AlignChipFrames(chipFrames, width, &unalignedFrameIndex, alignment);
+  return chipFrames;
 }
 
 @implementation TKMSubjectChip {
@@ -40,7 +85,7 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
 }
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
-                           font:(UIFont *)font
+                           font:(nullable UIFont *)font
                     showMeaning:(bool)showMeaning
                        delegate:(id<TKMSubjectChipDelegate>)delegate {
   NSAttributedString *japaneseText = [subject japaneseTextWithImageSize:kLabelHeight];
@@ -64,16 +109,18 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
   }
 }
 
-- (instancetype)initWithSubject:(TKMSubject *)subject
-                           font:(UIFont *)font
+- (instancetype)initWithSubject:(nullable TKMSubject *)subject
+                           font:(nullable UIFont *)font
                        chipText:(NSAttributedString *)chipText
-                       sideText:(NSAttributedString *)sideText
+                       sideText:(nullable NSAttributedString *)sideText
                   chipTextColor:(UIColor *)chipTextColor
                    chipGradient:(NSArray<id> *)chipGradient
                        delegate:(id<TKMSubjectChipDelegate>)delegate {
   UIFont *chipFont = [UIFont systemFontOfSize:kLabelHeight];
-  CGRect chipGradientFrame = CGRectMake(0, 0, TextWidth(chipText, chipFont), kChipHeight);
-  CGRect chipLabelFrame = UIEdgeInsetsInsetRect(chipGradientFrame, kLabelEdgeInsets);
+  CGRect chipLabelFrame = CGRectMake(kLabelInset, kLabelInset, TextWidth(chipText, chipFont), kLabelHeight);
+  CGRect chipGradientFrame = CGRectMake(0, 0,
+                                        CGRectGetMaxX(chipLabelFrame) + kLabelInset,
+                                        CGRectGetMaxY(chipLabelFrame) + kLabelInset);
   
   UILabel *chipLabel = [[UILabel alloc] initWithFrame:chipLabelFrame];
   chipLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
@@ -96,8 +143,8 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
   UILabel *sideTextLabel = nil;
   if (sideText) {
     CGRect sideTextFrame =
-        CGRectMake(CGRectGetMaxX(chipGradientFrame) + kChipSpacing, 0,
-                   TextWidth(sideText, font), kChipHeight);
+        CGRectMake(CGRectGetMaxX(chipGradientFrame) + kChipHorizontalSpacing, 0,
+                   TextWidth(sideText, font) + kChipHorizontalSpacing, kChipHeight);
     sideTextLabel = [[UILabel alloc] initWithFrame:sideTextFrame];
     sideTextLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
     sideTextLabel.attributedText = sideText;
@@ -127,14 +174,6 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
 
 - (void)handleTap:(UIGestureRecognizer *)gestureRecogniser {
   [_delegate didTapSubjectChip:self];
-}
-
-- (void)setSelected:(bool)selected {
-  self.backgroundColor = selected ? [UIColor colorWithWhite:0.9f alpha:1.f] : nil;
-}
-
-- (bool)isSelected {
-  return self.backgroundColor != nil;
 }
 
 @end
