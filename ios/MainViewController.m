@@ -40,8 +40,6 @@ static const int kUpcomingReviewsSection = 1;
 static const CGFloat kUserGradientYOffset = 450;
 static const CGFloat kUserGradientStartPoint = 0.8f;
 
-static const char *kDashboardURL = "https://www.wanikani.com/dashboard";
-
 static NSURL *UserProfileImageURL(NSString *emailAddress) {
   emailAddress = [emailAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
   emailAddress = [emailAddress lowercaseString];
@@ -339,10 +337,6 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   [_searchController dismissViewControllerAnimated:YES completion:^{
     [self.navigationController pushViewController:vc animated:YES];
   }];
-}
-
-- (IBAction)didTapOpenDashboard:(id)sender {
-  TKMOpenURL([NSURL URLWithString:@(kDashboardURL)]);
 }
 
 @end
