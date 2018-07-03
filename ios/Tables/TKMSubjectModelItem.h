@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "TKMModelItem.h"
+#import "TKMSubjectChip.h"
 #import "TKMSubjectDelegate.h"
 #import "proto/Wanikani.pbobjc.h"
 
@@ -43,14 +44,14 @@ NS_ASSUME_NONNULL_BEGIN;
 
 - (instancetype)initWithSubjects:(GPBInt32Array *)subjects
                       dataLoader:(DataLoader *)dataLoader
-                        delegate:(id<TKMSubjectDelegate>)delegate NS_DESIGNATED_INITIALIZER;
+                        delegate:(id<TKMSubjectChipDelegate>)delegate NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic, copy) GPBInt32Array *subjects;
 @property(nonatomic, nullable) UIFont *font;
 @property(nonatomic) DataLoader *dataLoader;
-@property(nonatomic, weak) id<TKMSubjectDelegate> delegate;
+@property(nonatomic, weak) id<TKMSubjectChipDelegate> delegate;
 
 @end
 

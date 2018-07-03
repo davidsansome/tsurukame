@@ -125,7 +125,7 @@ static UIFont *kIncorrectFont;
 
 - (instancetype)initWithSubjects:(GPBInt32Array *)subjects
                       dataLoader:(DataLoader *)dataLoader
-                        delegate:(id<TKMSubjectDelegate>)delegate {
+                        delegate:(id<TKMSubjectChipDelegate>)delegate {
   self = [super init];
   if (self) {
     _subjects = subjects;
@@ -177,6 +177,8 @@ static NSArray<NSValue *> *CalculateChipFrames(NSArray<TKMSubjectChip *> *chips,
 
 - (void)updateWithItem:(TKMSubjectCollectionModelItem *)item {
   [super updateWithItem:item];
+  
+  self.selectionStyle = UITableViewCellSelectionStyleNone;
   
   // Remove all existing chips.
   for (TKMSubjectChip *chip in _chips) {

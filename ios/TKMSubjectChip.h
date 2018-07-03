@@ -18,12 +18,18 @@
 
 @class TKMSubjectChip;
 
+@protocol TKMSubjectChipDelegate <NSObject>
+
+- (void)didTapSubjectChip:(TKMSubjectChip *)chip;
+
+@end
+
 @interface TKMSubjectChip : UIView
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
                            font:(UIFont *)font
                     showMeaning:(bool)showMeaning
-                       delegate:(id<TKMSubjectDelegate>)delegate;
+                       delegate:(id<TKMSubjectChipDelegate>)delegate;
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
                            font:(UIFont *)font
@@ -31,10 +37,13 @@
                         sideText:(NSAttributedString *)sideText
                    chipTextColor:(UIColor *)chipTextColor
                     chipGradient:(NSArray<id> *)chipGradient
-                        delegate:(id<TKMSubjectDelegate>)delegate NS_DESIGNATED_INITIALIZER;
+                        delegate:(id<TKMSubjectChipDelegate>)delegate NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 - (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+
+@property(nonatomic, readonly) TKMSubject *subject;
+@property(nonatomic, getter=isSelected) bool selected;
 
 @end

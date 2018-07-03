@@ -26,11 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<TKMSubjectDelegate> subjectDelegate;
 @property (nonatomic) bool showHints;
 
-@property (nonatomic, readonly) TKMSubject *lastSubjectClicked;
-
 - (void)updateWithSubject:(TKMSubject *)subject
            studyMaterials:(TKMStudyMaterials *)studyMaterials
                assignment:(nullable TKMAssignment *)assignment;
+
+- (void)deselectLastSubjectChipTapped;
 
 @end
 

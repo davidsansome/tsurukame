@@ -65,6 +65,11 @@
   self.navigationController.navigationBarHidden = YES;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+  [_subjectDetailsView deselectLastSubjectChipTapped];
+}
+
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
   _gradientLayer.frame =
