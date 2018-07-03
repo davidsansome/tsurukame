@@ -14,7 +14,8 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol NavigationControllerDelegate <NSObject>
+@protocol TKMViewController <NSObject>
+@optional
 - (bool)canSwipeToGoBack;
 @end
 

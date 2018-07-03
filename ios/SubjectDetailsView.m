@@ -92,6 +92,9 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   return JoinAttributedStringArray(strings, @", ");
 }
 
+@interface TKMSubjectDetailsView ()
+@end
+
 @implementation TKMSubjectDetailsView {
   NSDateFormatter *_availableDateFormatter;
   NSDateFormatter *_startedDateFormatter;

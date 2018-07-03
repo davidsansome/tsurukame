@@ -150,9 +150,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   }
   
   // Add shadows to things in the user info view.
-  TKMAddShadowToView(_userImageContainer, 2, 0.4, 4);
-  TKMAddShadowToView(_userNameLabel, 1, 0.4, 4);
-  TKMAddShadowToView(_userLevelLabel, 1, 0.2, 2);
+  TKMAddShadowToView(_userImageContainer, 2.f, 0.4f, 4.f);
+  TKMAddShadowToView(_userNameLabel, 1.f, 0.4f, 4.f);
+  TKMAddShadowToView(_userLevelLabel, 1.f, 0.2f, 2.f);
   
   // Set rounded corners on the user image.
   CGFloat cornerRadius = _userImageContainer.bounds.size.height / 2;
