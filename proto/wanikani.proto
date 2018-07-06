@@ -168,7 +168,11 @@ message FormattedText {
     JAPANESE = 3;
     READING = 4;
     VOCABULARY = 5;
+    ITALIC = 6;
+    BOLD = 7;
+    LINK = 8;
   }
   repeated Format format = 1;
   optional string text = 2;
+  optional string link_url = 3;
 }
