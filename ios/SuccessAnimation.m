@@ -257,6 +257,9 @@ void RunSuccessAnimation(UIView *answerField,
   if (isSubjectFinished && didLevelUp && UserDefaults.animateLevelUpPopup) {
     UIColor *srsLevelColor;
     switch (newSrsLevel) {
+      case 2:
+        srsLevelColor = [UIColor colorWithRed:0.867 green:0 blue:0.576 alpha:1]; // #dd0093;
+        break;
       case 5:
         srsLevelColor = [UIColor colorWithRed:0.533 green:0.176 blue:0.62 alpha:1]; // #882d9e
         break;
