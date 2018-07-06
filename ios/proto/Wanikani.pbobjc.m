@@ -1288,11 +1288,13 @@ typedef struct TKMSubjectOverrides__storage_ {
 
 @dynamic formatArray, formatArray_Count;
 @dynamic hasText, text;
+@dynamic hasLinkURL, linkURL;
 
 typedef struct TKMFormattedText__storage_ {
   uint32_t _has_storage_[1];
   GPBEnumArray *formatArray;
   NSString *text;
+  NSString *linkURL;
 } TKMFormattedText__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1319,6 +1321,15 @@ typedef struct TKMFormattedText__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "linkURL",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMFormattedText_FieldNumber_LinkURL,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TKMFormattedText__storage_, linkURL),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[TKMFormattedText class]
@@ -1328,6 +1339,11 @@ typedef struct TKMFormattedText__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMFormattedText__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\003\004\241!!\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -1343,13 +1359,16 @@ GPBEnumDescriptor *TKMFormattedText_Format_EnumDescriptor(void) {
   if (!descriptor) {
     static const char *valueNames =
         "Radical\000Kanji\000Japanese\000Reading\000Vocabular"
-        "y\000";
+        "y\000Italic\000Bold\000Link\000";
     static const int32_t values[] = {
         TKMFormattedText_Format_Radical,
         TKMFormattedText_Format_Kanji,
         TKMFormattedText_Format_Japanese,
         TKMFormattedText_Format_Reading,
         TKMFormattedText_Format_Vocabulary,
+        TKMFormattedText_Format_Italic,
+        TKMFormattedText_Format_Bold,
+        TKMFormattedText_Format_Link,
     };
     GPBEnumDescriptor *worker =
         [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(TKMFormattedText_Format)
@@ -1371,6 +1390,9 @@ BOOL TKMFormattedText_Format_IsValidValue(int32_t value__) {
     case TKMFormattedText_Format_Japanese:
     case TKMFormattedText_Format_Reading:
     case TKMFormattedText_Format_Vocabulary:
+    case TKMFormattedText_Format_Italic:
+    case TKMFormattedText_Format_Bold:
+    case TKMFormattedText_Format_Link:
       return YES;
     default:
       return NO;
