@@ -546,9 +546,6 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
-				6392DBA820D14997003019EB /* TKMSubjectDelegate.h */,
-				6392DBA520D14915003019EB /* TKMSubjectChip.h */,
-				6392DBA620D14915003019EB /* TKMSubjectChip.m */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -580,6 +577,8 @@
 				63BDA9A6200E04E500D75DA2 /* NavigationController.m */,
 				633DE9362094DDA900AC25F4 /* NSMutableArray+Shuffle.h */,
 				633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */,
+				6392DBA920DBB841003019EB /* NSMutableAttributedString+Replacements.h */,
+				6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */,
 				63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */,
 				63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */,
 				6319C99E204015B900C31F87 /* NSString+MD5.h */,
@@ -607,8 +606,6 @@
 				63A2375D1FE9225700C48657 /* Style.m */,
 				6356E77F1FDFEFAB009CE7C1 /* SubjectDetailsView.h */,
 				6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */,
-				6392DBA920DBB841003019EB /* NSMutableAttributedString+Replacements.h */,
-				6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */,
 				63B1DE3F1FE7D81600FAB9C2 /* SubjectDetailsViewController.h */,
 				63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */,
 				63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */,
@@ -617,6 +614,9 @@
 				63CAAA961FC6E04400E09DA1 /* third_party */,
 				633DE95B20C5635900AC25F4 /* TKMKanaInput.h */,
 				633DE95920C5635900AC25F4 /* TKMKanaInput.m */,
+				6392DBA520D14915003019EB /* TKMSubjectChip.h */,
+				6392DBA620D14915003019EB /* TKMSubjectChip.m */,
+				6392DBA820D14997003019EB /* TKMSubjectDelegate.h */,
 				63A2375F1FE9264300C48657 /* UIColor+HexString.h */,
 				63A237601FE9264300C48657 /* UIColor+HexString.m */,
 				6319C9A120426EBA00C31F87 /* UpcomingReviewsChartController.h */,

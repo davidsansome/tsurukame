@@ -51,6 +51,8 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
 
 @property(nonatomic, readonly, nullable) TKMSubject *subject;
 
+@property(nonatomic, getter=isDimmed) bool dimmed;
+
 @end
 
 NS_ASSUME_NONNULL_END;
