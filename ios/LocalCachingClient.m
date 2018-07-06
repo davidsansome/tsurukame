@@ -23,6 +23,8 @@ NSNotificationName kLocalCachingClientAvailableItemsChangedNotification =
     @"kLocalCachingClientAvailableItemsChangedNotification";
 NSNotificationName kLocalCachingClientPendingItemsChangedNotification = 
     @"kLocalCachingClientPendingItemsChangedNotification";
+NSNotificationName kLocalCachingClientUserInfoChangedNotification =
+    @"kLocalCachingClientUserInfoChangedNotification";
 
 static const char *kSchemaV1 =
     "CREATE TABLE sync ("
@@ -554,6 +556,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
       dispatch_group_notify(updateGroup, dispatch_get_main_queue(), ^{
         _busy = false;
         [self invalidateCachedAvailableSubjectCounts];
+        [self postNotificationOnMainThread:kLocalCachingClientUserInfoChangedNotification];
         if (completionHandler) {
           completionHandler();
         }
