@@ -26,6 +26,7 @@
 #import "UserDefaults.h"
 #import "TKMOpenURL.h"
 #import "proto/Wanikani+Convenience.h"
+#import "third_party/Haneke/Haneke.h"
 
 @class CombinedChartView;
 @class PieChartView;
@@ -278,23 +279,11 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 - (void)updateUserInfo {
   TKMUser *user = _localCachingClient.getUserInfo;
   
-  NSURLSession *session = [NSURLSession sharedSession];
-  NSURLRequest *req = [NSURLRequest requestWithURL:UserProfileImageURL([UserDefaults userEmailAddress])];
-  
-  NSURLSessionDataTask *task = [session dataTaskWithRequest:req
-                                          completionHandler:^(NSData * _Nullable data,
-                                                              NSURLResponse * _Nullable response,
-                                                              NSError * _Nullable error) {
-                                            if (error) {
-                                              NSLog(@"Error fetching profile photo: %@", error);
-                                              return;
-                                            }
-                                            UIImage *image = [UIImage imageWithData:data scale:[[UIScreen mainScreen] scale]];
-                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                              _userImageView.image = image;
-                                            });
-                                          }];
-  [task resume];
+  NSString *email = [UserDefaults userEmailAddress];
+  if (email.length) {
+    NSURL *imageURL = UserProfileImageURL(email);
+    [_userImageView hnk_setImageFromURL:imageURL];
+  }
   
   _userNameLabel.text = user.username;
   _userLevelLabel.text = [NSString stringWithFormat:@"Level %d \u00B7 started %@",

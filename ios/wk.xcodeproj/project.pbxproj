@@ -143,6 +143,14 @@
 		633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95420C5634A00AC25F4 /* TKMModelItem.m */; };
 		633DE95D20C5635A00AC25F4 /* TKMKanaInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95920C5635900AC25F4 /* TKMKanaInput.m */; };
 		633DE96120C5656B00AC25F4 /* TKMMarkupModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE96020C5656B00AC25F4 /* TKMMarkupModelItem.m */; };
+		63453E4920EF8C0500F20404 /* HNKCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 63453E3A20EF8C0400F20404 /* HNKCache.m */; };
+		63453E4A20EF8C0500F20404 /* UIImageView+Haneke.m in Sources */ = {isa = PBXBuildFile; fileRef = 63453E3B20EF8C0400F20404 /* UIImageView+Haneke.m */; };
+		63453E4B20EF8C0500F20404 /* HNKDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 63453E3D20EF8C0400F20404 /* HNKDiskCache.m */; };
+		63453E4C20EF8C0500F20404 /* HNKSimpleFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 63453E3E20EF8C0400F20404 /* HNKSimpleFetcher.m */; };
+		63453E4D20EF8C0500F20404 /* UIView+Haneke.m in Sources */ = {isa = PBXBuildFile; fileRef = 63453E4120EF8C0400F20404 /* UIView+Haneke.m */; };
+		63453E4E20EF8C0500F20404 /* UIButton+Haneke.m in Sources */ = {isa = PBXBuildFile; fileRef = 63453E4220EF8C0400F20404 /* UIButton+Haneke.m */; };
+		63453E4F20EF8C0500F20404 /* HNKDiskFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 63453E4320EF8C0400F20404 /* HNKDiskFetcher.m */; };
+		63453E5020EF8C0500F20404 /* HNKNetworkFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 63453E4620EF8C0400F20404 /* HNKNetworkFetcher.m */; };
 		6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */; };
 		6356E7831FDFF0EA009CE7C1 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6356E7821FDFF0E3009CE7C1 /* WebKit.framework */; };
 		637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12D7203847BE009E92DB /* LessonsViewController.m */; };
@@ -382,6 +390,23 @@
 		633DE95B20C5635900AC25F4 /* TKMKanaInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMKanaInput.h; sourceTree = "<group>"; };
 		633DE95F20C5656B00AC25F4 /* TKMMarkupModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMMarkupModelItem.h; sourceTree = "<group>"; };
 		633DE96020C5656B00AC25F4 /* TKMMarkupModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMMarkupModelItem.m; sourceTree = "<group>"; };
+		63453E3820EF8C0400F20404 /* UIButton+Haneke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Haneke.h"; sourceTree = "<group>"; };
+		63453E3920EF8C0400F20404 /* UIView+Haneke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Haneke.h"; sourceTree = "<group>"; };
+		63453E3A20EF8C0400F20404 /* HNKCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HNKCache.m; sourceTree = "<group>"; };
+		63453E3B20EF8C0400F20404 /* UIImageView+Haneke.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+Haneke.m"; sourceTree = "<group>"; };
+		63453E3C20EF8C0400F20404 /* HNKDiskFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HNKDiskFetcher.h; sourceTree = "<group>"; };
+		63453E3D20EF8C0400F20404 /* HNKDiskCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HNKDiskCache.m; sourceTree = "<group>"; };
+		63453E3E20EF8C0400F20404 /* HNKSimpleFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HNKSimpleFetcher.m; sourceTree = "<group>"; };
+		63453E3F20EF8C0400F20404 /* HNKNetworkFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HNKNetworkFetcher.h; sourceTree = "<group>"; };
+		63453E4020EF8C0400F20404 /* Haneke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Haneke.h; sourceTree = "<group>"; };
+		63453E4120EF8C0400F20404 /* UIView+Haneke.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Haneke.m"; sourceTree = "<group>"; };
+		63453E4220EF8C0400F20404 /* UIButton+Haneke.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Haneke.m"; sourceTree = "<group>"; };
+		63453E4320EF8C0400F20404 /* HNKDiskFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HNKDiskFetcher.m; sourceTree = "<group>"; };
+		63453E4420EF8C0400F20404 /* UIImageView+Haneke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+Haneke.h"; sourceTree = "<group>"; };
+		63453E4520EF8C0400F20404 /* HNKCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HNKCache.h; sourceTree = "<group>"; };
+		63453E4620EF8C0400F20404 /* HNKNetworkFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HNKNetworkFetcher.m; sourceTree = "<group>"; };
+		63453E4720EF8C0400F20404 /* HNKSimpleFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HNKSimpleFetcher.h; sourceTree = "<group>"; };
+		63453E4820EF8C0400F20404 /* HNKDiskCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HNKDiskCache.h; sourceTree = "<group>"; };
 		6356E77F1FDFEFAB009CE7C1 /* SubjectDetailsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectDetailsView.h; sourceTree = "<group>"; };
 		6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectDetailsView.m; sourceTree = "<group>"; };
 		6356E7821FDFF0E3009CE7C1 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -809,9 +834,35 @@
 			path = Tables;
 			sourceTree = "<group>";
 		};
+		63453E3720EF8C0400F20404 /* Haneke */ = {
+			isa = PBXGroup;
+			children = (
+				63453E3820EF8C0400F20404 /* UIButton+Haneke.h */,
+				63453E3920EF8C0400F20404 /* UIView+Haneke.h */,
+				63453E3A20EF8C0400F20404 /* HNKCache.m */,
+				63453E3B20EF8C0400F20404 /* UIImageView+Haneke.m */,
+				63453E3C20EF8C0400F20404 /* HNKDiskFetcher.h */,
+				63453E3D20EF8C0400F20404 /* HNKDiskCache.m */,
+				63453E3E20EF8C0400F20404 /* HNKSimpleFetcher.m */,
+				63453E3F20EF8C0400F20404 /* HNKNetworkFetcher.h */,
+				63453E4020EF8C0400F20404 /* Haneke.h */,
+				63453E4120EF8C0400F20404 /* UIView+Haneke.m */,
+				63453E4220EF8C0400F20404 /* UIButton+Haneke.m */,
+				63453E4320EF8C0400F20404 /* HNKDiskFetcher.m */,
+				63453E4420EF8C0400F20404 /* UIImageView+Haneke.h */,
+				63453E4520EF8C0400F20404 /* HNKCache.h */,
+				63453E4620EF8C0400F20404 /* HNKNetworkFetcher.m */,
+				63453E4720EF8C0400F20404 /* HNKSimpleFetcher.h */,
+				63453E4820EF8C0400F20404 /* HNKDiskCache.h */,
+			);
+			name = Haneke;
+			path = third_party/Haneke;
+			sourceTree = SOURCE_ROOT;
+		};
 		63CAAA961FC6E04400E09DA1 /* third_party */ = {
 			isa = PBXGroup;
 			children = (
+				63453E3720EF8C0400F20404 /* Haneke */,
 				6319C9B620441DF800C31F87 /* Charts */,
 				6319C9A420441D2200C31F87 /* FMDB */,
 				63CAAA971FC6E05000E09DA1 /* protobuf */,
@@ -1030,6 +1081,7 @@
 				63B1DE3E1FE7CF5E00FAB9C2 /* ReviewSummaryCell.m in Sources */,
 				6319CA932044203E00C31F87 /* IHighlighter.swift in Sources */,
 				6319CAD12044203E00C31F87 /* ChartAnimationEasing.swift in Sources */,
+				63453E4F20EF8C0500F20404 /* HNKDiskFetcher.m in Sources */,
 				63CAAAED1FC6E1D400E09DA1 /* GPBCodedInputStream.m in Sources */,
 				6319CADB2044203E00C31F87 /* LineChartView.swift in Sources */,
 				63CAAAEE1FC6E1D400E09DA1 /* GPBCodedOutputStream.m in Sources */,
@@ -1043,6 +1095,7 @@
 				63B1DE411FE7D81600FAB9C2 /* SubjectDetailsViewController.m in Sources */,
 				6319CAC72044203E00C31F87 /* ChartLimitLine.swift in Sources */,
 				63CAAACC1FC6E0BA00E09DA1 /* Type.pbobjc.m in Sources */,
+				63453E4B20EF8C0500F20404 /* HNKDiskCache.m in Sources */,
 				6319CA9A2044203E00C31F87 /* HorizontalBarChartView.swift in Sources */,
 				6319CB3120442A5D00C31F87 /* ILineScatterCandleRadarChartDataSet.swift in Sources */,
 				63EDA41B207F335500382CE3 /* PieChartDataSet.swift in Sources */,
@@ -1052,12 +1105,14 @@
 				63CAAAF31FC6E1D400E09DA1 /* GPBWellKnownTypes.m in Sources */,
 				6319CB1A204429E200C31F87 /* BubbleChartData.swift in Sources */,
 				6319CAAA2044203E00C31F87 /* YAxisRendererHorizontalBarChart.swift in Sources */,
+				63453E4C20EF8C0500F20404 /* HNKSimpleFetcher.m in Sources */,
 				6319CB17204429E200C31F87 /* CandleChartDataSet.swift in Sources */,
 				63EDA429207F335500382CE3 /* RadarChartView.swift in Sources */,
 				6319CADA2044203E00C31F87 /* LineChartDataSet.swift in Sources */,
 				633632EF201F3490006D582B /* UserDefaults.m in Sources */,
 				6319CA842044203E00C31F87 /* XAxisRenderer.swift in Sources */,
 				63CAAAF41FC6E1D400E09DA1 /* GPBWireFormat.m in Sources */,
+				63453E4A20EF8C0500F20404 /* UIImageView+Haneke.m in Sources */,
 				6319CB29204429F400C31F87 /* ScatterChartDataSet.swift in Sources */,
 				63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */,
 				6319CAC42044203E00C31F87 /* BarLineScatterCandleBubbleChartDataSet.swift in Sources */,
@@ -1069,6 +1124,7 @@
 				6319CAF42044203F00C31F87 /* LegendRenderer.swift in Sources */,
 				63EDA41C207F335500382CE3 /* YAxisRendererRadarChart.swift in Sources */,
 				6319CAE42044203E00C31F87 /* XAxis.swift in Sources */,
+				63453E4D20EF8C0500F20404 /* UIView+Haneke.m in Sources */,
 				6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */,
 				6319CB2E20442A5D00C31F87 /* ICandleChartDataSet.swift in Sources */,
 				6319CB18204429E200C31F87 /* CandleChartDataProvider.swift in Sources */,
@@ -1114,6 +1170,7 @@
 				6319CAB12044203E00C31F87 /* ChartUtils.swift in Sources */,
 				6319CACB2044203E00C31F87 /* DefaultAxisValueFormatter.swift in Sources */,
 				6319CAD32044203E00C31F87 /* DefaultFillFormatter.swift in Sources */,
+				63453E4E20EF8C0500F20404 /* UIButton+Haneke.m in Sources */,
 				633DE9382094DDA900AC25F4 /* NSMutableArray+Shuffle.m in Sources */,
 				6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */,
 				6319CACF2044203E00C31F87 /* BarChartData.swift in Sources */,
@@ -1151,6 +1208,7 @@
 				6392DBAB20DBB841003019EB /* NSMutableAttributedString+Replacements.m in Sources */,
 				6319C9B320441D3800C31F87 /* FMDatabase.m in Sources */,
 				63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */,
+				63453E5020EF8C0500F20404 /* HNKNetworkFetcher.m in Sources */,
 				6319CAD22044203E00C31F87 /* ComponentBase.swift in Sources */,
 				6319CAAD2044203E00C31F87 /* ChartDataProvider.swift in Sources */,
 				63CAAAEA1FC6E1D400E09DA1 /* GPBUtilities.m in Sources */,
@@ -1208,6 +1266,7 @@
 				6319CAFA2044203F00C31F87 /* LineChartRenderer.swift in Sources */,
 				6319CADD2044203E00C31F87 /* XAxisRendererHorizontalBarChart.swift in Sources */,
 				6319CB3020442A5D00C31F87 /* IBubbleChartDataSet.swift in Sources */,
+				63453E4920EF8C0500F20404 /* HNKCache.m in Sources */,
 				63CAAAEC1FC6E1D400E09DA1 /* GPBUnknownField.m in Sources */,
 				6319CAE62044203E00C31F87 /* ChevronUpShapeRenderer.swift in Sources */,
 				6319CAC22044203E00C31F87 /* HorizontalBarHighlighter.swift in Sources */,
