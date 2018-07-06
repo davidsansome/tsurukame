@@ -14,6 +14,8 @@
 
 #import "TKMAttributedModelItem.h"
 
+static const UIEdgeInsets kEdgeInsets = {8.f, 16.f, 8.f, 16.f};
+
 @interface TKMAttributedModelCell : TKMModelCell
 @end
 
@@ -23,7 +25,6 @@
   self = [super init];
   if (self) {
     _text = text;
-    _numberOfLines = 0;
   }
   return self;
 }
@@ -34,15 +35,43 @@
 
 @end
 
-@implementation TKMAttributedModelCell
+@implementation TKMAttributedModelCell {
+  UITextView *_textView;
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+  self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+  if (self) {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    self.userInteractionEnabled = YES;
+    
+    _textView = [[UITextView alloc] initWithFrame:self.bounds];
+    _textView.editable = NO;
+    _textView.scrollEnabled = NO;
+    _textView.textContainerInset = UIEdgeInsetsZero;
+    _textView.textContainer.lineFragmentPadding = 0.f;
+    
+    [self.contentView addSubview:_textView];
+  }
+  return self;
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+  CGSize availableSize = CGSizeMake(size.width - kEdgeInsets.left - kEdgeInsets.right,
+                                    size.height - kEdgeInsets.top - kEdgeInsets.bottom);
+  CGSize textViewSize = [_textView sizeThatFits:availableSize];
+  return CGSizeMake(textViewSize.width + kEdgeInsets.left + kEdgeInsets.right,
+                    textViewSize.height + kEdgeInsets.top + kEdgeInsets.bottom);
+}
+
+- (void)layoutSubviews {
+  _textView.frame = UIEdgeInsetsInsetRect(self.bounds, kEdgeInsets);
+}
 
 - (void)updateWithItem:(TKMAttributedModelItem *)item {
   [super updateWithItem:item];
   
-  self.selectionStyle = UITableViewCellSelectionStyleNone;
-  
-  self.textLabel.attributedText = item.text;
-  self.textLabel.numberOfLines = item.numberOfLines;
+  _textView.attributedText = item.text;
 }
 
 @end

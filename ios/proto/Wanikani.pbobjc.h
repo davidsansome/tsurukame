@@ -112,6 +112,9 @@ typedef GPB_ENUM(TKMFormattedText_Format) {
   TKMFormattedText_Format_Japanese = 3,
   TKMFormattedText_Format_Reading = 4,
   TKMFormattedText_Format_Vocabulary = 5,
+  TKMFormattedText_Format_Italic = 6,
+  TKMFormattedText_Format_Bold = 7,
+  TKMFormattedText_Format_Link = 8,
 };
 
 GPBEnumDescriptor *TKMFormattedText_Format_EnumDescriptor(void);
@@ -547,6 +550,7 @@ typedef GPB_ENUM(TKMSubjectOverrides_FieldNumber) {
 typedef GPB_ENUM(TKMFormattedText_FieldNumber) {
   TKMFormattedText_FieldNumber_FormatArray = 1,
   TKMFormattedText_FieldNumber_Text = 2,
+  TKMFormattedText_FieldNumber_LinkURL = 3,
 };
 
 @interface TKMFormattedText : GPBMessage
@@ -559,6 +563,10 @@ typedef GPB_ENUM(TKMFormattedText_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *text;
 /** Test to see if @c text has been set. */
 @property(nonatomic, readwrite) BOOL hasText;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *linkURL;
+/** Test to see if @c linkURL has been set. */
+@property(nonatomic, readwrite) BOOL hasLinkURL;
 
 @end
 

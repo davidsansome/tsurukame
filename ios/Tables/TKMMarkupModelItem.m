@@ -38,6 +38,19 @@ static NSAttributedString *AttributedStringForFormattedText(TKMFormattedText *fo
         break;
       case TKMFormattedText_Format_Japanese:
         break;
+      case TKMFormattedText_Format_Bold: {
+        UIFont *font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+        [attributes setValue:font forKey:NSFontAttributeName];
+        break;
+      }
+      case TKMFormattedText_Format_Italic: {
+        UIFont *font = [UIFont italicSystemFontOfSize:[UIFont systemFontSize]];
+        [attributes setValue:font forKey:NSFontAttributeName];
+        break;
+      }
+      case TKMFormattedText_Format_Link:
+        [attributes setValue:formattedText.linkURL forKey:NSLinkAttributeName];
+        break;
     }
   }
   

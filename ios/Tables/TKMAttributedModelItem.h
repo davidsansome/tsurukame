@@ -21,6 +21,5 @@
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic) NSAttributedString *text;
-@property(nonatomic) int numberOfLines;
 
 @end
