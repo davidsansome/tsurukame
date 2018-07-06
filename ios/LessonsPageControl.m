@@ -65,11 +65,16 @@
   [self addSubview:quizChip];
   [_chips addObject:quizChip];
   
+  self.currentPageIndex = _currentPageIndex;
+  
   [self setNeedsLayout];
 }
 
 - (void)setCurrentPageIndex:(NSInteger)index {
   _currentPageIndex = index;
+  for (int i = 0; i < _chips.count; ++i) {
+    _chips[i].dimmed = i != index;
+  }
 }
 
 - (void)layoutSubviews {
@@ -95,7 +100,7 @@
 - (void)didTapSubjectChip:(TKMSubjectChip *)chip {
   for (int i = 0; i < _chips.count; ++i) {
     if (_chips[i] == chip) {
-      _currentPageIndex = i;
+      self.currentPageIndex = i;
       [self sendActionsForControlEvents:UIControlEventValueChanged];
       break;
     }

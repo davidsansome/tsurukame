@@ -82,6 +82,8 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
 
 @implementation TKMSubjectChip {
   __weak id<TKMSubjectChipDelegate> _delegate;
+  
+  __weak UIView *_gradientView;
 }
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
@@ -137,6 +139,7 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
   gradientLayer.masksToBounds = YES;
   gradientLayer.colors = chipGradient;
   [gradientView.layer insertSublayer:gradientLayer atIndex:0];
+  _gradientView = gradientView;
   
   CGRect totalFrame = chipGradientFrame;
   
@@ -174,6 +177,14 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
 
 - (void)handleTap:(UIGestureRecognizer *)gestureRecogniser {
   [_delegate didTapSubjectChip:self];
+}
+
+- (void)setDimmed:(bool)dimmed {
+  _gradientView.alpha = dimmed ? 0.5f : 1.f;
+}
+
+- (bool)isDimmed {
+  return _gradientView.alpha < 0.75f;
 }
 
 @end
