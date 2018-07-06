@@ -40,6 +40,7 @@ static const int kUpcomingReviewsSection = 1;
 static const CGFloat kUserGradientYOffset = 450;
 static const CGFloat kUserGradientStartPoint = 0.8f;
 
+
 static NSURL *UserProfileImageURL(NSString *emailAddress) {
   emailAddress = [emailAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
   emailAddress = [emailAddress lowercaseString];
@@ -182,6 +183,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
          selector:@selector(pendingItemsChanged)
              name:kLocalCachingClientPendingItemsChangedNotification
            object:_localCachingClient];
+  [nc addObserver:self
+         selector:@selector(userInfoChanged)
+             name:kLocalCachingClientUserInfoChangedNotification
+           object:_localCachingClient];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -264,6 +269,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   [_currentLevelRadicalsChartController update:maxLevelAssignments];
   [_currentLevelKanjiChartController update:maxLevelAssignments];
   [_currentLevelVocabularyChartController update:maxLevelAssignments];
+}
+
+- (void)userInfoChanged {
+  [self updateUserInfo];
 }
 
 - (void)updateUserInfo {

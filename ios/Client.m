@@ -646,7 +646,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 - (void)getUserInfo:(UserInfoHandler)handler {
   NSURLComponents *url =
-  [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/user", kURLBase]];
+      [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/user", kURLBase]];
   
   [self startPagedQueryFor:url.URL handler:^(NSDictionary *data, NSError *error) {
     if (error) {
