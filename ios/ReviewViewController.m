@@ -388,6 +388,7 @@ static UIColor *kDefaultButtonTintColor;
   NSString *taskTypePrompt;
   NSArray *promptGradient;
   UIColor *promptTextColor;
+  NSString *taskTypePlaceholder;
   
   switch (_activeTask.assignment.subjectType) {
     case TKMSubject_Type_Kanji:
@@ -406,12 +407,14 @@ static UIColor *kDefaultButtonTintColor;
       taskTypePrompt = @"Meaning";
       promptGradient = kMeaningGradient;
       promptTextColor = kMeaningTextColor;
+      taskTypePlaceholder = @"Your Response";
       break;
     case kTKMTaskTypeReading:
       _kanaInput.enabled = true;
       taskTypePrompt = @"Reading";
       promptGradient = kReadingGradient;
       promptTextColor = kReadingTextColor;
+      taskTypePlaceholder = @"答え";
       break;
     case kTKMTaskType_Max:
       assert(false);
@@ -426,23 +429,14 @@ static UIColor *kDefaultButtonTintColor;
   
   // Animate the text labels.
   UIViewAnimationOptions options = UIViewAnimationOptionTransitionCrossDissolve;
-  [UIView transitionWithView:self.successRateLabel duration:kAnimationDuration options:options animations:^{
+  [UIView animateWithDuration:kAnimationDuration delay:0.f options:options animations:^{
     _successRateLabel.text = successRateText;
-  } completion:nil];
-  [UIView transitionWithView:self.doneLabel duration:kAnimationDuration options:options animations:^{
     _doneLabel.text = doneText;
-  } completion:nil];
-  [UIView transitionWithView:self.queueLabel duration:kAnimationDuration options:options animations:^{
     _queueLabel.text = queueText;
-  } completion:nil];
-  [UIView transitionWithView:self.questionLabel duration:kAnimationDuration options:options animations:^{
     _questionLabel.attributedText = _activeSubject.japaneseText;
-  } completion:nil];
-  [UIView transitionWithView:self.promptLabel duration:kAnimationDuration options:options animations:^{
     _promptLabel.attributedText = prompt;
-  } completion:nil];
-  [UIView transitionWithView:self.answerField duration:kAnimationDuration options:options animations:^{
     _answerField.text = nil;
+    _answerField.placeholder = taskTypePlaceholder;
   } completion:nil];
   
   // Text color.
