@@ -67,6 +67,8 @@ static const CGFloat kMinimumHeight = 44.f;
 }
 
 - (void)layoutSubviews {
+  [super layoutSubviews];
+  
   CGRect availableRect = UIEdgeInsetsInsetRect(self.bounds, kEdgeInsets);
   CGSize textViewSize = [_textView sizeThatFits:availableRect.size];
   
