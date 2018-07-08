@@ -15,6 +15,7 @@
 #import "TKMAttributedModelItem.h"
 
 static const UIEdgeInsets kEdgeInsets = {8.f, 16.f, 8.f, 16.f};
+static const CGFloat kMinimumHeight = 44.f;
 
 @interface TKMAttributedModelCell : TKMModelCell
 @end
@@ -57,15 +58,25 @@ static const UIEdgeInsets kEdgeInsets = {8.f, 16.f, 8.f, 16.f};
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-  CGSize availableSize = CGSizeMake(size.width - kEdgeInsets.left - kEdgeInsets.right,
-                                    size.height - kEdgeInsets.top - kEdgeInsets.bottom);
-  CGSize textViewSize = [_textView sizeThatFits:availableSize];
-  return CGSizeMake(textViewSize.width + kEdgeInsets.left + kEdgeInsets.right,
-                    textViewSize.height + kEdgeInsets.top + kEdgeInsets.bottom);
+  CGRect availableRect = UIEdgeInsetsInsetRect(CGRectMake(0, 0, size.width, size.height), kEdgeInsets);
+  CGSize textViewSize = [_textView sizeThatFits:availableRect.size];
+  
+  availableRect.size.height = MAX(kMinimumHeight,
+                                  textViewSize.height + kEdgeInsets.top + kEdgeInsets.bottom);
+  return availableRect.size;
 }
 
 - (void)layoutSubviews {
-  _textView.frame = UIEdgeInsetsInsetRect(self.bounds, kEdgeInsets);
+  CGRect availableRect = UIEdgeInsetsInsetRect(self.bounds, kEdgeInsets);
+  CGSize textViewSize = [_textView sizeThatFits:availableRect.size];
+  
+  // Center the text view vertically.
+  if (textViewSize.height < availableRect.size.height) {
+    availableRect.origin.y += floor((availableRect.size.height - textViewSize.height) / 2.f);
+    availableRect.size = textViewSize;
+  }
+  
+  _textView.frame = availableRect;
 }
 
 - (void)updateWithItem:(TKMAttributedModelItem *)item {
