@@ -429,12 +429,22 @@ static UIColor *kDefaultButtonTintColor;
   
   // Animate the text labels.
   UIViewAnimationOptions options = UIViewAnimationOptionTransitionCrossDissolve;
-  [UIView animateWithDuration:kAnimationDuration delay:0.f options:options animations:^{
+  [UIView transitionWithView:self.successRateLabel duration:kAnimationDuration options:options animations:^{
     _successRateLabel.text = successRateText;
+  } completion:nil];
+  [UIView transitionWithView:self.doneLabel duration:kAnimationDuration options:options animations:^{
     _doneLabel.text = doneText;
+  } completion:nil];
+  [UIView transitionWithView:self.queueLabel duration:kAnimationDuration options:options animations:^{
     _queueLabel.text = queueText;
+  } completion:nil];
+  [UIView transitionWithView:self.questionLabel duration:kAnimationDuration options:options animations:^{
     _questionLabel.attributedText = _activeSubject.japaneseText;
+  } completion:nil];
+  [UIView transitionWithView:self.promptLabel duration:kAnimationDuration options:options animations:^{
     _promptLabel.attributedText = prompt;
+  } completion:nil];
+  [UIView transitionWithView:self.answerField duration:kAnimationDuration options:options animations:^{
     _answerField.text = nil;
     _answerField.placeholder = taskTypePlaceholder;
   } completion:nil];
