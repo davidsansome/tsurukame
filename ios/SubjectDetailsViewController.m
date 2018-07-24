@@ -50,7 +50,7 @@
                           studyMaterials:studyMaterials
                               assignment:assignment];
   
-  _subjectTitle.attributedText = _subject.japaneseText;
+  _subjectTitle.attributedText = [_subject japaneseTextWithImageSize:40.f];
   _gradientLayer = [CAGradientLayer layer];
   _gradientLayer.colors = TKMGradientForSubject(_subject);
   [self.view.layer insertSublayer:_gradientLayer atIndex:0];
