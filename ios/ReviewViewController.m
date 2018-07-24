@@ -662,8 +662,11 @@ typedef enum : NSUInteger {
 }
 
 - (void)submit {
-  TKMAnswerCheckerResult result = CheckAnswer(_answerField.text, _activeSubject,
-                                             _activeStudyMaterials, _activeTaskType, _dataLoader);
+  NSString *answer = [_answerField.text copy];
+  TKMAnswerCheckerResult result = CheckAnswer(&answer, _activeSubject,
+                                              _activeStudyMaterials, _activeTaskType, _dataLoader);
+  _answerField.text = answer;
+  
   switch (result) {
     case kTKMAnswerPrecise:
     case kTKMAnswerImprecise: {

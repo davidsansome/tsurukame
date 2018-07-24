@@ -26,7 +26,7 @@ typedef NS_ENUM(NSInteger, TKMAnswerCheckerResult) {
   kTKMAnswerIncorrect,
 };
 
-extern TKMAnswerCheckerResult CheckAnswer(NSString *answer,
+extern TKMAnswerCheckerResult CheckAnswer(NSString **answer,
                                          TKMSubject *subject,
                                          TKMStudyMaterials *studyMaterials,
                                          TKMTaskType taskType,
