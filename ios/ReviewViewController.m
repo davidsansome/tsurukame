@@ -39,6 +39,12 @@ static UIColor *kReadingTextColor;
 static UIColor *kMeaningTextColor;
 static UIColor *kDefaultButtonTintColor;
 
+typedef enum : NSUInteger {
+  TKMAnswerCorrect,
+  TKMAnswerIncorrect,
+  TKMOverrideAnswerCorrect,
+  TKMIgnoreAnswer,
+} TKMAnswerResult;
 
 @interface ReviewViewController () <UITextFieldDelegate, TKMSubjectDelegate>
 
@@ -661,11 +667,11 @@ static UIColor *kDefaultButtonTintColor;
   switch (result) {
     case kTKMAnswerPrecise:
     case kTKMAnswerImprecise: {
-      [self markAnswer:true remark:false];
+      [self markAnswer:TKMAnswerCorrect];
       break;
     }
     case kTKMAnswerIncorrect:
-      [self markAnswer:false remark:false];
+      [self markAnswer:TKMAnswerIncorrect];
       break;
     case kTKMAnswerOtherKanjiReading:
       [self shakeView:_answerField];
@@ -687,26 +693,38 @@ static UIColor *kDefaultButtonTintColor;
   [view.layer addAnimation:animation forKey:nil];
 }
 
-- (void)markAnswer:(bool)correct remark:(bool)remark {
+- (void)markAnswer:(TKMAnswerResult)result {
+  const bool correct = result == TKMAnswerCorrect || result == TKMOverrideAnswerCorrect;
+  
   if (correct) {
     [_hapticGenerator impactOccurred];
     [_hapticGenerator prepare];
   }
   
   // Mark the task.
-  bool firstTimeWrong = true;
+  bool firstTimeWrong = false;
   switch (_activeTaskType) {
     case kTKMTaskTypeMeaning:
-      firstTimeWrong = !_activeTask.answer.hasMeaningWrong;
-      if (remark || firstTimeWrong) {
-        _activeTask.answer.meaningWrong = !correct;
+      if (result == TKMIgnoreAnswer) {
+        _activeTask.answer.meaningWrong = false;
+        _activeTask.answer.hasMeaningWrong = false;
+      } else {
+        firstTimeWrong = !_activeTask.answer.hasMeaningWrong;
+        if (firstTimeWrong || result == TKMOverrideAnswerCorrect) {
+          _activeTask.answer.meaningWrong = !correct;
+        }
       }
       _activeTask.answeredMeaning = correct;
       break;
     case kTKMTaskTypeReading:
-      firstTimeWrong = !_activeTask.answer.hasReadingWrong;
-      if (remark || firstTimeWrong) {
-        _activeTask.answer.readingWrong = !correct;
+      if (result == TKMIgnoreAnswer) {
+        _activeTask.answer.readingWrong = false;
+        _activeTask.answer.hasReadingWrong = false;
+      } else {
+        firstTimeWrong = !_activeTask.answer.hasReadingWrong;
+        if (firstTimeWrong || result == TKMOverrideAnswerCorrect) {
+          _activeTask.answer.readingWrong = !correct;
+        }
       }
       _activeTask.answeredReading = correct;
       break;
@@ -715,11 +733,23 @@ static UIColor *kDefaultButtonTintColor;
   }
   
   // Update stats.
-  if (!remark) {
-    _tasksAnswered ++;
-  }
-  if (correct) {
-    _tasksAnsweredCorrectly ++;
+  switch (result) {
+    case TKMAnswerCorrect:
+      _tasksAnswered ++;
+      _tasksAnsweredCorrectly ++;
+      break;
+      
+    case TKMAnswerIncorrect:
+      _tasksAnswered ++;
+      break;
+      
+    case TKMIgnoreAnswer:
+      _tasksAnswered --;
+      break;
+      
+    case TKMOverrideAnswerCorrect:
+      _tasksAnsweredCorrectly ++;
+      break;
   }
   
   // Remove it from the active queue if that was the last part.
@@ -736,14 +766,16 @@ static UIColor *kDefaultButtonTintColor;
   }
   
   // Show a new task if it was correct.
-  if (correct) {
+  if (result != TKMAnswerIncorrect) {
     UILabel *previousSubjectLabel = nil;
     if (isSubjectFinished && [_delegate reviewViewControllerShowsSubjectHistory:self]) {
       previousSubjectLabel = [self copyQuestionLabel];
       _previousSubject = _activeSubject;
     }
     [self randomTask];
-    RunSuccessAnimation(_answerField, _doneLabel, isSubjectFinished, didLevelUp, newSrsStage);
+    if (correct) {
+      RunSuccessAnimation(_answerField, _doneLabel, isSubjectFinished, didLevelUp, newSrsStage);
+    }
     if (previousSubjectLabel != nil) {
       [self animateLabelToPreviousSubjectButton:previousSubjectLabel];
     }
@@ -788,12 +820,20 @@ static UIColor *kDefaultButtonTintColor;
   c.popoverPresentationController.sourceView = _addSynonymButton;
   c.popoverPresentationController.sourceRect = _addSynonymButton.bounds;
 
-  [c addAction:[UIAlertAction actionWithTitle:@"Ignore typo"
+  [c addAction:[UIAlertAction actionWithTitle:@"My answer was correct"
                                         style:UIAlertActionStyleDefault
                                       handler:^(UIAlertAction * _Nonnull action) {
                                         ReviewViewController *unsafeSelf = weakSelf;
                                         if (unsafeSelf) {
-                                          [unsafeSelf markAnswer:true remark:true];
+                                          [unsafeSelf markAnswer:TKMOverrideAnswerCorrect];
+                                        }
+                                      }]];
+  [c addAction:[UIAlertAction actionWithTitle:@"Ask again later"
+                                        style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction * _Nonnull action) {
+                                        ReviewViewController *unsafeSelf = weakSelf;
+                                        if (unsafeSelf) {
+                                          [unsafeSelf markAnswer:TKMIgnoreAnswer];
                                         }
                                       }]];
   if (_activeTaskType == kTKMTaskTypeMeaning) {
@@ -803,7 +843,7 @@ static UIColor *kDefaultButtonTintColor;
                                           ReviewViewController *unsafeSelf = weakSelf;
                                           if (unsafeSelf) {
                                             [unsafeSelf addSynonym];
-                                            [unsafeSelf markAnswer:true remark:true];
+                                            [unsafeSelf markAnswer:TKMOverrideAnswerCorrect];
                                           }
                                         }]];
   }
