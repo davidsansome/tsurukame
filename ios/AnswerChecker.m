@@ -99,27 +99,27 @@ static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
   return NO;
 }
 
-TKMAnswerCheckerResult CheckAnswer(NSString *answer,
+TKMAnswerCheckerResult CheckAnswer(NSString **answer,
                                   TKMSubject *subject,
                                   TKMStudyMaterials *studyMaterials,
                                   TKMTaskType taskType,
                                   DataLoader *dataLoader) {
-  answer = FormattedString(answer);
+  *answer = FormattedString(*answer);
   
   switch (taskType) {
     case kTKMTaskTypeReading:
-      answer = [answer stringByReplacingOccurrencesOfString:@"n" withString:@"ん"];
-      if (IsAsciiPresent(answer)) {
+      *answer = [*answer stringByReplacingOccurrencesOfString:@"n" withString:@"ん"];
+      if (IsAsciiPresent(*answer)) {
         return kTKMAnswerContainsInvalidCharacters;
       }
       
       for (TKMReading *reading in subject.primaryReadings) {
-        if ([reading.reading isEqualToString:answer]) {
+        if ([reading.reading isEqualToString:*answer]) {
           return kTKMAnswerPrecise;
         }
       }
       for (TKMReading *reading in subject.alternateReadings) {
-        if ([reading.reading isEqualToString:answer]) {
+        if ([reading.reading isEqualToString:*answer]) {
           return subject.hasKanji ? kTKMAnswerOtherKanjiReading : kTKMAnswerPrecise;
         }
       }
@@ -133,7 +133,7 @@ TKMAnswerCheckerResult CheckAnswer(NSString *answer,
           return kTKMAnswerOtherKanjiReading;
         }
       }
-      if (subject.hasVocabulary && MismatchingOkurigana(answer, subject.japanese)) {
+      if (subject.hasVocabulary && MismatchingOkurigana(*answer, subject.japanese)) {
         return kTKMAnswerOtherKanjiReading;
       }
       break;
@@ -148,13 +148,13 @@ TKMAnswerCheckerResult CheckAnswer(NSString *answer,
       
       for (NSString *meaning in meaningTexts) {
         NSString *meaningText = FormattedString(meaning);
-        if ([meaningText isEqualToString:answer]) {
+        if ([meaningText isEqualToString:*answer]) {
           return kTKMAnswerPrecise;
         }
       }
       for (NSString *meaning in meaningTexts) {
         NSString *meaningText = FormattedString(meaning);
-        int distance = [meaningText levenshteinDistanceTo:answer];
+        int distance = [meaningText levenshteinDistanceTo:*answer];
         int tolerance = DistanceTolerance(meaningText);
         if (distance <= tolerance) {
           return kTKMAnswerImprecise;
