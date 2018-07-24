@@ -279,6 +279,7 @@ typedef enum : NSUInteger {
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
   _viewDidAppearOnce = true;
+  [_subjectDetailsView deselectLastSubjectChipTapped];
   dispatch_async(dispatch_get_main_queue(), ^{
     [_answerField becomeFirstResponder];
   });
