@@ -397,6 +397,8 @@
                         <outlet property="currentLevelRadicalsPieChartView" destination="TPS-zV-AWU" id="lQ6-3p-umh"/>
                         <outlet property="currentLevelVocabularyPieChartView" destination="2D9-xR-5vE" id="SRs-YF-UIk"/>
                         <outlet property="lessonsCell" destination="cHi-TB-m7d" id="I2l-ag-Z07"/>
+                        <outlet property="queuedItemsLabel" destination="ZMS-Lu-tge" id="oYP-du-0GD"/>
+                        <outlet property="queuedItemsSubtitleLabel" destination="DCZ-py-fGX" id="23Q-AS-zU3"/>
                         <outlet property="reviewsCell" destination="GQA-UB-k55" id="BDV-S7-dFy"/>
                         <outlet property="searchButton" destination="9xb-Y6-h0m" id="5ay-Pl-LKZ"/>
                         <outlet property="settingsButton" destination="OWg-xT-QDr" id="PEr-ig-hIJ"/>
