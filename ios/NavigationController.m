@@ -16,33 +16,78 @@
 
 #import "Style.h"
 
-static const NSTimeInterval kPopTransitionDuration = 0.8f;
-
-// Starting horizontal offset for the incoming view.
-static const CGFloat kPopToViewHorizontalOffset = -60.f;
+#import <objc/runtime.h>
 
 // Speed (in points/sec) the user has to fling the view to finish the animation.
 static const CGFloat kVelocityThreshold = 60.f;
 
-// Shadow on the outgoing view.
-static const CGFloat kShadowOpacity = 0.25f;
-static const CGFloat kShadowRadius = 5.f;
+#pragma mark - UIPanGestureRecognizer hackery
+
+// Expose the internals of this private UIKit class.
+@interface UIGestureRecognizerTarget : NSObject
+@property (nonatomic, readonly) SEL action;
+@property (nonatomic, readonly) id target;
+@end
+
+// An object that looks enough like a UIPanGestureRecognizer to pass to UINavigationController's
+// builtin transition handler.
+@interface FakeGestureRecognizer : NSObject
+@end
+
+@implementation FakeGestureRecognizer {
+  UIPanGestureRecognizer *_delegate;
+  CGFloat _horizontalTranslation;
+}
+
+- (instancetype)initWithDelegate:(UIPanGestureRecognizer *)delegate
+           horizontalTranslation:(CGFloat)horizontalTranslation {
+  self = [super init];
+  if (self) {
+    _delegate = delegate;
+    _horizontalTranslation = horizontalTranslation;
+  }
+  return self;
+}
+
+- (UIView *)view {
+  return _delegate.view;
+}
+
+- (UIGestureRecognizerState)state {
+  return _delegate.state;
+}
+
+- (CGPoint)translationInView:(UIView *)view {
+  return CGPointMake(_horizontalTranslation, 0);
+}
+
+- (CGPoint)velocityInView:(UIView *)view {
+  return [_delegate velocityInView:view];
+}
+
+@end
+
+#pragma mark - NavigationController
 
 @interface NavigationController () <UIGestureRecognizerDelegate,
-                                    UIViewControllerAnimatedTransitioning,
                                     UINavigationControllerDelegate>
 @end
 
 @implementation NavigationController {
   bool _isPushingViewController;
   
-  UIPercentDrivenInteractiveTransition *_currentPopTransition;
+  UIGestureRecognizerTarget *_builtinPanGestureRecognizerTarget;
 }
 
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.delegate = self;
   self.interactivePopGestureRecognizer.delegate = self;
+  
+  // Get the target method of the UINavigationController's pop gesture recognizer.
+  Ivar targetsIVar = class_getInstanceVariable([UIGestureRecognizer class], "_targets");
+  NSArray *targets = object_getIvar(self.interactivePopGestureRecognizer, targetsIVar);
+  _builtinPanGestureRecognizerTarget = targets.firstObject;
 }
 
 #pragma mark - UIViewController
@@ -61,34 +106,21 @@ static const CGFloat kShadowRadius = 5.f;
 }
 
 - (void)handlePopRecognizer:(UIPanGestureRecognizer *)recognizer {
-  const CGFloat translation = [recognizer translationInView:recognizer.view].x;
   const CGFloat velocity = [recognizer velocityInView:recognizer.view].x;
-  const CGFloat progress = translation / recognizer.view.bounds.size.width;
+  id object = recognizer;
   
-  switch (recognizer.state) {
-    case UIGestureRecognizerStateBegan:
-      _currentPopTransition = [[UIPercentDrivenInteractiveTransition alloc] init];
-      [self popViewControllerAnimated:YES];
-      
-      // Fallthrough.
-    case UIGestureRecognizerStateChanged:
-      [_currentPopTransition updateInteractiveTransition:progress];
-      break;
-      
-    case UIGestureRecognizerStateEnded:
-    case UIGestureRecognizerStateCancelled:
-      if (velocity > kVelocityThreshold) {
-        [_currentPopTransition finishInteractiveTransition];
-      } else {
-        [_currentPopTransition cancelInteractiveTransition];
-      }
-    
-      _currentPopTransition = nil;
-      break;
-      
-    default:
-      break;
+  if (velocity > kVelocityThreshold &&
+      (recognizer.state == UIGestureRecognizerStateEnded ||
+       recognizer.state == UIGestureRecognizerStateCancelled)) {
+    object = [[FakeGestureRecognizer alloc] initWithDelegate:recognizer
+                                       horizontalTranslation:recognizer.view.frame.size.width];
   }
+  
+  // Call the builtin gesture recognizer's selector.
+  IMP imp = [_builtinPanGestureRecognizerTarget.target
+             methodForSelector:_builtinPanGestureRecognizerTarget.action];
+  void (*func)(id, SEL, UIPanGestureRecognizer *) = (void *)imp;
+  func(_builtinPanGestureRecognizerTarget.target, _builtinPanGestureRecognizerTarget.action, object);
 }
 
 - (BOOL)_shouldCrossFadeBottomBars {
@@ -118,79 +150,6 @@ static const CGFloat kShadowRadius = 5.f;
        didShowViewController:(UIViewController *)viewController
                     animated:(BOOL)animated {
   _isPushingViewController = false;
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
-                                  animationControllerForOperation:(UINavigationControllerOperation)operation
-                                               fromViewController:(UIViewController *)fromVC
-                                                 toViewController:(UIViewController *)toVC {
-  if (operation == UINavigationControllerOperationPop && _currentPopTransition) {
-    return self;
-  }
-  return nil;
-}
-
-- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
-                         interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
-  return _currentPopTransition;
-}
-
-#pragma mark - UIViewControllerAnimatedTransitioning
-
-- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
-  return kPopTransitionDuration;
-}
-
-- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
-  UIViewController *outgoingVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-  UIViewController *incomingVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-  
-  // Calculate the frames for the views.
-  CGRect incomingFinalFrame = [transitionContext finalFrameForViewController:incomingVC];
-  CGRect incomingInitialFrame = CGRectOffset(incomingFinalFrame, kPopToViewHorizontalOffset, 0.f);
-  CGRect outgoingInitialFrame = outgoingVC.view.frame;
-  CGRect outgoingFinalFrame = CGRectOffset(outgoingInitialFrame,
-                                           outgoingInitialFrame.size.width, 0.f);
-  
-  // Add the incoming and outgoing views to the container.
-  UIView *containerView = [transitionContext containerView];
-  [containerView addSubview:incomingVC.view];
-  [containerView bringSubviewToFront:outgoingVC.view];
-  
-  // Use a black overlay to dim the incoming view.
-  UIView *blackOverlayView = [[UIView alloc] initWithFrame:incomingFinalFrame];
-  blackOverlayView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.2f];
-  blackOverlayView.alpha = 1.f;
-  [containerView insertSubview:blackOverlayView aboveSubview:incomingVC.view];
-  
-  // Give the outgoing view a shadow.
-  UIView *shadowView = [[UIView alloc] initWithFrame:outgoingInitialFrame];
-  shadowView.backgroundColor = [UIColor whiteColor];
-  TKMAddShadowToView(shadowView, 0, kShadowOpacity, kShadowRadius);
-  [containerView insertSubview:shadowView aboveSubview:blackOverlayView];
-  
-  // Set initial positions.
-  incomingVC.view.frame = incomingInitialFrame;
-  
-  [UIView animateWithDuration:kPopTransitionDuration
-                        delay:0.f
-                      options:UIViewAnimationOptionCurveLinear
-                   animations:^{
-                     blackOverlayView.alpha = 0.f;
-                     incomingVC.view.frame = incomingFinalFrame;
-                     outgoingVC.view.frame = outgoingFinalFrame;
-                     shadowView.frame = outgoingFinalFrame;
-                   } completion:^(BOOL finished) {
-                     [blackOverlayView removeFromSuperview];
-                     [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
-                     
-                     // Fade out the shadow before removing it.
-                     [UIView animateWithDuration:0.4f animations:^{
-                       shadowView.alpha = 0.f;
-                     } completion:^(BOOL finished) {
-                       [shadowView removeFromSuperview];
-                     }];
-                   }];
 }
 
 @end
