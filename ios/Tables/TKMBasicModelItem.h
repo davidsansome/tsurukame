@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN;
 
 - (instancetype)init NS_UNAVAILABLE;
 
-@property(nonatomic) UITableViewCellStyle style;
+@property(nonatomic, readonly) UITableViewCellStyle style;
 
 @property(nonatomic, nullable) NSString *title;
 @property(nonatomic, nullable) UIFont *titleFont;

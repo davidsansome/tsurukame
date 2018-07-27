@@ -32,6 +32,10 @@
     _accessoryType = accessoryType;
     _target = target;
     _action = action;
+    
+    if (style == UITableViewCellStyleSubtitle) {
+      _subtitleFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2];
+    }
   }
   return self;
 }
