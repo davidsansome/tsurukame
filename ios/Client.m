@@ -43,6 +43,13 @@ static NSError *MakeError(int code, NSString *msg) {
                          userInfo:@{NSLocalizedDescriptionKey:msg}];
 }
 
+static NSError *MakeErrorFromHTTPResponse(NSHTTPURLResponse *httpResponse) {
+  NSString *msg = [NSString stringWithFormat:@"HTTP error %ld for %@",
+                   (long)httpResponse.statusCode,
+                   httpResponse.URL.absoluteString];
+  return MakeError((int)httpResponse.statusCode, msg);
+}
+
 static const NSTimeInterval kCSRFTokenValidity = 2 * 60 * 60;  // 2 hours.
 static NSRegularExpression *sCSRFTokenRE;
 static NSRegularExpression *sEmailAddressRE;
@@ -69,10 +76,7 @@ static NSString *ParseCSRFTokenFromResponse(NSData * _Nullable data,
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
   if (httpResponse.statusCode != 200) {
     if (error) {
-      *error = MakeError((int)httpResponse.statusCode,
-                         [NSString stringWithFormat:@"HTTP error %ld for %@",
-                          (long)httpResponse.statusCode,
-                          response.URL.absoluteString]);
+      *error = MakeErrorFromHTTPResponse(httpResponse);
     }
     return nil;
   }
@@ -214,6 +218,12 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                                          NSError * _Nullable error) {
                        if (handler) {
                          handler(error);
+                         return;
+                       }
+                       NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                       if (httpResponse.statusCode != 200) {
+                         handler(MakeErrorFromHTTPResponse(httpResponse));
+                         return;
                        }
                      }];
   [task resume];
@@ -358,10 +368,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                    }
                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                    if (httpResponse.statusCode != 200) {
-                     handler(MakeError((int)httpResponse.statusCode,
-                                       [NSString stringWithFormat:@"HTTP error %ld for %@",
-                                        (long)httpResponse.statusCode,
-                                        response.URL.absoluteString]), nil, nil);
+                     handler(MakeErrorFromHTTPResponse(httpResponse), nil, nil);
                      return;
                    }
                    
