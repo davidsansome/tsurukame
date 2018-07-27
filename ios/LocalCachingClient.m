@@ -61,6 +61,13 @@ static const char *kSchemaV2 =
     "ALTER TABLE assignments ADD COLUMN subject_id;"
     "CREATE INDEX idx_subject_id ON assignments (subject_id);";
 
+static const char *kSchemaV3 = 
+    "CREATE TABLE subject_progress ("
+    "  id INTEGER PRIMARY KEY,"
+    "  level INTEGER,"
+    "  srs_stage INTEGER"
+    ");";
+
 static const char *kClearAllData = 
     "UPDATE sync SET"
     "  assignments_updated_after = \"\","
@@ -101,7 +108,6 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   int _cachedAvailableLessonCount;
   int _cachedAvailableReviewCount;
   NSArray<NSNumber *> *_cachedUpcomingReviews;
-  NSArray<TKMAssignment *> *_cachedMaxLevelAssignments;
   int _cachedPendingProgress;
   int _cachedPendingStudyMaterials;
   bool _isCachedAvailableSubjectCountsStale;
@@ -117,7 +123,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   if (self) {
     _client = client;
     _reachability = reachability;
-    _db = [self openDatabase];
+    [self openDatabase];
     assert(_db);
     _queue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0);
 
@@ -136,7 +142,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   return [NSURL fileURLWithPath:fileName];
 }
 
-- (FMDatabaseQueue *)openDatabase {
+- (void)openDatabase {
   FMDatabaseQueue *ret = [FMDatabaseQueue databaseQueueWithURL:[LocalCachingClient databaseFileUrl]];
 
   static NSArray<NSString *> *kSchemas;
@@ -145,8 +151,11 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     kSchemas = @[
       @(kSchemaV1),
       @(kSchemaV2),
+      @(kSchemaV3),
     ];
   });
+  
+  __block bool shouldPopulateSubjectProgress = false;
   
   [ret inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
     // Get the current version.
@@ -158,11 +167,29 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     }
     for (; currentVersion < targetVersion; ++currentVersion) {
       CheckExecuteStatements(db, kSchemas[currentVersion]);
+
+      if (currentVersion == 2) {
+        shouldPopulateSubjectProgress = true;
+      }
     }
     CheckUpdate(db, [NSString stringWithFormat:@"PRAGMA user_version = %lu", (unsigned long)targetVersion]);
     NSLog(@"Database updated to schema %lu", targetVersion);
   }];
-  return ret;
+  
+  _db = ret;
+  
+  if (shouldPopulateSubjectProgress) {
+    [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+      NSString *sql = @"REPLACE INTO subject_progress (id, level, srs_stage) VALUES (?, ?, ?)";
+      for (TKMAssignment *assignment in [self getAllAssignmentsInTransaction:db]) {
+        CheckUpdate(db, sql, @(assignment.subjectId), @(assignment.level), @(assignment.srsStage));
+      }
+      for (TKMProgress *progress in [self getAllPendingProgressInTransaction:db]) {
+        TKMAssignment *assignment = progress.assignment;
+        CheckUpdate(db, sql, @(assignment.subjectId), @(assignment.level), @(assignment.srsStage));
+      }
+    }];
+  }
 }
 
 #pragma mark - Local database getters
@@ -193,13 +220,19 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 }
 
 - (NSArray<TKMProgress *> *)getAllPendingProgress {
-  NSMutableArray<TKMProgress *> *progress = [NSMutableArray array];
+  __block NSArray<TKMProgress *> *progress = [NSMutableArray array];
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
-    FMResultSet *results = [db executeQuery:@"SELECT pb FROM pending_progress"];
-    while ([results next]) {
-      [progress addObject:[TKMProgress parseFromData:[results dataForColumnIndex:0] error:nil]];
-    }
+    progress = [self getAllPendingProgressInTransaction:db];
   }];
+  return progress;
+}
+
+- (NSArray<TKMProgress *> *)getAllPendingProgressInTransaction:(FMDatabase *)db {
+  NSMutableArray<TKMProgress *> *progress = [NSMutableArray array];
+  FMResultSet *results = [db executeQuery:@"SELECT pb FROM pending_progress"];
+  while ([results next]) {
+    [progress addObject:[TKMProgress parseFromData:[results dataForColumnIndex:0] error:nil]];
+  }
   return progress;
 }
 
@@ -265,6 +298,50 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   return ret;
 }
 
+- (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level inTransaction:(FMDatabase *)db {
+  NSMutableArray<TKMAssignment *> *ret = [NSMutableArray array];
+  FMResultSet *r = [db executeQuery:@"SELECT p.id, p.level, p.srs_stage, a.pb "
+                    "FROM subject_progress AS p "
+                    "LEFT JOIN assignments AS a "
+                    "ON p.id = a.subject_id "
+                    "WHERE p.level = ?", @(level)];
+  while ([r next]) {
+    NSData *data = [r dataForColumnIndex:3];
+    TKMAssignment *assignment;
+    if (data) {
+      assignment = [TKMAssignment parseFromData:data error:nil];
+    } else {
+      assignment = [TKMAssignment message];
+      assignment.subjectId = [r intForColumnIndex:0];
+      assignment.level = [r intForColumnIndex:1];
+    }
+    assignment.srsStage = [r intForColumnIndex:2];
+    [ret addObject:assignment];
+  }
+  return ret;
+}
+
+- (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
+  __block NSArray<TKMAssignment *> *ret = nil;
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    ret = [self getAssignmentsAtLevel:level inTransaction:db];
+  }];
+  return ret;
+}
+
+- (NSArray<TKMAssignment *> *)getAssignmentsAtMaxLevel {
+  __block NSArray<TKMAssignment *> *ret = nil;
+  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+    FMResultSet *r = [db executeQuery:@"SELECT MAX(level) FROM subject_progress"];
+    if ([r next]) {
+      int level = [r intForColumnIndex:0];
+      ret = [self getAssignmentsAtLevel:level inTransaction:db];
+    }
+    [r close];
+  }];
+  return ret;
+}
+
 #pragma mark - Getting cached data
 
 - (int)pendingProgress {
@@ -317,16 +394,6 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }
 }
 
-- (NSArray<TKMAssignment *> *)maxLevelAssignments {
-  @synchronized(self) {
-    if (_isCachedAvailableSubjectCountsStale) {
-      [self updateAvailableSubjectCounts];
-      _isCachedAvailableSubjectCountsStale = false;
-    }
-    return _cachedMaxLevelAssignments;
-  }
-}
-
 - (void)updateAvailableSubjectCounts {
   NSArray<TKMAssignment *> *assignments = [self getAllAssignments];
   int lessons = 0;
@@ -339,18 +406,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     [upcomingReviews addObject:@(0)];
   }
   
-  int maxLevel = 0;
-  NSMutableArray<TKMAssignment *> *maxLevelAssignments = [NSMutableArray array];
-  
   for (TKMAssignment *assignment in assignments) {
-    if (assignment.level > maxLevel) {
-      [maxLevelAssignments removeAllObjects];
-      maxLevel = assignment.level;
-    }
-    if (assignment.level == maxLevel) {
-      [maxLevelAssignments addObject:assignment];
-    }
-    
     if (assignment.isLessonStage) {
       lessons ++;
     } else if (assignment.isReviewStage) {
@@ -367,21 +423,10 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     }
   }
   
-  // Include any pending progress assignments in the max level list.
-  for (TKMProgress *progress in [self getAllPendingProgress]) {
-    if (progress.assignment.level == maxLevel) {
-      if (progress.isLesson || (!progress.readingWrong && !progress.meaningWrong)) {
-        progress.assignment.srsStage ++;
-      }
-      [maxLevelAssignments addObject:progress.assignment];
-    }
-  }
-
   NSLog(@"Recalculated available items");
   _cachedAvailableLessonCount = lessons;
   _cachedAvailableReviewCount = reviews;
   _cachedUpcomingReviews = upcomingReviews;
-  _cachedMaxLevelAssignments = maxLevelAssignments;
 }
 
 #pragma mark - Invalidating cached data
@@ -424,8 +469,17 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
       CheckUpdate(db, @"DELETE FROM assignments WHERE id = ?", @(p.assignment.id_p));
       
       // Store the progress locally.
-      CheckUpdate(db, @"REPLACE INTO pending_progress (id, pb) VALUES(?, ?)",
+      CheckUpdate(db, @"REPLACE INTO pending_progress (id, pb) VALUES (?, ?)",
                   @(p.assignment.subjectId), p.data);
+      
+      int newSrsStage = p.assignment.srsStage;
+      if (p.isLesson || (!p.meaningWrong && !p.readingWrong)) {
+        newSrsStage ++;
+      } else if (p.meaningWrong || p.readingWrong) {
+        newSrsStage = MAX(0, newSrsStage - 1);
+      }
+      CheckUpdate(db, @"REPLACE INTO subject_progress (id, level, srs_stage) VALUES (?, ?, ?)",
+                  @(p.assignment.subjectId), @(p.assignment.level), @(newSrsStage));
     }
   }];
   [self invalidateCachedPendingProgress];
@@ -583,6 +637,8 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
                                      for (TKMAssignment *assignment in assignments) {
                                        CheckUpdate(db, @"REPLACE INTO assignments (id, pb, subject_id) VALUES (?, ?, ?)",
                                                    @(assignment.id_p), assignment.data, @(assignment.subjectId));
+                                       CheckUpdate(db, @"REPLACE INTO subject_progress (id, level, srs_stage) VALUES (?, ?, ?)",
+                                                   @(assignment.subjectId), @(assignment.level), @(assignment.srsStage));
                                      }
                                      CheckUpdate(db, @"UPDATE sync SET assignments_updated_after = ?", date);
                                    }];
