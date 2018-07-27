@@ -262,7 +262,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   int lessons = _localCachingClient.availableLessonCount;
   int reviews = _localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _localCachingClient.upcomingReviews;
-  NSArray<TKMAssignment *> *maxLevelAssignments = _localCachingClient.maxLevelAssignments;
+  NSArray<TKMAssignment *> *maxLevelAssignments = [_localCachingClient getAssignmentsAtMaxLevel];
 
   SetTableViewCellCount(self.lessonsCell, lessons);
   SetTableViewCellCount(self.reviewsCell, reviews);

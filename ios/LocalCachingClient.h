@@ -33,7 +33,9 @@ typedef void (^CompletionHandler)(void);
 @property(nonatomic, readonly) NSArray<NSNumber *> *upcomingReviews;
 @property(nonatomic, readonly) int pendingProgress;
 @property(nonatomic, readonly) int pendingStudyMaterials;
-@property(nonatomic, readonly) NSArray<TKMAssignment *> *maxLevelAssignments;
+
+- (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
+- (NSArray<TKMAssignment *> *)getAssignmentsAtMaxLevel;
 
 + (NSURL *)databaseFileUrl;
 
