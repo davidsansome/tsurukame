@@ -889,7 +889,7 @@ typedef enum : NSUInteger {
 
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
             tappedBackButton:(UIButton *)backButton {
-  if (reviewViewController.reviewsCompleted == 0) {
+  if (reviewViewController.tasksAnsweredCorrectly == 0) {
     [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
     return;
   }
