@@ -31,7 +31,6 @@ type reader interface {
 
 type writer interface {
 	WriteSubject(id int, data *pb.Subject) error
-	WriteSubjectBytes(id int, data []byte) error
 }
 
 type closer interface {

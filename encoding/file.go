@@ -115,6 +115,7 @@ func (e *fileEncodingReader) Close() error {
 type fileEncodingWriter struct {
 	fh       *os.File
 	subjects [][]byte
+	header   pb.DataFileHeader
 }
 
 func OpenFileWriter(filename string) (Writer, error) {
@@ -129,33 +130,58 @@ func OpenFileWriter(filename string) (Writer, error) {
 	}, nil
 }
 
-func (e *fileEncodingWriter) WriteSubject(id int, data *pb.Subject) error {
-	data.Id = nil
+func (e *fileEncodingWriter) WriteSubject(id int, subject *pb.Subject) error {
+	subject.Id = nil
 
-	b, err := proto.Marshal(data)
+	// Marshal and store the proto.
+	b, err := proto.Marshal(subject)
 	if err != nil {
 		return err
 	}
-	return e.WriteSubjectBytes(id, b)
-}
-
-func (e *fileEncodingWriter) WriteSubjectBytes(id int, data []byte) error {
 	for len(e.subjects) <= int(id) {
 		e.subjects = append(e.subjects, nil)
 	}
-	e.subjects[id] = data
+	e.subjects[id] = b
+
+	// Add to the per-level counts in the metadata.
+	levelIndex := subject.GetLevel() - 1
+	for len(e.header.SubjectsByLevel) <= int(levelIndex) {
+		e.header.SubjectsByLevel = append(e.header.SubjectsByLevel, &pb.SubjectsByLevel{})
+	}
+	index := e.header.SubjectsByLevel[levelIndex]
+	if subject.Radical != nil {
+		index.Radicals = append(index.Radicals, int32(id))
+	}
+	if subject.Kanji != nil {
+		index.Kanji = append(index.Kanji, int32(id))
+	}
+	if subject.Vocabulary != nil {
+		index.Vocabulary = append(index.Vocabulary, int32(id))
+	}
+
 	return nil
 }
 
 func (e *fileEncodingWriter) Close() error {
-	// Write the index.
-	binary.Write(e.fh, order, uint32(len(e.subjects)))
-	offset := 4 + 4*len(e.subjects)
+	// Calculate the offsets of each message.
+	var offset int32
 	for _, d := range e.subjects {
-		if err := binary.Write(e.fh, order, uint32(offset)); err != nil {
-			return err
-		}
-		offset += len(d)
+		e.header.SubjectByteOffset = append(e.header.SubjectByteOffset, offset)
+		offset += int32(len(d))
+	}
+
+	// Seralise the header.
+	headerBytes, err := proto.Marshal(&e.header)
+	if err != nil {
+		return err
+	}
+
+	// Write the header and its length.
+	if err := binary.Write(e.fh, order, uint32(len(headerBytes))); err != nil {
+		return err
+	}
+	if _, err := e.fh.Write(headerBytes); err != nil {
+		return err
 	}
 
 	// Write each encoded protobuf.
