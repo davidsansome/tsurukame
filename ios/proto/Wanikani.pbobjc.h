@@ -34,6 +34,7 @@ CF_EXTERN_C_BEGIN
 @class TKMRadical;
 @class TKMReading;
 @class TKMSubject;
+@class TKMSubjectsByLevel;
 @class TKMVocabulary;
 @class TKMVocabulary_Sentence;
 
@@ -567,6 +568,53 @@ typedef GPB_ENUM(TKMFormattedText_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *linkURL;
 /** Test to see if @c linkURL has been set. */
 @property(nonatomic, readwrite) BOOL hasLinkURL;
+
+@end
+
+#pragma mark - TKMDataFileHeader
+
+typedef GPB_ENUM(TKMDataFileHeader_FieldNumber) {
+  TKMDataFileHeader_FieldNumber_SubjectsByLevelArray = 1,
+  TKMDataFileHeader_FieldNumber_SubjectByteOffsetArray = 2,
+};
+
+@interface TKMDataFileHeader : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMSubjectsByLevel*> *subjectsByLevelArray;
+/** The number of items in @c subjectsByLevelArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger subjectsByLevelArray_Count;
+
+/**
+ * Offset of each encoded Subject message, starting from the end of this
+ * header in the file.
+ **/
+@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *subjectByteOffsetArray;
+/** The number of items in @c subjectByteOffsetArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger subjectByteOffsetArray_Count;
+
+@end
+
+#pragma mark - TKMSubjectsByLevel
+
+typedef GPB_ENUM(TKMSubjectsByLevel_FieldNumber) {
+  TKMSubjectsByLevel_FieldNumber_RadicalsArray = 1,
+  TKMSubjectsByLevel_FieldNumber_KanjiArray = 2,
+  TKMSubjectsByLevel_FieldNumber_VocabularyArray = 3,
+};
+
+@interface TKMSubjectsByLevel : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *radicalsArray;
+/** The number of items in @c radicalsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger radicalsArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *kanjiArray;
+/** The number of items in @c kanjiArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger kanjiArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *vocabularyArray;
+/** The number of items in @c vocabularyArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger vocabularyArray_Count;
 
 @end
 

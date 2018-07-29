@@ -115,8 +115,20 @@ static void UnsetAllLabels(ChartViewBase *view) {
     sliceSizes[slice] ++;
     total ++;
   }
-  sliceSizes[LockedPieSlice] = [_dataLoader subjectsByLevel:maxLevelAssignments[0].level
-                                                     byType:_subjectType] - total;
+  TKMSubjectsByLevel *subjectCounts = [_dataLoader subjectsByLevel:maxLevelAssignments.firstObject.level];
+  int totalAtLevel = 0;
+  switch (_subjectType) {
+    case TKMSubject_Type_Radical:
+      totalAtLevel = (int)subjectCounts.radicalsArray_Count;
+      break;
+    case TKMSubject_Type_Kanji:
+      totalAtLevel = (int)subjectCounts.kanjiArray_Count;
+      break;
+    case TKMSubject_Type_Vocabulary:
+      totalAtLevel = (int)subjectCounts.vocabularyArray_Count;
+      break;
+  }
+  sliceSizes[LockedPieSlice] = totalAtLevel - total;
   
   UIColor *baseColor = TKMColor2ForSubjectType(_subjectType);
   NSMutableArray<PieChartDataEntry *> *values = [NSMutableArray array];
