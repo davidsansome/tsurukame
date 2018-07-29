@@ -21,6 +21,9 @@
 
 NS_ASSUME_NONNULL_BEGIN;
 
+@interface TKMSubjectModelView : TKMModelCell
+@end
+
 @interface TKMSubjectModelItem : NSObject <TKMModelItem>
 
 - (instancetype)initWithSubject:(TKMSubject *)subject

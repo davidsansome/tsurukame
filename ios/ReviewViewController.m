@@ -309,7 +309,6 @@ typedef enum : NSUInteger {
     vc.items = _completedReviews;
   } else if ([segue.identifier isEqualToString:@"subjectDetails"]) {
     SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
-    vc.showUserProgress = true;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
     vc.subject = (TKMSubject *)sender;
@@ -802,8 +801,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)revealAnswerButtonPressed:(id)sender {
   [_subjectDetailsView updateWithSubject:_activeSubject
-                          studyMaterials:_activeStudyMaterials
-                              assignment:nil];
+                          studyMaterials:_activeStudyMaterials];
   
   [CATransaction begin];
   [CATransaction setAnimationDuration:kAnimationDuration];

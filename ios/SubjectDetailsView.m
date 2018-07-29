@@ -214,8 +214,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 }
 
 - (void)updateWithSubject:(TKMSubject *)subject
-           studyMaterials:(TKMStudyMaterials *)studyMaterials
-               assignment:(nullable TKMAssignment *)assignment {
+           studyMaterials:(TKMStudyMaterials *)studyMaterials {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self];
   
   if (subject.hasRadical) {

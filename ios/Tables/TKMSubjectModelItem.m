@@ -23,7 +23,7 @@ static const CGFloat kJapaneseTextImageSize = 26.f;
 static UIFont *kNormalFont;
 static UIFont *kIncorrectFont;
 
-@interface TKMSubjectModelView : TKMModelCell
+@interface TKMSubjectModelView ()
 @property (weak, nonatomic) IBOutlet UILabel *levelLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subjectLabel;
 @property (weak, nonatomic) IBOutlet UILabel *readingLabel;

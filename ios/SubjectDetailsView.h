@@ -27,8 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) bool showHints;
 
 - (void)updateWithSubject:(TKMSubject *)subject
-           studyMaterials:(TKMStudyMaterials *)studyMaterials
-               assignment:(nullable TKMAssignment *)assignment;
+           studyMaterials:(TKMStudyMaterials *)studyMaterials;
 
 - (void)deselectLastSubjectChipTapped;
 

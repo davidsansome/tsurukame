@@ -43,17 +43,19 @@
 @end
 
 @implementation TKMTableModel {
+  TKMTableDelegage *_tableDelegate;
   BOOL _isInitialised;
 }
 
 - (instancetype)initWithTableView:(UITableView *)tableView {
   self = [super init];
   if (self) {
+    _tableDelegate = [[TKMTableDelegage alloc] init];
     _tableView = tableView;
     _sections = [NSMutableArray array];
     
     _tableView.dataSource = self;
-    _tableView.delegate = self;
+    _tableView.delegate = _tableDelegate;
   }
   return self;
 }
@@ -155,7 +157,9 @@
   return s.items.count - s.hiddenItems.count;
 }
 
-#pragma mark - UITableViewDelegate
+@end
+
+@implementation TKMTableDelegage
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   TKMModelCell *cell = [tableView cellForRowAtIndexPath:indexPath];
