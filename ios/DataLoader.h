@@ -27,6 +27,6 @@
 - (TKMSubject *)loadSubject:(int)subjectID;
 - (NSArray<TKMSubject *> *)loadAllSubjects;
 
-- (int)subjectsByLevel:(int)srsLevel byType:(TKMSubject_Type)type;
+- (TKMSubjectsByLevel *)subjectsByLevel:(int)level;
 
 @end

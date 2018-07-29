@@ -1399,6 +1399,125 @@ BOOL TKMFormattedText_Format_IsValidValue(int32_t value__) {
   }
 }
 
+#pragma mark - TKMDataFileHeader
+
+@implementation TKMDataFileHeader
+
+@dynamic subjectsByLevelArray, subjectsByLevelArray_Count;
+@dynamic subjectByteOffsetArray, subjectByteOffsetArray_Count;
+
+typedef struct TKMDataFileHeader__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *subjectsByLevelArray;
+  GPBInt32Array *subjectByteOffsetArray;
+} TKMDataFileHeader__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "subjectsByLevelArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMSubjectsByLevel),
+        .number = TKMDataFileHeader_FieldNumber_SubjectsByLevelArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMDataFileHeader__storage_, subjectsByLevelArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "subjectByteOffsetArray",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMDataFileHeader_FieldNumber_SubjectByteOffsetArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMDataFileHeader__storage_, subjectByteOffsetArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeInt32,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMDataFileHeader class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMDataFileHeader__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - TKMSubjectsByLevel
+
+@implementation TKMSubjectsByLevel
+
+@dynamic radicalsArray, radicalsArray_Count;
+@dynamic kanjiArray, kanjiArray_Count;
+@dynamic vocabularyArray, vocabularyArray_Count;
+
+typedef struct TKMSubjectsByLevel__storage_ {
+  uint32_t _has_storage_[1];
+  GPBInt32Array *radicalsArray;
+  GPBInt32Array *kanjiArray;
+  GPBInt32Array *vocabularyArray;
+} TKMSubjectsByLevel__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "radicalsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMSubjectsByLevel_FieldNumber_RadicalsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMSubjectsByLevel__storage_, radicalsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "kanjiArray",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMSubjectsByLevel_FieldNumber_KanjiArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMSubjectsByLevel__storage_, kanjiArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "vocabularyArray",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMSubjectsByLevel_FieldNumber_VocabularyArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMSubjectsByLevel__storage_, vocabularyArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeInt32,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMSubjectsByLevel class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMSubjectsByLevel__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 
 #pragma clang diagnostic pop
 
