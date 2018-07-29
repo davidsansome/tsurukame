@@ -327,7 +327,6 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)searchResultSelected:(TKMSubject *)subject {
   SubjectDetailsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
-  vc.showUserProgress = true;
   vc.dataLoader = _dataLoader;
   vc.localCachingClient = _localCachingClient;
   vc.subject = subject;

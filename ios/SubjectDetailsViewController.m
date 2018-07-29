@@ -42,13 +42,8 @@
   _subjectDetailsView.subjectDelegate = self;
   _subjectDetailsView.showHints = _showHints;
   TKMStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
-  TKMAssignment *assignment = nil;
-  if (_showUserProgress) {
-    assignment = [_localCachingClient getAssignmentForID:_subject.id_p];
-  }
   [_subjectDetailsView updateWithSubject:_subject
-                          studyMaterials:studyMaterials
-                              assignment:assignment];
+                          studyMaterials:studyMaterials];
   
   _subjectTitle.attributedText = [_subject japaneseTextWithImageSize:40.f];
   _gradientLayer = [CAGradientLayer layer];

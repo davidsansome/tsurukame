@@ -163,7 +163,6 @@
 		63A2375E1FE9225700C48657 /* Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A2375D1FE9225700C48657 /* Style.m */; };
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */; };
-		63B1DE3E1FE7CF5E00FAB9C2 /* ReviewSummaryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE3D1FE7CF5E00FAB9C2 /* ReviewSummaryCell.m */; };
 		63B1DE411FE7D81600FAB9C2 /* SubjectDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */; };
 		63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
 		63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */; };
@@ -430,8 +429,6 @@
 		63A237601FE9264300C48657 /* UIColor+HexString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
 		63B1DE391FE7BCDA00FAB9C2 /* ReviewSummaryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewSummaryViewController.h; sourceTree = "<group>"; };
 		63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewSummaryViewController.m; sourceTree = "<group>"; };
-		63B1DE3C1FE7CF5E00FAB9C2 /* ReviewSummaryCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewSummaryCell.h; sourceTree = "<group>"; };
-		63B1DE3D1FE7CF5E00FAB9C2 /* ReviewSummaryCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewSummaryCell.m; sourceTree = "<group>"; };
 		63B1DE3F1FE7D81600FAB9C2 /* SubjectDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectDetailsViewController.h; sourceTree = "<group>"; };
 		63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectDetailsViewController.m; sourceTree = "<group>"; };
 		63BDA9A5200E04E500D75DA2 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
@@ -615,8 +612,6 @@
 				63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */,
 				633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */,
 				633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */,
-				63B1DE3C1FE7CF5E00FAB9C2 /* ReviewSummaryCell.h */,
-				63B1DE3D1FE7CF5E00FAB9C2 /* ReviewSummaryCell.m */,
 				63B1DE391FE7BCDA00FAB9C2 /* ReviewSummaryViewController.h */,
 				63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */,
 				633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */,
@@ -1078,7 +1073,6 @@
 				63CAAAEB1FC6E1D400E09DA1 /* GPBUnknownFieldSet.m in Sources */,
 				63CAAB0E1FD7FA5E00E09DA1 /* Reachability.m in Sources */,
 				6319CA9F2044203E00C31F87 /* IBarChartDataSet.swift in Sources */,
-				63B1DE3E1FE7CF5E00FAB9C2 /* ReviewSummaryCell.m in Sources */,
 				6319CA932044203E00C31F87 /* IHighlighter.swift in Sources */,
 				6319CAD12044203E00C31F87 /* ChartAnimationEasing.swift in Sources */,
 				63453E4F20EF8C0500F20404 /* HNKDiskFetcher.m in Sources */,

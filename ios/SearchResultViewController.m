@@ -15,10 +15,11 @@
 #import "SearchResultViewController.h"
 
 #import "DataLoader.h"
-#import "ReviewSummaryCell.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMKanaInput.h"
 #import "proto/Wanikani.pbobjc.h"
+#import "Tables/TKMSubjectModelItem.h"
+#import "Tables/TKMTableModel.h"
 
 static const int kMaxResults = 50;
 
@@ -53,13 +54,13 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
   return false;
 }
 
-@interface SearchResultViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface SearchResultViewController () <TKMSubjectDelegate>
 
 @end
 
 @implementation SearchResultViewController {
   NSArray<TKMSubject *> *_allSubjects;
-  NSArray<TKMSubject *> *_results;
+  TKMTableModel *_model;
   dispatch_queue_t _queue;
 }
 
@@ -72,8 +73,6 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
   });
   
   [super viewDidLoad];
-  self.tableView.dataSource = self;
-  self.tableView.delegate = self;
 }
 
 - (void)ensureAllSubjectsLoaded {
@@ -98,15 +97,15 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
   NSString *query = [searchController.searchBar.text lowercaseString];
   dispatch_async(_queue, ^{
     NSString *kanaQuery = TKMConvertKanaText(query);
-    NSMutableArray<TKMSubject *> *results = [NSMutableArray array];
     
+    NSMutableArray<TKMSubject *> *results = [NSMutableArray array];
     @synchronized(self) {
       [self ensureAllSubjectsLoaded];
       for (TKMSubject *subject in _allSubjects) {
         if (SubjectMatchesQuery(subject, query, kanaQuery)) {
           [results addObject:subject];
         }
-        if (results.count > kMaxResults) {
+        if (results.count >= kMaxResults) {
           break;
         }
       }
@@ -122,33 +121,21 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
     }];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-      _results = results;
+      TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
+      [model addSection];
+      for (TKMSubject *subject in results) {
+        [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject delegate:self]];
+      }
+      _model = model;
       [self.tableView reloadData];
     });
   });
 }
 
-#pragma mark - UITableViewDataSource
+#pragma mark - TKMSubjectDelegate
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-  return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return _results.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-  ReviewSummaryCell *cell = [tableView dequeueReusableCellWithIdentifier:@"resultCell"];
-  TKMSubject *subject = _results[indexPath.row];
-  cell.subject = subject;
-  return cell;
-}
-
-#pragma mark - UITableViewDelegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  [_delegate searchResultSelected:_results[indexPath.row]];
+- (void)didTapSubject:(TKMSubject *)subject {
+  [_delegate searchResultSelected:subject];
 }
 
 @end

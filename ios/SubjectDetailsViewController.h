@@ -31,9 +31,6 @@
 // If this is set to true before the view is loaded, kanji hints will be displayed.
 @property (nonatomic) bool showHints;
 
-// If this is set to true before the view is loaded, the user's progress will be included.
-@property (nonatomic) bool showUserProgress;
-
 // The index of this subject in some other collection.  Unused, for convenience only.
 @property (nonatomic) NSInteger index;
 

@@ -16,8 +16,7 @@
 
 #import "TKMModelItem.h"
 
-@interface TKMTableModel : NSObject <UITableViewDataSource,
-                                    UITableViewDelegate>
+@interface TKMTableModel : NSObject <UITableViewDataSource>
 
 @property(nonatomic, readonly, weak) UITableView *tableView;
 
@@ -39,4 +38,7 @@
 
 - (void)reloadTable;
 
+@end
+
+@interface TKMTableDelegage : NSObject <UITableViewDelegate>
 @end
