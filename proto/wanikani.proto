@@ -176,3 +176,18 @@ message FormattedText {
   optional string text = 2;
   optional string link_url = 3;
 }
+
+message DataFileHeader {
+  repeated SubjectsByLevel subjects_by_level = 1;
+
+  // Offset of each encoded Subject message, starting from the end of this
+  // header in the file.
+  repeated int32 subject_byte_offset = 2;
+}
+
+message SubjectsByLevel {
+  repeated int32 radicals = 1;
+  repeated int32 kanji = 2;
+  repeated int32 vocabulary = 3;
+}
+
