@@ -73,7 +73,9 @@
   Client *client = [[Client alloc] initWithApiToken:UserDefaults.userApiToken
                                              cookie:UserDefaults.userCookie];
   
-  _localCachingClient = [[LocalCachingClient alloc] initWithClient:client reachability:_reachability];
+  _localCachingClient = [[LocalCachingClient alloc] initWithClient:client
+                                                        dataLoader:_dataLoader
+                                                      reachability:_reachability];
   
   // Ask for notification permissions.
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];

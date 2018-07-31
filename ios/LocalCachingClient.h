@@ -20,6 +20,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class DataLoader;
+
 extern NSNotificationName kLocalCachingClientAvailableItemsChangedNotification;
 extern NSNotificationName kLocalCachingClientPendingItemsChangedNotification;
 extern NSNotificationName kLocalCachingClientUserInfoChangedNotification;
@@ -34,12 +36,10 @@ typedef void (^CompletionHandler)(void);
 @property(nonatomic, readonly) int pendingProgress;
 @property(nonatomic, readonly) int pendingStudyMaterials;
 
-- (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
-- (NSArray<TKMAssignment *> *)getAssignmentsAtMaxLevel;
-
 + (NSURL *)databaseFileUrl;
 
 - (instancetype)initWithClient:(Client *)client
+                    dataLoader:(DataLoader *)dataLoader
                   reachability:(Reachability *)reachability NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -53,6 +53,8 @@ typedef void (^CompletionHandler)(void);
 - (TKMUser * _Nullable)getUserInfo;
 - (NSArray<TKMProgress *> *)getAllPendingProgress;
 - (TKMAssignment *)getAssignmentForID:(int)subjectID;
+- (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
+- (NSArray<TKMAssignment *> *)getAssignmentsAtMaxLevel;
 
 // Setters: save the data to the database and return immediately, make network requests in the
 // background.
