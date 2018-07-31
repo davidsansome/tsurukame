@@ -29,11 +29,20 @@
 
 @implementation SubjectsByLevelViewController {
   TKMTableModel *_model;
+  UISwitch *_answerSwitch;
 }
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  _answerSwitch = [[UISwitch alloc] init];
+  _answerSwitch.on = YES;
+  [_answerSwitch addTarget:self
+                    action:@selector(answerSwitchChanged:)
+          forControlEvents:UIControlEventValueChanged];
+  
   self.navigationItem.title = [NSString stringWithFormat:@"Level %d", _level];
+  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_answerSwitch];
   
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
   [model addSection:@"Radicals"];
@@ -66,7 +75,7 @@
   [model sortSection:1 usingComparator:comparator];
   [model sortSection:2 usingComparator:comparator];
   
-  for (int section = 0; section < 3; ++section) {
+  for (int section = 0; section < model.sectionCount; ++section) {
     NSArray *items = [model itemsInSection:section];
     TKMAssignment *lastAssignment = nil;
     for (int index = 0; index < items.count; ++index) {
@@ -96,6 +105,26 @@
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = NO;
+}
+
+- (void)answerSwitchChanged:(UISwitch *)sender {
+  bool showAnswers = sender.on;
+  
+  for (int section = 0; section < _model.sectionCount; ++section) {
+    for (id<TKMModelItem> item in [_model itemsInSection:section]) {
+      if ([item isKindOfClass:TKMSubjectModelItem.class]) {
+        TKMSubjectModelItem *subjectItem = item;
+        subjectItem.showAnswers = showAnswers;
+      }
+    }
+  }
+  
+  for (UITableViewCell *cell in self.tableView.visibleCells) {
+    if ([cell isKindOfClass:TKMSubjectModelView.class]) {
+      TKMSubjectModelView *subjectCell = (TKMSubjectModelView *)cell;
+      [subjectCell setShowAnswers:showAnswers animated:true];
+    }
+  }
 }
 
 #pragma mark - TKMSubjectDelegate

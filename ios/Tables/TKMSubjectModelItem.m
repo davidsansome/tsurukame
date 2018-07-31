@@ -24,11 +24,12 @@ static UIFont *kNormalFont;
 static UIFont *kCorrectFont;
 static UIFont *kIncorrectFont;
 
-@interface TKMSubjectModelView : TKMModelCell
+@interface TKMSubjectModelView ()
 @property (weak, nonatomic) IBOutlet UILabel *levelLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subjectLabel;
 @property (weak, nonatomic) IBOutlet UILabel *readingLabel;
 @property (weak, nonatomic) IBOutlet UILabel *meaningLabel;
+@property (weak, nonatomic) IBOutlet UIStackView *answerStack;
 @end
 
 @implementation TKMSubjectModelItem
@@ -44,6 +45,7 @@ static UIFont *kIncorrectFont;
     _meaningWrong = meaningWrong;
     _readingWrong = readingWrong;
     _showLevelNumber = true;
+    _showAnswers = true;
   }
   return self;
 }
@@ -127,6 +129,31 @@ static UIFont *kIncorrectFont;
     self.readingLabel.font = item.readingWrong ? kIncorrectFont : kCorrectFont;
     self.meaningLabel.font = item.meaningWrong ? kIncorrectFont : kCorrectFont;
   }
+  
+  [self setShowAnswers:item.showAnswers animated:false];
+  NSLog(@"%@", NSStringFromCGRect(_answerStack.frame));
+}
+
+- (void)setShowAnswers:(bool)showAnswers animated:(bool)animated {
+  if (!animated) {
+    _answerStack.hidden = !showAnswers;
+    _answerStack.alpha = showAnswers ? 1.f : 0.f;
+    return;
+  }
+  
+  CGRect visibleFrame = _answerStack.frame;
+  CGRect hiddenFrame = visibleFrame;
+  hiddenFrame.origin.x = self.frame.size.width;
+  
+  _answerStack.hidden = NO;
+  _answerStack.frame = showAnswers ? hiddenFrame : visibleFrame;
+  _answerStack.alpha = showAnswers ? 0.f : 1.f;
+  [UIView animateWithDuration:0.5f animations:^{
+    _answerStack.frame = showAnswers ? visibleFrame : hiddenFrame;
+    _answerStack.alpha = showAnswers ? 1.f : 0.f;
+  } completion:^(BOOL finished) {
+    _answerStack.hidden = showAnswers ? NO : YES;
+  }];
 }
 
 - (void)didSelectCell {
