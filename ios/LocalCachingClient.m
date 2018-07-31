@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "DataLoader.h"
 #import "LocalCachingClient.h"
 
 #import "proto/Wanikani+Convenience.h"
@@ -97,9 +98,29 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }
 }
 
+static void AddFakeAssignments(GPBInt32Array *subjectIDs,
+                               TKMSubject_Type subjectType,
+                               int level,
+                               NSSet<NSNumber *> *excludeSubjectIDs,
+                               NSMutableArray<TKMAssignment *> *assignments) {
+  for (int i = 0; i < subjectIDs.count; ++i) {
+    int subjectID = [subjectIDs valueAtIndex:i];
+    if ([excludeSubjectIDs containsObject:@(subjectID)]) {
+      continue;
+    }
+    TKMAssignment *assignment = [TKMAssignment message];
+    assignment.subjectId = subjectID;
+    assignment.subjectType = subjectType;
+    assignment.level = level;
+    assignment.srsStage = 0;
+    [assignments addObject:assignment];
+  }
+}
+
 
 @implementation LocalCachingClient {
   Client *_client;
+  DataLoader *_dataLoader;
   Reachability *_reachability;
   FMDatabaseQueue *_db;
   dispatch_queue_t _queue;
@@ -118,10 +139,12 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
 #pragma mark - Initialisers
 
 - (instancetype)initWithClient:(Client *)client
+                    dataLoader:(DataLoader *)dataLoader
                   reachability:(Reachability *)reachability {
   self = [super init];
   if (self) {
     _client = client;
+    _dataLoader = dataLoader;
     _reachability = reachability;
     [self openDatabase];
     assert(_db);
@@ -305,6 +328,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
                     "LEFT JOIN assignments AS a "
                     "ON p.id = a.subject_id "
                     "WHERE p.level = ?", @(level)];
+  NSMutableSet<NSNumber *> *subjectIDs = [NSMutableSet set];
   while ([r next]) {
     NSData *data = [r dataForColumnIndex:3];
     TKMAssignment *assignment;
@@ -317,7 +341,16 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
     }
     assignment.srsStage = [r intForColumnIndex:2];
     [ret addObject:assignment];
+    [subjectIDs addObject:@(assignment.subjectId)];
   }
+  
+  // Add fake assignments for any other subjects at this level that don't have assignments yet (the
+  // user hasn't unlocked the prerequisite radicals/kanji).
+  TKMSubjectsByLevel *subjectsByLevel = [_dataLoader subjectsByLevel:level];
+  AddFakeAssignments(subjectsByLevel.radicalsArray, TKMSubject_Type_Radical, level, subjectIDs, ret);
+  AddFakeAssignments(subjectsByLevel.kanjiArray, TKMSubject_Type_Kanji, level, subjectIDs, ret);
+  AddFakeAssignments(subjectsByLevel.vocabularyArray, TKMSubject_Type_Vocabulary, level, subjectIDs, ret);
+  
   return ret;
 }
 

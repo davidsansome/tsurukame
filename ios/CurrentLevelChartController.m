@@ -105,6 +105,8 @@ static void UnsetAllLabels(ChartViewBase *view) {
     enum PieSlice slice = LockedPieSlice;
     if (assignment.isLessonStage) {
       slice = LessonPieSlice;
+    } else if (!assignment.isReviewStage) {
+      slice = LockedPieSlice;
     } else if (assignment.srsStage <= 1) {
       slice = NovicePieSlice;
     } else if (assignment.srsStage < 5) {
@@ -115,20 +117,6 @@ static void UnsetAllLabels(ChartViewBase *view) {
     sliceSizes[slice] ++;
     total ++;
   }
-  TKMSubjectsByLevel *subjectCounts = [_dataLoader subjectsByLevel:maxLevelAssignments.firstObject.level];
-  int totalAtLevel = 0;
-  switch (_subjectType) {
-    case TKMSubject_Type_Radical:
-      totalAtLevel = (int)subjectCounts.radicalsArray_Count;
-      break;
-    case TKMSubject_Type_Kanji:
-      totalAtLevel = (int)subjectCounts.kanjiArray_Count;
-      break;
-    case TKMSubject_Type_Vocabulary:
-      totalAtLevel = (int)subjectCounts.vocabularyArray_Count;
-      break;
-  }
-  sliceSizes[LockedPieSlice] = totalAtLevel - total;
   
   UIColor *baseColor = TKMColor2ForSubjectType(_subjectType);
   NSMutableArray<PieChartDataEntry *> *values = [NSMutableArray array];
