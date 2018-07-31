@@ -18,6 +18,7 @@
 #import "ReviewViewController.h"
 #import "SubjectDetailsViewController.h"
 #import "proto/Wanikani+Convenience.h"
+#import "UIView+SafeAreaInsets.h"
 
 @interface LessonsViewController () <ReviewViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet LessonsPageControl *pageControl;
@@ -67,7 +68,7 @@
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
   
-  CGRect safeArea = UIEdgeInsetsInsetRect(self.view.frame, self.view.safeAreaInsets);
+  CGRect safeArea = UIEdgeInsetsInsetRect(self.view.frame, self.view.tkm_safeAreaInsets);
   CGSize pageControlSize = [_pageControl sizeThatFits:CGSizeMake(self.view.frame.size.width, 0)];
   CGRect pageControlFrame = CGRectMake(CGRectGetMinX(safeArea),
                                        CGRectGetMaxY(safeArea) - pageControlSize.height,

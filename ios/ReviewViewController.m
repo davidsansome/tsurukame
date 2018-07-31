@@ -23,6 +23,7 @@
 #import "UserDefaults.h"
 #import "TKMKanaInput.h"
 #import "proto/Wanikani+Convenience.h"
+#import "UIView+SafeAreaInsets.h"
 
 #import <WebKit/WebKit.h>
 
@@ -268,7 +269,7 @@ typedef enum : NSUInteger {
   [_questionGradient addAnimation:positionAnimation forKey:nil];
   
   // Fix the extra inset at the top of the subject details view.
-  _subjectDetailsView.contentInset = UIEdgeInsetsMake(-self.view.safeAreaInsets.top, 0, 0, 0);
+  _subjectDetailsView.contentInset = UIEdgeInsetsMake(-self.view.tkm_safeAreaInsets.top, 0, 0, 0);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
