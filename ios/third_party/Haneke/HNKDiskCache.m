@@ -166,7 +166,7 @@ NSString *const HNKExtendedFileAttributeKey = @"io.haneke.key";
     });
 }
 
-- (void)updateAccessDateForKey:(NSString*)key data:(NSData* (^)())lazyData
+- (void)updateAccessDateForKey:(NSString*)key data:(NSData* (^)(void))lazyData
 {
     dispatch_async(_queue, ^{
         [self syncUpdateAccessDateForKey:key data:lazyData];
@@ -266,7 +266,7 @@ NSString *const HNKExtendedFileAttributeKey = @"io.haneke.key";
     }
 }
 
-- (void)syncUpdateAccessDateForKey:(NSString*)key data:(NSData* (^)())lazyData
+- (void)syncUpdateAccessDateForKey:(NSString*)key data:(NSData* (^)(void))lazyData
 {
     NSString *path = [self pathForKey:key];
     NSDate *now = [NSDate date];
