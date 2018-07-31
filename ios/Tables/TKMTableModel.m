@@ -62,6 +62,10 @@
   return self;
 }
 
+- (int)sectionCount {
+  return self.sections.count;
+}
+
 - (NSArray<id<TKMModelItem>> *)itemsInSection:(int)section {
   return self.sections[section].items;
 }

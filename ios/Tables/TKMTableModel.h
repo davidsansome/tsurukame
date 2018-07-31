@@ -19,6 +19,7 @@
 @interface TKMTableModel : NSObject <UITableViewDataSource, UITableViewDelegate>
 
 @property(nonatomic, readonly, weak) UITableView *tableView;
+@property(nonatomic, readonly) int sectionCount;
 
 - (instancetype)initWithTableView:(UITableView *)tableView NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;

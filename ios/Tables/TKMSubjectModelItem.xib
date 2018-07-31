@@ -66,6 +66,7 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <color key="tintColor" red="0.72212885149999995" green="0.85173509820000004" blue="0.98823529409999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <connections>
+                <outlet property="answerStack" destination="hFs-Wr-vk0" id="ZgE-Md-LuY"/>
                 <outlet property="levelLabel" destination="qRR-OX-bSu" id="evL-Nn-oBL"/>
                 <outlet property="meaningLabel" destination="y8K-YK-cn3" id="fuG-Lt-ybN"/>
                 <outlet property="readingLabel" destination="4Xw-0q-YTh" id="9Ge-HX-yxa"/>

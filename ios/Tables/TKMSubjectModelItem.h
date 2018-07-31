@@ -21,6 +21,12 @@
 
 NS_ASSUME_NONNULL_BEGIN;
 
+@interface TKMSubjectModelView : TKMModelCell
+
+- (void)setShowAnswers:(bool)showAnswers animated:(bool)animated;
+
+@end
+
 @interface TKMSubjectModelItem : NSObject <TKMModelItem>
 
 /** Used for review summary.  Shows the meaning or reading in bold if they were wrong. */
@@ -44,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN;
 @property(nonatomic) bool readingWrong;
 @property(nonatomic) bool meaningWrong;
 @property(nonatomic) bool showLevelNumber;
+@property(nonatomic) bool showAnswers;
 @property(nonatomic) NSArray<id> *gradientColors;
 
 @end
