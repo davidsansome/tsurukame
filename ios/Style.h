@@ -30,6 +30,7 @@ extern UIColor *TKMColor2ForSubjectType(TKMSubject_Type subjectType);
 extern NSArray<id> *TKMRadicalGradient(void);
 extern NSArray<id> *TKMKanjiGradient(void);
 extern NSArray<id> *TKMVocabularyGradient(void);
+extern NSArray<id> *TKMLockedGradient(void);
 extern NSArray<id> *TKMGradientForAssignment(TKMAssignment *assignment);
 extern NSArray<id> *TKMGradientForSubject(TKMSubject *subject);
 

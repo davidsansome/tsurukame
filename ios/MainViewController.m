@@ -22,6 +22,7 @@
 #import "SearchResultViewController.h"
 #import "Style.h"
 #import "SubjectDetailsViewController.h"
+#import "SubjectsByLevelViewController.h"
 #import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
 #import "TKMOpenURL.h"
@@ -318,6 +319,11 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
       items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
     }
     vc.items = items;
+  } else if ([segue.identifier isEqualToString:@"subjectsByLevel"]) {
+    SubjectsByLevelViewController *vc = (SubjectsByLevelViewController *)segue.destinationViewController;
+    vc.dataLoader = _dataLoader;
+    vc.localCachingClient = _localCachingClient;
+    vc.level = _localCachingClient.getUserInfo.level;
   }
 }
 

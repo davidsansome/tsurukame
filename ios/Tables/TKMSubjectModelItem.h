@@ -21,15 +21,17 @@
 
 NS_ASSUME_NONNULL_BEGIN;
 
-@interface TKMSubjectModelView : TKMModelCell
-@end
-
 @interface TKMSubjectModelItem : NSObject <TKMModelItem>
 
+/** Used for review summary.  Shows the meaning or reading in bold if they were wrong. */
 - (instancetype)initWithSubject:(TKMSubject *)subject
                        delegate:(id<TKMSubjectDelegate>)delegate
                    readingWrong:(bool)readingWrong
                    meaningWrong:(bool)meaningWrong NS_DESIGNATED_INITIALIZER;
+
+- (instancetype)initWithSubject:(TKMSubject *)subject
+                     assignment:(TKMAssignment *)assignment
+                       delegate:(id<TKMSubjectDelegate>)delegate;
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
                        delegate:(id<TKMSubjectDelegate>)delegate;
@@ -37,9 +39,12 @@ NS_ASSUME_NONNULL_BEGIN;
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic, copy) TKMSubject *subject;
+@property(nonatomic) TKMAssignment *assignment;
 @property(nonatomic, weak) id<TKMSubjectDelegate> delegate;
 @property(nonatomic) bool readingWrong;
 @property(nonatomic) bool meaningWrong;
+@property(nonatomic) bool showLevelNumber;
+@property(nonatomic) NSArray<id> *gradientColors;
 
 @end
 

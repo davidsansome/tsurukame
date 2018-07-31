@@ -12,30 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import "TKMModelItem.h"
 
-@class TKMModelCell;
+@interface TKMListSeparatorItem : NSObject <TKMModelItem>
 
-extern void TKMSafePerformSelector(id target, SEL selector, id object);
+- (instancetype)initWithLabel:(NSString *)label NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
 
-@protocol TKMModelItem <NSObject>
-
-@optional
-- (Class)cellClass;
-- (NSString *)cellNibName;
-- (NSString *)cellReuseIdentifier;
-- (TKMModelCell *)createCell;
-
-- (CGFloat)rowHeight;
-
-@end
-
-@interface TKMModelCell : UITableViewCell
-
-@property(nonatomic, readonly, weak) id<TKMModelItem> item;
-
-- (void)updateWithItem:(id<TKMModelItem>)item;
-
-- (void)didSelectCell;
+@property (nonatomic, readonly) NSString *label;
 
 @end

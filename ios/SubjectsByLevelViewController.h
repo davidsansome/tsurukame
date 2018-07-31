@@ -14,28 +14,13 @@
 
 #import <UIKit/UIKit.h>
 
-@class TKMModelCell;
+@class DataLoader;
+@class LocalCachingClient;
 
-extern void TKMSafePerformSelector(id target, SEL selector, id object);
+@interface SubjectsByLevelViewController : UITableViewController
 
-@protocol TKMModelItem <NSObject>
-
-@optional
-- (Class)cellClass;
-- (NSString *)cellNibName;
-- (NSString *)cellReuseIdentifier;
-- (TKMModelCell *)createCell;
-
-- (CGFloat)rowHeight;
-
-@end
-
-@interface TKMModelCell : UITableViewCell
-
-@property(nonatomic, readonly, weak) id<TKMModelItem> item;
-
-- (void)updateWithItem:(id<TKMModelItem>)item;
-
-- (void)didSelectCell;
+@property(nonatomic) DataLoader *dataLoader;
+@property(nonatomic) LocalCachingClient *localCachingClient;
+@property(nonatomic) int level;
 
 @end

@@ -21,9 +21,10 @@
 static const CGFloat kJapaneseTextImageSize = 26.f;
 
 static UIFont *kNormalFont;
+static UIFont *kCorrectFont;
 static UIFont *kIncorrectFont;
 
-@interface TKMSubjectModelView ()
+@interface TKMSubjectModelView : TKMModelCell
 @property (weak, nonatomic) IBOutlet UILabel *levelLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subjectLabel;
 @property (weak, nonatomic) IBOutlet UILabel *readingLabel;
@@ -42,6 +43,17 @@ static UIFont *kIncorrectFont;
     _delegate = delegate;
     _meaningWrong = meaningWrong;
     _readingWrong = readingWrong;
+    _showLevelNumber = true;
+  }
+  return self;
+}
+
+- (instancetype)initWithSubject:(TKMSubject *)subject
+                     assignment:(TKMAssignment *)assignment
+                       delegate:(id<TKMSubjectDelegate>)delegate {
+  self = [self initWithSubject:subject delegate:delegate readingWrong:false meaningWrong:false];
+  if (self) {
+    self.assignment = assignment;
   }
   return self;
 }
@@ -64,7 +76,8 @@ static UIFont *kIncorrectFont;
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    kNormalFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightThin];
+    kNormalFont = [UIFont systemFontOfSize:14.0f];
+    kCorrectFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightThin];
     kIncorrectFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightBold];
   });
   
@@ -87,9 +100,13 @@ static UIFont *kIncorrectFont;
 - (void)updateWithItem:(TKMSubjectModelItem *)item {
   [super updateWithItem:item];
   
-  self.levelLabel.text = [NSString stringWithFormat:@"%d", item.subject.level];
+  self.levelLabel.hidden = !item.showLevelNumber;
+  if (item.showLevelNumber) {
+    self.levelLabel.text = [NSString stringWithFormat:@"%d", item.subject.level];
+  }
+  _gradient.colors = item.gradientColors ?: TKMGradientForSubject(item.subject);
+  
   self.subjectLabel.attributedText = [item.subject japaneseTextWithImageSize:kJapaneseTextImageSize];
-  _gradient.colors = TKMGradientForSubject(item.subject);
   if (item.subject.hasRadical) {
     [self.readingLabel setHidden:YES];
     self.meaningLabel.text = item.subject.commaSeparatedMeanings;
@@ -103,8 +120,13 @@ static UIFont *kIncorrectFont;
     self.meaningLabel.text = item.subject.commaSeparatedMeanings;
   }
   
-  self.readingLabel.font = item.readingWrong ? kIncorrectFont : kNormalFont;
-  self.meaningLabel.font = item.meaningWrong ? kIncorrectFont : kNormalFont;
+  if (!item.readingWrong && !item.meaningWrong) {
+    self.readingLabel.font = kNormalFont;
+    self.meaningLabel.font = kNormalFont;
+  } else {
+    self.readingLabel.font = item.readingWrong ? kIncorrectFont : kCorrectFont;
+    self.meaningLabel.font = item.meaningWrong ? kIncorrectFont : kCorrectFont;
+  }
 }
 
 - (void)didSelectCell {

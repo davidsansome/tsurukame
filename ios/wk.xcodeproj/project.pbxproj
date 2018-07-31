@@ -202,6 +202,9 @@
 		63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */; };
 		63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.m */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
+		63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */; };
+		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
+		63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */; };
 		63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */; };
 		63EDA418207F335500382CE3 /* PieChartDataEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA406207F335200382CE3 /* PieChartDataEntry.swift */; };
 		63EDA419207F335500382CE3 /* IRadarChartDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA407207F335200382CE3 /* IRadarChartDataSet.swift */; };
@@ -517,6 +520,11 @@
 		63CAAB121FD7FEA400E09DA1 /* LocalCachingClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalCachingClient.h; sourceTree = "<group>"; };
 		63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalCachingClient.m; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		63E9A8CA210D6CC000418CE1 /* SubjectsByLevelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsByLevelViewController.h; sourceTree = "<group>"; };
+		63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsByLevelViewController.m; sourceTree = "<group>"; };
+		63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMListSeparatorItem.xib; sourceTree = "<group>"; };
+		63E9A8CF2110859800418CE1 /* TKMListSeparatorItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMListSeparatorItem.h; sourceTree = "<group>"; };
+		63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMListSeparatorItem.m; sourceTree = "<group>"; };
 		63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchResultViewController.h; sourceTree = "<group>"; };
 		63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchResultViewController.m; sourceTree = "<group>"; };
 		63EDA406207F335200382CE3 /* PieChartDataEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PieChartDataEntry.swift; path = third_party/Charts/PieChartDataEntry.swift; sourceTree = SOURCE_ROOT; };
@@ -568,6 +576,8 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				63E9A8CA210D6CC000418CE1 /* SubjectsByLevelViewController.h */,
+				63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -825,6 +835,9 @@
 				6392DBA020D130F0003019EB /* TKMSubjectModelItem.h */,
 				6392DBA120D130F0003019EB /* TKMSubjectModelItem.m */,
 				6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */,
+				63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */,
+				63E9A8CF2110859800418CE1 /* TKMListSeparatorItem.h */,
+				63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */,
 			);
 			path = Tables;
 			sourceTree = "<group>";
@@ -1040,6 +1053,7 @@
 				63CAAAFA1FC6EADD00E09DA1 /* data.bin in Resources */,
 				6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */,
 				63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */,
+				63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */,
 				63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */,
 				63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */,
 			);
@@ -1061,6 +1075,7 @@
 				63EDA41D207F335500382CE3 /* XAxisRendererRadarChart.swift in Sources */,
 				6319CA9E2044203E00C31F87 /* IFillFormatter.swift in Sources */,
 				63CAAAD91FC6E0CB00E09DA1 /* Wanikani.pbobjc.m in Sources */,
+				63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */,
 				6319CAB22044203E00C31F87 /* HorizontalBarChartRenderer.swift in Sources */,
 				63EDA426207F335500382CE3 /* RadarChartDataSet.swift in Sources */,
 				6319CB002044203F00C31F87 /* AnimatedViewPortJob.swift in Sources */,
@@ -1164,6 +1179,7 @@
 				6319CAB12044203E00C31F87 /* ChartUtils.swift in Sources */,
 				6319CACB2044203E00C31F87 /* DefaultAxisValueFormatter.swift in Sources */,
 				6319CAD32044203E00C31F87 /* DefaultFillFormatter.swift in Sources */,
+				63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */,
 				63453E4E20EF8C0500F20404 /* UIButton+Haneke.m in Sources */,
 				633DE9382094DDA900AC25F4 /* NSMutableArray+Shuffle.m in Sources */,
 				6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */,

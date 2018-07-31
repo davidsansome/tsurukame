@@ -41,6 +41,8 @@ UIColor *TKMKanjiColor1()      { return UIColorFromHex(0xFF00AA); }
 UIColor *TKMKanjiColor2()      { return UIColorFromHex(0xDD0093); }
 UIColor *TKMVocabularyColor1() { return UIColorFromHex(0xAA00FF); }
 UIColor *TKMVocabularyColor2() { return UIColorFromHex(0x9300DD); }
+UIColor *TKMLockedColor1()     { return UIColorFromHex(0x505050); }
+UIColor *TKMLockedColor2()     { return UIColorFromHex(0x484848); }
 UIColor *TKMGreyColor()        { return UIColorFromHex(0xC8C8C8); }
 
 UIColor *TKMColor2ForSubjectType(TKMSubject_Type subjectType) {
@@ -64,6 +66,10 @@ NSArray<id> *TKMKanjiGradient(void) {
 
 NSArray<id> *TKMVocabularyGradient(void) {
   return ArrayOfTwoColors(TKMVocabularyColor1(), TKMVocabularyColor2());
+}
+
+NSArray<id> *TKMLockedGradient(void) {
+  return ArrayOfTwoColors(TKMLockedColor1(), TKMLockedColor2());
 }
 
 NSArray<id> *TKMGradientForAssignment(TKMAssignment *assignment) {

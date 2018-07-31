@@ -859,7 +859,7 @@ typedef enum : NSUInteger {
   if (!_activeStudyMaterials) {
     _activeStudyMaterials = [[TKMStudyMaterials alloc] init];
     _activeStudyMaterials.subjectId = _activeSubject.id_p;
-    _activeStudyMaterials.subjectType = _activeSubject.subjectType;
+    _activeStudyMaterials.subjectType = _activeSubject.subjectTypeString;
   }
   [_activeStudyMaterials.meaningSynonymsArray addObject:_answerField.text];
   [_localCachingClient updateStudyMaterial:_activeStudyMaterials];

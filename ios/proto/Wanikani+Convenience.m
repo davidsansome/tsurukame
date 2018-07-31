@@ -16,8 +16,8 @@
 
 #import <UIKit/UIKit.h>
 
-NSString *TKMSRSLevelName(int srsLevel) {
-  switch (srsLevel) {
+NSString *TKMSRSStageName(int srsStage) {
+  switch (srsStage) {
     case 1:
       return @"Novice";
     case 2:
@@ -27,6 +27,30 @@ NSString *TKMSRSLevelName(int srsLevel) {
     case 5:
     case 6:
       return @"Guru";
+    case 7:
+      return @"Master";
+    case 8:
+      return @"Enlightened";
+    case 9:
+      return @"Burned";
+  }
+  return nil;
+}
+
+NSString *TKMDetailedSRSStageName(int srsStage) {
+  switch (srsStage) {
+    case 1:
+      return @"Novice";
+    case 2:
+      return @"Apprentice I";
+    case 3:
+      return @"Apprentice II";
+    case 4:
+      return @"Apprentice III";
+    case 5:
+      return @"Guru I";
+    case 6:
+      return @"Guru II";
     case 7:
       return @"Master";
     case 8:
@@ -57,7 +81,7 @@ NSString *TKMSRSLevelName(int srsLevel) {
   return [NSAttributedString attributedStringWithAttachment:imageAttachment];
 }
 
-- (NSString *)subjectType {
+- (NSString *)subjectTypeString {
   if (self.hasRadical) {
     return @"radical";
   }
@@ -68,6 +92,19 @@ NSString *TKMSRSLevelName(int srsLevel) {
     return @"vocabulary";
   }
   return nil;
+}
+
+- (TKMSubject_Type)subjectType {
+  if (self.hasRadical) {
+    return TKMSubject_Type_Radical;
+  }
+  if (self.hasKanji) {
+    return TKMSubject_Type_Kanji;
+  }
+  if (self.hasVocabulary) {
+    return TKMSubject_Type_Vocabulary;
+  }
+  abort();
 }
 
 - (NSString *)primaryMeaning {
@@ -161,11 +198,11 @@ NSString *TKMSRSLevelName(int srsLevel) {
 @implementation TKMAssignment (Convenience)
 
 - (bool)isLessonStage {
-  return !self.hasStartedAt && self.srsStage == 0;
+  return self.hasId_p && !self.hasStartedAt && self.srsStage == 0;
 }
 
 - (bool)isReviewStage {
-  return self.hasAvailableAt && self.srsStage != 0;
+  return self.hasId_p && self.hasAvailableAt && self.srsStage != 0;
 }
 
 - (NSDate *)availableAtDate {
