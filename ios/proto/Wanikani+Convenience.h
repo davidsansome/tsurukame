@@ -16,11 +16,13 @@
 
 #import "Wanikani.pbobjc.h"
 
-extern NSString *TKMSRSLevelName(int srsLevel);
+extern NSString *TKMSRSStageName(int srsStage);
+extern NSString *TKMDetailedSRSStageName(int srsStage);
 
 @interface TKMSubject (Convenience)
 
-@property (nonatomic, readonly) NSString *subjectType;
+@property (nonatomic, readonly) TKMSubject_Type subjectType;
+@property (nonatomic, readonly) NSString *subjectTypeString;
 @property (nonatomic, readonly) NSString *primaryMeaning;
 @property (nonatomic, readonly) NSArray<TKMReading *> *primaryReadings;
 @property (nonatomic, readonly) NSArray<TKMReading *> *alternateReadings;

@@ -241,7 +241,7 @@ void RunSuccessAnimation(UIView *answerField,
                          UIView *doneLabel,
                          bool isSubjectFinished,
                          bool didLevelUp,
-                         int newSrsLevel) {
+                         int newSrsStage) {
   if (UserDefaults.animateParticleExplosion) {
     CreateExplosion(answerField);
   }
@@ -256,7 +256,7 @@ void RunSuccessAnimation(UIView *answerField,
   
   if (isSubjectFinished && didLevelUp && UserDefaults.animateLevelUpPopup) {
     UIColor *srsLevelColor;
-    switch (newSrsLevel) {
+    switch (newSrsStage) {
       case 2:
         srsLevelColor = [UIColor colorWithRed:0.867 green:0 blue:0.576 alpha:1]; // #dd0093;
         break;
@@ -275,7 +275,7 @@ void RunSuccessAnimation(UIView *answerField,
       default:
         return;
     }
-    NSString *srsLevelString = TKMSRSLevelName(newSrsLevel);
+    NSString *srsLevelString = TKMSRSStageName(newSrsStage);
     
     CreateSpringyBillboard(answerField, srsLevelString,
                            [UIFont systemFontOfSize:16.0],

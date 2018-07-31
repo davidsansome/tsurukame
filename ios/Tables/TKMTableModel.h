@@ -16,7 +16,7 @@
 
 #import "TKMModelItem.h"
 
-@interface TKMTableModel : NSObject <UITableViewDataSource>
+@interface TKMTableModel : NSObject <UITableViewDataSource, UITableViewDelegate>
 
 @property(nonatomic, readonly, weak) UITableView *tableView;
 
@@ -26,19 +26,23 @@
 - (void)setIndexPath:(NSIndexPath *)index isHidden:(BOOL)hidden;
 - (BOOL)isIndexPathHidden:(NSIndexPath *)index;
 
+- (NSArray<id<TKMModelItem>> *)itemsInSection:(int)section;
+
 @end
 
 @interface TKMMutableTableModel : TKMTableModel
 
-- (void)addSection;
-- (void)addSection:(NSString *)title;
-- (void)addSection:(NSString *)title footer:(NSString *)footer;
+- (int)addSection;
+- (int)addSection:(NSString *)title;
+- (int)addSection:(NSString *)title footer:(NSString *)footer;
 - (NSIndexPath *)addItem:(id<TKMModelItem>)item;
+- (NSIndexPath *)addItem:(id<TKMModelItem>)item toSection:(int)section;
 - (NSIndexPath *)addItem:(id<TKMModelItem>)item hidden:(bool)hidden;
+- (NSIndexPath *)addItem:(id<TKMModelItem>)item toSection:(int)section hidden:(bool)hidden;
+- (NSIndexPath *)insertItem:(id<TKMModelItem>)item atIndex:(int)index inSection:(int)section;
+
+- (void)sortSection:(int)section usingComparator:(NSComparator)comparator;
 
 - (void)reloadTable;
 
-@end
-
-@interface TKMTableDelegage : NSObject <UITableViewDelegate>
 @end

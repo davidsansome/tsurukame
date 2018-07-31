@@ -43,21 +43,27 @@
 @end
 
 @implementation TKMTableModel {
-  TKMTableDelegage *_tableDelegate;
   BOOL _isInitialised;
+}
+
+- (void)dealloc {
+  NSAssert(_isInitialised, @"TKMTableModel deallocated without being used. Did you forget to retain it?");
 }
 
 - (instancetype)initWithTableView:(UITableView *)tableView {
   self = [super init];
   if (self) {
-    _tableDelegate = [[TKMTableDelegage alloc] init];
     _tableView = tableView;
     _sections = [NSMutableArray array];
     
     _tableView.dataSource = self;
-    _tableView.delegate = _tableDelegate;
+    _tableView.delegate = self;
   }
   return self;
+}
+
+- (NSArray<id<TKMModelItem>> *)itemsInSection:(int)section {
+  return self.sections[section].items;
 }
 
 #pragma mark - Hiding items
@@ -134,7 +140,11 @@
     }
   }
   
+  // Disable animations when reusing a cell.
+  [CATransaction begin];
+  [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
   [cell updateWithItem:item];
+  [CATransaction commit];
   return cell;
 }
 
@@ -157,46 +167,77 @@
   return s.items.count - s.hiddenItems.count;
 }
 
-@end
-
-@implementation TKMTableDelegage
+#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   TKMModelCell *cell = [tableView cellForRowAtIndexPath:indexPath];
   [cell didSelectCell];
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+  id<TKMModelItem> item = _sections[indexPath.section].items[indexPath.item];
+  if ([item respondsToSelector:@selector(rowHeight)]) {
+    return [item rowHeight];
+  }
+  return tableView.rowHeight;
+}
+
 @end
 
 @implementation TKMMutableTableModel
 
-- (void)addSection {
-  [self addSection:nil footer:nil];
+- (int)addSection {
+  return [self addSection:nil footer:nil];
 }
 
-- (void)addSection:(NSString *)title {
-  [self addSection:title footer:nil];
+- (int)addSection:(NSString *)title {
+  return [self addSection:title footer:nil];
 }
 
-- (void)addSection:(NSString *)title footer:(NSString *)footer {
+- (int)addSection:(NSString *)title footer:(NSString *)footer {
   TKMTableModelSection *section = [[TKMTableModelSection alloc] init];
   section.headerTitle = title;
   section.footerTitle = footer;
+  
+  int index = (int)self.sections.count;
   [self.sections addObject:section];
+  return index;
 }
 
-- (NSIndexPath *)addItem:(id<TKMModelItem>)item {
-  [self.sections.lastObject.items addObject:item];
-  return [NSIndexPath indexPathForRow:self.sections.lastObject.items.count - 1
-                            inSection:self.sections.count - 1];
-}
-
-- (NSIndexPath *)addItem:(id<TKMModelItem>)item hidden:(bool)hidden {
-  NSIndexPath *indexPath = [self addItem:item];
+- (NSIndexPath *)addItem:(id<TKMModelItem>)item toSection:(int)sectionIndex hidden:(bool)hidden {
+  TKMTableModelSection *section = self.sections[sectionIndex];
+  [section.items addObject:item];
+  
+  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:section.items.count - 1
+                                              inSection:sectionIndex];
   if (hidden) {
     [self setIndexPath:indexPath isHidden:YES];
   }
   return indexPath;
+}
+
+- (NSIndexPath *)addItem:(id<TKMModelItem>)item {
+  return [self addItem:item hidden:NO];
+}
+
+- (NSIndexPath *)addItem:(id<TKMModelItem>)item hidden:(bool)hidden {
+  if (self.sections.count == 0) {
+    [self addSection];
+  }
+  return [self addItem:item toSection:(int)self.sections.count - 1 hidden:hidden];
+}
+
+- (NSIndexPath *)addItem:(id<TKMModelItem>)item toSection:(int)section {
+  return [self addItem:item toSection:section hidden:NO];
+}
+
+- (NSIndexPath *)insertItem:(id<TKMModelItem>)item atIndex:(int)index inSection:(int)section {
+  [self.sections[section].items insertObject:item atIndex:index];
+  return [NSIndexPath indexPathForRow:index inSection:section];
+}
+
+- (void)sortSection:(int)section usingComparator:(NSComparator)comparator {
+  [self.sections[section].items sortUsingComparator:comparator];
 }
 
 - (void)reloadTable {
