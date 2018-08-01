@@ -184,6 +184,9 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   if (isHint && !_showHints) {
     return;
   }
+  if (!formattedText.count) {
+    return;
+  }
   
   NSMutableAttributedString *text = TKMRenderFormattedText(formattedText);
   [text replaceFontSize:kFontSize];
