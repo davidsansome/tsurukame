@@ -205,6 +205,10 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
   return self.hasId_p && self.hasAvailableAt && self.srsStage != 0;
 }
 
+- (bool)isBurned {
+  return self.srsStage == 9;
+}
+
 - (NSDate *)availableAtDate {
   return [NSDate dateWithTimeIntervalSince1970:self.availableAt];
 }

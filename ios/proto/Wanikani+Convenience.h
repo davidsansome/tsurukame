@@ -45,6 +45,7 @@ extern NSString *TKMDetailedSRSStageName(int srsStage);
 
 @property (nonatomic, readonly) bool isLessonStage;
 @property (nonatomic, readonly) bool isReviewStage;
+@property (nonatomic, readonly) bool isBurned;
 @property (nonatomic, readonly) NSDate *availableAtDate;
 @property (nonatomic, readonly) NSDate *startedAtDate;
 @property (nonatomic, readonly) NSDate *passedAtDate;

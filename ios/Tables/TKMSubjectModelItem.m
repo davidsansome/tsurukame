@@ -131,7 +131,6 @@ static UIFont *kIncorrectFont;
   }
   
   [self setShowAnswers:item.showAnswers animated:false];
-  NSLog(@"%@", NSStringFromCGRect(_answerStack.frame));
 }
 
 - (void)setShowAnswers:(bool)showAnswers animated:(bool)animated {

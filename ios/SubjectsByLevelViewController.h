@@ -23,4 +23,7 @@
 @property(nonatomic) LocalCachingClient *localCachingClient;
 @property(nonatomic) int level;
 
+@property(nonatomic) bool showAnswers;
+- (void)setShowAnswers:(bool)showAnswers animated:(bool)animated;
+
 @end

@@ -47,7 +47,9 @@
 }
 
 - (void)dealloc {
-  NSAssert(_isInitialised, @"TKMTableModel deallocated without being used. Did you forget to retain it?");
+  if (!_isInitialised) {
+    NSLog(@"TKMTableModel deallocated without being used. Did you forget to retain it?");
+  }
 }
 
 - (instancetype)initWithTableView:(UITableView *)tableView {
