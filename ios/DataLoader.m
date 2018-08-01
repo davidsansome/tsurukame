@@ -45,7 +45,7 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
 }
 
 - (int)maximumLevel {
-  return (int)_header.subjectsByLevelArray_Count + 1;
+  return (int)_header.subjectsByLevelArray_Count;
 }
 
 - (bool)isValidSubjectID:(int)subjectID {
