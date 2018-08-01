@@ -588,7 +588,7 @@ typedef GPB_ENUM(TKMDataFileHeader_FieldNumber) {
  * Offset of each encoded Subject message, starting from the end of this
  * header in the file.
  **/
-@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *subjectByteOffsetArray;
+@property(nonatomic, readwrite, strong, null_resettable) GPBUInt32Array *subjectByteOffsetArray;
 /** The number of items in @c subjectByteOffsetArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger subjectByteOffsetArray_Count;
 
