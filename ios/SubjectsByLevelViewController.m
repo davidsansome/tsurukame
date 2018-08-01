@@ -29,20 +29,11 @@
 
 @implementation SubjectsByLevelViewController {
   TKMTableModel *_model;
-  UISwitch *_answerSwitch;
 }
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  
-  _answerSwitch = [[UISwitch alloc] init];
-  _answerSwitch.on = YES;
-  [_answerSwitch addTarget:self
-                    action:@selector(answerSwitchChanged:)
-          forControlEvents:UIControlEventValueChanged];
-  
   self.navigationItem.title = [NSString stringWithFormat:@"Level %d", _level];
-  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_answerSwitch];
   
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
   [model addSection:@"Radicals"];
@@ -56,6 +47,7 @@
                                                                   assignment:assignment
                                                                     delegate:self];
     item.showLevelNumber = false;
+    item.showAnswers = _showAnswers;
     if (!assignment.isReviewStage && !assignment.isLessonStage) {
       item.gradientColors = TKMLockedGradient();
     }
@@ -85,7 +77,7 @@
           lastAssignment.isReviewStage != assignment.isReviewStage ||
           lastAssignment.isLessonStage != assignment.isLessonStage) {
         NSString *label;
-        if (assignment.isReviewStage) {
+        if (assignment.isReviewStage || assignment.isBurned) {
           label = TKMDetailedSRSStageName(assignment.srsStage);
         } else if (assignment.isLessonStage) {
           label = @"Available in Lessons";
@@ -107,9 +99,12 @@
   self.navigationController.navigationBarHidden = NO;
 }
 
-- (void)answerSwitchChanged:(UISwitch *)sender {
-  bool showAnswers = sender.on;
-  
+- (void)setShowAnswers:(bool)showAnswers {
+  [self setShowAnswers:showAnswers animated:false];
+}
+
+- (void)setShowAnswers:(bool)showAnswers animated:(bool)animated {
+  _showAnswers = showAnswers;
   for (int section = 0; section < _model.sectionCount; ++section) {
     for (id<TKMModelItem> item in [_model itemsInSection:section]) {
       if ([item isKindOfClass:TKMSubjectModelItem.class]) {
@@ -122,7 +117,7 @@
   for (UITableViewCell *cell in self.tableView.visibleCells) {
     if ([cell isKindOfClass:TKMSubjectModelView.class]) {
       TKMSubjectModelView *subjectCell = (TKMSubjectModelView *)cell;
-      [subjectCell setShowAnswers:showAnswers animated:true];
+      [subjectCell setShowAnswers:showAnswers animated:animated];
     }
   }
 }

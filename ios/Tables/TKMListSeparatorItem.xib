@@ -18,16 +18,16 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0hv-D6-PYI">
-                        <rect key="frame" x="168" y="-4" width="37.5" height="17.5"/>
+                        <rect key="frame" x="168" y="-4" width="37.5" height="17"/>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
-                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <color key="backgroundColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 <constraints>
-                    <constraint firstItem="0hv-D6-PYI" firstAttribute="centerY" secondItem="QGA-Uh-22D" secondAttribute="centerY" id="6uW-uX-hJg"/>
                     <constraint firstItem="0hv-D6-PYI" firstAttribute="centerX" secondItem="QGA-Uh-22D" secondAttribute="centerX" id="Lo9-Q5-8F8"/>
+                    <constraint firstItem="0hv-D6-PYI" firstAttribute="centerY" secondItem="QGA-Uh-22D" secondAttribute="centerY" id="Tbe-G6-P4y"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

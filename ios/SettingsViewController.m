@@ -139,7 +139,6 @@
 }
 
 - (void)animateParticleExplosionSwitchChanged:(UISwitch *)switchView {
-  NSLog(@"Toggled");
   UserDefaults.animateParticleExplosion = switchView.on;
 }
 

@@ -21,8 +21,8 @@
 #import "ReviewViewController.h"
 #import "SearchResultViewController.h"
 #import "Style.h"
+#import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"
-#import "SubjectsByLevelViewController.h"
 #import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
 #import "TKMOpenURL.h"
@@ -263,7 +263,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   int lessons = _localCachingClient.availableLessonCount;
   int reviews = _localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _localCachingClient.upcomingReviews;
-  NSArray<TKMAssignment *> *maxLevelAssignments = [_localCachingClient getAssignmentsAtMaxLevel];
+  NSArray<TKMAssignment *> *maxLevelAssignments = [_localCachingClient getAssignmentsAtUsersCurrentLevel];
 
   SetTableViewCellCount(self.lessonsCell, lessons);
   SetTableViewCellCount(self.reviewsCell, reviews);
@@ -319,8 +319,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
       items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
     }
     vc.items = items;
-  } else if ([segue.identifier isEqualToString:@"subjectsByLevel"]) {
-    SubjectsByLevelViewController *vc = (SubjectsByLevelViewController *)segue.destinationViewController;
+  } else if ([segue.identifier isEqualToString:@"subjectCatalogue"]) {
+    SubjectCatalogueViewController *vc = (SubjectCatalogueViewController *)segue.destinationViewController;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
     vc.level = _localCachingClient.getUserInfo.level;

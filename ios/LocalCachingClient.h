@@ -54,7 +54,7 @@ typedef void (^CompletionHandler)(void);
 - (NSArray<TKMProgress *> *)getAllPendingProgress;
 - (TKMAssignment *)getAssignmentForID:(int)subjectID;
 - (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
-- (NSArray<TKMAssignment *> *)getAssignmentsAtMaxLevel;
+- (NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
 
 // Setters: save the data to the database and return immediately, make network requests in the
 // background.

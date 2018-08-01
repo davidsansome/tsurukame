@@ -362,7 +362,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Everything in this level" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Jav-Y0-HDW">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Show all" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Jav-Y0-HDW">
                                                     <rect key="frame" x="16" y="0.0" width="324" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -372,7 +372,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="qoc-jm-LHh" kind="show" identifier="subjectsByLevel" id="vvt-xT-ulO"/>
+                                            <segue destination="XWq-bF-0D1" kind="show" identifier="subjectCatalogue" id="DLl-3g-mv9"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -496,10 +496,18 @@
             </objects>
             <point key="canvasLocation" x="546" y="176"/>
         </scene>
+        <!--Subject Catalogue View Controller-->
+        <scene sceneID="diY-fN-oc5">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="XWq-bF-0D1" customClass="SubjectCatalogueViewController" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0ft-nE-WU4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1362" y="834"/>
+        </scene>
         <!--Subjects By Level View Controller-->
         <scene sceneID="VQ8-fl-bl2">
             <objects>
-                <tableViewController id="qoc-jm-LHh" customClass="SubjectsByLevelViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="subjectsByLevel" id="qoc-jm-LHh" customClass="SubjectsByLevelViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Je4-Jb-gHW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

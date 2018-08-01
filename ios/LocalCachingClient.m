@@ -362,7 +362,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   return ret;
 }
 
-- (NSArray<TKMAssignment *> *)getAssignmentsAtMaxLevel {
+- (NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
   __block NSArray<TKMAssignment *> *ret = nil;
   [_db inDatabase:^(FMDatabase * _Nonnull db) {
     FMResultSet *r = [db executeQuery:@"SELECT MAX(level) FROM subject_progress"];
