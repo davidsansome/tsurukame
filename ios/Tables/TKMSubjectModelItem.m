@@ -140,11 +140,15 @@ static UIFont *kIncorrectFont;
     return;
   }
   
+  // Unhide the answer frame and update its width.
+  _answerStack.hidden = NO;
+  [self setNeedsLayout];
+  [self layoutIfNeeded];
+  
   CGRect visibleFrame = _answerStack.frame;
   CGRect hiddenFrame = visibleFrame;
   hiddenFrame.origin.x = self.frame.size.width;
   
-  _answerStack.hidden = NO;
   _answerStack.frame = showAnswers ? hiddenFrame : visibleFrame;
   _answerStack.alpha = showAnswers ? 0.f : 1.f;
   [UIView animateWithDuration:0.5f animations:^{
