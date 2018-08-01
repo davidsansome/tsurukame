@@ -66,7 +66,8 @@ static const char *kSchemaV3 =
     "CREATE TABLE subject_progress ("
     "  id INTEGER PRIMARY KEY,"
     "  level INTEGER,"
-    "  srs_stage INTEGER"
+    "  srs_stage INTEGER,"
+    "  subject_type INTEGER"
     ");";
 
 static const char *kClearAllData = 
@@ -112,7 +113,6 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
     assignment.subjectId = subjectID;
     assignment.subjectType = subjectType;
     assignment.level = level;
-    assignment.srsStage = 0;
     [assignments addObject:assignment];
   }
 }
@@ -203,13 +203,16 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   
   if (shouldPopulateSubjectProgress) {
     [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
-      NSString *sql = @"REPLACE INTO subject_progress (id, level, srs_stage) VALUES (?, ?, ?)";
+      NSString *sql = @"REPLACE INTO subject_progress (id, level, srs_stage, subject_type) "
+                       "VALUES (?, ?, ?, ?)";
       for (TKMAssignment *assignment in [self getAllAssignmentsInTransaction:db]) {
-        CheckUpdate(db, sql, @(assignment.subjectId), @(assignment.level), @(assignment.srsStage));
+        CheckUpdate(db, sql, @(assignment.subjectId), @(assignment.level), @(assignment.srsStage),
+                    @(assignment.subjectType));
       }
       for (TKMProgress *progress in [self getAllPendingProgressInTransaction:db]) {
         TKMAssignment *assignment = progress.assignment;
-        CheckUpdate(db, sql, @(assignment.subjectId), @(assignment.level), @(assignment.srsStage));
+        CheckUpdate(db, sql, @(assignment.subjectId), @(assignment.level), @(assignment.srsStage),
+                    @(assignment.subjectType));
       }
     }];
   }
@@ -323,14 +326,14 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 
 - (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level inTransaction:(FMDatabase *)db {
   NSMutableArray<TKMAssignment *> *ret = [NSMutableArray array];
-  FMResultSet *r = [db executeQuery:@"SELECT p.id, p.level, p.srs_stage, a.pb "
+  FMResultSet *r = [db executeQuery:@"SELECT p.id, p.level, p.srs_stage, p.subject_type, a.pb "
                     "FROM subject_progress AS p "
                     "LEFT JOIN assignments AS a "
                     "ON p.id = a.subject_id "
                     "WHERE p.level = ?", @(level)];
   NSMutableSet<NSNumber *> *subjectIDs = [NSMutableSet set];
   while ([r next]) {
-    NSData *data = [r dataForColumnIndex:3];
+    NSData *data = [r dataForColumnIndex:4];
     TKMAssignment *assignment;
     if (data) {
       assignment = [TKMAssignment parseFromData:data error:nil];
@@ -338,6 +341,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       assignment = [TKMAssignment message];
       assignment.subjectId = [r intForColumnIndex:0];
       assignment.level = [r intForColumnIndex:1];
+      assignment.subjectType = [r intForColumnIndex:3];
     }
     assignment.srsStage = [r intForColumnIndex:2];
     [ret addObject:assignment];
@@ -511,8 +515,10 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       } else if (p.meaningWrong || p.readingWrong) {
         newSrsStage = MAX(0, newSrsStage - 1);
       }
-      CheckUpdate(db, @"REPLACE INTO subject_progress (id, level, srs_stage) VALUES (?, ?, ?)",
-                  @(p.assignment.subjectId), @(p.assignment.level), @(newSrsStage));
+      CheckUpdate(db, @"REPLACE INTO subject_progress (id, level, srs_stage, subject_type) "
+                        "VALUES (?, ?, ?, ?)",
+                  @(p.assignment.subjectId), @(p.assignment.level), @(newSrsStage),
+                  @(p.assignment.subjectType));
     }
   }];
   [self invalidateCachedPendingProgress];
@@ -670,8 +676,9 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
                                      for (TKMAssignment *assignment in assignments) {
                                        CheckUpdate(db, @"REPLACE INTO assignments (id, pb, subject_id) VALUES (?, ?, ?)",
                                                    @(assignment.id_p), assignment.data, @(assignment.subjectId));
-                                       CheckUpdate(db, @"REPLACE INTO subject_progress (id, level, srs_stage) VALUES (?, ?, ?)",
-                                                   @(assignment.subjectId), @(assignment.level), @(assignment.srsStage));
+                                       CheckUpdate(db, @"REPLACE INTO subject_progress (id, level, srs_stage, subject_type) VALUES (?, ?, ?, ?)",
+                                                   @(assignment.subjectId), @(assignment.level), @(assignment.srsStage),
+                                                   @(assignment.subjectType));
                                      }
                                      CheckUpdate(db, @"UPDATE sync SET assignments_updated_after = ?", date);
                                    }];
