@@ -105,7 +105,7 @@ static void UnsetAllLabels(ChartViewBase *view) {
     enum PieSlice slice = LockedPieSlice;
     if (assignment.isLessonStage) {
       slice = LessonPieSlice;
-    } else if (!assignment.isReviewStage) {
+    } else if (!assignment.hasSrsStage) {
       slice = LockedPieSlice;
     } else if (assignment.srsStage <= 1) {
       slice = NovicePieSlice;
