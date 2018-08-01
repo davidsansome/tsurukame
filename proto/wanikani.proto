@@ -182,7 +182,7 @@ message DataFileHeader {
 
   // Offset of each encoded Subject message, starting from the end of this
   // header in the file.
-  repeated int32 subject_byte_offset = 2;
+  repeated uint32 subject_byte_offset = 2;
 }
 
 message SubjectsByLevel {

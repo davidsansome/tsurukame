@@ -29,9 +29,9 @@ var (
 )
 
 type fileEncodingReader struct {
-	fh      *os.File
-	count   uint32
-	offsets []uint32
+	fh          *os.File
+	header      *pb.DataFileHeader
+	firstOffset uint32
 }
 
 func OpenFileReader(filename string) (Reader, error) {
@@ -40,34 +40,37 @@ func OpenFileReader(filename string) (Reader, error) {
 		return nil, err
 	}
 
-	// Read the index.
-	var count uint32
-	if err := binary.Read(fh, order, &count); err != nil {
+	// Read the header length.
+	var headerLength uint32
+	if err := binary.Read(fh, order, &headerLength); err != nil {
 		fh.Close()
 		return nil, err
 	}
 
-	subjectOffsets := make([]uint32, count)
-	for i := uint32(0); i < count; i++ {
-		if err := binary.Read(fh, order, &subjectOffsets[i]); err != nil {
-			fh.Close()
-			return nil, err
-		}
+	headerData := make([]byte, headerLength)
+	if _, err := fh.ReadAt(headerData, int64(4)); err != nil {
+		return nil, err
+	}
+
+	var header pb.DataFileHeader
+	if err := proto.Unmarshal(headerData, &header); err != nil {
+		return nil, err
 	}
 
 	return &fileEncodingReader{
-		fh:      fh,
-		count:   count,
-		offsets: subjectOffsets,
+		fh:          fh,
+		header:      &header,
+		firstOffset: 4 + headerLength,
 	}, nil
 }
 
 func (e *fileEncodingReader) SubjectCount() (int, error) {
-	return int(e.count), nil
+	return len(e.header.SubjectByteOffset) - 1, nil
 }
 
 func (e *fileEncodingReader) HasSubject(id int) bool {
-	return id >= 0 && uint32(id) < e.count
+	count, _ := e.SubjectCount()
+	return id >= 0 && id < count
 }
 
 func (e *fileEncodingReader) ReadSubject(id int) (*pb.Subject, error) {
@@ -86,23 +89,26 @@ func (e *fileEncodingReader) ReadSubject(id int) (*pb.Subject, error) {
 }
 
 func (e *fileEncodingReader) ReadSubjectBytes(id int) ([]byte, error) {
-	if id < 0 || uint32(id) >= e.count {
-		return nil, fmt.Errorf("Subject ID %d out of range 0-%d", id, e.count)
+	count, _ := e.SubjectCount()
+	if !e.HasSubject(id) {
+		return nil, fmt.Errorf("Subject ID %d out of range 0-%d", id, count)
 	}
 
+	offset := e.header.SubjectByteOffset[id] + e.firstOffset
 	var length uint32
-	if uint32(id) == e.count-1 {
+	if id == count-1 {
 		stat, err := e.fh.Stat()
 		if err != nil {
 			return nil, err
 		}
-		length = uint32(stat.Size()) - e.offsets[id]
+		length = uint32(stat.Size()) - offset
 	} else {
-		length = e.offsets[id+1] - e.offsets[id]
+		nextOffset := e.header.SubjectByteOffset[id+1] + e.firstOffset
+		length = nextOffset - offset
 	}
 
 	data := make([]byte, length)
-	if _, err := e.fh.ReadAt(data, int64(e.offsets[id])); err != nil {
+	if _, err := e.fh.ReadAt(data, int64(offset)); err != nil {
 		return nil, err
 	}
 	return data, nil
@@ -164,10 +170,10 @@ func (e *fileEncodingWriter) WriteSubject(id int, subject *pb.Subject) error {
 
 func (e *fileEncodingWriter) Close() error {
 	// Calculate the offsets of each message.
-	var offset int32
+	var offset uint32
 	for _, d := range e.subjects {
 		e.header.SubjectByteOffset = append(e.header.SubjectByteOffset, offset)
-		offset += int32(len(d))
+		offset += uint32(len(d))
 	}
 
 	// Seralise the header.
