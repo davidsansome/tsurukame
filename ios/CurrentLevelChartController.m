@@ -99,7 +99,7 @@ static void UnsetAllLabels(ChartViewBase *view) {
   int sliceSizes[PieSlice_Count] = {0};
   int total = 0;
   for (TKMAssignment *assignment in maxLevelAssignments) {
-    if (assignment.subjectType != _subjectType) {
+    if (!assignment.hasSubjectType || assignment.subjectType != _subjectType) {
       continue;
     }
     enum PieSlice slice = LockedPieSlice;
