@@ -15,6 +15,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -30,9 +31,10 @@ import (
 )
 
 var (
-	inputDir      = flag.String("in", "data", "Input directory")
-	outputFile    = flag.String("out", "data.bin", "Output file")
-	overridesFile = flag.String("overrides", "overrides.txt", "Overrides text proto")
+	inputDir         = flag.String("in", "data", "Input directory")
+	outputFile       = flag.String("out", "data.bin", "Output file")
+	overridesFile    = flag.String("overrides", "overrides.txt", "Overrides text proto")
+	similarKanjiFile = flag.String("similar-kanji-file", "wk_niai_noto.json", "Similar kanji input")
 )
 
 func main() {
@@ -61,7 +63,10 @@ func Combine() error {
 		}
 	}
 
-	if err := encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
+	sk, err := IndexSimilarKanji(reader, *similarKanjiFile)
+	utils.Must(err)
+
+	utils.Must(encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
 		// Remove fields we don't care about for the iOS app.
 		spb.DocumentUrl = nil
 		if spb.Radical != nil && spb.Radical.CharacterImage != nil {
@@ -107,10 +112,13 @@ func Combine() error {
 			spb.Vocabulary.ReadingExplanation = nil
 		}
 
+		// Add similar kanji.
+		if spb.Kanji != nil {
+			spb.Kanji.VisuallySimilarKanji = sk.Convert(spb.GetJapanese())
+		}
+
 		return writer.WriteSubject(id, spb)
-	}); err != nil {
-		return err
-	}
+	}))
 
 	return writer.Close()
 }
@@ -159,4 +167,56 @@ func UnsetEmptyFields(spb *pb.Subject) {
 			spb.Kanji.ReadingHint = nil
 		}
 	}
+}
+
+type similarKanjiEntry struct {
+	Kan   string  `json:"kan"`
+	Score float32 `json:"score"`
+}
+
+type similarKanji struct {
+	kanjiSubjectIDs map[string]int
+	data            map[string][]similarKanjiEntry
+}
+
+func IndexSimilarKanji(reader encoding.Reader, filename string) (*similarKanji, error) {
+	r := &similarKanji{
+		kanjiSubjectIDs: make(map[string]int),
+		data:            make(map[string][]similarKanjiEntry),
+	}
+
+	// Index Kanji by ID so we can look them up in the similar kanji file.
+	if err := encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
+		if spb.Kanji != nil {
+			r.kanjiSubjectIDs[spb.GetJapanese()] = int(spb.GetId())
+		}
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	// Read the similar Kanji file.
+	similarKanjiData, err := ioutil.ReadFile(*similarKanjiFile)
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(similarKanjiData, &r.data); err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
+func (s *similarKanji) Convert(kanji string) []*pb.VisuallySimilarKanji {
+	var ret []*pb.VisuallySimilarKanji
+	if entries, ok := s.data[kanji]; ok {
+		for _, entry := range entries {
+			if id, ok := s.kanjiSubjectIDs[entry.Kan]; ok {
+				ret = append(ret, &pb.VisuallySimilarKanji{
+					Id:    proto.Int32(int32(id)),
+					Score: proto.Int32(int32(entry.Score * 1000)),
+				})
+			}
+		}
+	}
+	return ret
 }
