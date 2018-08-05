@@ -43,6 +43,11 @@ message Radical {
   repeated FormattedText formatted_mnemonic = 4;
 }
 
+message VisuallySimilarKanji {
+  optional int32 id = 1;
+  optional int32 score = 2;  // From 0 to 1000.
+}
+
 message Kanji {
   optional string meaning_mnemonic = 1;
   optional string meaning_hint = 2;
@@ -53,6 +58,8 @@ message Kanji {
   repeated FormattedText formatted_meaning_hint = 6;
   repeated FormattedText formatted_reading_mnemonic = 7;
   repeated FormattedText formatted_reading_hint = 8;
+
+  repeated VisuallySimilarKanji visually_similar_kanji = 9;
 }
 
 message Vocabulary {
