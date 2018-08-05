@@ -274,6 +274,60 @@ typedef struct TKMRadical__storage_ {
 
 @end
 
+#pragma mark - TKMVisuallySimilarKanji
+
+@implementation TKMVisuallySimilarKanji
+
+@dynamic hasId_p, id_p;
+@dynamic hasScore, score;
+
+typedef struct TKMVisuallySimilarKanji__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t id_p;
+  int32_t score;
+} TKMVisuallySimilarKanji__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "id_p",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMVisuallySimilarKanji_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMVisuallySimilarKanji__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "score",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMVisuallySimilarKanji_FieldNumber_Score,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TKMVisuallySimilarKanji__storage_, score),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMVisuallySimilarKanji class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMVisuallySimilarKanji__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 #pragma mark - TKMKanji
 
 @implementation TKMKanji
@@ -286,6 +340,7 @@ typedef struct TKMRadical__storage_ {
 @dynamic formattedMeaningHintArray, formattedMeaningHintArray_Count;
 @dynamic formattedReadingMnemonicArray, formattedReadingMnemonicArray_Count;
 @dynamic formattedReadingHintArray, formattedReadingHintArray_Count;
+@dynamic visuallySimilarKanjiArray, visuallySimilarKanjiArray_Count;
 
 typedef struct TKMKanji__storage_ {
   uint32_t _has_storage_[1];
@@ -297,6 +352,7 @@ typedef struct TKMKanji__storage_ {
   NSMutableArray *formattedMeaningHintArray;
   NSMutableArray *formattedReadingMnemonicArray;
   NSMutableArray *formattedReadingHintArray;
+  NSMutableArray *visuallySimilarKanjiArray;
 } TKMKanji__storage_;
 
 // This method is threadsafe because it is initially called
@@ -374,6 +430,15 @@ typedef struct TKMKanji__storage_ {
         .number = TKMKanji_FieldNumber_FormattedReadingHintArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedReadingHintArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "visuallySimilarKanjiArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMVisuallySimilarKanji),
+        .number = TKMKanji_FieldNumber_VisuallySimilarKanjiArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMKanji__storage_, visuallySimilarKanjiArray),
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeMessage,
       },

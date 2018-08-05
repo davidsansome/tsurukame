@@ -35,6 +35,7 @@ CF_EXTERN_C_BEGIN
 @class TKMReading;
 @class TKMSubject;
 @class TKMSubjectsByLevel;
+@class TKMVisuallySimilarKanji;
 @class TKMVocabulary;
 @class TKMVocabulary_Sentence;
 
@@ -210,6 +211,24 @@ typedef GPB_ENUM(TKMRadical_FieldNumber) {
 
 @end
 
+#pragma mark - TKMVisuallySimilarKanji
+
+typedef GPB_ENUM(TKMVisuallySimilarKanji_FieldNumber) {
+  TKMVisuallySimilarKanji_FieldNumber_Id_p = 1,
+  TKMVisuallySimilarKanji_FieldNumber_Score = 2,
+};
+
+@interface TKMVisuallySimilarKanji : GPBMessage
+
+@property(nonatomic, readwrite) int32_t id_p;
+
+@property(nonatomic, readwrite) BOOL hasId_p;
+/** From 0 to 1000. */
+@property(nonatomic, readwrite) int32_t score;
+
+@property(nonatomic, readwrite) BOOL hasScore;
+@end
+
 #pragma mark - TKMKanji
 
 typedef GPB_ENUM(TKMKanji_FieldNumber) {
@@ -221,6 +240,7 @@ typedef GPB_ENUM(TKMKanji_FieldNumber) {
   TKMKanji_FieldNumber_FormattedMeaningHintArray = 6,
   TKMKanji_FieldNumber_FormattedReadingMnemonicArray = 7,
   TKMKanji_FieldNumber_FormattedReadingHintArray = 8,
+  TKMKanji_FieldNumber_VisuallySimilarKanjiArray = 9,
 };
 
 @interface TKMKanji : GPBMessage
@@ -256,6 +276,10 @@ typedef GPB_ENUM(TKMKanji_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedReadingHintArray;
 /** The number of items in @c formattedReadingHintArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger formattedReadingHintArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMVisuallySimilarKanji*> *visuallySimilarKanjiArray;
+/** The number of items in @c visuallySimilarKanjiArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger visuallySimilarKanjiArray_Count;
 
 @end
 

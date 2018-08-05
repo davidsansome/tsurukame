@@ -27,6 +27,8 @@ static const CGFloat kSectionHeaderHeight = 38.f;
 static const CGFloat kSectionFooterHeight = 0.f;
 static const CGFloat kFontSize = 14.f;
 
+static const int kVisuallySimilarKanjiScoreThreshold = 400;
+
 static UIColor *kMeaningSynonymColor;
 static UIColor *kHintTextColor;
 static UIFont *kFont;
@@ -165,13 +167,29 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   [model addItem:item];
 }
 
+- (void)addSimilarKanji:(TKMSubject *)subject
+                toModel:(TKMMutableTableModel *)model {
+  bool addedSection = false;
+  for (TKMVisuallySimilarKanji *visuallySimilarKanji in subject.kanji.visuallySimilarKanjiArray) {
+    if (visuallySimilarKanji.score < kVisuallySimilarKanjiScoreThreshold) {
+      continue;
+    }
+    if (!addedSection) {
+      [model addSection:@"Visually Similar Kanji"];
+      addedSection = true;
+    }
+    TKMSubject *subject = [_dataLoader loadSubject:visuallySimilarKanji.id_p];
+    [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject delegate:_subjectDelegate]];
+  }
+}
+
 - (void)addAmalgamationSubjects:(TKMSubject *)subject
                         toModel:(TKMMutableTableModel *)model {
-  if (!subject.amalgamationSubjectIdsArray.count) {
+  if (!subject.amalgamationSubjectIdsArray_Count) {
     return;
   }
   [model addSection:@"Used in"];
-  for (int i = 0; i < subject.amalgamationSubjectIdsArray.count; ++i) {
+  for (int i = 0; i < subject.amalgamationSubjectIdsArray_Count; ++i) {
     int subjectID = [subject.amalgamationSubjectIdsArray valueAtIndex:i];
     TKMSubject *subject = [_dataLoader loadSubject:subjectID];
     [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject delegate:_subjectDelegate]];
@@ -241,6 +259,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [self addFormattedText:subject.kanji.formattedReadingMnemonicArray isHint:false toModel:model];
     [self addFormattedText:subject.kanji.formattedReadingHintArray isHint:true toModel:model];
     
+    [self addSimilarKanji:subject toModel:model];
     [self addAmalgamationSubjects:subject toModel:model];
   }
   if (subject.hasVocabulary) {
