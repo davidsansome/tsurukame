@@ -109,6 +109,7 @@ TKMAnswerCheckerResult CheckAnswer(NSString **answer,
   switch (taskType) {
     case kTKMTaskTypeReading:
       *answer = [*answer stringByReplacingOccurrencesOfString:@"n" withString:@"ん"];
+      *answer = [*answer stringByReplacingOccurrencesOfString:@" " withString:@""];
       if (IsAsciiPresent(*answer)) {
         return kTKMAnswerContainsInvalidCharacters;
       }
