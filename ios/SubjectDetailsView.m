@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "NSMutableAttributedString+Replacements.h"
+#import "Style.h"
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
 #import "UIColor+HexString.h"
@@ -179,7 +180,14 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
       addedSection = true;
     }
     TKMSubject *subject = [_dataLoader loadSubject:visuallySimilarKanji.id_p];
-    [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject delegate:_subjectDelegate]];
+    TKMAssignment *assignment = [_localCachingClient getAssignmentForID:visuallySimilarKanji.id_p];
+    
+    TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject delegate:_subjectDelegate];
+    if (!assignment) {
+      item.gradientColors = TKMLockedGradient();
+    }
+    
+    [model addItem:item];
   }
 }
 

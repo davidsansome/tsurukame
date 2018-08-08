@@ -214,6 +214,7 @@ typedef enum : NSUInteger {
            object:nil];
   
   _subjectDetailsView.dataLoader = _dataLoader;
+  _subjectDetailsView.localCachingClient = _localCachingClient;
   _subjectDetailsView.subjectDelegate = self;
   
   _answerField.delegate = _kanaInput;
