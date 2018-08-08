@@ -20,9 +20,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class LocalCachingClient;
+
 @interface TKMSubjectDetailsView : UITableView
 
 @property (nonatomic) DataLoader *dataLoader;
+@property (nonatomic) LocalCachingClient *localCachingClient;
 @property (nonatomic, weak) id<TKMSubjectDelegate> subjectDelegate;
 @property (nonatomic) bool showHints;
 

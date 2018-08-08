@@ -39,6 +39,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   _subjectDetailsView.dataLoader = _dataLoader;
+  _subjectDetailsView.localCachingClient = _localCachingClient;
   _subjectDetailsView.subjectDelegate = self;
   _subjectDetailsView.showHints = _showHints;
   TKMStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
