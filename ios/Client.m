@@ -15,6 +15,9 @@
 #import "Client.h"
 #import "proto/Wanikani+Convenience.h"
 
+// TODO: delete in release.
+#import <UIKit/UIKit.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 const char *kWanikaniSessionCookieName = "_wanikani_session";
@@ -147,7 +150,6 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   NSString *_apiToken;
   NSString *_cookie;
   NSURLSession *_urlSession;
-  NSISO8601DateFormatter *_dateFormatter;
   NSString *_csrfToken;
   NSDate *_csrfTokenUpdated;
 }
@@ -160,7 +162,6 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     _apiToken = apiToken;
     _cookie = cookie;
     _urlSession = [NSURLSession sharedSession];
-    _dateFormatter = [[NSISO8601DateFormatter alloc] init];
   }
   return self;
 }
@@ -180,6 +181,19 @@ static NSString *GetSessionCookie(NSURLSession *session) {
       return date;
     }
   }
+  
+  // TODO: delete in release.
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Error parsing date"
+                                                                 message:string
+                                                          preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * action) {}];
+  
+  [alert addAction:defaultAction];
+  UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
+  [vc presentViewController:alert animated:YES completion:nil];
+  
   return nil;
 }
 
@@ -463,17 +477,17 @@ static NSString *GetSessionCookie(NSURLSession *session) {
       
       if (d[@"data"][@"available_at"] != [NSNull null]) {
         assignment.availableAt =
-            [[_dateFormatter dateFromString:d[@"data"][@"available_at"]] timeIntervalSince1970];
+            [[Client parseISO8601Date:d[@"data"][@"available_at"]] timeIntervalSince1970];
       }
       
       if (d[@"data"][@"started_at"] != [NSNull null]) {
         assignment.startedAt =
-            [[_dateFormatter dateFromString:d[@"data"][@"started_at"]] timeIntervalSince1970];
+            [[Client parseISO8601Date:d[@"data"][@"started_at"]] timeIntervalSince1970];
       }
       
       if (d[@"data"][@"passed_at"] != [NSNull null]) {
         assignment.passedAt =
-            [[_dateFormatter dateFromString:d[@"data"][@"passed_at"]] timeIntervalSince1970];
+            [[Client parseISO8601Date:d[@"data"][@"passed_at"]] timeIntervalSince1970];
       }
       
       NSString *subjectType = d[@"data"][@"subject_type"];
@@ -702,7 +716,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     ret.subscribed = [data[@"subscribed"] boolValue];
     
     if (data[@"started_at"] != [NSNull null]) {
-      ret.startedAt = [[_dateFormatter dateFromString:data[@"started_at"]] timeIntervalSince1970];
+      ret.startedAt = [[Client parseISO8601Date:data[@"started_at"]] timeIntervalSince1970];
     }
     
     handler(nil, ret);
