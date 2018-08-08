@@ -54,6 +54,7 @@ static const NSTimeInterval kCSRFTokenValidity = 2 * 60 * 60;  // 2 hours.
 static NSRegularExpression *sCSRFTokenRE;
 static NSRegularExpression *sEmailAddressRE;
 static NSRegularExpression *sAPITokenRE;
+static NSArray<NSDateFormatter *> *sDateFormatters;
 
 typedef void(^PartialResponseHandler)(id _Nullable data, NSError * _Nullable error);
 typedef void(^PUTResponseHandler)(NSError * _Nullable error);
@@ -67,6 +68,26 @@ static void EnsureInitialised() {
                                                                 options:0 error:nil];
     sAPITokenRE = [NSRegularExpression regularExpressionWithPattern:@(kAPITokenREPattern)
                                                             options:0 error:nil];
+    
+    NSDateFormatter *(^makeDateFormatter)(NSString *format) = ^(NSString *format) {
+      NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+      formatter.dateFormat = format;
+      formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+      formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+      return formatter;
+    };
+    
+    sDateFormatters = @[
+        makeDateFormatter(@"yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"),
+        makeDateFormatter(@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+        makeDateFormatter(@"yyyy-MM-dd'T'HH:mm:ss'Z'"),
+        makeDateFormatter(@"yyyyMMdd'T'HH:mm:ss.SSSSSS'Z'"),
+        makeDateFormatter(@"yyyyMMdd'T'HH:mm:ss.SSS'Z'"),
+        makeDateFormatter(@"yyyyMMdd'T'HH:mm:ss'Z'"),
+        makeDateFormatter(@"yyyy-MM-dd'T'HH:mm:ss.SSSSSSX"),
+        makeDateFormatter(@"yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+        makeDateFormatter(@"yyyy-MM-dd'T'HH:mm:ssX"),
+    ];
   });
 }
 
@@ -126,7 +147,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   NSString *_apiToken;
   NSString *_cookie;
   NSURLSession *_urlSession;
-  NSDateFormatter *_dateFormatter;
+  NSISO8601DateFormatter *_dateFormatter;
   NSString *_csrfToken;
   NSDate *_csrfTokenUpdated;
 }
@@ -139,11 +160,27 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     _apiToken = apiToken;
     _cookie = cookie;
     _urlSession = [NSURLSession sharedSession];
-    _dateFormatter = [[NSDateFormatter alloc] init];
-    _dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'";
-    _dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+    _dateFormatter = [[NSISO8601DateFormatter alloc] init];
   }
   return self;
+}
+
+#pragma mark - Date functions
+
++ (NSString *)currentISO8601Date {
+  EnsureInitialised();
+  return [sDateFormatters.firstObject stringFromDate:[NSDate date]];
+}
+
++ (NSDate *)parseISO8601Date:(NSString *)string {
+  EnsureInitialised();
+  for (NSDateFormatter *formatter in sDateFormatters) {
+    NSDate *date = [formatter dateFromString:string];
+    if (date) {
+      return date;
+    }
+  }
+  return nil;
 }
 
 #pragma mark - Authorization
@@ -168,10 +205,6 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 }
 
 #pragma mark - Query utilities
-
-- (NSString *)currentISO8601Time {
-  return [_dateFormatter stringFromDate:[NSDate date]];
-}
 
 - (void)startPagedQueryFor:(NSURL *)url
                    handler:(PartialResponseHandler)handler {
