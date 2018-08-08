@@ -41,10 +41,10 @@ typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
                           cookie:(NSString *)cookie NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-@property (nonatomic, readonly) NSDateFormatter *dateFormatter;
-@property (nonatomic, readonly) NSString *currentISO8601Time;
-
 @property (nonatomic) bool pretendToBeOfflineForTesting;
+
++ (NSDate *)parseISO8601Date:(NSString *)string;
++ (NSString *)currentISO8601Date;
 
 + (void)getCookieForUsername:(NSString *)username
                     password:(NSString *)password

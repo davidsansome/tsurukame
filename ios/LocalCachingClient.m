@@ -671,7 +671,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
                                  if (error) {
                                    NSLog(@"getAssignmentsModifiedAfter failed: %@", error);
                                  } else {
-                                   NSString *date = _client.currentISO8601Time;
+                                   NSString *date = Client.currentISO8601Date;
                                    [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
                                      for (TKMAssignment *assignment in assignments) {
                                        CheckUpdate(db, @"REPLACE INTO assignments (id, pb, subject_id) VALUES (?, ?, ?)",
@@ -701,7 +701,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
                                    if (error) {
                                      NSLog(@"getStudyMaterialsModifiedAfter failed: %@", error);
                                    } else {
-                                     NSString *date = _client.currentISO8601Time;
+                                     NSString *date = Client.currentISO8601Date;
                                      [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
                                        for (TKMStudyMaterials *studyMaterial in studyMaterials) {
                                          CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES (?, ?)",
