@@ -802,6 +802,9 @@ typedef enum : NSUInteger {
 }
 
 - (IBAction)revealAnswerButtonPressed:(id)sender {
+  _subjectDetailsView.blurReading = !_activeTask.answer.hasReadingWrong;
+  _subjectDetailsView.blurMeaning = !_activeTask.answer.hasMeaningWrong;
+  
   [_subjectDetailsView updateWithSubject:_activeSubject
                           studyMaterials:_activeStudyMaterials];
   

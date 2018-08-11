@@ -13,11 +13,11 @@
 // limitations under the License.
 
 #import "TKMAttributedModelItem.h"
+#import "TKMBlurrableCell.h"
 
-static const UIEdgeInsets kEdgeInsets = {8.f, 16.f, 8.f, 16.f};
 static const CGFloat kMinimumHeight = 44.f;
 
-@interface TKMAttributedModelCell : TKMModelCell
+@interface TKMAttributedModelCell : TKMBlurrableCell
 @end
 
 @implementation TKMAttributedModelItem
@@ -38,6 +38,8 @@ static const CGFloat kMinimumHeight = 44.f;
 
 @implementation TKMAttributedModelCell {
   UITextView *_textView;
+  NSLayoutConstraint *_topConstraint;
+  NSLayoutConstraint *_bottomConstraint;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -46,45 +48,47 @@ static const CGFloat kMinimumHeight = 44.f;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.userInteractionEnabled = YES;
     
-    _textView = [[UITextView alloc] initWithFrame:self.bounds];
+    _textView = [[UITextView alloc] initWithFrame:self.contentView.bounds];
     _textView.editable = NO;
     _textView.scrollEnabled = NO;
     _textView.textContainerInset = UIEdgeInsetsZero;
     _textView.textContainer.lineFragmentPadding = 0.f;
+    _textView.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self.contentView addSubview:_textView];
+    
+    UILayoutGuide *guide = self.contentView.layoutMarginsGuide;
+    _topConstraint = [_textView.topAnchor constraintEqualToAnchor:guide.topAnchor];
+    _bottomConstraint = [_textView.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor];
+    _topConstraint.active = YES;
+    _bottomConstraint.active = YES;
+    [_textView.leftAnchor constraintEqualToAnchor:guide.leftAnchor].active = YES;
+    [_textView.rightAnchor constraintEqualToAnchor:guide.rightAnchor].active = YES;
   }
   return self;
-}
-
-- (CGSize)sizeThatFits:(CGSize)size {
-  CGRect availableRect = UIEdgeInsetsInsetRect(CGRectMake(0, 0, size.width, size.height), kEdgeInsets);
-  CGSize textViewSize = [_textView sizeThatFits:availableRect.size];
-  
-  availableRect.size.height = MAX(kMinimumHeight,
-                                  textViewSize.height + kEdgeInsets.top + kEdgeInsets.bottom);
-  return availableRect.size;
-}
-
-- (void)layoutSubviews {
-  [super layoutSubviews];
-  
-  CGRect availableRect = UIEdgeInsetsInsetRect(self.bounds, kEdgeInsets);
-  CGSize textViewSize = [_textView sizeThatFits:availableRect.size];
-  
-  // Center the text view vertically.
-  if (textViewSize.height < availableRect.size.height) {
-    availableRect.origin.y += floor((availableRect.size.height - textViewSize.height) / 2.f);
-    availableRect.size = textViewSize;
-  }
-  
-  _textView.frame = availableRect;
 }
 
 - (void)updateWithItem:(TKMAttributedModelItem *)item {
   [super updateWithItem:item];
   
+  self.blurrable = item.blurrable;
   _textView.attributedText = item.text;
+}
+
+- (void)updateConstraints {
+  CGRect availableRect = UIEdgeInsetsInsetRect(self.contentView.bounds, self.contentView.layoutMargins);
+  CGSize textSize = [_textView sizeThatFits:availableRect.size];
+  CGFloat height = self.contentView.layoutMargins.top + textSize.height + self.contentView.layoutMargins.bottom;
+  
+  CGFloat missingHeight = kMinimumHeight - height;
+  if (missingHeight > 0.f) {
+    CGFloat extraTopSpace = floor(missingHeight / 2.f);
+    CGFloat extraBottomSpace = missingHeight - extraTopSpace;
+    _topConstraint.constant = extraTopSpace;
+    _bottomConstraint.constant = -extraBottomSpace;
+  }
+  
+  [super updateConstraints];
 }
 
 @end

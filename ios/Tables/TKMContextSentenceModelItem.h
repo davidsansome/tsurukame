@@ -14,13 +14,15 @@
 
 #import "TKMBasicModelItem.h"
 
-@interface TKMAttributedModelItem : NSObject <TKMModelItem>
+@interface TKMContextSentenceModelItem : TKMBasicModelItem
 
-- (instancetype)initWithText:(NSAttributedString *)text NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithJapanese:(NSString *)japanese
+                         english:(NSString *)english
+                            font:(UIFont *)font
+                       blurrable:(bool)blurrable NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)init NS_UNAVAILABLE;
+TKM_BASIC_MODEL_ITEM_INITIALISERS_UNAVAILABLE;
 
-@property(nonatomic) NSAttributedString *text;
 @property(nonatomic) bool blurrable;
 
 @end
