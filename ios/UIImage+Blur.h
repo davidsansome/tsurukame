@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "TKMBasicModelItem.h"
+#import <UIKit/UIKit.h>
 
-@interface TKMAttributedModelItem : NSObject <TKMModelItem>
+NS_ASSUME_NONNULL_BEGIN
 
-- (instancetype)initWithText:(NSAttributedString *)text NS_DESIGNATED_INITIALIZER;
+@interface UIImage (Blur)
 
-- (instancetype)init NS_UNAVAILABLE;
-
-@property(nonatomic) NSAttributedString *text;
-@property(nonatomic) bool blurrable;
+- (UIImage *)blurredImageWithRadius:(CGFloat)radius
+                         iterations:(NSUInteger)iterations
+                          tintColor:(nullable UIColor *)tintColor;
 
 @end
+
+NS_ASSUME_NONNULL_END

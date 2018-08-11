@@ -12,15 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "TKMBasicModelItem.h"
+#import "TKMModelItem.h"
 
-@interface TKMAttributedModelItem : NSObject <TKMModelItem>
+@interface TKMBlurrableCell : TKMModelCell
 
-- (instancetype)initWithText:(NSAttributedString *)text NS_DESIGNATED_INITIALIZER;
-
-- (instancetype)init NS_UNAVAILABLE;
-
-@property(nonatomic) NSAttributedString *text;
 @property(nonatomic) bool blurrable;
+
+/** Fill color for the blurred image.  Defaults to white. */
+@property(nonatomic) UIColor *blurBackgroundColor;
+
+/**
+ * Explicit list of views within the contentView to blur.  If not set, the whole contentView is
+ * blurred.
+ */
+@property(nonatomic, readonly) NSArray<UIView *> *viewsToBlur;
 
 @end
