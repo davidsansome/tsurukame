@@ -169,6 +169,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
             dataLoader:_dataLoader
               delegate:self];
   item.font = kFont;
+  item.blurrable = _blurMeaning;
   
   [model addSection:title];
   [model addItem:item];

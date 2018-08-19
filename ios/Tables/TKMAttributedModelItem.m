@@ -69,10 +69,10 @@ static const CGFloat kMinimumHeight = 44.f;
 }
 
 - (void)updateWithItem:(TKMAttributedModelItem *)item {
-  [super updateWithItem:item];
-  
   self.blurrable = item.blurrable;
   _textView.attributedText = item.text;
+  
+  [super updateWithItem:item];
 }
 
 - (void)updateConstraints {
