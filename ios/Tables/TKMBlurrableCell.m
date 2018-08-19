@@ -37,6 +37,11 @@ static const CGFloat kBlurToggleDuration = 0.25f;
   _blurrable = blurrable;
   _isBlurred = blurrable;
   
+  if (_blurView) {
+    [_blurView removeFromSuperview];
+    _blurView = nil;
+  }
+  
   if (blurrable) {
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
     UIImage *image = [UIImage imageNamed:@"baseline_remove_red_eye_black_24pt"];
@@ -51,9 +56,10 @@ static const CGFloat kBlurToggleDuration = 0.25f;
     [self.contentView addSubview:_blurView];
   } else {
     self.accessoryView = nil;
-    [_blurView removeFromSuperview];
-    _blurView = nil;
   }
+  
+  [self setNeedsLayout];
+  [self setNeedsUpdateConstraints];
 }
 
 - (void)layoutSubviews {

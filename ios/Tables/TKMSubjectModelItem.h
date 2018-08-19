@@ -63,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN;
 
 - (instancetype)init NS_UNAVAILABLE;
 
+@property(nonatomic) bool blurrable;
 @property(nonatomic, copy) GPBInt32Array *subjects;
 @property(nonatomic, nullable) UIFont *font;
 @property(nonatomic) DataLoader *dataLoader;
