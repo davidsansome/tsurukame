@@ -55,6 +55,8 @@ UITextField *_stub;
 + (void)setUp {
     // Put setup code here. This method is called before the invocation of all test methods in the class.
     
+    EnsureInitialised();
+    
     //tsuConsonants = kConsonants - kN
     NSMutableCharacterSet *tsuConsonants = [[kN invertedSet] mutableCopy];
     [tsuConsonants formIntersectionWithCharacterSet:kConsonants];
@@ -126,13 +128,15 @@ UITextField *_stub;
     NSArray *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
     
     for(NSString *consonant in _tsuConsonantsArray) {
-        for(NSString *nm in kNArray) {
-            _stub.text = nm;
-            
-            BOOL returnValue = [_kanaInput textField:_stub shouldChangeCharactersInRange:NSMakeRange(1, 0) replacementString:consonant];
-            
-            XCTAssertTrue(returnValue);
-            XCTAssertEqualObjects(@"ん", _stub.text);
+        if(![kCanFollowN characterIsMember:[consonant characterAtIndex:0]]) {
+            for(NSString *nm in kNArray) {
+                _stub.text = nm;
+                
+                BOOL returnValue = [_kanaInput textField:_stub shouldChangeCharactersInRange:NSMakeRange(1, 0) replacementString:consonant];
+                
+                XCTAssertTrue(returnValue);
+                XCTAssertEqualObjects(@"ん", _stub.text);
+            }
         }
     }
 }
@@ -156,5 +160,58 @@ UITextField *_stub;
     }
 }
 
+- (void)testShouldChangeCharactersInRange6 {
+    // when you type a uppercase consonant followed by the same consonant, it should be replaced by ッ
+    
+    for(NSString *consonant in _tsuConsonantsArray) {
+        NSString *uppercaseConsonant = [consonant uppercaseString];
+        _stub.text = uppercaseConsonant;
+        
+        BOOL returnValue = [_kanaInput textField:_stub shouldChangeCharactersInRange:NSMakeRange(1, 0) replacementString:uppercaseConsonant];
+        
+        XCTAssertTrue(returnValue);
+        XCTAssertEqual(@"ッ", _stub.text);
+    }
+}
+
+- (void)testShouldChangeCharactersInRange7 {
+    // when there is a N or M and you type a consonant it should be replaced by ン and the returnValue should be true
+    
+    NSArray *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
+    
+    for(NSString *consonant in _tsuConsonantsArray) {
+        if(![kCanFollowN characterIsMember:[consonant characterAtIndex:0]]) {
+            for(NSString *nm in kNArray) {
+                _stub.text = [nm uppercaseString];
+                
+                BOOL returnValue = [_kanaInput textField:_stub shouldChangeCharactersInRange:NSMakeRange(1, 0) replacementString:consonant];
+                
+                XCTAssertTrue(returnValue);
+                NSLog(@"%@", _stub.text);
+                XCTAssertEqualObjects(@"ン", _stub.text);
+            }
+        }
+    }
+}
+
+- (void)testShouldChangeCharactersInRange8 {
+    // when there is the start of a pattern, the first letter of the patten is uppercase and you type the last letter of the pattern it should be replaced by the given replacement in katakana and the returnValue should be false
+    
+    for(NSString *replacement in [kReplacements keyEnumerator]) {
+        // this pattern is checked by another case...for this function it doesn't matter if it is in the kReplacements CharacterSet
+        if([replacement isEqualToString:@"n "]) {
+            continue;
+        }
+        
+        NSString *lastReplacementCharacter = [replacement substringFromIndex:replacement.length - 1];
+        
+        
+        _stub.text = [[replacement substringToIndex:replacement.length - 1] capitalizedString];
+        
+        BOOL returnValue = [_kanaInput textField:_stub shouldChangeCharactersInRange:NSMakeRange(_stub.text.length, 0) replacementString: lastReplacementCharacter];
+        XCTAssertFalse(returnValue);
+        XCTAssertEqualObjects(kReplacements[replacement], _stub.text);
+    }
+}
 
 @end
