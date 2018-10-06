@@ -129,13 +129,31 @@ UITextField *_stub;
     }
 }
 
+- (void)testShouldChangeCharactersInRange5 {
+    // when there is the start of a pattern and you type the last letter of the pattern it should be replaced by the given replacement and the returnValue should be false
+    
+    for(NSString *replacement in [kReplacements keyEnumerator]) {
+        // this pattern is checked by another case...for this function it doesn't matter if it is in the kReplacements CharacterSet
+        if([replacement isEqualToString:@"n "]) {
+            continue;
+        }
+        
+        NSString *lastReplacementCharacter = [replacement substringFromIndex:replacement.length - 1];
+        
+        _stub.text = [replacement substringToIndex:replacement.length - 1];
+        
+        BOOL returnValue = [_kanaInput textField:_stub shouldChangeCharactersInRange:NSMakeRange(_stub.text.length, 0) replacementString: lastReplacementCharacter];
+        XCTAssertFalse(returnValue);
+        XCTAssertEqualObjects(kReplacements[replacement], _stub.text);
+    }
+}
 
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testkReplacementsContainsOnlyValidCombinations {
+    for(NSString *key1 in [kReplacements keyEnumerator]) {
+        for(NSString *key2 in [kReplacements keyEnumerator]) {
+            XCTAssertFalse(key1 != key2 && [key1 hasPrefix:key2]);
+        }
+    }
 }
 
 @end
