@@ -76,6 +76,14 @@ UITextField *_stub;
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
+- (void)testkReplacementsContainsOnlyValidCombinations {
+    for(NSString *key1 in [kReplacements keyEnumerator]) {
+        for(NSString *key2 in [kReplacements keyEnumerator]) {
+            XCTAssertFalse(key1 != key2 && [key1 hasPrefix:key2]);
+        }
+    }
+}
+
 - (void)testShouldChangeCharactersInRange1 {
     // when the _kanaInput is disabled shouldChangeCharactersInRange should return true and the text should be unchanged
     
@@ -148,12 +156,5 @@ UITextField *_stub;
     }
 }
 
-- (void)testkReplacementsContainsOnlyValidCombinations {
-    for(NSString *key1 in [kReplacements keyEnumerator]) {
-        for(NSString *key2 in [kReplacements keyEnumerator]) {
-            XCTAssertFalse(key1 != key2 && [key1 hasPrefix:key2]);
-        }
-    }
-}
 
 @end
