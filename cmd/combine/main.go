@@ -22,12 +22,12 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	"github.com/davidsansome/wk/encoding"
-	"github.com/davidsansome/wk/markup"
-	"github.com/davidsansome/wk/similar_kanji"
-	"github.com/davidsansome/wk/utils"
+	"github.com/davidsansome/tsurukame/encoding"
+	"github.com/davidsansome/tsurukame/markup"
+	"github.com/davidsansome/tsurukame/similar_kanji"
+	"github.com/davidsansome/tsurukame/utils"
 
-	pb "github.com/davidsansome/wk/proto"
+	pb "github.com/davidsansome/tsurukame/proto"
 )
 
 var (

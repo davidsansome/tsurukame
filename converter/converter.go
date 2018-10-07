@@ -19,9 +19,9 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	"github.com/davidsansome/wk/api"
-	"github.com/davidsansome/wk/jsonapi"
-	pb "github.com/davidsansome/wk/proto"
+	"github.com/davidsansome/tsurukame/api"
+	"github.com/davidsansome/tsurukame/jsonapi"
+	pb "github.com/davidsansome/tsurukame/proto"
 )
 
 func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
