@@ -21,7 +21,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/davidsansome/wk/utils"
+	"github.com/davidsansome/tsurukame/utils"
 )
 
 const (

@@ -17,7 +17,7 @@ package encoding
 import (
 	"os"
 
-	pb "github.com/davidsansome/wk/proto"
+	pb "github.com/davidsansome/tsurukame/proto"
 )
 
 type SubjectIterator func(id int, subject *pb.Subject) error

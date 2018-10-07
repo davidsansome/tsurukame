@@ -20,11 +20,11 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	"github.com/davidsansome/wk/api"
-	"github.com/davidsansome/wk/converter"
-	"github.com/davidsansome/wk/encoding"
-	"github.com/davidsansome/wk/jsonapi"
-	"github.com/davidsansome/wk/utils"
+	"github.com/davidsansome/tsurukame/api"
+	"github.com/davidsansome/tsurukame/converter"
+	"github.com/davidsansome/tsurukame/encoding"
+	"github.com/davidsansome/tsurukame/jsonapi"
+	"github.com/davidsansome/tsurukame/utils"
 )
 
 var (

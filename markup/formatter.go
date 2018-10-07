@@ -19,7 +19,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	pb "github.com/davidsansome/wk/proto"
+	pb "github.com/davidsansome/tsurukame/proto"
 )
 
 var (

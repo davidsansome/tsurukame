@@ -15,7 +15,7 @@ All the data - kanji, meanings, readings, mnemonics, etc. - are stored in a data
 
 Before doing anything else, follow the [Go Getting Started](https://golang.org/doc/install) guide to install Go and set up your environment.  Then you can check out the Tsurukame code inside your gopath:
 
-    go get -u -v github.com/davidsansome/wk/...
+    go get -u -v github.com/davidsansome/tsurukame/...
 
 ### Inspect data.bin
 
