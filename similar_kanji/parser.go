@@ -21,9 +21,9 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	"github.com/davidsansome/wk/encoding"
+	"github.com/davidsansome/tsurukame/encoding"
 
-	pb "github.com/davidsansome/wk/proto"
+	pb "github.com/davidsansome/tsurukame/proto"
 )
 
 type entry struct {

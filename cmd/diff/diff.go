@@ -21,8 +21,8 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/pmezard/go-difflib/difflib"
 
-	"github.com/davidsansome/wk/encoding"
-	"github.com/davidsansome/wk/utils"
+	"github.com/davidsansome/tsurukame/encoding"
+	"github.com/davidsansome/tsurukame/utils"
 )
 
 func main() {

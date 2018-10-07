@@ -17,7 +17,7 @@ package main
 import (
 	"fmt"
 
-	pb "github.com/davidsansome/wk/proto"
+	pb "github.com/davidsansome/tsurukame/proto"
 )
 
 func RemoveNone(subject pb.Subject) pb.Subject {
