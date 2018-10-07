@@ -237,6 +237,7 @@
 		63EEFECD1FC45D810070C05F /* ReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEC71FC45D800070C05F /* ReviewViewController.m */; };
 		63EEFED31FC45E810070C05F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
+		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -587,6 +588,7 @@
 		63EEFED21FC45E810070C05F /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		63EEFED71FC46E720070C05F /* Client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		63EEFED81FC46E720070C05F /* Client.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
+		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1039,6 +1041,7 @@
 			children = (
 				63E9A8E621199C8500418CE1 /* Info.plist */,
 				63E9A8DC21199C2600418CE1 /* ClientTest.m */,
+				BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1383,6 +1386,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63E9A8EC21199C9700418CE1 /* ClientTest.m in Sources */,
+				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
