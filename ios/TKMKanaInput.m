@@ -413,14 +413,24 @@ replacementString:(NSString *)string {
   if (range.location > 0 && string.length == 1) {
     unichar newChar = [string characterAtIndex:0];
     unichar lastChar = [textField.text characterAtIndex:range.location - 1];
+      
+    BOOL lastCharWasUppercase = [[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember: lastChar];
+    
+    newChar = tolower(newChar);
+    lastChar = tolower(lastChar);
   
     // Test for sokuon.
     if (![kN characterIsMember:newChar] &&
         newChar == lastChar &&
         [kConsonants characterIsMember:newChar] &&
         [kConsonants characterIsMember:lastChar]) {
+    
+      NSString *replacementString = @"っ";
+      if (lastCharWasUppercase) {
+        replacementString = convertHiraganaToKatakana(replacementString);
+      }
       textField.text = [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
-                                                               withString:@"っ"];
+                                                               withString:replacementString];
       return YES;
     }
   
@@ -428,8 +438,12 @@ replacementString:(NSString *)string {
     if (newChar != 'n' &&
         [kN characterIsMember:lastChar] &&
         ![kCanFollowN characterIsMember:newChar]) {
+      NSString *replacementString = @"ん";
+      if (lastCharWasUppercase) {
+        replacementString = convertHiraganaToKatakana(replacementString);
+      }
       textField.text = [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
-                                                               withString:@"ん"];
+                                                               withString:replacementString];
       return YES;
     }
   }
@@ -442,8 +456,16 @@ replacementString:(NSString *)string {
     NSRange replacementRange = NSMakeRange(range.location - i, i);
     NSString *text = [NSString stringWithFormat:@"%@%@",
                       [textField.text substringWithRange:replacementRange], string];
+      
+    BOOL firstCharacterIsUppercase = [[NSCharacterSet uppercaseLetterCharacterSet]
+                                      characterIsMember: [text characterAtIndex:0]];
+    text = [text lowercaseString];
+      
     NSString *replacement = kReplacements[text];
     if (replacement) {
+      if (firstCharacterIsUppercase) {
+        replacement = convertHiraganaToKatakana(replacement);
+      }
       textField.text = [textField.text stringByReplacingCharactersInRange:replacementRange
                                                                withString:replacement];
       return NO;
