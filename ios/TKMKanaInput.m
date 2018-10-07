@@ -323,6 +323,22 @@ static void EnsureInitialised() {
   });
 }
 
+NSString *convertHiraganaToKatakana(NSString *string) {
+    int differenceHiraganaKatakana = u'ア' - u'あ';
+    
+    unichar stringBuffer[string.length];
+    [string getCharacters:stringBuffer];
+    
+    for (int i = 0; i < string.length; ++i) {
+        // if the character is in Hiragana Unicode Block
+        if (stringBuffer[i] >= u'\u3040' && stringBuffer[i] <= u'\u309f') {
+            stringBuffer[i] = stringBuffer[i] + differenceHiraganaKatakana;
+        }
+    }
+    
+    return [[NSString alloc] initWithCharacters:stringBuffer length:string.length];
+}
+
 NSString *TKMConvertKanaText(NSString *input) {
   EnsureInitialised();
   

@@ -170,7 +170,7 @@ UITextField *_stub;
         BOOL returnValue = [_kanaInput textField:_stub shouldChangeCharactersInRange:NSMakeRange(1, 0) replacementString:uppercaseConsonant];
         
         XCTAssertTrue(returnValue);
-        XCTAssertEqual(@"ッ", _stub.text);
+        XCTAssertEqualObjects(@"ッ", _stub.text);
     }
 }
 
@@ -203,15 +203,27 @@ UITextField *_stub;
             continue;
         }
         
-        NSString *lastReplacementCharacter = [replacement substringFromIndex:replacement.length - 1];
+        NSString *capitalizedReplacement = [replacement capitalizedString];
+        
+        NSString *lastReplacementCharacter = [capitalizedReplacement substringFromIndex:capitalizedReplacement.length - 1];
         
         
-        _stub.text = [[replacement substringToIndex:replacement.length - 1] capitalizedString];
+        _stub.text = [capitalizedReplacement substringToIndex:capitalizedReplacement.length - 1];
         
         BOOL returnValue = [_kanaInput textField:_stub shouldChangeCharactersInRange:NSMakeRange(_stub.text.length, 0) replacementString: lastReplacementCharacter];
         XCTAssertFalse(returnValue);
-        XCTAssertEqualObjects(kReplacements[replacement], _stub.text);
+        XCTAssertEqualObjects(convertHiraganaToKatakana(kReplacements[replacement]), _stub.text);
     }
+}
+
+- (void)testConvertHiraganaToKatakana1 {
+    // hopefully I got all the combinations :D
+    NSString *hiraganaInput = @"あいうえおかきくけこきゃきゅきょさしすせそしゃしゅしょたちつてとちゃちゅちょなにぬねのにゃにゅにょはひふへほひゃひゅひょまみむめもみゃみゅみょやゆよらりるれろりゃりゅりょわゐゑをんがぎぐげごぎゃぎゅぎょざじずぜぞじゃじゅじょだぢづでどぢゃぢゅぢょばびぶべぼびゃびゅびょぱぴぷぺぽぴゃぴゅぴょっ";
+    
+    NSString *katakanaOutput = @"アイウエオカキクケコキャキュキョサシスセソシャシュショタチツテトチャチュチョナニヌネノニャニュニョハヒフヘホヒャヒュヒョマミムメモミャミュミョヤユヨラリルレロリャリュリョワヰヱヲンガギグゲゴギャギュギョザジズゼゾジャジュジョダヂヅデドヂャヂュヂョバビブベボビャビュビョパピプペポピャピュピョッ";
+    NSString *converted = convertHiraganaToKatakana(hiraganaInput);
+    
+    XCTAssertEqualObjects(katakanaOutput,converted);
 }
 
 @end
