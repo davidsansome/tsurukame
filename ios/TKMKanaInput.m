@@ -315,9 +315,6 @@ void EnsureInitialised() {
     kConsonants = [NSCharacterSet characterSetWithCharactersInString:@"bcdfghjklmnpqrstvwxyz"];
     kN = [NSCharacterSet characterSetWithCharactersInString:@"nm"];
     kCanFollowN = [NSCharacterSet characterSetWithCharactersInString:@"aiueony"];
-    kDistanceHiraganaKatakanaCodeblock = u'ア' - u'あ';
-    kHiraganaMax = u'\u309f';
-    kHiraganaMin = u'\u3040';
   });
 }
 

@@ -15,13 +15,14 @@
 #ifndef TKMKanaInput_Internals_h
 #define TKMKanaInput_Internals_h
 
+static const unichar kDistanceHiraganaKatakanaCodeblock = u'ア' - u'あ';
+static const unichar kHiraganaMax = u'\u309f';
+static const unichar kHiraganaMin = u'\u3040';
+
 static NSDictionary<NSString *, NSString *> *kReplacements;
 static NSCharacterSet *kConsonants;
 static NSCharacterSet *kN;
 static NSCharacterSet *kCanFollowN;
-static unichar kDistanceHiraganaKatakanaCodeblock;
-static unichar kHiraganaMax;
-static unichar kHiraganaMin;
 static dispatch_once_t sOnceToken;
 
 extern void EnsureInitialised(void);
