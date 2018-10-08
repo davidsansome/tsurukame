@@ -13,16 +13,11 @@
 // limitations under the License.
 
 #import "TKMKanaInput.h"
+#import "TKMKanaInput+Internals.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSDictionary<NSString *, NSString *> *kReplacements;
-static NSCharacterSet *kConsonants;
-static NSCharacterSet *kN;
-static NSCharacterSet *kCanFollowN;
-static dispatch_once_t sOnceToken;
-
-static void EnsureInitialised() {
+void EnsureInitialised() {
   dispatch_once(&sOnceToken, ^{
     kReplacements = @{
                       @"a": @"\u3042",
@@ -320,23 +315,24 @@ static void EnsureInitialised() {
     kConsonants = [NSCharacterSet characterSetWithCharactersInString:@"bcdfghjklmnpqrstvwxyz"];
     kN = [NSCharacterSet characterSetWithCharactersInString:@"nm"];
     kCanFollowN = [NSCharacterSet characterSetWithCharactersInString:@"aiueony"];
+    kDistanceHiraganaKatakanaCodeblock = u'ア' - u'あ';
+    kHiraganaMax = u'\u309f';
+    kHiraganaMin = u'\u3040';
   });
 }
 
-NSString *convertHiraganaToKatakana(NSString *string) {
-    int differenceHiraganaKatakana = u'ア' - u'あ';
-    
-    unichar stringBuffer[string.length];
-    [string getCharacters:stringBuffer];
-    
-    for (int i = 0; i < string.length; ++i) {
-        // if the character is in Hiragana Unicode Block
-        if (stringBuffer[i] >= u'\u3040' && stringBuffer[i] <= u'\u309f') {
-            stringBuffer[i] = stringBuffer[i] + differenceHiraganaKatakana;
-        }
+NSString *ConvertHiraganaToKatakana(NSString *string) {
+  unichar stringBuffer[string.length];
+  [string getCharacters:stringBuffer range:NSMakeRange(0, string.length)];
+  
+  for (int i = 0; i < string.length; ++i) {
+    // if the character is in Hiragana Unicode Block
+    if (stringBuffer[i] >= kHiraganaMin && stringBuffer[i] <= kHiraganaMax) {
+      stringBuffer[i] = stringBuffer[i] + kDistanceHiraganaKatakanaCodeblock;
     }
-    
-    return [[NSString alloc] initWithCharacters:stringBuffer length:string.length];
+  }
+  
+  return [[NSString alloc] initWithCharacters:stringBuffer length:string.length];
 }
 
 NSString *TKMConvertKanaText(NSString *input) {
@@ -424,11 +420,7 @@ replacementString:(NSString *)string {
         newChar == lastChar &&
         [kConsonants characterIsMember:newChar] &&
         [kConsonants characterIsMember:lastChar]) {
-    
-      NSString *replacementString = @"っ";
-      if (lastCharWasUppercase) {
-        replacementString = convertHiraganaToKatakana(replacementString);
-      }
+      NSString *replacementString = lastCharWasUppercase ? @"ッ" : @"っ";
       textField.text = [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
                                                                withString:replacementString];
       return YES;
@@ -438,10 +430,7 @@ replacementString:(NSString *)string {
     if (newChar != 'n' &&
         [kN characterIsMember:lastChar] &&
         ![kCanFollowN characterIsMember:newChar]) {
-      NSString *replacementString = @"ん";
-      if (lastCharWasUppercase) {
-        replacementString = convertHiraganaToKatakana(replacementString);
-      }
+      NSString *replacementString = lastCharWasUppercase ? @"ン" : @"ん";
       textField.text = [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
                                                                withString:replacementString];
       return YES;
@@ -464,7 +453,7 @@ replacementString:(NSString *)string {
     NSString *replacement = kReplacements[text];
     if (replacement) {
       if (firstCharacterIsUppercase) {
-        replacement = convertHiraganaToKatakana(replacement);
+        replacement = ConvertHiraganaToKatakana(replacement);
       }
       textField.text = [textField.text stringByReplacingCharactersInRange:replacementRange
                                                                withString:replacement];
