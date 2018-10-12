@@ -164,8 +164,6 @@
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */; };
 		63B1DE411FE7D81600FAB9C2 /* SubjectDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */; };
-		63B2BFD0211EBFD600357D6F /* UIImage+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B2BFCF211EBFD600357D6F /* UIImage+Blur.m */; };
-		63B2BFD4211EF4C500357D6F /* TKMContextSentenceModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B2BFD3211EF4C500357D6F /* TKMContextSentenceModelItem.m */; };
 		63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
 		63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */; };
 		63CAAACC1FC6E0BA00E09DA1 /* Type.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAB81FC6E0B700E09DA1 /* Type.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -210,7 +208,6 @@
 		63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */; };
 		63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */; };
 		63E9A8EC21199C9700418CE1 /* ClientTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8DC21199C2600418CE1 /* ClientTest.m */; };
-		63E9A8EF211B272100418CE1 /* TKMBlurrableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8EE211B272100418CE1 /* TKMBlurrableCell.m */; };
 		63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */; };
 		63EDA418207F335500382CE3 /* PieChartDataEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA406207F335200382CE3 /* PieChartDataEntry.swift */; };
 		63EDA419207F335500382CE3 /* IRadarChartDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA407207F335200382CE3 /* IRadarChartDataSet.swift */; };
@@ -451,10 +448,6 @@
 		63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewSummaryViewController.m; sourceTree = "<group>"; };
 		63B1DE3F1FE7D81600FAB9C2 /* SubjectDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectDetailsViewController.h; sourceTree = "<group>"; };
 		63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectDetailsViewController.m; sourceTree = "<group>"; };
-		63B2BFCE211EBFD600357D6F /* UIImage+Blur.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Blur.h"; sourceTree = "<group>"; };
-		63B2BFCF211EBFD600357D6F /* UIImage+Blur.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Blur.m"; sourceTree = "<group>"; };
-		63B2BFD2211EF4C500357D6F /* TKMContextSentenceModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMContextSentenceModelItem.h; sourceTree = "<group>"; };
-		63B2BFD3211EF4C500357D6F /* TKMContextSentenceModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMContextSentenceModelItem.m; sourceTree = "<group>"; };
 		63BDA9A5200E04E500D75DA2 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		63BDA9A6200E04E500D75DA2 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SuccessAnimation.h; sourceTree = "<group>"; };
@@ -553,8 +546,6 @@
 		63E9A8DC21199C2600418CE1 /* ClientTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientTest.m; sourceTree = "<group>"; };
 		63E9A8E221199C8500418CE1 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63E9A8E621199C8500418CE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		63E9A8ED211B272100418CE1 /* TKMBlurrableCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMBlurrableCell.h; sourceTree = "<group>"; };
-		63E9A8EE211B272100418CE1 /* TKMBlurrableCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMBlurrableCell.m; sourceTree = "<group>"; };
 		63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchResultViewController.h; sourceTree = "<group>"; };
 		63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchResultViewController.m; sourceTree = "<group>"; };
 		63EDA406207F335200382CE3 /* PieChartDataEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PieChartDataEntry.swift; path = third_party/Charts/PieChartDataEntry.swift; sourceTree = SOURCE_ROOT; };
@@ -616,8 +607,6 @@
 			isa = PBXGroup;
 			children = (
 				BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */,
-				63B2BFCE211EBFD600357D6F /* UIImage+Blur.h */,
-				63B2BFCF211EBFD600357D6F /* UIImage+Blur.m */,
 				63E9A8DB21199C2600418CE1 /* Tests */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
@@ -886,10 +875,6 @@
 				633DE95020C5634A00AC25F4 /* TKMSwitchModelItem.m */,
 				633DE94E20C5634A00AC25F4 /* TKMTableModel.h */,
 				633DE95120C5634A00AC25F4 /* TKMTableModel.m */,
-				63E9A8ED211B272100418CE1 /* TKMBlurrableCell.h */,
-				63E9A8EE211B272100418CE1 /* TKMBlurrableCell.m */,
-				63B2BFD2211EF4C500357D6F /* TKMContextSentenceModelItem.h */,
-				63B2BFD3211EF4C500357D6F /* TKMContextSentenceModelItem.m */,
 			);
 			path = Tables;
 			sourceTree = "<group>";
@@ -1301,7 +1286,6 @@
 				63CAAAD01FC6E0BA00E09DA1 /* Struct.pbobjc.m in Sources */,
 				63EDA427207F335500382CE3 /* PieHighlighter.swift in Sources */,
 				63EEFED91FC46E720070C05F /* Client.m in Sources */,
-				63B2BFD0211EBFD600357D6F /* UIImage+Blur.m in Sources */,
 				63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */,
 				633DE95520C5634A00AC25F4 /* TKMSwitchModelItem.m in Sources */,
 				6319CAA42044203E00C31F87 /* CombinedChartRenderer.swift in Sources */,
@@ -1328,7 +1312,6 @@
 				633DE95620C5634A00AC25F4 /* TKMTableModel.m in Sources */,
 				63EDA420207F335500382CE3 /* PieChartData.swift in Sources */,
 				6319CB27204429F400C31F87 /* ScatterChartDataProvider.swift in Sources */,
-				63E9A8EF211B272100418CE1 /* TKMBlurrableCell.m in Sources */,
 				63CAAAD21FC6E0BA00E09DA1 /* SourceContext.pbobjc.m in Sources */,
 				63CAAAF01FC6E1D400E09DA1 /* GPBDictionary.m in Sources */,
 				63EDA425207F335500382CE3 /* PieRadarHighlighter.swift in Sources */,
@@ -1345,7 +1328,6 @@
 				6319C9A0204015B900C31F87 /* NSString+MD5.m in Sources */,
 				6319CB1F204429E200C31F87 /* CandleStickChartRenderer.swift in Sources */,
 				63CAAACE1FC6E0BA00E09DA1 /* Empty.pbobjc.m in Sources */,
-				63B2BFD4211EF4C500357D6F /* TKMContextSentenceModelItem.m in Sources */,
 				6319CAE12044203E00C31F87 /* LegendEntry.swift in Sources */,
 				6319CA822044203E00C31F87 /* BarLineChartViewBase.swift in Sources */,
 				63EDA428207F335500382CE3 /* RadarChartData.swift in Sources */,

@@ -27,11 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) DataLoader *dataLoader;
 @property (nonatomic) LocalCachingClient *localCachingClient;
 @property (nonatomic, weak) id<TKMSubjectDelegate> subjectDelegate;
-
 @property (nonatomic) bool showHints;
-@property (nonatomic) bool blurReading;
-@property (nonatomic) bool blurMeaning;
-@property (nonatomic) bool blurContextSentences;
 
 - (void)updateWithSubject:(TKMSubject *)subject
            studyMaterials:(TKMStudyMaterials *)studyMaterials;
