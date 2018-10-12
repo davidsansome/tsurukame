@@ -25,7 +25,7 @@ import (
 )
 
 const (
-	urlBase = "https://www.wanikani.com/api/v2"
+	urlBase = "https://api.wanikani.com/v2"
 )
 
 type Client struct {
