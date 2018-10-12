@@ -170,6 +170,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 
 - (void)addSimilarKanji:(TKMSubject *)subject
                 toModel:(TKMMutableTableModel *)model {
+  int currentLevel = [_localCachingClient getUsersCurrentLevel];
   bool addedSection = false;
   for (TKMVisuallySimilarKanji *visuallySimilarKanji in subject.kanji.visuallySimilarKanjiArray) {
     if (visuallySimilarKanji.score < kVisuallySimilarKanjiScoreThreshold) {
@@ -180,13 +181,11 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
       addedSection = true;
     }
     TKMSubject *subject = [_dataLoader loadSubject:visuallySimilarKanji.id_p];
-    TKMAssignment *assignment = [_localCachingClient getAssignmentForID:visuallySimilarKanji.id_p];
-    
-    TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject delegate:_subjectDelegate];
-    if (!assignment) {
-      item.gradientColors = TKMLockedGradient();
+    if (subject.level > currentLevel) {
+      continue;
     }
     
+    TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject delegate:_subjectDelegate];
     [model addItem:item];
   }
 }
