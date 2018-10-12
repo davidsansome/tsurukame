@@ -265,7 +265,7 @@
 		6319C9AD20441D3800C31F87 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = third_party/FMDB/FMDatabaseAdditions.h; sourceTree = SOURCE_ROOT; };
 		6319C9AE20441D3800C31F87 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = third_party/FMDB/FMDatabaseAdditions.m; sourceTree = SOURCE_ROOT; };
 		6319C9AF20441D3800C31F87 /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabasePool.h; path = third_party/FMDB/FMDatabasePool.h; sourceTree = SOURCE_ROOT; };
-		6319C9B520441DE200C31F87 /* wk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = wk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6319C9B520441DE200C31F87 /* Tsurukame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tsurukame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6319C9FB2044202300C31F87 /* BarChartDataSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BarChartDataSet.swift; path = third_party/Charts/BarChartDataSet.swift; sourceTree = SOURCE_ROOT; };
 		6319C9FC2044202300C31F87 /* BarLineChartViewBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BarLineChartViewBase.swift; path = third_party/Charts/BarLineChartViewBase.swift; sourceTree = SOURCE_ROOT; };
 		6319C9FD2044202300C31F87 /* MarkerImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MarkerImage.swift; path = third_party/Charts/MarkerImage.swift; sourceTree = SOURCE_ROOT; };
@@ -689,7 +689,7 @@
 				6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */,
 				633632ED201F3490006D582B /* UserDefaults.h */,
 				633632EE201F3490006D582B /* UserDefaults.m */,
-				6319C9B520441DE200C31F87 /* wk.app */,
+				6319C9B520441DE200C31F87 /* Tsurukame.app */,
 				63E9A8E221199C8500418CE1 /* Tests.xctest */,
 			);
 			sourceTree = "<group>";
@@ -1036,9 +1036,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		630FD6121FC45BDF00D21C1F /* wk */ = {
+		630FD6121FC45BDF00D21C1F /* Tsurukame */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 630FD6291FC45BDF00D21C1F /* Build configuration list for PBXNativeTarget "wk" */;
+			buildConfigurationList = 630FD6291FC45BDF00D21C1F /* Build configuration list for PBXNativeTarget "Tsurukame" */;
 			buildPhases = (
 				630FD60F1FC45BDF00D21C1F /* Sources */,
 				630FD6101FC45BDF00D21C1F /* Frameworks */,
@@ -1048,9 +1048,9 @@
 			);
 			dependencies = (
 			);
-			name = wk;
+			name = Tsurukame;
 			productName = wk;
-			productReference = 6319C9B520441DE200C31F87 /* wk.app */;
+			productReference = 6319C9B520441DE200C31F87 /* Tsurukame.app */;
 			productType = "com.apple.product-type.application";
 		};
 		63E9A8E121199C8500418CE1 /* Tests */ = {
@@ -1097,7 +1097,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 630FD60E1FC45BDF00D21C1F /* Build configuration list for PBXProject "wk" */;
+			buildConfigurationList = 630FD60E1FC45BDF00D21C1F /* Build configuration list for PBXProject "Tsurukame" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -1110,7 +1110,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				630FD6121FC45BDF00D21C1F /* wk */,
+				630FD6121FC45BDF00D21C1F /* Tsurukame */,
 				63E9A8E121199C8500418CE1 /* Tests */,
 			);
 		};
@@ -1379,7 +1379,7 @@
 /* Begin PBXTargetDependency section */
 		63E9A8E821199C8500418CE1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 630FD6121FC45BDF00D21C1F /* wk */;
+			target = 630FD6121FC45BDF00D21C1F /* Tsurukame */;
 			targetProxy = 63E9A8E721199C8500418CE1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1557,7 +1557,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/wk.app/wk";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tsurukame.app/Tsurukame";
 			};
 			name = Debug;
 		};
@@ -1576,14 +1576,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/wk.app/wk";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tsurukame.app/Tsurukame";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		630FD60E1FC45BDF00D21C1F /* Build configuration list for PBXProject "wk" */ = {
+		630FD60E1FC45BDF00D21C1F /* Build configuration list for PBXProject "Tsurukame" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				630FD6271FC45BDF00D21C1F /* Debug */,
@@ -1592,7 +1592,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		630FD6291FC45BDF00D21C1F /* Build configuration list for PBXNativeTarget "wk" */ = {
+		630FD6291FC45BDF00D21C1F /* Build configuration list for PBXNativeTarget "Tsurukame" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				630FD62A1FC45BDF00D21C1F /* Debug */,

@@ -18,7 +18,7 @@
 #import "Style.h"
 #import "proto/Wanikani+Convenience.h"
 
-#import "wk-Swift.h"
+#import "Tsurukame-Swift.h"
 
 enum PieSlice {
   LockedPieSlice,
