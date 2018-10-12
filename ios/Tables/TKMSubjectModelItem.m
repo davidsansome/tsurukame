@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "DataLoader.h"
-#import "TKMBlurrableCell.h"
 #import "TKMSubjectChip.h"
 #import "TKMSubjectModelItem.h"
 #import "Style.h"
@@ -167,7 +166,7 @@ static UIFont *kIncorrectFont;
 
 @end
 
-@interface TKMSubjectCollectionModelView : TKMBlurrableCell
+@interface TKMSubjectCollectionModelView : TKMModelCell
 @end
 
 @implementation TKMSubjectCollectionModelItem
@@ -206,6 +205,8 @@ static UIFont *kIncorrectFont;
 - (void)updateWithItem:(TKMSubjectCollectionModelItem *)item {
   [super updateWithItem:item];
   
+  self.selectionStyle = UITableViewCellSelectionStyleNone;
+  
   // Remove all existing chips.
   for (TKMSubjectChip *chip in _chips) {
     [chip removeFromSuperview];
@@ -223,19 +224,15 @@ static UIFont *kIncorrectFont;
     [self.contentView addSubview:chip];
     [_chips addObject:chip];
   }
-  
-  self.selectionStyle = UITableViewCellSelectionStyleNone;
-  self.blurrable = item.blurrable;
   [self setNeedsLayout];
 }
 
 - (void)layoutSubviews {
-  NSArray<NSValue *> *chipFrames =
-      TKMCalculateSubjectChipFrames(_chips, self.contentView.frame.size.width, NSTextAlignmentLeft);
+  NSArray<NSValue *> *chipFrames = TKMCalculateSubjectChipFrames(_chips, self.frame.size.width,
+                                                                 NSTextAlignmentLeft);
   for (int i = 0; i < _chips.count; ++i) {
     _chips[i].frame = [chipFrames[i] CGRectValue];
   }
-  [super layoutSubviews];
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {

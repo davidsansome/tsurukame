@@ -14,12 +14,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "TKMBlurrableCell.h"
 #import "TKMModelItem.h"
 
 NS_ASSUME_NONNULL_BEGIN;
 
-@interface TKMBasicModelCell : TKMBlurrableCell
+@interface TKMBasicModelCell : TKMModelCell
 @end
 
 @interface TKMBasicModelItem : NSObject <TKMModelItem>

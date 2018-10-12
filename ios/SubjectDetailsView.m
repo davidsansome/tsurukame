@@ -19,7 +19,6 @@
 #import "UIColor+HexString.h"
 #import "proto/Wanikani+Convenience.h"
 #import "Tables/TKMAttributedModelItem.h"
-#import "Tables/TKMContextSentenceModelItem.h"
 #import "Tables/TKMMarkupModelItem.h"
 #import "Tables/TKMTableModel.h"
 
@@ -27,7 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 static const CGFloat kSectionHeaderHeight = 38.f;
 static const CGFloat kSectionFooterHeight = 0.f;
-static const CGFloat kEstimatedRowHeight = 44.f;
 static const CGFloat kFontSize = 14.f;
 
 static const int kVisuallySimilarKanjiScoreThreshold = 400;
@@ -131,8 +129,6 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     self.estimatedSectionHeaderHeight = kSectionHeaderHeight;
     self.sectionFooterHeight = kSectionFooterHeight;
     self.estimatedSectionFooterHeight = kSectionFooterHeight;
-    self.rowHeight = UITableViewAutomaticDimension;
-    self.estimatedRowHeight = kEstimatedRowHeight;
   }
   return self;
 }
@@ -143,7 +139,6 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   NSAttributedString *text = RenderMeanings(subject.meaningsArray, studyMaterials);
   text = [text stringWithFontSize:kFontSize];
   TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
-  item.blurrable = _blurMeaning;
   
   [model addSection:@"Meaning"];
   [model addItem:item];
@@ -155,7 +150,6 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   NSAttributedString *text = RenderReadings(subject.readingsArray, primaryOnly);
   text = [text stringWithFontSize:kFontSize];
   TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
-  item.blurrable = _blurReading;
   
   [model addSection:@"Reading"];
   [model addItem:item];
@@ -169,7 +163,6 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
             dataLoader:_dataLoader
               delegate:self];
   item.font = kFont;
-  item.blurrable = _blurMeaning;
   
   [model addSection:title];
   [model addItem:item];
@@ -213,7 +206,6 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 
 - (void)addFormattedText:(NSArray<TKMFormattedText*> *)formattedText
                   isHint:(bool)isHint
-               blurrable:(bool)blurrable
                  toModel:(TKMMutableTableModel *)model {
   if (isHint && !_showHints) {
     return;
@@ -228,9 +220,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [text replaceTextColor:kHintTextColor];
   }
   
-  TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
-  item.blurrable = blurrable;
-  [model addItem:item];
+  [model addItem:[[TKMAttributedModelItem alloc] initWithText:text]];
 }
 
 - (void)addContextSentences:(TKMSubject *)subject
@@ -241,10 +231,14 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   
   [model addSection:@"Context Sentences"];
   for (TKMVocabulary_Sentence *sentence in subject.vocabulary.sentencesArray) {
-    [model addItem:[[TKMContextSentenceModelItem alloc] initWithJapanese:sentence.japanese
-                                                                 english:sentence.english
-                                                                    font:kFont
-                                                               blurrable:_blurContextSentences]];
+    TKMBasicModelItem *item = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                                 title:sentence.japanese
+                                                              subtitle:sentence.english];
+    item.titleFont = kFont;
+    item.subtitleFont = kFont;
+    item.numberOfTitleLines = 0;
+    item.numberOfSubtitleLines = 0;
+    [model addItem:item];
   }
 }
 
@@ -256,10 +250,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [self addMeanings:subject studyMaterials:studyMaterials toModel:model];
 
     [model addSection:@"Mnemonic"];
-    [self addFormattedText:subject.radical.formattedMnemonicArray
-                    isHint:false
-                 blurrable:_blurMeaning
-                   toModel:model];
+    [self addFormattedText:subject.radical.formattedMnemonicArray isHint:false toModel:model];
     
     [self addAmalgamationSubjects:subject toModel:model];
   }
@@ -269,24 +260,12 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [self addComponents:subject title:@"Radicals" toModel:model];
     
     [model addSection:@"Meaning Explanation"];
-    [self addFormattedText:subject.kanji.formattedMeaningMnemonicArray
-                    isHint:false
-                 blurrable:_blurMeaning
-                   toModel:model];
-    [self addFormattedText:subject.kanji.formattedMeaningHintArray
-                    isHint:true
-                 blurrable:_blurMeaning
-                   toModel:model];
+    [self addFormattedText:subject.kanji.formattedMeaningMnemonicArray isHint:false toModel:model];
+    [self addFormattedText:subject.kanji.formattedMeaningHintArray isHint:true toModel:model];
     
     [model addSection:@"Reading Explanation"];
-    [self addFormattedText:subject.kanji.formattedReadingMnemonicArray
-                    isHint:false
-                 blurrable:_blurReading
-                   toModel:model];
-    [self addFormattedText:subject.kanji.formattedReadingHintArray
-                    isHint:true
-                 blurrable:_blurReading
-                   toModel:model];
+    [self addFormattedText:subject.kanji.formattedReadingMnemonicArray isHint:false toModel:model];
+    [self addFormattedText:subject.kanji.formattedReadingHintArray isHint:true toModel:model];
     
     [self addSimilarKanji:subject toModel:model];
     [self addAmalgamationSubjects:subject toModel:model];
@@ -297,16 +276,10 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [self addComponents:subject title:@"Kanji" toModel:model];
     
     [model addSection:@"Meaning Explanation"];
-    [self addFormattedText:subject.vocabulary.formattedMeaningExplanationArray
-                    isHint:false
-                 blurrable:_blurMeaning
-                   toModel:model];
+    [self addFormattedText:subject.vocabulary.formattedMeaningExplanationArray isHint:false toModel:model];
     
     [model addSection:@"Reading Explanation"];
-    [self addFormattedText:subject.vocabulary.formattedReadingExplanationArray
-                    isHint:false
-                 blurrable:_blurReading
-                   toModel:model];
+    [self addFormattedText:subject.vocabulary.formattedReadingExplanationArray isHint:false toModel:model];
     
     [self addContextSentences:subject toModel:model];
     
