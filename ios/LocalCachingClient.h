@@ -53,6 +53,7 @@ typedef void (^CompletionHandler)(void);
 - (TKMUser * _Nullable)getUserInfo;
 - (NSArray<TKMProgress *> *)getAllPendingProgress;
 - (TKMAssignment *)getAssignmentForID:(int)subjectID;
+- (int)getUsersCurrentLevel;
 - (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
 - (NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
 
