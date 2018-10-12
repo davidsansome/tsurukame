@@ -149,7 +149,8 @@
     NSDate *startDate = [[NSCalendar currentCalendar] nextDateAfterDate:[NSDate date]
                                                            matchingUnit:NSCalendarUnitMinute
                                                                   value:0
-                                                                options:NSCalendarMatchNextTime];
+                                                                options:NSCalendarMatchNextTime |
+                                                                        NSCalendarMatchStrictly];
     NSTimeInterval startInterval = [startDate timeIntervalSinceNow];
     int cumulativeReviews = reviewCount;
     for (int hour = 0; hour < upcomingReviews.count; hour++) {
@@ -160,6 +161,10 @@
       cumulativeReviews += reviews;
       
       NSTimeInterval triggerTimeInterval = startInterval + (hour * 60 * 60);
+      if (triggerTimeInterval <= 0) {
+        // UNTimeIntervalNotificationTrigger sometimes crashes with a negative triggerTimeInterval.
+        continue;
+      }
       NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];
       UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
       content.badge = @(cumulativeReviews);
