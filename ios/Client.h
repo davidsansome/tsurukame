@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class DataLoader;
+
 NS_ASSUME_NONNULL_BEGIN
 
 extern const char *kWanikaniSessionCookieName;
@@ -38,7 +40,8 @@ typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
 @interface Client : NSObject
 
 - (instancetype)initWithApiToken:(NSString *)apiToken
-                          cookie:(NSString *)cookie NS_DESIGNATED_INITIALIZER;
+                          cookie:(NSString *)cookie
+                      dataLoader:(DataLoader *)dataLoader NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
 @property (nonatomic) bool pretendToBeOfflineForTesting;

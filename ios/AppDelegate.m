@@ -71,7 +71,8 @@
 
 - (void)loginComplete:(NSNotification *)notification {
   Client *client = [[Client alloc] initWithApiToken:UserDefaults.userApiToken
-                                             cookie:UserDefaults.userCookie];
+                                             cookie:UserDefaults.userCookie
+                                         dataLoader:_dataLoader];
   
   _localCachingClient = [[LocalCachingClient alloc] initWithClient:client
                                                         dataLoader:_dataLoader

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "Client.h"
+#import "DataLoader.h"
 #import "proto/Wanikani+Convenience.h"
 
 // TODO: delete in release.
@@ -149,18 +150,21 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 @implementation Client {
   NSString *_apiToken;
   NSString *_cookie;
+  DataLoader *_dataLoader;
   NSURLSession *_urlSession;
   NSString *_csrfToken;
   NSDate *_csrfTokenUpdated;
 }
 
 - (instancetype)initWithApiToken:(NSString *)apiToken
-                          cookie:(NSString *)cookie {
+                          cookie:(NSString *)cookie
+                      dataLoader:(DataLoader *)dataLoader {
   EnsureInitialised();
   
   if (self = [super init]) {
     _apiToken = apiToken;
     _cookie = cookie;
+    _dataLoader = dataLoader;
     _urlSession = [NSURLSession sharedSession];
   }
   return self;
@@ -471,9 +475,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     for (NSDictionary *d in data) {
       TKMAssignment *assignment = [[TKMAssignment alloc] init];
       assignment.id_p = [d[@"id"] intValue];
-      assignment.level = [d[@"data"][@"level"] intValue];
       assignment.subjectId = [d[@"data"][@"subject_id"] intValue];
       assignment.srsStage = [d[@"data"][@"srs_stage"] intValue];
+      
+      TKMSubject *subject = [_dataLoader loadSubject:assignment.subjectId];
+      assignment.level = subject.level;
       
       if (d[@"data"][@"available_at"] != [NSNull null]) {
         assignment.availableAt =
