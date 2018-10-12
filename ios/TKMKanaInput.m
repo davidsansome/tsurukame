@@ -399,7 +399,7 @@ NSString *TKMConvertKanaText(NSString *input) {
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
   [_delegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
-  if (!_enabled || range.length != 0) {
+  if (!_enabled || range.length != 0 || string.length == 0) {
     return YES;
   }
   
