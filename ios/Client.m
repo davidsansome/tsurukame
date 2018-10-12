@@ -16,9 +16,6 @@
 #import "DataLoader.h"
 #import "proto/Wanikani+Convenience.h"
 
-// TODO: delete in release.
-#import <UIKit/UIKit.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 const char *kWanikaniSessionCookieName = "_wanikani_session";
@@ -185,19 +182,6 @@ static NSString *GetSessionCookie(NSURLSession *session) {
       return date;
     }
   }
-  
-  // TODO: delete in release.
-  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Error parsing date"
-                                                                 message:string
-                                                          preferredStyle:UIAlertControllerStyleAlert];
-  UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
-                                                          style:UIAlertActionStyleDefault
-                                                        handler:^(UIAlertAction * action) {}];
-  
-  [alert addAction:defaultAction];
-  UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
-  [vc presentViewController:alert animated:YES completion:nil];
-  
   return nil;
 }
 
