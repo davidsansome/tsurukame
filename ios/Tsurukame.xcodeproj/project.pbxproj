@@ -606,8 +606,6 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
-				BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */,
-				63E9A8DB21199C2600418CE1 /* Tests */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -675,12 +673,16 @@
 				63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */,
 				63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */,
 				633DE93C20C2CA0600AC25F4 /* Tables */,
+				63E9A8DB21199C2600418CE1 /* Tests */,
+				63E9A8E221199C8500418CE1 /* Tests.xctest */,
 				63CAAA961FC6E04400E09DA1 /* third_party */,
 				633DE95B20C5635900AC25F4 /* TKMKanaInput.h */,
 				633DE95920C5635900AC25F4 /* TKMKanaInput.m */,
+				BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */,
 				6392DBA520D14915003019EB /* TKMSubjectChip.h */,
 				6392DBA620D14915003019EB /* TKMSubjectChip.m */,
 				6392DBA820D14997003019EB /* TKMSubjectDelegate.h */,
+				6319C9B520441DE200C31F87 /* Tsurukame.app */,
 				63A2375F1FE9264300C48657 /* UIColor+HexString.h */,
 				63A237601FE9264300C48657 /* UIColor+HexString.m */,
 				63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */,
@@ -689,8 +691,6 @@
 				6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */,
 				633632ED201F3490006D582B /* UserDefaults.h */,
 				633632EE201F3490006D582B /* UserDefaults.m */,
-				6319C9B520441DE200C31F87 /* Tsurukame.app */,
-				63E9A8E221199C8500418CE1 /* Tests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
