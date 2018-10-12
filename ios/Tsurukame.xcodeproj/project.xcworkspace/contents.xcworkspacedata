@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:wk.xcodeproj">
+      location = "self:/Users/david/wk/ios/Tsurukame.xcodeproj">
    </FileRef>
 </Workspace>

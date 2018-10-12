@@ -16,7 +16,7 @@
 
 #import "Style.h"
 
-#import "wk-Swift.h"
+#import "Tsurukame-Swift.h"
 
 @interface UpcomingReviewsXAxisValueFormatter : NSObject <IChartAxisValueFormatter>
 - (instancetype)initWithStartTime:(NSDate *)startTime;

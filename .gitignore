@@ -1,5 +1,6 @@
 data
 .DS_Store
-ios/wk.xcodeproj/project.xcworkspace/xcuserdata/
-ios/wk.xcodeproj/xcuserdata/
+ios/Tsurukame.xcodeproj/project.xcworkspace/xcuserdata/
+ios/Tsurukame.xcodeproj/project.xcworkspace/xcshareddata/
+ios/Tsurukame.xcodeproj/xcuserdata/
 sqlite3-extension/proto.so
