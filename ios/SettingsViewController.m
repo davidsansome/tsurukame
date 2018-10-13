@@ -26,6 +26,7 @@
 @implementation SettingsViewController {
   TKMTableModel *_model;
   NSIndexPath *_groupMeaningReadingIndexPath;
+  NSIndexPath *_randomFontsIndexPath;
 }
 
 - (void)viewDidLoad {
@@ -63,6 +64,22 @@
                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                   target:self
                                                   action:@selector(didTapReviewOrder:)]];
+  
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                    title:@"Jitai"
+                                                 subtitle:@"Use random font for each review"
+                                                       on:UserDefaults.randomFonts
+                                                   target:self
+                                                   action:@selector(randomFontsSwitchChanged:)]];
+  _randomFontsIndexPath =
+  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                    title:@"Used Fonts"
+                                                 subtitle:@""
+                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                   target:self
+                                                   action:@selector(didTapRandomFonts:)]
+              hidden:!UserDefaults.randomFonts];
+  
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                     title:@"Back-to-back"
                                                  subtitle:@"Group Meaning and Reading together"
@@ -149,6 +166,11 @@
 - (void)animatePlusOneSwitchChanged:(UISwitch *)switchView {
   UserDefaults.animatePlusOne = switchView.on;
 }
+
+- (void)randomFontsSwitchChanged:(UISwitch *)switchView {
+  UserDefaults.randomFonts = switchView.on;
+  [_model setIndexPath:_randomFontsIndexPath isHidden:!switchView.on];
+}
   
 - (void)groupMeaningReadingSwitchChanged:(UISwitch *)switchView {
   UserDefaults.groupMeaningReading = switchView.on;
@@ -165,6 +187,10 @@
 
 - (void)didTapReviewOrder:(TKMBasicModelItem *)item {
   [self performSegueWithIdentifier:@"reviewOrder" sender:self];
+}
+
+- (void)didTapRandomFonts:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"randomFonts" sender:self];
 }
 
 - (void)didTapTaskOrder:(TKMBasicModelItem *)item {
