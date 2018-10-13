@@ -24,6 +24,7 @@
 #import "TKMKanaInput.h"
 #import "proto/Wanikani+Convenience.h"
 #import "UIView+SafeAreaInsets.h"
+#import "TKMFontLoader.h"
 
 #import <WebKit/WebKit.h>
 
@@ -448,6 +449,15 @@ typedef enum : NSUInteger {
   } completion:nil];
   [UIView transitionWithView:self.questionLabel duration:kAnimationDuration options:options animations:^{
     _questionLabel.attributedText = _activeSubject.japaneseText;
+    
+    NSArray *availableFonts = [TKMFontLoader getFontsThatRender:_questionLabel.text];
+    NSUInteger random = arc4random_uniform([availableFonts count]);
+    NSString *randomFont = [[availableFonts objectAtIndex:random] fontName];
+    
+    NSLog(@"Using Font: %@", randomFont);
+    
+    CGFloat size = [_questionLabel.font pointSize];
+    [_questionLabel setFont:[UIFont fontWithName:randomFont size:size]];
   } completion:nil];
   [UIView transitionWithView:self.promptLabel duration:kAnimationDuration options:options animations:^{
     _promptLabel.attributedText = prompt;
