@@ -17,7 +17,7 @@ static NSArray *loadedFonts;
 void EnsureInitialized() {
   dispatch_once(&sOnceToken, ^{
     NSBundle *mainBundle = [NSBundle mainBundle];
-    NSArray *urls = [mainBundle URLsForResourcesWithExtension:nil subdirectory:@"Ressources/fonts"];
+    NSArray *urls = [mainBundle URLsForResourcesWithExtension:nil subdirectory:@"Resources/fonts"];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
