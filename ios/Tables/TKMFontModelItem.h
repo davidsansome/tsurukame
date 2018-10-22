@@ -7,11 +7,28 @@
 //
 
 #import "TKMModelItem.h"
+#import "../TKMFontLoader.h"
+#import "../TKMFontDelegate.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TKMFontModelItem : TKMModelCell
+@interface TKMFontModelView : TKMModelCell
 
 @end
+
+
+@interface TKMFontModelItem : NSObject <TKMModelItem>
+
+- (instancetype)initWithFont:(TKMFont *)font delegate:(id<TKMFontDelegate>)delegate NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
+
+- (void)setSelected:(BOOL)selected;
+
+@property(nonatomic, copy) TKMFont *font;
+@property(nonatomic, weak) id<TKMFontDelegate> delegate;
+
+@end
+
 
 NS_ASSUME_NONNULL_END

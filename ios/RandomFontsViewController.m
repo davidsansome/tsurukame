@@ -8,31 +8,50 @@
 
 #import "RandomFontsViewController.h"
 #import "TKMFontLoader.h"
+#import "Tables/TKMTableModel.h"
+#import "Tables/TKMFontModelItem.h"
+#import "TKMFontDelegate.h"
+#import "UserDefaults.h"
 
-@interface RandomFontsViewController ()
+@interface RandomFontsViewController () <TKMFontDelegate>
 
 @end
 
 @implementation RandomFontsViewController {
-  NSArray *fontsArray;
+  TKMTableModel *_model;
 }
 
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  fontsArray = [TKMFontLoader getLoadedFonts];
+  NSArray *fontsArray = [TKMFontLoader getLoadedFonts];
+  
+  TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView: self.tableView];
+  
+  [fontsArray enumerateObjectsUsingBlock:^(TKMFont *font, NSUInteger index, BOOL *stop) {
+    TKMFontModelItem *item = [[TKMFontModelItem alloc] initWithFont:font delegate:self];
+    [model addItem:item];
+    
+    if (font.enabled) {
+      NSLog(@"selecting font %@", font.fontName);
+      NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:index inSection:0];
+      [self.tableView selectRowAtIndexPath: selectedIndex animated:NO scrollPosition: UITableViewScrollPositionNone];
+    }
+  }];
+  
+  _model = model;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-  return 1;
+-(void)viewWillDisappear:(BOOL)animated {
+  [TKMFontLoader saveToUserDefaults];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section {
-  return [fontsArray count];
+- (void)didTapFont:(TKMFont *)font {
+  //[TKMFontLoader saveToUserDefaults];
 }
 
 #pragma mark - Table view data source
-
+/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FontShowcaseCell" forIndexPath:indexPath];
   
@@ -44,6 +63,7 @@
   
   return cell;
 }
+ */
 
 /*
 // Override to support conditional editing of the table view.

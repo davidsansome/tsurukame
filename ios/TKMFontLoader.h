@@ -15,11 +15,12 @@
 @interface TKMFontLoader : NSObject
 
 + (NSArray*) getLoadedFonts;
-+ (NSArray*) getFontsThatRender:(NSString*)text;
++ (NSString*) getRandomFontToRender:(NSString*)text;
++ (void) saveToUserDefaults;
 
 @end
 
-@interface TKMFont : NSObject
+@interface TKMFont : NSObject <NSCoding>
   @property(strong) NSString *fontName;
   @property BOOL enabled;
 
