@@ -69,7 +69,7 @@ void EnsureInitialized() {
   return loadedFonts;
 }
 
-+ (BOOL) font:(TKMFont*)font canRender:(NSString*)text {
++ (BOOL)font:(TKMFont*)font canRender:(NSString*)text {
   CTFontRef fontRef = CTFontCreateWithName((CFStringRef)font.fontName, 0.0, NULL);
   
   NSUInteger count = text.length;
@@ -77,11 +77,13 @@ void EnsureInitialized() {
   CGGlyph glyphs[count];
   [text getCharacters:characters range:NSMakeRange(0, count)];
   
-  // TODO: find better solution for this
-  return CTFontGetGlyphsForCharacters(fontRef, characters, glyphs, count);
+  BOOL canRender = CTFontGetGlyphsForCharacters(fontRef, characters, glyphs, count);
+  CFRelease(fontRef);
+  
+  return canRender;
 }
 
-+ (NSString*) getRandomFontToRender:(NSString*)text {
++ (NSString*)getRandomFontToRender:(NSString*)text {
   NSPredicate *fontPredicate = [NSPredicate predicateWithBlock:^BOOL(TKMFont *font, NSDictionary *_) {
     return font.enabled && [TKMFontLoader font:font canRender:text];
   }];
