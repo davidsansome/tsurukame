@@ -526,6 +526,9 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TY8-JV-WfA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="563"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="19G-qM-1qD" appends="YES" id="3Bz-Zh-VcU"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gdi-7v-770">
                                 <rect key="frame" x="0.0" y="563" width="375" height="40"/>
@@ -536,6 +539,9 @@
                                 <fontDescription key="fontDescription" name=".SFNSDisplay" family=".SF NS Display" pointSize="60"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="19G-qM-1qD" appends="YES" id="TTv-ct-IbZ"/>
+                                </connections>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="thumb" translatesAutoresizingMaskIntoConstraints="NO" id="9gS-sh-cYw">
                                 <rect key="frame" x="158.5" y="37" width="16" height="16"/>
@@ -658,6 +664,7 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Jee-0P-imk" secondAttribute="trailing" id="0Pg-uy-3Ek"/>
                             <constraint firstItem="lqe-Ns-DBU" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="13b-3r-nEp"/>
@@ -741,6 +748,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tCW-sh-YGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="19G-qM-1qD">
+                    <connections>
+                        <action selector="questionLabelTapped:" destination="Mzz-hx-Bdo" id="7cs-c8-DrG"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-92" y="834.33283358320841"/>
         </scene>
@@ -992,24 +1004,10 @@
         <scene sceneID="Edv-Yt-Zoe">
             <objects>
                 <tableViewController id="QeO-rY-q75" customClass="RandomFontsViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="I82-At-GcW">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="75" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="I82-At-GcW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FontShowcaseCell" rowHeight="103" id="yqM-3e-gG3">
-                                <rect key="frame" x="0.0" y="28" width="375" height="103"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yqM-3e-gG3" id="ztk-b5-pCb">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="102.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="QeO-rY-q75" id="s55-gr-GMI"/>
-                            <outlet property="delegate" destination="QeO-rY-q75" id="cvD-FG-IjJ"/>
-                        </connections>
                     </tableView>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BnI-lh-nSF" userLabel="First Responder" sceneMemberID="firstResponder"/>

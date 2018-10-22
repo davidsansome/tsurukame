@@ -16,10 +16,16 @@
 
 #define DEFINE_OBJECT(type, name, setterName) \
 + (type *)name { \
-  return [[NSUserDefaults standardUserDefaults] stringForKey:@#name]; \
+  NSObject *data = [[NSUserDefaults standardUserDefaults] objectForKey:@#name]; \
+  if([data isKindOfClass:[NSString class]]) { \
+    return (type*) data; \
+  } else { \
+    return (type*) [NSKeyedUnarchiver unarchiveObjectWithData: (NSData*)data]; \
+  } \
 } \
 + (void)setterName:(type *)value { \
-  [[NSUserDefaults standardUserDefaults] setObject:value forKey:@#name]; \
+  NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject: value]; \
+  [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:@#name]; \
 }
 
 #define DEFINE_ENUM(type, name, setterName, defaultValue) \
@@ -57,7 +63,8 @@ DEFINE_BOOL(animateLevelUpPopup, setAnimateLevelUpPopup, YES);
 DEFINE_BOOL(animatePlusOne, setAnimatePlusOne, YES);
 
 DEFINE_ENUM(ReviewOrder, reviewOrder, setReviewOrder, ReviewOrder_Random);
-DEFINE_BOOL(randomFonts, setRandomFonts, NO)
+DEFINE_BOOL(randomFontsEnabled, setRandomFontsEnabled, NO);
+DEFINE_OBJECT(NSArray, usedFonts, setUsedFonts);
 DEFINE_BOOL(groupMeaningReading, setGroupMeaningReading, NO);
 DEFINE_BOOL(meaningFirst, setMeaningFirst, YES);
 DEFINE_BOOL(showAnswerImmediately, setShowAnswerImmediately, YES);

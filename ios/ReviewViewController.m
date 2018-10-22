@@ -110,6 +110,9 @@ typedef enum : NSUInteger {
   bool _viewDidAppearOnce;
   
   UIImpactFeedbackGenerator *_hapticGenerator;
+  
+  NSString *_usedFontName;
+  NSString *_normalFontName;
 }
 
 #pragma mark - Constructors
@@ -226,6 +229,9 @@ typedef enum : NSUInteger {
   if (_hideBackButton) {
     _backButton.hidden = YES;
   }
+  
+  _usedFontName = [UIFont systemFontOfSize:1].fontName;
+  _normalFontName = _questionLabel.font.fontName;
   
   [self viewDidLayoutSubviews];
   [self randomTask];
@@ -429,6 +435,12 @@ typedef enum : NSUInteger {
       assert(false);
   }
   
+  // Set random font
+  if(UserDefaults.randomFontsEnabled) {
+    _usedFontName = [TKMFontLoader getRandomFontToRender:_activeSubject.japaneseText.string];
+    NSLog(@"Using Font: %@", _usedFontName);
+  }
+  
   UIFont *boldFont = [UIFont boldSystemFontOfSize:self.promptLabel.font.pointSize];
   NSMutableAttributedString *prompt = [[NSMutableAttributedString alloc] initWithString:
                                        [NSString stringWithFormat:@"%@ %@",
@@ -449,15 +461,10 @@ typedef enum : NSUInteger {
   } completion:nil];
   [UIView transitionWithView:self.questionLabel duration:kAnimationDuration options:options animations:^{
     _questionLabel.attributedText = _activeSubject.japaneseText;
-    
-    NSArray *availableFonts = [TKMFontLoader getFontsThatRender:_questionLabel.text];
-    NSUInteger random = arc4random_uniform([availableFonts count]);
-    NSString *randomFont = [[availableFonts objectAtIndex:random] fontName];
-    
-    NSLog(@"Using Font: %@", randomFont);
-    
-    CGFloat size = [_questionLabel.font pointSize];
-    [_questionLabel setFont:[UIFont fontWithName:randomFont size:size]];
+    if(UserDefaults.randomFontsEnabled) {
+      CGFloat size = [_questionLabel.font pointSize];
+      [_questionLabel setFont:[UIFont fontWithName:_usedFontName size:size]];
+    }
   } completion:nil];
   [UIView transitionWithView:self.promptLabel duration:kAnimationDuration options:options animations:^{
     _promptLabel.attributedText = prompt;
@@ -628,6 +635,18 @@ typedef enum : NSUInteger {
 
 - (IBAction)previousSubjectButtonPressed:(id)sender {
   [self performSegueWithIdentifier:@"subjectDetails" sender:_previousSubject];
+}
+
+#pragma mark - Question Label Tapped
+
+- (IBAction)questionLabelTapped:(id)sender {
+  if (!UserDefaults.randomFontsEnabled) {
+    return;
+  }
+  CGFloat size = [_questionLabel.font pointSize];
+  NSString *newFontName = [_questionLabel.font.fontName isEqualToString:_normalFontName] ? _usedFontName : _normalFontName;
+  [_questionLabel setFont:[UIFont fontWithName:newFontName size:size]];
+  NSLog(@"Label tapped %@", newFontName);
 }
 
 #pragma mark - Back button

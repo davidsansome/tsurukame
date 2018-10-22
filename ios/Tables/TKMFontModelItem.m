@@ -8,17 +8,55 @@
 
 #import "TKMFontModelItem.h"
 
-@implementation TKMFontModelItem
+@interface TKMFontModelView ()
+
+@property (weak, nonatomic) IBOutlet UILabel *fontNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *fontPreviewLabel;
+
+@end
+
+@implementation TKMFontModelView
+
+- (void)updateWithItem:(TKMFontModelItem *)item {
+  [super updateWithItem:item];
+  
+  _fontNameLabel.text = item.font.fontName;
+  NSUInteger oldSize = _fontPreviewLabel.font.pointSize;
+  _fontPreviewLabel.font = [UIFont fontWithName:item.font.fontName size:oldSize];
+  _fontPreviewLabel.text = @"あいうえお\n漢字 字体";
+}
 
 - (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
+  [super awakeFromNib];
+  // Initialization code
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
+  [super setSelected:selected animated:animated];
+  [(TKMFontModelItem*)self.item setSelected:selected];
+  self.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+}
 
-    // Configure the view for the selected state
+@end
+
+@implementation TKMFontModelItem
+
+- (instancetype)initWithFont:(TKMFont *)font delegate:(nonnull id<TKMFontDelegate>)delegate{
+  self = [super init];
+  if (self) {
+    _font = font;
+    _delegate = delegate;
+  }
+  return self;
+}
+
+- (void)setSelected:(BOOL)selected {
+  _font.enabled = selected;
+  [_delegate didTapFont:_font];
+}
+
+- (NSString *)cellNibName {
+  return @"TKMFontModelItem";
 }
 
 @end

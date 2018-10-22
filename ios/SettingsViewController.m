@@ -68,7 +68,7 @@
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                     title:@"Jitai"
                                                  subtitle:@"Use random font for each review"
-                                                       on:UserDefaults.randomFonts
+                                                       on:UserDefaults.usedFonts
                                                    target:self
                                                    action:@selector(randomFontsSwitchChanged:)]];
   _randomFontsIndexPath =
@@ -78,7 +78,7 @@
                                             accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                    target:self
                                                    action:@selector(didTapRandomFonts:)]
-              hidden:!UserDefaults.randomFonts];
+              hidden:!UserDefaults.randomFontsEnabled];
   
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                     title:@"Back-to-back"
@@ -168,7 +168,7 @@
 }
 
 - (void)randomFontsSwitchChanged:(UISwitch *)switchView {
-  UserDefaults.randomFonts = switchView.on;
+  UserDefaults.randomFontsEnabled = switchView.on;
   [_model setIndexPath:_randomFontsIndexPath isHidden:!switchView.on];
 }
   
