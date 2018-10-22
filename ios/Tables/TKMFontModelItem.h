@@ -8,7 +8,6 @@
 
 #import "TKMModelItem.h"
 #import "../TKMFontLoader.h"
-#import "../TKMFontDelegate.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -20,13 +19,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TKMFontModelItem : NSObject <TKMModelItem>
 
-- (instancetype)initWithFont:(TKMFont *)font delegate:(id<TKMFontDelegate>)delegate NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithFont:(TKMFont *)font NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void)setSelected:(BOOL)selected;
 
 @property(nonatomic, copy) TKMFont *font;
-@property(nonatomic, weak) id<TKMFontDelegate> delegate;
+@property(nonatomic, weak) id delegate;
 
 @end
 

@@ -20,20 +20,12 @@ void EnsureInitialized() {
   dispatch_once(&sOnceToken, ^{
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSArray *urls = [mainBundle URLsForResourcesWithExtension:nil subdirectory:@"Ressources/fonts"];
-    
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    
     NSMutableArray *fonts = [[NSMutableArray alloc] init];
     
     NSArray *fontsFromDefaults = UserDefaults.usedFonts;
     
-    NSLog(@"Loading Userdefaults");
-    for (TKMFont *font in fontsFromDefaults) {
-      NSLog(@"%@; %o", font.fontName, font.enabled);
-    }
-    
     for (NSURL *url in urls) {
-      NSLog(@"Loading Data from: %@", [url path]);
       NSData *data = [fileManager contentsAtPath: [url path]];
       
       CFErrorRef error;
@@ -45,7 +37,6 @@ void EnsureInitialized() {
         CFRelease(errorDescription);
       }
       CFStringRef fontName = CGFontCopyFullName(font);
-      NSLog(@"Loaded Font: %@", fontName);
       
       TKMFont *newFont = [[TKMFont alloc] init];
       newFont.fontName = (__bridge NSString *) fontName;
@@ -95,10 +86,6 @@ void EnsureInitialized() {
 }
 
 + (void) saveToUserDefaults {
-  NSLog(@"Saving Userdefaults");
-  for (TKMFont *font in loadedFonts) {
-    NSLog(@"%@; %o", font.fontName, font.enabled);
-  }
   UserDefaults.usedFonts = loadedFonts;
 }
 
