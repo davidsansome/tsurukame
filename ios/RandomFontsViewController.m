@@ -38,7 +38,6 @@
     [model addItem:item];
     
     if (font.enabled) {
-      NSLog(@"selecting font %@", font.fontName);
       NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:index inSection:0];
       [self.tableView selectRowAtIndexPath: selectedIndex animated:NO scrollPosition: UITableViewScrollPositionNone];
     }
