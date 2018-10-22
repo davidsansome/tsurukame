@@ -438,7 +438,6 @@ typedef enum : NSUInteger {
   // Set random font
   if(UserDefaults.randomFontsEnabled) {
     _usedFontName = [TKMFontLoader getRandomFontToRender:_activeSubject.japaneseText.string];
-    NSLog(@"Using Font: %@", _usedFontName);
   }
   
   UIFont *boldFont = [UIFont boldSystemFontOfSize:self.promptLabel.font.pointSize];
@@ -646,7 +645,6 @@ typedef enum : NSUInteger {
   CGFloat size = [_questionLabel.font pointSize];
   NSString *newFontName = [_questionLabel.font.fontName isEqualToString:_normalFontName] ? _usedFontName : _normalFontName;
   [_questionLabel setFont:[UIFont fontWithName:newFontName size:size]];
-  NSLog(@"Label tapped %@", newFontName);
 }
 
 #pragma mark - Back button

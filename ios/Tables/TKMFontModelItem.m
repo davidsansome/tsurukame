@@ -41,18 +41,16 @@
 
 @implementation TKMFontModelItem
 
-- (instancetype)initWithFont:(TKMFont *)font delegate:(nonnull id<TKMFontDelegate>)delegate{
+- (instancetype)initWithFont:(TKMFont *)font {
   self = [super init];
   if (self) {
     _font = font;
-    _delegate = delegate;
   }
   return self;
 }
 
 - (void)setSelected:(BOOL)selected {
   _font.enabled = selected;
-  [_delegate didTapFont:_font];
 }
 
 - (NSString *)cellNibName {

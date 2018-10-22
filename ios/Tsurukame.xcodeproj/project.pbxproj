@@ -586,7 +586,6 @@
 		63EEFED81FC46E720070C05F /* Client.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
 		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMKanaInput+Internals.h"; sourceTree = "<group>"; };
-		BB676C0721752302005A76A0 /* TKMFontDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMFontDelegate.h; sourceTree = "<group>"; };
 		BBE4E32D2172576B003A200E /* TKMFontLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMFontLoader.m; sourceTree = "<group>"; };
 		BBE4E32F217259EE003A200E /* TKMFontLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMFontLoader.h; sourceTree = "<group>"; };
 		BBE4E330217276EC003A200E /* RandomFontsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RandomFontsViewController.h; sourceTree = "<group>"; };
@@ -620,7 +619,6 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
-				BB676C0721752302005A76A0 /* TKMFontDelegate.h */,
 				BBE4E330217276EC003A200E /* RandomFontsViewController.h */,
 				BBE4E331217276EC003A200E /* RandomFontsViewController.m */,
 				BBE4E32F217259EE003A200E /* TKMFontLoader.h */,
