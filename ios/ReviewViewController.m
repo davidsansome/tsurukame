@@ -230,7 +230,7 @@ typedef enum : NSUInteger {
     _backButton.hidden = YES;
   }
   
-  _usedFontName = [UIFont systemFontOfSize:1].fontName;
+  _usedFontName = _questionLabel.font.fontName;
   _normalFontName = _questionLabel.font.fontName;
   
   [self viewDidLayoutSubviews];

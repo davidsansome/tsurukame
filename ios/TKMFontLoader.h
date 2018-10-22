@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef Header_h
-#define Header_h
-
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
 
@@ -29,8 +26,4 @@
 @interface TKMFont : NSObject <NSCoding>
   @property(strong) NSString *fontName;
   @property BOOL enabled;
-
-
 @end
-
-#endif /* Header_h */
