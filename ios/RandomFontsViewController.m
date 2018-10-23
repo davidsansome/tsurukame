@@ -29,7 +29,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  NSArray *fontsArray = [TKMFontLoader getLoadedFonts];
+  NSArray<TKMFont*> *fontsArray = [TKMFontLoader getLoadedFonts];
   
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView: self.tableView];
   

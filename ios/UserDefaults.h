@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "TKMFontLoader.h"
+
 #import <Foundation/Foundation.h>
 
 #define DECLARE_OBJECT(type, name) \
@@ -44,7 +46,7 @@ DECLARE_BOOL(animatePlusOne);
 // Review settings.
 DECLARE_ENUM(ReviewOrder, reviewOrder);
 DECLARE_BOOL(randomFontsEnabled);
-DECLARE_OBJECT(NSArray, usedFonts);
+DECLARE_OBJECT(NSArray<TKMFont*>, usedFonts);
 DECLARE_BOOL(groupMeaningReading);
 DECLARE_BOOL(meaningFirst);
 DECLARE_BOOL(showAnswerImmediately);
