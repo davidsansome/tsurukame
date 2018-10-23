@@ -20,6 +20,7 @@
 @interface TKMFontLoader : NSObject
 
 + (NSArray<TKMFont*>*) getLoadedFonts;
++ (NSArray<TKMFont*>*) getEnabledFonts;
 + (TKMFont*) getRandomFontToRender:(NSString*)text;
 + (void) saveToUserDefaults;
 

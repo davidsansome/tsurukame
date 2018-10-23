@@ -21,41 +21,54 @@
 
 static dispatch_once_t sOnceToken;
 static NSArray<TKMFont*> *sLoadedFonts;
+static NSPredicate * sEnabledPredicate;
 static NSString *const kFontDirectory = @"fonts";
+
+NSString *LoadFontFromUrl(NSURL *url) {
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+  NSData *data = [fileManager contentsAtPath: [url path]];
+  
+  CFErrorRef error;
+  CGDataProviderRef provider = CGDataProviderCreateWithCFData((CFDataRef)data);
+  CGFontRef font = CGFontCreateWithDataProvider(provider);
+  if (! CTFontManagerRegisterGraphicsFont(font, &error)) {
+    CFStringRef errorDescription = CFErrorCopyDescription(error);
+    NSLog(@"Failed to load font: %@", errorDescription);
+    CFRelease(errorDescription);
+    CFRelease(font);
+    CFRelease(provider);
+    return nil;
+  }
+  CFStringRef fontName = CGFontCopyFullName(font);
+  
+  CFRelease(font);
+  CFRelease(provider);
+  return (__bridge NSString *) fontName;
+}
 
 void EnsureInitialized() {
   dispatch_once(&sOnceToken, ^{
+    sEnabledPredicate = [NSPredicate predicateWithFormat:@"enabled == true"];
+    
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSArray<NSURL*> *urls = [mainBundle URLsForResourcesWithExtension:nil subdirectory:kFontDirectory];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
     NSMutableArray<TKMFont*> *fonts = [NSMutableArray array];
     
     NSArray<TKMFont*> *fontsFromDefaults = UserDefaults.usedFonts;
     
     for (NSURL *url in urls) {
-      NSData *data = [fileManager contentsAtPath: [url path]];
-      
-      CFErrorRef error;
-      CGDataProviderRef provider = CGDataProviderCreateWithCFData((CFDataRef)data);
-      CGFontRef font = CGFontCreateWithDataProvider(provider);
-      if (! CTFontManagerRegisterGraphicsFont(font, &error)) {
-        CFStringRef errorDescription = CFErrorCopyDescription(error);
-        NSLog(@"Failed to load font: %@", errorDescription);
-        CFRelease(errorDescription);
-      }
-      CFStringRef fontName = CGFontCopyFullName(font);
-      
       TKMFont *newFont = [[TKMFont alloc] init];
-      newFont.fontName = (__bridge NSString *) fontName;
+      newFont.fontName = LoadFontFromUrl(url);
+      if (newFont.fontName == nil) {
+        continue;
+      }
       
       NSPredicate *fontNamePredicate = [NSPredicate predicateWithFormat: @"fontName == %@", newFont.fontName];
       NSArray<TKMFont*> *filteredArray = [fontsFromDefaults filteredArrayUsingPredicate:fontNamePredicate];
-      newFont.enabled = filteredArray.firstObject.enabled;
+      newFont.enabled = filteredArray == nil || filteredArray.firstObject.enabled;
       
       [fonts addObject:newFont];
-      
-      CFRelease(font);
-      CFRelease(provider);
     }
     
     sLoadedFonts = fonts;
@@ -68,6 +81,10 @@ void EnsureInitialized() {
 + (NSArray<TKMFont*> *)getLoadedFonts {
   EnsureInitialized();
   return sLoadedFonts;
+}
+
++ (NSArray<TKMFont*> *)getEnabledFonts {
+  return [[TKMFontLoader getLoadedFonts] filteredArrayUsingPredicate:sEnabledPredicate];
 }
 
 + (BOOL)font:(TKMFont*)font canRender:(NSString*)text {
