@@ -20,11 +20,11 @@
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
 #import "SuccessAnimation.h"
-#import "UserDefaults.h"
-#import "TKMKanaInput.h"
-#import "proto/Wanikani+Convenience.h"
-#import "UIView+SafeAreaInsets.h"
 #import "TKMFontLoader.h"
+#import "TKMKanaInput.h"
+#import "UserDefaults.h"
+#import "UIView+SafeAreaInsets.h"
+#import "proto/Wanikani+Convenience.h"
 
 #import <WebKit/WebKit.h>
 
@@ -437,7 +437,8 @@ typedef enum : NSUInteger {
   
   // Set random font
   if(UserDefaults.randomFontsEnabled) {
-    _usedFontName = [TKMFontLoader getRandomFontToRender:_activeSubject.japaneseText.string];
+    TKMFont *randomFont = [TKMFontLoader getRandomFontToRender:_activeSubject.japaneseText.string];
+    _usedFontName = randomFont.fontName;
   }
   
   UIFont *boldFont = [UIFont boldSystemFontOfSize:self.promptLabel.font.pointSize];

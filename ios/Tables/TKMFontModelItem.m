@@ -32,11 +32,6 @@
   _fontPreviewLabel.text = @"あいうえお\n漢字 字体";
 }
 
-- (void)awakeFromNib {
-  [super awakeFromNib];
-  // Initialization code
-}
-
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
   [super setSelected:selected animated:animated];
   [(TKMFontModelItem*)self.item setSelected:selected];

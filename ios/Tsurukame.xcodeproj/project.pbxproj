@@ -239,7 +239,6 @@
 		BBE4E332217276EC003A200E /* RandomFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* RandomFontsViewController.m */; };
 		BBE4E33621728AE9003A200E /* TKMFontModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E33421728AE9003A200E /* TKMFontModelItem.m */; };
 		BBE4E33721728AE9003A200E /* TKMFontModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = BBE4E33521728AE9003A200E /* TKMFontModelItem.xib */; };
-		BBF29B9E21723E7E00E461A1 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = BBF29B9D21723E7D00E461A1 /* Resources */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -586,6 +585,12 @@
 		63EEFED81FC46E720070C05F /* Client.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
 		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMKanaInput+Internals.h"; sourceTree = "<group>"; };
+		BB3B7BCB217FA40B0053DA07 /* fc_fl.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = fc_fl.ttf; sourceTree = "<group>"; };
+		BB3B7BCC217FA40B0053DA07 /* armedbanana.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = armedbanana.ttf; sourceTree = "<group>"; };
+		BB3B7BCD217FA40B0053DA07 /* Hosohuwafont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hosohuwafont.ttf; sourceTree = "<group>"; };
+		BB3B7BCE217FA40B0053DA07 /* dartsfont.woff */ = {isa = PBXFileReference; lastKnownFileType = file; path = dartsfont.woff; sourceTree = "<group>"; };
+		BB3B7BCF217FA40B0053DA07 /* KUDOU.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = KUDOU.TTF; sourceTree = "<group>"; };
+		BB3B7BD0217FA40B0053DA07 /* nagayama_kai08.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = nagayama_kai08.otf; sourceTree = "<group>"; };
 		BBE4E32D2172576B003A200E /* TKMFontLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMFontLoader.m; sourceTree = "<group>"; };
 		BBE4E32F217259EE003A200E /* TKMFontLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMFontLoader.h; sourceTree = "<group>"; };
 		BBE4E330217276EC003A200E /* RandomFontsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RandomFontsViewController.h; sourceTree = "<group>"; };
@@ -593,7 +598,6 @@
 		BBE4E33321728AE9003A200E /* TKMFontModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMFontModelItem.h; sourceTree = "<group>"; };
 		BBE4E33421728AE9003A200E /* TKMFontModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMFontModelItem.m; sourceTree = "<group>"; };
 		BBE4E33521728AE9003A200E /* TKMFontModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMFontModelItem.xib; sourceTree = "<group>"; };
-		BBF29B9D21723E7D00E461A1 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -619,11 +623,11 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				BB3B7BCA217FA40B0053DA07 /* fonts */,
 				BBE4E330217276EC003A200E /* RandomFontsViewController.h */,
 				BBE4E331217276EC003A200E /* RandomFontsViewController.m */,
 				BBE4E32F217259EE003A200E /* TKMFontLoader.h */,
 				BBE4E32D2172576B003A200E /* TKMFontLoader.m */,
-				BBF29B9D21723E7D00E461A1 /* Resources */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -1054,6 +1058,19 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		BB3B7BCA217FA40B0053DA07 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				BB3B7BCB217FA40B0053DA07 /* fc_fl.ttf */,
+				BB3B7BCC217FA40B0053DA07 /* armedbanana.ttf */,
+				BB3B7BCD217FA40B0053DA07 /* Hosohuwafont.ttf */,
+				BB3B7BCE217FA40B0053DA07 /* dartsfont.woff */,
+				BB3B7BCF217FA40B0053DA07 /* KUDOU.TTF */,
+				BB3B7BD0217FA40B0053DA07 /* nagayama_kai08.otf */,
+			);
+			path = fonts;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1146,7 +1163,6 @@
 				63CAAAFA1FC6EADD00E09DA1 /* data.bin in Resources */,
 				6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */,
 				63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */,
-				BBF29B9E21723E7E00E461A1 /* Resources in Resources */,
 				63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */,
 				63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */,
 				63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */,

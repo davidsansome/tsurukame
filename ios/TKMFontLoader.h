@@ -15,15 +15,19 @@
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
 
+@class TKMFont;
+
 @interface TKMFontLoader : NSObject
 
-+ (NSArray*) getLoadedFonts;
-+ (NSString*) getRandomFontToRender:(NSString*)text;
++ (NSArray<TKMFont*>*) getLoadedFonts;
++ (TKMFont*) getRandomFontToRender:(NSString*)text;
 + (void) saveToUserDefaults;
 
 @end
 
 @interface TKMFont : NSObject <NSCoding>
-  @property(strong) NSString *fontName;
-  @property BOOL enabled;
+
+@property(nonatomic) NSString *fontName;
+@property(nonatomic) BOOL enabled;
+
 @end

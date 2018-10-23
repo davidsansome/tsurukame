@@ -30,7 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setSelected:(BOOL)selected;
 
 @property(nonatomic, copy) TKMFont *font;
-@property(nonatomic, weak) id delegate;
 
 @end
 

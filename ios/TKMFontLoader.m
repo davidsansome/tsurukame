@@ -20,16 +20,17 @@
 #import "UserDefaults.h"
 
 static dispatch_once_t sOnceToken;
-static NSArray *loadedFonts;
+static NSArray<TKMFont*> *sLoadedFonts;
+static NSString *const kFontDirectory = @"fonts";
 
 void EnsureInitialized() {
   dispatch_once(&sOnceToken, ^{
     NSBundle *mainBundle = [NSBundle mainBundle];
-    NSArray *urls = [mainBundle URLsForResourcesWithExtension:nil subdirectory:@"Resources/fonts"];
+    NSArray<NSURL*> *urls = [mainBundle URLsForResourcesWithExtension:nil subdirectory:kFontDirectory];
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSMutableArray *fonts = [[NSMutableArray alloc] init];
+    NSMutableArray<TKMFont*> *fonts = [NSMutableArray array];
     
-    NSArray *fontsFromDefaults = UserDefaults.usedFonts;
+    NSArray<TKMFont*> *fontsFromDefaults = UserDefaults.usedFonts;
     
     for (NSURL *url in urls) {
       NSData *data = [fileManager contentsAtPath: [url path]];
@@ -48,8 +49,8 @@ void EnsureInitialized() {
       newFont.fontName = (__bridge NSString *) fontName;
       
       NSPredicate *fontNamePredicate = [NSPredicate predicateWithFormat: @"fontName == %@", newFont.fontName];
-      NSArray *filteredArray = [fontsFromDefaults filteredArrayUsingPredicate:fontNamePredicate];
-      newFont.enabled = [filteredArray count] >= 1 ? [[filteredArray objectAtIndex:0] enabled] : false;
+      NSArray<TKMFont*> *filteredArray = [fontsFromDefaults filteredArrayUsingPredicate:fontNamePredicate];
+      newFont.enabled = filteredArray.firstObject.enabled;
       
       [fonts addObject:newFont];
       
@@ -57,16 +58,16 @@ void EnsureInitialized() {
       CFRelease(provider);
     }
     
-    loadedFonts = fonts;
+    sLoadedFonts = fonts;
   });
 }
 
 
 @implementation TKMFontLoader
 
-+ (NSArray *)getLoadedFonts {
++ (NSArray<TKMFont*> *)getLoadedFonts {
   EnsureInitialized();
-  return loadedFonts;
+  return sLoadedFonts;
 }
 
 + (BOOL)font:(TKMFont*)font canRender:(NSString*)text {
@@ -83,18 +84,18 @@ void EnsureInitialized() {
   return canRender;
 }
 
-+ (NSString*)getRandomFontToRender:(NSString*)text {
++ (TKMFont*)getRandomFontToRender:(NSString*)text {
   NSPredicate *fontPredicate = [NSPredicate predicateWithBlock:^BOOL(TKMFont *font, NSDictionary *_) {
     return font.enabled && [TKMFontLoader font:font canRender:text];
   }];
   
-  NSArray *availableFonts = [[TKMFontLoader getLoadedFonts] filteredArrayUsingPredicate:fontPredicate];
+  NSArray<TKMFont*> *availableFonts = [[TKMFontLoader getLoadedFonts] filteredArrayUsingPredicate:fontPredicate];
   NSUInteger random = arc4random_uniform((uint32_t)[availableFonts count]);
-  return [[availableFonts objectAtIndex:random] fontName];
+  return availableFonts[random];
 }
 
 + (void) saveToUserDefaults {
-  UserDefaults.usedFonts = loadedFonts;
+  UserDefaults.usedFonts = sLoadedFonts;
 }
 
 @end
