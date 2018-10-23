@@ -67,14 +67,15 @@
   
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                     title:@"Jitai"
-                                                 subtitle:@"Use random font for each review"
+                                                 subtitle:@"Use a random font for each review"
                                                        on:UserDefaults.usedFonts
                                                    target:self
                                                    action:@selector(randomFontsSwitchChanged:)]];
+  
   _randomFontsIndexPath =
   [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
-                                                    title:@"Used Fonts"
-                                                 subtitle:@""
+                                                    title:@"Selected Fonts"
+                                                 subtitle:self.selectedFontsSubtitle
                                             accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                    target:self
                                                    action:@selector(didTapRandomFonts:)]
@@ -126,6 +127,15 @@
   
   _model = model;
   [model reloadTable];
+}
+
+- (NSString *)selectedFontsSubtitle {
+  NSArray<TKMFont*> *enabledFonts = [TKMFontLoader getEnabledFonts];
+  if (enabledFonts.count == 1) {
+    return enabledFonts.firstObject.fontName;
+  } else {
+    return [NSString stringWithFormat:@"%lu fonts", enabledFonts.count];
+  }
 }
 
 - (NSString *)reviewOrderValueText {

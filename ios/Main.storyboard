@@ -539,9 +539,6 @@
                                 <fontDescription key="fontDescription" name=".SFNSDisplay" family=".SF NS Display" pointSize="60"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="19G-qM-1qD" appends="YES" id="TTv-ct-IbZ"/>
-                                </connections>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="thumb" translatesAutoresizingMaskIntoConstraints="NO" id="9gS-sh-cYw">
                                 <rect key="frame" x="158.5" y="37" width="16" height="16"/>
@@ -1000,10 +997,10 @@
             </objects>
             <point key="canvasLocation" x="545" y="835"/>
         </scene>
-        <!--Random Fonts View Controller-->
+        <!--Select Fonts-->
         <scene sceneID="Edv-Yt-Zoe">
             <objects>
-                <tableViewController id="QeO-rY-q75" customClass="RandomFontsViewController" sceneMemberID="viewController">
+                <tableViewController title="Select Fonts" id="QeO-rY-q75" customClass="RandomFontsViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="75" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="I82-At-GcW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -34,6 +34,9 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
   [super setSelected:selected animated:animated];
+  if (!selected && [TKMFontLoader getEnabledFonts].count == 1) {
+    return;
+  }
   [(TKMFontModelItem*)self.item setSelected:selected];
   self.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 }

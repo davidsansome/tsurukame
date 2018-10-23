@@ -36,6 +36,8 @@
 
 - (BOOL)application:(UIApplication *)application
       didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  UserDefaults.randomFontsEnabled = nil;
+  UserDefaults.usedFonts = nil;
   [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
   
   _storyboard = self.window.rootViewController.storyboard;
