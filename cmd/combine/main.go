@@ -83,6 +83,7 @@ func Combine() error {
 		}
 		if spb.Vocabulary != nil {
 			spb.Vocabulary.Audio = nil
+			spb.Vocabulary.HasAudioFile = proto.Bool(true)
 		}
 
 		// Clean up the data.
