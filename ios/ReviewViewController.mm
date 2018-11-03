@@ -21,14 +21,18 @@
 #import "SubjectDetailsViewController.h"
 #import "SuccessAnimation.h"
 #import "UserDefaults.h"
+#import "TKMGradientView.h"
 #import "TKMKanaInput.h"
 #import "proto/Wanikani+Convenience.h"
 #import "UIView+SafeAreaInsets.h"
 
 #import <WebKit/WebKit.h>
 
-static const NSTimeInterval kAnimationDuration = 0.25f;
-static const CGFloat kSpacingFromKeyboard = 0.f;
+#include <memory>
+
+static const NSTimeInterval kDefaultAnimationDuration = 0.25f;
+// Undocumented, but it's what the keyboard animations use.
+static const UIViewAnimationCurve kDefaultAnimationCurve = (UIViewAnimationCurve) 7;
 
 static const CGFloat kPreviousSubjectScale = 0.25f;
 static const CGFloat kPreviousSubjectButtonPadding = 6.f;
@@ -40,18 +44,26 @@ static UIColor *kReadingTextColor;
 static UIColor *kMeaningTextColor;
 static UIColor *kDefaultButtonTintColor;
 
-typedef enum : NSUInteger {
+enum TKMAnswerResult {
   TKMAnswerCorrect,
   TKMAnswerIncorrect,
   TKMOverrideAnswerCorrect,
   TKMIgnoreAnswer,
-} TKMAnswerResult;
+};
+
+struct AnimationContext {
+  AnimationContext(bool cheats, bool subjectDetailsViewShown)
+      : cheats(cheats), subjectDetailsViewShown(subjectDetailsViewShown) {}
+  
+  bool cheats;
+  bool subjectDetailsViewShown;
+};
 
 @interface ReviewViewController () <UITextFieldDelegate, TKMSubjectDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
-@property (weak, nonatomic) IBOutlet UIView *questionBackground;
-@property (weak, nonatomic) IBOutlet UIView *promptBackground;
+@property (weak, nonatomic) IBOutlet TKMGradientView *questionBackground;
+@property (weak, nonatomic) IBOutlet TKMGradientView *promptBackground;
 @property (weak, nonatomic) IBOutlet UILabel *questionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *promptLabel;
 @property (weak, nonatomic) IBOutlet UITextField *answerField;
@@ -93,10 +105,7 @@ typedef enum : NSUInteger {
   int _tasksAnsweredCorrectly;
   int _tasksAnswered;
 
-  CAGradientLayer *_questionGradient;
-  CAGradientLayer *_promptGradient;
   CAGradientLayer *_previousSubjectGradient;
-  bool _inAnimation;
   
   UIImage *_tickImage;
   UIImage *_forwardArrowImage;
@@ -104,11 +113,11 @@ typedef enum : NSUInteger {
   TKMSubject *_previousSubject;
   UILabel *_previousSubjectLabel;
   
-  // We don't adjust the bottom constraint after the view appeared the first time - some keyboards
-  // (gboard) change size a lot.
-  bool _viewDidAppearOnce;
-  
   UIImpactFeedbackGenerator *_hapticGenerator;
+  
+  // These are set to match the keyboard animation.
+  CGFloat _animationDuration;
+  UIViewAnimationCurve _animationCurve;
 }
 
 #pragma mark - Constructors
@@ -134,6 +143,9 @@ typedef enum : NSUInteger {
     
     _tickImage = [UIImage imageNamed:@"confirm"];
     _forwardArrowImage = [UIImage imageNamed:@"ic_arrow_forward_white"];
+    
+    _animationDuration = kDefaultAnimationDuration;
+    _animationCurve = kDefaultAnimationCurve;
     
     UIKeyCommand *enterCommand =
         [UIKeyCommand keyCommandWithInput:@"\r"
@@ -198,11 +210,7 @@ typedef enum : NSUInteger {
   [super viewDidLoad];
   TKMAddShadowToView(_questionLabel, 1, 0.2, 4);
   TKMAddShadowToView(_previousSubjectButton, 0, 0.7, 4);
-    
-  _questionGradient = [CAGradientLayer layer];
-  [_questionBackground.layer addSublayer:_questionGradient];
-  _promptGradient = [CAGradientLayer layer];
-  [_promptBackground.layer addSublayer:_promptGradient];
+  
   _previousSubjectGradient = [CAGradientLayer layer];
   _previousSubjectGradient.cornerRadius = 4.f;
   [_previousSubjectButton.layer addSublayer:_previousSubjectGradient];
@@ -211,6 +219,10 @@ typedef enum : NSUInteger {
   [nc addObserver:self
          selector:@selector(keyboardWillShow:)
              name:UIKeyboardWillShowNotification
+           object:nil];
+  [nc addObserver:self
+         selector:@selector(keyboardWillHide:)
+             name:UIKeyboardWillHideNotification
            object:nil];
   
   _subjectDetailsView.dataLoader = _dataLoader;
@@ -233,42 +245,6 @@ typedef enum : NSUInteger {
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
   
-  // Set the prompt's frame straight away - we don't care about animating it.
-  _promptGradient.frame = _promptBackground.bounds;
-  _previousSubjectGradient.frame = _previousSubjectButton.bounds;
-
-  // 'frame' is a derived property.  Set it so the CALayer calculates 'bounds' and 'position' for
-  // us, then animate those animatable properties from the old values to the new values.
-  CGRect oldBounds = _questionGradient.bounds;
-  CGPoint oldPosition = _questionGradient.position;
-  _questionGradient.frame = _questionBackground.bounds;
-  CGRect newBounds = _questionGradient.bounds;
-  CGPoint newPosition = _questionGradient.position;
-  
-  if (!_inAnimation) {
-    return;
-  }
-
-  // Animate bounds.  
-  CABasicAnimation *boundsAnimation = [CABasicAnimation animationWithKeyPath:@"bounds"];
-  boundsAnimation.duration = kAnimationDuration;
-  boundsAnimation.timingFunction =
-      [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-  boundsAnimation.fromValue = [NSValue valueWithCGRect:oldBounds];
-  boundsAnimation.toValue = [NSValue valueWithCGRect:newBounds];
-  [_questionGradient addAnimation:boundsAnimation forKey:nil];
-  
-  // Set position straight away with no animation.  Position is in some other
-  // non-screen space, so even though we're not moving it on screen, we need to
-  // jump to the new position immediately.
-  CABasicAnimation *positionAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
-  positionAnimation.duration = 0;
-  positionAnimation.timingFunction =
-      [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-  positionAnimation.fromValue = [NSValue valueWithCGPoint:oldPosition];
-  positionAnimation.toValue = [NSValue valueWithCGPoint:newPosition];
-  [_questionGradient addAnimation:positionAnimation forKey:nil];
-  
   // Fix the extra inset at the top of the subject details view.
   _subjectDetailsView.contentInset = UIEdgeInsetsMake(-self.view.tkm_safeAreaInsets.top, 0, 0, 0);
 }
@@ -280,7 +256,6 @@ typedef enum : NSUInteger {
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
-  _viewDidAppearOnce = true;
   [_subjectDetailsView deselectLastSubjectChipTapped];
   dispatch_async(dispatch_get_main_queue(), ^{
     [_answerField becomeFirstResponder];
@@ -294,13 +269,34 @@ typedef enum : NSUInteger {
 #pragma mark - Event handlers
 
 - (void)keyboardWillShow:(NSNotification *)notification {
-  if (!_viewDidAppearOnce) {
-    CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGRect viewFrame = [self.view.superview convertRect:self.view.frame
-                                                 toView:self.view.window.rootViewController.view];
-    CGFloat offset = CGRectGetMaxY(viewFrame) - keyboardFrame.origin.y;
-    _answerFieldToBottomConstraint.constant = offset + kSpacingFromKeyboard;
-  }
+  CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+  CGFloat keyboardHeight = keyboardFrame.size.height;
+  _animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+  _animationCurve = (UIViewAnimationCurve)
+      [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+  
+  [self resizeKeyboardToHeight:keyboardHeight];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+  _animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+  _animationCurve = (UIViewAnimationCurve)
+      [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+  
+  [self resizeKeyboardToHeight:0];
+}
+
+- (void)resizeKeyboardToHeight:(CGFloat)height {
+  _answerFieldToBottomConstraint.constant = height;
+  
+  [UIView beginAnimations:nil context:nil];
+  [UIView setAnimationDuration:_animationDuration];
+  [UIView setAnimationCurve:_animationCurve];
+  [UIView setAnimationBeginsFromCurrentState:YES];
+  
+  [self.view layoutIfNeeded];
+  
+  [UIView commitAnimations];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -435,28 +431,6 @@ typedef enum : NSUInteger {
   [prompt setAttributes:@{NSFontAttributeName: boldFont}
                   range:NSMakeRange(prompt.length - taskTypePrompt.length, taskTypePrompt.length)];
   
-  // Animate the text labels.
-  UIViewAnimationOptions options = UIViewAnimationOptionTransitionCrossDissolve;
-  [UIView transitionWithView:self.successRateLabel duration:kAnimationDuration options:options animations:^{
-    _successRateLabel.text = successRateText;
-  } completion:nil];
-  [UIView transitionWithView:self.doneLabel duration:kAnimationDuration options:options animations:^{
-    _doneLabel.text = doneText;
-  } completion:nil];
-  [UIView transitionWithView:self.queueLabel duration:kAnimationDuration options:options animations:^{
-    _queueLabel.text = queueText;
-  } completion:nil];
-  [UIView transitionWithView:self.questionLabel duration:kAnimationDuration options:options animations:^{
-    _questionLabel.attributedText = _activeSubject.japaneseText;
-  } completion:nil];
-  [UIView transitionWithView:self.promptLabel duration:kAnimationDuration options:options animations:^{
-    _promptLabel.attributedText = prompt;
-  } completion:nil];
-  [UIView transitionWithView:self.answerField duration:kAnimationDuration options:options animations:^{
-    _answerField.text = nil;
-    _answerField.placeholder = taskTypePlaceholder;
-  } completion:nil];
-  
   // Text color.
   _promptLabel.textColor = promptTextColor;
   
@@ -464,11 +438,8 @@ typedef enum : NSUInteger {
   _submitButton.enabled = false;
   
   // Background gradients.
-  [CATransaction begin];
-  [CATransaction setAnimationDuration:kAnimationDuration];
-  _questionGradient.colors = TKMGradientForAssignment(_activeTask.assignment);
-  _promptGradient.colors = promptGradient;
-  [CATransaction commit];
+  _questionBackground.layer.colors = TKMGradientForAssignment(_activeTask.assignment);
+  _promptBackground.layer.colors = promptGradient;
   
   // Accessibility.
   _successRateLabel.accessibilityLabel = [NSString stringWithFormat:@"%@ correct so far",
@@ -477,17 +448,29 @@ typedef enum : NSUInteger {
   _queueLabel.accessibilityLabel = [NSString stringWithFormat:@"%@ remaining", queueText];
   _questionLabel.accessibilityLabel = [NSString stringWithFormat:@"Japanese %@. Question",
                                        subjectTypePrompt];
-
-  [self animateSubjectDetailsViewShown:false];
   
-  [_answerField becomeFirstResponder];
+  auto animationBlock = ^{
+    _successRateLabel.text = successRateText;
+    _doneLabel.text = doneText;
+    _queueLabel.text = queueText;
+    UIViewAnimationOptions options = UIModalTransitionStyleCrossDissolve;
+    [UIView transitionWithView:self.view duration:_animationDuration options:options animations:^{
+      _questionLabel.attributedText = _activeSubject.japaneseText;
+    } completion:nil];
+    _promptLabel.attributedText = prompt;
+    _answerField.text = nil;
+    _answerField.placeholder = taskTypePlaceholder;
+  };
+  
+  [self animateSubjectDetailsViewShown:false
+                    withAnimationBlock:animationBlock];
 }
 
 #pragma mark - Animation
 
-- (void)animateSubjectDetailsViewShown:(bool)shown {
+- (void)animateSubjectDetailsViewShown:(bool)shown
+                    withAnimationBlock:(nullable void (^)(void))animationBlock {
   bool cheats = [_delegate reviewViewController:self allowsCheatsFor:_activeTask];
-  _answerField.enabled = !shown;
 
   if (shown) {
     _subjectDetailsView.hidden = NO;
@@ -502,50 +485,73 @@ typedef enum : NSUInteger {
   // Change the submit button icon.
   UIImage *submitButtonImage = shown ? _forwardArrowImage : _tickImage;
   [_submitButton setImage:submitButtonImage forState:UIControlStateNormal];
-
+  
+  // We have to do the UIView animation this way (rather than using the block syntax) so we can set
+  // UIViewAnimationCurve.  Create a context to pass to the stop selector.
+  AnimationContext *context = new AnimationContext(cheats, shown);
+  [UIView beginAnimations:nil context:context];
+  [UIView setAnimationDelegate:self];
+  [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
+  [UIView setAnimationDuration:_animationDuration];
+  [UIView setAnimationCurve:_animationCurve];
+  [UIView setAnimationBeginsFromCurrentState:YES];
+  
+  // Constraints.
+  _answerFieldToBottomConstraint.active = !shown;
+  
+  // Enable/disable the answer field, and set its first responder status.
+  // This makes the keyboard appear or disappear immediately.  We need this animation to happen
+  // here so it's in sync with the others.
+  _answerField.enabled = !shown;
+  if (!shown) {
+    [_answerField becomeFirstResponder];
+  } else {
+    [_answerField resignFirstResponder];
+  }
+  
+  if (animationBlock) {
+    animationBlock();
+  }
+  
   [self.view layoutIfNeeded];
-  [UIView animateWithDuration:kAnimationDuration animations:^{
-    // Constraints.  Disable both first then enable the one we want.
-    _answerFieldToBottomConstraint.active = false;
-    _answerFieldToSubjectDetailsViewConstraint.active = false;
-    _answerFieldToBottomConstraint.active = !shown;
-    _answerFieldToSubjectDetailsViewConstraint.active = shown;
 
-    // Scale the text in the question label.
-    const float scale = shown ? 0.7 : 1.0;
-    _questionLabel.transform = CGAffineTransformMakeScale(scale, scale);
+  // Scale the text in the question label.
+  const float scale = shown ? 0.7 : 1.0;
+  _questionLabel.transform = CGAffineTransformMakeScale(scale, scale);
 
-    // Fade the controls.
-    _subjectDetailsView.alpha = shown ? 1.0 : 0.0;
-    if (cheats) {
-      _addSynonymButton.alpha = shown ? 1.0 : 0.0;
+  // Fade the controls.
+  _subjectDetailsView.alpha = shown ? 1.0 : 0.0;
+  if (cheats) {
+    _addSynonymButton.alpha = shown ? 1.0 : 0.0;
+  }
+  _revealAnswerButton.alpha = 0.0;
+  _previousSubjectLabel.alpha = shown ? 0.0 : 1.0;
+  _previousSubjectButton.alpha = shown ? 0.0 : 1.0;
+  
+  // Change the background color of the answer field.
+  _answerField.textColor = shown ? [UIColor redColor] : [UIColor blackColor];
+  
+  // Scroll to the top.
+  [_subjectDetailsView setContentOffset:CGPointMake(0, -_subjectDetailsView.contentInset.top)];
+  
+  [UIView commitAnimations];
+}
+
+- (void)animationDidStop:(NSString *)animationID
+                finished:(NSNumber *)finished
+                 context:(void *)contextPtr {
+  std::unique_ptr<AnimationContext> context(reinterpret_cast<AnimationContext *>(contextPtr));
+  
+  _revealAnswerButton.hidden = YES;
+  if (context->subjectDetailsViewShown) {
+    _previousSubjectLabel.hidden = YES;
+    _previousSubjectButton.hidden = YES;
+  } else {
+    _subjectDetailsView.hidden = YES;
+    if (context->cheats) {
+      _addSynonymButton.hidden = YES;
     }
-    _revealAnswerButton.alpha = 0.0;
-    _previousSubjectLabel.alpha = shown ? 0.0 : 1.0;
-    _previousSubjectButton.alpha = shown ? 0.0 : 1.0;
-    
-    // Change the background color of the answer field.
-    _answerField.textColor = shown ? [UIColor redColor] : [UIColor blackColor];
-    
-    // We resize the gradient layers in viewDidLayoutSubviews.
-    _inAnimation = true;
-    [self.view layoutIfNeeded];
-    _inAnimation = false;
-    
-    // Scroll to the top.
-    [_subjectDetailsView setContentOffset:CGPointMake(0, -_subjectDetailsView.contentInset.top)];
-  } completion:^(BOOL finished) {
-    _revealAnswerButton.hidden = YES;
-    if (shown) {
-      _previousSubjectLabel.hidden = YES;
-      _previousSubjectButton.hidden = YES;
-    } else {
-      _subjectDetailsView.hidden = YES;
-      if (cheats) {
-        _addSynonymButton.hidden = YES;
-      }
-    }
-  }];
+  }
 }
 
 #pragma mark - Previous subject button
@@ -790,7 +796,7 @@ typedef enum : NSUInteger {
   // Otherwise show the correct answer.
   if (!UserDefaults.showAnswerImmediately && firstTimeWrong) {
     _revealAnswerButton.hidden = NO;
-    [UIView animateWithDuration:kAnimationDuration animations:^{
+    [UIView animateWithDuration:_animationDuration animations:^{
       _answerField.textColor = [UIColor redColor];
       _answerField.enabled = NO;
       _revealAnswerButton.alpha = 1.0;
@@ -805,10 +811,8 @@ typedef enum : NSUInteger {
   [_subjectDetailsView updateWithSubject:_activeSubject
                           studyMaterials:_activeStudyMaterials];
   
-  [CATransaction begin];
-  [CATransaction setAnimationDuration:kAnimationDuration];
-  [self animateSubjectDetailsViewShown:true];
-  [CATransaction commit];
+  [self animateSubjectDetailsViewShown:true
+                    withAnimationBlock:nil];
 }
 
 #pragma mark - Ignoring incorrect answers

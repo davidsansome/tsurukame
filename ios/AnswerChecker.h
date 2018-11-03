@@ -18,6 +18,10 @@
 
 @class DataLoader;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef NS_ENUM(NSInteger, TKMAnswerCheckerResult) {
   kTKMAnswerPrecise,
   kTKMAnswerImprecise,
@@ -31,3 +35,7 @@ extern TKMAnswerCheckerResult CheckAnswer(NSString **answer,
                                          TKMStudyMaterials *studyMaterials,
                                          TKMTaskType taskType,
                                          DataLoader *dataLoader);
+
+#ifdef __cplusplus
+}
+#endif

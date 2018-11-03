@@ -36,6 +36,9 @@
 
 - (BOOL)application:(UIApplication *)application
       didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  // Uncomment to slow the animation speed on a real device.
+  // [self.window.layer setSpeed:.1f];
+  
   [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
   
   _storyboard = self.window.rootViewController.storyboard;
