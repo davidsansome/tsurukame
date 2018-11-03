@@ -99,7 +99,8 @@ message Vocabulary {
   }
   repeated PartOfSpeech parts_of_speech = 4;
 
-  optional string audio = 5;
+  optional string audio = 5;  // Not present in final data.
+  optional bool has_audio_file = 8;
 }
 
 message Subject {
