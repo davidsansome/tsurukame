@@ -64,5 +64,4 @@ node_modules/
 # dotenv environment variables file
 .env
 
-audio
-fonts
+audio/*
