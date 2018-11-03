@@ -16,6 +16,10 @@
 
 #import "proto/Wanikani.pbobjc.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern void TKMAddShadowToView(UIView *view, float offset, float opacity, float radius);
 
 extern UIColor *TKMKanjiColor1(void);
@@ -33,4 +37,7 @@ extern NSArray<id> *TKMVocabularyGradient(void);
 extern NSArray<id> *TKMLockedGradient(void);
 extern NSArray<id> *TKMGradientForAssignment(TKMAssignment *assignment);
 extern NSArray<id> *TKMGradientForSubject(TKMSubject *subject);
-
+  
+#ifdef __cplusplus
+}
+#endif
