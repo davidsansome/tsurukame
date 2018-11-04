@@ -16,6 +16,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class Reachability;
+
 typedef enum TKMAudioPlaybackState {
   TKMAudioLoading,
   TKMAudioPlaying,
@@ -31,6 +33,10 @@ typedef enum TKMAudioPlaybackState {
 @interface TKMAudio : NSObject
 
 @property(nonatomic, readonly) TKMAudioPlaybackState currentState;
+
+- (instancetype)initWithReachability:(Reachability *)reachability
+    NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
 
 - (void)playAudioForSubjectID:(int)subjectID
                      delegate:(nullable id<TKMAudioDelegate>)delegate;

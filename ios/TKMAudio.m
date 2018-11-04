@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "Reachability.h"
 #import "TKMAudio.h"
 
 #import <AVFoundation/AVFoundation.h>
@@ -20,13 +21,15 @@
 static NSString *const kURLPattern = @"https://tsurukame.app/audio/%d";
 
 @implementation TKMAudio {
+  Reachability *_reachability;
   AVPlayer *_player;
   __weak id<TKMAudioDelegate> _delegate;
 }
 
-- (instancetype)init {
+- (instancetype)initWithReachability:(Reachability *)reachability {
   self = [super init];
   if (self) {
+    _reachability = reachability;
     _currentState = TKMAudioFinished;
     
     AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -50,6 +53,11 @@ static NSString *const kURLPattern = @"https://tsurukame.app/audio/%d";
 
 - (void)playAudioForSubjectID:(int)subjectID
                      delegate:(nullable id<TKMAudioDelegate>)delegate {
+  if (!_reachability.isReachable) {
+    [self showOfflineDialog];
+    return;
+  }
+  
   [self setCurrentState:TKMAudioFinished];
   _delegate = delegate;
   
@@ -70,7 +78,10 @@ static NSString *const kURLPattern = @"https://tsurukame.app/audio/%d";
   [self setCurrentState:TKMAudioFinished];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary<NSKeyValueChangeKey,id> *)change
+                       context:(void *)context {
   if ([keyPath isEqual:@"currentItem.status"]) {
     switch (_player.currentItem.status) {
       case AVPlayerItemStatusFailed:
@@ -101,7 +112,24 @@ static NSString *const kURLPattern = @"https://tsurukame.app/audio/%d";
   UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
                                                    style:UIAlertActionStyleDefault
                                                  handler:^(UIAlertAction * action) {}];
+  [alert addAction:action];
   
+  UIViewController *vc = UIApplication.sharedApplication.keyWindow.rootViewController;
+  [vc presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)showOfflineDialog {
+  NSString *title = @"Audio not available offline";
+  NSString *message = @"Download audio in Settings when you're back online";
+  
+  UIAlertController *alert =
+      [UIAlertController alertControllerWithTitle:title
+                                          message:message
+                                   preferredStyle:UIAlertControllerStyleAlert];
+  
+  UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
+                                                   style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction * action) {}];
   [alert addAction:action];
   
   UIViewController *vc = UIApplication.sharedApplication.keyWindow.rootViewController;
