@@ -324,6 +324,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     SubjectCatalogueViewController *vc = (SubjectCatalogueViewController *)segue.destinationViewController;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
+    vc.audio = _audio;
     vc.level = _localCachingClient.getUserInfo.level;
   }
 }

@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef enum TKMDownloadModelItemState {
   TKMDownloadModelItemNotInstalled,
   TKMDownloadModelItemDownloading,
+  TKMDownloadModelItemInstalling,
   TKMDownloadModelItemInstalledNotSelected,
   TKMDownloadModelItemInstalledSelected,
 } TKMDownloadModelItemState;
@@ -45,12 +46,13 @@ typedef enum TKMDownloadModelItemState {
 @property(nonatomic) TKMDownloadModelItemState state;
 @property(nonatomic) int64_t totalSizeBytes;
 @property(nonatomic) int64_t downloadingProgressBytes;
+@property(nonatomic) float installingProgress;
 
 @end
 
 @interface TKMDownloadModelView : TKMModelCell
 
-- (void)updateDownloadProgress;
+- (void)updateProgress;
 
 @end
 

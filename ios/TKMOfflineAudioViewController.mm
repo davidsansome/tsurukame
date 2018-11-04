@@ -17,6 +17,11 @@
 #import "UserDefaults.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "TKMAudio.h"
+#import "third_party/Light-Untar/NSFileManager+Tar.h"
+
+#import <compression.h>
+#import <memory>
 
 static NSString *const kURLPattern = @"https://tsurukame.app/audio/%@";
 
@@ -33,6 +38,33 @@ static const AvailablePackage kAvailablePackages[] = {
   {@"levels-41-50.tar.lzfse", @"Levels 41-50", 23461014},
   {@"levels-51-60.tar.lzfse", @"Levels 51-60", 30460353},
 };
+
+static NSData *DecompressLZFSE(NSData *compressedData) {
+  if (!compressedData.length) {
+    return nil;
+  }
+  
+  // Assume a compression ratio of 1.25.
+  size_t bufferSize = compressedData.length * 1.25;
+  
+  while (true) {
+    uint8_t *buffer = (uint8_t *)malloc(bufferSize);
+    size_t decodedSize = compression_decode_buffer(
+        buffer, bufferSize, (const uint8_t *)compressedData.bytes, compressedData.length,
+        nil, COMPRESSION_LZFSE);
+    if (decodedSize == 0) {
+      free(buffer);
+      return nil;
+    }
+    if (decodedSize == bufferSize) {
+      // The buffer wasn't big enough - try again.
+      free(buffer);
+      bufferSize *= 1.25;
+      continue;
+    }
+    return [NSData dataWithBytesNoCopy:buffer length:decodedSize];
+  }
+}
 
 @interface TKMOfflineAudioViewController () <TKMDownloadModelDelegate,
                                              NSURLSessionDownloadDelegate>
@@ -121,35 +153,67 @@ static const AvailablePackage kAvailablePackages[] = {
 - (void)URLSession:(NSURLSession *)session
       downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location {
-  NSString *filename = downloadTask.originalRequest.URL.lastPathComponent;
+  NSURL *url = downloadTask.originalRequest.URL;
+  NSString *filename = url.lastPathComponent;
   
-  // TODO: extract data.
+  NSData *lzfseData = [NSData dataWithContentsOfURL:location];
+  if (!lzfseData) {
+    [self reportErrorOnMainThread:filename
+                            title:@"Error reading data"
+                          message:url.absoluteString];
+    return;
+  }
+  
+  NSData *tarData = DecompressLZFSE(lzfseData);
+  if (!tarData) {
+    [self reportErrorOnMainThread:filename
+                            title:@"Error decompressing data"
+                          message:url.absoluteString];
+    return;
+  }
+  
+  auto extractProgress = ^(float progress) {
+    [self updateProgressOnMainThread:filename
+                         updateBlock:^(TKMDownloadModelItem *item) {
+                           item.state = TKMDownloadModelItemInstalling;
+                           item.installingProgress = progress;
+                         }];
+  };
+  
+  NSFileManager *fileManager = [[NSFileManager alloc] init];
+  NSError *error;
+  [fileManager createFilesAndDirectoriesAtPath:[TKMAudio cacheDirectoryPath]
+                                   withTarData:tarData
+                                         error:&error
+                                      progress:extractProgress];
+  
+  if (error) {
+    [self reportErrorOnMainThread:filename
+                            title:@"Error extracting data"
+                          message:url.absoluteString];
+    return;
+  }
   
   dispatch_async(dispatch_get_main_queue(), ^{
+    NSMutableSet<NSString *> *installedPackages =
+        [NSMutableSet setWithSet:UserDefaults.installedAudioPackages];
+    [installedPackages addObject:filename];
+    UserDefaults.installedAudioPackages = installedPackages;
+    
     [_downloads removeObjectForKey:filename];
     [self rerender];
   });
 }
 
-- (void)URLSession:(NSURLSession *)session
-              task:(NSURLSessionTask *)task
-didCompleteWithError:(NSError *)error {
-  if (!error) {
-    return;
-  }
-  
-  NSString *filename = task.originalRequest.URL.lastPathComponent;
-  
+- (void)reportErrorOnMainThread:(NSString *)filename
+                          title:(NSString *)title
+                        message:(NSString *)message {
   dispatch_async(dispatch_get_main_queue(), ^{
     [_downloads removeObjectForKey:filename];
     
-    if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
-      return;
-    }
-    
     UIAlertController *alert =
-        [UIAlertController alertControllerWithTitle:error.localizedDescription
-                                            message:task.originalRequest.URL.absoluteString
+        [UIAlertController alertControllerWithTitle:title
+                                            message:message
                                      preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
@@ -161,20 +225,46 @@ didCompleteWithError:(NSError *)error {
   });
 }
 
--(void)URLSession:(NSURLSession *)session
-     downloadTask:(NSURLSessionDownloadTask *)downloadTask
-     didWriteData:(int64_t)bytesWritten
-totalBytesWritten:(int64_t)totalBytesWritten
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+didCompleteWithError:(NSError *)error {
+  if (!error) {
+    return;
+  }
+  if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
+    return;
+  }
+  
+  NSString *filename = task.originalRequest.URL.lastPathComponent;
+  [self reportErrorOnMainThread:filename
+                          title:error.localizedDescription
+                        message:task.originalRequest.URL.absoluteString];
+}
+
+- (void)URLSession:(NSURLSession *)session
+      downloadTask:(NSURLSessionDownloadTask *)downloadTask
+      didWriteData:(int64_t)bytesWritten
+ totalBytesWritten:(int64_t)totalBytesWritten
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
   NSString *filename = downloadTask.originalRequest.URL.lastPathComponent;
+  
+  [self updateProgressOnMainThread:filename
+                       updateBlock:^(TKMDownloadModelItem *item) {
+                         item.state = TKMDownloadModelItemDownloading;
+                         item.downloadingProgressBytes = totalBytesWritten;
+                       }];
+}
+
+- (void)updateProgressOnMainThread:(NSString *)filename
+                       updateBlock:(void(^)(TKMDownloadModelItem *))updateBlock {
   dispatch_async(dispatch_get_main_queue(), ^{
     // Try to update the visible cell without reloading the whole table.  This is a bit of a hack.
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_indexPaths[filename]];
     if (cell) {
       TKMDownloadModelView *view = (TKMDownloadModelView *)cell;
       TKMDownloadModelItem *item = (TKMDownloadModelItem *)view.item;
-      item.downloadingProgressBytes = totalBytesWritten;
-      [view updateDownloadProgress];
+      updateBlock(item);
+      [view updateProgress];
     }
   });
 }

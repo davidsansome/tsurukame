@@ -172,6 +172,7 @@
 		63BFA78B218EB1B30058E885 /* TKMDownloadModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */; };
 		63BFA78E218EB6890058E885 /* TKMOfflineAudioViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA78D218EB6890058E885 /* TKMOfflineAudioViewController.mm */; };
 		63BFA791218EB7AB0058E885 /* TKMDownloadModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */; };
+		63BFA795218ED85B0058E885 /* NSFileManager+Tar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA793218ED85B0058E885 /* NSFileManager+Tar.m */; };
 		63CAAACC1FC6E0BA00E09DA1 /* Type.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAB81FC6E0B700E09DA1 /* Type.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAACD1FC6E0BA00E09DA1 /* Any.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAB91FC6E0B700E09DA1 /* Any.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAACE1FC6E0BA00E09DA1 /* Empty.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAABA1FC6E0B800E09DA1 /* Empty.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -469,6 +470,8 @@
 		63BFA78D218EB6890058E885 /* TKMOfflineAudioViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TKMOfflineAudioViewController.mm; sourceTree = "<group>"; };
 		63BFA78F218EB7AB0058E885 /* TKMDownloadModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMDownloadModelItem.h; sourceTree = "<group>"; };
 		63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMDownloadModelItem.m; sourceTree = "<group>"; };
+		63BFA793218ED85B0058E885 /* NSFileManager+Tar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSFileManager+Tar.m"; path = "third_party/Light-Untar/NSFileManager+Tar.m"; sourceTree = SOURCE_ROOT; };
+		63BFA794218ED85B0058E885 /* NSFileManager+Tar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSFileManager+Tar.h"; path = "third_party/Light-Untar/NSFileManager+Tar.h"; sourceTree = SOURCE_ROOT; };
 		63CAAA981FC6E08400E09DA1 /* GPBArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPBArray.h; path = third_party/protobuf/GPBArray.h; sourceTree = SOURCE_ROOT; };
 		63CAAA991FC6E08400E09DA1 /* GPBWireFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPBWireFormat.h; path = third_party/protobuf/GPBWireFormat.h; sourceTree = SOURCE_ROOT; };
 		63CAAA9B1FC6E08500E09DA1 /* GPBDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPBDescriptor.h; path = third_party/protobuf/GPBDescriptor.h; sourceTree = SOURCE_ROOT; };
@@ -932,9 +935,19 @@
 			path = third_party/Haneke;
 			sourceTree = SOURCE_ROOT;
 		};
+		63BFA792218ED8380058E885 /* Light-Untar */ = {
+			isa = PBXGroup;
+			children = (
+				63BFA794218ED85B0058E885 /* NSFileManager+Tar.h */,
+				63BFA793218ED85B0058E885 /* NSFileManager+Tar.m */,
+			);
+			path = "Light-Untar";
+			sourceTree = "<group>";
+		};
 		63CAAA961FC6E04400E09DA1 /* third_party */ = {
 			isa = PBXGroup;
 			children = (
+				63BFA792218ED8380058E885 /* Light-Untar */,
 				63453E3720EF8C0400F20404 /* Haneke */,
 				6319C9B620441DF800C31F87 /* Charts */,
 				6319C9A420441D2200C31F87 /* FMDB */,
@@ -1361,6 +1374,7 @@
 				6319C9A0204015B900C31F87 /* NSString+MD5.m in Sources */,
 				6319CB1F204429E200C31F87 /* CandleStickChartRenderer.swift in Sources */,
 				63CAAACE1FC6E0BA00E09DA1 /* Empty.pbobjc.m in Sources */,
+				63BFA795218ED85B0058E885 /* NSFileManager+Tar.m in Sources */,
 				6319CAE12044203E00C31F87 /* LegendEntry.swift in Sources */,
 				6319CA822044203E00C31F87 /* BarLineChartViewBase.swift in Sources */,
 				63EDA428207F335500382CE3 /* RadarChartData.swift in Sources */,
@@ -1475,6 +1489,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lcompression";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1528,6 +1543,7 @@
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-lcompression";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1545,6 +1561,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-lcompression";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1567,6 +1584,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-lcompression";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

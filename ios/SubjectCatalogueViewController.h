@@ -16,11 +16,13 @@
 
 @class DataLoader;
 @class LocalCachingClient;
+@class TKMAudio;
 
 @interface SubjectCatalogueViewController : UIPageViewController
 
 @property(nonatomic) DataLoader *dataLoader;
 @property(nonatomic) LocalCachingClient *localCachingClient;
+@property(nonatomic) TKMAudio *audio;
 @property(nonatomic) int level;
 
 @property(nonatomic, readonly) bool showAnswers;

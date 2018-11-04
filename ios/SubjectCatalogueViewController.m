@@ -69,6 +69,7 @@
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectsByLevel"];
   vc.dataLoader = _dataLoader;
   vc.localCachingClient = _localCachingClient;
+  vc.audio = _audio;
   vc.level = level;
   [vc setShowAnswers:self.showAnswers animated:false];
   return vc;

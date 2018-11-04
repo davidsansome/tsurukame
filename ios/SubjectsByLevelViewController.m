@@ -129,6 +129,7 @@
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   vc.dataLoader = _dataLoader;
   vc.localCachingClient = _localCachingClient;
+  vc.audio = _audio;
   vc.subject = subject;
   [self.navigationController pushViewController:vc animated:YES];
 }
