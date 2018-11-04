@@ -26,6 +26,7 @@
 @implementation SettingsViewController {
   TKMTableModel *_model;
   NSIndexPath *_groupMeaningReadingIndexPath;
+  NSIndexPath *_randomFontsIndexPath;
 }
 
 - (void)rerender {
@@ -59,6 +60,23 @@
                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                   target:self
                                                   action:@selector(didTapReviewOrder:)]];
+  
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                    title:@"Jitai"
+                                                 subtitle:@"Use a random font for each review"
+                                                       on:UserDefaults.usedFonts
+                                                   target:self
+                                                   action:@selector(randomFontsSwitchChanged:)]];
+  
+  _randomFontsIndexPath =
+  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                    title:@"Selected Fonts"
+                                                 subtitle:self.selectedFontsSubtitle
+                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                   target:self
+                                                   action:@selector(didTapRandomFonts:)]
+              hidden:!UserDefaults.randomFontsEnabled];
+  
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                     title:@"Back-to-back"
                                                  subtitle:@"Group Meaning and Reading together"
@@ -115,6 +133,15 @@
   [model reloadTable];
 }
 
+- (NSString *)selectedFontsSubtitle {
+  NSArray<TKMFont*> *enabledFonts = [TKMFontLoader getEnabledFonts];
+  if (enabledFonts.count == 1) {
+    return enabledFonts.firstObject.fontName;
+  } else {
+    return [NSString stringWithFormat:@"%lu fonts", enabledFonts.count];
+  }
+}
+
 - (NSString *)reviewOrderValueText {
   switch (UserDefaults.reviewOrder) {
     case ReviewOrder_Random:
@@ -153,6 +180,11 @@
 - (void)animatePlusOneSwitchChanged:(UISwitch *)switchView {
   UserDefaults.animatePlusOne = switchView.on;
 }
+
+- (void)randomFontsSwitchChanged:(UISwitch *)switchView {
+  UserDefaults.randomFontsEnabled = switchView.on;
+  [_model setIndexPath:_randomFontsIndexPath isHidden:!switchView.on];
+}
   
 - (void)groupMeaningReadingSwitchChanged:(UISwitch *)switchView {
   UserDefaults.groupMeaningReading = switchView.on;
@@ -169,6 +201,10 @@
 
 - (void)didTapReviewOrder:(TKMBasicModelItem *)item {
   [self performSegueWithIdentifier:@"reviewOrder" sender:self];
+}
+
+- (void)didTapRandomFonts:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"randomFonts" sender:self];
 }
 
 - (void)didTapTaskOrder:(TKMBasicModelItem *)item {

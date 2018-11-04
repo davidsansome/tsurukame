@@ -34,10 +34,10 @@
 }
 
 static NSCharacterSet *_tsuConsonants;
-static NSArray *_tsuConsonantsArray;
+static NSArray<NSString*> *_tsuConsonantsArray;
 
-+ (NSArray*)getCharactersFromCharacterSet:(NSCharacterSet*)charset {
-  NSMutableArray *array = [NSMutableArray array];
++ (NSArray<NSString*> *)getCharactersFromCharacterSet:(NSCharacterSet*)charset {
+  NSMutableArray<NSString*> *array = [NSMutableArray array];
   for (int plane = 0; plane <= 16; plane++) {
     if ([charset hasMemberInPlane:plane]) {
       UTF32Char c;
@@ -122,7 +122,7 @@ static NSArray *_tsuConsonantsArray;
 - (void)testShouldChangeCharactersInRangeReplacesNFollwedByConsonant {
   // when there is a n or m and you type a consonant it should be replaced by ん and the returnValue should be true
   
-  NSArray *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
+  NSArray<NSString*> *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
   
   for(NSString *consonant in _tsuConsonantsArray) {
     if(![kCanFollowN characterIsMember:[consonant characterAtIndex:0]]) {
@@ -174,7 +174,7 @@ static NSArray *_tsuConsonantsArray;
 - (void)testShouldChangeCharactersInRangeReplacesUppercaseNFollowedByConsonantWithKatakana {
   // when there is a N or M and you type a consonant it should be replaced by ン and the returnValue should be true
   
-  NSArray *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
+  NSArray<NSString*> *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
   
   for(NSString *consonant in _tsuConsonantsArray) {
     if(![kCanFollowN characterIsMember:[consonant characterAtIndex:0]]) {

@@ -52,6 +52,8 @@
   [[NSUserDefaults standardUserDefaults] setBool:value forKey:@#name]; \
 }
 
+@class TKMFont;
+
 @implementation UserDefaults
 
 DEFINE_OBJECT(NSString, userCookie, setUserCookie);
@@ -63,6 +65,8 @@ DEFINE_BOOL(animateLevelUpPopup, setAnimateLevelUpPopup, YES);
 DEFINE_BOOL(animatePlusOne, setAnimatePlusOne, YES);
 
 DEFINE_ENUM(ReviewOrder, reviewOrder, setReviewOrder, ReviewOrder_Random);
+DEFINE_BOOL(randomFontsEnabled, setRandomFontsEnabled, NO);
+DEFINE_OBJECT(NSArray<TKMFont*>, usedFonts, setUsedFonts);
 DEFINE_BOOL(groupMeaningReading, setGroupMeaningReading, NO);
 DEFINE_BOOL(meaningFirst, setMeaningFirst, YES);
 DEFINE_BOOL(showAnswerImmediately, setShowAnswerImmediately, YES);

@@ -526,6 +526,9 @@
                         <subviews>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TY8-JV-WfA" customClass="TKMGradientView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="563"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="19G-qM-1qD" appends="YES" id="3Bz-Zh-VcU"/>
+                                </connections>
                             </view>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gdi-7v-770" customClass="TKMGradientView">
                                 <rect key="frame" x="0.0" y="563" width="375" height="40"/>
@@ -564,7 +567,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctF-hm-AxT">
-                                <rect key="frame" x="307" y="601.5" width="68" height="67"/>
+                                <rect key="frame" x="278" y="588" width="97" height="94"/>
                                 <accessibility key="accessibilityConfiguration" label="Confirm"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                 <state key="normal" image="confirm"/>
@@ -633,7 +636,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </tableView>
                             <button hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fq3-oe-fWe">
-                                <rect key="frame" x="0.0" y="604" width="62" height="62"/>
+                                <rect key="frame" x="0.0" y="593" width="84" height="84"/>
                                 <accessibility key="accessibilityConfiguration" hint="Double tap to open a menu" label="Cheats"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                 <state key="normal" image="add"/>
@@ -642,7 +645,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zyq-WW-fbd">
-                                <rect key="frame" x="0.0" y="604" width="62" height="62"/>
+                                <rect key="frame" x="0.0" y="593" width="84" height="84"/>
                                 <connections>
                                     <action selector="revealAnswerButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="cKB-bi-Zr1"/>
                                 </connections>
@@ -658,6 +661,7 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Jee-0P-imk" secondAttribute="trailing" id="0Pg-uy-3Ek"/>
                             <constraint firstItem="lqe-Ns-DBU" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="13b-3r-nEp"/>
@@ -741,6 +745,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tCW-sh-YGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="19G-qM-1qD">
+                    <connections>
+                        <action selector="questionLabelTapped:" destination="Mzz-hx-Bdo" id="7cs-c8-DrG"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-92" y="834.33283358320841"/>
         </scene>
@@ -764,6 +773,7 @@
                         <segue destination="7Tc-3C-9Vx" kind="show" identifier="taskOrder" id="U7N-3Q-4cQ"/>
                         <segue destination="uj2-VH-hcW" kind="show" identifier="reviewOrder" id="7Yf-CB-TUU"/>
                         <segue destination="AG2-Tf-RDu" kind="show" identifier="offlineAudio" id="EkU-M7-aeu"/>
+                        <segue destination="QeO-rY-q75" kind="show" identifier="randomFonts" id="l0d-dJ-or1"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFO-Ke-JcM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1006,15 +1016,29 @@
             </objects>
             <point key="canvasLocation" x="545" y="835"/>
         </scene>
+        <!--Select Fonts-->
+        <scene sceneID="Edv-Yt-Zoe">
+            <objects>
+                <tableViewController title="Select Fonts" id="QeO-rY-q75" customClass="RandomFontsViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="75" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="I82-At-GcW">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BnI-lh-nSF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1821.5999999999999" y="-493.40329835082463"/>
+        </scene>
     </scenes>
     <resources>
-        <image name="add" width="22" height="22"/>
+        <image name="add" width="44" height="44"/>
         <image name="back" width="24" height="24"/>
-        <image name="confirm" width="28" height="27"/>
-        <image name="ic_search_white" width="24" height="24"/>
-        <image name="ic_settings_white" width="24" height="24"/>
+        <image name="confirm" width="57" height="54"/>
+        <image name="ic_search_white" width="48" height="48"/>
+        <image name="ic_settings_white" width="48" height="48"/>
         <image name="inbox" width="24" height="24"/>
-        <image name="launch_screen" width="1126" height="2436"/>
+        <image name="launch_screen" width="270.239990234375" height="584.6400146484375"/>
         <image name="thumb" width="24" height="24"/>
         <image name="tick" width="24" height="24"/>
     </resources>
