@@ -19,11 +19,18 @@
 #import <UIKit/UIKit.h>
 
 static NSString *const kURLPattern = @"https://tsurukame.app/audio/%d.mp3";
+static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
 
 @implementation TKMAudio {
   Reachability *_reachability;
   AVPlayer *_player;
   __weak id<TKMAudioDelegate> _delegate;
+}
+
++ (NSString *)cacheDirectoryPath {
+  NSArray<NSString *> *paths =
+      NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  return [NSString stringWithFormat:@"%@/audio", paths.firstObject];
 }
 
 - (instancetype)initWithReachability:(Reachability *)reachability {
@@ -53,22 +60,34 @@ static NSString *const kURLPattern = @"https://tsurukame.app/audio/%d.mp3";
 
 - (void)playAudioForSubjectID:(int)subjectID
                      delegate:(nullable id<TKMAudioDelegate>)delegate {
+  // Is the audio available offline?
+  NSString *filename = [NSString stringWithFormat:kOfflineFilePattern,
+                        [TKMAudio cacheDirectoryPath], subjectID];
+  if ([[NSFileManager defaultManager] fileExistsAtPath:filename]) {
+    [self playURL:[NSURL fileURLWithPath:filename] delegate:delegate];
+    return;
+  }
+  
   if (!_reachability.isReachable) {
     [self showOfflineDialog];
     return;
   }
   
+  NSString *urlString = [NSString stringWithFormat:kURLPattern, subjectID];
+  [self playURL:[NSURL URLWithString:urlString] delegate:delegate];
+}
+
+- (void)playURL:(NSURL *)url
+       delegate:(nullable id<TKMAudioDelegate>)delegate {
   [self setCurrentState:TKMAudioFinished];
   _delegate = delegate;
-  
-  NSString *urlString = [NSString stringWithFormat:kURLPattern, subjectID];
   
   if (!_player || _player.status == AVPlayerStatusFailed) {
     _player = [[AVPlayer alloc] init];
     [_player addObserver:self forKeyPath:@"currentItem.status" options:0 context:nil];
   }
   
-  AVPlayerItem *item = [AVPlayerItem playerItemWithURL:[NSURL URLWithString:urlString]];
+  AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
   [_player replaceCurrentItemWithPlayerItem:item];
   [_player play];
 }

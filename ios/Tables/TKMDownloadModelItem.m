@@ -67,7 +67,8 @@ static NSString *FriendlySize(int64_t bytes) {
       [_image setTintColor:TKMDefaultTintColor()];
       break;
     case TKMDownloadModelItemDownloading:
-      [self updateDownloadProgress];
+    case TKMDownloadModelItemInstalling:
+      [self updateProgress];
       [_image setImage:[UIImage imageNamed:@"baseline_cancel_black_24pt"]];
       [_image setTintColor:[UIColor lightGrayColor]];
       break;
@@ -84,11 +85,19 @@ static NSString *FriendlySize(int64_t bytes) {
   }
 }
 
-- (void)updateDownloadProgress {
+- (void)updateProgress {
   TKMDownloadModelItem *item = (TKMDownloadModelItem *)self.item;
-  if (item.state == TKMDownloadModelItemDownloading) {
-    _subtitle.text = [NSString stringWithFormat:@"downloading %lld%%",
-                      item.downloadingProgressBytes * 100 / item.totalSizeBytes];
+  switch (item.state) {
+    case TKMDownloadModelItemDownloading:
+      _subtitle.text = [NSString stringWithFormat:@"downloading %lld%%",
+                        item.downloadingProgressBytes * 100 / item.totalSizeBytes];
+      break;
+    case TKMDownloadModelItemInstalling:
+      _subtitle.text = [NSString stringWithFormat:@"instaling %d%%",
+                        (int)(item.installingProgress * 100)];
+      break;
+    default:
+      break;
   }
 }
 

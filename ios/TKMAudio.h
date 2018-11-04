@@ -34,6 +34,8 @@ typedef enum TKMAudioPlaybackState {
 
 @property(nonatomic, readonly) TKMAudioPlaybackState currentState;
 
++ (NSString *)cacheDirectoryPath;
+
 - (instancetype)initWithReachability:(Reachability *)reachability
     NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
