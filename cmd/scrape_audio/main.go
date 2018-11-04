@@ -52,18 +52,21 @@ func Scrape() error {
 	// Create output directory.
 	utils.Must(os.MkdirAll(*out, 0755))
 
-	subjectIDByLevel := map[int][]string{}
+	filenamesByLevel := map[int][]string{}
 
 	if err := encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
 		if spb.Vocabulary == nil || spb.Vocabulary.Audio == nil {
 			return nil
 		}
 		url := urlPrefix + spb.Vocabulary.GetAudio()
-		idString := strconv.Itoa(id)
-		outPath := path.Join(*out, idString)
+
+		// Always request the mp3 - AVFoundation on iOS can't play oggs.
+		url = strings.Replace(url, "ogg", "mp3", 1)
+		outFilename := fmt.Sprintf("%s.mp3", strconv.Itoa(id))
+		outPath := path.Join(*out, outFilename)
 
 		level := int(spb.GetLevel())
-		subjectIDByLevel[level] = append(subjectIDByLevel[level], idString)
+		filenamesByLevel[level] = append(filenamesByLevel[level], outFilename)
 		if _, err := os.Stat(outPath); !os.IsNotExist(err) {
 			fmt.Printf("Skipping %s (already exists)\n", outPath)
 			return nil
@@ -74,22 +77,18 @@ func Scrape() error {
 		resp, err := http.Get(url)
 		utils.Must(err)
 		if resp.StatusCode != http.StatusOK {
-			url = strings.Replace(url, "ogg", "mp3", 1)
-			fmt.Printf("HTTP %d from %s, trying mp3 instead\n", resp.StatusCode, resp.Request.URL)
-			resp, err = http.Get(url)
-			utils.Must(err)
-			if resp.StatusCode != http.StatusOK {
-				return fmt.Errorf("HTTP %d from %s", resp.StatusCode, resp.Request.URL)
-			}
+			return fmt.Errorf("HTTP %d from %s", resp.StatusCode, resp.Request.URL)
 		}
 		defer resp.Body.Close()
 
+		// Open the output file.
 		fh, err := os.Create(outPath)
 		if err != nil {
 			return err
 		}
 		defer fh.Close()
 
+		// Write the output file.
 		if _, err := io.Copy(fh, resp.Body); err != nil {
 			return err
 		}
@@ -98,22 +97,34 @@ func Scrape() error {
 		return err
 	}
 
+	// Create archives for level groups.
+	var definitions []string
 	for i := 0; i < 6; i++ {
 		startLevel := i*10 + 1
 		endLevel := (i + 1) * 10
 		var subjectIDs []string
 		for level := startLevel; level <= endLevel; level++ {
-			subjectIDs = append(subjectIDs, subjectIDByLevel[level]...)
+			subjectIDs = append(subjectIDs, filenamesByLevel[level]...)
 		}
-		if err := createArchive(fmt.Sprintf("levels-%d-%d", startLevel, endLevel), subjectIDs); err != nil {
+		filename := fmt.Sprintf("levels-%d-%d", startLevel, endLevel)
+		sizeBytes, err := createArchive(filename, subjectIDs)
+		if err != nil {
 			return err
 		}
+		definitions = append(definitions,
+			fmt.Sprintf(`{@"%s.tar.lzfse", @"Levels %d-%d", %d},`, filename, startLevel, endLevel, sizeBytes))
 	}
+
+	fmt.Println("\nstatic const AvailablePackage kAvailablePackages[] = {")
+	for _, definition := range definitions {
+		fmt.Printf("  %s\n", definition)
+	}
+	fmt.Println("};")
 
 	return nil
 }
 
-func createArchive(filename string, subjectIDs []string) error {
+func createArchive(filename string, subjectIDs []string) (int64, error) {
 	tarFilename := path.Join(*out, fmt.Sprintf("%s.tar", filename))
 	lzfseFilename := path.Join(*out, fmt.Sprintf("%s.tar.lzfse", filename))
 	fmt.Println("Creating archive", lzfseFilename)
@@ -121,9 +132,17 @@ func createArchive(filename string, subjectIDs []string) error {
 	tarArgs := []string{"-cf", tarFilename, "-C", *out}
 	tarArgs = append(tarArgs, subjectIDs...)
 	if err := exec.Command("tar", tarArgs...).Run(); err != nil {
-		return err
+		return 0, err
 	}
 	defer os.Remove(tarFilename)
 
-	return exec.Command("lzfse", "-encode", "-i", tarFilename, "-o", lzfseFilename).Run()
+	if err := exec.Command("lzfse", "-encode", "-i", tarFilename, "-o", lzfseFilename).Run(); err != nil {
+		return 0, err
+	}
+
+	st, err := os.Stat(lzfseFilename)
+	if err != nil {
+		return 0, err
+	}
+	return st.Size(), err
 }
