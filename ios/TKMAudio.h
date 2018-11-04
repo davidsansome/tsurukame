@@ -12,20 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "TKMBasicModelItem.h"
+#import <Foundation/Foundation.h>
 
-@interface TKMAttributedModelItem : NSObject <TKMModelItem>
+NS_ASSUME_NONNULL_BEGIN
 
-- (instancetype)initWithText:(NSAttributedString *)text NS_DESIGNATED_INITIALIZER;
+typedef enum TKMAudioPlaybackState {
+  TKMAudioLoading,
+  TKMAudioPlaying,
+  TKMAudioFinished,
+} TKMAudioPlaybackState;
 
-- (instancetype)init NS_UNAVAILABLE;
+@protocol TKMAudioDelegate<NSObject>
 
-@property(nonatomic) NSAttributedString *text;
+- (void)audioPlaybackStateChanged:(TKMAudioPlaybackState)state;
+
+@end
+
+@interface TKMAudio : NSObject
+
+@property(nonatomic, readonly) TKMAudioPlaybackState currentState;
+
+- (void)playAudioForSubjectID:(int)subjectID
+                     delegate:(nullable id<TKMAudioDelegate>)delegate;
+- (void)stopPlayback;
 
 @end
 
-@interface TKMAttributedModelCell : TKMModelCell
-
-@property(nonatomic) UIButton *rightButton;
-
-@end
+NS_ASSUME_NONNULL_END

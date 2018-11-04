@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "TKMBasicModelItem.h"
+#import "TKMAttributedModelItem.h"
 
-@interface TKMAttributedModelItem : NSObject <TKMModelItem>
+NS_ASSUME_NONNULL_BEGIN
 
-- (instancetype)initWithText:(NSAttributedString *)text NS_DESIGNATED_INITIALIZER;
+@class TKMAudio;
 
-- (instancetype)init NS_UNAVAILABLE;
+@interface TKMReadingModelItem : TKMAttributedModelItem
 
-@property(nonatomic) NSAttributedString *text;
+- (void)setAudio:(TKMAudio *)audio
+       subjectID:(int)subjectID;
 
-@end
-
-@interface TKMAttributedModelCell : TKMModelCell
-
-@property(nonatomic) UIButton *rightButton;
+@property(nonatomic, readonly) TKMAudio *audio;
+@property(nonatomic, readonly) int audioSubjectID;
 
 @end
+
+NS_ASSUME_NONNULL_END

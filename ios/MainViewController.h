@@ -19,12 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 @class DataLoader;
 @class LocalCachingClient;
 @class Reachability;
+@class TKMAudio;
 
 @interface MainViewController : UITableViewController
 
 @property(nonatomic) DataLoader *dataLoader;
 @property(nonatomic) Reachability *reachability;
 @property(nonatomic) LocalCachingClient *localCachingClient;
+@property(nonatomic) TKMAudio *audio;
 
 - (void)refresh;
 

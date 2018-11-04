@@ -16,10 +16,12 @@
 #import "Style.h"
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
+#import "TKMAudio.h"
 #import "UIColor+HexString.h"
 #import "proto/Wanikani+Convenience.h"
 #import "Tables/TKMAttributedModelItem.h"
 #import "Tables/TKMMarkupModelItem.h"
+#import "Tables/TKMReadingModelItem.h"
 #import "Tables/TKMTableModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -149,7 +151,12 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   bool primaryOnly = subject.hasKanji;
   NSAttributedString *text = RenderReadings(subject.readingsArray, primaryOnly);
   text = [text stringWithFontSize:kFontSize];
-  TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
+  TKMReadingModelItem *item = [[TKMReadingModelItem alloc] initWithText:text];
+  if (subject.hasVocabulary &&
+      subject.vocabulary.hasAudioFile) {
+    [item setAudio:_audio
+         subjectID:subject.id_p];
+  }
   
   [model addSection:@"Reading"];
   [model addItem:item];

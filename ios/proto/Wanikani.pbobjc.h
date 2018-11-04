@@ -293,6 +293,7 @@ typedef GPB_ENUM(TKMVocabulary_FieldNumber) {
   TKMVocabulary_FieldNumber_Audio = 5,
   TKMVocabulary_FieldNumber_FormattedMeaningExplanationArray = 6,
   TKMVocabulary_FieldNumber_FormattedReadingExplanationArray = 7,
+  TKMVocabulary_FieldNumber_HasAudioFile = 8,
 };
 
 @interface TKMVocabulary : GPBMessage
@@ -322,10 +323,14 @@ typedef GPB_ENUM(TKMVocabulary_FieldNumber) {
 /** The number of items in @c partsOfSpeechArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger partsOfSpeechArray_Count;
 
+/** Not present in final data. */
 @property(nonatomic, readwrite, copy, null_resettable) NSString *audio;
 /** Test to see if @c audio has been set. */
 @property(nonatomic, readwrite) BOOL hasAudio;
 
+@property(nonatomic, readwrite) BOOL hasAudioFile;
+
+@property(nonatomic, readwrite) BOOL hasHasAudioFile;
 @end
 
 #pragma mark - TKMVocabulary_Sentence

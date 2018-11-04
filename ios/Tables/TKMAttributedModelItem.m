@@ -17,9 +17,6 @@
 static const UIEdgeInsets kEdgeInsets = {8.f, 16.f, 8.f, 16.f};
 static const CGFloat kMinimumHeight = 44.f;
 
-@interface TKMAttributedModelCell : TKMModelCell
-@end
-
 @implementation TKMAttributedModelItem
 
 - (instancetype)initWithText:(NSAttributedString *)text {
@@ -70,6 +67,18 @@ static const CGFloat kMinimumHeight = 44.f;
   [super layoutSubviews];
   
   CGRect availableRect = UIEdgeInsetsInsetRect(self.bounds, kEdgeInsets);
+  
+  if (_rightButton) {
+    CGSize buttonSize = [_rightButton intrinsicContentSize];
+    _rightButton.frame = CGRectMake(
+        CGRectGetMaxX(availableRect) - buttonSize.width - kEdgeInsets.right,
+        availableRect.origin.y - kEdgeInsets.top,
+        buttonSize.width + kEdgeInsets.right * 2,
+        availableRect.size.height + kEdgeInsets.top + kEdgeInsets.bottom);
+    
+    availableRect.size.width -= buttonSize.width + kEdgeInsets.right;
+  }
+  
   CGSize textViewSize = [_textView sizeThatFits:availableRect.size];
   
   // Center the text view vertically.
