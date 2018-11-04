@@ -22,6 +22,8 @@ extern "C" {
 
 extern void TKMAddShadowToView(UIView *view, float offset, float opacity, float radius);
 
+extern UIColor *TKMDefaultTintColor(void);
+  
 extern UIColor *TKMKanjiColor1(void);
 extern UIColor *TKMKanjiColor2(void);
 extern UIColor *TKMRadicalColor1(void);

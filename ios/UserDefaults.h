@@ -48,4 +48,7 @@ DECLARE_BOOL(meaningFirst);
 DECLARE_BOOL(showAnswerImmediately);
 DECLARE_BOOL(enableCheats);
 
+// Offline audio.
+DECLARE_OBJECT(NSSet<NSString *>, installedAudioPackages);
+
 @end

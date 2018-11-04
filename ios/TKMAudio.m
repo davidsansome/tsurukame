@@ -18,7 +18,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
 
-static NSString *const kURLPattern = @"https://tsurukame.app/audio/%d";
+static NSString *const kURLPattern = @"https://tsurukame.app/audio/%d.mp3";
 
 @implementation TKMAudio {
   Reachability *_reachability;
