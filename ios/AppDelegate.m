@@ -49,7 +49,7 @@
   _dataLoader = [[DataLoader alloc] initFromURL:[[NSBundle mainBundle] URLForResource:@"data"
                                                                         withExtension:@"bin"]];
   _reachability = [Reachability reachabilityForInternetConnection];
-  _audio = [[TKMAudio alloc] init];
+  _audio = [[TKMAudio alloc] initWithReachability:_reachability];
   
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
