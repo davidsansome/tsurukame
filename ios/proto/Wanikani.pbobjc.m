@@ -470,6 +470,7 @@ typedef struct TKMKanji__storage_ {
 @dynamic sentencesArray, sentencesArray_Count;
 @dynamic partsOfSpeechArray, partsOfSpeechArray_Count;
 @dynamic hasAudio, audio;
+@dynamic hasHasAudioFile, hasAudioFile;
 
 typedef struct TKMVocabulary__storage_ {
   uint32_t _has_storage_[1];
@@ -550,6 +551,15 @@ typedef struct TKMVocabulary__storage_ {
         .offset = (uint32_t)offsetof(TKMVocabulary__storage_, formattedReadingExplanationArray),
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "hasAudioFile",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMVocabulary_FieldNumber_HasAudioFile,
+        .hasIndex = 3,
+        .offset = 4,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
       },
     };
     GPBDescriptor *localDescriptor =

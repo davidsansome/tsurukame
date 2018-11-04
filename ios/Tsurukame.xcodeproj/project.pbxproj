@@ -154,6 +154,7 @@
 		6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */; };
 		6356E7831FDFF0EA009CE7C1 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6356E7821FDFF0E3009CE7C1 /* WebKit.framework */; };
 		635D0079218D94AA006CD711 /* TKMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D0078218D94AA006CD711 /* TKMGradientView.m */; };
+		635D007C218DA308006CD711 /* TKMAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D007B218DA308006CD711 /* TKMAudio.m */; };
 		637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12D7203847BE009E92DB /* LessonsViewController.m */; };
 		637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12DD203D779D009E92DB /* LessonsPageControl.m */; };
 		6392DB9F20CCE29E003019EB /* TKMAttributedModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */; };
@@ -167,6 +168,7 @@
 		63B1DE411FE7D81600FAB9C2 /* SubjectDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */; };
 		63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
 		63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */; };
+		63BFA789218DB6840058E885 /* TKMReadingModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA788218DB6840058E885 /* TKMReadingModelItem.m */; };
 		63CAAACC1FC6E0BA00E09DA1 /* Type.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAB81FC6E0B700E09DA1 /* Type.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAACD1FC6E0BA00E09DA1 /* Any.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAB91FC6E0B700E09DA1 /* Any.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAACE1FC6E0BA00E09DA1 /* Empty.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAABA1FC6E0B800E09DA1 /* Empty.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -429,6 +431,8 @@
 		6356E7821FDFF0E3009CE7C1 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		635D0077218D94AA006CD711 /* TKMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMGradientView.h; sourceTree = "<group>"; };
 		635D0078218D94AA006CD711 /* TKMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMGradientView.m; sourceTree = "<group>"; };
+		635D007A218DA308006CD711 /* TKMAudio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMAudio.h; sourceTree = "<group>"; };
+		635D007B218DA308006CD711 /* TKMAudio.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMAudio.m; sourceTree = "<group>"; };
 		637C12D6203847BE009E92DB /* LessonsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LessonsViewController.h; sourceTree = "<group>"; };
 		637C12D7203847BE009E92DB /* LessonsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LessonsViewController.m; sourceTree = "<group>"; };
 		637C12DC203D779D009E92DB /* LessonsPageControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LessonsPageControl.h; sourceTree = "<group>"; };
@@ -455,6 +459,8 @@
 		63BDA9A6200E04E500D75DA2 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SuccessAnimation.h; sourceTree = "<group>"; };
 		63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SuccessAnimation.m; sourceTree = "<group>"; };
+		63BFA787218DB6840058E885 /* TKMReadingModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReadingModelItem.h; sourceTree = "<group>"; };
+		63BFA788218DB6840058E885 /* TKMReadingModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMReadingModelItem.m; sourceTree = "<group>"; };
 		63CAAA981FC6E08400E09DA1 /* GPBArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPBArray.h; path = third_party/protobuf/GPBArray.h; sourceTree = SOURCE_ROOT; };
 		63CAAA991FC6E08400E09DA1 /* GPBWireFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPBWireFormat.h; path = third_party/protobuf/GPBWireFormat.h; sourceTree = SOURCE_ROOT; };
 		63CAAA9B1FC6E08500E09DA1 /* GPBDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPBDescriptor.h; path = third_party/protobuf/GPBDescriptor.h; sourceTree = SOURCE_ROOT; };
@@ -609,6 +615,8 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				635D007A218DA308006CD711 /* TKMAudio.h */,
+				635D007B218DA308006CD711 /* TKMAudio.m */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -863,6 +871,8 @@
 			isa = PBXGroup;
 			children = (
 				6392DB9D20CCE29E003019EB /* TKMAttributedModelItem.h */,
+				63BFA787218DB6840058E885 /* TKMReadingModelItem.h */,
+				63BFA788218DB6840058E885 /* TKMReadingModelItem.m */,
 				6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */,
 				633DE94D20C5634900AC25F4 /* TKMBasicModelItem.h */,
 				633DE95220C5634A00AC25F4 /* TKMBasicModelItem.m */,
@@ -1204,6 +1214,7 @@
 				633632EF201F3490006D582B /* UserDefaults.m in Sources */,
 				6319CA842044203E00C31F87 /* XAxisRenderer.swift in Sources */,
 				63CAAAF41FC6E1D400E09DA1 /* GPBWireFormat.m in Sources */,
+				635D007C218DA308006CD711 /* TKMAudio.m in Sources */,
 				63453E4A20EF8C0500F20404 /* UIImageView+Haneke.m in Sources */,
 				6319CB29204429F400C31F87 /* ScatterChartDataSet.swift in Sources */,
 				63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */,
@@ -1255,6 +1266,7 @@
 				633DE96120C5656B00AC25F4 /* TKMMarkupModelItem.m in Sources */,
 				6319CA8C2044203E00C31F87 /* LineChartData.swift in Sources */,
 				6319CB1E204429E200C31F87 /* CandleChartData.swift in Sources */,
+				63BFA789218DB6840058E885 /* TKMReadingModelItem.m in Sources */,
 				6319CAE92044203E00C31F87 /* Animator.swift in Sources */,
 				6319CB072044296700C31F87 /* ILineRadarChartDataSet.swift in Sources */,
 				6319CA912044203E00C31F87 /* Renderer.swift in Sources */,

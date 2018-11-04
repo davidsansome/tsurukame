@@ -302,6 +302,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     ReviewViewController *vc = (ReviewViewController *)segue.destinationViewController;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
+    vc.audio = _audio;
     
     NSArray<TKMAssignment *> *assignments = [_localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments];
@@ -335,6 +336,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   SubjectDetailsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   vc.dataLoader = _dataLoader;
   vc.localCachingClient = _localCachingClient;
+  vc.audio = _audio;
   vc.subject = subject;
   vc.showHints = YES;
   [_searchController dismissViewControllerAnimated:YES completion:^{

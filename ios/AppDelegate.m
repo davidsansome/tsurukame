@@ -19,6 +19,7 @@
 #import "LoginViewController.h"
 #import "MainViewController.h"
 #import "ReviewViewController.h"
+#import "TKMAudio.h"
 #import "UserDefaults.h"
 
 #import <UserNotifications/UserNotifications.h>
@@ -32,6 +33,7 @@
   DataLoader *_dataLoader;
   LocalCachingClient *_localCachingClient;
   Reachability *_reachability;
+  TKMAudio *_audio;
 }
 
 - (BOOL)application:(UIApplication *)application
@@ -47,6 +49,7 @@
   _dataLoader = [[DataLoader alloc] initFromURL:[[NSBundle mainBundle] URLForResource:@"data"
                                                                         withExtension:@"bin"]];
   _reachability = [Reachability reachabilityForInternetConnection];
+  _audio = [[TKMAudio alloc] init];
   
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
@@ -91,6 +94,7 @@
     vc.dataLoader = _dataLoader;
     vc.reachability = _reachability;
     vc.localCachingClient = _localCachingClient;
+    vc.audio = _audio;
     
     [_navigationController setViewControllers:@[vc] animated:(notification == nil) ? NO : YES];
   };

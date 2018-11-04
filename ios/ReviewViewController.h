@@ -19,6 +19,7 @@
 #import "ReviewItem.h"
 
 @class ReviewViewController;
+@class TKMAudio;
 
 @protocol ReviewViewControllerDelegate <NSObject>
 
@@ -38,8 +39,9 @@
 @interface ReviewViewController : UIViewController
 
 // Must set these prior to starting.
-@property(nonatomic, assign) DataLoader *dataLoader;
-@property(nonatomic, assign) LocalCachingClient *localCachingClient;
+@property(nonatomic) DataLoader *dataLoader;
+@property(nonatomic) LocalCachingClient *localCachingClient;
+@property(nonatomic) TKMAudio *audio;
 @property(nonatomic, copy) NSArray<ReviewItem *> *items;
 @property(nonatomic) bool hideBackButton;
 

@@ -21,17 +21,18 @@
 
 @interface SubjectDetailsViewController : UIViewController
 
-@property (nonatomic) DataLoader *dataLoader;
-@property (nonatomic) LocalCachingClient *localCachingClient;
-@property (nonatomic) TKMSubject *subject;
+@property(nonatomic) DataLoader *dataLoader;
+@property(nonatomic) LocalCachingClient *localCachingClient;
+@property(nonatomic) TKMSubject *subject;
+@property(nonatomic) TKMAudio *audio;
 
 // If this is set to true before the view is loaded, the back button will be hidden.
-@property (nonatomic) bool hideBackButton;
+@property(nonatomic) bool hideBackButton;
 
 // If this is set to true before the view is loaded, kanji hints will be displayed.
-@property (nonatomic) bool showHints;
+@property(nonatomic) bool showHints;
 
 // The index of this subject in some other collection.  Unused, for convenience only.
-@property (nonatomic) NSInteger index;
+@property(nonatomic) NSInteger index;
 
 @end

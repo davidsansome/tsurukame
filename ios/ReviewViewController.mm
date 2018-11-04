@@ -227,6 +227,7 @@ struct AnimationContext {
   
   _subjectDetailsView.dataLoader = _dataLoader;
   _subjectDetailsView.localCachingClient = _localCachingClient;
+  _subjectDetailsView.audio = _audio;
   _subjectDetailsView.subjectDelegate = self;
   
   _answerField.delegate = _kanaInput;

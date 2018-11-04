@@ -21,13 +21,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class LocalCachingClient;
+@class TKMAudio;
 
 @interface TKMSubjectDetailsView : UITableView
 
-@property (nonatomic) DataLoader *dataLoader;
-@property (nonatomic) LocalCachingClient *localCachingClient;
-@property (nonatomic, weak) id<TKMSubjectDelegate> subjectDelegate;
-@property (nonatomic) bool showHints;
+@property(nonatomic) DataLoader *dataLoader;
+@property(nonatomic) LocalCachingClient *localCachingClient;
+@property(nonatomic) TKMAudio *audio;
+@property(nonatomic, weak) id<TKMSubjectDelegate> subjectDelegate;
+@property(nonatomic) bool showHints;
 
 - (void)updateWithSubject:(TKMSubject *)subject
            studyMaterials:(TKMStudyMaterials *)studyMaterials;
