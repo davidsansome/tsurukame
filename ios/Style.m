@@ -35,6 +35,10 @@ void TKMAddShadowToView(UIView *view, float offset, float opacity, float radius)
   view.clipsToBounds = NO;
 }
 
+UIColor *TKMDefaultTintColor() {
+  return [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+}
+
 UIColor *TKMRadicalColor1()    { return UIColorFromHex(0x00AAFF); }
 UIColor *TKMRadicalColor2()    { return UIColorFromHex(0x0093DD); }
 UIColor *TKMKanjiColor1()      { return UIColorFromHex(0xFF00AA); }

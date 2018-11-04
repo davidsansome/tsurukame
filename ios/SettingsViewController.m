@@ -28,10 +28,6 @@
   NSIndexPath *_groupMeaningReadingIndexPath;
 }
 
-- (void)viewDidLoad {
-  [super viewDidLoad];
-}
-
 - (void)rerender {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
   
@@ -89,6 +85,14 @@
                                                        on:UserDefaults.enableCheats
                                                    target:self
                                                    action:@selector(enableCheatsSwitchChanged:)]];
+  
+  [model addSection];
+  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                    title:@"Offline audio"
+                                                 subtitle:nil
+                                            accessoryType:UITableViewCellAccessoryNone
+                                                   target:self
+                                                   action:@selector(didTapOfflineAudio:)]];
   
   [model addSection];
   [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
@@ -169,6 +173,10 @@
 
 - (void)didTapTaskOrder:(TKMBasicModelItem *)item {
   [self performSegueWithIdentifier:@"taskOrder" sender:self];
+}
+
+- (void)didTapOfflineAudio:(id)sender {
+  [self performSegueWithIdentifier:@"offlineAudio" sender:self];
 }
 
 - (void)didTapLogOut:(id)sender {
