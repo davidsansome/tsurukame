@@ -20,11 +20,12 @@
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
 #import "SuccessAnimation.h"
-#import "UserDefaults.h"
+#import "TKMFontLoader.h"
 #import "TKMGradientView.h"
 #import "TKMKanaInput.h"
-#import "proto/Wanikani+Convenience.h"
 #import "UIView+SafeAreaInsets.h"
+#import "UserDefaults.h"
+#import "proto/Wanikani+Convenience.h"
 
 #import <WebKit/WebKit.h>
 
@@ -118,6 +119,9 @@ struct AnimationContext {
   // These are set to match the keyboard animation.
   CGFloat _animationDuration;
   UIViewAnimationCurve _animationCurve;
+
+  NSString *_usedFontName;
+  NSString *_normalFontName;
 }
 
 #pragma mark - Constructors
@@ -238,6 +242,9 @@ struct AnimationContext {
   if (_hideBackButton) {
     _backButton.hidden = YES;
   }
+  
+  _usedFontName = _questionLabel.font.fontName;
+  _normalFontName = _questionLabel.font.fontName;
   
   [self viewDidLayoutSubviews];
   [self randomTask];
@@ -425,13 +432,19 @@ struct AnimationContext {
       assert(false);
   }
   
+  // Set random font
+  if(UserDefaults.randomFontsEnabled) {
+    TKMFont *randomFont = [TKMFontLoader getRandomFontToRender:_activeSubject.japaneseText.string];
+    _usedFontName = randomFont.fontName;
+  }
+  
   UIFont *boldFont = [UIFont boldSystemFontOfSize:self.promptLabel.font.pointSize];
   NSMutableAttributedString *prompt = [[NSMutableAttributedString alloc] initWithString:
                                        [NSString stringWithFormat:@"%@ %@",
                                         subjectTypePrompt, taskTypePrompt]];
   [prompt setAttributes:@{NSFontAttributeName: boldFont}
                   range:NSMakeRange(prompt.length - taskTypePrompt.length, taskTypePrompt.length)];
-  
+
   // Text color.
   _promptLabel.textColor = promptTextColor;
   
@@ -457,6 +470,10 @@ struct AnimationContext {
     UIViewAnimationOptions options = UIModalTransitionStyleCrossDissolve;
     [UIView transitionWithView:self.view duration:_animationDuration options:options animations:^{
       _questionLabel.attributedText = _activeSubject.japaneseText;
+      if (UserDefaults.randomFontsEnabled) {
+        CGFloat size = [_questionLabel.font pointSize];
+        [_questionLabel setFont:[UIFont fontWithName:_usedFontName size:size]];
+      }
     } completion:nil];
     _promptLabel.attributedText = prompt;
     _answerField.text = nil;
@@ -625,6 +642,17 @@ struct AnimationContext {
 
 - (IBAction)previousSubjectButtonPressed:(id)sender {
   [self performSegueWithIdentifier:@"subjectDetails" sender:_previousSubject];
+}
+
+#pragma mark - Question Label Tapped
+
+- (IBAction)questionLabelTapped:(id)sender {
+  if (!UserDefaults.randomFontsEnabled) {
+    return;
+  }
+  CGFloat size = [_questionLabel.font pointSize];
+  NSString *newFontName = [_questionLabel.font.fontName isEqualToString:_normalFontName] ? _usedFontName : _normalFontName;
+  [_questionLabel setFont:[UIFont fontWithName:newFontName size:size]];
 }
 
 #pragma mark - Back button
