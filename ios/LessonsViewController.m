@@ -129,6 +129,7 @@
           [self.storyboard instantiateViewControllerWithIdentifier:@"reviewViewController"];
       _reviewViewController.dataLoader = _dataLoader;
       _reviewViewController.localCachingClient = _localCachingClient;
+      _reviewViewController.audio = _audio;
       _reviewViewController.delegate = self;
       _reviewViewController.hideBackButton = true;
       _reviewViewController.items = _items;

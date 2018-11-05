@@ -17,6 +17,7 @@
 #import "DataLoader.h"
 #import "LocalCachingClient.h"
 #import "ReviewItem.h"
+#import "TKMAudio.h"
 
 @interface LessonsViewController : UIViewController <
     UIPageViewControllerDataSource,
@@ -24,6 +25,7 @@
 
 @property(nonatomic, assign) DataLoader *dataLoader;
 @property(nonatomic, assign) LocalCachingClient *localCachingClient;
+@property(nonatomic, assign) TKMAudio *audio;
 
 @property(nonatomic, copy) NSArray<ReviewItem *> *items;
 
