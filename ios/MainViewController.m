@@ -311,6 +311,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;
     vc.dataLoader = _dataLoader;
     vc.localCachingClient = _localCachingClient;
+    vc.audio = _audio;
     
     NSArray<TKMAssignment *> *assignments = [_localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments
