@@ -41,13 +41,13 @@
   if (item.audioSubjectID) {
     if (!self.rightButton) {
       self.rightButton = [[UIButton alloc] init];
-      [self.rightButton setImage:[UIImage imageNamed:@"baseline_volume_up_black_24pt"]
-                        forState:UIControlStateNormal];
       [self.rightButton addTarget:self
                            action:@selector(didTapButton)
                  forControlEvents:UIControlEventTouchUpInside];
       [self addSubview:self.rightButton];
     }
+    [self.rightButton setImage:[UIImage imageNamed:@"baseline_volume_up_black_24pt"]
+                      forState:UIControlStateNormal];
   } else {
     [self.rightButton removeFromSuperview];
     self.rightButton = nil;
