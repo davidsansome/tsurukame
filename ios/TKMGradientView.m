@@ -16,6 +16,8 @@
 
 @implementation TKMGradientView
 
+@dynamic layer;
+
 + (Class)layerClass {
   return [CAGradientLayer class];
 }
