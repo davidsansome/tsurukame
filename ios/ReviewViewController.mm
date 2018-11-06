@@ -22,6 +22,7 @@
 #import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
 #import "SuccessAnimation.h"
+#import "TKMAudio.h"
 #import "TKMFontLoader.h"
 #import "TKMGradientView.h"
 #import "TKMKanaInput.h"
@@ -819,6 +820,11 @@ struct AnimationContext {
 
   // Show a new task if it was correct.
   if (result != TKMAnswerIncorrect) {
+    if (UserDefaults.playAudioAutomatically && _activeTaskType == kTKMTaskTypeReading &&
+        _activeSubject.hasVocabulary && _activeSubject.vocabulary.hasAudioFile) {
+      [_services.audio playAudioForSubjectID:_activeSubject.id_p delegate:nil];
+    }
+
     UILabel *previousSubjectLabel = nil;
     if (isSubjectFinished && [_delegate reviewViewControllerShowsSubjectHistory:self]) {
       previousSubjectLabel = [self copyQuestionLabel];

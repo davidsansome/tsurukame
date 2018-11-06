@@ -109,7 +109,14 @@
                                                     target:self
                                                     action:@selector(enableCheatsSwitchChanged:)]];
 
-  [model addSection];
+  [model addSection:@"Audio"];
+  [model addItem:[[TKMSwitchModelItem alloc]
+                     initWithStyle:UITableViewCellStyleSubtitle
+                             title:@"Play audio automatically"
+                          subtitle:@"When you get an answer correct"
+                                on:UserDefaults.playAudioAutomatically
+                            target:self
+                            action:@selector(playAudioAutomaticallySwitchChanged:)]];
   [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                     title:@"Offline audio"
                                                  subtitle:nil
@@ -204,6 +211,10 @@
 
 - (void)enableCheatsSwitchChanged:(UISwitch *)switchView {
   UserDefaults.enableCheats = switchView.on;
+}
+
+- (void)playAudioAutomaticallySwitchChanged:(UISwitch *)switchView {
+  UserDefaults.playAudioAutomatically = switchView.on;
 }
 
 - (void)didTapReviewOrder:(TKMBasicModelItem *)item {
