@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@
     [chip removeFromSuperview];
   }
   [_chips removeAllObjects];
-  
+
   // Create a chip for each subject.
   for (TKMSubject *subject in subjects) {
     TKMSubjectChip *chip = [[TKMSubjectChip alloc] initWithSubject:subject
@@ -51,10 +51,10 @@
     [self addSubview:chip];
     [_chips addObject:chip];
   }
-  
+
   // Create the quiz chip.
   NSAttributedString *quizText = [[NSAttributedString alloc] initWithString:@"Quiz"];
-  NSArray *chipGradient = @[(id)TKMGreyColor().CGColor, (id)TKMGreyColor().CGColor];
+  NSArray *chipGradient = @[ (id)TKMGreyColor().CGColor, (id)TKMGreyColor().CGColor ];
   TKMSubjectChip *quizChip = [[TKMSubjectChip alloc] initWithSubject:nil
                                                                 font:nil
                                                             chipText:quizText
@@ -64,9 +64,9 @@
                                                             delegate:self];
   [self addSubview:quizChip];
   [_chips addObject:quizChip];
-  
+
   self.currentPageIndex = _currentPageIndex;
-  
+
   [self setNeedsLayout];
 }
 
@@ -78,8 +78,8 @@
 }
 
 - (void)layoutSubviews {
-  NSArray<NSValue *> *chipFrames = TKMCalculateSubjectChipFrames(_chips, self.frame.size.width,
-                                                                 NSTextAlignmentCenter);
+  NSArray<NSValue *> *chipFrames =
+      TKMCalculateSubjectChipFrames(_chips, self.frame.size.width, NSTextAlignmentCenter);
   for (int i = 0; i < _chips.count; ++i) {
     _chips[i].frame = [chipFrames[i] CGRectValue];
   }
@@ -89,10 +89,11 @@
   if (!_chips.count) {
     return size;
   }
-  NSArray<NSValue *> *chipFrames = TKMCalculateSubjectChipFrames(_chips, size.width,
-                                                                 NSTextAlignmentCenter);
+  NSArray<NSValue *> *chipFrames =
+      TKMCalculateSubjectChipFrames(_chips, size.width, NSTextAlignmentCenter);
   return CGSizeMake(size.width,
-                    CGRectGetMaxY([chipFrames.lastObject CGRectValue]) + kTKMSubjectChipCollectionEdgeInsets.bottom);
+                    CGRectGetMaxY([chipFrames.lastObject CGRectValue]) +
+                        kTKMSubjectChipCollectionEdgeInsets.bottom);
 }
 
 #pragma mark - TKMSubjectChipDelegate

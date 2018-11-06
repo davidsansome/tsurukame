@@ -39,8 +39,7 @@ NS_ASSUME_NONNULL_BEGIN;
                      assignment:(TKMAssignment *)assignment
                        delegate:(id<TKMSubjectDelegate>)delegate;
 
-- (instancetype)initWithSubject:(TKMSubject *)subject
-                       delegate:(id<TKMSubjectDelegate>)delegate;
+- (instancetype)initWithSubject:(TKMSubject *)subject delegate:(id<TKMSubjectDelegate>)delegate;
 
 - (instancetype)init NS_UNAVAILABLE;
 

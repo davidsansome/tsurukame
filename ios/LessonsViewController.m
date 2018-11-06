@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,21 +21,21 @@
 #import "ReviewViewController.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMServices.h"
-#import "proto/Wanikani+Convenience.h"
 #import "UIView+SafeAreaInsets.h"
+#import "proto/Wanikani+Convenience.h"
 
 @interface LessonsViewController () <ReviewViewControllerDelegate>
-@property (weak, nonatomic) IBOutlet LessonsPageControl *pageControl;
-@property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property(weak, nonatomic) IBOutlet LessonsPageControl *pageControl;
+@property(weak, nonatomic) IBOutlet UIButton *backButton;
 @end
 
 @implementation LessonsViewController {
   TKMServices *_services;
   NSArray<ReviewItem *> *_items;
-  
+
   UIPageViewController *_pageController;
   NSInteger _currentPageIndex;
-  
+
   ReviewViewController *_reviewViewController;
 }
 
@@ -46,12 +46,15 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  
+
   // Create the page controller.
-  _pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+  _pageController = [[UIPageViewController alloc]
+      initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
+        navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
+                      options:nil];
   _pageController.dataSource = self;
   _pageController.delegate = self;
-  
+
   // Set the subjects on the page control.
   NSMutableArray<TKMSubject *> *subjects = [NSMutableArray array];
   for (ReviewItem *item in _items) {
@@ -59,19 +62,19 @@
     [subjects addObject:subject];
   }
   _pageControl.subjects = subjects;
-  
+
   // Add it as a child view controller, below the back button.
   [self addChildViewController:_pageController];
   [self.view insertSubview:_pageController.view belowSubview:_backButton];
   [_pageController didMoveToParentViewController:self];
-  
+
   // Hook up the page control.
   [_pageControl addTarget:self
                    action:@selector(pageChanged)
          forControlEvents:UIControlEventValueChanged];
-  
+
   // Load the first page.
-  [_pageController setViewControllers:@[[self createViewControllerForIndex:0]]
+  [_pageController setViewControllers:@[ [self createViewControllerForIndex:0] ]
                             direction:UIPageViewControllerNavigationDirectionForward
                              animated:NO
                            completion:nil];
@@ -79,7 +82,7 @@
 
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
-  
+
   CGRect safeArea = UIEdgeInsetsInsetRect(self.view.frame, self.view.tkm_safeAreaInsets);
   CGSize pageControlSize = [_pageControl sizeThatFits:CGSizeMake(self.view.frame.size.width, 0)];
   CGRect pageControlFrame = CGRectMake(CGRectGetMinX(safeArea),
@@ -88,7 +91,7 @@
                                        pageControlSize.height);
   _pageControl.frame = pageControlFrame;
   [_pageControl setNeedsLayout];
-  
+
   CGRect pageControllerFrame = self.view.frame;
   pageControllerFrame.size.height = pageControlFrame.origin.y;
   _pageController.view.frame = pageControllerFrame;
@@ -109,24 +112,21 @@
   if (newPageIndex == _currentPageIndex) {
     return;
   }
-  
+
   UIViewController *vc = [self createViewControllerForIndex:newPageIndex];
   UIPageViewControllerNavigationDirection direction =
       (newPageIndex > _currentPageIndex) ? UIPageViewControllerNavigationDirectionForward
                                          : UIPageViewControllerNavigationDirectionReverse;
-  [_pageController setViewControllers:@[vc]
-                            direction:direction
-                             animated:YES
-                           completion:nil];
+  [_pageController setViewControllers:@[ vc ] direction:direction animated:YES completion:nil];
   _currentPageIndex = newPageIndex;
 }
 
 #pragma mark - UIPageViewControllerDelegate
 
 - (void)pageViewController:(UIPageViewController *)pageViewController
-        didFinishAnimating:(BOOL)finished
-   previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers
-       transitionCompleted:(BOOL)completed {
+         didFinishAnimating:(BOOL)finished
+    previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers
+        transitionCompleted:(BOOL)completed {
   NSInteger index = [self indexOfViewController:_pageController.viewControllers[0]];
   _pageControl.currentPageIndex = index;
   _currentPageIndex = index;
@@ -148,7 +148,7 @@
   } else if (index < 0 || index > _items.count) {
     return nil;
   }
-  
+
   ReviewItem *item = _items[index];
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
@@ -194,7 +194,7 @@
 
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
           finishedReviewItem:(ReviewItem *)reviewItem {
-  [_services.localCachingClient sendProgress:@[reviewItem.answer]];
+  [_services.localCachingClient sendProgress:@[ reviewItem.answer ]];
 }
 
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {

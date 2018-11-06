@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "DataLoader.h"
-#import "TKMSubjectChip.h"
 #import "TKMSubjectModelItem.h"
+#import "DataLoader.h"
 #import "Style.h"
+#import "TKMSubjectChip.h"
 #import "proto/Wanikani+Convenience.h"
 
 static const CGFloat kJapaneseTextImageSize = 26.f;
@@ -25,11 +25,11 @@ static UIFont *kCorrectFont;
 static UIFont *kIncorrectFont;
 
 @interface TKMSubjectModelView ()
-@property (weak, nonatomic) IBOutlet UILabel *levelLabel;
-@property (weak, nonatomic) IBOutlet UILabel *subjectLabel;
-@property (weak, nonatomic) IBOutlet UILabel *readingLabel;
-@property (weak, nonatomic) IBOutlet UILabel *meaningLabel;
-@property (weak, nonatomic) IBOutlet UIStackView *answerStack;
+@property(weak, nonatomic) IBOutlet UILabel *levelLabel;
+@property(weak, nonatomic) IBOutlet UILabel *subjectLabel;
+@property(weak, nonatomic) IBOutlet UILabel *readingLabel;
+@property(weak, nonatomic) IBOutlet UILabel *meaningLabel;
+@property(weak, nonatomic) IBOutlet UIStackView *answerStack;
 @end
 
 @implementation TKMSubjectModelItem
@@ -60,8 +60,7 @@ static UIFont *kIncorrectFont;
   return self;
 }
 
-- (instancetype)initWithSubject:(TKMSubject *)subject
-                       delegate:(id<TKMSubjectDelegate>)delegate {
+- (instancetype)initWithSubject:(TKMSubject *)subject delegate:(id<TKMSubjectDelegate>)delegate {
   return [self initWithSubject:subject delegate:delegate readingWrong:false meaningWrong:false];
 }
 
@@ -82,7 +81,7 @@ static UIFont *kIncorrectFont;
     kCorrectFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightThin];
     kIncorrectFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightBold];
   });
-  
+
   self = [super initWithCoder:aDecoder];
   if (self) {
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
@@ -101,14 +100,15 @@ static UIFont *kIncorrectFont;
 
 - (void)updateWithItem:(TKMSubjectModelItem *)item {
   [super updateWithItem:item];
-  
+
   self.levelLabel.hidden = !item.showLevelNumber;
   if (item.showLevelNumber) {
     self.levelLabel.text = [NSString stringWithFormat:@"%d", item.subject.level];
   }
   _gradient.colors = item.gradientColors ?: TKMGradientForSubject(item.subject);
-  
-  self.subjectLabel.attributedText = [item.subject japaneseTextWithImageSize:kJapaneseTextImageSize];
+
+  self.subjectLabel.attributedText =
+      [item.subject japaneseTextWithImageSize:kJapaneseTextImageSize];
   if (item.subject.hasRadical) {
     [self.readingLabel setHidden:YES];
     self.meaningLabel.text = item.subject.commaSeparatedMeanings;
@@ -121,7 +121,7 @@ static UIFont *kIncorrectFont;
     self.readingLabel.text = item.subject.commaSeparatedReadings;
     self.meaningLabel.text = item.subject.commaSeparatedMeanings;
   }
-  
+
   if (!item.readingWrong && !item.meaningWrong) {
     self.readingLabel.font = kNormalFont;
     self.meaningLabel.font = kNormalFont;
@@ -129,7 +129,7 @@ static UIFont *kIncorrectFont;
     self.readingLabel.font = item.readingWrong ? kIncorrectFont : kCorrectFont;
     self.meaningLabel.font = item.meaningWrong ? kIncorrectFont : kCorrectFont;
   }
-  
+
   [self setShowAnswers:item.showAnswers animated:false];
 }
 
@@ -139,24 +139,26 @@ static UIFont *kIncorrectFont;
     _answerStack.alpha = showAnswers ? 1.f : 0.f;
     return;
   }
-  
+
   // Unhide the answer frame and update its width.
   _answerStack.hidden = NO;
   [self setNeedsLayout];
   [self layoutIfNeeded];
-  
+
   CGRect visibleFrame = _answerStack.frame;
   CGRect hiddenFrame = visibleFrame;
   hiddenFrame.origin.x = self.frame.size.width;
-  
+
   _answerStack.frame = showAnswers ? hiddenFrame : visibleFrame;
   _answerStack.alpha = showAnswers ? 0.f : 1.f;
-  [UIView animateWithDuration:0.5f animations:^{
-    _answerStack.frame = showAnswers ? visibleFrame : hiddenFrame;
-    _answerStack.alpha = showAnswers ? 1.f : 0.f;
-  } completion:^(BOOL finished) {
-    _answerStack.hidden = showAnswers ? NO : YES;
-  }];
+  [UIView animateWithDuration:0.5f
+      animations:^{
+        _answerStack.frame = showAnswers ? visibleFrame : hiddenFrame;
+        _answerStack.alpha = showAnswers ? 1.f : 0.f;
+      }
+      completion:^(BOOL finished) {
+        _answerStack.hidden = showAnswers ? NO : YES;
+      }];
 }
 
 - (void)didSelectCell {
@@ -204,15 +206,15 @@ static UIFont *kIncorrectFont;
 
 - (void)updateWithItem:(TKMSubjectCollectionModelItem *)item {
   [super updateWithItem:item];
-  
+
   self.selectionStyle = UITableViewCellSelectionStyleNone;
-  
+
   // Remove all existing chips.
   for (TKMSubjectChip *chip in _chips) {
     [chip removeFromSuperview];
   }
   [_chips removeAllObjects];
-  
+
   // Create a chip for each subject.
   for (int i = 0; i < item.subjects.count; ++i) {
     int subjectID = [item.subjects valueAtIndex:i];
@@ -228,8 +230,8 @@ static UIFont *kIncorrectFont;
 }
 
 - (void)layoutSubviews {
-  NSArray<NSValue *> *chipFrames = TKMCalculateSubjectChipFrames(_chips, self.frame.size.width,
-                                                                 NSTextAlignmentLeft);
+  NSArray<NSValue *> *chipFrames =
+      TKMCalculateSubjectChipFrames(_chips, self.frame.size.width, NSTextAlignmentLeft);
   for (int i = 0; i < _chips.count; ++i) {
     _chips[i].frame = [chipFrames[i] CGRectValue];
   }
@@ -239,10 +241,11 @@ static UIFont *kIncorrectFont;
   if (!_chips.count) {
     return size;
   }
-  NSArray<NSValue *> *chipFrames = TKMCalculateSubjectChipFrames(_chips, size.width,
-                                                                 NSTextAlignmentLeft);
+  NSArray<NSValue *> *chipFrames =
+      TKMCalculateSubjectChipFrames(_chips, size.width, NSTextAlignmentLeft);
   return CGSizeMake(size.width,
-                    CGRectGetMaxY([chipFrames.lastObject CGRectValue]) + kTKMSubjectChipCollectionEdgeInsets.bottom);
+                    CGRectGetMaxY([chipFrames.lastObject CGRectValue]) +
+                        kTKMSubjectChipCollectionEdgeInsets.bottom);
 }
 
 @end

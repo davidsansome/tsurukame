@@ -22,13 +22,14 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  
+
   NSInteger selectedRow = UserDefaults.reviewOrder - 1;
   if (selectedRow < 0 || selectedRow >= [self.tableView numberOfRowsInSection:0]) {
     selectedRow = 0;
   }
   NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:selectedRow inSection:0];
-  UITableViewCell *selectedCell = [self tableView:self.tableView cellForRowAtIndexPath:selectedIndex];
+  UITableViewCell *selectedCell = [self tableView:self.tableView
+                            cellForRowAtIndexPath:selectedIndex];
   selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
 }
 

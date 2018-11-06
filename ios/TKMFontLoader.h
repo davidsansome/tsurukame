@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
+#import <Foundation/Foundation.h>
 
 @class TKMFont;
 
 @interface TKMFontLoader : NSObject
 
-+ (NSArray<TKMFont*>*) getLoadedFonts;
-+ (NSArray<TKMFont*>*) getEnabledFonts;
-+ (TKMFont*) getRandomFontToRender:(NSString*)text;
-+ (void) saveToUserDefaults;
++ (NSArray<TKMFont *> *)getLoadedFonts;
++ (NSArray<TKMFont *> *)getEnabledFonts;
++ (TKMFont *)getRandomFontToRender:(NSString *)text;
++ (void)saveToUserDefaults;
 
 @end
 

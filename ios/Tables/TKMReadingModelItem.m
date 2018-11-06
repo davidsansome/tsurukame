@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "TKMAudio.h"
 #import "TKMReadingModelItem.h"
+#import "TKMAudio.h"
 
-@interface TKMReadingModelCell : TKMAttributedModelCell<TKMAudioDelegate>
+@interface TKMReadingModelCell : TKMAttributedModelCell <TKMAudioDelegate>
 @end
 
 @implementation TKMReadingModelItem
@@ -37,7 +37,7 @@
 
 - (void)updateWithItem:(TKMReadingModelItem *)item {
   [super updateWithItem:item];
-  
+
   if (item.audioSubjectID) {
     if (!self.rightButton) {
       self.rightButton = [[UIButton alloc] init];
@@ -56,7 +56,7 @@
 
 - (void)didTapButton {
   TKMReadingModelItem *item = (TKMReadingModelItem *)self.item;
-  
+
   if (item.audio.currentState == TKMAudioPlaying) {
     [item.audio stopPlayback];
   } else {

@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "Style.h"
 #import "TKMSubjectChip.h"
+#import "Style.h"
 #import "proto/Wanikani+Convenience.h"
 
 static const CGFloat kChipHeight = 28.f;
 static const CGFloat kLabelInset = 6.f;
-static const CGFloat kLabelHeight = kChipHeight - kLabelInset*2;
+static const CGFloat kLabelHeight = kChipHeight - kLabelInset * 2;
 static const CGFloat kChipCornerRadius = 6.f;
 
 static const CGFloat kChipHorizontalSpacing = 8.f;
@@ -30,10 +30,11 @@ static CGFloat TextWidth(NSAttributedString *item, UIFont *font) {
   NSMutableAttributedString *str =
       [[NSMutableAttributedString alloc] initWithAttributedString:item];
   [str addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, str.length)];
-  
-  CGRect rect = [str boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, kLabelHeight)
-                                  options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                  context:nil];
+
+  CGRect rect = [str
+      boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, kLabelHeight)
+                   options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                   context:nil];
   return MAX(kLabelHeight, rect.size.width);
 }
 
@@ -43,10 +44,10 @@ static void AlignChipFrames(NSMutableArray<NSValue *> *chipFrames, CGFloat width
     return;
   }
   CGFloat totalWidth = width - kTKMSubjectChipCollectionEdgeInsets.left * 2;
-  CGFloat chipTotalWidth = CGRectGetMaxX([chipFrames.lastObject CGRectValue]) -
-                           kTKMSubjectChipCollectionEdgeInsets.left;
+  CGFloat chipTotalWidth =
+      CGRectGetMaxX([chipFrames.lastObject CGRectValue]) - kTKMSubjectChipCollectionEdgeInsets.left;
   CGFloat offset = (totalWidth - chipTotalWidth) / 2;
-  
+
   for (NSUInteger i = *unalignedFrameIndex; i < chipFrames.count; ++i) {
     CGRect rect = [chipFrames[i] CGRectValue];
     rect.origin.x += offset;
@@ -59,22 +60,21 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
                                                   NSTextAlignment alignment) {
   NSMutableArray<NSValue *> *chipFrames = [NSMutableArray array];
   NSUInteger unalignedFrameIndex = 0;
-  
+
   CGPoint origin = CGPointMake(kTKMSubjectChipCollectionEdgeInsets.left,
                                kTKMSubjectChipCollectionEdgeInsets.top);
   for (TKMSubjectChip *chip in chips) {
     CGRect chipFrame = chip.frame;
     chipFrame.origin = origin;
-    
+
     if (CGRectGetMaxX(chipFrame) > width - kTKMSubjectChipCollectionEdgeInsets.right) {
       AlignChipFrames(chipFrames, width, &unalignedFrameIndex, alignment);
       chipFrame.origin.y += chipFrame.size.height + kChipVerticalSpacing;
       chipFrame.origin.x = kTKMSubjectChipCollectionEdgeInsets.left;
     }
-    
+
     [chipFrames addObject:[NSValue valueWithCGRect:chipFrame]];
-    origin = CGPointMake(CGRectGetMaxX(chipFrame) + kChipHorizontalSpacing,
-                         chipFrame.origin.y);
+    origin = CGPointMake(CGRectGetMaxX(chipFrame) + kChipHorizontalSpacing, chipFrame.origin.y);
   }
   AlignChipFrames(chipFrames, width, &unalignedFrameIndex, alignment);
   return chipFrames;
@@ -82,7 +82,7 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
 
 @implementation TKMSubjectChip {
   __weak id<TKMSubjectChipDelegate> _delegate;
-  
+
   __weak UIView *_gradientView;
 }
 
@@ -92,7 +92,8 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
                        delegate:(id<TKMSubjectChipDelegate>)delegate {
   NSAttributedString *japaneseText = [subject japaneseTextWithImageSize:kLabelHeight];
   if (showMeaning) {
-    NSAttributedString *sideText = [[NSAttributedString alloc] initWithString:subject.primaryMeaning];
+    NSAttributedString *sideText =
+        [[NSAttributedString alloc] initWithString:subject.primaryMeaning];
     return [self initWithSubject:subject
                             font:font
                         chipText:japaneseText
@@ -119,11 +120,11 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
                    chipGradient:(NSArray<id> *)chipGradient
                        delegate:(id<TKMSubjectChipDelegate>)delegate {
   UIFont *chipFont = [UIFont systemFontOfSize:kLabelHeight];
-  CGRect chipLabelFrame = CGRectMake(kLabelInset, kLabelInset, TextWidth(chipText, chipFont), kLabelHeight);
-  CGRect chipGradientFrame = CGRectMake(0, 0,
-                                        CGRectGetMaxX(chipLabelFrame) + kLabelInset,
+  CGRect chipLabelFrame =
+      CGRectMake(kLabelInset, kLabelInset, TextWidth(chipText, chipFont), kLabelHeight);
+  CGRect chipGradientFrame = CGRectMake(0, 0, CGRectGetMaxX(chipLabelFrame) + kLabelInset,
                                         CGRectGetMaxY(chipLabelFrame) + kLabelInset);
-  
+
   UILabel *chipLabel = [[UILabel alloc] initWithFrame:chipLabelFrame];
   chipLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
   chipLabel.attributedText = chipText;
@@ -131,7 +132,7 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
   chipLabel.textColor = chipTextColor;
   chipLabel.userInteractionEnabled = NO;
   chipLabel.textAlignment = NSTextAlignmentCenter;
-  
+
   UIView *gradientView = [[UIView alloc] initWithFrame:chipGradientFrame];
   CAGradientLayer *gradientLayer = [CAGradientLayer layer];
   gradientLayer.frame = gradientView.bounds;
@@ -140,9 +141,9 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
   gradientLayer.colors = chipGradient;
   [gradientView.layer insertSublayer:gradientLayer atIndex:0];
   _gradientView = gradientView;
-  
+
   CGRect totalFrame = chipGradientFrame;
-  
+
   UILabel *sideTextLabel = nil;
   if (sideText) {
     CGRect sideTextFrame =
@@ -153,21 +154,21 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
     sideTextLabel.attributedText = sideText;
     sideTextLabel.font = font;
     sideTextLabel.userInteractionEnabled = NO;
-    
+
     totalFrame = CGRectUnion(totalFrame, sideTextFrame);
   }
-  
+
   self = [super initWithFrame:totalFrame];
   if (self) {
     _subject = subject;
     _delegate = delegate;
-    
+
     [self addSubview:gradientView];
     [self addSubview:chipLabel];
     if (sideTextLabel) {
       [self addSubview:sideTextLabel];
     }
-    
+
     UIGestureRecognizer *gestureRecogniser =
         [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [self addGestureRecognizer:gestureRecogniser];

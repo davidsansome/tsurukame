@@ -28,7 +28,7 @@
     [self removeAttribute:NSFontAttributeName range:range];
     [self addAttribute:NSFontAttributeName value:newFont range:range];
   };
-  
+
   [self beginEditing];
   [self enumerateAttribute:NSFontAttributeName
                    inRange:NSMakeRange(0, self.length)
@@ -42,7 +42,7 @@
     [self removeAttribute:NSForegroundColorAttributeName range:range];
     [self addAttribute:NSForegroundColorAttributeName value:newColor range:range];
   };
-  
+
   [self beginEditing];
   [self enumerateAttribute:NSForegroundColorAttributeName
                    inRange:NSMakeRange(0, self.length)
@@ -56,13 +56,15 @@
 @implementation NSAttributedString (Replacements)
 
 - (NSAttributedString *)stringWithFontSize:(CGFloat)newSize {
-  NSMutableAttributedString *ret = [[NSMutableAttributedString alloc] initWithAttributedString:self];
+  NSMutableAttributedString *ret =
+      [[NSMutableAttributedString alloc] initWithAttributedString:self];
   [ret replaceFontSize:newSize];
   return ret;
 }
 
 - (NSAttributedString *)stringWithTextColor:(UIColor *)newColor {
-  NSMutableAttributedString *ret = [[NSMutableAttributedString alloc] initWithAttributedString:self];
+  NSMutableAttributedString *ret =
+      [[NSMutableAttributedString alloc] initWithAttributedString:self];
   [ret replaceTextColor:newColor];
   return ret;
 }

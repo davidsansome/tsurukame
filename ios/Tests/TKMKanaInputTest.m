@@ -14,8 +14,8 @@
 
 #import <XCTest/XCTest.h>
 
-#import "../TKMKanaInput.h"
 #import "../TKMKanaInput+Internals.h"
+#import "../TKMKanaInput.h"
 
 @interface StubUITextFieldDelegate : NSObject <UITextFieldDelegate>
 @end
@@ -34,17 +34,19 @@
 }
 
 static NSCharacterSet *_tsuConsonants;
-static NSArray<NSString*> *_tsuConsonantsArray;
+static NSArray<NSString *> *_tsuConsonantsArray;
 
-+ (NSArray<NSString*> *)getCharactersFromCharacterSet:(NSCharacterSet*)charset {
-  NSMutableArray<NSString*> *array = [NSMutableArray array];
++ (NSArray<NSString *> *)getCharactersFromCharacterSet:(NSCharacterSet *)charset {
+  NSMutableArray<NSString *> *array = [NSMutableArray array];
   for (int plane = 0; plane <= 16; plane++) {
     if ([charset hasMemberInPlane:plane]) {
       UTF32Char c;
-      for (c = plane << 16; c < (plane+1) << 16; c++) {
+      for (c = plane << 16; c < (plane + 1) << 16; c++) {
         if ([charset longCharacterIsMember:c]) {
-          UTF32Char littleEndianChar = OSSwapHostToLittleInt32(c); // To make it byte-order safe
-          NSString *s = [[NSString alloc] initWithBytes:&littleEndianChar length: sizeof(littleEndianChar) encoding:NSUTF32LittleEndianStringEncoding];
+          UTF32Char littleEndianChar = OSSwapHostToLittleInt32(c);  // To make it byte-order safe
+          NSString *s = [[NSString alloc] initWithBytes:&littleEndianChar
+                                                 length:sizeof(littleEndianChar)
+                                               encoding:NSUTF32LittleEndianStringEncoding];
           [array addObject:s];
         }
       }
@@ -55,27 +57,29 @@ static NSArray<NSString*> *_tsuConsonantsArray;
 
 + (void)setUp {
   EnsureInitialised();
-  
-  //tsuConsonants = kConsonants - kN
+
+  // tsuConsonants = kConsonants - kN
   NSMutableCharacterSet *tsuConsonants = [[kN invertedSet] mutableCopy];
   [tsuConsonants formIntersectionWithCharacterSet:kConsonants];
-  
+
   _tsuConsonants = tsuConsonants;
   _tsuConsonantsArray = [TKMKanaInputTest getCharactersFromCharacterSet:_tsuConsonants];
 }
 
 - (void)setUp {
-  // Put setup code here. This method is called before the invocation of each test method in the class.
+  // Put setup code here. This method is called before the invocation of each test method in the
+  // class.
   StubUITextFieldDelegate *delegate = [[StubUITextFieldDelegate alloc] init];
   _kanaInput = [[TKMKanaInput alloc] initWithDelegate:delegate];
   _kanaInput.enabled = true;
-  
+
   _textField = [[UITextField alloc] init];
 }
 
 - (void)testkReplacementsContainsOnlyValidCombinations {
   NSString *lastKey;
-  for (NSString *key in [[kReplacements allKeys] sortedArrayUsingSelector:@selector(localizedCompare:)]) {
+  for (NSString *key in
+       [[kReplacements allKeys] sortedArrayUsingSelector:@selector(localizedCompare:)]) {
     if (lastKey) {
       XCTAssertFalse([key hasPrefix:lastKey]);
     }
@@ -84,53 +88,65 @@ static NSArray<NSString*> *_tsuConsonantsArray;
 }
 
 - (void)testShouldChangeCharactersInRangeDoesNothingWhenDisabled {
-  // when the _kanaInput is disabled shouldChangeCharactersInRange should return true and the text should be unchanged
-  
+  // when the _kanaInput is disabled shouldChangeCharactersInRange should return true and the text
+  // should be unchanged
+
   NSString *text = [_textField.text copy];
-  
+
   _kanaInput.enabled = false;
-  BOOL returnValue = [_kanaInput textField:_textField shouldChangeCharactersInRange:NSMakeRange(0, 0) replacementString:@""];
-  
+  BOOL returnValue = [_kanaInput textField:_textField
+             shouldChangeCharactersInRange:NSMakeRange(0, 0)
+                         replacementString:@""];
+
   XCTAssertTrue(returnValue);
   XCTAssertEqualObjects(text, _textField.text);
 }
 
 - (void)testShouldChangeCharactersInRangeDoesNothingOnPaste {
-  // when the length of the Range is greater 0 shouldChangeCharactersInRange should return true and the text should be unchanged
-  
+  // when the length of the Range is greater 0 shouldChangeCharactersInRange should return true and
+  // the text should be unchanged
+
   NSString *text = [_textField.text copy];
-  
-  BOOL returnValue = [_kanaInput textField:_textField shouldChangeCharactersInRange:NSMakeRange(0, 3) replacementString:@""];
-  
+
+  BOOL returnValue = [_kanaInput textField:_textField
+             shouldChangeCharactersInRange:NSMakeRange(0, 3)
+                         replacementString:@""];
+
   XCTAssertTrue(returnValue);
   XCTAssertEqualObjects(text, _textField.text);
 }
 
 - (void)testShouldChangeCharactersInRangeReplacesSameConsonantWithSokuon {
-  // when there is a consonant and you type the same consonant it should be replaced by っ and the returnValue should be true
-  
-  for(NSString *consonant in _tsuConsonantsArray) {
+  // when there is a consonant and you type the same consonant it should be replaced by っ and the
+  // returnValue should be true
+
+  for (NSString *consonant in _tsuConsonantsArray) {
     _textField.text = consonant;
-    
-    BOOL returnValue = [_kanaInput textField:_textField shouldChangeCharactersInRange:NSMakeRange(1, 0) replacementString:consonant];
-    
+
+    BOOL returnValue = [_kanaInput textField:_textField
+               shouldChangeCharactersInRange:NSMakeRange(1, 0)
+                           replacementString:consonant];
+
     XCTAssertTrue(returnValue);
     XCTAssertEqualObjects(@"っ", _textField.text);
   }
 }
 
 - (void)testShouldChangeCharactersInRangeReplacesNFollwedByConsonant {
-  // when there is a n or m and you type a consonant it should be replaced by ん and the returnValue should be true
-  
-  NSArray<NSString*> *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
-  
-  for(NSString *consonant in _tsuConsonantsArray) {
-    if(![kCanFollowN characterIsMember:[consonant characterAtIndex:0]]) {
-      for(NSString *nm in kNArray) {
+  // when there is a n or m and you type a consonant it should be replaced by ん and the returnValue
+  // should be true
+
+  NSArray<NSString *> *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
+
+  for (NSString *consonant in _tsuConsonantsArray) {
+    if (![kCanFollowN characterIsMember:[consonant characterAtIndex:0]]) {
+      for (NSString *nm in kNArray) {
         _textField.text = nm;
-        
-        BOOL returnValue = [_kanaInput textField:_textField shouldChangeCharactersInRange:NSMakeRange(1, 0) replacementString:consonant];
-        
+
+        BOOL returnValue = [_kanaInput textField:_textField
+                   shouldChangeCharactersInRange:NSMakeRange(1, 0)
+                               replacementString:consonant];
+
         XCTAssertTrue(returnValue);
         XCTAssertEqualObjects(@"ん", _textField.text);
       }
@@ -139,19 +155,23 @@ static NSArray<NSString*> *_tsuConsonantsArray;
 }
 
 - (void)testShouldChangeCharactersInRangeReplacesRomanizationPatternsCorrectly {
-  // when there is the start of a pattern and you type the last letter of the pattern it should be replaced by the given replacement and the returnValue should be false
-  
-  for(NSString *replacement in [kReplacements keyEnumerator]) {
-    // this pattern is checked by another case...for this function it doesn't matter if it is in the kReplacements CharacterSet
-    if([replacement isEqualToString:@"n "]) {
+  // when there is the start of a pattern and you type the last letter of the pattern it should be
+  // replaced by the given replacement and the returnValue should be false
+
+  for (NSString *replacement in [kReplacements keyEnumerator]) {
+    // this pattern is checked by another case...for this function it doesn't matter if it is in the
+    // kReplacements CharacterSet
+    if ([replacement isEqualToString:@"n "]) {
       continue;
     }
-    
+
     NSString *lastReplacementCharacter = [replacement substringFromIndex:replacement.length - 1];
-    
+
     _textField.text = [replacement substringToIndex:replacement.length - 1];
-    
-    BOOL returnValue = [_kanaInput textField:_textField shouldChangeCharactersInRange:NSMakeRange(_textField.text.length, 0) replacementString: lastReplacementCharacter];
+
+    BOOL returnValue = [_kanaInput textField:_textField
+               shouldChangeCharactersInRange:NSMakeRange(_textField.text.length, 0)
+                           replacementString:lastReplacementCharacter];
     XCTAssertFalse(returnValue);
     XCTAssertEqualObjects(kReplacements[replacement], _textField.text);
   }
@@ -159,30 +179,35 @@ static NSArray<NSString*> *_tsuConsonantsArray;
 
 - (void)testShouldChangeCharactersInRangeReplacesSameUppercaseConsonantWithKatakanaSokuon {
   // when you type a uppercase consonant followed by the same consonant, it should be replaced by ッ
-  
-  for(NSString *consonant in _tsuConsonantsArray) {
+
+  for (NSString *consonant in _tsuConsonantsArray) {
     NSString *uppercaseConsonant = [consonant uppercaseString];
     _textField.text = uppercaseConsonant;
-    
-    BOOL returnValue = [_kanaInput textField:_textField shouldChangeCharactersInRange:NSMakeRange(1, 0) replacementString:uppercaseConsonant];
-    
+
+    BOOL returnValue = [_kanaInput textField:_textField
+               shouldChangeCharactersInRange:NSMakeRange(1, 0)
+                           replacementString:uppercaseConsonant];
+
     XCTAssertTrue(returnValue);
     XCTAssertEqualObjects(@"ッ", _textField.text);
   }
 }
 
 - (void)testShouldChangeCharactersInRangeReplacesUppercaseNFollowedByConsonantWithKatakana {
-  // when there is a N or M and you type a consonant it should be replaced by ン and the returnValue should be true
-  
-  NSArray<NSString*> *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
-  
-  for(NSString *consonant in _tsuConsonantsArray) {
-    if(![kCanFollowN characterIsMember:[consonant characterAtIndex:0]]) {
-      for(NSString *nm in kNArray) {
+  // when there is a N or M and you type a consonant it should be replaced by ン and the returnValue
+  // should be true
+
+  NSArray<NSString *> *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
+
+  for (NSString *consonant in _tsuConsonantsArray) {
+    if (![kCanFollowN characterIsMember:[consonant characterAtIndex:0]]) {
+      for (NSString *nm in kNArray) {
         _textField.text = [nm uppercaseString];
-        
-        BOOL returnValue = [_kanaInput textField:_textField shouldChangeCharactersInRange:NSMakeRange(1, 0) replacementString:consonant];
-        
+
+        BOOL returnValue = [_kanaInput textField:_textField
+                   shouldChangeCharactersInRange:NSMakeRange(1, 0)
+                               replacementString:consonant];
+
         XCTAssertTrue(returnValue);
         XCTAssertEqualObjects(@"ン", _textField.text);
       }
@@ -191,22 +216,27 @@ static NSArray<NSString*> *_tsuConsonantsArray;
 }
 
 - (void)testShouldChangeCharactersInRangeReplacesUppercaseRomanizationPatternsWithKatakana {
-  // when there is the start of a pattern, the first letter of the patten is uppercase and you type the last letter of the pattern it should be replaced by the given replacement in katakana and the returnValue should be false
-  
-  for(NSString *replacement in [kReplacements keyEnumerator]) {
-    // this pattern is checked by another case...for this function it doesn't matter if it is in the kReplacements CharacterSet
-    if([replacement isEqualToString:@"n "]) {
+  // when there is the start of a pattern, the first letter of the patten is uppercase and you type
+  // the last letter of the pattern it should be replaced by the given replacement in katakana and
+  // the returnValue should be false
+
+  for (NSString *replacement in [kReplacements keyEnumerator]) {
+    // this pattern is checked by another case...for this function it doesn't matter if it is in the
+    // kReplacements CharacterSet
+    if ([replacement isEqualToString:@"n "]) {
       continue;
     }
-    
+
     NSString *capitalizedReplacement = [replacement capitalizedString];
-    
-    NSString *lastReplacementCharacter = [capitalizedReplacement substringFromIndex:capitalizedReplacement.length - 1];
-    
-    
+
+    NSString *lastReplacementCharacter =
+        [capitalizedReplacement substringFromIndex:capitalizedReplacement.length - 1];
+
     _textField.text = [capitalizedReplacement substringToIndex:capitalizedReplacement.length - 1];
-    
-    BOOL returnValue = [_kanaInput textField:_textField shouldChangeCharactersInRange:NSMakeRange(_textField.text.length, 0) replacementString: lastReplacementCharacter];
+
+    BOOL returnValue = [_kanaInput textField:_textField
+               shouldChangeCharactersInRange:NSMakeRange(_textField.text.length, 0)
+                           replacementString:lastReplacementCharacter];
     XCTAssertFalse(returnValue);
     XCTAssertEqualObjects(ConvertHiraganaToKatakana(kReplacements[replacement]), _textField.text);
   }
@@ -214,12 +244,20 @@ static NSArray<NSString*> *_tsuConsonantsArray;
 
 - (void)testConvertHiraganaToKatakanaConvertsAllTheHiraganaToKatakana {
   // hopefully I got all the combinations :D
-  NSString *hiraganaInput = @"あいうえおかきくけこきゃきゅきょさしすせそしゃしゅしょたちつてとちゃちゅちょなにぬねのにゃにゅにょはひふへほひゃひゅひょまみむめもみゃみゅみょやゆよらりるれろりゃりゅりょわゐゑをんがぎぐげごぎゃぎゅぎょざじずぜぞじゃじゅじょだぢづでどぢゃぢゅぢょばびぶべぼびゃびゅびょぱぴぷぺぽぴゃぴゅぴょっ";
-  
-  NSString *katakanaOutput = @"アイウエオカキクケコキャキュキョサシスセソシャシュショタチツテトチャチュチョナニヌネノニャニュニョハヒフヘホヒャヒュヒョマミムメモミャミュミョヤユヨラリルレロリャリュリョワヰヱヲンガギグゲゴギャギュギョザジズゼゾジャジュジョダヂヅデドヂャヂュヂョバビブベボビャビュビョパピプペポピャピュピョッ";
+  NSString *hiraganaInput =
+      @"あいうえおかきくけこきゃきゅきょさしすせそしゃしゅしょたちつてとちゃちゅちょなにぬねのにゃ"
+      @"にゅにょはひふへほひゃひゅひょまみむめもみゃみゅみょやゆよらりるれろりゃりゅりょわゐゑをん"
+      @"がぎぐげごぎゃぎゅぎょざじずぜぞじゃじゅじょだぢづでどぢゃぢゅぢょばびぶべぼびゃびゅびょぱ"
+      @"ぴぷぺぽぴゃぴゅぴょっ";
+
+  NSString *katakanaOutput =
+      @"アイウエオカキクケコキャキュキョサシスセソシャシュショタチツテトチャチュチョナニヌネノニャ"
+      @"ニュニョハヒフヘホヒャヒュヒョマミムメモミャミュミョヤユヨラリルレロリャリュリョワヰヱヲン"
+      @"ガギグゲゴギャギュギョザジズゼゾジャジュジョダヂヅデドヂャヂュヂョバビブベボビャビュビョパ"
+      @"ピプペポピャピュピョッ";
   NSString *converted = ConvertHiraganaToKatakana(hiraganaInput);
-  
-  XCTAssertEqualObjects(katakanaOutput,converted);
+
+  XCTAssertEqualObjects(katakanaOutput, converted);
 }
 
 @end

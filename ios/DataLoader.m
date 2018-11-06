@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
     NSError *err = nil;
     _file = [NSFileHandle fileHandleForReadingFromURL:url error:&err];
     NSAssert(err == nil, @"Opening data file at %@ failed: %@", url, err);
-    
+
     // Read the header.
     uint32_t headerLength = ReadUint32(_file, 0);
     _firstSubjectOffset = 4 + headerLength;
@@ -53,24 +53,26 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
 }
 
 - (TKMSubject *)loadSubject:(int)subjectID {
-  NSAssert([self isValidSubjectID:subjectID],
-           @"Tried to read subject %d outside 0-%d", subjectID, (int)_header.subjectByteOffsetArray_Count);
-  
-  const uint32_t offset = _firstSubjectOffset + [_header.subjectByteOffsetArray valueAtIndex:subjectID];
-  
+  NSAssert([self isValidSubjectID:subjectID], @"Tried to read subject %d outside 0-%d", subjectID,
+           (int)_header.subjectByteOffsetArray_Count);
+
+  const uint32_t offset =
+      _firstSubjectOffset + [_header.subjectByteOffsetArray valueAtIndex:subjectID];
+
   NSData *data = nil;
   if (subjectID == _header.subjectByteOffsetArray_Count - 1) {
     [_file seekToFileOffset:offset];
     data = [_file readDataToEndOfFile];
   } else {
     // Read the offset of the next subject and compare to determine the length.
-    const uint32_t nextOffset = _firstSubjectOffset + [_header.subjectByteOffsetArray valueAtIndex:subjectID + 1];
+    const uint32_t nextOffset =
+        _firstSubjectOffset + [_header.subjectByteOffsetArray valueAtIndex:subjectID + 1];
     const uint32_t length = nextOffset - offset;
-    
+
     [_file seekToFileOffset:offset];
     data = [_file readDataOfLength:length];
   }
-  
+
   TKMSubject *ret = [TKMSubject parseFromData:data error:nil];
   ret.id_p = subjectID;
   return ret;

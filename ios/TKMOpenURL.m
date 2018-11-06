@@ -14,8 +14,8 @@
 
 #import "TKMOpenURL.h"
 
-static NSString * const kGoogleChromeHTTPScheme = @"googlechrome:";
-static NSString * const kGoogleChromeHTTPSScheme = @"googlechromes:";
+static NSString *const kGoogleChromeHTTPScheme = @"googlechrome:";
+static NSString *const kGoogleChromeHTTPSScheme = @"googlechromes:";
 
 static BOOL IsChromeInstalled() {
   NSURL *simpleURL = [NSURL URLWithString:kGoogleChromeHTTPScheme];
@@ -32,15 +32,13 @@ static BOOL OpenInChrome(NSURL *url) {
     } else if ([scheme isEqualToString:@"https"]) {
       chromeScheme = kGoogleChromeHTTPSScheme;
     }
-    
+
     // Proceed only if a valid Google Chrome URI Scheme is available.
     if (chromeScheme) {
       NSString *absoluteString = [url absoluteString];
       NSRange rangeForScheme = [absoluteString rangeOfString:@":"];
-      NSString *urlNoScheme =
-      [absoluteString substringFromIndex:rangeForScheme.location + 1];
-      NSString *chromeURLString =
-      [chromeScheme stringByAppendingString:urlNoScheme];
+      NSString *urlNoScheme = [absoluteString substringFromIndex:rangeForScheme.location + 1];
+      NSString *chromeURLString = [chromeScheme stringByAppendingString:urlNoScheme];
       NSURL *chromeURL = [NSURL URLWithString:chromeURLString];
       // Open the URL with Google Chrome.
       [[UIApplication sharedApplication] openURL:chromeURL options:@{} completionHandler:nil];
@@ -55,4 +53,3 @@ void TKMOpenURL(NSURL *url) {
     [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
   }
 }
-

@@ -1,19 +1,19 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "DataLoader.h"
 #import "LocalCachingClient.h"
+#import "DataLoader.h"
 
 #import "proto/Wanikani+Convenience.h"
 #import "third_party/FMDB/FMDB.h"
@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSNotificationName kLocalCachingClientAvailableItemsChangedNotification =
     @"kLocalCachingClientAvailableItemsChangedNotification";
-NSNotificationName kLocalCachingClientPendingItemsChangedNotification = 
+NSNotificationName kLocalCachingClientPendingItemsChangedNotification =
     @"kLocalCachingClientPendingItemsChangedNotification";
 NSNotificationName kLocalCachingClientUserInfoChangedNotification =
     @"kLocalCachingClientUserInfoChangedNotification";
@@ -62,7 +62,7 @@ static const char *kSchemaV2 =
     "ALTER TABLE assignments ADD COLUMN subject_id;"
     "CREATE INDEX idx_subject_id ON assignments (subject_id);";
 
-static const char *kSchemaV3 = 
+static const char *kSchemaV3 =
     "CREATE TABLE subject_progress ("
     "  id INTEGER PRIMARY KEY,"
     "  level INTEGER,"
@@ -70,7 +70,7 @@ static const char *kSchemaV3 =
     "  subject_type INTEGER"
     ");";
 
-static const char *kClearAllData = 
+static const char *kClearAllData =
     "UPDATE sync SET"
     "  assignments_updated_after = \"\","
     "  study_materials_updated_after = \"\""
@@ -84,7 +84,7 @@ static const char *kClearAllData =
 static void CheckUpdate(FMDatabase *db, NSString *sql, ...) {
   va_list args;
   va_start(args, sql);
-  
+
   if (![db executeUpdate:sql withVAList:args]) {
     NSLog(@"DB query failed: %@\nQuery: %@", db.lastErrorMessage, sql);
     abort();
@@ -116,7 +116,6 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
     [assignments addObject:assignment];
   }
 }
-
 
 @implementation LocalCachingClient {
   Client *_client;
@@ -158,15 +157,15 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 }
 
 + (NSURL *)databaseFileUrl {
-  NSArray *paths =
-      NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString *fileName = [NSString stringWithFormat:@"%@/local-cache.db", paths[0]];
-  
+
   return [NSURL fileURLWithPath:fileName];
 }
 
 - (void)openDatabase {
-  FMDatabaseQueue *ret = [FMDatabaseQueue databaseQueueWithURL:[LocalCachingClient databaseFileUrl]];
+  FMDatabaseQueue *ret =
+      [FMDatabaseQueue databaseQueueWithURL:[LocalCachingClient databaseFileUrl]];
 
   static NSArray<NSString *> *kSchemas;
   static dispatch_once_t once;
@@ -177,10 +176,10 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       @(kSchemaV3),
     ];
   });
-  
+
   __block bool shouldPopulateSubjectProgress = false;
-  
-  [ret inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+
+  [ret inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
     // Get the current version.
     NSUInteger targetVersion = kSchemas.count;
     NSUInteger currentVersion = db.userVersion;
@@ -195,16 +194,18 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
         shouldPopulateSubjectProgress = true;
       }
     }
-    CheckUpdate(db, [NSString stringWithFormat:@"PRAGMA user_version = %lu", (unsigned long)targetVersion]);
+    CheckUpdate(
+        db, [NSString stringWithFormat:@"PRAGMA user_version = %lu", (unsigned long)targetVersion]);
     NSLog(@"Database updated to schema %lu", targetVersion);
   }];
-  
+
   _db = ret;
-  
+
   if (shouldPopulateSubjectProgress) {
-    [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
-      NSString *sql = @"REPLACE INTO subject_progress (id, level, srs_stage, subject_type) "
-                       "VALUES (?, ?, ?, ?)";
+    [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
+      NSString *sql =
+          @"REPLACE INTO subject_progress (id, level, srs_stage, subject_type) "
+           "VALUES (?, ?, ?, ?)";
       for (TKMAssignment *assignment in [self getAllAssignmentsInTransaction:db]) {
         CheckUpdate(db, sql, @(assignment.subjectId), @(assignment.level), @(assignment.srsStage),
                     @(assignment.subjectType));
@@ -222,7 +223,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 
 - (NSArray<TKMAssignment *> *)getAllAssignments {
   __block NSArray<TKMAssignment *> *ret = nil;
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
     ret = [self getAllAssignmentsInTransaction:db];
   }];
   return ret;
@@ -230,7 +231,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 
 - (NSArray<TKMAssignment *> *)getAllAssignmentsInTransaction:(FMDatabase *)db {
   NSMutableArray<TKMAssignment *> *ret = [NSMutableArray array];
-  
+
   FMResultSet *r = [db executeQuery:@"SELECT pb FROM assignments"];
   while ([r next]) {
     NSError *error = nil;
@@ -241,13 +242,13 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
     }
     [ret addObject:assignment];
   }
-  
+
   return ret;
 }
 
 - (NSArray<TKMProgress *> *)getAllPendingProgress {
   __block NSArray<TKMProgress *> *progress = [NSMutableArray array];
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
     progress = [self getAllPendingProgressInTransaction:db];
   }];
   return progress;
@@ -262,9 +263,9 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   return progress;
 }
 
-- (TKMStudyMaterials * _Nullable)getStudyMaterialForID:(int)subjectID {
+- (TKMStudyMaterials *_Nullable)getStudyMaterialForID:(int)subjectID {
   __block TKMStudyMaterials *ret = nil;
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
     FMResultSet *r = [db executeQuery:@"SELECT pb FROM study_materials WHERE id = ?", @(subjectID)];
     while ([r next]) {
       ret = [TKMStudyMaterials parseFromData:[r dataForColumnIndex:0] error:nil];
@@ -273,9 +274,9 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   return ret;
 }
 
-- (TKMUser * _Nullable)getUserInfo {
+- (TKMUser *_Nullable)getUserInfo {
   __block TKMUser *ret = nil;
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
     FMResultSet *r = [db executeQuery:@"SELECT pb FROM user"];
     while ([r next]) {
       ret = [TKMUser parseFromData:[r dataForColumnIndex:0] error:nil];
@@ -286,7 +287,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 
 - (int)countRowsInTable:(NSString *)tableName {
   __block int ret = 0;
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
     NSString *sql = [NSString stringWithFormat:@"SELECT COUNT(*) FROM %@", tableName];
     FMResultSet *r = [db executeQuery:sql];
     while ([r next]) {
@@ -298,8 +299,9 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 
 - (TKMAssignment *)getAssignmentForID:(int)subjectID {
   __block TKMAssignment *ret = nil;
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
-    FMResultSet *r = [db executeQuery:@"SELECT pb FROM assignments WHERE subject_id = ?", @(subjectID)];
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
+    FMResultSet *r =
+        [db executeQuery:@"SELECT pb FROM assignments WHERE subject_id = ?", @(subjectID)];
     if ([r next]) {
       NSError *error = nil;
       ret = [TKMAssignment parseFromData:[r dataForColumnIndex:0] error:&error];
@@ -309,7 +311,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       [r close];
       return;
     }
-    
+
     r = [db executeQuery:@"SELECT pb FROM pending_progress WHERE id = ?", @(subjectID)];
     if ([r next]) {
       NSError *error = nil;
@@ -326,11 +328,13 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 
 - (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level inTransaction:(FMDatabase *)db {
   NSMutableArray<TKMAssignment *> *ret = [NSMutableArray array];
-  FMResultSet *r = [db executeQuery:@"SELECT p.id, p.level, p.srs_stage, p.subject_type, a.pb "
-                    "FROM subject_progress AS p "
-                    "LEFT JOIN assignments AS a "
-                    "ON p.id = a.subject_id "
-                    "WHERE p.level = ?", @(level)];
+  FMResultSet *r = [db executeQuery:
+                           @"SELECT p.id, p.level, p.srs_stage, p.subject_type, a.pb "
+                            "FROM subject_progress AS p "
+                            "LEFT JOIN assignments AS a "
+                            "ON p.id = a.subject_id "
+                            "WHERE p.level = ?",
+                           @(level)];
   NSMutableSet<NSNumber *> *subjectIDs = [NSMutableSet set];
   while ([r next]) {
     NSData *data = [r dataForColumnIndex:4];
@@ -347,20 +351,22 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
     [ret addObject:assignment];
     [subjectIDs addObject:@(assignment.subjectId)];
   }
-  
+
   // Add fake assignments for any other subjects at this level that don't have assignments yet (the
   // user hasn't unlocked the prerequisite radicals/kanji).
   TKMSubjectsByLevel *subjectsByLevel = [_dataLoader subjectsByLevel:level];
-  AddFakeAssignments(subjectsByLevel.radicalsArray, TKMSubject_Type_Radical, level, subjectIDs, ret);
+  AddFakeAssignments(
+      subjectsByLevel.radicalsArray, TKMSubject_Type_Radical, level, subjectIDs, ret);
   AddFakeAssignments(subjectsByLevel.kanjiArray, TKMSubject_Type_Kanji, level, subjectIDs, ret);
-  AddFakeAssignments(subjectsByLevel.vocabularyArray, TKMSubject_Type_Vocabulary, level, subjectIDs, ret);
-  
+  AddFakeAssignments(
+      subjectsByLevel.vocabularyArray, TKMSubject_Type_Vocabulary, level, subjectIDs, ret);
+
   return ret;
 }
 
 - (int)getUsersCurrentLevel {
   __block int ret = 0;
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
     FMResultSet *r = [db executeQuery:@"SELECT MAX(level) FROM subject_progress"];
     if ([r next]) {
       ret = [r intForColumnIndex:0];
@@ -372,7 +378,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 
 - (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
   __block NSArray<TKMAssignment *> *ret = nil;
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
     ret = [self getAssignmentsAtLevel:level inTransaction:db];
   }];
   return ret;
@@ -438,31 +444,33 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   NSArray<TKMAssignment *> *assignments = [self getAllAssignments];
   int lessons = 0;
   int reviews = 0;
-  
+
   NSDate *now = [NSDate date];
-  
+
   NSMutableArray<NSNumber *> *upcomingReviews = [NSMutableArray arrayWithCapacity:48];
   for (int i = 0; i < 24; i++) {
     [upcomingReviews addObject:@(0)];
   }
-  
+
   for (TKMAssignment *assignment in assignments) {
     if (assignment.isLessonStage) {
-      lessons ++;
+      lessons++;
     } else if (assignment.isReviewStage) {
       NSTimeInterval availableInSeconds = [assignment.availableAtDate timeIntervalSinceDate:now];
       if (availableInSeconds <= 0) {
-        reviews ++;
+        reviews++;
         continue;
       }
       int availableInHours = availableInSeconds / (60 * 60);
       if (availableInHours < upcomingReviews.count) {
-        [upcomingReviews setObject:[NSNumber numberWithInt:[upcomingReviews[availableInHours] intValue] + 1]
-                atIndexedSubscript:availableInHours];
+        [upcomingReviews
+                     setObject:[NSNumber
+                                   numberWithInt:[upcomingReviews[availableInHours] intValue] + 1]
+            atIndexedSubscript:availableInHours];
       }
     }
   }
-  
+
   NSLog(@"Recalculated available items");
   _cachedAvailableLessonCount = lessons;
   _cachedAvailableReviewCount = reviews;
@@ -503,30 +511,31 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 #pragma mark - Send progress
 
 - (void)sendProgress:(NSArray<TKMProgress *> *)progress {
-  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+  [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
     for (TKMProgress *p in progress) {
       // Delete the assignment.
       CheckUpdate(db, @"DELETE FROM assignments WHERE id = ?", @(p.assignment.id_p));
-      
+
       // Store the progress locally.
       CheckUpdate(db, @"REPLACE INTO pending_progress (id, pb) VALUES (?, ?)",
                   @(p.assignment.subjectId), p.data);
-      
+
       int newSrsStage = p.assignment.srsStage;
       if (p.isLesson || (!p.meaningWrong && !p.readingWrong)) {
-        newSrsStage ++;
+        newSrsStage++;
       } else if (p.meaningWrong || p.readingWrong) {
         newSrsStage = MAX(0, newSrsStage - 1);
       }
-      CheckUpdate(db, @"REPLACE INTO subject_progress (id, level, srs_stage, subject_type) "
-                        "VALUES (?, ?, ?, ?)",
+      CheckUpdate(db,
+                  @"REPLACE INTO subject_progress (id, level, srs_stage, subject_type) "
+                   "VALUES (?, ?, ?, ?)",
                   @(p.assignment.subjectId), @(p.assignment.level), @(newSrsStage),
                   @(p.assignment.subjectType));
     }
   }];
   [self invalidateCachedPendingProgress];
   [self invalidateCachedAvailableSubjectCounts];
-  
+
   [self sendPendingProgress:progress handler:nil];
 }
 
@@ -537,70 +546,83 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 
 - (void)sendPendingProgress:(NSArray<TKMProgress *> *)progress
                     handler:(CompletionHandler _Nullable)handler {
-  [_client sendProgress:progress handler:^(NSError * _Nullable error) {
-    if (error) {
-      NSLog(@"sendProgress failed: %@", error);
-    } else {
-      // Delete the local pending progress.
-      [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
-        for (TKMProgress *p in progress) {
-          CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
-        }
-      }];
-      [self invalidateCachedPendingProgress];
-    }
-    if (handler) {
-      handler();
-    }
-  }];
+  [_client
+      sendProgress:progress
+           handler:^(NSError *_Nullable error) {
+             if (error) {
+               NSLog(@"sendProgress failed: %@", error);
+             } else {
+               // Delete the local pending progress.
+               [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
+                 for (TKMProgress *p in progress) {
+                   CheckUpdate(
+                       db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
+                 }
+               }];
+               [self invalidateCachedPendingProgress];
+             }
+             if (handler) {
+               handler();
+             }
+           }];
 }
 
 #pragma mark - Send study materials
 
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material {
-  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+  [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
     // Store the study material locally.
-    CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES(?, ?)", @(material.subjectId), material.data);
+    CheckUpdate(db,
+                @"REPLACE INTO study_materials (id, pb) VALUES(?, ?)",
+                @(material.subjectId),
+                material.data);
     CheckUpdate(db, @"REPLACE INTO pending_study_materials (id) VALUES(?)", @(material.subjectId));
   }];
   [self invalidateCachedPendingStudyMaterials];
-  
+
   [self sendPendingStudyMaterial:material handler:nil];
 }
 
 - (void)sendAllPendingStudyMaterials:(CompletionHandler)handler {
   dispatch_group_t dispatchGroup = dispatch_group_create();
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
-    FMResultSet *results = [db executeQuery:@"SELECT s.pb FROM study_materials AS s, pending_study_materials AS p ON s.id = p.id"];
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
+    FMResultSet *results = [db
+        executeQuery:
+            @"SELECT s.pb FROM study_materials AS s, pending_study_materials AS p ON s.id = p.id"];
     while ([results next]) {
-      TKMStudyMaterials *material = [TKMStudyMaterials parseFromData:[results dataForColumnIndex:0] error:nil];
+      TKMStudyMaterials *material = [TKMStudyMaterials parseFromData:[results dataForColumnIndex:0]
+                                                               error:nil];
       NSLog(@"Sending pending study material update %@", [material description]);
-      
+
       dispatch_group_enter(dispatchGroup);
-      [self sendPendingStudyMaterial:material handler:^{
-        dispatch_group_leave(dispatchGroup);
-      }];
+      [self sendPendingStudyMaterial:material
+                             handler:^{
+                               dispatch_group_leave(dispatchGroup);
+                             }];
     }
   }];
-  
+
   dispatch_group_notify(dispatchGroup, _queue, handler);
 }
 
 - (void)sendPendingStudyMaterial:(TKMStudyMaterials *)material
                          handler:(CompletionHandler _Nullable)handler {
-  [_client updateStudyMaterial:material handler:^(NSError * _Nullable error) {
-    if (error) {
-      NSLog(@"Failed to send study material update: %@", error);
-    } else {
-      [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
-        CheckUpdate(db, @"DELETE FROM pending_study_materials WHERE id = ?", @(material.subjectId));
-      }];
-      [self invalidateCachedPendingStudyMaterials];
-    }
-    if (handler) {
-      handler();
-    }
-  }];
+  [_client updateStudyMaterial:material
+                       handler:^(NSError *_Nullable error) {
+                         if (error) {
+                           NSLog(@"Failed to send study material update: %@", error);
+                         } else {
+                           [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
+                             CheckUpdate(db,
+                                         @"DELETE FROM pending_study_materials WHERE id = ?",
+                                         @(material.subjectId));
+                           }];
+                           [self invalidateCachedPendingStudyMaterials];
+                         }
+                         if (handler) {
+                           handler();
+                         }
+                       }];
 }
 
 #pragma mark - Sync
@@ -612,7 +634,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
     }
     return;
   }
-  
+
   dispatch_async(_queue, ^{
     if (_busy) {
       if (completionHandler) {
@@ -621,7 +643,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       return;
     }
     _busy = true;
-    
+
     dispatch_group_t sendGroup = dispatch_group_create();
 
     dispatch_group_enter(sendGroup);
@@ -632,10 +654,10 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
     [self sendAllPendingStudyMaterials:^{
       dispatch_group_leave(sendGroup);
     }];
-    
+
     dispatch_group_notify(sendGroup, _queue, ^{
       dispatch_group_t updateGroup = dispatch_group_create();
-    
+
       dispatch_group_enter(updateGroup);
       [self updateAssignments:^{
         dispatch_group_leave(updateGroup);
@@ -648,7 +670,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       [self updateUserInfo:^{
         dispatch_group_leave(updateGroup);
       }];
-      
+
       dispatch_group_notify(updateGroup, dispatch_get_main_queue(), ^{
         _busy = false;
         [self invalidateCachedAvailableSubjectCounts];
@@ -664,62 +686,78 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 - (void)updateAssignments:(CompletionHandler)handler {
   // Get the last assignment update time.
   __block NSString *lastDate;
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
     lastDate = [db stringForQuery:@"SELECT assignments_updated_after FROM sync"];
   }];
-  
+
   NSLog(@"Getting all assignments modified after %@", lastDate);
-  [_client getAssignmentsModifiedAfter:lastDate
-                               handler:^(NSError *error, NSArray<TKMAssignment *> *assignments) {
-                                 if (error) {
-                                   NSLog(@"getAssignmentsModifiedAfter failed: %@", error);
-                                 } else {
-                                   NSString *date = Client.currentISO8601Date;
-                                   [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
-                                     for (TKMAssignment *assignment in assignments) {
-                                       CheckUpdate(db, @"REPLACE INTO assignments (id, pb, subject_id) VALUES (?, ?, ?)",
-                                                   @(assignment.id_p), assignment.data, @(assignment.subjectId));
-                                       CheckUpdate(db, @"REPLACE INTO subject_progress (id, level, srs_stage, subject_type) VALUES (?, ?, ?, ?)",
-                                                   @(assignment.subjectId), @(assignment.level), @(assignment.srsStage),
-                                                   @(assignment.subjectType));
-                                     }
-                                     CheckUpdate(db, @"UPDATE sync SET assignments_updated_after = ?", date);
-                                   }];
-                                   NSLog(@"Recorded %lu new assignments at %@", (unsigned long)assignments.count, date);
-                                 }
-                                 handler();
-                               }];
+  [_client
+      getAssignmentsModifiedAfter:lastDate
+                          handler:^(NSError *error, NSArray<TKMAssignment *> *assignments) {
+                            if (error) {
+                              NSLog(@"getAssignmentsModifiedAfter failed: %@", error);
+                            } else {
+                              NSString *date = Client.currentISO8601Date;
+                              [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                                for (TKMAssignment *assignment in assignments) {
+                                  CheckUpdate(db,
+                                              @"REPLACE INTO assignments (id, pb, subject_id) "
+                                              @"VALUES (?, ?, ?)",
+                                              @(assignment.id_p), assignment.data,
+                                              @(assignment.subjectId));
+                                  CheckUpdate(db,
+                                              @"REPLACE INTO subject_progress (id, level, "
+                                              @"srs_stage, subject_type) VALUES (?, ?, ?, ?)",
+                                              @(assignment.subjectId), @(assignment.level),
+                                              @(assignment.srsStage), @(assignment.subjectType));
+                                }
+                                CheckUpdate(
+                                    db, @"UPDATE sync SET assignments_updated_after = ?", date);
+                              }];
+                              NSLog(@"Recorded %lu new assignments at %@",
+                                    (unsigned long)assignments.count,
+                                    date);
+                            }
+                            handler();
+                          }];
 }
 
 - (void)updateStudyMaterials:(CompletionHandler)handler {
   // Get the last study materials update time.
   __block NSString *lastDate;
-  [_db inDatabase:^(FMDatabase * _Nonnull db) {
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
     lastDate = [db stringForQuery:@"SELECT study_materials_updated_after FROM sync"];
   }];
-  
+
   NSLog(@"Getting all study materials modified after %@", lastDate);
-  [_client getStudyMaterialsModifiedAfter:lastDate
-                                 handler:^(NSError *error, NSArray<TKMStudyMaterials *> *studyMaterials) {
-                                   if (error) {
-                                     NSLog(@"getStudyMaterialsModifiedAfter failed: %@", error);
-                                   } else {
-                                     NSString *date = Client.currentISO8601Date;
-                                     [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
-                                       for (TKMStudyMaterials *studyMaterial in studyMaterials) {
-                                         CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES (?, ?)",
-                                                     @(studyMaterial.subjectId), studyMaterial.data);
-                                       }
-                                       CheckUpdate(db, @"UPDATE sync SET study_materials_updated_after = ?", date);
-                                     }];
-                                     NSLog(@"Recorded %lu new study materials at %@", (unsigned long)studyMaterials.count, date);
+  [_client
+      getStudyMaterialsModifiedAfter:lastDate
+                             handler:^(NSError *error,
+                                       NSArray<TKMStudyMaterials *> *studyMaterials) {
+                               if (error) {
+                                 NSLog(@"getStudyMaterialsModifiedAfter failed: %@", error);
+                               } else {
+                                 NSString *date = Client.currentISO8601Date;
+                                 [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                                   for (TKMStudyMaterials *studyMaterial in studyMaterials) {
+                                     CheckUpdate(
+                                         db, @"REPLACE INTO study_materials (id, pb) VALUES (?, ?)",
+                                         @(studyMaterial.subjectId), studyMaterial.data);
                                    }
-                                   handler();
+                                   CheckUpdate(db,
+                                               @"UPDATE sync SET study_materials_updated_after = ?",
+                                               date);
                                  }];
+                                 NSLog(@"Recorded %lu new study materials at %@",
+                                       (unsigned long)studyMaterials.count,
+                                       date);
+                               }
+                               handler();
+                             }];
 }
 
 - (void)updateUserInfo:(CompletionHandler)handler {
-  [_client getUserInfo:^(NSError * _Nullable error, TKMUser * _Nullable user) {
+  [_client getUserInfo:^(NSError *_Nullable error, TKMUser *_Nullable user) {
     if (error) {
       NSLog(@"getUserInfo failed: %@", error);
     } else {
@@ -733,7 +771,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 }
 
 - (void)clearAllData {
-  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+  [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
     CheckExecuteStatements(db, @(kClearAllData));
     NSLog(@"Database reset");
   }];

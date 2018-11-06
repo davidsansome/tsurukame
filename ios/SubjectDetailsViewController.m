@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,8 +15,8 @@
 #import "SubjectDetailsViewController.h"
 
 #import "DataLoader.h"
-#import "NavigationController.h"
 #import "LocalCachingClient.h"
+#import "NavigationController.h"
 #import "Style.h"
 #import "SubjectDetailsView.h"
 #import "TKMServices.h"
@@ -28,9 +28,9 @@
 
 @interface SubjectDetailsViewController () <TKMSubjectDelegate, TKMViewController>
 
-@property (weak, nonatomic) IBOutlet TKMSubjectDetailsView *subjectDetailsView;
-@property (weak, nonatomic) IBOutlet UILabel *subjectTitle;
-@property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property(weak, nonatomic) IBOutlet TKMSubjectDetailsView *subjectDetailsView;
+@property(weak, nonatomic) IBOutlet UILabel *subjectTitle;
+@property(weak, nonatomic) IBOutlet UIButton *backButton;
 
 @end
 
@@ -55,11 +55,7 @@
 }
 
 - (void)setupWithServices:(TKMServices *)services subject:(TKMSubject *)subject {
-  [self setupWithServices:services
-                  subject:subject
-                showHints:NO
-           hideBackButton:NO
-                    index:0];
+  [self setupWithServices:services subject:subject showHints:NO hideBackButton:NO index:0];
 }
 
 - (bool)canSwipeToGoBack {
@@ -68,19 +64,17 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  [_subjectDetailsView setupWithServices:_services
-                               showHints:_showHints
-                         subjectDelegate:self];
-  
-  TKMStudyMaterials *studyMaterials = [_services.localCachingClient getStudyMaterialForID:_subject.id_p];
-  [_subjectDetailsView updateWithSubject:_subject
-                          studyMaterials:studyMaterials];
-  
+  [_subjectDetailsView setupWithServices:_services showHints:_showHints subjectDelegate:self];
+
+  TKMStudyMaterials *studyMaterials =
+      [_services.localCachingClient getStudyMaterialForID:_subject.id_p];
+  [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
+
   _subjectTitle.attributedText = [_subject japaneseTextWithImageSize:40.f];
   _gradientLayer = [CAGradientLayer layer];
   _gradientLayer.colors = TKMGradientForSubject(_subject);
   [self.view.layer insertSublayer:_gradientLayer atIndex:0];
-  
+
   if (_hideBackButton) {
     _backButton.hidden = YES;
   }
@@ -98,9 +92,8 @@
 
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
-  _gradientLayer.frame =
-      CGRectMake(0, 0, self.view.bounds.size.width,
-                 _subjectTitle.frame.origin.y + _subjectTitle.frame.size.height);
+  _gradientLayer.frame = CGRectMake(0, 0, self.view.bounds.size.width,
+                                    _subjectTitle.frame.origin.y + _subjectTitle.frame.size.height);
 }
 
 - (IBAction)backButtonPressed:(id)sender {
@@ -116,8 +109,7 @@
 - (void)didTapSubject:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
-  [vc setupWithServices:_services
-                subject:subject];
+  [vc setupWithServices:_services subject:subject];
   [self.navigationController pushViewController:vc animated:YES];
 }
 

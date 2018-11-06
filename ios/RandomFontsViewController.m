@@ -14,8 +14,8 @@
 
 #import "RandomFontsViewController.h"
 #import "TKMFontLoader.h"
-#import "Tables/TKMTableModel.h"
 #import "Tables/TKMFontModelItem.h"
+#import "Tables/TKMTableModel.h"
 #import "UserDefaults.h"
 
 @interface RandomFontsViewController ()
@@ -28,25 +28,27 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  
-  NSArray<TKMFont*> *fontsArray = [TKMFontLoader getLoadedFonts];
-  
-  TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView: self.tableView];
-  
+
+  NSArray<TKMFont *> *fontsArray = [TKMFontLoader getLoadedFonts];
+
+  TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
+
   [fontsArray enumerateObjectsUsingBlock:^(TKMFont *font, NSUInteger index, BOOL *stop) {
     TKMFontModelItem *item = [[TKMFontModelItem alloc] initWithFont:font];
     [model addItem:item];
-    
+
     if (font.enabled) {
       NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:index inSection:0];
-      [self.tableView selectRowAtIndexPath: selectedIndex animated:NO scrollPosition: UITableViewScrollPositionNone];
+      [self.tableView selectRowAtIndexPath:selectedIndex
+                                  animated:NO
+                            scrollPosition:UITableViewScrollPositionNone];
     }
   }];
-  
+
   _model = model;
 }
 
--(void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated {
   [TKMFontLoader saveToUserDefaults];
 }
 

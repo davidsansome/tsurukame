@@ -32,7 +32,7 @@
     _accessoryType = accessoryType;
     _target = target;
     _action = action;
-    
+
     if (style == UITableViewCellStyleSubtitle) {
       _subtitleFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2];
     }
@@ -66,9 +66,7 @@
 }
 
 - (NSString *)cellReuseIdentifier {
-  return [NSString stringWithFormat:@"%s/%ld",
-          object_getClassName(self.cellClass),
-          (long)_style];
+  return [NSString stringWithFormat:@"%s/%ld", object_getClassName(self.cellClass), (long)_style];
 }
 
 - (TKMModelCell *)createCell {
@@ -81,9 +79,9 @@
 
 - (void)updateWithItem:(TKMBasicModelItem *)item {
   [super updateWithItem:item];
-  
+
   self.selectionStyle = UITableViewCellSelectionStyleNone;
-  
+
   self.textLabel.text = item.title;
   self.textLabel.font = item.titleFont;
   self.textLabel.textColor = item.titleTextColor;

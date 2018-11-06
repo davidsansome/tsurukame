@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,7 +29,6 @@ static const char *kKanaCharacters =
     "やゆよゃゅょぃっ"
     "わをん";
 
-
 static NSString *FormattedString(NSString *s) {
   s = [s stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
   s = [s lowercaseString];
@@ -46,7 +45,7 @@ static BOOL IsAsciiPresent(NSString *s) {
   dispatch_once(&onceToken, ^{
     kAsciiCharacterSet = [NSCharacterSet characterSetWithRange:NSMakeRange(0, 255)];
   });
-  
+
   return [s rangeOfCharacterFromSet:kAsciiCharacterSet].location != NSNotFound;
 }
 
@@ -69,11 +68,11 @@ static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
   dispatch_once(&onceToken, ^{
     kKanaCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@(kKanaCharacters)];
   });
-  
+
   if (answer.length < japanese.length) {
     return NO;
   }
-  
+
   for (int i = 0; i < japanese.length; ++i) {
     unichar japaneseChar = [japanese characterAtIndex:i];
     if (![kKanaCharacterSet characterIsMember:japaneseChar]) {
@@ -84,7 +83,7 @@ static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
       return YES;
     }
   }
-  
+
   for (int i = 1; i <= japanese.length; ++i) {
     unichar japaneseChar = [japanese characterAtIndex:japanese.length - i];
     if (![kKanaCharacterSet characterIsMember:japaneseChar]) {
@@ -95,17 +94,17 @@ static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
       return YES;
     }
   }
-  
+
   return NO;
 }
 
 TKMAnswerCheckerResult CheckAnswer(NSString **answer,
-                                  TKMSubject *subject,
-                                  TKMStudyMaterials *studyMaterials,
-                                  TKMTaskType taskType,
-                                  DataLoader *dataLoader) {
+                                   TKMSubject *subject,
+                                   TKMStudyMaterials *studyMaterials,
+                                   TKMTaskType taskType,
+                                   DataLoader *dataLoader) {
   *answer = FormattedString(*answer);
-  
+
   switch (taskType) {
     case kTKMTaskTypeReading:
       *answer = [*answer stringByReplacingOccurrencesOfString:@"n" withString:@"ん"];
@@ -113,7 +112,7 @@ TKMAnswerCheckerResult CheckAnswer(NSString **answer,
       if (IsAsciiPresent(*answer)) {
         return kTKMAnswerContainsInvalidCharacters;
       }
-      
+
       for (TKMReading *reading in subject.primaryReadings) {
         if ([reading.reading isEqualToString:*answer]) {
           return kTKMAnswerPrecise;
@@ -128,7 +127,8 @@ TKMAnswerCheckerResult CheckAnswer(NSString **answer,
           subject.componentSubjectIdsArray_Count == 1) {
         // If the vocabulary is made up of only one Kanji, check whether the user wrote the Kanji
         // reading instead of the vocabulary reading.
-        TKMSubject *kanji = [dataLoader loadSubject:[subject.componentSubjectIdsArray valueAtIndex:0]];
+        TKMSubject *kanji =
+            [dataLoader loadSubject:[subject.componentSubjectIdsArray valueAtIndex:0]];
         TKMAnswerCheckerResult kanjiResult = CheckAnswer(answer, kanji, nil, taskType, dataLoader);
         if (kanjiResult == kTKMAnswerPrecise) {
           return kTKMAnswerOtherKanjiReading;
@@ -138,15 +138,15 @@ TKMAnswerCheckerResult CheckAnswer(NSString **answer,
         return kTKMAnswerOtherKanjiReading;
       }
       break;
-      
+
     case kTKMTaskTypeMeaning: {
       NSMutableArray<NSString *> *meaningTexts =
           [NSMutableArray arrayWithArray:studyMaterials.meaningSynonymsArray];
-      
+
       for (TKMMeaning *meaning in subject.meaningsArray) {
         [meaningTexts addObject:meaning.meaning];
       }
-      
+
       for (NSString *meaning in meaningTexts) {
         NSString *meaningText = FormattedString(meaning);
         if ([meaningText isEqualToString:*answer]) {
@@ -163,7 +163,7 @@ TKMAnswerCheckerResult CheckAnswer(NSString **answer,
       }
       break;
     }
-      
+
     case kTKMTaskType_Max:
       assert(false);
   }

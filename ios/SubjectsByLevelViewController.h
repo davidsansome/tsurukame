@@ -21,9 +21,7 @@
 @property(nonatomic, readonly) int level;
 @property(nonatomic, readonly) bool showAnswers;
 
-- (void)setupWithServices:(TKMServices *)services
-                    level:(int)level
-              showAnswers:(bool)showAnswers;
+- (void)setupWithServices:(TKMServices *)services level:(int)level showAnswers:(bool)showAnswers;
 
 - (void)setShowAnswers:(bool)showAnswers animated:(bool)animated;
 

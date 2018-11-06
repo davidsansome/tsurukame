@@ -16,7 +16,7 @@
 #import "Style.h"
 
 @interface TKMListSeparatorCell : TKMModelCell
-@property (nonatomic, weak) IBOutlet UILabel *label;
+@property(nonatomic, weak) IBOutlet UILabel *label;
 @end
 
 @implementation TKMListSeparatorItem

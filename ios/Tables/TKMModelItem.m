@@ -21,7 +21,6 @@ void TKMSafePerformSelector(id target, SEL selector, id object) {
   ((void (*)(id, SEL, id))[target methodForSelector:selector])(target, selector, object);
 }
 
-
 @implementation TKMModelCell : UITableViewCell
 
 - (void)updateWithItem:(id<TKMModelItem>)item {

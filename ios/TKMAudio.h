@@ -24,7 +24,7 @@ typedef enum TKMAudioPlaybackState {
   TKMAudioFinished,
 } TKMAudioPlaybackState;
 
-@protocol TKMAudioDelegate<NSObject>
+@protocol TKMAudioDelegate <NSObject>
 
 - (void)audioPlaybackStateChanged:(TKMAudioPlaybackState)state;
 
@@ -36,12 +36,10 @@ typedef enum TKMAudioPlaybackState {
 
 + (NSString *)cacheDirectoryPath;
 
-- (instancetype)initWithReachability:(Reachability *)reachability
-    NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithReachability:(Reachability *)reachability NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-- (void)playAudioForSubjectID:(int)subjectID
-                     delegate:(nullable id<TKMAudioDelegate>)delegate;
+- (void)playAudioForSubjectID:(int)subjectID delegate:(nullable id<TKMAudioDelegate>)delegate;
 - (void)stopPlayback;
 
 @end

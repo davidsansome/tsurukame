@@ -18,8 +18,7 @@
 
 @interface SubjectCatalogueViewController : UIPageViewController
 
-- (void)setupWithServices:(TKMServices *)services
-                    level:(int)level;
+- (void)setupWithServices:(TKMServices *)services level:(int)level;
 
 @property(nonatomic, readonly) bool showAnswers;
 
