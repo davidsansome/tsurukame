@@ -72,6 +72,7 @@ DEFINE_BOOL(meaningFirst, setMeaningFirst, YES);
 DEFINE_BOOL(showAnswerImmediately, setShowAnswerImmediately, YES);
 DEFINE_BOOL(enableCheats, setEnableCheats, YES);
 
+DEFINE_BOOL(playAudioAutomatically, setPlayAudioAutomatically, NO);
 DEFINE_OBJECT(NSSet<NSString *>, installedAudioPackages, setInstalledAudioPackages);
 
 @end
