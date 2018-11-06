@@ -33,6 +33,7 @@
 #import "proto/Wanikani+Convenience.h"
 
 #include <memory>
+#include <vector>
 
 static const NSTimeInterval kDefaultAnimationDuration = 0.25f;
 // Undocumented, but it's what the keyboard animations use.
@@ -55,12 +56,55 @@ enum TKMAnswerResult {
   TKMIgnoreAnswer,
 };
 
-struct AnimationContext {
+static UILabel *CopyLabel(UILabel *original) {
+  UILabel *copy = [[UILabel alloc] init];
+  copy.transform = original.transform;
+  copy.bounds = original.bounds;
+  copy.center = original.center;
+  copy.attributedText = original.attributedText;
+  copy.font = original.font;
+  copy.textColor = original.textColor;
+  copy.textAlignment = original.textAlignment;
+  [original.superview addSubview:copy];
+  return copy;
+}
+
+class AnimationContext {
+ public:
   AnimationContext(bool cheats, bool subjectDetailsViewShown)
       : cheats(cheats), subjectDetailsViewShown(subjectDetailsViewShown) {}
 
   bool cheats;
   bool subjectDetailsViewShown;
+
+  void AddFadingLabel(UILabel *original) {
+    UILabel *copy = CopyLabel(original);
+    original.alpha = 0.f;
+    fadingLabels.push_back(std::make_pair(original, copy));
+  }
+
+  void AnimateFadingLabels() {
+    for (const auto &pair : fadingLabels) {
+      UILabel *original = pair.first;
+      UILabel *copy = pair.second;
+
+      original.alpha = 1.f;
+      copy.center = original.center;
+      copy.bounds = original.bounds;
+      copy.transform = original.transform;
+      copy.alpha = 0.f;
+    }
+  }
+
+  ~AnimationContext() {
+    for (const auto &pair : fadingLabels) {
+      UILabel *copy = pair.second;
+      [copy removeFromSuperview];
+    }
+  }
+
+ private:
+  std::vector<std::pair<UILabel *, UILabel *>> fadingLabels;
 };
 
 @interface ReviewViewController () <UITextFieldDelegate, TKMSubjectDelegate>
@@ -446,8 +490,9 @@ struct AnimationContext {
   _submitButton.enabled = false;
 
   // Background gradients.
-  _questionBackground.layer.colors = TKMGradientForAssignment(_activeTask.assignment);
-  _promptBackground.layer.colors = promptGradient;
+  [_questionBackground animateColorsTo:TKMGradientForAssignment(_activeTask.assignment)
+                              duration:_animationDuration];
+  [_promptBackground animateColorsTo:promptGradient duration:_animationDuration];
 
   // Accessibility.
   _successRateLabel.accessibilityLabel =
@@ -457,34 +502,45 @@ struct AnimationContext {
   _questionLabel.accessibilityLabel =
       [NSString stringWithFormat:@"Japanese %@. Question", subjectTypePrompt];
 
-  auto animationBlock = ^{
-    _successRateLabel.text = successRateText;
-    _doneLabel.text = doneText;
-    _queueLabel.text = queueText;
-    UIViewAnimationOptions options = UIModalTransitionStyleCrossDissolve;
-    [UIView transitionWithView:self.view
-                      duration:_animationDuration
-                       options:options
-                    animations:^{
-                      _questionLabel.attributedText = _activeSubject.japaneseText;
-                      if (UserDefaults.randomFontsEnabled) {
-                        CGFloat size = [_questionLabel.font pointSize];
-                        [_questionLabel setFont:[UIFont fontWithName:_usedFontName size:size]];
-                      }
-                    }
-                    completion:nil];
-    _promptLabel.attributedText = prompt;
-    _answerField.text = nil;
-    _answerField.placeholder = taskTypePlaceholder;
+  _answerField.text = nil;
+  _answerField.placeholder = taskTypePlaceholder;
+
+  // We're changing the position of lots of labels at the same time as changing their contents.
+  // To animate the contents change we have to do a UIView transition, which actually creates a new
+  // view with the new contents, fades out the old one and fades in the new one, swapping them out
+  // at the right time.  Unfortunately if we try to animate the view's position at the same time
+  // only one of the copies gets animated, and the other one just fades out in place.
+  // To work around this we copy and fade each view manually, but animate both copies.
+  auto setupContextBlock = ^(AnimationContext *context) {
+    if (![_questionLabel.attributedText isEqual:_activeSubject.japaneseText]) {
+      context->AddFadingLabel(_questionLabel);
+      _questionLabel.attributedText = _activeSubject.japaneseText;
+    }
+    if (![_successRateLabel.text isEqual:successRateText]) {
+      context->AddFadingLabel(_successRateLabel);
+      _successRateLabel.text = successRateText;
+    }
+    if (![_doneLabel.text isEqual:doneText]) {
+      context->AddFadingLabel(_doneLabel);
+      _doneLabel.text = doneText;
+    }
+    if (![_queueLabel.text isEqual:queueText]) {
+      context->AddFadingLabel(_queueLabel);
+      _queueLabel.text = queueText;
+    }
+    if (![_promptLabel.attributedText.string isEqual:prompt.string]) {
+      context->AddFadingLabel(_promptLabel);
+      _promptLabel.attributedText = prompt;
+    }
   };
 
-  [self animateSubjectDetailsViewShown:false withAnimationBlock:animationBlock];
+  [self animateSubjectDetailsViewShown:false setupContextBlock:setupContextBlock];
 }
 
 #pragma mark - Animation
 
 - (void)animateSubjectDetailsViewShown:(bool)shown
-                    withAnimationBlock:(nullable void (^)(void))animationBlock {
+                     setupContextBlock:(void (^_Nullable)(AnimationContext *))setupContextBlock {
   bool cheats = [_delegate reviewViewController:self allowsCheatsFor:_activeTask];
 
   if (shown) {
@@ -504,12 +560,16 @@ struct AnimationContext {
   // We have to do the UIView animation this way (rather than using the block syntax) so we can set
   // UIViewAnimationCurve.  Create a context to pass to the stop selector.
   AnimationContext *context = new AnimationContext(cheats, shown);
+  if (setupContextBlock) {
+    setupContextBlock(context);
+  }
+
   [UIView beginAnimations:nil context:context];
   [UIView setAnimationDelegate:self];
   [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
   [UIView setAnimationDuration:_animationDuration];
   [UIView setAnimationCurve:_animationCurve];
-  [UIView setAnimationBeginsFromCurrentState:YES];
+  [UIView setAnimationBeginsFromCurrentState:NO];
 
   // Constraints.
   _answerFieldToBottomConstraint.active = !shown;
@@ -524,15 +584,13 @@ struct AnimationContext {
     [_answerField resignFirstResponder];
   }
 
-  if (animationBlock) {
-    animationBlock();
-  }
-
-  [self.view layoutIfNeeded];
-
   // Scale the text in the question label.
   const float scale = shown ? 0.7 : 1.0;
   _questionLabel.transform = CGAffineTransformMakeScale(scale, scale);
+
+  [self.view layoutIfNeeded];
+
+  context->AnimateFadingLabels();
 
   // Fade the controls.
   _subjectDetailsView.alpha = shown ? 1.0 : 0.0;
@@ -570,17 +628,6 @@ struct AnimationContext {
 }
 
 #pragma mark - Previous subject button
-
-- (UILabel *)copyQuestionLabel {
-  UILabel *previousSubjectLabel = [[UILabel alloc] initWithFrame:_questionLabel.frame];
-  previousSubjectLabel.transform = _questionLabel.transform;
-  previousSubjectLabel.attributedText = _questionLabel.attributedText;
-  previousSubjectLabel.font = _questionLabel.font;
-  previousSubjectLabel.textColor = _questionLabel.textColor;
-  previousSubjectLabel.textAlignment = _questionLabel.textAlignment;
-  [self.view addSubview:previousSubjectLabel];
-  return previousSubjectLabel;
-}
 
 - (void)animateLabelToPreviousSubjectButton:(UILabel *)label {
   CGPoint oldLabelCenter = label.center;
@@ -815,7 +862,7 @@ struct AnimationContext {
 
     UILabel *previousSubjectLabel = nil;
     if (isSubjectFinished && [_delegate reviewViewControllerShowsSubjectHistory:self]) {
-      previousSubjectLabel = [self copyQuestionLabel];
+      previousSubjectLabel = CopyLabel(_questionLabel);
       _previousSubject = _activeSubject;
     }
     [self randomTask];
@@ -846,7 +893,7 @@ struct AnimationContext {
 - (IBAction)revealAnswerButtonPressed:(id)sender {
   [_subjectDetailsView updateWithSubject:_activeSubject studyMaterials:_activeStudyMaterials];
 
-  [self animateSubjectDetailsViewShown:true withAnimationBlock:nil];
+  [self animateSubjectDetailsViewShown:true setupContextBlock:nil];
 }
 
 #pragma mark - Ignoring incorrect answers

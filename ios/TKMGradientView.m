@@ -20,4 +20,16 @@
   return [CAGradientLayer class];
 }
 
+- (void)animateColorsTo:(NSArray *)toColors duration:(NSTimeInterval)duration {
+  NSArray *oldColors = self.layer.colors;
+  self.layer.colors = toColors;
+  CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"colors"];
+  animation.duration = duration;
+  animation.fromValue = oldColors;
+  animation.toValue = toColors;
+  animation.fillMode = kCAFillModeForwards;
+  animation.removedOnCompletion = false;
+  [self.layer addAnimation:animation forKey:@"colors"];
+}
+
 @end

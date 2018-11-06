@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, readonly) CAGradientLayer *layer;
 
+- (void)animateColorsTo:(NSArray *)toColors duration:(NSTimeInterval)duration;
+
 @end
 
 NS_ASSUME_NONNULL_END
