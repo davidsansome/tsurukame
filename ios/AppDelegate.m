@@ -20,6 +20,7 @@
 #import "MainViewController.h"
 #import "ReviewViewController.h"
 #import "TKMAudio.h"
+#import "TKMServices+Internals.h"
 #import "UserDefaults.h"
 
 #import <UserNotifications/UserNotifications.h>
@@ -30,10 +31,7 @@
 @implementation AppDelegate {
   UIStoryboard *_storyboard;
   UINavigationController *_navigationController;
-  DataLoader *_dataLoader;
-  LocalCachingClient *_localCachingClient;
-  Reachability *_reachability;
-  TKMAudio *_audio;
+  TKMServices *_services;
 }
 
 - (BOOL)application:(UIApplication *)application
@@ -45,11 +43,7 @@
   
   _storyboard = self.window.rootViewController.storyboard;
   _navigationController = (UINavigationController *)self.window.rootViewController;
-  
-  _dataLoader = [[DataLoader alloc] initFromURL:[[NSBundle mainBundle] URLForResource:@"data"
-                                                                        withExtension:@"bin"]];
-  _reachability = [Reachability reachabilityForInternetConnection];
-  _audio = [[TKMAudio alloc] initWithReachability:_reachability];
+  _services = [[TKMServices alloc] init];
   
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
@@ -78,11 +72,11 @@
 - (void)loginComplete:(NSNotification *)notification {
   Client *client = [[Client alloc] initWithApiToken:UserDefaults.userApiToken
                                              cookie:UserDefaults.userCookie
-                                         dataLoader:_dataLoader];
+                                         dataLoader:_services.dataLoader];
   
-  _localCachingClient = [[LocalCachingClient alloc] initWithClient:client
-                                                        dataLoader:_dataLoader
-                                                      reachability:_reachability];
+  _services.localCachingClient = [[LocalCachingClient alloc] initWithClient:client
+                                                                 dataLoader:_services.dataLoader
+                                                               reachability:_services.reachability];
   
   // Ask for notification permissions.
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
@@ -91,16 +85,13 @@
   
   void (^pushMainViewController)(void) = ^() {
     MainViewController *vc = [_storyboard instantiateViewControllerWithIdentifier:@"main"];
-    vc.dataLoader = _dataLoader;
-    vc.reachability = _reachability;
-    vc.localCachingClient = _localCachingClient;
-    vc.audio = _audio;
+    [vc setupWithServices:_services];
     
     [_navigationController setViewControllers:@[vc] animated:(notification == nil) ? NO : YES];
   };
   // Do a sync before pushing the main view controller if this was a new login.
   if (notification) {
-    [_localCachingClient sync:pushMainViewController];
+    [_services.localCachingClient sync:pushMainViewController];
   } else {
     pushMainViewController();
   }
@@ -110,14 +101,14 @@
   UserDefaults.userCookie = nil;
   UserDefaults.userApiToken = nil;
   UserDefaults.userEmailAddress = nil;
-  [_localCachingClient clearAllData];
-  _localCachingClient = nil;
+  [_services.localCachingClient clearAllData];
+  _services.localCachingClient = nil;
   
   [self pushLoginViewController];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-  [_reachability startNotifier];
+  [_services.reachability startNotifier];
   
   if ([_navigationController.topViewController isKindOfClass:MainViewController.class]) {
     MainViewController *vc = (MainViewController *)_navigationController.topViewController;
@@ -126,27 +117,27 @@
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-  [_reachability stopNotifier];
+  [_services.reachability stopNotifier];
   [self updateAppBadgeCount];
 }
 
 - (void)application:(UIApplication *)application
       performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-  if (!_localCachingClient) {
+  if (!_services.localCachingClient) {
     completionHandler(UIBackgroundFetchResultNoData);
     return;
   }
   
   __weak AppDelegate *weakSelf = self;
-  [_localCachingClient sync:^{
+  [_services.localCachingClient sync:^{
     [weakSelf updateAppBadgeCount];
     completionHandler(UIBackgroundFetchResultNewData);
   }];
 }
 
 - (void)updateAppBadgeCount {
-  int reviewCount = _localCachingClient.availableReviewCount;
-  NSArray<NSNumber *> *upcomingReviews = _localCachingClient.upcomingReviews;
+  int reviewCount = _services.localCachingClient.availableReviewCount;
+  NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
 
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   void(^updateBlock)(void) = ^() {

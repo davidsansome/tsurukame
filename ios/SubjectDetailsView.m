@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "SubjectDetailsView.h"
+
+#import "DataLoader.h"
+#import "LocalCachingClient.h"
 #import "NSMutableAttributedString+Replacements.h"
 #import "Style.h"
-#import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMAudio.h"
+#import "TKMServices.h"
 #import "UIColor+HexString.h"
 #import "proto/Wanikani+Convenience.h"
 #import "Tables/TKMAttributedModelItem.h"
 #import "Tables/TKMMarkupModelItem.h"
 #import "Tables/TKMReadingModelItem.h"
+#import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -104,6 +109,10 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   NSDateFormatter *_availableDateFormatter;
   NSDateFormatter *_startedDateFormatter;
   
+  TKMServices *_services;
+  BOOL _showHints;
+  __weak id<TKMSubjectDelegate> _subjectDelegate;
+  
   TKMTableModel *_tableModel;
   
   __weak TKMSubjectChip *_lastSubjectChipTapped;
@@ -135,6 +144,14 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   return self;
 }
 
+- (void)setupWithServices:(TKMServices *)services
+                showHints:(BOOL)showHints
+          subjectDelegate:(id<TKMSubjectDelegate>)subjectDelegate {
+  _services = services;
+  _showHints = showHints;
+  _subjectDelegate = subjectDelegate;
+}
+
 - (void)addMeanings:(TKMSubject *)subject
      studyMaterials:(TKMStudyMaterials *)studyMaterials
             toModel:(TKMMutableTableModel *)model {
@@ -154,7 +171,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   TKMReadingModelItem *item = [[TKMReadingModelItem alloc] initWithText:text];
   if (subject.hasVocabulary &&
       subject.vocabulary.hasAudioFile) {
-    [item setAudio:_audio
+    [item setAudio:_services.audio
          subjectID:subject.id_p];
   }
   
@@ -167,7 +184,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
               toModel:(TKMMutableTableModel *)model {
   TKMSubjectCollectionModelItem *item = [[TKMSubjectCollectionModelItem alloc]
       initWithSubjects:subject.componentSubjectIdsArray
-            dataLoader:_dataLoader
+            dataLoader:_services.dataLoader
               delegate:self];
   item.font = kFont;
   
@@ -177,7 +194,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 
 - (void)addSimilarKanji:(TKMSubject *)subject
                 toModel:(TKMMutableTableModel *)model {
-  int currentLevel = [_localCachingClient getUsersCurrentLevel];
+  int currentLevel = [_services.localCachingClient getUsersCurrentLevel];
   bool addedSection = false;
   for (TKMVisuallySimilarKanji *visuallySimilarKanji in subject.kanji.visuallySimilarKanjiArray) {
     if (visuallySimilarKanji.score < kVisuallySimilarKanjiScoreThreshold) {
@@ -187,7 +204,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
       [model addSection:@"Visually Similar Kanji"];
       addedSection = true;
     }
-    TKMSubject *subject = [_dataLoader loadSubject:visuallySimilarKanji.id_p];
+    TKMSubject *subject = [_services.dataLoader loadSubject:visuallySimilarKanji.id_p];
     if (subject.level > currentLevel) {
       continue;
     }
@@ -205,7 +222,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   [model addSection:@"Used in"];
   for (int i = 0; i < subject.amalgamationSubjectIdsArray_Count; ++i) {
     int subjectID = [subject.amalgamationSubjectIdsArray valueAtIndex:i];
-    TKMSubject *subject = [_dataLoader loadSubject:subjectID];
+    TKMSubject *subject = [_services.dataLoader loadSubject:subjectID];
     [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject delegate:_subjectDelegate]];
   }
 }

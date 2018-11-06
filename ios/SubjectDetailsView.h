@@ -14,22 +14,18 @@
 
 #import <UIKit/UIKit.h>
 
-#import "DataLoader.h"
-#import "proto/Wanikani.pbobjc.h"
-#import "Tables/TKMSubjectModelItem.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-@class LocalCachingClient;
-@class TKMAudio;
+@class TKMServices;
+@class TKMSubject;
+@class TKMStudyMaterials;
+@protocol TKMSubjectDelegate;
 
 @interface TKMSubjectDetailsView : UITableView
 
-@property(nonatomic) DataLoader *dataLoader;
-@property(nonatomic) LocalCachingClient *localCachingClient;
-@property(nonatomic) TKMAudio *audio;
-@property(nonatomic, weak) id<TKMSubjectDelegate> subjectDelegate;
-@property(nonatomic) bool showHints;
+- (void)setupWithServices:(TKMServices *)services
+                showHints:(BOOL)showHints
+          subjectDelegate:(id<TKMSubjectDelegate>)subjectDelegate;
 
 - (void)updateWithSubject:(TKMSubject *)subject
            studyMaterials:(TKMStudyMaterials *)studyMaterials;

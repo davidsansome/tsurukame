@@ -14,16 +14,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class DataLoader;
-@class LocalCachingClient;
-@class TKMAudio;
+@class TKMServices;
 
 @interface SubjectCatalogueViewController : UIPageViewController
 
-@property(nonatomic) DataLoader *dataLoader;
-@property(nonatomic) LocalCachingClient *localCachingClient;
-@property(nonatomic) TKMAudio *audio;
-@property(nonatomic) int level;
+- (void)setupWithServices:(TKMServices *)services
+                    level:(int)level;
 
 @property(nonatomic, readonly) bool showAnswers;
 

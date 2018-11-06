@@ -152,7 +152,6 @@
 		63453E4F20EF8C0500F20404 /* HNKDiskFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 63453E4320EF8C0400F20404 /* HNKDiskFetcher.m */; };
 		63453E5020EF8C0500F20404 /* HNKNetworkFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 63453E4620EF8C0400F20404 /* HNKNetworkFetcher.m */; };
 		6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356E7801FDFEFAB009CE7C1 /* SubjectDetailsView.m */; };
-		6356E7831FDFF0EA009CE7C1 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6356E7821FDFF0E3009CE7C1 /* WebKit.framework */; };
 		635D0079218D94AA006CD711 /* TKMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D0078218D94AA006CD711 /* TKMGradientView.m */; };
 		635D007C218DA308006CD711 /* TKMAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D007B218DA308006CD711 /* TKMAudio.m */; };
 		637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12D7203847BE009E92DB /* LessonsViewController.m */; };
@@ -173,6 +172,7 @@
 		63BFA78E218EB6890058E885 /* TKMOfflineAudioViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA78D218EB6890058E885 /* TKMOfflineAudioViewController.mm */; };
 		63BFA791218EB7AB0058E885 /* TKMDownloadModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */; };
 		63BFA795218ED85B0058E885 /* NSFileManager+Tar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA793218ED85B0058E885 /* NSFileManager+Tar.m */; };
+		63BFA79821904D520058E885 /* TKMServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA79721904D520058E885 /* TKMServices.m */; };
 		63CAAACC1FC6E0BA00E09DA1 /* Type.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAB81FC6E0B700E09DA1 /* Type.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAACD1FC6E0BA00E09DA1 /* Any.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAB91FC6E0B700E09DA1 /* Any.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAACE1FC6E0BA00E09DA1 /* Empty.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAABA1FC6E0B800E09DA1 /* Empty.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -477,6 +477,9 @@
 		63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMDownloadModelItem.m; sourceTree = "<group>"; };
 		63BFA793218ED85B0058E885 /* NSFileManager+Tar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSFileManager+Tar.m"; path = "third_party/Light-Untar/NSFileManager+Tar.m"; sourceTree = SOURCE_ROOT; };
 		63BFA794218ED85B0058E885 /* NSFileManager+Tar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSFileManager+Tar.h"; path = "third_party/Light-Untar/NSFileManager+Tar.h"; sourceTree = SOURCE_ROOT; };
+		63BFA79621904D520058E885 /* TKMServices.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMServices.h; sourceTree = "<group>"; };
+		63BFA79721904D520058E885 /* TKMServices.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMServices.m; sourceTree = "<group>"; };
+		63BFA79921904DDE0058E885 /* TKMServices+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMServices+Internals.h"; sourceTree = "<group>"; };
 		63CAAA981FC6E08400E09DA1 /* GPBArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPBArray.h; path = third_party/protobuf/GPBArray.h; sourceTree = SOURCE_ROOT; };
 		63CAAA991FC6E08400E09DA1 /* GPBWireFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPBWireFormat.h; path = third_party/protobuf/GPBWireFormat.h; sourceTree = SOURCE_ROOT; };
 		63CAAA9B1FC6E08500E09DA1 /* GPBDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPBDescriptor.h; path = third_party/protobuf/GPBDescriptor.h; sourceTree = SOURCE_ROOT; };
@@ -621,7 +624,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6356E7831FDFF0EA009CE7C1 /* WebKit.framework in Frameworks */,
 				63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -723,6 +725,9 @@
 				BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */,
 				63BFA78C218EB6890058E885 /* TKMOfflineAudioViewController.h */,
 				63BFA78D218EB6890058E885 /* TKMOfflineAudioViewController.mm */,
+				63BFA79621904D520058E885 /* TKMServices.h */,
+				63BFA79721904D520058E885 /* TKMServices.m */,
+				63BFA79921904DDE0058E885 /* TKMServices+Internals.h */,
 				6392DBA520D14915003019EB /* TKMSubjectChip.h */,
 				6392DBA620D14915003019EB /* TKMSubjectChip.m */,
 				6392DBA820D14997003019EB /* TKMSubjectDelegate.h */,
@@ -1241,6 +1246,7 @@
 				6319CA982044203E00C31F87 /* CombinedChartData.swift in Sources */,
 				6319CB2F20442A5D00C31F87 /* IScatterChartDataSet.swift in Sources */,
 				63CAAAD31FC6E0BA00E09DA1 /* Timestamp.pbobjc.m in Sources */,
+				63BFA79821904D520058E885 /* TKMServices.m in Sources */,
 				6319CAC12044203E00C31F87 /* Highlight.swift in Sources */,
 				63EDA418207F335500382CE3 /* PieChartDataEntry.swift in Sources */,
 				6319CAB32044203E00C31F87 /* YAxis.swift in Sources */,

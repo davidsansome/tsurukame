@@ -14,25 +14,26 @@
 
 #import <UIKit/UIKit.h>
 
-#import "DataLoader.h"
-#import "LocalCachingClient.h"
-#import "SubjectDetailsView.h"
-#import "proto/Wanikani.pbobjc.h"
+NS_ASSUME_NONNULL_BEGIN;
+
+@class TKMServices;
+@class TKMSubject;
 
 @interface SubjectDetailsViewController : UIViewController
 
-@property(nonatomic) DataLoader *dataLoader;
-@property(nonatomic) LocalCachingClient *localCachingClient;
-@property(nonatomic) TKMSubject *subject;
-@property(nonatomic) TKMAudio *audio;
+- (void)setupWithServices:(TKMServices *)services
+                  subject:(TKMSubject *)subject
+                showHints:(BOOL)showHints
+           hideBackButton:(BOOL)hideBackButton
+                    index:(NSInteger)index;
 
-// If this is set to true before the view is loaded, the back button will be hidden.
-@property(nonatomic) bool hideBackButton;
+- (void)setupWithServices:(TKMServices *)services
+                  subject:(TKMSubject *)subject;
 
-// If this is set to true before the view is loaded, kanji hints will be displayed.
-@property(nonatomic) bool showHints;
-
-// The index of this subject in some other collection.  Unused, for convenience only.
-@property(nonatomic) NSInteger index;
+/* The index of this subject in some other collection.  Unused, for convenience only. */
+@property(nonatomic, readonly) NSInteger index;
 
 @end
+
+NS_ASSUME_NONNULL_END;
+

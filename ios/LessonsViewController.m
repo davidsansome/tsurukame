@@ -14,9 +14,13 @@
 
 #import "LessonsViewController.h"
 
+#import "DataLoader.h"
 #import "LessonsPageControl.h"
+#import "LocalCachingClient.h"
+#import "ReviewItem.h"
 #import "ReviewViewController.h"
 #import "SubjectDetailsViewController.h"
+#import "TKMServices.h"
 #import "proto/Wanikani+Convenience.h"
 #import "UIView+SafeAreaInsets.h"
 
@@ -26,10 +30,18 @@
 @end
 
 @implementation LessonsViewController {
+  TKMServices *_services;
+  NSArray<ReviewItem *> *_items;
+  
   UIPageViewController *_pageController;
   NSInteger _currentPageIndex;
   
   ReviewViewController *_reviewViewController;
+}
+
+- (void)setupWithServices:(id)services items:(NSArray<ReviewItem *> *)items {
+  _services = services;
+  _items = [items copy];
 }
 
 - (void)viewDidLoad {
@@ -43,7 +55,7 @@
   // Set the subjects on the page control.
   NSMutableArray<TKMSubject *> *subjects = [NSMutableArray array];
   for (ReviewItem *item in _items) {
-    TKMSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
+    TKMSubject *subject = [_services.dataLoader loadSubject:item.assignment.subjectId];
     [subjects addObject:subject];
   }
   _pageControl.subjects = subjects;
@@ -127,12 +139,10 @@
     if (_reviewViewController == nil) {
       _reviewViewController =
           [self.storyboard instantiateViewControllerWithIdentifier:@"reviewViewController"];
-      _reviewViewController.dataLoader = _dataLoader;
-      _reviewViewController.localCachingClient = _localCachingClient;
-      _reviewViewController.audio = _audio;
-      _reviewViewController.delegate = self;
-      _reviewViewController.hideBackButton = true;
-      _reviewViewController.items = _items;
+      [_reviewViewController setupWithServices:_services
+                                         items:_items
+                                hideBackButton:YES
+                                      delegate:self];
     }
     return _reviewViewController;
   } else if (index < 0 || index > _items.count) {
@@ -142,12 +152,11 @@
   ReviewItem *item = _items[index];
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
-  vc.dataLoader = _dataLoader;
-  vc.localCachingClient = _localCachingClient;
-  vc.showHints = true;
-  vc.hideBackButton = true;
-  vc.subject = [_dataLoader loadSubject:item.assignment.subjectId];
-  vc.index = index;
+  [vc setupWithServices:_services
+                subject:[_services.dataLoader loadSubject:item.assignment.subjectId]
+              showHints:YES
+         hideBackButton:YES
+                  index:index];
   return vc;
 }
 
@@ -185,7 +194,7 @@
 
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
           finishedReviewItem:(ReviewItem *)reviewItem {
-  [_localCachingClient sendProgress:@[reviewItem.answer]];
+  [_services.localCachingClient sendProgress:@[reviewItem.answer]];
 }
 
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {

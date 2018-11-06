@@ -14,14 +14,16 @@
 
 #import <UIKit/UIKit.h>
 
-#import "DataLoader.h"
-#import "LocalCachingClient.h"
-#import "ReviewItem.h"
+NS_ASSUME_NONNULL_BEGIN;
+
+@class ReviewItem;
+@class TKMServices;
 
 @interface ReviewSummaryViewController : UITableViewController
 
-@property (nonatomic) DataLoader *dataLoader;
-@property (nonatomic) LocalCachingClient *localCachingClient;
-@property (nonatomic) NSArray<ReviewItem *> *items;
+- (void)setupWithServices:(TKMServices *)services
+                    items:(NSArray<ReviewItem *> *)items;
 
 @end
+
+NS_ASSUME_NONNULL_END;

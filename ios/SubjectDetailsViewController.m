@@ -12,10 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "SubjectDetailsViewController.h"
+
+#import "DataLoader.h"
 #import "NavigationController.h"
+#import "LocalCachingClient.h"
 #import "Style.h"
 #import "SubjectDetailsView.h"
-#import "SubjectDetailsViewController.h"
+#import "TKMServices.h"
+#import "Tables/TKMSubjectModelItem.h"
+
 #import "proto/Wanikani+Convenience.h"
 
 #import <WebKit/WebKit.h>
@@ -29,7 +35,31 @@
 @end
 
 @implementation SubjectDetailsViewController {
+  TKMServices *_services;
+  BOOL _showHints;
+  BOOL _hideBackButton;
+  TKMSubject *_subject;
   CAGradientLayer *_gradientLayer;
+}
+
+- (void)setupWithServices:(TKMServices *)services
+                  subject:(TKMSubject *)subject
+                showHints:(BOOL)showHints
+           hideBackButton:(BOOL)hideBackButton
+                    index:(NSInteger)index {
+  _services = services;
+  _subject = subject;
+  _showHints = showHints;
+  _hideBackButton = hideBackButton;
+  _index = index;
+}
+
+- (void)setupWithServices:(TKMServices *)services subject:(TKMSubject *)subject {
+  [self setupWithServices:services
+                  subject:subject
+                showHints:NO
+           hideBackButton:NO
+                    index:0];
 }
 
 - (bool)canSwipeToGoBack {
@@ -38,12 +68,11 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  _subjectDetailsView.dataLoader = _dataLoader;
-  _subjectDetailsView.localCachingClient = _localCachingClient;
-  _subjectDetailsView.audio = _audio;
-  _subjectDetailsView.subjectDelegate = self;
-  _subjectDetailsView.showHints = _showHints;
-  TKMStudyMaterials *studyMaterials = [_localCachingClient getStudyMaterialForID:_subject.id_p];
+  [_subjectDetailsView setupWithServices:_services
+                               showHints:_showHints
+                         subjectDelegate:self];
+  
+  TKMStudyMaterials *studyMaterials = [_services.localCachingClient getStudyMaterialForID:_subject.id_p];
   [_subjectDetailsView updateWithSubject:_subject
                           studyMaterials:studyMaterials];
   
@@ -87,9 +116,8 @@
 - (void)didTapSubject:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
-  vc.dataLoader = _dataLoader;
-  vc.localCachingClient = _localCachingClient;
-  vc.subject = subject;
+  [vc setupWithServices:_services
+                subject:subject];
   [self.navigationController pushViewController:vc animated:YES];
 }
 

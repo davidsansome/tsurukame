@@ -14,18 +14,17 @@
 
 #import <UIKit/UIKit.h>
 
-@class DataLoader;
-@class LocalCachingClient;
-@class TKMAudio;
+@class TKMServices;
 
 @interface SubjectsByLevelViewController : UITableViewController
 
-@property(nonatomic) DataLoader *dataLoader;
-@property(nonatomic) LocalCachingClient *localCachingClient;
-@property(nonatomic) TKMAudio *audio;
-@property(nonatomic) int level;
+@property(nonatomic, readonly) int level;
+@property(nonatomic, readonly) bool showAnswers;
 
-@property(nonatomic) bool showAnswers;
+- (void)setupWithServices:(TKMServices *)services
+                    level:(int)level
+              showAnswers:(bool)showAnswers;
+
 - (void)setShowAnswers:(bool)showAnswers animated:(bool)animated;
 
 @end

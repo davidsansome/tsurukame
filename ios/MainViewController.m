@@ -16,8 +16,10 @@
 
 #import "CurrentLevelChartController.h"
 #import "LessonsViewController.h"
+#import "LocalCachingClient.h"
 #import "NSDate+TimeAgo.h"
 #import "NSString+MD5.h"
+#import "ReviewItem.h"
 #import "ReviewViewController.h"
 #import "SearchResultViewController.h"
 #import "Style.h"
@@ -25,7 +27,7 @@
 #import "SubjectDetailsViewController.h"
 #import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
-#import "TKMOpenURL.h"
+#import "TKMServices.h"
 #import "proto/Wanikani+Convenience.h"
 #import "third_party/Haneke/Haneke.h"
 
@@ -89,6 +91,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 @end
 
 @implementation MainViewController {
+  TKMServices *_services;
   UpcomingReviewsChartController *_upcomingReviewsChartController;
   CurrentLevelChartController *_currentLevelRadicalsChartController;
   CurrentLevelChartController *_currentLevelKanjiChartController;
@@ -96,6 +99,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   UISearchController *_searchController;
   __weak SearchResultViewController *_searchResultsViewController;
   __weak CAGradientLayer *_userGradientLayer;
+}
+
+- (void)setupWithServices:(TKMServices *)services {
+  _services = services;
 }
 
 - (void)viewDidLoad {
@@ -127,8 +134,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   // Create the search results view controller.
   SearchResultViewController *searchResultsViewController =
       [self.storyboard instantiateViewControllerWithIdentifier:@"searchResults"];
-  searchResultsViewController.dataLoader = _dataLoader;
-  searchResultsViewController.delegate = self;
+  [searchResultsViewController setupWithServices:_services
+                                        delegate:self];
   _searchResultsViewController = searchResultsViewController;
   
   // Create the search controller.
@@ -166,29 +173,29 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   _currentLevelRadicalsChartController =
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelRadicalsPieChartView
                                                  subjectType:TKMSubject_Type_Radical
-                                                  dataLoader:_dataLoader];
+                                                  dataLoader:_services.dataLoader];
   _currentLevelKanjiChartController =
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelKanjiPieChartView
                                                  subjectType:TKMSubject_Type_Kanji
-                                                  dataLoader:_dataLoader];
+                                                  dataLoader:_services.dataLoader];
   _currentLevelVocabularyChartController =
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelVocabularyPieChartView
                                                  subjectType:TKMSubject_Type_Vocabulary
-                                                  dataLoader:_dataLoader];
+                                                  dataLoader:_services.dataLoader];
   
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
          selector:@selector(availableItemsChanged)
              name:kLocalCachingClientAvailableItemsChangedNotification
-           object:_localCachingClient];
+           object:_services.localCachingClient];
   [nc addObserver:self
          selector:@selector(pendingItemsChanged)
              name:kLocalCachingClientPendingItemsChangedNotification
-           object:_localCachingClient];
+           object:_services.localCachingClient];
   [nc addObserver:self
          selector:@selector(userInfoChanged)
              name:kLocalCachingClientUserInfoChangedNotification
-           object:_localCachingClient];
+           object:_services.localCachingClient];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -223,7 +230,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   [self updateUserInfo];
   [self updatePendingItems];
   [self updateAvailableItems];
-  [_localCachingClient sync:nil];
+  [_services.localCachingClient sync:nil];
 }
 
 - (void)pendingItemsChanged {
@@ -233,8 +240,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)updatePendingItems {
-  int pendingProgress = _localCachingClient.pendingProgress;
-  int pendingStudyMaterials = _localCachingClient.pendingStudyMaterials;
+  int pendingProgress = _services.localCachingClient.pendingProgress;
+  int pendingStudyMaterials = _services.localCachingClient.pendingStudyMaterials;
   if (pendingProgress == 0 && pendingStudyMaterials == 0) {
     _queuedItemsLabel.text = @"You're up to date!";
     _queuedItemsSubtitleLabel.text = nil;
@@ -260,10 +267,11 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)updateAvailableItems {
-  int lessons = _localCachingClient.availableLessonCount;
-  int reviews = _localCachingClient.availableReviewCount;
-  NSArray<NSNumber *> *upcomingReviews = _localCachingClient.upcomingReviews;
-  NSArray<TKMAssignment *> *maxLevelAssignments = [_localCachingClient getAssignmentsAtUsersCurrentLevel];
+  int lessons = _services.localCachingClient.availableLessonCount;
+  int reviews = _services.localCachingClient.availableReviewCount;
+  NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
+  NSArray<TKMAssignment *> *maxLevelAssignments =
+      [_services.localCachingClient getAssignmentsAtUsersCurrentLevel];
 
   SetTableViewCellCount(self.lessonsCell, lessons);
   SetTableViewCellCount(self.reviewsCell, reviews);
@@ -278,7 +286,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)updateUserInfo {
-  TKMUser *user = _localCachingClient.getUserInfo;
+  TKMUser *user = _services.localCachingClient.getUserInfo;
   
   NSString *email = [UserDefaults userEmailAddress];
   if (email.length) {
@@ -294,39 +302,33 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)didPullToRefresh {
   [self.refreshControl endRefreshing];
-  [_localCachingClient sync:nil];
+  [_services.localCachingClient sync:nil];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
   if ([segue.identifier isEqualToString:@"startReview"]) {
-    ReviewViewController *vc = (ReviewViewController *)segue.destinationViewController;
-    vc.dataLoader = _dataLoader;
-    vc.localCachingClient = _localCachingClient;
-    vc.audio = _audio;
-    
-    NSArray<TKMAssignment *> *assignments = [_localCachingClient getAllAssignments];
+    NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments];
-    vc.items = items;
-  } else if ([segue.identifier isEqualToString:@"startLessons"]) {
-    LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;
-    vc.dataLoader = _dataLoader;
-    vc.localCachingClient = _localCachingClient;
-    vc.audio = _audio;
     
-    NSArray<TKMAssignment *> *assignments = [_localCachingClient getAllAssignments];
+    ReviewViewController *vc = (ReviewViewController *)segue.destinationViewController;
+    [vc setupWithServices:_services
+                    items:items
+           hideBackButton:NO
+                 delegate:nil];
+  } else if ([segue.identifier isEqualToString:@"startLessons"]) {
+    NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments
-                                                              dataLoader:_dataLoader];
+                                                              dataLoader:_services.dataLoader];
     items = [items sortedArrayUsingSelector:@selector(compareForLessons:)];
     if (items.count > kItemsPerLesson) {
       items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
     }
-    vc.items = items;
+    
+    LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;
+    [vc setupWithServices:_services items:items];
   } else if ([segue.identifier isEqualToString:@"subjectCatalogue"]) {
     SubjectCatalogueViewController *vc = (SubjectCatalogueViewController *)segue.destinationViewController;
-    vc.dataLoader = _dataLoader;
-    vc.localCachingClient = _localCachingClient;
-    vc.audio = _audio;
-    vc.level = _localCachingClient.getUserInfo.level;
+    [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
   }
 }
 
@@ -335,12 +337,13 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)searchResultSelected:(TKMSubject *)subject {
-  SubjectDetailsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
-  vc.dataLoader = _dataLoader;
-  vc.localCachingClient = _localCachingClient;
-  vc.audio = _audio;
-  vc.subject = subject;
-  vc.showHints = YES;
+  SubjectDetailsViewController *vc =
+      [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
+  [vc setupWithServices:_services
+                subject:subject
+              showHints:YES
+         hideBackButton:NO
+                  index:0];
   [_searchController dismissViewControllerAnimated:YES completion:^{
     [self.navigationController pushViewController:vc animated:YES];
   }];

@@ -15,6 +15,7 @@
 #import "DataLoader.h"
 #import "SubjectCatalogueViewController.h"
 #import "SubjectsByLevelViewController.h"
+#import "TKMServices.h"
 
 @interface SubjectCatalogueViewController () <UIPageViewControllerDataSource,
                                               UIPageViewControllerDelegate>
@@ -22,7 +23,14 @@
 @end
 
 @implementation SubjectCatalogueViewController {
+  TKMServices *_services;
+  int _level;
   UISwitch *_answerSwitch;
+}
+
+- (void)setupWithServices:(TKMServices *)services level:(int)level {
+  _services = services;
+  _level = level;
 }
 
 - (void)viewDidLoad {
@@ -62,15 +70,12 @@
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)createViewControllerForLevel:(int)level {
-  if (level < 1 || level > _dataLoader.maximumLevel) {
+  if (level < 1 || level > _services.dataLoader.maximumLevel) {
     return nil;
   }
   SubjectsByLevelViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectsByLevel"];
-  vc.dataLoader = _dataLoader;
-  vc.localCachingClient = _localCachingClient;
-  vc.audio = _audio;
-  vc.level = level;
+  [vc setupWithServices:_services level:level showAnswers:self.showAnswers];
   [vc setShowAnswers:self.showAnswers animated:false];
   return vc;
 }
@@ -103,7 +108,7 @@
 willTransitionToViewControllers:(NSArray<UIViewController *> *)pendingViewControllers {
   for (UIViewController *viewController in pendingViewControllers) {
     SubjectsByLevelViewController *vc = (SubjectsByLevelViewController *)viewController;
-    vc.showAnswers = self.showAnswers;
+    [vc setShowAnswers:self.showAnswers animated:NO];
   }
 }
 

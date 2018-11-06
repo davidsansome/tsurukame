@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "DataLoader.h"
+#import "LocalCachingClient.h"
+#import "ReviewItem.h"
 #import "ReviewSummaryViewController.h"
 #import "SubjectDetailsViewController.h"
+#import "TKMServices.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
@@ -23,7 +27,14 @@
 @end
 
 @implementation ReviewSummaryViewController {
+  TKMServices *_services;
+  NSArray<ReviewItem *> *_items;
   TKMTableModel *_model;
+}
+
+- (void)setupWithServices:(TKMServices *)services items:(NSArray<ReviewItem *> *)items {
+  _services = services;
+  _items = items;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -36,7 +47,7 @@
 }
 
 - (void)setItems:(NSArray<ReviewItem *> *)items {
-  int currentLevel = [_localCachingClient getUserInfo].level;
+  int currentLevel = [_services.localCachingClient getUserInfo].level;
   
   NSMutableDictionary<NSNumber *, NSMutableArray<ReviewItem *> *> *incorrectItemsByLevel =
       [NSMutableDictionary dictionary];
@@ -77,7 +88,7 @@
     }
     
     for (ReviewItem *item in incorrectItemsByLevel[level]) {
-      TKMSubject *subject = [_dataLoader loadSubject:item.assignment.subjectId];
+      TKMSubject *subject = [_services.dataLoader loadSubject:item.assignment.subjectId];
       [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject
                                                          delegate:self
                                                      readingWrong:item.answer.readingWrong
@@ -92,9 +103,7 @@
 - (void)didTapSubject:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
-  vc.dataLoader = _dataLoader;
-  vc.localCachingClient = _localCachingClient;
-  vc.subject = subject;
+  [vc setupWithServices:_services subject:subject];
   [self.navigationController pushViewController:vc animated:YES];
 }
 
