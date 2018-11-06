@@ -171,7 +171,7 @@ struct AnimationContext {
            hideBackButton:(BOOL)hideBackButton
                  delegate:(nullable id<ReviewViewControllerDelegate>)delegate {
   if (!delegate) {
-    _defaultDelegate = [[DefaultReviewViewControllerDelegate alloc] initWithServices:_services];
+    _defaultDelegate = [[DefaultReviewViewControllerDelegate alloc] initWithServices:services];
     delegate = _defaultDelegate;
   }
 
