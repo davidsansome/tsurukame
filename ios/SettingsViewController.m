@@ -113,7 +113,7 @@
   [model addItem:[[TKMSwitchModelItem alloc]
                      initWithStyle:UITableViewCellStyleSubtitle
                              title:@"Play audio automatically"
-                          subtitle:@"When you get an answer correct"
+                          subtitle:@"When you answer correctly"
                                 on:UserDefaults.playAudioAutomatically
                             target:self
                             action:@selector(playAudioAutomaticallySwitchChanged:)]];
