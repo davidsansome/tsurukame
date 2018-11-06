@@ -37,62 +37,64 @@ static const CGFloat kMinimumHeight = 44.f;
   UITextView *_textView;
 }
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style
+              reuseIdentifier:(NSString *)reuseIdentifier {
   self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
   if (self) {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.userInteractionEnabled = YES;
-    
+
     _textView = [[UITextView alloc] initWithFrame:self.bounds];
     _textView.editable = NO;
     _textView.scrollEnabled = NO;
     _textView.textContainerInset = UIEdgeInsetsZero;
     _textView.textContainer.lineFragmentPadding = 0.f;
-    
+
     [self.contentView addSubview:_textView];
   }
   return self;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-  CGRect availableRect = UIEdgeInsetsInsetRect(CGRectMake(0, 0, size.width, size.height), kEdgeInsets);
+  CGRect availableRect =
+      UIEdgeInsetsInsetRect(CGRectMake(0, 0, size.width, size.height), kEdgeInsets);
   CGSize textViewSize = [_textView sizeThatFits:availableRect.size];
-  
-  availableRect.size.height = MAX(kMinimumHeight,
-                                  textViewSize.height + kEdgeInsets.top + kEdgeInsets.bottom);
+
+  availableRect.size.height =
+      MAX(kMinimumHeight, textViewSize.height + kEdgeInsets.top + kEdgeInsets.bottom);
   return availableRect.size;
 }
 
 - (void)layoutSubviews {
   [super layoutSubviews];
-  
+
   CGRect availableRect = UIEdgeInsetsInsetRect(self.bounds, kEdgeInsets);
-  
+
   if (_rightButton) {
     CGSize buttonSize = [_rightButton intrinsicContentSize];
-    _rightButton.frame = CGRectMake(
-        CGRectGetMaxX(availableRect) - buttonSize.width - kEdgeInsets.right,
-        availableRect.origin.y - kEdgeInsets.top,
-        buttonSize.width + kEdgeInsets.right * 2,
-        availableRect.size.height + kEdgeInsets.top + kEdgeInsets.bottom);
-    
+    _rightButton.frame =
+        CGRectMake(CGRectGetMaxX(availableRect) - buttonSize.width - kEdgeInsets.right,
+                   availableRect.origin.y - kEdgeInsets.top,
+                   buttonSize.width + kEdgeInsets.right * 2,
+                   availableRect.size.height + kEdgeInsets.top + kEdgeInsets.bottom);
+
     availableRect.size.width -= buttonSize.width + kEdgeInsets.right;
   }
-  
+
   CGSize textViewSize = [_textView sizeThatFits:availableRect.size];
-  
+
   // Center the text view vertically.
   if (textViewSize.height < availableRect.size.height) {
     availableRect.origin.y += floor((availableRect.size.height - textViewSize.height) / 2.f);
     availableRect.size = textViewSize;
   }
-  
+
   _textView.frame = availableRect;
 }
 
 - (void)updateWithItem:(TKMAttributedModelItem *)item {
   [super updateWithItem:item];
-  
+
   _textView.attributedText = item.text;
 }
 

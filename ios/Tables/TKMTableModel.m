@@ -18,7 +18,7 @@
 
 @property(nonatomic) NSString *headerTitle;
 @property(nonatomic) NSString *footerTitle;
-@property(nonatomic) NSMutableArray<id<TKMModelItem> > *items;
+@property(nonatomic) NSMutableArray<id<TKMModelItem>> *items;
 @property(nonatomic) NSMutableIndexSet *hiddenItems;
 
 @end
@@ -57,7 +57,7 @@
   if (self) {
     _tableView = tableView;
     _sections = [NSMutableArray array];
-    
+
     _tableView.dataSource = self;
     _tableView.delegate = self;
   }
@@ -78,20 +78,20 @@
   if (hidden == [self isIndexPathHidden:index]) {
     return;
   }
-  
+
   NSMutableIndexSet *indexSet = _sections[index.section].hiddenItems;
   if (hidden) {
     [indexSet addIndex:index.row];
   } else {
     [indexSet removeIndex:index.row];
   }
-  
+
   if (_isInitialised) {
     if (hidden) {
-      [_tableView deleteRowsAtIndexPaths:@[index]
+      [_tableView deleteRowsAtIndexPaths:@[ index ]
                         withRowAnimation:UITableViewRowAnimationAutomatic];
     } else {
-      [_tableView insertRowsAtIndexPaths:@[index]
+      [_tableView insertRowsAtIndexPaths:@[ index ]
                         withRowAnimation:UITableViewRowAnimationAutomatic];
     }
   }
@@ -107,12 +107,12 @@
                  cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
   TKMTableModelSection *section = _sections[indexPath.section];
   __block NSInteger row = indexPath.row;
-  [section.hiddenItems enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+  [section.hiddenItems enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *_Nonnull stop) {
     if (idx <= row) {
-      row ++;
+      row++;
     }
   }];
-  
+
   return [self cellForItem:section.items[row]];
 }
 
@@ -123,7 +123,7 @@
   } else {
     reuseIdentifier = @(object_getClassName(item.class));
   }
-  
+
   TKMModelCell *cell = [_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
   if (!cell) {
     if ([item respondsToSelector:@selector(createCell)]) {
@@ -145,7 +145,7 @@
                reuseIdentifier);
     }
   }
-  
+
   // Disable animations when reusing a cell.
   [CATransaction begin];
   [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
@@ -167,8 +167,7 @@
   return _sections.count;
 }
 
-- (NSInteger)tableView:(nonnull UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   TKMTableModelSection *s = _sections[section];
   return s.items.count - s.hiddenItems.count;
 }
@@ -204,7 +203,7 @@
   TKMTableModelSection *section = [[TKMTableModelSection alloc] init];
   section.headerTitle = title;
   section.footerTitle = footer;
-  
+
   int index = (int)self.sections.count;
   [self.sections addObject:section];
   return index;
@@ -213,7 +212,7 @@
 - (NSIndexPath *)addItem:(id<TKMModelItem>)item toSection:(int)sectionIndex hidden:(bool)hidden {
   TKMTableModelSection *section = self.sections[sectionIndex];
   [section.items addObject:item];
-  
+
   NSIndexPath *indexPath = [NSIndexPath indexPathForRow:section.items.count - 1
                                               inSection:sectionIndex];
   if (hidden) {

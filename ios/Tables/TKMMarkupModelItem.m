@@ -53,18 +53,21 @@ static NSAttributedString *AttributedStringForFormattedText(TKMFormattedText *fo
         break;
     }
   }
-  
+
   return [[NSAttributedString alloc] initWithString:formattedText.text attributes:attributes];
 }
 
 NSMutableAttributedString *TKMRenderFormattedText(NSArray<TKMFormattedText *> *formattedText) {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    kRadicalBackgroundColor = [UIColor colorWithRed:0.839 green:0.945 blue:1 alpha:1]; // #d6f1ff
-    kKanjiBackgroundColor = [UIColor colorWithRed:1 green:0.839 blue:0.945 alpha:1]; // #ffd6f1
-    kVocabularyBackgroundColor = [UIColor colorWithRed:0.945 green:0.839 blue:1 alpha:1]; // #f1d6ff
+    kRadicalBackgroundColor = [UIColor colorWithRed:0.839 green:0.945 blue:1 alpha:1];  // #d6f1ff
+    kKanjiBackgroundColor = [UIColor colorWithRed:1 green:0.839 blue:0.945 alpha:1];    // #ffd6f1
+    kVocabularyBackgroundColor = [UIColor colorWithRed:0.945
+                                                 green:0.839
+                                                  blue:1
+                                                 alpha:1];  // #f1d6ff
   });
-  
+
   NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
   for (TKMFormattedText *part in formattedText) {
     [text appendAttributedString:AttributedStringForFormattedText(part)];

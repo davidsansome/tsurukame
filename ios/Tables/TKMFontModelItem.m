@@ -16,8 +16,8 @@
 
 @interface TKMFontModelView ()
 
-@property (weak, nonatomic) IBOutlet UILabel *fontNameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *fontPreviewLabel;
+@property(weak, nonatomic) IBOutlet UILabel *fontNameLabel;
+@property(weak, nonatomic) IBOutlet UILabel *fontPreviewLabel;
 
 @end
 
@@ -25,7 +25,7 @@
 
 - (void)updateWithItem:(TKMFontModelItem *)item {
   [super updateWithItem:item];
-  
+
   _fontNameLabel.text = item.font.fontName;
   NSUInteger oldSize = _fontPreviewLabel.font.pointSize;
   _fontPreviewLabel.font = [UIFont fontWithName:item.font.fontName size:oldSize];
@@ -37,7 +37,7 @@
   if (!selected && [TKMFontLoader getEnabledFonts].count == 1) {
     return;
   }
-  [(TKMFontModelItem*)self.item setSelected:selected];
+  [(TKMFontModelItem *)self.item setSelected:selected];
   self.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 }
 

@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,9 +18,9 @@
 #import "SubjectDetailsViewController.h"
 #import "TKMKanaInput.h"
 #import "TKMServices.h"
-#import "proto/Wanikani.pbobjc.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "proto/Wanikani.pbobjc.h"
 
 static const int kMaxResults = 50;
 
@@ -62,7 +62,7 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
 @implementation SearchResultViewController {
   TKMServices *_services;
   __weak id<SearchResultViewControllerDelegate> _delegate;
-  
+
   NSArray<TKMSubject *> *_allSubjects;
   TKMTableModel *_model;
   dispatch_queue_t _queue;
@@ -80,7 +80,7 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
       [self ensureAllSubjectsLoaded];
     }
   });
-  
+
   [super viewDidLoad];
 }
 
@@ -106,7 +106,7 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
   NSString *query = [searchController.searchBar.text lowercaseString];
   dispatch_async(_queue, ^{
     NSString *kanaQuery = TKMConvertKanaText(query);
-    
+
     NSMutableArray<TKMSubject *> *results = [NSMutableArray array];
     @synchronized(self) {
       [self ensureAllSubjectsLoaded];
@@ -122,13 +122,21 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
     [results sortUsingComparator:^NSComparisonResult(TKMSubject *a, TKMSubject *b) {
       bool aMatchesExactly = SubjectMatchesQueryExactly(a, query, kanaQuery);
       bool bMatchesExactly = SubjectMatchesQueryExactly(b, query, kanaQuery);
-      if (aMatchesExactly && !bMatchesExactly) { return NSOrderedAscending; }
-      if (bMatchesExactly && !aMatchesExactly) { return NSOrderedDescending; }
-      if (a.level < b.level) { return NSOrderedAscending; }
-      if (a.level > b.level) { return NSOrderedDescending; }
+      if (aMatchesExactly && !bMatchesExactly) {
+        return NSOrderedAscending;
+      }
+      if (bMatchesExactly && !aMatchesExactly) {
+        return NSOrderedDescending;
+      }
+      if (a.level < b.level) {
+        return NSOrderedAscending;
+      }
+      if (a.level > b.level) {
+        return NSOrderedDescending;
+      }
       return NSOrderedSame;
     }];
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
       TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
       [model addSection];

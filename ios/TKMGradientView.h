@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TKMGradientView : UIView
 
-@property (nonatomic, readonly) CAGradientLayer *layer;
+@property(nonatomic, readonly) CAGradientLayer *layer;
 
 @end
 

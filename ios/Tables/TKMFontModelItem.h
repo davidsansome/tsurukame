@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "TKMModelItem.h"
 #import "../TKMFontLoader.h"
-
+#import "TKMModelItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,6 +31,5 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) TKMFont *font;
 
 @end
-
 
 NS_ASSUME_NONNULL_END

@@ -16,7 +16,6 @@
 
 #import "DataLoader.h"
 #import "LocalCachingClient.h"
-#import "proto/Wanikani+Convenience.h"
 #import "Style.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMServices.h"
@@ -24,6 +23,7 @@
 #import "Tables/TKMModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "proto/Wanikani+Convenience.h"
 
 @interface SubjectsByLevelViewController () <TKMSubjectDelegate>
 @end
@@ -43,12 +43,12 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.navigationItem.title = [NSString stringWithFormat:@"Level %d", _level];
-  
+
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
   [model addSection:@"Radicals"];
   [model addSection:@"Kanji"];
   [model addSection:@"Vocabulary"];
-  
+
   for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtLevel:_level]) {
     TKMSubject *subject = [_services.dataLoader loadSubject:assignment.subjectId];
     int section = subject.subjectType - 1;
@@ -62,7 +62,7 @@
     }
     [model addItem:item toSection:section];
   }
-  
+
   NSComparator comparator = ^NSComparisonResult(TKMSubjectModelItem *a, TKMSubjectModelItem *b) {
     if (a.assignment.isReviewStage && !b.assignment.isReviewStage) return NSOrderedAscending;
     if (!a.assignment.isReviewStage && b.assignment.isReviewStage) return NSOrderedDescending;
@@ -75,14 +75,13 @@
   [model sortSection:0 usingComparator:comparator];
   [model sortSection:1 usingComparator:comparator];
   [model sortSection:2 usingComparator:comparator];
-  
+
   for (int section = 0; section < model.sectionCount; ++section) {
     NSArray *items = [model itemsInSection:section];
     TKMAssignment *lastAssignment = nil;
     for (int index = 0; index < items.count; ++index) {
-      TKMAssignment *assignment = ((TKMSubjectModelItem *) items[index]).assignment;
-      if (lastAssignment == nil ||
-          lastAssignment.srsStage != assignment.srsStage ||
+      TKMAssignment *assignment = ((TKMSubjectModelItem *)items[index]).assignment;
+      if (lastAssignment == nil || lastAssignment.srsStage != assignment.srsStage ||
           lastAssignment.isReviewStage != assignment.isReviewStage ||
           lastAssignment.isLessonStage != assignment.isLessonStage) {
         NSString *label;
@@ -93,13 +92,15 @@
         } else {
           label = @"Locked";
         }
-        [model insertItem:[[TKMListSeparatorItem alloc] initWithLabel:label] atIndex:index inSection:section];
-        index ++;
+        [model insertItem:[[TKMListSeparatorItem alloc] initWithLabel:label]
+                  atIndex:index
+                inSection:section];
+        index++;
       }
       lastAssignment = assignment;
     }
   }
-  
+
   _model = model;
 }
 
@@ -122,7 +123,7 @@
       }
     }
   }
-  
+
   for (UITableViewCell *cell in self.tableView.visibleCells) {
     if ([cell isKindOfClass:TKMSubjectModelView.class]) {
       TKMSubjectModelView *subjectCell = (TKMSubjectModelView *)cell;

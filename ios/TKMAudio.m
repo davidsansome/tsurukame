@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "Reachability.h"
 #import "TKMAudio.h"
+#import "Reachability.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
@@ -38,10 +38,10 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
   if (self) {
     _reachability = reachability;
     _currentState = TKMAudioFinished;
-    
+
     AVAudioSession *session = [AVAudioSession sharedInstance];
     [session setCategory:AVAudioSessionCategoryPlayback error:nil];
-    
+
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self
            selector:@selector(itemFinishedPlaying:)
@@ -58,35 +58,33 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
   }
 }
 
-- (void)playAudioForSubjectID:(int)subjectID
-                     delegate:(nullable id<TKMAudioDelegate>)delegate {
+- (void)playAudioForSubjectID:(int)subjectID delegate:(nullable id<TKMAudioDelegate>)delegate {
   // Is the audio available offline?
-  NSString *filename = [NSString stringWithFormat:kOfflineFilePattern,
-                        [TKMAudio cacheDirectoryPath], subjectID];
+  NSString *filename =
+      [NSString stringWithFormat:kOfflineFilePattern, [TKMAudio cacheDirectoryPath], subjectID];
   if ([[NSFileManager defaultManager] fileExistsAtPath:filename]) {
     [self playURL:[NSURL fileURLWithPath:filename] delegate:delegate];
     return;
   }
-  
+
   if (!_reachability.isReachable) {
     [self showOfflineDialog];
     return;
   }
-  
+
   NSString *urlString = [NSString stringWithFormat:kURLPattern, subjectID];
   [self playURL:[NSURL URLWithString:urlString] delegate:delegate];
 }
 
-- (void)playURL:(NSURL *)url
-       delegate:(nullable id<TKMAudioDelegate>)delegate {
+- (void)playURL:(NSURL *)url delegate:(nullable id<TKMAudioDelegate>)delegate {
   [self setCurrentState:TKMAudioFinished];
   _delegate = delegate;
-  
+
   if (!_player || _player.status == AVPlayerStatusFailed) {
     _player = [[AVPlayer alloc] init];
     [_player addObserver:self forKeyPath:@"currentItem.status" options:0 context:nil];
   }
-  
+
   AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
   [_player replaceCurrentItemWithPlayerItem:item];
   [_player play];
@@ -99,7 +97,7 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
-                        change:(NSDictionary<NSKeyValueChangeKey,id> *)change
+                        change:(NSDictionary<NSKeyValueChangeKey, id> *)change
                        context:(void *)context {
   if ([keyPath isEqual:@"currentItem.status"]) {
     switch (_player.currentItem.status) {
@@ -107,11 +105,11 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
         [self showErrorDialog:_player.currentItem.error];
         [self setCurrentState:TKMAudioFinished];
         break;
-        
+
       case AVPlayerItemStatusUnknown:
         [self setCurrentState:TKMAudioLoading];
         break;
-        
+
       case AVPlayerItemStatusReadyToPlay:
         [self setCurrentState:TKMAudioPlaying];
         break;
@@ -121,18 +119,19 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
 
 - (void)showErrorDialog:(NSError *)error {
   AVURLAsset *asset = (AVURLAsset *)_player.currentItem.asset;
-  NSString *message = [NSString stringWithFormat:@"%@\nURL: %@",
-                       error.localizedFailureReason, asset.URL];
+  NSString *message =
+      [NSString stringWithFormat:@"%@\nURL: %@", error.localizedFailureReason, asset.URL];
   UIAlertController *alert =
       [UIAlertController alertControllerWithTitle:error.localizedDescription
                                           message:message
                                    preferredStyle:UIAlertControllerStyleAlert];
-  
+
   UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
                                                    style:UIAlertActionStyleDefault
-                                                 handler:^(UIAlertAction * action) {}];
+                                                 handler:^(UIAlertAction *action){
+                                                 }];
   [alert addAction:action];
-  
+
   UIViewController *vc = UIApplication.sharedApplication.keyWindow.rootViewController;
   [vc presentViewController:alert animated:YES completion:nil];
 }
@@ -140,17 +139,18 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
 - (void)showOfflineDialog {
   NSString *title = @"Audio not available offline";
   NSString *message = @"Download audio in Settings when you're back online";
-  
+
   UIAlertController *alert =
       [UIAlertController alertControllerWithTitle:title
                                           message:message
                                    preferredStyle:UIAlertControllerStyleAlert];
-  
+
   UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
                                                    style:UIAlertActionStyleDefault
-                                                 handler:^(UIAlertAction * action) {}];
+                                                 handler:^(UIAlertAction *action){
+                                                 }];
   [alert addAction:action];
-  
+
   UIViewController *vc = UIApplication.sharedApplication.keyWindow.rootViewController;
   [vc presentViewController:alert animated:YES completion:nil];
 }

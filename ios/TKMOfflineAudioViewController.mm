@@ -14,10 +14,10 @@
 
 #import "TKMOfflineAudioViewController.h"
 
-#import "UserDefaults.h"
+#import "TKMAudio.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"
-#import "TKMAudio.h"
+#import "UserDefaults.h"
 #import "third_party/Light-Untar/NSFileManager+Tar.h"
 
 #import <compression.h>
@@ -31,27 +31,27 @@ struct AvailablePackage {
   int64_t sizeBytes;
 };
 static const AvailablePackage kAvailablePackages[] = {
-  {@"levels-1-10.tar.lzfse", @"Levels 1-10", 15788944},
-  {@"levels-11-20.tar.lzfse", @"Levels 11-20", 25544078},
-  {@"levels-21-30.tar.lzfse", @"Levels 21-30", 26003280},
-  {@"levels-31-40.tar.lzfse", @"Levels 31-40", 23445692},
-  {@"levels-41-50.tar.lzfse", @"Levels 41-50", 23461014},
-  {@"levels-51-60.tar.lzfse", @"Levels 51-60", 30460353},
+    {@"levels-1-10.tar.lzfse", @"Levels 1-10", 15788944},
+    {@"levels-11-20.tar.lzfse", @"Levels 11-20", 25544078},
+    {@"levels-21-30.tar.lzfse", @"Levels 21-30", 26003280},
+    {@"levels-31-40.tar.lzfse", @"Levels 31-40", 23445692},
+    {@"levels-41-50.tar.lzfse", @"Levels 41-50", 23461014},
+    {@"levels-51-60.tar.lzfse", @"Levels 51-60", 30460353},
 };
 
 static NSData *DecompressLZFSE(NSData *compressedData) {
   if (!compressedData.length) {
     return nil;
   }
-  
+
   // Assume a compression ratio of 1.25.
   size_t bufferSize = compressedData.length * 1.25;
-  
+
   while (true) {
     uint8_t *buffer = (uint8_t *)malloc(bufferSize);
-    size_t decodedSize = compression_decode_buffer(
-        buffer, bufferSize, (const uint8_t *)compressedData.bytes, compressedData.length,
-        nil, COMPRESSION_LZFSE);
+    size_t decodedSize =
+        compression_decode_buffer(buffer, bufferSize, (const uint8_t *)compressedData.bytes,
+                                  compressedData.length, nil, COMPRESSION_LZFSE);
     if (decodedSize == 0) {
       free(buffer);
       return nil;
@@ -66,8 +66,7 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
   }
 }
 
-@interface TKMOfflineAudioViewController () <TKMDownloadModelDelegate,
-                                             NSURLSessionDownloadDelegate>
+@interface TKMOfflineAudioViewController () <TKMDownloadModelDelegate, NSURLSessionDownloadDelegate>
 
 @end
 
@@ -92,12 +91,12 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
   _indexPaths = [NSMutableDictionary dictionary];
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
 
-  for (const AvailablePackage& package : kAvailablePackages) {
+  for (const AvailablePackage &package : kAvailablePackages) {
     TKMDownloadModelItem *item = [[TKMDownloadModelItem alloc] initWithFilename:package.filename
                                                                           title:package.title
                                                                        delegate:self];
     item.totalSizeBytes = package.sizeBytes;
-    
+
     if ([_downloads objectForKey:package.filename]) {
       NSURLSessionDownloadTask *task = _downloads[package.filename];
       item.downloadingProgressBytes = task.countOfBytesReceived;
@@ -107,10 +106,10 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
     } else {
       item.state = TKMDownloadModelItemNotInstalled;
     }
-    
+
     _indexPaths[package.filename] = [model addItem:item];
   }
-  
+
   _model = model;
   [model reloadTable];
 }
@@ -118,7 +117,7 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = NO;
-  
+
   [self rerender];
 }
 
@@ -137,7 +136,8 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
 
 - (void)startDownloadFor:(NSString *)filename {
   NSString *urlString = [NSString stringWithFormat:kURLPattern, filename];
-  NSURLSessionDownloadTask *task = [_urlSession downloadTaskWithURL:[NSURL URLWithString:urlString]];
+  NSURLSessionDownloadTask *task =
+      [_urlSession downloadTaskWithURL:[NSURL URLWithString:urlString]];
   _downloads[filename] = task;
   [task resume];
   [self rerender];
@@ -151,19 +151,17 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
 }
 
 - (void)URLSession:(NSURLSession *)session
-      downloadTask:(NSURLSessionDownloadTask *)downloadTask
-didFinishDownloadingToURL:(NSURL *)location {
+                 downloadTask:(NSURLSessionDownloadTask *)downloadTask
+    didFinishDownloadingToURL:(NSURL *)location {
   NSURL *url = downloadTask.originalRequest.URL;
   NSString *filename = url.lastPathComponent;
-  
+
   NSData *lzfseData = [NSData dataWithContentsOfURL:location];
   if (!lzfseData) {
-    [self reportErrorOnMainThread:filename
-                            title:@"Error reading data"
-                          message:url.absoluteString];
+    [self reportErrorOnMainThread:filename title:@"Error reading data" message:url.absoluteString];
     return;
   }
-  
+
   NSData *tarData = DecompressLZFSE(lzfseData);
   if (!tarData) {
     [self reportErrorOnMainThread:filename
@@ -171,7 +169,7 @@ didFinishDownloadingToURL:(NSURL *)location {
                           message:url.absoluteString];
     return;
   }
-  
+
   auto extractProgress = ^(float progress) {
     [self updateProgressOnMainThread:filename
                          updateBlock:^(TKMDownloadModelItem *item) {
@@ -179,27 +177,27 @@ didFinishDownloadingToURL:(NSURL *)location {
                            item.installingProgress = progress;
                          }];
   };
-  
+
   NSFileManager *fileManager = [[NSFileManager alloc] init];
   NSError *error;
   [fileManager createFilesAndDirectoriesAtPath:[TKMAudio cacheDirectoryPath]
                                    withTarData:tarData
                                          error:&error
                                       progress:extractProgress];
-  
+
   if (error) {
     [self reportErrorOnMainThread:filename
                             title:@"Error extracting data"
                           message:url.absoluteString];
     return;
   }
-  
+
   dispatch_async(dispatch_get_main_queue(), ^{
     NSMutableSet<NSString *> *installedPackages =
         [NSMutableSet setWithSet:UserDefaults.installedAudioPackages];
     [installedPackages addObject:filename];
     UserDefaults.installedAudioPackages = installedPackages;
-    
+
     [_downloads removeObjectForKey:filename];
     [self rerender];
   });
@@ -210,15 +208,16 @@ didFinishDownloadingToURL:(NSURL *)location {
                         message:(NSString *)message {
   dispatch_async(dispatch_get_main_queue(), ^{
     [_downloads removeObjectForKey:filename];
-    
+
     UIAlertController *alert =
         [UIAlertController alertControllerWithTitle:title
                                             message:message
                                      preferredStyle:UIAlertControllerStyleAlert];
-    
+
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
                                                      style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction * action) {}];
+                                                   handler:^(UIAlertAction *action){
+                                                   }];
     [alert addAction:action];
     [self presentViewController:alert animated:YES completion:nil];
     [self rerender];
@@ -226,15 +225,15 @@ didFinishDownloadingToURL:(NSURL *)location {
 }
 
 - (void)URLSession:(NSURLSession *)session
-              task:(NSURLSessionTask *)task
-didCompleteWithError:(NSError *)error {
+                    task:(NSURLSessionTask *)task
+    didCompleteWithError:(NSError *)error {
   if (!error) {
     return;
   }
   if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
     return;
   }
-  
+
   NSString *filename = task.originalRequest.URL.lastPathComponent;
   [self reportErrorOnMainThread:filename
                           title:error.localizedDescription
@@ -242,12 +241,12 @@ didCompleteWithError:(NSError *)error {
 }
 
 - (void)URLSession:(NSURLSession *)session
-      downloadTask:(NSURLSessionDownloadTask *)downloadTask
-      didWriteData:(int64_t)bytesWritten
- totalBytesWritten:(int64_t)totalBytesWritten
-totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+                 downloadTask:(NSURLSessionDownloadTask *)downloadTask
+                 didWriteData:(int64_t)bytesWritten
+            totalBytesWritten:(int64_t)totalBytesWritten
+    totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
   NSString *filename = downloadTask.originalRequest.URL.lastPathComponent;
-  
+
   [self updateProgressOnMainThread:filename
                        updateBlock:^(TKMDownloadModelItem *item) {
                          item.state = TKMDownloadModelItemDownloading;
@@ -256,7 +255,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 }
 
 - (void)updateProgressOnMainThread:(NSString *)filename
-                       updateBlock:(void(^)(TKMDownloadModelItem *))updateBlock {
+                       updateBlock:(void (^)(TKMDownloadModelItem *))updateBlock {
   dispatch_async(dispatch_get_main_queue(), ^{
     // Try to update the visible cell without reloading the whole table.  This is a bit of a hack.
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_indexPaths[filename]];

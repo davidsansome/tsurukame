@@ -22,10 +22,10 @@
 @implementation ClientTest
 
 - (void)testDateParsing {
-  NSTimeInterval(^parse)(NSString *string) = ^(NSString *string) {
+  NSTimeInterval (^parse)(NSString *string) = ^(NSString *string) {
     return [[Client parseISO8601Date:string] timeIntervalSince1970];
   };
-  
+
   XCTAssertEqual(parse(@"2018-08-05T11:08:39.431000Z"), 1533467319.431);
   XCTAssertEqual(parse(@"2018-08-05T11:08:39.431Z"), 1533467319.431);
   XCTAssertEqual(parse(@"2018-08-05T11:08:39.000000Z"), 1533467319.0);

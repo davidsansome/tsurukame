@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,9 +28,7 @@ static void CreateSpark(UIView *superview,
                         CGFloat radians,
                         UIColor *color,
                         NSTimeInterval duration) {
-  CGRect frame = CGRectMake(origin.x - size / 2,
-                            origin.y - size / 2,
-                            size, size);
+  CGRect frame = CGRectMake(origin.x - size / 2, origin.y - size / 2, size, size);
   UIView *view = [[UIView alloc] initWithFrame:frame];
   view.backgroundColor = color;
   view.layer.anchorPoint = CGPointMake(1.0, 1.0);
@@ -38,15 +36,16 @@ static void CreateSpark(UIView *superview,
   view.alpha = 0.0;
   [superview addSubview:view];
   [superview layoutIfNeeded];
-  
+
   // Fade in.
   [UIView animateWithDuration:duration * 0.2
                         delay:0
                       options:UIViewAnimationOptionCurveLinear
                    animations:^{
                      view.alpha = 1.0;
-                   } completion:nil];
-  
+                   }
+                   completion:nil];
+
   // Explode.
   [UIView animateWithDuration:duration * 0.4
                         delay:0
@@ -55,55 +54,55 @@ static void CreateSpark(UIView *superview,
                      view.center = CGPointMake(view.center.x - distance * sin(radians),
                                                view.center.y - distance * cos(radians));
                      [superview layoutIfNeeded];
-                   } completion:nil];
-  
+                   }
+                   completion:nil];
+
   // Get smaller.
   [UIView animateWithDuration:duration * 0.8
-                        delay:duration * 0.2
-                      options:UIViewAnimationOptionCurveLinear
-                   animations:^{
-                     view.transform = CGAffineTransformScale(view.transform, 0.001, 0.001);
-                     [superview layoutIfNeeded];
-                   } completion:^(BOOL finished) {
-                     [view removeFromSuperview];
-                   }];
-  
+      delay:duration * 0.2
+      options:UIViewAnimationOptionCurveLinear
+      animations:^{
+        view.transform = CGAffineTransformScale(view.transform, 0.001, 0.001);
+        [superview layoutIfNeeded];
+      }
+      completion:^(BOOL finished) {
+        [view removeFromSuperview];
+      }];
+
   // Fade out.
   [UIView animateWithDuration:duration * 0.2
                         delay:duration * 0.8
                       options:UIViewAnimationOptionCurveEaseOut
                    animations:^{
                      view.alpha = 0.0;
-                   } completion:nil];
+                   }
+                   completion:nil];
 }
 
-void CreatePlusOneText(UIView *toView,
-                       NSString *text,
-                       UIFont *font,
-                       UIColor *color,
+void CreatePlusOneText(UIView *toView, NSString *text, UIFont *font, UIColor *color,
                        CGFloat duration) {
   UIView *superview = toView.superview;
-  
+
   UILabel *view = [[UILabel alloc] initWithFrame:CGRectZero];
   view.text = text;
   view.font = font;
   view.textColor = color;
   view.alpha = 0.0;
   [view sizeToFit];
-  view.center = CGPointMake(toView.center.x,
-                            toView.center.y + font.pointSize * 1.5);
+  view.center = CGPointMake(toView.center.x, toView.center.y + font.pointSize * 1.5);
   view.transform = CGAffineTransformMakeScale(0.1, 0.1);
   [superview addSubview:view];
   [superview layoutIfNeeded];
-  
+
   // Fade in.
   [UIView animateWithDuration:duration * 0.1
                         delay:0
                       options:UIViewAnimationOptionCurveLinear
                    animations:^{
                      view.alpha = 1.0;
-                   } completion:nil];
-  
+                   }
+                   completion:nil];
+
   // Get bigger.
   [UIView animateWithDuration:duration * 0.2
                         delay:0.0
@@ -112,19 +111,21 @@ void CreatePlusOneText(UIView *toView,
                       options:0
                    animations:^{
                      view.transform = CGAffineTransformIdentity;
-                   } completion:nil];
-  
+                   }
+                   completion:nil];
+
   // Move to destination and get smaller
   [UIView animateWithDuration:duration * 0.3
-                        delay:duration * 0.7
-                      options:UIViewAnimationOptionCurveLinear
-                   animations:^{
-                     view.center = toView.center;
-                     view.transform = CGAffineTransformMakeScale(0.1, 0.1);
-                     view.alpha = 0.1;
-                   } completion:^(BOOL finished) {
-                     [view removeFromSuperview];
-                   }];
+      delay:duration * 0.7
+      options:UIViewAnimationOptionCurveLinear
+      animations:^{
+        view.center = toView.center;
+        view.transform = CGAffineTransformMakeScale(0.1, 0.1);
+        view.alpha = 0.1;
+      }
+      completion:^(BOOL finished) {
+        [view removeFromSuperview];
+      }];
 }
 
 void CreateSpringyBillboard(UIView *originView,
@@ -138,11 +139,14 @@ void CreateSpringyBillboard(UIView *originView,
                             CGFloat duration) {
   const CGFloat angleRadians = RandFloat(-M_PI * 0.1, M_PI * 0.1);
   UIView *superview = originView.superview;
-  
+
   CGFloat hue, saturation, alpha;
   [backgroundColor getHue:&hue saturation:&saturation brightness:nil alpha:&alpha];
-  UIColor *borderColor = [UIColor colorWithHue:hue saturation:saturation / 2 brightness:1.0 alpha:alpha];
-  
+  UIColor *borderColor = [UIColor colorWithHue:hue
+                                    saturation:saturation / 2
+                                    brightness:1.0
+                                         alpha:alpha];
+
   UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
   label.text = text;
   label.font = font;
@@ -155,7 +159,7 @@ void CreateSpringyBillboard(UIView *originView,
   label.textAlignment = NSTextAlignmentCenter;
   [label sizeToFit];
   label.frame = CGRectInset(label.frame, -padding, -padding);
-  
+
   UIView *container = [[UIView alloc] initWithFrame:label.frame];
   container.alpha = 0.0;
   container.center = originView.center;
@@ -166,18 +170,19 @@ void CreateSpringyBillboard(UIView *originView,
   container.layer.shadowRadius = 4;
   container.clipsToBounds = NO;
   [container addSubview:label];
-  
+
   [superview addSubview:container];
   [superview layoutIfNeeded];
-  
+
   // Fade in.
   [UIView animateWithDuration:duration * 0.15
                         delay:0
                       options:UIViewAnimationOptionCurveLinear
                    animations:^{
                      container.alpha = 1.0;
-                   } completion:nil];
-  
+                   }
+                   completion:nil];
+
   // Spring to target position.
   [UIView animateWithDuration:duration * 0.3
                         delay:0.0
@@ -185,22 +190,25 @@ void CreateSpringyBillboard(UIView *originView,
         initialSpringVelocity:1
                       options:0
                    animations:^{
-                     container.center = CGPointMake(container.center.x + distance * sin(angleRadians),
-                                                    container.center.y - distance * cos(angleRadians));
+                     container.center =
+                         CGPointMake(container.center.x + distance * sin(angleRadians),
+                                     container.center.y - distance * cos(angleRadians));
                      [superview layoutIfNeeded];
-                   } completion:nil];
-  
+                   }
+                   completion:nil];
+
   // Get smaller and fade out.
   [UIView animateWithDuration:duration * 0.1
-                        delay:duration * 0.85
-                      options:UIViewAnimationOptionCurveEaseInOut
-                   animations:^{
-                     container.transform = CGAffineTransformScale(container.transform, 0.001, 0.001);
-                     container.alpha = 0.0;
-                     [superview layoutIfNeeded];
-                   } completion:^(BOOL finished) {
-                     [label removeFromSuperview];
-                   }];
+      delay:duration * 0.85
+      options:UIViewAnimationOptionCurveEaseInOut
+      animations:^{
+        container.transform = CGAffineTransformScale(container.transform, 0.001, 0.001);
+        container.alpha = 0.0;
+        [superview layoutIfNeeded];
+      }
+      completion:^(BOOL finished) {
+        [label removeFromSuperview];
+      }];
 }
 
 static void CreateExplosion(UIView *view) {
@@ -214,25 +222,25 @@ static void CreateExplosion(UIView *view) {
   const CGFloat kAngleRange = M_PI * 0.3;
   static UIColor *color1;
   static UIColor *color2;
-  
+
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    color1 = [UIColor colorWithRed:247.0/255 green:181.0/255 blue:74.0/255 alpha:1.0];
-    color2 = [UIColor colorWithRed:230.0/255 green:57.0/255 blue:91.0/255 alpha:1.0];
+    color1 = [UIColor colorWithRed:247.0 / 255 green:181.0 / 255 blue:74.0 / 255 alpha:1.0];
+    color2 = [UIColor colorWithRed:230.0 / 255 green:57.0 / 255 blue:91.0 / 255 alpha:1.0];
   });
-  
+
   UIView *superview = view.superview;
   for (int i = 0; i < 80; ++i) {
     CGFloat size = RandFloat(kSizeMin, kSizeMax);
     CGFloat distance = RandFloat(kDistanceMin, kDistanceMax);
     CGFloat duration = RandFloat(kDurationMin, kDurationMax);
     CGFloat offset = RandFloat(-1.0, 1.0);
-    CGFloat angle = - kAngleRange * offset;
+    CGFloat angle = -kAngleRange * offset;
     CGFloat originCenterOffset = kOriginCenterOffsetRange * offset;
     UIColor *color = arc4random_uniform(2) ? color1 : color2;
-    CGPoint origin = CGPointMake(view.center.x + originCenterOffset * view.bounds.size.width,
-                                 view.center.y);
-    
+    CGPoint origin =
+        CGPointMake(view.center.x + originCenterOffset * view.bounds.size.width, view.center.y);
+
     CreateSpark(superview, origin, size, distance, angle, color, duration);
   }
 }
@@ -245,7 +253,7 @@ void RunSuccessAnimation(UIView *answerField,
   if (UserDefaults.animateParticleExplosion) {
     CreateExplosion(answerField);
   }
-  
+
   if (isSubjectFinished && UserDefaults.animatePlusOne) {
     CreatePlusOneText(doneLabel,
                       @"+1",
@@ -253,37 +261,35 @@ void RunSuccessAnimation(UIView *answerField,
                       [UIColor whiteColor],
                       1.5);  // Duration.
   }
-  
+
   if (isSubjectFinished && didLevelUp && UserDefaults.animateLevelUpPopup) {
     UIColor *srsLevelColor;
     switch (newSrsStage) {
       case 2:
-        srsLevelColor = [UIColor colorWithRed:0.867 green:0 blue:0.576 alpha:1]; // #dd0093;
+        srsLevelColor = [UIColor colorWithRed:0.867 green:0 blue:0.576 alpha:1];  // #dd0093;
         break;
       case 5:
-        srsLevelColor = [UIColor colorWithRed:0.533 green:0.176 blue:0.62 alpha:1]; // #882d9e
+        srsLevelColor = [UIColor colorWithRed:0.533 green:0.176 blue:0.62 alpha:1];  // #882d9e
         break;
       case 7:
-        srsLevelColor = [UIColor colorWithRed:0.161 green:0.302 blue:0.859 alpha:1]; // #294ddb
+        srsLevelColor = [UIColor colorWithRed:0.161 green:0.302 blue:0.859 alpha:1];  // #294ddb
         break;
       case 8:
-        srsLevelColor = [UIColor colorWithRed:0 green:0.576 blue:0.867 alpha:1]; // #0093dd
+        srsLevelColor = [UIColor colorWithRed:0 green:0.576 blue:0.867 alpha:1];  // #0093dd
         break;
       case 9:
-        srsLevelColor = [UIColor colorWithRed:0.263 green:0.263 blue:0.263 alpha:1]; // #434343
+        srsLevelColor = [UIColor colorWithRed:0.263 green:0.263 blue:0.263 alpha:1];  // #434343
         break;
       default:
         return;
     }
     NSString *srsLevelString = TKMSRSStageName(newSrsStage);
-    
-    CreateSpringyBillboard(answerField, srsLevelString,
-                           [UIFont systemFontOfSize:16.0],
-                           [UIColor whiteColor],
-                           srsLevelColor,
-                           5.0,  // Border radius.
-                           6.0,  // Padding.
+
+    CreateSpringyBillboard(answerField, srsLevelString, [UIFont systemFontOfSize:16.0],
+                           [UIColor whiteColor], srsLevelColor,
+                           5.0,    // Border radius.
+                           6.0,    // Padding.
                            100.0,  // Distance.
-                           3.0);  // Duration.
+                           3.0);   // Duration.
   }
 }

@@ -20,8 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TKMReadingModelItem : TKMAttributedModelItem
 
-- (void)setAudio:(TKMAudio *)audio
-       subjectID:(int)subjectID;
+- (void)setAudio:(TKMAudio *)audio subjectID:(int)subjectID;
 
 @property(nonatomic, readonly) TKMAudio *audio;
 @property(nonatomic, readonly) int audioSubjectID;

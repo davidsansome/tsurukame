@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -71,7 +71,7 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
   if (!self.hasRadical || !self.radical.hasCharacterImageFile) {
     return [[NSAttributedString alloc] initWithString:self.japanese];
   }
-  
+
   NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
   imageAttachment.image = [UIImage imageNamed:[NSString stringWithFormat:@"radical-%d", self.id_p]];
   if (imageSize == 0) {
@@ -135,7 +135,7 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 }
 
 - (NSString *)commaSeparatedMeanings {
-  NSMutableArray<NSString *>* strings = [NSMutableArray array];
+  NSMutableArray<NSString *> *strings = [NSMutableArray array];
   for (TKMMeaning *meaning in self.meaningsArray) {
     [strings addObject:meaning.meaning];
   }
@@ -143,7 +143,7 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 }
 
 - (NSString *)commaSeparatedReadings {
-  NSMutableArray<NSString *>* strings = [NSMutableArray array];
+  NSMutableArray<NSString *> *strings = [NSMutableArray array];
   for (TKMReading *reading in self.readingsArray) {
     [strings addObject:reading.reading];
   }
@@ -151,7 +151,7 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 }
 
 - (NSString *)commaSeparatedPrimaryReadings {
-  NSMutableArray<NSString *>* strings = [NSMutableArray array];
+  NSMutableArray<NSString *> *strings = [NSMutableArray array];
   for (TKMReading *reading in self.primaryReadings) {
     [strings addObject:reading.reading];
   }
@@ -164,32 +164,73 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 
 - (NSString *)commaSeparatedPartsOfSpeech {
   NSMutableArray<NSString *> *parts = [NSMutableArray array];
-  [self.partsOfSpeechArray enumerateValuesWithBlock:^(int32_t value, NSUInteger idx, BOOL * _Nonnull stop) {
-    NSString *str;
-    switch ((TKMVocabulary_PartOfSpeech)value) {
-      case TKMVocabulary_PartOfSpeech_Noun:             str = @"Noun";              break;
-      case TKMVocabulary_PartOfSpeech_Numeral:          str = @"Numeral";           break;
-      case TKMVocabulary_PartOfSpeech_IntransitiveVerb: str = @"Intransitive Verb"; break;
-      case TKMVocabulary_PartOfSpeech_IchidanVerb:      str = @"Ichidan Verb";      break;
-      case TKMVocabulary_PartOfSpeech_TransitiveVerb:   str = @"Transitive Verb";   break;
-      case TKMVocabulary_PartOfSpeech_NoAdjective:      str = @"No Adjective";      break;
-      case TKMVocabulary_PartOfSpeech_GodanVerb:        str = @"Godan Verb";        break;
-      case TKMVocabulary_PartOfSpeech_NaAdjective:      str = @"Na Adjective";      break;
-      case TKMVocabulary_PartOfSpeech_IAdjective:       str = @"I Adjective";       break;
-      case TKMVocabulary_PartOfSpeech_Suffix:           str = @"Suffix";            break;
-      case TKMVocabulary_PartOfSpeech_Adverb:           str = @"Adverb";            break;
-      case TKMVocabulary_PartOfSpeech_SuruVerb:         str = @"Suru Verb";         break;
-      case TKMVocabulary_PartOfSpeech_Prefix:           str = @"Prefix";            break;
-      case TKMVocabulary_PartOfSpeech_ProperNoun:       str = @"Proper Noun";       break;
-      case TKMVocabulary_PartOfSpeech_Expression:       str = @"Expression";        break;
-      case TKMVocabulary_PartOfSpeech_Adjective:        str = @"Adjective";         break;
-      case TKMVocabulary_PartOfSpeech_Interjection:     str = @"Interjection";      break;
-      case TKMVocabulary_PartOfSpeech_Counter:          str = @"Counter";           break;
-      case TKMVocabulary_PartOfSpeech_Pronoun:          str = @"Pronoun";           break;
-      case TKMVocabulary_PartOfSpeech_Conjunction:      str = @"Conjunction";       break;
-    }
-    [parts addObject:str];
-  }];
+  [self.partsOfSpeechArray
+      enumerateValuesWithBlock:^(int32_t value, NSUInteger idx, BOOL *_Nonnull stop) {
+        NSString *str;
+        switch ((TKMVocabulary_PartOfSpeech)value) {
+          case TKMVocabulary_PartOfSpeech_Noun:
+            str = @"Noun";
+            break;
+          case TKMVocabulary_PartOfSpeech_Numeral:
+            str = @"Numeral";
+            break;
+          case TKMVocabulary_PartOfSpeech_IntransitiveVerb:
+            str = @"Intransitive Verb";
+            break;
+          case TKMVocabulary_PartOfSpeech_IchidanVerb:
+            str = @"Ichidan Verb";
+            break;
+          case TKMVocabulary_PartOfSpeech_TransitiveVerb:
+            str = @"Transitive Verb";
+            break;
+          case TKMVocabulary_PartOfSpeech_NoAdjective:
+            str = @"No Adjective";
+            break;
+          case TKMVocabulary_PartOfSpeech_GodanVerb:
+            str = @"Godan Verb";
+            break;
+          case TKMVocabulary_PartOfSpeech_NaAdjective:
+            str = @"Na Adjective";
+            break;
+          case TKMVocabulary_PartOfSpeech_IAdjective:
+            str = @"I Adjective";
+            break;
+          case TKMVocabulary_PartOfSpeech_Suffix:
+            str = @"Suffix";
+            break;
+          case TKMVocabulary_PartOfSpeech_Adverb:
+            str = @"Adverb";
+            break;
+          case TKMVocabulary_PartOfSpeech_SuruVerb:
+            str = @"Suru Verb";
+            break;
+          case TKMVocabulary_PartOfSpeech_Prefix:
+            str = @"Prefix";
+            break;
+          case TKMVocabulary_PartOfSpeech_ProperNoun:
+            str = @"Proper Noun";
+            break;
+          case TKMVocabulary_PartOfSpeech_Expression:
+            str = @"Expression";
+            break;
+          case TKMVocabulary_PartOfSpeech_Adjective:
+            str = @"Adjective";
+            break;
+          case TKMVocabulary_PartOfSpeech_Interjection:
+            str = @"Interjection";
+            break;
+          case TKMVocabulary_PartOfSpeech_Counter:
+            str = @"Counter";
+            break;
+          case TKMVocabulary_PartOfSpeech_Pronoun:
+            str = @"Pronoun";
+            break;
+          case TKMVocabulary_PartOfSpeech_Conjunction:
+            str = @"Conjunction";
+            break;
+        }
+        [parts addObject:str];
+      }];
   return [parts componentsJoinedByString:@", "];
 }
 
@@ -226,9 +267,10 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 @implementation TKMProgress (Convenience)
 
 - (NSString *)reviewFormParameters {
-  return [NSString stringWithFormat:@"%d%%5B%%5D=%@&%d%%5B%%5D=%@",
-          self.assignment.subjectId, self.hasMeaningWrong ? (self.meaningWrong ? @"1" : @"0") : @"",
-          self.assignment.subjectId, self.hasReadingWrong ? (self.readingWrong ? @"1" : @"0") : @""];
+  return [NSString stringWithFormat:@"%d%%5B%%5D=%@&%d%%5B%%5D=%@", self.assignment.subjectId,
+                                    self.hasMeaningWrong ? (self.meaningWrong ? @"1" : @"0") : @"",
+                                    self.assignment.subjectId,
+                                    self.hasReadingWrong ? (self.readingWrong ? @"1" : @"0") : @""];
 }
 
 - (NSString *)lessonFormParameters {

@@ -56,13 +56,13 @@ static NSString *FriendlySize(int64_t bytes) {
 
 - (void)updateWithItem:(TKMDownloadModelItem *)item {
   [super updateWithItem:item];
-  
+
   _title.text = item.title;
-  
+
   switch (item.state) {
     case TKMDownloadModelItemNotInstalled:
-      _subtitle.text = [NSString stringWithFormat:@"not installed - %@",
-                        FriendlySize(item.totalSizeBytes)];
+      _subtitle.text =
+          [NSString stringWithFormat:@"not installed - %@", FriendlySize(item.totalSizeBytes)];
       [_image setImage:[UIImage imageNamed:@"baseline_cloud_download_black_24pt"]];
       [_image setTintColor:TKMDefaultTintColor()];
       break;
@@ -89,12 +89,13 @@ static NSString *FriendlySize(int64_t bytes) {
   TKMDownloadModelItem *item = (TKMDownloadModelItem *)self.item;
   switch (item.state) {
     case TKMDownloadModelItemDownloading:
-      _subtitle.text = [NSString stringWithFormat:@"downloading %lld%%",
-                        item.downloadingProgressBytes * 100 / item.totalSizeBytes];
+      _subtitle.text =
+          [NSString stringWithFormat:@"downloading %lld%%",
+                                     item.downloadingProgressBytes * 100 / item.totalSizeBytes];
       break;
     case TKMDownloadModelItemInstalling:
-      _subtitle.text = [NSString stringWithFormat:@"instaling %d%%",
-                        (int)(item.installingProgress * 100)];
+      _subtitle.text =
+          [NSString stringWithFormat:@"instaling %d%%", (int)(item.installingProgress * 100)];
       break;
     default:
       break;

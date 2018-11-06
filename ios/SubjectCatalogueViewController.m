@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "DataLoader.h"
 #import "SubjectCatalogueViewController.h"
+#import "DataLoader.h"
 #import "SubjectsByLevelViewController.h"
 #import "TKMServices.h"
 
@@ -37,15 +37,16 @@
   [super viewDidLoad];
   self.delegate = self;
   self.dataSource = self;
-  
+
   _answerSwitch = [[UISwitch alloc] init];
   _answerSwitch.on = YES;
   [_answerSwitch addTarget:self
                     action:@selector(answerSwitchChanged:)
           forControlEvents:UIControlEventValueChanged];
-  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_answerSwitch];
-  
-  [self setViewControllers:@[[self createViewControllerForLevel:_level]]
+  self.navigationItem.rightBarButtonItem =
+      [[UIBarButtonItem alloc] initWithCustomView:_answerSwitch];
+
+  [self setViewControllers:@[ [self createViewControllerForLevel:_level] ]
                  direction:UIPageViewControllerNavigationDirectionForward
                   animated:NO
                 completion:nil];
@@ -95,9 +96,9 @@
 #pragma mark - UIPageViewControllerDelegate
 
 - (void)pageViewController:(UIPageViewController *)pageViewController
-        didFinishAnimating:(BOOL)finished
-   previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers
-       transitionCompleted:(BOOL)completed {
+         didFinishAnimating:(BOOL)finished
+    previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers
+        transitionCompleted:(BOOL)completed {
   if (!finished || !completed) {
     return;
   }
@@ -105,7 +106,7 @@
 }
 
 - (void)pageViewController:(UIPageViewController *)pageViewController
-willTransitionToViewControllers:(NSArray<UIViewController *> *)pendingViewControllers {
+    willTransitionToViewControllers:(NSArray<UIViewController *> *)pendingViewControllers {
   for (UIViewController *viewController in pendingViewControllers) {
     SubjectsByLevelViewController *vc = (SubjectsByLevelViewController *)viewController;
     [vc setShowAnswers:self.showAnswers animated:NO];

@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,18 +24,17 @@ extern const char *kWanikaniSessionCookieName;
 extern NSErrorDomain const kTKMClientErrorDomain;
 extern const int kTKMLoginErrorCode;
 
-typedef void (^CookieHandler)(NSError * _Nullable error,
-                              NSString * _Nullable cookie);
-typedef void (^ApiTokenHandler)(NSError * _Nullable error,
-                                NSString * _Nullable apiToken,
-                                NSString * _Nullable emailAddress);
-typedef void (^AssignmentHandler)(NSError * _Nullable error,
-                                  NSArray<TKMAssignment *> * _Nullable assignments);
-typedef void (^ProgressHandler)(NSError * _Nullable error);
-typedef void (^StudyMaterialsHandler)(NSError * _Nullable error,
-                                      NSArray<TKMStudyMaterials *> * _Nullable studyMaterials);
-typedef void (^UserInfoHandler)(NSError * _Nullable error, TKMUser * _Nullable user);
-typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
+typedef void (^CookieHandler)(NSError *_Nullable error, NSString *_Nullable cookie);
+typedef void (^ApiTokenHandler)(NSError *_Nullable error,
+                                NSString *_Nullable apiToken,
+                                NSString *_Nullable emailAddress);
+typedef void (^AssignmentHandler)(NSError *_Nullable error,
+                                  NSArray<TKMAssignment *> *_Nullable assignments);
+typedef void (^ProgressHandler)(NSError *_Nullable error);
+typedef void (^StudyMaterialsHandler)(NSError *_Nullable error,
+                                      NSArray<TKMStudyMaterials *> *_Nullable studyMaterials);
+typedef void (^UserInfoHandler)(NSError *_Nullable error, TKMUser *_Nullable user);
+typedef void (^UpdateStudyMaterialHandler)(NSError *_Nullable error);
 
 @interface Client : NSObject
 
@@ -44,7 +43,7 @@ typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
                       dataLoader:(DataLoader *)dataLoader NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-@property (nonatomic) bool pretendToBeOfflineForTesting;
+@property(nonatomic) bool pretendToBeOfflineForTesting;
 
 + (NSDate *)parseISO8601Date:(NSString *)string;
 + (NSString *)currentISO8601Date;
@@ -52,14 +51,10 @@ typedef void (^UpdateStudyMaterialHandler)(NSError * _Nullable error);
 + (void)getCookieForUsername:(NSString *)username
                     password:(NSString *)password
                      handler:(CookieHandler)handler;
-+ (void)getApiTokenForCookie:(NSString *)cookie
-                     handler:(ApiTokenHandler)handler;
-- (void)getAssignmentsModifiedAfter:(NSString *)date
-                            handler:(AssignmentHandler)handler;
-- (void)sendProgress:(NSArray<TKMProgress *> *)progress
-             handler:(ProgressHandler _Nullable)handler;
-- (void)getStudyMaterialsModifiedAfter:(NSString *)date
-                               handler:(StudyMaterialsHandler)handler;
++ (void)getApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler;
+- (void)getAssignmentsModifiedAfter:(NSString *)date handler:(AssignmentHandler)handler;
+- (void)sendProgress:(NSArray<TKMProgress *> *)progress handler:(ProgressHandler _Nullable)handler;
+- (void)getStudyMaterialsModifiedAfter:(NSString *)date handler:(StudyMaterialsHandler)handler;
 - (void)getUserInfo:(UserInfoHandler)handler;
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material
                     handler:(UpdateStudyMaterialHandler)handler;

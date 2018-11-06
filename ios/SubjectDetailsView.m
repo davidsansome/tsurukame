@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,13 +21,13 @@
 #import "SubjectDetailsViewController.h"
 #import "TKMAudio.h"
 #import "TKMServices.h"
-#import "UIColor+HexString.h"
-#import "proto/Wanikani+Convenience.h"
 #import "Tables/TKMAttributedModelItem.h"
 #import "Tables/TKMMarkupModelItem.h"
 #import "Tables/TKMReadingModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "UIColor+HexString.h"
+#import "proto/Wanikani+Convenience.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -64,16 +64,15 @@ static NSAttributedString *RenderMeanings(NSArray<TKMMeaning *> *meanings,
   }
   for (NSString *meaning in studyMaterials.meaningSynonymsArray) {
     NSDictionary<NSAttributedStringKey, id> *attributes = @{
-        NSForegroundColorAttributeName: kMeaningSynonymColor,
+      NSForegroundColorAttributeName : kMeaningSynonymColor,
     };
-    [strings addObject:[[NSAttributedString alloc] initWithString:meaning
-                                                       attributes:attributes]];
+    [strings addObject:[[NSAttributedString alloc] initWithString:meaning attributes:attributes]];
   }
   for (TKMMeaning *meaning in meanings) {
     if (!meaning.isPrimary) {
       UIFont *font = [UIFont systemFontOfSize:kFont.pointSize weight:UIFontWeightLight];
       NSDictionary<NSAttributedStringKey, id> *attributes = @{
-          NSFontAttributeName: font,
+        NSFontAttributeName : font,
       };
       [strings addObject:[[NSAttributedString alloc] initWithString:meaning.meaning
                                                          attributes:attributes]];
@@ -93,7 +92,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     if (!primaryOnly && !reading.isPrimary) {
       UIFont *font = [UIFont systemFontOfSize:kFont.pointSize weight:UIFontWeightLight];
       NSDictionary<NSAttributedStringKey, id> *attributes = @{
-          NSFontAttributeName: font,
+        NSFontAttributeName : font,
       };
       [strings addObject:[[NSAttributedString alloc] initWithString:reading.reading
                                                          attributes:attributes]];
@@ -108,34 +107,34 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 @implementation TKMSubjectDetailsView {
   NSDateFormatter *_availableDateFormatter;
   NSDateFormatter *_startedDateFormatter;
-  
+
   TKMServices *_services;
   BOOL _showHints;
   __weak id<TKMSubjectDelegate> _subjectDelegate;
-  
+
   TKMTableModel *_tableModel;
-  
+
   __weak TKMSubjectChip *_lastSubjectChipTapped;
 }
 
 - (nullable instancetype)initWithCoder:(NSCoder *)coder {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    kMeaningSynonymColor = [UIColor colorWithRed:0.231 green:0.6 blue:0.988 alpha:1]; // #3b99fc
+    kMeaningSynonymColor = [UIColor colorWithRed:0.231 green:0.6 blue:0.988 alpha:1];  // #3b99fc
     kHintTextColor = [UIColor colorWithWhite:0.3f alpha:1.f];
     kFont = [UIFont systemFontOfSize:kFontSize];
   });
-  
+
   self = [super initWithCoder:coder];
   if (self) {
     _availableDateFormatter = [[NSDateFormatter alloc] init];
     _availableDateFormatter.dateStyle = NSDateFormatterMediumStyle;
     _availableDateFormatter.timeStyle = NSDateFormatterMediumStyle;
-    
+
     _startedDateFormatter = [[NSDateFormatter alloc] init];
     _startedDateFormatter.dateStyle = NSDateFormatterMediumStyle;
     _startedDateFormatter.timeStyle = NSDateFormatterNoStyle;
-    
+
     self.sectionHeaderHeight = kSectionHeaderHeight;
     self.estimatedSectionHeaderHeight = kSectionHeaderHeight;
     self.sectionFooterHeight = kSectionFooterHeight;
@@ -158,23 +157,20 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   NSAttributedString *text = RenderMeanings(subject.meaningsArray, studyMaterials);
   text = [text stringWithFontSize:kFontSize];
   TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
-  
+
   [model addSection:@"Meaning"];
   [model addItem:item];
 }
 
-- (void)addReadings:(TKMSubject *)subject
-            toModel:(TKMMutableTableModel *)model {
+- (void)addReadings:(TKMSubject *)subject toModel:(TKMMutableTableModel *)model {
   bool primaryOnly = subject.hasKanji;
   NSAttributedString *text = RenderReadings(subject.readingsArray, primaryOnly);
   text = [text stringWithFontSize:kFontSize];
   TKMReadingModelItem *item = [[TKMReadingModelItem alloc] initWithText:text];
-  if (subject.hasVocabulary &&
-      subject.vocabulary.hasAudioFile) {
-    [item setAudio:_services.audio
-         subjectID:subject.id_p];
+  if (subject.hasVocabulary && subject.vocabulary.hasAudioFile) {
+    [item setAudio:_services.audio subjectID:subject.id_p];
   }
-  
+
   [model addSection:@"Reading"];
   [model addItem:item];
 }
@@ -182,18 +178,17 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 - (void)addComponents:(TKMSubject *)subject
                 title:(NSString *)title
               toModel:(TKMMutableTableModel *)model {
-  TKMSubjectCollectionModelItem *item = [[TKMSubjectCollectionModelItem alloc]
-      initWithSubjects:subject.componentSubjectIdsArray
-            dataLoader:_services.dataLoader
-              delegate:self];
+  TKMSubjectCollectionModelItem *item =
+      [[TKMSubjectCollectionModelItem alloc] initWithSubjects:subject.componentSubjectIdsArray
+                                                   dataLoader:_services.dataLoader
+                                                     delegate:self];
   item.font = kFont;
-  
+
   [model addSection:title];
   [model addItem:item];
 }
 
-- (void)addSimilarKanji:(TKMSubject *)subject
-                toModel:(TKMMutableTableModel *)model {
+- (void)addSimilarKanji:(TKMSubject *)subject toModel:(TKMMutableTableModel *)model {
   int currentLevel = [_services.localCachingClient getUsersCurrentLevel];
   bool addedSection = false;
   for (TKMVisuallySimilarKanji *visuallySimilarKanji in subject.kanji.visuallySimilarKanjiArray) {
@@ -208,14 +203,14 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     if (subject.level > currentLevel) {
       continue;
     }
-    
-    TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject delegate:_subjectDelegate];
+
+    TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject
+                                                                    delegate:_subjectDelegate];
     [model addItem:item];
   }
 }
 
-- (void)addAmalgamationSubjects:(TKMSubject *)subject
-                        toModel:(TKMMutableTableModel *)model {
+- (void)addAmalgamationSubjects:(TKMSubject *)subject toModel:(TKMMutableTableModel *)model {
   if (!subject.amalgamationSubjectIdsArray_Count) {
     return;
   }
@@ -227,7 +222,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   }
 }
 
-- (void)addFormattedText:(NSArray<TKMFormattedText*> *)formattedText
+- (void)addFormattedText:(NSArray<TKMFormattedText *> *)formattedText
                   isHint:(bool)isHint
                  toModel:(TKMMutableTableModel *)model {
   if (isHint && !_showHints) {
@@ -236,22 +231,21 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   if (!formattedText.count) {
     return;
   }
-  
+
   NSMutableAttributedString *text = TKMRenderFormattedText(formattedText);
   [text replaceFontSize:kFontSize];
   if (isHint) {
     [text replaceTextColor:kHintTextColor];
   }
-  
+
   [model addItem:[[TKMAttributedModelItem alloc] initWithText:text]];
 }
 
-- (void)addContextSentences:(TKMSubject *)subject
-                    toModel:(TKMMutableTableModel *)model {
+- (void)addContextSentences:(TKMSubject *)subject toModel:(TKMMutableTableModel *)model {
   if (!subject.vocabulary.sentencesArray.count) {
     return;
   }
-  
+
   [model addSection:@"Context Sentences"];
   for (TKMVocabulary_Sentence *sentence in subject.vocabulary.sentencesArray) {
     TKMBasicModelItem *item = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
@@ -265,31 +259,30 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   }
 }
 
-- (void)updateWithSubject:(TKMSubject *)subject
-           studyMaterials:(TKMStudyMaterials *)studyMaterials {
+- (void)updateWithSubject:(TKMSubject *)subject studyMaterials:(TKMStudyMaterials *)studyMaterials {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self];
-  
+
   if (subject.hasRadical) {
     [self addMeanings:subject studyMaterials:studyMaterials toModel:model];
 
     [model addSection:@"Mnemonic"];
     [self addFormattedText:subject.radical.formattedMnemonicArray isHint:false toModel:model];
-    
+
     [self addAmalgamationSubjects:subject toModel:model];
   }
   if (subject.hasKanji) {
     [self addMeanings:subject studyMaterials:studyMaterials toModel:model];
     [self addReadings:subject toModel:model];
     [self addComponents:subject title:@"Radicals" toModel:model];
-    
+
     [model addSection:@"Meaning Explanation"];
     [self addFormattedText:subject.kanji.formattedMeaningMnemonicArray isHint:false toModel:model];
     [self addFormattedText:subject.kanji.formattedMeaningHintArray isHint:true toModel:model];
-    
+
     [model addSection:@"Reading Explanation"];
     [self addFormattedText:subject.kanji.formattedReadingMnemonicArray isHint:false toModel:model];
     [self addFormattedText:subject.kanji.formattedReadingHintArray isHint:true toModel:model];
-    
+
     [self addSimilarKanji:subject toModel:model];
     [self addAmalgamationSubjects:subject toModel:model];
   }
@@ -297,21 +290,24 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [self addMeanings:subject studyMaterials:studyMaterials toModel:model];
     [self addReadings:subject toModel:model];
     [self addComponents:subject title:@"Kanji" toModel:model];
-    
+
     [model addSection:@"Meaning Explanation"];
-    [self addFormattedText:subject.vocabulary.formattedMeaningExplanationArray isHint:false toModel:model];
-    
+    [self addFormattedText:subject.vocabulary.formattedMeaningExplanationArray
+                    isHint:false
+                   toModel:model];
+
     [model addSection:@"Reading Explanation"];
-    [self addFormattedText:subject.vocabulary.formattedReadingExplanationArray isHint:false toModel:model];
-    
+    [self addFormattedText:subject.vocabulary.formattedReadingExplanationArray
+                    isHint:false
+                   toModel:model];
+
     [self addContextSentences:subject toModel:model];
-    
+
     // TODO: part of speech
-    
   }
-  
+
   // TODO: Your progress, SRS level, next review, first started, reached guru
-  
+
   _tableModel = model;
   [model reloadTable];
 }
@@ -324,7 +320,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 
 - (void)didTapSubjectChip:(TKMSubjectChip *)chip {
   _lastSubjectChipTapped = chip;
-  
+
   _lastSubjectChipTapped.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.f];
   [_subjectDelegate didTapSubject:_lastSubjectChipTapped.subject];
 }
@@ -332,4 +328,3 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 @end
 
 NS_ASSUME_NONNULL_END
-

@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,8 +25,8 @@ static const CGFloat kVelocityThreshold = 60.f;
 
 // Expose the internals of this private UIKit class.
 @interface UIGestureRecognizerTarget : NSObject
-@property (nonatomic, readonly) SEL action;
-@property (nonatomic, readonly) id target;
+@property(nonatomic, readonly) SEL action;
+@property(nonatomic, readonly) id target;
 @end
 
 // An object that looks enough like a UIPanGestureRecognizer to pass to UINavigationController's
@@ -69,13 +69,12 @@ static const CGFloat kVelocityThreshold = 60.f;
 
 #pragma mark - NavigationController
 
-@interface NavigationController () <UIGestureRecognizerDelegate,
-                                    UINavigationControllerDelegate>
+@interface NavigationController () <UIGestureRecognizerDelegate, UINavigationControllerDelegate>
 @end
 
 @implementation NavigationController {
   bool _isPushingViewController;
-  
+
   UIGestureRecognizerTarget *_builtinPanGestureRecognizerTarget;
 }
 
@@ -83,7 +82,7 @@ static const CGFloat kVelocityThreshold = 60.f;
   [super viewDidLoad];
   self.delegate = self;
   self.interactivePopGestureRecognizer.delegate = self;
-  
+
   // Get the target method of the UINavigationController's pop gesture recognizer.
   Ivar targetsIVar = class_getInstanceVariable([UIGestureRecognizer class], "_targets");
   NSArray *targets = object_getIvar(self.interactivePopGestureRecognizer, targetsIVar);
@@ -95,7 +94,7 @@ static const CGFloat kVelocityThreshold = 60.f;
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
   _isPushingViewController = true;
   [super pushViewController:viewController animated:animated];
-  
+
   id<TKMViewController> newViewController = (id<TKMViewController>)viewController;
   if ([newViewController respondsToSelector:@selector(canSwipeToGoBack)] &&
       [newViewController canSwipeToGoBack]) {
@@ -108,19 +107,19 @@ static const CGFloat kVelocityThreshold = 60.f;
 - (void)handlePopRecognizer:(UIPanGestureRecognizer *)recognizer {
   const CGFloat velocity = [recognizer velocityInView:recognizer.view].x;
   id object = recognizer;
-  
-  if (velocity > kVelocityThreshold &&
-      (recognizer.state == UIGestureRecognizerStateEnded ||
-       recognizer.state == UIGestureRecognizerStateCancelled)) {
+
+  if (velocity > kVelocityThreshold && (recognizer.state == UIGestureRecognizerStateEnded ||
+                                        recognizer.state == UIGestureRecognizerStateCancelled)) {
     object = [[FakeGestureRecognizer alloc] initWithDelegate:recognizer
                                        horizontalTranslation:recognizer.view.frame.size.width];
   }
-  
+
   // Call the builtin gesture recognizer's selector.
   IMP imp = [_builtinPanGestureRecognizerTarget.target
-             methodForSelector:_builtinPanGestureRecognizerTarget.action];
+      methodForSelector:_builtinPanGestureRecognizerTarget.action];
   void (*func)(id, SEL, UIPanGestureRecognizer *) = (void *)imp;
-  func(_builtinPanGestureRecognizerTarget.target, _builtinPanGestureRecognizerTarget.action, object);
+  func(
+      _builtinPanGestureRecognizerTarget.target, _builtinPanGestureRecognizerTarget.action, object);
 }
 
 - (BOOL)_shouldCrossFadeBottomBars {
@@ -136,7 +135,7 @@ static const CGFloat kVelocityThreshold = 60.f;
   if (self.viewControllers.count <= 1 || _isPushingViewController) {
     return NO;
   }
-  
+
   id<TKMViewController> topViewController = (id<TKMViewController>)self.topViewController;
   if ([topViewController respondsToSelector:@selector(canSwipeToGoBack)]) {
     return [topViewController canSwipeToGoBack];

@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,14 +28,14 @@ static NSString *const kPrivacyPolicyURL =
 
 @interface LoginViewController () <UITextFieldDelegate>
 
-@property (weak, nonatomic) IBOutlet UILabel *signInLabel;
-@property (weak, nonatomic) IBOutlet UITextField *usernameField;
-@property (weak, nonatomic) IBOutlet UITextField *passwordField;
-@property (weak, nonatomic) IBOutlet UIButton *signInButton;
-@property (weak, nonatomic) IBOutlet UILabel *privacyPolicyLabel;
-@property (weak, nonatomic) IBOutlet UIButton *privacyPolicyButton;
-@property (weak, nonatomic) IBOutlet UIView *activityIndicatorOverlay;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property(weak, nonatomic) IBOutlet UILabel *signInLabel;
+@property(weak, nonatomic) IBOutlet UITextField *usernameField;
+@property(weak, nonatomic) IBOutlet UITextField *passwordField;
+@property(weak, nonatomic) IBOutlet UIButton *signInButton;
+@property(weak, nonatomic) IBOutlet UILabel *privacyPolicyLabel;
+@property(weak, nonatomic) IBOutlet UIButton *privacyPolicyButton;
+@property(weak, nonatomic) IBOutlet UIView *activityIndicatorOverlay;
+@property(weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @end
 
@@ -43,14 +43,14 @@ static NSString *const kPrivacyPolicyURL =
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  
+
   TKMAddShadowToView(_signInLabel, 0.f, 1.f, 5.f);
   TKMAddShadowToView(_privacyPolicyLabel, 0.f, 1.f, 2.f);
   TKMAddShadowToView(_privacyPolicyButton, 0.f, 1.f, 2.f);
-  
+
   _usernameField.delegate = self;
   _passwordField.delegate = self;
-  
+
   [_usernameField addTarget:self
                      action:@selector(textFieldDidChange:)
            forControlEvents:UIControlEventEditingChanged];
@@ -77,11 +77,9 @@ static NSString *const kPrivacyPolicyURL =
 }
 
 - (void)textFieldDidChange:(UITextField *)textField {
-  bool enabled = _usernameField.text.length != 0 &&
-                 _passwordField.text.length != 0;
+  bool enabled = _usernameField.text.length != 0 && _passwordField.text.length != 0;
   _signInButton.enabled = enabled;
-  _signInButton.backgroundColor = enabled ? TKMRadicalColor2()
-                                          : [UIColor darkGrayColor];
+  _signInButton.backgroundColor = enabled ? TKMRadicalColor2() : [UIColor darkGrayColor];
 }
 
 #pragma mark - Sign In flow
@@ -91,11 +89,11 @@ static NSString *const kPrivacyPolicyURL =
     return;
   }
   [self showActivityIndicatorOverlay:true];
-  
+
   __weak LoginViewController *weakSelf = self;
   [Client getCookieForUsername:_usernameField.text
                       password:_passwordField.text
-                       handler:^(NSError * _Nullable error, NSString * _Nullable cookie) {
+                       handler:^(NSError *_Nullable error, NSString *_Nullable cookie) {
                          [weakSelf handleCookieResponse:error cookie:cookie];
                        }];
 }
@@ -109,13 +107,17 @@ static NSString *const kPrivacyPolicyURL =
     }
     return;
   }
-  
+
   UserDefaults.userCookie = cookie;
-  
+
   __weak LoginViewController *weakSelf = self;
-  [Client getApiTokenForCookie:cookie handler:^(NSError * _Nullable error, NSString * _Nullable apiToken, NSString * _Nullable emailAddress) {
-    [weakSelf handleApiTokenResponse:error apiToken:apiToken emailAddress:emailAddress];
-  }];
+  [Client getApiTokenForCookie:cookie
+                       handler:^(NSError *_Nullable error, NSString *_Nullable apiToken,
+                                 NSString *_Nullable emailAddress) {
+                         [weakSelf handleApiTokenResponse:error
+                                                 apiToken:apiToken
+                                             emailAddress:emailAddress];
+                       }];
 }
 
 - (void)handleApiTokenResponse:(NSError *)error
@@ -125,10 +127,10 @@ static NSString *const kPrivacyPolicyURL =
     [self showLoginError:@"An error occurred fetching your API key"];
     return;
   }
-  
+
   UserDefaults.userEmailAddress = emailAddress;
   UserDefaults.userApiToken = apiToken;
-  
+
   dispatch_async(dispatch_get_main_queue(), ^{
     [[NSNotificationCenter defaultCenter] postNotificationName:kLoginCompleteNotification
                                                         object:self];
@@ -142,7 +144,9 @@ static NSString *const kPrivacyPolicyURL =
     UIAlertController *c = [UIAlertController alertControllerWithTitle:@"Error"
                                                                message:message
                                                         preferredStyle:UIAlertControllerStyleAlert];
-    [c addAction:[UIAlertAction actionWithTitle:@"Close" style:UIAlertActionStyleCancel handler:nil]];
+    [c addAction:[UIAlertAction actionWithTitle:@"Close"
+                                          style:UIAlertActionStyleCancel
+                                        handler:nil]];
     [self presentViewController:c animated:YES completion:nil];
     [self showActivityIndicatorOverlay:false];
   });

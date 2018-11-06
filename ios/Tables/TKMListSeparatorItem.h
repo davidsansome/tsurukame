@@ -19,6 +19,6 @@
 - (instancetype)initWithLabel:(NSString *)label NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-@property (nonatomic, readonly) NSString *label;
+@property(nonatomic, readonly) NSString *label;
 
 @end

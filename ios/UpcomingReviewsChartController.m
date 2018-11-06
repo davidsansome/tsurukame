@@ -1,11 +1,11 @@
 // Copyright 2018 David Sansome
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,8 +37,7 @@
   return self;
 }
 
-- (NSString * _Nonnull)stringForValue:(double)value
-                                 axis:(ChartAxisBase * _Nullable)axis {
+- (NSString *_Nonnull)stringForValue:(double)value axis:(ChartAxisBase *_Nullable)axis {
   if (value == 0) {
     return @"";
   }
@@ -47,7 +46,6 @@
 }
 
 @end
-
 
 @implementation UpcomingReviewsChartController
 
@@ -71,15 +69,15 @@
 }
 
 - (void)update:(NSArray<NSNumber *> *)upcomingReviews
-currentReviewCount:(int)currentReviewCount
-        atDate:(nonnull NSDate *)date {
+    currentReviewCount:(int)currentReviewCount
+                atDate:(nonnull NSDate *)date {
   NSMutableArray<BarChartDataEntry *> *hourlyData = [NSMutableArray array];
   NSMutableArray<ChartDataEntry *> *cumulativeData = [NSMutableArray array];
-  
+
   // Add the reviews pending now.
   int cumulativeReviews = currentReviewCount;
   [cumulativeData addObject:[[ChartDataEntry alloc] initWithX:0 y:cumulativeReviews]];
-  
+
   // Add upcoming hourly reviews.
   for (int i = 0; i < upcomingReviews.count; ++i) {
     int x = i + 1;
@@ -90,23 +88,24 @@ currentReviewCount:(int)currentReviewCount
       [hourlyData addObject:[[BarChartDataEntry alloc] initWithX:x y:y]];
     }
   }
-  
-  LineChartDataSet *lineDataSet = [[LineChartDataSet alloc] initWithValues:cumulativeData label:nil];
+
+  LineChartDataSet *lineDataSet = [[LineChartDataSet alloc] initWithValues:cumulativeData
+                                                                     label:nil];
   lineDataSet.drawValuesEnabled = NO;
   lineDataSet.drawCircleHoleEnabled = NO;
   lineDataSet.circleRadius = 1.5f;
-  lineDataSet.colors = @[TKMVocabularyColor2()];
-  lineDataSet.circleColors = @[TKMVocabularyColor2()];
-  
+  lineDataSet.colors = @[ TKMVocabularyColor2() ];
+  lineDataSet.circleColors = @[ TKMVocabularyColor2() ];
+
   BarChartDataSet *barDataSet = [[BarChartDataSet alloc] initWithValues:hourlyData label:nil];
   barDataSet.axisDependency = AxisDependencyRight;
-  barDataSet.colors = @[TKMRadicalColor2()];
+  barDataSet.colors = @[ TKMRadicalColor2() ];
   barDataSet.valueFormatter = [[ChartDefaultValueFormatter alloc] initWithDecimals:0];
-  
+
   CombinedChartData *data = [[CombinedChartData alloc] init];
   data.lineData = [[LineChartData alloc] initWithDataSet:lineDataSet];
   data.barData = [[BarChartData alloc] initWithDataSet:barDataSet];
-  
+
   _view.data = data;
   _view.xAxis.valueFormatter = [[UpcomingReviewsXAxisValueFormatter alloc] initWithStartTime:date];
   _view.rightAxis.axisMaximum = barDataSet.yMax * 1.1f;  // Leave a little room on top for labels.

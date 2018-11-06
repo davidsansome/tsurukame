@@ -60,11 +60,13 @@
 
 - (void)updateWithItem:(TKMSwitchModelItem *)item {
   [self.switchView removeTarget:nil action:nil forControlEvents:UIControlEventValueChanged];
-  
+
   [super updateWithItem:item];
-  
+
   self.switchView.on = item.on;
-  [self.switchView addTarget:item.target action:item.action forControlEvents:UIControlEventValueChanged];
+  [self.switchView addTarget:item.target
+                      action:item.action
+            forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)didSelectCell {
