@@ -237,10 +237,6 @@ struct AnimationContext {
          selector:@selector(keyboardWillShow:)
              name:UIKeyboardWillShowNotification
            object:nil];
-  [nc addObserver:self
-         selector:@selector(keyboardWillHide:)
-             name:UIKeyboardWillHideNotification
-           object:nil];
 
   [_subjectDetailsView setupWithServices:_services showHints:NO subjectDelegate:self];
 
@@ -294,14 +290,6 @@ struct AnimationContext {
       [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
   [self resizeKeyboardToHeight:keyboardHeight];
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification {
-  _animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-  _animationCurve = (UIViewAnimationCurve)
-      [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
-
-  [self resizeKeyboardToHeight:0];
 }
 
 - (void)resizeKeyboardToHeight:(CGFloat)height {
