@@ -17,6 +17,7 @@
 #import "DataLoader.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMKanaInput.h"
+#import "TKMServices.h"
 #import "proto/Wanikani.pbobjc.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
@@ -59,9 +60,17 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
 @end
 
 @implementation SearchResultViewController {
+  TKMServices *_services;
+  __weak id<SearchResultViewControllerDelegate> _delegate;
+  
   NSArray<TKMSubject *> *_allSubjects;
   TKMTableModel *_model;
   dispatch_queue_t _queue;
+}
+
+- (void)setupWithServices:(id)services delegate:(id<SearchResultViewControllerDelegate>)delegate {
+  _services = services;
+  _delegate = delegate;
 }
 
 - (void)viewDidLoad {
@@ -77,7 +86,7 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
 
 - (void)ensureAllSubjectsLoaded {
   if (_allSubjects == nil) {
-    _allSubjects = [_dataLoader loadAllSubjects];
+    _allSubjects = [_services.dataLoader loadAllSubjects];
   }
 }
 

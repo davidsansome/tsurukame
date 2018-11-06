@@ -14,12 +14,11 @@
 
 #import <UIKit/UIKit.h>
 
-#import "DataLoader.h"
-#import "LocalCachingClient.h"
-#import "ReviewItem.h"
-
+@class ReviewItem;
 @class ReviewViewController;
-@class TKMAudio;
+@class TKMServices;
+
+NS_ASSUME_NONNULL_BEGIN;
 
 @protocol ReviewViewControllerDelegate <NSObject>
 
@@ -38,14 +37,10 @@
 
 @interface ReviewViewController : UIViewController
 
-// Must set these prior to starting.
-@property(nonatomic) DataLoader *dataLoader;
-@property(nonatomic) LocalCachingClient *localCachingClient;
-@property(nonatomic) TKMAudio *audio;
-@property(nonatomic, copy) NSArray<ReviewItem *> *items;
-@property(nonatomic) bool hideBackButton;
-
-@property(nonatomic, weak) id<ReviewViewControllerDelegate> delegate;
+- (void)setupWithServices:(TKMServices *)services
+                    items:(NSArray<ReviewItem *> *)items
+           hideBackButton:(BOOL)hideBackButton
+                 delegate:(nullable id<ReviewViewControllerDelegate>)delegate;
 
 @property(nonatomic) bool wrappingUp;
 @property(nonatomic, readonly) int tasksAnsweredCorrectly;
@@ -55,4 +50,10 @@
 
 
 @interface DefaultReviewViewControllerDelegate : NSObject<ReviewViewControllerDelegate>
+
+- (instancetype)initWithServices:(TKMServices *)services NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
+
 @end
+
+NS_ASSUME_NONNULL_END;

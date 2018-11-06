@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #import "AnswerChecker.h"
+#import "DataLoader.h"
+#import "LocalCachingClient.h"
 #import "NSMutableArray+Shuffle.h"
 #import "ReviewSummaryViewController.h"
 #import "ReviewViewController.h"
@@ -23,11 +25,11 @@
 #import "TKMFontLoader.h"
 #import "TKMGradientView.h"
 #import "TKMKanaInput.h"
+#import "TKMServices.h"
 #import "UIView+SafeAreaInsets.h"
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
-
-#import <WebKit/WebKit.h>
+#import "Tables/TKMSubjectModelItem.h"
 
 #include <memory>
 
@@ -90,7 +92,10 @@ struct AnimationContext {
 
 @implementation ReviewViewController {
   TKMKanaInput *_kanaInput;
-  id<ReviewViewControllerDelegate> _defaultDelegate;
+  TKMServices *_services;
+  BOOL _hideBackButton;
+  __weak id<ReviewViewControllerDelegate> _delegate;
+  DefaultReviewViewControllerDelegate *_defaultDelegate;  // Required for the strong reference.
 
   NSMutableArray<ReviewItem *> *_activeQueue;
   NSMutableArray<ReviewItem *> *_reviewQueue;
@@ -141,8 +146,6 @@ struct AnimationContext {
   self = [super initWithCoder:aDecoder];
   if (self) {
     _kanaInput = [[TKMKanaInput alloc] initWithDelegate:self];
-    _defaultDelegate = [[DefaultReviewViewControllerDelegate alloc] init];
-    _delegate = _defaultDelegate;
     _hapticGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
     
     _tickImage = [UIImage imageNamed:@"confirm"];
@@ -160,12 +163,18 @@ struct AnimationContext {
   return self;
 }
 
-#pragma mark - Public methods
-
-- (void)setDelegate:(id<ReviewViewControllerDelegate>)delegate {
-  if (delegate != _defaultDelegate) {
-    _defaultDelegate = nil;
+- (void)setupWithServices:(TKMServices *)services
+                    items:(NSArray<ReviewItem *> *)items
+           hideBackButton:(BOOL)hideBackButton
+                 delegate:(nullable id<ReviewViewControllerDelegate>)delegate {
+  if (!delegate) {
+    _defaultDelegate = [[DefaultReviewViewControllerDelegate alloc] initWithServices:_services];
+    delegate = _defaultDelegate;
   }
+  
+  _services = services;
+  [self setItems:items];
+  _hideBackButton = hideBackButton;
   _delegate = delegate;
 }
 
@@ -229,10 +238,9 @@ struct AnimationContext {
              name:UIKeyboardWillHideNotification
            object:nil];
   
-  _subjectDetailsView.dataLoader = _dataLoader;
-  _subjectDetailsView.localCachingClient = _localCachingClient;
-  _subjectDetailsView.audio = _audio;
-  _subjectDetailsView.subjectDelegate = self;
+  [_subjectDetailsView setupWithServices:_services
+                               showHints:NO
+                         subjectDelegate:self];
   
   _answerField.delegate = _kanaInput;
   [_answerField addTarget:self
@@ -310,14 +318,10 @@ struct AnimationContext {
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
   if ([segue.identifier isEqualToString:@"reviewSummary"]) {
     ReviewSummaryViewController *vc = (ReviewSummaryViewController *)segue.destinationViewController;
-    vc.dataLoader = _dataLoader;
-    vc.localCachingClient = _localCachingClient;
-    vc.items = _completedReviews;
+    [vc setupWithServices:_services items:_completedReviews];
   } else if ([segue.identifier isEqualToString:@"subjectDetails"]) {
     SubjectDetailsViewController *vc = (SubjectDetailsViewController *)segue.destinationViewController;
-    vc.dataLoader = _dataLoader;
-    vc.localCachingClient = _localCachingClient;
-    vc.subject = (TKMSubject *)sender;
+    [vc setupWithServices:_services subject:(TKMSubject *)sender];
   }
 }
 
@@ -380,9 +384,9 @@ struct AnimationContext {
   // Choose a random task from the active queue.
   _activeTaskIndex = arc4random_uniform((uint32_t)_activeQueue.count);
   _activeTask = _activeQueue[_activeTaskIndex];
-  _activeSubject = [_dataLoader loadSubject:_activeTask.assignment.subjectId];
+  _activeSubject = [_services.dataLoader loadSubject:_activeTask.assignment.subjectId];
   _activeStudyMaterials =
-      [_localCachingClient getStudyMaterialForID:_activeTask.assignment.subjectId];
+      [_services.localCachingClient getStudyMaterialForID:_activeTask.assignment.subjectId];
   
   // Choose whether to ask the meaning or the reading.
   if (_activeTask.answeredMeaning) {
@@ -701,7 +705,8 @@ struct AnimationContext {
 - (void)submit {
   NSString *answer = [_answerField.text copy];
   TKMAnswerCheckerResult result = CheckAnswer(&answer, _activeSubject,
-                                              _activeStudyMaterials, _activeTaskType, _dataLoader);
+                                              _activeStudyMaterials, _activeTaskType,
+                                              _services.dataLoader);
   _answerField.text = answer;
   
   switch (result) {
@@ -897,7 +902,7 @@ struct AnimationContext {
     _activeStudyMaterials.subjectType = _activeSubject.subjectTypeString;
   }
   [_activeStudyMaterials.meaningSynonymsArray addObject:_answerField.text];
-  [_localCachingClient updateStudyMaterial:_activeStudyMaterials];
+  [_services.localCachingClient updateStudyMaterial:_activeStudyMaterials];
 }
 
 #pragma mark - TKMSubjectDelegate
@@ -909,7 +914,17 @@ struct AnimationContext {
 @end
 
 
-@implementation DefaultReviewViewControllerDelegate
+@implementation DefaultReviewViewControllerDelegate {
+  TKMServices *_services;
+}
+
+- (instancetype)initWithServices:(TKMServices *)services {
+  self = [super init];
+  if (self) {
+    _services = services;
+  }
+  return self;
+}
 
 - (bool)reviewViewController:(ReviewViewController *)reviewViewController
              allowsCheatsFor:(ReviewItem *)reviewItem {
@@ -962,7 +977,7 @@ struct AnimationContext {
 
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
           finishedReviewItem:(ReviewItem *)reviewItem {
-  [reviewViewController.localCachingClient sendProgress:@[reviewItem.answer]];
+  [_services.localCachingClient sendProgress:@[reviewItem.answer]];
 }
 
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {

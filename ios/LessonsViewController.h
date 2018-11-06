@@ -14,19 +14,14 @@
 
 #import <UIKit/UIKit.h>
 
-#import "DataLoader.h"
-#import "LocalCachingClient.h"
-#import "ReviewItem.h"
-#import "TKMAudio.h"
+@class ReviewItem;
+@class TKMServices;
 
 @interface LessonsViewController : UIViewController <
     UIPageViewControllerDataSource,
     UIPageViewControllerDelegate>
 
-@property(nonatomic, assign) DataLoader *dataLoader;
-@property(nonatomic, assign) LocalCachingClient *localCachingClient;
-@property(nonatomic, assign) TKMAudio *audio;
-
-@property(nonatomic, copy) NSArray<ReviewItem *> *items;
+- (void)setupWithServices:(TKMServices *)services
+                    items:(NSArray<ReviewItem *> *)items;
 
 @end

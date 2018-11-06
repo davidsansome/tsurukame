@@ -19,6 +19,7 @@
 #import "proto/Wanikani+Convenience.h"
 #import "Style.h"
 #import "SubjectDetailsViewController.h"
+#import "TKMServices.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
@@ -28,7 +29,15 @@
 @end
 
 @implementation SubjectsByLevelViewController {
+  TKMServices *_services;
+  int _level;
   TKMTableModel *_model;
+}
+
+- (void)setupWithServices:(TKMServices *)services level:(int)level showAnswers:(bool)showAnswers {
+  _services = services;
+  _level = level;
+  [self setShowAnswers:showAnswers animated:NO];
 }
 
 - (void)viewDidLoad {
@@ -40,8 +49,8 @@
   [model addSection:@"Kanji"];
   [model addSection:@"Vocabulary"];
   
-  for (TKMAssignment *assignment in [_localCachingClient getAssignmentsAtLevel:_level]) {
-    TKMSubject *subject = [_dataLoader loadSubject:assignment.subjectId];
+  for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtLevel:_level]) {
+    TKMSubject *subject = [_services.dataLoader loadSubject:assignment.subjectId];
     int section = subject.subjectType - 1;
     TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject
                                                                   assignment:assignment
@@ -127,10 +136,7 @@
 - (void)didTapSubject:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
-  vc.dataLoader = _dataLoader;
-  vc.localCachingClient = _localCachingClient;
-  vc.audio = _audio;
-  vc.subject = subject;
+  [vc setupWithServices:_services subject:subject];
   [self.navigationController pushViewController:vc animated:YES];
 }
 
