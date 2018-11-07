@@ -28,13 +28,12 @@
 
 @implementation ReviewSummaryViewController {
   TKMServices *_services;
-  NSArray<ReviewItem *> *_items;
   TKMTableModel *_model;
 }
 
 - (void)setupWithServices:(TKMServices *)services items:(NSArray<ReviewItem *> *)items {
   _services = services;
-  _items = items;
+  [self setItems:items];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
