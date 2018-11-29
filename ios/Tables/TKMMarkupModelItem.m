@@ -19,9 +19,8 @@ static UIColor *kKanjiBackgroundColor;
 static UIColor *kVocabularyBackgroundColor;
 
 static NSAttributedString *AttributedStringForFormattedText(
-                                                            TKMFormattedText *formattedText,
-                                                            NSDictionary<NSAttributedStringKey, id> *standardAttributes
-                                                            ) {
+    TKMFormattedText *formattedText,
+    NSDictionary<NSAttributedStringKey, id> *standardAttributes) {
   NSMutableDictionary<NSAttributedStringKey, id> *attributes = [NSMutableDictionary dictionary];
   
   if(standardAttributes) {
@@ -66,9 +65,9 @@ static NSAttributedString *AttributedStringForFormattedText(
 }
 
 NSMutableAttributedString *TKMRenderFormattedText(
-                                                  NSArray<TKMFormattedText *> *formattedText,
-                                                  NSDictionary<NSAttributedStringKey, id> *standardAttributes
-                                                  ) {
+    NSArray<TKMFormattedText *> *formattedText,
+    NSDictionary<NSAttributedStringKey, id> *standardAttributes) {
+  
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     kRadicalBackgroundColor = [UIColor colorWithRed:0.839 green:0.945 blue:1 alpha:1];  // #d6f1ff
