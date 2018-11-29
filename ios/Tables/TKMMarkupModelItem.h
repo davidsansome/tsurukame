@@ -17,4 +17,5 @@
 #import "proto/Wanikani.pbobjc.h"
 
 extern NSMutableAttributedString *TKMRenderFormattedText(
-    NSArray<TKMFormattedText *> *formattedText);
+    NSArray<TKMFormattedText *> *formattedText,
+    NSDictionary<NSAttributedStringKey, id> *standardAttributes);

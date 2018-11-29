@@ -18,8 +18,15 @@ static UIColor *kRadicalBackgroundColor;
 static UIColor *kKanjiBackgroundColor;
 static UIColor *kVocabularyBackgroundColor;
 
-static NSAttributedString *AttributedStringForFormattedText(TKMFormattedText *formattedText) {
+static NSAttributedString *AttributedStringForFormattedText(
+    TKMFormattedText *formattedText,
+    NSDictionary<NSAttributedStringKey, id> *standardAttributes) {
   NSMutableDictionary<NSAttributedStringKey, id> *attributes = [NSMutableDictionary dictionary];
+  
+  if(standardAttributes) {
+    [attributes addEntriesFromDictionary:standardAttributes];
+  }
+  
   for (int i = 0; i < formattedText.formatArray.count; i++) {
     TKMFormattedText_Format format = [formattedText.formatArray valueAtIndex:i];
     switch (format) {
@@ -57,7 +64,10 @@ static NSAttributedString *AttributedStringForFormattedText(TKMFormattedText *fo
   return [[NSAttributedString alloc] initWithString:formattedText.text attributes:attributes];
 }
 
-NSMutableAttributedString *TKMRenderFormattedText(NSArray<TKMFormattedText *> *formattedText) {
+NSMutableAttributedString *TKMRenderFormattedText(
+    NSArray<TKMFormattedText *> *formattedText,
+    NSDictionary<NSAttributedStringKey, id> *standardAttributes) {
+  
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     kRadicalBackgroundColor = [UIColor colorWithRed:0.839 green:0.945 blue:1 alpha:1];  // #d6f1ff
@@ -70,7 +80,7 @@ NSMutableAttributedString *TKMRenderFormattedText(NSArray<TKMFormattedText *> *f
 
   NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
   for (TKMFormattedText *part in formattedText) {
-    [text appendAttributedString:AttributedStringForFormattedText(part)];
+    [text appendAttributedString:AttributedStringForFormattedText(part, standardAttributes)];
   }
   return text;
 }
