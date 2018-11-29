@@ -231,12 +231,12 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   if (!formattedText.count) {
     return;
   }
-
-  NSMutableAttributedString *text = TKMRenderFormattedText(formattedText);
+  
+  NSDictionary<NSAttributedStringKey, id> *standardAttributes =
+  isHint ? [NSDictionary dictionaryWithObject:kHintTextColor forKey:NSForegroundColorAttributeName]: nil;
+  
+  NSMutableAttributedString *text = TKMRenderFormattedText(formattedText, standardAttributes);
   [text replaceFontSize:kFontSize];
-  if (isHint) {
-    [text replaceTextColor:kHintTextColor];
-  }
 
   [model addItem:[[TKMAttributedModelItem alloc] initWithText:text]];
 }
