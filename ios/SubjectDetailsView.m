@@ -189,7 +189,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 }
 
 - (void)addSimilarKanji:(TKMSubject *)subject toModel:(TKMMutableTableModel *)model {
-  int currentLevel = [_services.localCachingClient getUsersCurrentLevel];
+  int currentLevel = [_services.localCachingClient getUserInfo].level;
   bool addedSection = false;
   for (TKMVisuallySimilarKanji *visuallySimilarKanji in subject.kanji.visuallySimilarKanjiArray) {
     if (visuallySimilarKanji.score < kVisuallySimilarKanjiScoreThreshold) {

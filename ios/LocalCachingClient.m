@@ -364,18 +364,6 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   return ret;
 }
 
-- (int)getUsersCurrentLevel {
-  __block int ret = 0;
-  [_db inDatabase:^(FMDatabase *_Nonnull db) {
-    FMResultSet *r = [db executeQuery:@"SELECT MAX(level) FROM subject_progress"];
-    if ([r next]) {
-      ret = [r intForColumnIndex:0];
-    }
-    [r close];
-  }];
-  return ret;
-}
-
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
   if (level > _dataLoader.maxLevelGrantedBySubscription) {
     return nil;
@@ -389,7 +377,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 }
 
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
-  return [self getAssignmentsAtLevel:[self getUsersCurrentLevel]];
+  return [self getAssignmentsAtLevel:[self getUserInfo].level];
 }
 
 #pragma mark - Getting cached data

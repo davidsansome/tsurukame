@@ -104,14 +104,14 @@ static void UnsetAllLabels(ChartViewBase *view) {
   return self;
 }
 
-- (void)update:(NSArray<TKMAssignment *> *)maxLevelAssignments {
-  if (maxLevelAssignments.count == 0) {
+- (void)update:(NSArray<TKMAssignment *> *)currentLevelAssignments {
+  if (currentLevelAssignments.count == 0) {
     return;
   }
 
   int sliceSizes[PieSlice_Count] = {0};
   int total = 0;
-  for (TKMAssignment *assignment in maxLevelAssignments) {
+  for (TKMAssignment *assignment in currentLevelAssignments) {
     if (!assignment.hasSubjectType || assignment.subjectType != _subjectType) {
       continue;
     }

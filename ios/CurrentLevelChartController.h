@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly) PieChartView *view;
 @property(nonatomic) TKMSubject_Type subjectType;
 
-- (void)update:(NSArray<TKMAssignment *> *)maxLevelAssignments;
+- (void)update:(NSArray<TKMAssignment *> *)currentLevelAssignments;
 
 @end
 
