@@ -15,6 +15,7 @@
 #import "TKMOfflineAudioViewController.h"
 
 #import "TKMAudio.h"
+#import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "UserDefaults.h"
@@ -72,6 +73,7 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
 
 @implementation TKMOfflineAudioViewController {
   NSURLSession *_urlSession;
+  NSFileManager *_fileManager;
   TKMTableModel *_model;
   NSMutableDictionary<NSString *, NSURLSessionDownloadTask *> *_downloads;
   NSMutableDictionary<NSString *, NSIndexPath *> *_indexPaths;
@@ -82,6 +84,7 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
   if (self) {
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     _urlSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+    _fileManager = [[NSFileManager alloc] init];
     _downloads = [NSMutableDictionary dictionary];
   }
   return self;
@@ -90,6 +93,8 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
 - (void)rerender {
   _indexPaths = [NSMutableDictionary dictionary];
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
+  [model addSection:@"" footer:@"Download audio to your phone so it plays without delay and "
+      "is available when you're not connected to the internet."];
 
   for (const AvailablePackage &package : kAvailablePackages) {
     TKMDownloadModelItem *item = [[TKMDownloadModelItem alloc] initWithFilename:package.filename
@@ -108,6 +113,19 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
     }
 
     _indexPaths[package.filename] = [model addItem:item];
+  }
+  
+  if ([_fileManager fileExistsAtPath:[TKMAudio cacheDirectoryPath]]) {
+    [model addSection];
+    TKMBasicModelItem *deleteItem =
+        [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                           title:@"Delete all offline audio"
+                                        subtitle:nil
+                                   accessoryType:UITableViewCellAccessoryNone
+                                          target:self
+                                          action:@selector(didTapDeleteAllAudio:)];
+    deleteItem.textColor = [UIColor redColor];
+    [model addItem:deleteItem];
   }
 
   _model = model;
@@ -178,12 +196,11 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
                          }];
   };
 
-  NSFileManager *fileManager = [[NSFileManager alloc] init];
   NSError *error;
-  [fileManager createFilesAndDirectoriesAtPath:[TKMAudio cacheDirectoryPath]
-                                   withTarData:tarData
-                                         error:&error
-                                      progress:extractProgress];
+  [_fileManager createFilesAndDirectoriesAtPath:[TKMAudio cacheDirectoryPath]
+                                    withTarData:tarData
+                                          error:&error
+                                       progress:extractProgress];
 
   if (error) {
     [self reportErrorOnMainThread:filename
@@ -203,11 +220,13 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
   });
 }
 
-- (void)reportErrorOnMainThread:(NSString *)filename
+- (void)reportErrorOnMainThread:(nullable NSString *)filename
                           title:(NSString *)title
                         message:(NSString *)message {
   dispatch_async(dispatch_get_main_queue(), ^{
-    [_downloads removeObjectForKey:filename];
+    if (filename) {
+      [_downloads removeObjectForKey:filename];
+    }
 
     UIAlertController *alert =
         [UIAlertController alertControllerWithTitle:title
@@ -266,6 +285,35 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
       [view updateProgress];
     }
   });
+}
+
+- (void)didTapDeleteAllAudio:(id)sender {
+  __weak TKMOfflineAudioViewController *weakSelf = self;
+  UIAlertController *c = [UIAlertController alertControllerWithTitle:@"Delete all offline audio"
+                                                             message:@"Are you sure?"
+                                                      preferredStyle:UIAlertControllerStyleAlert];
+  [c addAction:[UIAlertAction
+                actionWithTitle:@"Delete"
+                style:UIAlertActionStyleDestructive
+                handler:^(UIAlertAction *_Nonnull action) {
+                  [weakSelf deleteAllAudio];
+                }]];
+  [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                        style:UIAlertActionStyleCancel
+                                      handler:nil]];
+  [self presentViewController:c animated:YES completion:nil];
+}
+
+- (void)deleteAllAudio {
+  NSError *error;
+  if (![_fileManager removeItemAtPath:[TKMAudio cacheDirectoryPath] error:&error]) {
+    [self reportErrorOnMainThread:nil
+                            title:@"Error deleting files"
+                          message:error.localizedDescription];
+  } else {
+    UserDefaults.installedAudioPackages = [NSSet set];
+    [self rerender];
+  }
 }
 
 @end
