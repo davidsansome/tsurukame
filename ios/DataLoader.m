@@ -44,15 +44,22 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
   return self;
 }
 
-- (int)maximumLevel {
+- (int)maxSubjectLevel {
   return (int)_header.subjectsByLevelArray_Count;
+}
+
+- (int)maxLevelGrantedBySubscription {
+  if (_maxLevelGrantedBySubscription) {
+    return MIN(_maxLevelGrantedBySubscription, self.maxSubjectLevel);
+  }
+  return self.maxSubjectLevel;
 }
 
 - (bool)isValidSubjectID:(int)subjectID {
   return subjectID < _header.subjectByteOffsetArray_Count && subjectID >= 0;
 }
 
-- (TKMSubject *)loadSubject:(int)subjectID {
+- (nullable TKMSubject *)loadSubject:(int)subjectID {
   NSAssert([self isValidSubjectID:subjectID], @"Tried to read subject %d outside 0-%d", subjectID,
            (int)_header.subjectByteOffsetArray_Count);
 
@@ -74,6 +81,11 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
   }
 
   TKMSubject *ret = [TKMSubject parseFromData:data error:nil];
+  if (ret.level > self.maxLevelGrantedBySubscription) {
+    NSLog(@"Tried to load subject %d from level %d > max level %d",
+          subjectID, ret.level, self.maxLevelGrantedBySubscription);
+    return nil;
+  }
   ret.id_p = subjectID;
   return ret;
 }
@@ -81,12 +93,18 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
 - (NSArray<TKMSubject *> *)loadAllSubjects {
   NSMutableArray<TKMSubject *> *ret = [NSMutableArray array];
   for (int subjectID = 1; subjectID < _header.subjectByteOffsetArray_Count; ++subjectID) {
-    [ret addObject:[self loadSubject:subjectID]];
+    TKMSubject *subject = [self loadSubject:subjectID];
+    if (subject) {
+      [ret addObject:subject];
+    }
   }
   return ret;
 }
 
-- (TKMSubjectsByLevel *)subjectsByLevel:(int)level {
+- (nullable TKMSubjectsByLevel *)subjectsByLevel:(int)level {
+  if (level > self.maxLevelGrantedBySubscription) {
+    return nil;
+  }
   return _header.subjectsByLevelArray[level - 1];
 }
 

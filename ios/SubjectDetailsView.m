@@ -195,13 +195,13 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     if (visuallySimilarKanji.score < kVisuallySimilarKanjiScoreThreshold) {
       continue;
     }
+    TKMSubject *subject = [_services.dataLoader loadSubject:visuallySimilarKanji.id_p];
+    if (!subject || subject.level > currentLevel) {
+      continue;
+    }
     if (!addedSection) {
       [model addSection:@"Visually Similar Kanji"];
       addedSection = true;
-    }
-    TKMSubject *subject = [_services.dataLoader loadSubject:visuallySimilarKanji.id_p];
-    if (subject.level > currentLevel) {
-      continue;
     }
 
     TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject
@@ -211,14 +211,23 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 }
 
 - (void)addAmalgamationSubjects:(TKMSubject *)subject toModel:(TKMMutableTableModel *)model {
-  if (!subject.amalgamationSubjectIdsArray_Count) {
-    return;
-  }
-  [model addSection:@"Used in"];
+  NSMutableArray<TKMSubject *> *amalgamationSubjects = [NSMutableArray array];
   for (int i = 0; i < subject.amalgamationSubjectIdsArray_Count; ++i) {
     int subjectID = [subject.amalgamationSubjectIdsArray valueAtIndex:i];
-    TKMSubject *subject = [_services.dataLoader loadSubject:subjectID];
-    [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject delegate:_subjectDelegate]];
+    TKMSubject *amalgamationSubject = [_services.dataLoader loadSubject:subjectID];
+    if (amalgamationSubject) {
+      [amalgamationSubjects addObject:amalgamationSubject];
+    }
+  }
+  
+  if (!amalgamationSubjects.count) {
+    return;
+  }
+  
+  [model addSection:@"Used in"];
+  for (TKMSubject *amalgamationSubject in amalgamationSubjects) {
+    [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:amalgamationSubject
+                                                       delegate:_subjectDelegate]];
   }
 }
 

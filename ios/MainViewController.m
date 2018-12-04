@@ -287,7 +287,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)updateUserInfo {
-  TKMUser *user = _services.localCachingClient.getUserInfo;
+  TKMUser *user = [_services.localCachingClient getUserInfo];
 
   NSString *email = [UserDefaults userEmailAddress];
   if (email.length) {

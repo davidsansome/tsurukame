@@ -71,7 +71,7 @@
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)createViewControllerForLevel:(int)level {
-  if (level < 1 || level > _services.dataLoader.maximumLevel) {
+  if (level < 1 || level > _services.dataLoader.maxLevelGrantedBySubscription) {
     return nil;
   }
   SubjectsByLevelViewController *vc =

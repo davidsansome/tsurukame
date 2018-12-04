@@ -49,13 +49,13 @@ typedef void (^CompletionHandler)(void);
 
 // Getters: query the database and return data immediately, without making network requests.
 - (NSArray<TKMAssignment *> *)getAllAssignments;
-- (TKMStudyMaterials *_Nullable)getStudyMaterialForID:(int)subjectID;
-- (TKMUser *_Nullable)getUserInfo;
+- (nullable TKMStudyMaterials *)getStudyMaterialForID:(int)subjectID;
+- (nullable TKMUser *)getUserInfo;
 - (NSArray<TKMProgress *> *)getAllPendingProgress;
 - (TKMAssignment *)getAssignmentForID:(int)subjectID;
 - (int)getUsersCurrentLevel;
-- (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
-- (NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
+- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
+- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
 
 // Setters: save the data to the database and return immediately, make network requests in the
 // background.

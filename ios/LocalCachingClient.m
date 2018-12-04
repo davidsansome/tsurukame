@@ -263,7 +263,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   return progress;
 }
 
-- (TKMStudyMaterials *_Nullable)getStudyMaterialForID:(int)subjectID {
+- (nullable TKMStudyMaterials *)getStudyMaterialForID:(int)subjectID {
   __block TKMStudyMaterials *ret = nil;
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     FMResultSet *r = [db executeQuery:@"SELECT pb FROM study_materials WHERE id = ?", @(subjectID)];
@@ -274,7 +274,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   return ret;
 }
 
-- (TKMUser *_Nullable)getUserInfo {
+- (nullable TKMUser *)getUserInfo {
   __block TKMUser *ret = nil;
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     FMResultSet *r = [db executeQuery:@"SELECT pb FROM user"];
@@ -376,7 +376,11 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   return ret;
 }
 
-- (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
+- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
+  if (level > _dataLoader.maxLevelGrantedBySubscription) {
+    return nil;
+  }
+  
   __block NSArray<TKMAssignment *> *ret = nil;
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     ret = [self getAssignmentsAtLevel:level inTransaction:db];
@@ -384,7 +388,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   return ret;
 }
 
-- (NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
+- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
   return [self getAssignmentsAtLevel:[self getUsersCurrentLevel]];
 }
 

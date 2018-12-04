@@ -51,6 +51,7 @@
              name:kLoginCompleteNotification
            object:nil];
   [nc addObserver:self selector:@selector(logout:) name:kLogoutNotification object:nil];
+  [nc addObserver:self selector:@selector(userInfoChanged:) name:kLocalCachingClientUserInfoChangedNotification object:nil];
 
   if (UserDefaults.userApiToken && UserDefaults.userCookie) {
     [self loginComplete:nil];
@@ -92,6 +93,7 @@
   if (notification) {
     [_services.localCachingClient sync:pushMainViewController];
   } else {
+    [self userInfoChanged:nil];  // Set the user's max level.
     pushMainViewController();
   }
 }
@@ -181,6 +183,11 @@
           dispatch_async(dispatch_get_main_queue(), updateBlock);
         }
       }];
+}
+
+- (void)userInfoChanged:(NSNotification *)notification {
+  _services.dataLoader.maxLevelGrantedBySubscription =
+      [_services.localCachingClient getUserInfo].maxLevelGrantedBySubscription;
 }
 
 @end
