@@ -378,7 +378,9 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 }
 
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
-  return [self getAssignmentsAtLevel:[self getUserInfo].level];
+  TKMUser *user = [self getUserInfo];
+  int level = MIN(user.level, _dataLoader.maxLevelGrantedBySubscription);
+  return [self getAssignmentsAtLevel:level];
 }
 
 #pragma mark - Getting cached data

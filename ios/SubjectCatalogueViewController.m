@@ -30,7 +30,7 @@
 
 - (void)setupWithServices:(TKMServices *)services level:(int)level {
   _services = services;
-  _level = level;
+  _level = MIN(level, _services.dataLoader.maxLevelGrantedBySubscription);
 }
 
 - (void)viewDidLoad {
