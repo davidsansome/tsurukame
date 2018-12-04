@@ -79,7 +79,8 @@ static const char *kClearAllData =
     "DELETE FROM pending_progress;"
     "DELETE FROM study_materials;"
     "DELETE FROM user;"
-    "DELETE FROM pending_study_materials;";
+    "DELETE FROM pending_study_materials;"
+    "DELETE FROM subject_progress;";
 
 static void CheckUpdate(FMDatabase *db, NSString *sql, ...) {
   va_list args;
