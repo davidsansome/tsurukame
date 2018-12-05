@@ -58,7 +58,7 @@ static NSAttributedString *RenderMeanings(NSArray<TKMMeaning *> *meanings,
                                           TKMStudyMaterials *studyMaterials) {
   NSMutableArray<NSAttributedString *> *strings = [NSMutableArray array];
   for (TKMMeaning *meaning in meanings) {
-    if (meaning.isPrimary) {
+    if (meaning.type == TKMMeaning_Type_Primary) {
       [strings addObject:[[NSAttributedString alloc] initWithString:meaning.meaning]];
     }
   }
@@ -69,7 +69,8 @@ static NSAttributedString *RenderMeanings(NSArray<TKMMeaning *> *meanings,
     [strings addObject:[[NSAttributedString alloc] initWithString:meaning attributes:attributes]];
   }
   for (TKMMeaning *meaning in meanings) {
-    if (!meaning.isPrimary) {
+    if (meaning.type != TKMMeaning_Type_Primary &&
+        meaning.type != TKMMeaning_Type_Blacklist) {
       UIFont *font = [UIFont systemFontOfSize:kFont.pointSize weight:UIFontWeightLight];
       NSDictionary<NSAttributedStringKey, id> *attributes = @{
         NSFontAttributeName : font,
@@ -276,6 +277,13 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 
     [model addSection:@"Mnemonic"];
     [self addFormattedText:subject.radical.formattedMnemonicArray isHint:false toModel:model];
+    
+    if (subject.radical.hasDeprecatedMnemonic) {
+      [model addSection:@"Old Mnemonic"];
+      [self addFormattedText:subject.radical.formattedDeprecatedMnemonicArray
+                      isHint:false
+                     toModel:model];
+    }
 
     [self addAmalgamationSubjects:subject toModel:model];
   }

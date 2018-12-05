@@ -48,10 +48,11 @@ static GPBFileDescriptor *TKMWanikaniRoot_FileDescriptor(void) {
 @implementation TKMMeaning
 
 @dynamic hasMeaning, meaning;
-@dynamic hasIsPrimary, isPrimary;
+@dynamic hasType, type;
 
 typedef struct TKMMeaning__storage_ {
   uint32_t _has_storage_[1];
+  TKMMeaning_Type type;
   NSString *meaning;
 } TKMMeaning__storage_;
 
@@ -60,24 +61,26 @@ typedef struct TKMMeaning__storage_ {
 + (GPBDescriptor *)descriptor {
   static GPBDescriptor *descriptor = nil;
   if (!descriptor) {
-    static GPBMessageFieldDescription fields[] = {
+    static GPBMessageFieldDescriptionWithDefault fields[] = {
       {
-        .name = "meaning",
-        .dataTypeSpecific.className = NULL,
-        .number = TKMMeaning_FieldNumber_Meaning,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(TKMMeaning__storage_, meaning),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
+        .defaultValue.valueString = nil,
+        .core.name = "meaning",
+        .core.dataTypeSpecific.className = NULL,
+        .core.number = TKMMeaning_FieldNumber_Meaning,
+        .core.hasIndex = 0,
+        .core.offset = (uint32_t)offsetof(TKMMeaning__storage_, meaning),
+        .core.flags = GPBFieldOptional,
+        .core.dataType = GPBDataTypeString,
       },
       {
-        .name = "isPrimary",
-        .dataTypeSpecific.className = NULL,
-        .number = TKMMeaning_FieldNumber_IsPrimary,
-        .hasIndex = 1,
-        .offset = 2,  // Stored in _has_storage_ to save space.
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeBool,
+        .defaultValue.valueEnum = TKMMeaning_Type_Primary,
+        .core.name = "type",
+        .core.dataTypeSpecific.enumDescFunc = TKMMeaning_Type_EnumDescriptor,
+        .core.number = TKMMeaning_FieldNumber_Type,
+        .core.hasIndex = 1,
+        .core.offset = (uint32_t)offsetof(TKMMeaning__storage_, type),
+        .core.flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
+        .core.dataType = GPBDataTypeEnum,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -85,9 +88,9 @@ typedef struct TKMMeaning__storage_ {
                                      rootClass:[TKMWanikaniRoot class]
                                           file:TKMWanikaniRoot_FileDescriptor()
                                         fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescriptionWithDefault))
                                    storageSize:sizeof(TKMMeaning__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:GPBDescriptorInitializationFlag_FieldsWithDefault];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -95,6 +98,45 @@ typedef struct TKMMeaning__storage_ {
 }
 
 @end
+
+#pragma mark - Enum TKMMeaning_Type
+
+GPBEnumDescriptor *TKMMeaning_Type_EnumDescriptor(void) {
+  static GPBEnumDescriptor *descriptor = NULL;
+  if (!descriptor) {
+    static const char *valueNames =
+        "Primary\000Secondary\000AuxiliaryWhitelist\000Bla"
+        "cklist\000";
+    static const int32_t values[] = {
+        TKMMeaning_Type_Primary,
+        TKMMeaning_Type_Secondary,
+        TKMMeaning_Type_AuxiliaryWhitelist,
+        TKMMeaning_Type_Blacklist,
+    };
+    GPBEnumDescriptor *worker =
+        [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(TKMMeaning_Type)
+                                       valueNames:valueNames
+                                           values:values
+                                            count:(uint32_t)(sizeof(values) / sizeof(int32_t))
+                                     enumVerifier:TKMMeaning_Type_IsValidValue];
+    if (!OSAtomicCompareAndSwapPtrBarrier(nil, worker, (void * volatile *)&descriptor)) {
+      [worker release];
+    }
+  }
+  return descriptor;
+}
+
+BOOL TKMMeaning_Type_IsValidValue(int32_t value__) {
+  switch (value__) {
+    case TKMMeaning_Type_Primary:
+    case TKMMeaning_Type_Secondary:
+    case TKMMeaning_Type_AuxiliaryWhitelist:
+    case TKMMeaning_Type_Blacklist:
+      return YES;
+    default:
+      return NO;
+  }
+}
 
 #pragma mark - TKMReading
 
@@ -205,14 +247,18 @@ BOOL TKMReading_Type_IsValidValue(int32_t value__) {
 
 @dynamic hasCharacterImage, characterImage;
 @dynamic hasMnemonic, mnemonic;
+@dynamic hasDeprecatedMnemonic, deprecatedMnemonic;
 @dynamic hasHasCharacterImageFile, hasCharacterImageFile;
 @dynamic formattedMnemonicArray, formattedMnemonicArray_Count;
+@dynamic formattedDeprecatedMnemonicArray, formattedDeprecatedMnemonicArray_Count;
 
 typedef struct TKMRadical__storage_ {
   uint32_t _has_storage_[1];
   NSString *characterImage;
   NSString *mnemonic;
   NSMutableArray *formattedMnemonicArray;
+  NSString *deprecatedMnemonic;
+  NSMutableArray *formattedDeprecatedMnemonicArray;
 } TKMRadical__storage_;
 
 // This method is threadsafe because it is initially called
@@ -243,8 +289,8 @@ typedef struct TKMRadical__storage_ {
         .name = "hasCharacterImageFile",
         .dataTypeSpecific.className = NULL,
         .number = TKMRadical_FieldNumber_HasCharacterImageFile,
-        .hasIndex = 2,
-        .offset = 3,  // Stored in _has_storage_ to save space.
+        .hasIndex = 3,
+        .offset = 4,  // Stored in _has_storage_ to save space.
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
       },
@@ -254,6 +300,24 @@ typedef struct TKMRadical__storage_ {
         .number = TKMRadical_FieldNumber_FormattedMnemonicArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMRadical__storage_, formattedMnemonicArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "deprecatedMnemonic",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMRadical_FieldNumber_DeprecatedMnemonic,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(TKMRadical__storage_, deprecatedMnemonic),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "formattedDeprecatedMnemonicArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .number = TKMRadical_FieldNumber_FormattedDeprecatedMnemonicArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMRadical__storage_, formattedDeprecatedMnemonicArray),
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeMessage,
       },

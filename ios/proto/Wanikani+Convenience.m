@@ -109,7 +109,7 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 
 - (NSString *)primaryMeaning {
   for (TKMMeaning *meaning in self.meaningsArray) {
-    if (meaning.isPrimary) {
+    if (meaning.type == TKMMeaning_Type_Primary) {
       return meaning.meaning;
     }
   }
@@ -137,7 +137,9 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 - (NSString *)commaSeparatedMeanings {
   NSMutableArray<NSString *> *strings = [NSMutableArray array];
   for (TKMMeaning *meaning in self.meaningsArray) {
-    [strings addObject:meaning.meaning];
+    if (meaning.type != TKMMeaning_Type_Blacklist) {
+      [strings addObject:meaning.meaning];
+    }
   }
   return [strings componentsJoinedByString:@", "];
 }

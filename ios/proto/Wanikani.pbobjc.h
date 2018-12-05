@@ -41,6 +41,27 @@ CF_EXTERN_C_BEGIN
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - Enum TKMMeaning_Type
+
+typedef GPB_ENUM(TKMMeaning_Type) {
+  TKMMeaning_Type_Primary = 1,
+  TKMMeaning_Type_Secondary = 2,
+
+  /** Old meaning for a radical that was changed. */
+  TKMMeaning_Type_AuxiliaryWhitelist = 3,
+
+  /** Similar (within edit distance) to an accepted reading but incorrect. */
+  TKMMeaning_Type_Blacklist = 4,
+};
+
+GPBEnumDescriptor *TKMMeaning_Type_EnumDescriptor(void);
+
+/**
+ * Checks to see if the given value is defined by the enum or was not known at
+ * the time this source was generated.
+ **/
+BOOL TKMMeaning_Type_IsValidValue(int32_t value);
+
 #pragma mark - Enum TKMReading_Type
 
 typedef GPB_ENUM(TKMReading_Type) {
@@ -146,7 +167,7 @@ BOOL TKMFormattedText_Format_IsValidValue(int32_t value);
 
 typedef GPB_ENUM(TKMMeaning_FieldNumber) {
   TKMMeaning_FieldNumber_Meaning = 1,
-  TKMMeaning_FieldNumber_IsPrimary = 2,
+  TKMMeaning_FieldNumber_Type = 3,
 };
 
 @interface TKMMeaning : GPBMessage
@@ -155,9 +176,9 @@ typedef GPB_ENUM(TKMMeaning_FieldNumber) {
 /** Test to see if @c meaning has been set. */
 @property(nonatomic, readwrite) BOOL hasMeaning;
 
-@property(nonatomic, readwrite) BOOL isPrimary;
+@property(nonatomic, readwrite) TKMMeaning_Type type;
 
-@property(nonatomic, readwrite) BOOL hasIsPrimary;
+@property(nonatomic, readwrite) BOOL hasType;
 @end
 
 #pragma mark - TKMReading
@@ -174,6 +195,10 @@ typedef GPB_ENUM(TKMReading_FieldNumber) {
 /** Test to see if @c reading has been set. */
 @property(nonatomic, readwrite) BOOL hasReading;
 
+/**
+ * Non-primary readings are not accepted for Kanji.
+ * TODO: use the accepted_answer field instead.
+ **/
 @property(nonatomic, readwrite) BOOL isPrimary;
 
 @property(nonatomic, readwrite) BOOL hasIsPrimary;
@@ -189,6 +214,8 @@ typedef GPB_ENUM(TKMRadical_FieldNumber) {
   TKMRadical_FieldNumber_Mnemonic = 2,
   TKMRadical_FieldNumber_HasCharacterImageFile = 3,
   TKMRadical_FieldNumber_FormattedMnemonicArray = 4,
+  TKMRadical_FieldNumber_DeprecatedMnemonic = 5,
+  TKMRadical_FieldNumber_FormattedDeprecatedMnemonicArray = 6,
 };
 
 @interface TKMRadical : GPBMessage
@@ -202,12 +229,20 @@ typedef GPB_ENUM(TKMRadical_FieldNumber) {
 /** Test to see if @c mnemonic has been set. */
 @property(nonatomic, readwrite) BOOL hasMnemonic;
 
+@property(nonatomic, readwrite, copy, null_resettable) NSString *deprecatedMnemonic;
+/** Test to see if @c deprecatedMnemonic has been set. */
+@property(nonatomic, readwrite) BOOL hasDeprecatedMnemonic;
+
 @property(nonatomic, readwrite) BOOL hasCharacterImageFile;
 
 @property(nonatomic, readwrite) BOOL hasHasCharacterImageFile;
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedMnemonicArray;
 /** The number of items in @c formattedMnemonicArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger formattedMnemonicArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedDeprecatedMnemonicArray;
+/** The number of items in @c formattedDeprecatedMnemonicArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger formattedDeprecatedMnemonicArray_Count;
 
 @end
 

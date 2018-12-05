@@ -144,7 +144,9 @@ TKMAnswerCheckerResult CheckAnswer(NSString **answer,
           [NSMutableArray arrayWithArray:studyMaterials.meaningSynonymsArray];
 
       for (TKMMeaning *meaning in subject.meaningsArray) {
-        [meaningTexts addObject:meaning.meaning];
+        if (meaning.type != TKMMeaning_Type_Blacklist) {
+          [meaningTexts addObject:meaning.meaning];
+        }
       }
 
       for (NSString *meaning in meaningTexts) {
