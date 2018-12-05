@@ -57,6 +57,7 @@ message Radical {
   optional bool has_character_image_file = 3;
 
   repeated FormattedText formatted_mnemonic = 4;
+  repeated FormattedText formatted_deprecated_mnemonic = 6;
 }
 
 message VisuallySimilarKanji {

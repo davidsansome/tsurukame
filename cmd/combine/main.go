@@ -101,6 +101,10 @@ func Combine() error {
 		if spb.Radical != nil {
 			spb.Radical.FormattedMnemonic = markup.FormatText(spb.Radical.GetMnemonic())
 			spb.Radical.Mnemonic = nil
+			if spb.Radical.DeprecatedMnemonic != nil {
+				spb.Radical.FormattedDeprecatedMnemonic = markup.FormatText(spb.Radical.GetFormattedDeprecatedMnemonic())
+				spb.Radical.DeprecatedMnemonic = nil
+			}
 		}
 		if spb.Kanji != nil {
 			spb.Kanji.FormattedMeaningMnemonic = markup.FormatText(spb.Kanji.GetMeaningMnemonic())
