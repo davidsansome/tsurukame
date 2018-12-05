@@ -28,18 +28,19 @@ type SubjectObject struct {
 	ID     int    `'json:"id"`
 	Object string `json:"object"`
 	Data   struct {
-		Level                  int              `json:"level"`
-		Slug                   string           `json:"slug"`
-		HiddenAt               string           `json:"hidden_at"`
-		DocumentURL            string           `json:"document_url"`
-		Character              string           `json:"character"`
-		Characters             string           `json:"characters"`
-		CharacterImages        []CharacterImage `json:"character_images"`
-		Meanings               []MeaningObject
-		Readings               []ReadingObject
-		ComponentSubjectIDs    []int    `json:"component_subject_ids"`
-		AmalgamationSubjectIDs []int    `json:"amalgamation_subject_ids"`
-		PartsOfSpeech          []string `json:"parts_of_speech"`
+		Level                  int                      `json:"level"`
+		Slug                   string                   `json:"slug"`
+		HiddenAt               string                   `json:"hidden_at"`
+		DocumentURL            string                   `json:"document_url"`
+		Character              string                   `json:"character"`
+		Characters             string                   `json:"characters"`
+		CharacterImages        []CharacterImage         `json:"character_images"`
+		Meanings               []MeaningObject          `json:"meanings"`
+		AuxiliaryMeanings      []AuxiliaryMeaningObject `json:"auxiliary_meanings"`
+		Readings               []ReadingObject          `json:"readings"`
+		ComponentSubjectIDs    []int                    `json:"component_subject_ids"`
+		AmalgamationSubjectIDs []int                    `json:"amalgamation_subject_ids"`
+		PartsOfSpeech          []string                 `json:"parts_of_speech"`
 	} `json:"data"`
 }
 
@@ -58,6 +59,11 @@ type MeaningObject struct {
 	Meaning        string `json:"meaning"`
 	Primary        bool   `json:"primary"`
 	AcceptedAnswer bool   `json:"accepted_answer"`
+}
+
+type AuxiliaryMeaningObject struct {
+	Meaning string `json:"meaning"`
+	Type    string `json:"type"`
 }
 
 type ReadingObject struct {

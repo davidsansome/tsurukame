@@ -15,6 +15,7 @@
 package jsonapi
 
 type Radical struct {
-	Stroke   int    `json:"stroke"`
-	Mnemonic string `json:"mnemonic"`
+	Stroke             int    `json:"stroke"`
+	Mnemonic           string `json:"mnemonic"`
+	DeprecatedMnemonic string `json:"deprecated_mnemonic"`
 }

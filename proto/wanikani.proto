@@ -19,12 +19,27 @@ option objc_class_prefix = "TKM";
 package proto;
 
 message Meaning {
+  enum Type {
+    PRIMARY = 1;
+    SECONDARY = 2;
+
+    // Old meaning for a radical that was changed.
+    AUXILIARY_WHITELIST = 3;
+
+    // Similar (within edit distance) to an accepted reading but incorrect.
+    BLACKLIST = 4;
+  }
   optional string meaning = 1;
-  optional bool is_primary = 2;
+  optional Type type = 3;
+
+  reserved 2;  // Don't re-use fields.
 }
 
 message Reading {
   optional string reading = 1;
+
+  // Non-primary readings are not accepted for Kanji.
+  // TODO: use the accepted_answer field instead.
   optional bool is_primary = 2;
 
   enum Type {
@@ -38,6 +53,7 @@ message Reading {
 message Radical {
   optional string character_image = 1;  // Not present in final data.
   optional string mnemonic = 2;
+  optional string deprecated_mnemonic = 5;
   optional bool has_character_image_file = 3;
 
   repeated FormattedText formatted_mnemonic = 4;

@@ -30,7 +30,7 @@ func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
 		Level:       proto.Int32(int32(o.Data.Level)),
 		Slug:        proto.String(o.Data.Slug),
 		DocumentUrl: proto.String(o.Data.DocumentURL),
-		Meanings:    convertMeanings(o.Data.Meanings),
+		Meanings:    convertMeanings(o.Data.Meanings, o.Data.AuxiliaryMeanings),
 	}
 
 	if len(o.Data.Character) != 0 {
@@ -81,13 +81,32 @@ func bestCharacterImageURL(id int, images []api.CharacterImage) string {
 	panic(fmt.Sprintf("No SVG found for radical %d", id))
 }
 
-func convertMeanings(m []api.MeaningObject) []*pb.Meaning {
+func convertMeanings(m []api.MeaningObject, a []api.AuxiliaryMeaningObject) []*pb.Meaning {
 	var ret []*pb.Meaning
 	for _, meaning := range m {
-		ret = append(ret, &pb.Meaning{
-			Meaning:   proto.String(meaning.Meaning),
-			IsPrimary: proto.Bool(meaning.Primary),
-		})
+		p := &pb.Meaning{
+			Meaning: proto.String(meaning.Meaning),
+		}
+		if meaning.Primary {
+			p.Type = pb.Meaning_PRIMARY.Enum()
+		} else {
+			p.Type = pb.Meaning_SECONDARY.Enum()
+		}
+		ret = append(ret, p)
+	}
+	for _, auxiliary := range a {
+		p := &pb.Meaning{
+			Meaning: proto.String(auxiliary.Meaning),
+		}
+		switch auxiliary.Type {
+		case "whitelist":
+			p.Type = pb.Meaning_AUXILIARY_WHITELIST.Enum()
+		case "blacklist":
+			p.Type = pb.Meaning_BLACKLIST.Enum()
+		default:
+			panic(fmt.Sprintf("Unknown auxiliary type %s", auxiliary.Type))
+		}
+		ret = append(ret, p)
 	}
 	return ret
 }
@@ -171,6 +190,9 @@ func convertPartOfSpeech(p string) (pb.Vocabulary_PartOfSpeech, bool) {
 
 func AddRadical(s *pb.Subject, r *jsonapi.Radical) {
 	s.Radical.Mnemonic = proto.String(r.Mnemonic)
+	if r.DeprecatedMnemonic != "" {
+		s.Radical.DeprecatedMnemonic = proto.String(r.DeprecatedMnemonic)
+	}
 }
 
 func AddKanji(s *pb.Subject, k *jsonapi.Kanji) {
