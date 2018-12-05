@@ -48,6 +48,10 @@ typedef enum TKMDownloadModelItemState {
 @property(nonatomic) int64_t downloadingProgressBytes;
 @property(nonatomic) float installingProgress;
 
+@property(nonatomic) NSString *previewText;
+@property(nonatomic) NSString *previewFontName;
+@property(nonatomic) NSString *previewAccessibilityLabel;
+
 @end
 
 @interface TKMDownloadModelView : TKMModelCell

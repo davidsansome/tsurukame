@@ -27,6 +27,7 @@ static NSString *FriendlySize(int64_t bytes) {
 }
 
 @interface TKMDownloadModelView ()
+@property(nonatomic, weak) IBOutlet UILabel *preview;
 @property(nonatomic, weak) IBOutlet UILabel *title;
 @property(nonatomic, weak) IBOutlet UILabel *subtitle;
 @property(nonatomic, weak) IBOutlet UIImageView *image;
@@ -82,6 +83,15 @@ static NSString *FriendlySize(int64_t bytes) {
       [_image setImage:[UIImage imageNamed:@"tick"]];
       [_image setTintColor:[UIColor lightGrayColor]];
       break;
+  }
+  
+  if (item.previewText.length) {
+    _preview.hidden = NO;
+    _preview.text = item.previewText;
+    _preview.font = [UIFont fontWithName:item.previewFontName size:26.f];
+    _preview.accessibilityLabel = item.previewAccessibilityLabel;
+  } else {
+    _preview.hidden = YES;
   }
 }
 

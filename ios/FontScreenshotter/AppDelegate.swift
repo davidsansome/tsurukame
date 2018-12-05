@@ -12,29 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <CoreText/CoreText.h>
-#import <Foundation/Foundation.h>
+import UIKit
 
-@class TKMFont;
-
-@interface TKMFontLoader : NSObject
-
-@property(nonatomic, readonly) NSArray<TKMFont *> *allFonts;
-
-- (instancetype)init;
-
-@end
-
-
-@interface TKMFont : NSObject
-
-@property(nonatomic, readonly) NSString *fontName;
-@property(nonatomic, readonly) NSString *displayName;
-@property(nonatomic, readonly) int64_t sizeBytes;
-@property(nonatomic, readonly) BOOL available;
-@property(nonatomic, readonly) BOOL enabled;
-
-- (instancetype)init NS_UNAVAILABLE;
-- (void)reload;
-
-@end
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  var window: UIWindow?
+  
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    let vc = ViewController()
+    self.window = UIWindow(frame: UIScreen.main.bounds)
+    self.window?.rootViewController = vc
+    self.window?.makeKeyAndVisible()
+    return true
+  }
+}

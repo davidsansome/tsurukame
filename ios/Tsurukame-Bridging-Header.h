@@ -12,29 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <CoreText/CoreText.h>
-#import <Foundation/Foundation.h>
+#ifndef Tsurukame_Bridging_Header_h
+#define Tsurukame_Bridging_Header_h
 
-@class TKMFont;
+#import "Tables/TKMDownloadModelItem.h"
+#import "Tables/TKMTableModel.h"
+#import "TKMFontLoader.h"
 
-@interface TKMFontLoader : NSObject
-
-@property(nonatomic, readonly) NSArray<TKMFont *> *allFonts;
-
-- (instancetype)init;
-
-@end
-
-
-@interface TKMFont : NSObject
-
-@property(nonatomic, readonly) NSString *fontName;
-@property(nonatomic, readonly) NSString *displayName;
-@property(nonatomic, readonly) int64_t sizeBytes;
-@property(nonatomic, readonly) BOOL available;
-@property(nonatomic, readonly) BOOL enabled;
-
-- (instancetype)init NS_UNAVAILABLE;
-- (void)reload;
-
-@end
+#endif /* Tsurukame_Bridging_Header_h */
