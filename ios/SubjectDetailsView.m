@@ -278,7 +278,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [model addSection:@"Mnemonic"];
     [self addFormattedText:subject.radical.formattedMnemonicArray isHint:false toModel:model];
     
-    if (subject.radical.hasDeprecatedMnemonic) {
+    if (subject.radical.formattedDeprecatedMnemonicArray_Count) {
       [model addSection:@"Old Mnemonic"];
       [self addFormattedText:subject.radical.formattedDeprecatedMnemonicArray
                       isHint:false
