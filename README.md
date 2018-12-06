@@ -32,6 +32,7 @@ You'll need:
 
 Run the scraper:
 
+    mkdir data
     go run cmd/scrape/main.go --api-token [Your API token] --cookie [Your HTTP cookie]
 
 This will take an hour or so to download everything.  It stores its output in the ```data``` directory (change this with ```--out```).  You can stop it and start it again and it will pick up from where it left off.
