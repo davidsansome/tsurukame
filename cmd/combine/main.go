@@ -102,7 +102,7 @@ func Combine() error {
 			spb.Radical.FormattedMnemonic = markup.FormatText(spb.Radical.GetMnemonic())
 			spb.Radical.Mnemonic = nil
 			if spb.Radical.DeprecatedMnemonic != nil {
-				spb.Radical.FormattedDeprecatedMnemonic = markup.FormatText(spb.Radical.GetFormattedDeprecatedMnemonic())
+				spb.Radical.FormattedDeprecatedMnemonic = markup.FormatText(spb.Radical.GetDeprecatedMnemonic())
 				spb.Radical.DeprecatedMnemonic = nil
 			}
 		}

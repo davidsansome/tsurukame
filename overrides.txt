@@ -1,0 +1,31 @@
+subject: <
+  id: 647
+  kanji: <
+    meaning_mnemonic: "Your <radical>clan</radical> is where you get your name. But not your given name, your <kanji>family name</kanji>. That's why people have names that mean \"in a rice paddy\" and \"near the ferry crossing.\" Where your clan was became your family name, or <kanji>surname</kanji>."
+  >
+>
+subject: <
+  id: 1773
+  kanji: <
+    reading_mnemonic: "This <kanji>elegant</kanji> fang makes the turkey look more like a <reading>ga</reading>rgoyle (<ja>\343\201\214</ja>) than a turkey. In fact, you haven't seen it move at all. Maybe it is just an elegant gargoyle!"
+  >
+>
+subject: <
+  id: 2113
+  kanji: <
+    reading_mnemonic: "In between <kanji>grasp</kanji>ing and <kanji>bundle</kanji>-ing, you shout <reading>HA</reading> (<ja>\343\201\257</ja>)! That's when the sheets come off the bed."
+  >
+>
+subject: <
+  id: 2118
+  kanji: <
+    reading_hint: "Picture a single <ja>\351\247\205</ja> on a map, bright red. Now watch the red spread to all of the other <ja>\351\247\205</ja> on the map, dyeing them red and spreading the epidemic all over your country."
+  >
+>
+subject: <
+  id: 7688
+  vocabulary: <
+    reading_explanation: "The readings for this word are both kun'yomi readings, but it's like the hiragana that normally sticks out is stuffed in. <ja>\345\276\205\343\201\241</ja> \342\206\222 <ja>\345\276\205</ja>, <ja>\345\220\210\343\201\204</ja> \342\206\222 <ja>\345\220\210</ja> and is pronounced the same too. I know it's confusing, but once you get it down you'll never forget!"
+  >
+>
+
