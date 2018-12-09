@@ -455,12 +455,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                        assignment.id_p = [d[@"id"] intValue];
                        assignment.subjectId = [d[@"data"][@"subject_id"] intValue];
                        assignment.srsStage = [d[@"data"][@"srs_stage"] intValue];
-
-                       TKMSubject *subject = [_dataLoader loadSubject:assignment.subjectId];
-                       if (!subject) {
-                         continue;
-                       }
-                       assignment.level = subject.level;
+                       assignment.level = [_dataLoader levelOfSubjectID:assignment.subjectId];
 
                        if (d[@"data"][@"available_at"] != [NSNull null]) {
                          assignment.availableAt = [[Client
