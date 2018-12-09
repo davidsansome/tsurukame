@@ -84,7 +84,8 @@ func Scrape() error {
 		utils.Must(err)
 		defer resp.Body.Close()
 		if resp.StatusCode != http.StatusOK {
-			return fmt.Errorf("HTTP %d from %s", resp.StatusCode, resp.Request.URL)
+			fmt.Printf("HTTP %d from %s\n", resp.StatusCode, resp.Request.URL)
+			return nil
 		}
 
 		imgData, err := ioutil.ReadAll(resp.Body)
