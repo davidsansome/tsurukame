@@ -87,9 +87,10 @@ SubjectLoop:
 				return err
 			}
 			// Don't merge repeated fields.
-			existingSpb.ComponentSubjectIds = nil
-			existingSpb.Meanings = nil
 			existingSpb.Readings = nil
+			existingSpb.Meanings = nil
+			existingSpb.ComponentSubjectIds = nil
+			existingSpb.AmalgamationSubjectIds = nil
 			if existingSpb.Vocabulary != nil {
 				existingSpb.Vocabulary.PartsOfSpeech = nil
 			}
