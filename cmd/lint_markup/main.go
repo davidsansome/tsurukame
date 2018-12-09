@@ -103,19 +103,23 @@ func LintText(id int, field, completeText string) bool {
 	text := completeText
 	var stack []string
 	for {
-		pos := strings.Index(text, "[")
+		pos := strings.IndexAny(text, "[<")
 		if pos == -1 {
 			return true
 		}
 
 		text = text[pos+1:]
-		endPos := strings.Index(text, "]")
+		endPos := strings.IndexAny(text, "]>")
 		if endPos == -1 {
 			ReportError(id, field, completeText, "Missing end bracket")
 			return false
 		}
 
 		tag := text[0:endPos]
+		if spacePos := strings.Index(tag, " "); spacePos != -1 {
+			tag = tag[0:spacePos]
+		}
+
 		if tag[0] != '/' {
 			stack = append(stack, tag)
 			continue
@@ -143,5 +147,5 @@ func ReportError(id int, field, completeText, reason string) {
 	}
 	lines := strings.Split(completeText, "\n")
 	completeText = strings.Join(lines, "\n  ")
-	fmt.Printf("%d %s\n%s\n  %s\n\n", id, field, reason, completeText)
+	fmt.Printf("Subject ID %d %s\n%s\n  %s\n\n", id, field, reason, completeText)
 }
