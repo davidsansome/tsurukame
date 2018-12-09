@@ -23,7 +23,7 @@ static NSAttributedString *AttributedStringForFormattedText(
     NSDictionary<NSAttributedStringKey, id> *standardAttributes) {
   NSMutableDictionary<NSAttributedStringKey, id> *attributes = [NSMutableDictionary dictionary];
   
-  if(standardAttributes) {
+  if (standardAttributes) {
     [attributes addEntriesFromDictionary:standardAttributes];
   }
   

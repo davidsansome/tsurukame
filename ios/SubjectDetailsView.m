@@ -242,8 +242,10 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     return;
   }
   
-  NSDictionary<NSAttributedStringKey, id> *standardAttributes =
-  isHint ? [NSDictionary dictionaryWithObject:kHintTextColor forKey:NSForegroundColorAttributeName]: nil;
+  NSDictionary<NSAttributedStringKey, id> *standardAttributes;
+  if (isHint) {
+    standardAttributes = @{ NSForegroundColorAttributeName: kHintTextColor };
+  }
   
   NSMutableAttributedString *text = TKMRenderFormattedText(formattedText, standardAttributes);
   [text replaceFontSize:kFontSize];
@@ -258,13 +260,13 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 
   [model addSection:@"Context Sentences"];
   for (TKMVocabulary_Sentence *sentence in subject.vocabulary.sentencesArray) {
-    TKMBasicModelItem *item = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                                                 title:sentence.japanese
-                                                              subtitle:sentence.english];
-    item.titleFont = kFont;
-    item.subtitleFont = kFont;
-    item.numberOfTitleLines = 0;
-    item.numberOfSubtitleLines = 0;
+    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
+    [text appendAttributedString:[[NSAttributedString alloc] initWithString:sentence.japanese]];
+    [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+    [text appendAttributedString:[[NSAttributedString alloc] initWithString:sentence.english]];
+    [text replaceFontSize:kFontSize];
+    
+    TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
     [model addItem:item];
   }
 }

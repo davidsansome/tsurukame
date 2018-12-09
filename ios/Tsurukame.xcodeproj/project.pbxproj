@@ -906,11 +906,15 @@
 			isa = PBXGroup;
 			children = (
 				6392DB9D20CCE29E003019EB /* TKMAttributedModelItem.h */,
-				63BFA787218DB6840058E885 /* TKMReadingModelItem.h */,
-				63BFA788218DB6840058E885 /* TKMReadingModelItem.m */,
 				6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */,
 				633DE94D20C5634900AC25F4 /* TKMBasicModelItem.h */,
 				633DE95220C5634A00AC25F4 /* TKMBasicModelItem.m */,
+				63BFA78F218EB7AB0058E885 /* TKMDownloadModelItem.h */,
+				63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */,
+				63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */,
+				BBE4E33321728AE9003A200E /* TKMFontModelItem.h */,
+				BBE4E33421728AE9003A200E /* TKMFontModelItem.m */,
+				BBE4E33521728AE9003A200E /* TKMFontModelItem.xib */,
 				63E9A8CF2110859800418CE1 /* TKMListSeparatorItem.h */,
 				63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */,
 				63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */,
@@ -918,6 +922,8 @@
 				633DE96020C5656B00AC25F4 /* TKMMarkupModelItem.m */,
 				633DE95320C5634A00AC25F4 /* TKMModelItem.h */,
 				633DE95420C5634A00AC25F4 /* TKMModelItem.m */,
+				63BFA787218DB6840058E885 /* TKMReadingModelItem.h */,
+				63BFA788218DB6840058E885 /* TKMReadingModelItem.m */,
 				6392DBA020D130F0003019EB /* TKMSubjectModelItem.h */,
 				6392DBA120D130F0003019EB /* TKMSubjectModelItem.m */,
 				6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */,
@@ -925,12 +931,6 @@
 				633DE95020C5634A00AC25F4 /* TKMSwitchModelItem.m */,
 				633DE94E20C5634A00AC25F4 /* TKMTableModel.h */,
 				633DE95120C5634A00AC25F4 /* TKMTableModel.m */,
-				63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */,
-				63BFA78F218EB7AB0058E885 /* TKMDownloadModelItem.h */,
-				63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */,
-				BBE4E33321728AE9003A200E /* TKMFontModelItem.h */,
-				BBE4E33421728AE9003A200E /* TKMFontModelItem.m */,
-				BBE4E33521728AE9003A200E /* TKMFontModelItem.xib */,
 			);
 			path = Tables;
 			sourceTree = "<group>";
