@@ -271,6 +271,20 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   }
 }
 
+- (void)addPartsOfSpeech:(TKMVocabulary *)vocab toModel:(TKMMutableTableModel *)model {
+  NSString *text = [vocab commaSeparatedPartsOfSpeech];
+  if (!text.length) {
+    return;
+  }
+  
+  [model addSection:@"Part of Speech"];
+  TKMBasicModelItem *item = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                               title:text
+                                                            subtitle:nil];
+  item.titleFont = kFont;
+  [model addItem:item];
+}
+
 - (void)updateWithSubject:(TKMSubject *)subject studyMaterials:(TKMStudyMaterials *)studyMaterials {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self];
 
@@ -319,10 +333,9 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [self addFormattedText:subject.vocabulary.formattedReadingExplanationArray
                     isHint:false
                    toModel:model];
-
+    
+    [self addPartsOfSpeech:subject.vocabulary toModel:model];
     [self addContextSentences:subject toModel:model];
-
-    // TODO: part of speech
   }
 
   // TODO: Your progress, SRS level, next review, first started, reached guru
