@@ -197,7 +197,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
     }
     CheckUpdate(
         db, [NSString stringWithFormat:@"PRAGMA user_version = %lu", (unsigned long)targetVersion]);
-    NSLog(@"Database updated to schema %lu", targetVersion);
+    NSLog(@"Database updated to schema %lu", (unsigned long)targetVersion);
   }];
 
   _db = ret;
@@ -218,6 +218,16 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       }
     }];
   }
+  
+  // Remove any deleted subjects from the database.
+  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+    GPBInt32Array *deletedSubjectIDs = _dataLoader.deletedSubjectIDs;
+    for (int i = 0; i < deletedSubjectIDs.count; ++i) {
+      int subjectID = [deletedSubjectIDs valueAtIndex:i];
+      CheckUpdate(db, @"DELETE FROM assignments WHERE subject_id = ?", @(subjectID));
+      CheckUpdate(db, @"DELETE FROM subject_progress WHERE id = ?", @(subjectID));
+    }
+  }];
 }
 
 #pragma mark - Local database getters

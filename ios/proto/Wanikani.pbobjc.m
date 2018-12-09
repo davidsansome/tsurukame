@@ -1543,12 +1543,14 @@ BOOL TKMFormattedText_Format_IsValidValue(int32_t value__) {
 @implementation TKMDataFileHeader
 
 @dynamic subjectsByLevelArray, subjectsByLevelArray_Count;
+@dynamic deletedSubjectIdsArray, deletedSubjectIdsArray_Count;
 @dynamic subjectByteOffsetArray, subjectByteOffsetArray_Count;
 
 typedef struct TKMDataFileHeader__storage_ {
   uint32_t _has_storage_[1];
   NSMutableArray *subjectsByLevelArray;
   GPBUInt32Array *subjectByteOffsetArray;
+  GPBInt32Array *deletedSubjectIdsArray;
 } TKMDataFileHeader__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1574,6 +1576,15 @@ typedef struct TKMDataFileHeader__storage_ {
         .offset = (uint32_t)offsetof(TKMDataFileHeader__storage_, subjectByteOffsetArray),
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeUInt32,
+      },
+      {
+        .name = "deletedSubjectIdsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMDataFileHeader_FieldNumber_DeletedSubjectIdsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMDataFileHeader__storage_, deletedSubjectIdsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeInt32,
       },
     };
     GPBDescriptor *localDescriptor =

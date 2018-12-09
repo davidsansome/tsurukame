@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** The highest level available in the database. */
 @property(nonatomic, readonly) int maxSubjectLevel;
 
+/** Array of subject IDs that have been deleted. */
+@property(nonatomic, readonly) GPBInt32Array *deletedSubjectIDs;
+
 - (bool)isValidSubjectID:(int)subjectID;
 
 /** Returns the subject with the given ID, or nil if higher than maxLevelGrantedBySubscription. */

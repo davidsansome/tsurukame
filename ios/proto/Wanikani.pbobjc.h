@@ -640,6 +640,7 @@ typedef GPB_ENUM(TKMFormattedText_FieldNumber) {
 typedef GPB_ENUM(TKMDataFileHeader_FieldNumber) {
   TKMDataFileHeader_FieldNumber_SubjectsByLevelArray = 1,
   TKMDataFileHeader_FieldNumber_SubjectByteOffsetArray = 2,
+  TKMDataFileHeader_FieldNumber_DeletedSubjectIdsArray = 3,
 };
 
 @interface TKMDataFileHeader : GPBMessage
@@ -647,6 +648,10 @@ typedef GPB_ENUM(TKMDataFileHeader_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMSubjectsByLevel*> *subjectsByLevelArray;
 /** The number of items in @c subjectsByLevelArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger subjectsByLevelArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *deletedSubjectIdsArray;
+/** The number of items in @c deletedSubjectIdsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger deletedSubjectIdsArray_Count;
 
 /**
  * Offset of each encoded Subject message, starting from the end of this

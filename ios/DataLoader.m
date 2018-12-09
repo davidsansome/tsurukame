@@ -48,6 +48,10 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
   return (int)_header.subjectsByLevelArray_Count;
 }
 
+- (GPBInt32Array *)deletedSubjectIDs {
+  return _header.deletedSubjectIdsArray;
+}
+
 - (int)maxLevelGrantedBySubscription {
   if (_maxLevelGrantedBySubscription) {
     return MIN(_maxLevelGrantedBySubscription, self.maxSubjectLevel);
