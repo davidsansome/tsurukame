@@ -32,12 +32,12 @@ struct AvailablePackage {
   int64_t sizeBytes;
 };
 static const AvailablePackage kAvailablePackages[] = {
-    {@"levels-1-10.tar.lzfse", @"Levels 1-10", 15788944},
-    {@"levels-11-20.tar.lzfse", @"Levels 11-20", 25544078},
-    {@"levels-21-30.tar.lzfse", @"Levels 21-30", 26003280},
-    {@"levels-31-40.tar.lzfse", @"Levels 31-40", 23445692},
-    {@"levels-41-50.tar.lzfse", @"Levels 41-50", 23461014},
-    {@"levels-51-60.tar.lzfse", @"Levels 51-60", 30460353},
+    {@"levels-1-10.tar.lzfse", @"Levels 1-10", 15967576},
+    {@"levels-11-20.tar.lzfse", @"Levels 11-20", 25708984},
+    {@"levels-21-30.tar.lzfse", @"Levels 21-30", 25927270},
+    {@"levels-31-40.tar.lzfse", @"Levels 31-40", 23220050},
+    {@"levels-41-50.tar.lzfse", @"Levels 41-50", 23442286},
+    {@"levels-51-60.tar.lzfse", @"Levels 51-60", 30460589},
 };
 
 static NSData *DecompressLZFSE(NSData *compressedData) {
