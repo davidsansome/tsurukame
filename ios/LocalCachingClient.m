@@ -766,10 +766,15 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 }
 
 - (void)clearAllData {
-  [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
     CheckExecuteStatements(db, @(kClearAllData));
     NSLog(@"Database reset");
   }];
+}
+
+- (void)clearAllDataAndClose {
+  [self clearAllData];
+  [_db close];
 }
 
 @end

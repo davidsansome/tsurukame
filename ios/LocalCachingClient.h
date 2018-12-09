@@ -62,6 +62,7 @@ typedef void (^CompletionHandler)(void);
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material;
 
 // Delete everything: use when a user logs out.
+- (void)clearAllDataAndClose;
 - (void)clearAllData;
 
 @end

@@ -91,6 +91,7 @@
   };
   // Do a sync before pushing the main view controller if this was a new login.
   if (notification) {
+    [_services.localCachingClient clearAllData];
     [_services.localCachingClient sync:pushMainViewController];
   } else {
     [self userInfoChanged:nil];  // Set the user's max level.
@@ -102,7 +103,7 @@
   UserDefaults.userCookie = nil;
   UserDefaults.userApiToken = nil;
   UserDefaults.userEmailAddress = nil;
-  [_services.localCachingClient clearAllData];
+  [_services.localCachingClient clearAllDataAndClose];
   _services.localCachingClient = nil;
 
   [self pushLoginViewController];
