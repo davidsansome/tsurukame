@@ -51,6 +51,10 @@
 
   for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtLevel:_level]) {
     TKMSubject *subject = [_services.dataLoader loadSubject:assignment.subjectId];
+    if (!subject) {
+      continue;
+    }
+    
     int section = subject.subjectType - 1;
     TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject
                                                                   assignment:assignment
