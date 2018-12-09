@@ -7,9 +7,12 @@ wanikani.pb.cc: wanikani.pb.h
 
 proto.so: proto.cc wanikani.pb.h wanikani.pb.cc
 	g++ -Wall -fPIC -std=c++17 \
-			-I../proto/ \
+			-L/usr/local/lib/ \
 			-o proto.so -shared \
 			proto.cc \
-			../proto/wanikani.pb.cc \
+			wanikani.pb.cc \
 			-lsqlite3 \
 			-lprotobuf
+
+clean:
+	rm -f proto.so wanikani.pb.h wanikani.pb.cc
