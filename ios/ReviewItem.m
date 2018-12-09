@@ -18,9 +18,14 @@
 
 @implementation ReviewItem
 
-+ (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments {
++ (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments
+                                          dataLoader:(DataLoader *)dataLoader {
   NSMutableArray *ret = [NSMutableArray array];
   for (TKMAssignment *assignment in assignments) {
+    if (![dataLoader isValidSubjectID:assignment.subjectId]) {
+      continue;
+    }
+    
     if (assignment.isReviewStage && assignment.availableAtDate.timeIntervalSinceNow < 0) {
       [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
     }
@@ -32,10 +37,7 @@
                                           dataLoader:(DataLoader *)dataLoader {
   NSMutableArray *ret = [NSMutableArray array];
   for (TKMAssignment *assignment in assignments) {
-    // Protect against new subjects getting added to WaniKani.  This will assert in developer builds
-    // but should just skip new subjects in release builds.
     if (![dataLoader isValidSubjectID:assignment.subjectId]) {
-      NSAssert(false, @"Invalid subject ID in assignment: %@", assignment);
       continue;
     }
 

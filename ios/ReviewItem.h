@@ -27,7 +27,8 @@ typedef NS_ENUM(NSInteger, TKMTaskType) {
 
 @interface ReviewItem : NSObject
 
-+ (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments;
++ (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments
+                                          dataLoader:(DataLoader *)dataLoader;
 + (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<TKMAssignment *> *)assignments
                                           dataLoader:(DataLoader *)dataLoader;
 

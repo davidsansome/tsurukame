@@ -59,6 +59,9 @@
   NSMutableArray<TKMSubject *> *subjects = [NSMutableArray array];
   for (ReviewItem *item in _items) {
     TKMSubject *subject = [_services.dataLoader loadSubject:item.assignment.subjectId];
+    if (!subject) {
+      continue;
+    }
     [subjects addObject:subject];
   }
   _pageControl.subjects = subjects;

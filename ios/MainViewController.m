@@ -309,7 +309,11 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
   if ([segue.identifier isEqualToString:@"startReview"]) {
     NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
-    NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments];
+    NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments
+                                                              dataLoader:_services.dataLoader];
+    if (!items.count) {
+      return;
+    }
 
     ReviewViewController *vc = (ReviewViewController *)segue.destinationViewController;
     [vc setupWithServices:_services items:items hideBackButton:NO delegate:nil];
@@ -317,6 +321,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments
                                                               dataLoader:_services.dataLoader];
+    if (!items.count) {
+      return;
+    }
+    
     items = [items sortedArrayUsingSelector:@selector(compareForLessons:)];
     if (items.count > kItemsPerLesson) {
       items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];

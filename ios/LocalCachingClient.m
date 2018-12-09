@@ -458,6 +458,12 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   }
 
   for (TKMAssignment *assignment in assignments) {
+    // Don't count assignments with invalid subjects.  This includes assignments for levels higher
+    // than the user's max level.
+    if (![_dataLoader isValidSubjectID:assignment.subjectId]) {
+      continue;
+    }
+    
     if (assignment.isLessonStage) {
       lessons++;
     } else if (assignment.isReviewStage) {
@@ -476,7 +482,6 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
     }
   }
 
-  NSLog(@"Recalculated available items");
   _cachedAvailableLessonCount = lessons;
   _cachedAvailableReviewCount = reviews;
   _cachedUpcomingReviews = upcomingReviews;

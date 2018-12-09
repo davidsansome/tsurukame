@@ -39,6 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (bool)isValidSubjectID:(int)subjectID;
 
+/** Returns the level of the subject with the given ID, without loading it. */
+- (int)levelOfSubjectID:(int)subjectID;
+
 /** Returns the subject with the given ID, or nil if higher than maxLevelGrantedBySubscription. */
 - (nullable TKMSubject *)loadSubject:(int)subjectID;
 

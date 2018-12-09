@@ -641,6 +641,7 @@ typedef GPB_ENUM(TKMDataFileHeader_FieldNumber) {
   TKMDataFileHeader_FieldNumber_SubjectsByLevelArray = 1,
   TKMDataFileHeader_FieldNumber_SubjectByteOffsetArray = 2,
   TKMDataFileHeader_FieldNumber_DeletedSubjectIdsArray = 3,
+  TKMDataFileHeader_FieldNumber_LevelBySubjectArray = 4,
 };
 
 @interface TKMDataFileHeader : GPBMessage
@@ -649,6 +650,15 @@ typedef GPB_ENUM(TKMDataFileHeader_FieldNumber) {
 /** The number of items in @c subjectsByLevelArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger subjectsByLevelArray_Count;
 
+/** The level of each subject. */
+@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *levelBySubjectArray;
+/** The number of items in @c levelBySubjectArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger levelBySubjectArray_Count;
+
+/**
+ * Subject IDs that no longer have any data.  The client should ignore any
+ * assignments with these subjects.
+ **/
 @property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *deletedSubjectIdsArray;
 /** The number of items in @c deletedSubjectIdsArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger deletedSubjectIdsArray_Count;
