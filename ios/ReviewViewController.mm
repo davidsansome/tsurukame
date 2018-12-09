@@ -337,7 +337,16 @@ class AnimationContext {
 }
 
 - (void)resizeKeyboardToHeight:(CGFloat)height {
-  _answerFieldToBottomConstraint.constant = height;
+  // When the review view is embedded in a lesson view controller, the review view doesn't extend
+  // all the way to the bottom - the page selector view is below it.  Take this into account:
+  // find out how far the bottom of our UIView is from the bottom of the window, and subtract that
+  // distance from the constraint height.
+  CGPoint viewBottomLeft = [self.view convertPoint:CGPointMake(0, CGRectGetMaxY(self.view.bounds))
+                                            toView:self.view.window];
+  CGFloat windowBottom = CGRectGetMaxY(self.view.window.bounds);
+  CGFloat distanceFromViewBottomToWindowBottom = windowBottom - viewBottomLeft.y;
+  
+  _answerFieldToBottomConstraint.constant = height - distanceFromViewBottomToWindowBottom;
 
   [UIView beginAnimations:nil context:nil];
   [UIView setAnimationDuration:_animationDuration];
