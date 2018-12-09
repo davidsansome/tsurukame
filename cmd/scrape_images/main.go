@@ -17,6 +17,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"image"
+	"image/png"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -100,6 +102,7 @@ func Scrape() error {
 
 			path := fmt.Sprintf("%s/radical-%d-%dx.png", dir, spb.GetId(), x)
 			utils.Must(ScaleSVGData(imgData, path, px))
+			utils.Must(RecolorPNG(path))
 			fmt.Println("Saved", path)
 		}
 
@@ -132,4 +135,37 @@ func ScaleSVGData(svg []byte, png string, size int) error {
 	}
 
 	return ScaleSVG(tmpfile.Name(), png, size)
+}
+
+func RecolorPNG(filename string) error {
+	r, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+
+	genericImg, err := png.Decode(r)
+	if err != nil {
+		return err
+	}
+	img := genericImg.(*image.NRGBA)
+
+	b := img.Bounds()
+	for x := 0; x < b.Dx(); x++ {
+		for y := 0; y < b.Dy(); y++ {
+			c := img.NRGBAAt(x, y)
+			c.R = 0xff - c.R
+			c.G = 0xff - c.G
+			c.B = 0xff - c.B
+			img.SetNRGBA(x, y, c)
+		}
+	}
+
+	w, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer w.Close()
+
+	return png.Encode(w, img)
 }
