@@ -176,6 +176,13 @@ func (e *fileEncodingWriter) Close() error {
 		offset += uint32(len(d))
 	}
 
+	// Count the missing items and add them to the header.
+	for id, d := range e.subjects {
+		if d == nil {
+			e.header.DeletedSubjectIds = append(e.header.DeletedSubjectIds, int32(id))
+		}
+	}
+
 	// Seralise the header.
 	headerBytes, err := proto.Marshal(&e.header)
 	if err != nil {

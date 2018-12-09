@@ -204,6 +204,7 @@ message FormattedText {
 
 message DataFileHeader {
   repeated SubjectsByLevel subjects_by_level = 1;
+  repeated int32 deleted_subject_ids = 3;
 
   // Offset of each encoded Subject message, starting from the end of this
   // header in the file.
