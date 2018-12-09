@@ -131,8 +131,7 @@ func OpenFileWriter(filename string) (Writer, error) {
 	}
 
 	return &fileEncodingWriter{
-		fh:       fh,
-		subjects: make([][]byte, 0),
+		fh: fh,
 	}, nil
 }
 
@@ -148,6 +147,10 @@ func (e *fileEncodingWriter) WriteSubject(id int, subject *pb.Subject) error {
 		e.subjects = append(e.subjects, nil)
 	}
 	e.subjects[id] = b
+	for len(e.header.LevelBySubject) <= int(id) {
+		e.header.LevelBySubject = append(e.header.LevelBySubject, 0)
+	}
+	e.header.LevelBySubject[id] = subject.GetLevel()
 
 	// Add to the per-level counts in the metadata.
 	levelIndex := subject.GetLevel() - 1

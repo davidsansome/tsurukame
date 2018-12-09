@@ -204,6 +204,12 @@ message FormattedText {
 
 message DataFileHeader {
   repeated SubjectsByLevel subjects_by_level = 1;
+
+  // The level of each subject.
+  repeated int32 level_by_subject = 4;
+
+  // Subject IDs that no longer have any data.  The client should ignore any
+  // assignments with these subjects.
   repeated int32 deleted_subject_ids = 3;
 
   // Offset of each encoded Subject message, starting from the end of this
