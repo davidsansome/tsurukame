@@ -167,6 +167,7 @@
       }
       NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];
       UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+      content.body = [NSString stringWithFormat:@"%d review%@ available", cumulativeReviews, cumulativeReviews == 1 ? @"" : @"s"];
       content.badge = @(cumulativeReviews);
       UNNotificationTrigger *trigger =
           [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:triggerTimeInterval
