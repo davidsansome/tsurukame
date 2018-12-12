@@ -150,7 +150,7 @@
         nextDateAfterDate:[NSDate date]
              matchingUnit:NSCalendarUnitMinute
                     value:0
-                  options:NSCalendarMatchNextTime | NSCalendarMatchStrictly];
+                  options:NSCalendarMatchNextTime];
     NSTimeInterval startInterval = [startDate timeIntervalSinceNow];
     int cumulativeReviews = reviewCount;
     for (int hour = 0; hour < upcomingReviews.count; hour++) {
