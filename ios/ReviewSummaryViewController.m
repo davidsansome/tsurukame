@@ -65,9 +65,15 @@
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
 
   // Summary section.
-  NSString *summaryText =
-      [NSString stringWithFormat:@"%d%% (%d/%lu)", (int)((double)(correct) / items.count * 100),
-                                 correct, (unsigned long)items.count];
+  NSString *summaryText;
+  if (items.count) {
+    summaryText = [NSString stringWithFormat:@"%d%% (%d/%lu)",
+                   (int)((double)(correct) / items.count * 100),
+                   correct,
+                   (unsigned long)items.count];
+  } else {
+    summaryText = @"0%";
+  }
   [model addSection:@"Summary"];
   [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
                                                     title:@"Correct answers"
