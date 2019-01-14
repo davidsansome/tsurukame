@@ -54,7 +54,8 @@ static const char *kSchemaV1 =
     ");"
     "CREATE TABLE pending_study_materials ("
     "  id INTEGER PRIMARY KEY"
-    ");";
+    ");"
+;
 
 static const char *kSchemaV2 =
     "DELETE FROM assignments;"
@@ -70,6 +71,20 @@ static const char *kSchemaV3 =
     "  subject_type INTEGER"
     ");";
 
+static const char *kSchemaV4 =
+    "CREATE TABLE error_log ("
+    "  date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+    "  stack TEXT,"
+    "  code INTEGER,"
+    "  description TEXT,"
+    "  request_url TEXT,"
+    "  response_url TEXT,"
+    "  request_data TEXT,"
+    "  request_headers TEXT,"
+    "  response_headers TEXT,"
+    "  response_data TEXT"
+    ");";
+
 static const char *kClearAllData =
     "UPDATE sync SET"
     "  assignments_updated_after = \"\","
@@ -80,7 +95,8 @@ static const char *kClearAllData =
     "DELETE FROM study_materials;"
     "DELETE FROM user;"
     "DELETE FROM pending_study_materials;"
-    "DELETE FROM subject_progress;";
+    "DELETE FROM subject_progress;"
+    "DELETE FROM error_log;";
 
 static void CheckUpdate(FMDatabase *db, NSString *sql, ...) {
   va_list args;
@@ -175,6 +191,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       @(kSchemaV1),
       @(kSchemaV2),
       @(kSchemaV3),
+      @(kSchemaV4),
     ];
   });
 
@@ -227,6 +244,40 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       CheckUpdate(db, @"DELETE FROM assignments WHERE subject_id = ?", @(subjectID));
       CheckUpdate(db, @"DELETE FROM subject_progress WHERE id = ?", @(subjectID));
     }
+  }];
+}
+
+#pragma mark - Error handling
+
+- (void)logError:(NSError *)error {
+  NSString *stack = [NSThread callStackSymbols].description;
+  NSLog(@"Error %@ at:\n%@", error, stack);
+  
+  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+    // Delete old log entries.
+    CheckUpdate(db, @"DELETE FROM error_log WHERE ROWID IN ("
+                "  SELECT ROWID FROM error_log ORDER BY ROWID DESC LIMIT -1 OFFSET 999"
+                ")");
+    
+    if (!TKMIsClientError(error)) {
+      CheckUpdate(db, @"INSERT INTO error_log (stack, code, description) "
+                  "VALUES (?,?,?)",
+                  stack, @(error.code), error.description);
+      return;
+    }
+    
+    TKMClientError *ce = (TKMClientError *)error;
+    CheckUpdate(db, @"INSERT INTO error_log"
+                "(stack, code, description, request_url, response_url,"
+                " request_data, request_headers, response_headers, response_data) "
+                "VALUES (?,?,?,?,?,?,?,?)",
+                stack, @(ce.code), ce.localizedDescription,
+                ce.request.URL.description,
+                ce.response.URL.description,
+                 [[NSString alloc] initWithData:ce.request.HTTPBody encoding:NSUTF8StringEncoding],
+                ce.request.allHTTPHeaderFields.description,
+                ce.response.allHeaderFields.description,
+                [[NSString alloc] initWithData:ce.responseData encoding:NSUTF8StringEncoding]);
   }];
 }
 
@@ -490,7 +541,6 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 #pragma mark - Invalidating cached data
 
 - (void)postNotificationOnMainThread:(NSNotificationName)name {
-  NSLog(@"Posting on main thread: %@", name);
   dispatch_async(dispatch_get_main_queue(), ^{
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc postNotificationName:name object:self];
@@ -560,7 +610,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       sendProgress:progress
            handler:^(NSError *_Nullable error) {
              if (error) {
-               NSLog(@"sendProgress failed: %@", error);
+               [self logError:error];
              } else {
                // Delete the local pending progress.
                [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
@@ -620,7 +670,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   [_client updateStudyMaterial:material
                        handler:^(NSError *_Nullable error) {
                          if (error) {
-                           NSLog(@"Failed to send study material update: %@", error);
+                           [self logError:error];
                          } else {
                            [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
                              CheckUpdate(db,
@@ -705,7 +755,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
       getAssignmentsModifiedAfter:lastDate
                           handler:^(NSError *error, NSArray<TKMAssignment *> *assignments) {
                             if (error) {
-                              NSLog(@"getAssignmentsModifiedAfter failed: %@", error);
+                              [self logError:error];
                             } else {
                               NSString *date = Client.currentISO8601Date;
                               [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -745,7 +795,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
                              handler:^(NSError *error,
                                        NSArray<TKMStudyMaterials *> *studyMaterials) {
                                if (error) {
-                                 NSLog(@"getStudyMaterialsModifiedAfter failed: %@", error);
+                                 [self logError:error];
                                } else {
                                  NSString *date = Client.currentISO8601Date;
                                  [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -769,7 +819,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 - (void)updateUserInfo:(CompletionHandler)handler {
   [_client getUserInfo:^(NSError *_Nullable error, TKMUser *_Nullable user) {
     if (error) {
-      NSLog(@"getUserInfo failed: %@", error);
+      [self logError:error];
     } else {
       [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
         CheckUpdate(db, @"REPLACE INTO user (id, pb) VALUES (0, ?)", user.data);

@@ -37,20 +37,71 @@ static NSString *const kFormDataContentType = @"application/x-www-form-urlencode
 static NSString *const kJSONContentType = @"application/json";
 
 NSErrorDomain const kTKMClientErrorDomain = @"kTKMClientErrorDomain";
+static NSErrorUserInfoKey const kTKMClientErrorRequestKey = @"kTKMClientErrorRequestKey";
+static NSErrorUserInfoKey const kTKMClientErrorResponseKey = @"kTKMClientErrorResponseKey";
+static NSErrorUserInfoKey const kTKMClientErrorResponseDataKey = @"kTKMClientErrorResponseDataKey";
+
 const int kTKMLoginErrorCode = 403;
 
-static NSError *MakeError(int code, NSString *msg) {
-  return [NSError errorWithDomain:kTKMClientErrorDomain
-                             code:code
-                         userInfo:@{NSLocalizedDescriptionKey : msg}];
+bool TKMIsClientError(NSError *error) {
+  return [error.domain isEqual:kTKMClientErrorDomain];
 }
 
-static NSError *MakeErrorFromHTTPResponse(NSHTTPURLResponse *httpResponse) {
-  NSString *msg = [NSString stringWithFormat:@"HTTP error %ld for %@",
-                                             (long)httpResponse.statusCode,
-                                             httpResponse.URL.absoluteString];
-  return MakeError((int)httpResponse.statusCode, msg);
+@implementation TKMClientError
+
+- (nullable NSURLRequest *)request {
+  return (NSURLRequest *)self.userInfo[kTKMClientErrorRequestKey];
 }
+
+- (nullable NSHTTPURLResponse *)response {
+  return (NSHTTPURLResponse *)self.userInfo[kTKMClientErrorResponseKey];
+}
+
+- (nullable NSData *)responseData {
+  return (NSData *)self.userInfo[kTKMClientErrorResponseDataKey];
+}
+
++ (instancetype)httpErrorWithRequest:(NSURLRequest *)request
+                            response:(NSURLResponse *)response
+                        responseData:(NSData *)responseData {
+  NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+  NSString *msg = [NSString stringWithFormat:@"HTTP error %ld for %@",
+                   (long)httpResponse.statusCode,
+                   response.URL.absoluteString];
+  return [self httpErrorWithMessage:msg
+                            request:request
+                           response:response
+                       responseData:responseData];
+}
+
++ (instancetype)httpErrorWithMessage:(NSString *)message
+                             request:(nullable NSURLRequest *)request
+                            response:(NSURLResponse *)response
+                        responseData:(NSData *)responseData {
+  NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+  NSMutableDictionary<NSErrorUserInfoKey, id> *userInfo = [NSMutableDictionary dictionary];
+  userInfo[NSLocalizedDescriptionKey] = message;
+  userInfo[kTKMClientErrorResponseKey] = response;
+  userInfo[kTKMClientErrorResponseDataKey] = responseData;
+  userInfo[kTKMClientErrorRequestKey] = request;
+  
+  return [self errorWithDomain:kTKMClientErrorDomain
+                          code:httpResponse.statusCode
+                      userInfo:userInfo];
+}
+
++ (instancetype)errorWithMessage:(NSString *)message {
+  return [self errorWithMessage:message code:0];
+}
+
++ (instancetype)errorWithMessage:(NSString *)message
+                            code:(int)code {
+  return [self errorWithDomain:kTKMClientErrorDomain
+                          code:code
+                      userInfo:@{NSLocalizedDescriptionKey: message}];
+}
+
+@end
 
 static const NSTimeInterval kCSRFTokenValidity = 2 * 60 * 60;  // 2 hours.
 static NSRegularExpression *sCSRFTokenRE;
@@ -96,14 +147,15 @@ static void EnsureInitialised() {
   });
 }
 
-static NSString *ParseCSRFTokenFromResponse(NSData *_Nullable data,
-                                            NSURLResponse *_Nullable response,
-                                            NSError **_Nullable error) {
+static NSString *ParseCSRFTokenFromResponse(NSData *data,
+                                            NSURLRequest *request,
+                                            NSURLResponse *response,
+                                            NSError **error) {
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
   if (httpResponse.statusCode != 200) {
-    if (error) {
-      *error = MakeErrorFromHTTPResponse(httpResponse);
-    }
+    *error = [TKMClientError httpErrorWithRequest:request
+                                         response:response
+                                     responseData:data];
     return nil;
   }
 
@@ -112,9 +164,10 @@ static NSString *ParseCSRFTokenFromResponse(NSData *_Nullable data,
                                                           options:0
                                                             range:NSMakeRange(0, body.length)];
   if (!result || result.range.location == NSNotFound) {
-    if (error) {
-      *error = MakeError(0, @"Progress token not found in page");
-    }
+    *error = [TKMClientError httpErrorWithMessage:@"Progress token not found on page"
+                                          request:request
+                                         response:response
+                                     responseData:data];
     return nil;
   }
 
@@ -217,7 +270,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 - (void)startPagedQueryFor:(NSURL *)url handler:(PartialResponseHandler)handler {
   if (self.pretendToBeOfflineForTesting) {
-    handler(nil, MakeError(42, @"I'm offline"));
+    handler(nil, [TKMClientError errorWithMessage:@"Offline for testing" code:42]);
     return;
   }
 
@@ -226,7 +279,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
       dataTaskWithRequest:req
         completionHandler:^(
             NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-          [self parseJsonResponse:data error:error handler:handler];
+          [self parseJsonResponse:data
+                          request:req
+                         response:response
+                            error:error
+                          handler:handler];
         }];
   [task resume];
 }
@@ -236,7 +293,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                     data:(NSData *)data
                  handler:(PUTResponseHandler)handler {
   if (self.pretendToBeOfflineForTesting) {
-    handler(MakeError(42, @"I'm offline"));
+    handler([TKMClientError errorWithMessage:@"Offline for testing" code:42]);
     return;
   }
 
@@ -254,20 +311,24 @@ static NSString *GetSessionCookie(NSURLSession *session) {
       dataTaskWithRequest:req
         completionHandler:^(
             NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-          if (handler) {
+          if (error) {
             handler(error);
             return;
           }
           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
           if (httpResponse.statusCode != 200) {
-            handler(MakeErrorFromHTTPResponse(httpResponse));
+            handler([TKMClientError httpErrorWithRequest:req response:response responseData:data]);
             return;
           }
+          
+          handler(nil);
         }];
   [task resume];
 }
 
 - (void)parseJsonResponse:(NSData *)data
+                  request:(NSURLRequest *)request
+                 response:(NSURLResponse *)response
                     error:(NSError *)error
                   handler:(PartialResponseHandler)handler {
   if (error != nil) {
@@ -280,7 +341,10 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     return;
   }
   if (dict[@"error"] != nil) {
-    handler(nil, MakeError(0, dict[@"error"]));
+    handler(nil, [TKMClientError httpErrorWithMessage:dict[@"error"]
+                                              request:request
+                                             response:response
+                                         responseData:data]);
     return;
   }
 
@@ -299,7 +363,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
         dataTaskWithRequest:req
           completionHandler:^(
               NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-            [self parseJsonResponse:data error:error handler:handler];
+            [self parseJsonResponse:data
+                            request:req
+                           response:response
+                              error:error
+                            handler:handler];
           }];
     [task resume];
   } else {
@@ -318,6 +386,9 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   NSURLSessionConfiguration *configuration =
       [NSURLSessionConfiguration ephemeralSessionConfiguration];
   NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+  
+  NSMutableURLRequest *firstRequest = [NSMutableURLRequest requestWithURL:url];
+  NSMutableURLRequest *secondRequest = [NSMutableURLRequest requestWithURL:url];
 
   __block NSString *csrfToken = nil;
   __block NSString *originalCookie = nil;
@@ -331,14 +402,14 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
         NSString *newCookie = GetSessionCookie(session);
         if ([newCookie isEqualToString:originalCookie]) {
-          handler(MakeError(kTKMLoginErrorCode, @"Bad credentials"), nil);
+          handler([TKMClientError errorWithMessage:@"Bad credentials" code:kTKMLoginErrorCode], nil);
           return;
         } else if ([response.URL.absoluteString isEqualToString:@(kDashboardURL)]) {
           handler(nil, newCookie);
           return;
         }
 
-        handler(MakeError(0, @"Unknown error"), nil);
+        handler([TKMClientError errorWithMessage:@"Unknown error"], nil);
       };
 
   void (^firstHandler)(
@@ -348,7 +419,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
           handler(error, nil);
           return;
         }
-        csrfToken = ParseCSRFTokenFromResponse(data, response, &error);
+        csrfToken = ParseCSRFTokenFromResponse(data, firstRequest, response, &error);
         if (error != nil) {
           handler(error, nil);
           return;
@@ -364,21 +435,21 @@ static NSString *GetSessionCookie(NSURLSession *session) {
         postData[@"utf8"] = @"✓";
         NSData *postDataBytes = EncodeQueryString(postData);
 
-        NSMutableURLRequest *post = [NSMutableURLRequest requestWithURL:url];
-        post.HTTPBody = postDataBytes;
-        post.HTTPShouldHandleCookies = YES;
-        post.HTTPMethod = @"POST";
-        [post addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [post addValue:[@(postDataBytes.length) stringValue] forHTTPHeaderField:@"Content-Length"];
+        secondRequest.HTTPBody = postDataBytes;
+        secondRequest.HTTPShouldHandleCookies = YES;
+        secondRequest.HTTPMethod = @"POST";
+        [secondRequest addValue:@"application/x-www-form-urlencoded"
+             forHTTPHeaderField:@"Content-Type"];
+        [secondRequest addValue:[@(postDataBytes.length) stringValue]
+             forHTTPHeaderField:@"Content-Length"];
 
-        NSURLSessionDataTask *task = [session dataTaskWithRequest:post
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:secondRequest
                                                 completionHandler:secondHandler];
         [task resume];
       };
 
-  NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
-  req.HTTPShouldHandleCookies = YES;
-  NSURLSessionDataTask *task = [session dataTaskWithRequest:req completionHandler:firstHandler];
+  firstRequest.HTTPShouldHandleCookies = YES;
+  NSURLSessionDataTask *task = [session dataTaskWithRequest:firstRequest completionHandler:firstHandler];
   [task resume];
 }
 
@@ -398,7 +469,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
           }
           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
           if (httpResponse.statusCode != 200) {
-            handler(MakeErrorFromHTTPResponse(httpResponse), nil, nil);
+            handler([TKMClientError httpErrorWithRequest:req response:response responseData:data], nil, nil);
             return;
           }
 
@@ -407,14 +478,20 @@ static NSString *GetSessionCookie(NSURLSession *session) {
           NSTextCheckingResult *apiTokenResult =
               [sAPITokenRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
           if (!apiTokenResult || apiTokenResult.range.location == NSNotFound) {
-            handler(MakeError(0, @"API token not found in page"), nil, nil);
+            handler([TKMClientError httpErrorWithMessage:@"API token not found in page"
+                                                 request:req
+                                                response:response
+                                            responseData:data], nil, nil);
             return;
           }
 
           NSTextCheckingResult *emailAddressResult =
               [sEmailAddressRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
           if (!emailAddressResult || emailAddressResult.range.location == NSNotFound) {
-            handler(MakeError(0, @"Email address not found in page"), nil, nil);
+            handler([TKMClientError httpErrorWithMessage:@"Email address not found in page"
+                                                 request:req
+                                                response:response
+                                            responseData:data], nil, nil);
             return;
           }
 
@@ -499,7 +576,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
             handler(error);
             return;
           }
-          _csrfToken = ParseCSRFTokenFromResponse(data, response, &error);
+          _csrfToken = ParseCSRFTokenFromResponse(data, req, response, &error);
           if (!error) {
             _csrfTokenUpdated = [NSDate date];
           }

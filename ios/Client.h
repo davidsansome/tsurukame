@@ -36,6 +36,16 @@ typedef void (^StudyMaterialsHandler)(NSError *_Nullable error,
 typedef void (^UserInfoHandler)(NSError *_Nullable error, TKMUser *_Nullable user);
 typedef void (^UpdateStudyMaterialHandler)(NSError *_Nullable error);
 
+@interface TKMClientError : NSError
+
+@property(nonatomic, readonly, nullable) NSURLRequest *request;
+@property(nonatomic, readonly, nullable) NSHTTPURLResponse *response;
+@property(nonatomic, readonly, nullable) NSData *responseData;
+
+@end
+
+extern bool TKMIsClientError(NSError *error);
+
 @interface Client : NSObject
 
 - (instancetype)initWithApiToken:(NSString *)apiToken
