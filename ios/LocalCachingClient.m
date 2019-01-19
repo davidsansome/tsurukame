@@ -18,6 +18,8 @@
 #import "proto/Wanikani+Convenience.h"
 #import "third_party/FMDB/FMDB.h"
 
+#import <sys/errno.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 NSNotificationName kLocalCachingClientAvailableItemsChangedNotification =
@@ -253,10 +255,16 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   NSString *stack = [NSThread callStackSymbols].description;
   NSLog(@"Error %@ at:\n%@", error, stack);
   
+  // Don't bother logging some common errors.
+  if (([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorTimedOut) ||
+      ([error.domain isEqual:NSPOSIXErrorDomain] && error.code == ECONNABORTED)) {
+    return;
+  }
+  
   [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
     // Delete old log entries.
     CheckUpdate(db, @"DELETE FROM error_log WHERE ROWID IN ("
-                "  SELECT ROWID FROM error_log ORDER BY ROWID DESC LIMIT -1 OFFSET 999"
+                "  SELECT ROWID FROM error_log ORDER BY ROWID DESC LIMIT -1 OFFSET 99"
                 ")");
     
     if (!TKMIsClientError(error)) {
@@ -274,7 +282,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
                 stack, @(ce.code), ce.localizedDescription,
                 ce.request.URL.description,
                 ce.response.URL.description,
-                 [[NSString alloc] initWithData:ce.request.HTTPBody encoding:NSUTF8StringEncoding],
+                [[NSString alloc] initWithData:ce.request.HTTPBody encoding:NSUTF8StringEncoding],
                 ce.request.allHTTPHeaderFields.description,
                 ce.response.allHeaderFields.description,
                 [[NSString alloc] initWithData:ce.responseData encoding:NSUTF8StringEncoding]);
