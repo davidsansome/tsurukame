@@ -75,4 +75,7 @@ DEFINE_BOOL(enableCheats, setEnableCheats, YES);
 DEFINE_BOOL(playAudioAutomatically, setPlayAudioAutomatically, NO);
 DEFINE_OBJECT(NSSet<NSString *>, installedAudioPackages, setInstalledAudioPackages);
 
+DEFINE_BOOL(notificationsAllReviews, setNotificationsAllReviews, NO);
+DEFINE_BOOL(notificationsBadging, setNotificationsBadging, YES);
+
 @end

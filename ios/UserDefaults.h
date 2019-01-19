@@ -53,4 +53,8 @@ DECLARE_BOOL(enableCheats);
 DECLARE_BOOL(playAudioAutomatically);
 DECLARE_OBJECT(NSSet<NSString *>, installedAudioPackages);
 
+// Notifications.
+DECLARE_BOOL(notificationsAllReviews);
+DECLARE_BOOL(notificationsBadging);
+
 @end

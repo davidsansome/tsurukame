@@ -79,7 +79,8 @@
 
   // Ask for notification permissions.
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-  [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge)
+  UNAuthorizationOptions options = UNAuthorizationOptionBadge | UNAuthorizationOptionAlert;
+  [center requestAuthorizationWithOptions:options
                         completionHandler:^(BOOL granted, NSError *_Nullable error){
                         }];
 
@@ -138,6 +139,11 @@
 }
 
 - (void)updateAppBadgeCount {
+  if (!UserDefaults.notificationsAllReviews &&
+      !UserDefaults.notificationsBadging) {
+    return;
+  }
+  
   int reviewCount = _services.localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
 
@@ -167,8 +173,12 @@
       }
       NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];
       UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-      content.body = [NSString stringWithFormat:@"%d review%@ available", cumulativeReviews, cumulativeReviews == 1 ? @"" : @"s"];
-      content.badge = @(cumulativeReviews);
+      if (UserDefaults.notificationsAllReviews) {
+        content.body = [NSString stringWithFormat:@"%d review%@ available", cumulativeReviews, cumulativeReviews == 1 ? @"" : @"s"];
+      }
+      if (UserDefaults.notificationsBadging) {
+        content.badge = @(cumulativeReviews);
+      }
       UNNotificationTrigger *trigger =
           [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:triggerTimeInterval
                                                              repeats:NO];

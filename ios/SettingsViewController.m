@@ -20,6 +20,10 @@
 #import "Tables/TKMTableModel.h"
 #import "UserDefaults.h"
 
+#import <UserNotifications/UserNotifications.h>
+
+typedef void (^NotificationPermissionHandler)(BOOL granted);
+
 @interface SettingsViewController ()
 @end
 
@@ -27,33 +31,36 @@
   TKMTableModel *_model;
   NSIndexPath *_groupMeaningReadingIndexPath;
   NSIndexPath *_randomFontsIndexPath;
+  
+  NotificationPermissionHandler _notificationHandler;
+}
+
+- (void)viewDidLoad {
+  [super viewDidLoad];
+  
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  [nc addObserver:self
+         selector:@selector(applicationDidBecomeActive:)
+             name:UIApplicationDidBecomeActiveNotification
+           object:nil];
 }
 
 - (void)rerender {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
-
-  [model addSection:@"Animations" footer:@"You can turn off any animations you find distracting"];
-  [model addItem:[[TKMSwitchModelItem alloc]
-                     initWithStyle:UITableViewCellStyleDefault
-                             title:@"Particle explosion"
-                          subtitle:nil
-                                on:UserDefaults.animateParticleExplosion
-                            target:self
-                            action:@selector(animateParticleExplosionSwitchChanged:)]];
-  [model addItem:[[TKMSwitchModelItem alloc]
-                     initWithStyle:UITableViewCellStyleDefault
-                             title:@"Level up popup"
-                          subtitle:nil
-                                on:UserDefaults.animateLevelUpPopup
-                            target:self
-                            action:@selector(animateLevelUpPopupSwitchChanged:)]];
-  [model
-      addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                                  title:@"+1"
-                                               subtitle:nil
-                                                     on:UserDefaults.animatePlusOne
-                                                 target:self
-                                                 action:@selector(animatePlusOneSwitchChanged:)]];
+  
+  [model addSection:@"Notifications"];
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                     title:@"Notify for available reviews"
+                                                  subtitle:nil
+                                                        on:UserDefaults.notificationsAllReviews
+                                                    target:self
+                                                    action:@selector(allReviewsSwitchChanged:)]];
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                     title:@"Badge the app icon"
+                                                  subtitle:nil
+                                                        on:UserDefaults.notificationsBadging
+                                                    target:self
+                                                    action:@selector(badgingSwitchChanged:)]];
 
   [model addSection:@"Reviews"];
   [model
@@ -107,6 +114,29 @@
                                             accessoryType:UITableViewCellAccessoryNone
                                                    target:self
                                                    action:@selector(didTapOfflineAudio:)]];
+
+  [model addSection:@"Animations" footer:@"You can turn off any animations you find distracting"];
+  [model addItem:[[TKMSwitchModelItem alloc]
+                     initWithStyle:UITableViewCellStyleDefault
+                             title:@"Particle explosion"
+                          subtitle:nil
+                                on:UserDefaults.animateParticleExplosion
+                            target:self
+                            action:@selector(animateParticleExplosionSwitchChanged:)]];
+  [model addItem:[[TKMSwitchModelItem alloc]
+                     initWithStyle:UITableViewCellStyleDefault
+                             title:@"Level up popup"
+                          subtitle:nil
+                                on:UserDefaults.animateLevelUpPopup
+                            target:self
+                            action:@selector(animateLevelUpPopupSwitchChanged:)]];
+  [model
+      addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                  title:@"+1"
+                                               subtitle:nil
+                                                     on:UserDefaults.animatePlusOne
+                                                 target:self
+                                                 action:@selector(animatePlusOneSwitchChanged:)]];
 
   [model addSection];
   [model addItem:[[TKMBasicModelItem alloc]
@@ -194,6 +224,87 @@
 
 - (void)playAudioAutomaticallySwitchChanged:(UISwitch *)switchView {
   UserDefaults.playAudioAutomatically = switchView.on;
+}
+
+- (void)allReviewsSwitchChanged:(UISwitch *)switchView {
+  [self promptForNotifications:switchView handler:^(BOOL granted) {
+    UserDefaults.notificationsAllReviews = granted;
+  }];
+}
+
+- (void)badgingSwitchChanged:(UISwitch *)switchView {
+  [self promptForNotifications:switchView handler:^(BOOL granted) {
+    UserDefaults.notificationsBadging = granted;
+  }];
+}
+
+- (void)promptForNotifications:(UISwitch *)switchView
+                       handler:(NotificationPermissionHandler)handler {
+  if (_notificationHandler) {
+    return;
+  }
+  if (!switchView.on) {
+    handler(NO);
+    return;
+  }
+  
+  [switchView setOn:NO animated:YES];
+  switchView.enabled = NO;
+  __weak SettingsViewController *weakSelf = self;
+  _notificationHandler = ^(BOOL granted) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      switchView.enabled = YES;
+      [switchView setOn:granted animated:YES];
+      handler(granted);
+      
+      SettingsViewController *strongSelf = weakSelf;
+      if (strongSelf) {
+        strongSelf->_notificationHandler = nil;
+      }
+    });
+  };
+  
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  UNAuthorizationOptions options = UNAuthorizationOptionBadge | UNAuthorizationOptionAlert;
+  UIApplication *application = [UIApplication sharedApplication];
+  [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *_Nonnull settings) {
+    switch (settings.authorizationStatus) {
+      case UNAuthorizationStatusAuthorized:
+      case UNAuthorizationStatusProvisional: {
+        _notificationHandler(YES);
+        break;
+      }
+      case UNAuthorizationStatusNotDetermined: {
+        [center requestAuthorizationWithOptions:options
+                              completionHandler:^(BOOL granted, NSError *_Nullable error) {
+                                _notificationHandler(granted);
+                              }];
+        break;
+      }
+      case UNAuthorizationStatusDenied: {
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [application openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
+                       options:[NSDictionary dictionary]
+             completionHandler:nil];
+        });
+        break;
+      }
+    }
+  }];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+  if (!_notificationHandler) {
+    return;
+  }
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *_Nonnull settings) {
+    BOOL granted = settings.authorizationStatus == UNAuthorizationStatusAuthorized;
+    if (@available(iOS 12.0, *)) {
+      granted |= settings.authorizationStatus == UNAuthorizationStatusProvisional;
+    }
+    _notificationHandler(granted);
+  }];
 }
 
 - (void)didTapReviewOrder:(TKMBasicModelItem *)item {
