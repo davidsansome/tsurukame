@@ -480,6 +480,12 @@ class AnimationContext {
       assert(false);
   }
 
+  // Set random font
+  if (UserDefaults.randomFontsEnabled) {
+    TKMFont *randomFont = [TKMFontLoader getRandomFontToRender:_activeSubject.japaneseText.string];
+    _usedFontName = randomFont.fontName;
+  }
+
   UIFont *boldFont = [UIFont boldSystemFontOfSize:self.promptLabel.font.pointSize];
   NSMutableAttributedString *prompt = [[NSMutableAttributedString alloc]
       initWithString:[NSString stringWithFormat:@"%@ %@", subjectTypePrompt, taskTypePrompt]];
@@ -694,6 +700,14 @@ class AnimationContext {
 #pragma mark - Question Label Tapped
 
 - (IBAction)questionLabelTapped:(id)sender {
+  if (!UserDefaults.randomFontsEnabled) {
+    return;
+  }
+  CGFloat size = [_questionLabel.font pointSize];
+  NSString *newFontName = [_questionLabel.font.fontName isEqualToString:_normalFontName]
+                              ? _usedFontName
+                              : _normalFontName;
+  [_questionLabel setFont:[UIFont fontWithName:newFontName size:size]];
 }
 
 #pragma mark - Back button

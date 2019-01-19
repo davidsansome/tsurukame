@@ -1310,6 +1310,7 @@
 				63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */,
 				63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */,
 				63BFA78B218EB1B30058E885 /* TKMDownloadModelItem.xib in Resources */,
+				BB2909A6217FAF8B00B1816F /* fonts in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
