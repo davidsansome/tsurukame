@@ -42,8 +42,7 @@ DECLARE_BOOL(animatePlusOne);
 
 // Review settings.
 DECLARE_ENUM(ReviewOrder, reviewOrder);
-DECLARE_BOOL(randomFontsEnabled);
-DECLARE_OBJECT(NSArray<TKMFont *>, usedFonts);
+DECLARE_OBJECT(NSSet<NSString *>, selectedFonts);
 DECLARE_BOOL(groupMeaningReading);
 DECLARE_BOOL(meaningFirst);
 DECLARE_BOOL(showAnswerImmediately);

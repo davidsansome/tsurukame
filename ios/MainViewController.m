@@ -22,6 +22,7 @@
 #import "ReviewItem.h"
 #import "ReviewViewController.h"
 #import "SearchResultViewController.h"
+#import "SettingsViewController.h"
 #import "Style.h"
 #import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"
@@ -336,6 +337,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     SubjectCatalogueViewController *vc =
         (SubjectCatalogueViewController *)segue.destinationViewController;
     [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
+  } else if ([segue.identifier isEqual:@"settings"]) {
+    SettingsViewController *vc = (SettingsViewController *)segue.destinationViewController;
+    [vc setupWithServices:_services];
   }
 }
 

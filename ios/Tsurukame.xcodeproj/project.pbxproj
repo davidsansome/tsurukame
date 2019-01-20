@@ -228,6 +228,7 @@
 		63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */; };
 		63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */; };
 		63E9A8EC21199C9700418CE1 /* ClientTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8DC21199C2600418CE1 /* ClientTest.m */; };
+		63E9E51121F424690022C16E /* TKMDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9E51021F424690022C16E /* TKMDownloadViewController.m */; };
 		63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */; };
 		63EDA418207F335500382CE3 /* PieChartDataEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA406207F335200382CE3 /* PieChartDataEntry.swift */; };
 		63EDA419207F335500382CE3 /* IRadarChartDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA407207F335200382CE3 /* IRadarChartDataSet.swift */; };
@@ -256,9 +257,7 @@
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
-		BBE4E332217276EC003A200E /* RandomFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* RandomFontsViewController.m */; };
-		BBE4E33621728AE9003A200E /* TKMFontModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E33421728AE9003A200E /* TKMFontModelItem.m */; };
-		BBE4E33721728AE9003A200E /* TKMFontModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = BBE4E33521728AE9003A200E /* TKMFontModelItem.xib */; };
+		BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* TKMFontsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -602,6 +601,8 @@
 		63E9A8DC21199C2600418CE1 /* ClientTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClientTest.m; sourceTree = "<group>"; };
 		63E9A8E221199C8500418CE1 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63E9A8E621199C8500418CE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63E9E50F21F424690022C16E /* TKMDownloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMDownloadViewController.h; sourceTree = "<group>"; };
+		63E9E51021F424690022C16E /* TKMDownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMDownloadViewController.m; sourceTree = "<group>"; };
 		63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchResultViewController.h; sourceTree = "<group>"; };
 		63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchResultViewController.m; sourceTree = "<group>"; };
 		63EDA406207F335200382CE3 /* PieChartDataEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PieChartDataEntry.swift; path = third_party/Charts/PieChartDataEntry.swift; sourceTree = SOURCE_ROOT; };
@@ -640,11 +641,8 @@
 		BB2909A5217FAF8B00B1816F /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		BBE4E32D2172576B003A200E /* TKMFontLoader.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TKMFontLoader.mm; sourceTree = "<group>"; };
 		BBE4E32F217259EE003A200E /* TKMFontLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMFontLoader.h; sourceTree = "<group>"; };
-		BBE4E330217276EC003A200E /* RandomFontsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RandomFontsViewController.h; sourceTree = "<group>"; };
-		BBE4E331217276EC003A200E /* RandomFontsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RandomFontsViewController.m; sourceTree = "<group>"; };
-		BBE4E33321728AE9003A200E /* TKMFontModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMFontModelItem.h; sourceTree = "<group>"; };
-		BBE4E33421728AE9003A200E /* TKMFontModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMFontModelItem.m; sourceTree = "<group>"; };
-		BBE4E33521728AE9003A200E /* TKMFontModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMFontModelItem.xib; sourceTree = "<group>"; };
+		BBE4E330217276EC003A200E /* TKMFontsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMFontsViewController.h; sourceTree = "<group>"; };
+		BBE4E331217276EC003A200E /* TKMFontsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMFontsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -689,6 +687,8 @@
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
 				63EEFEB61FC45C440070C05F /* AppDelegate.m */,
 				63EEFEBC1FC45C440070C05F /* Assets.xcassets */,
+				63E9E50F21F424690022C16E /* TKMDownloadViewController.h */,
+				63E9E51021F424690022C16E /* TKMDownloadViewController.m */,
 				63EEFED71FC46E720070C05F /* Client.h */,
 				63EEFED81FC46E720070C05F /* Client.m */,
 				63EDA42A207F38BE00382CE3 /* CurrentLevelChartController.h */,
@@ -725,8 +725,8 @@
 				6319C99E204015B900C31F87 /* NSString+MD5.h */,
 				6319C99F204015B900C31F87 /* NSString+MD5.m */,
 				63CAAAD61FC6E0BF00E09DA1 /* proto */,
-				BBE4E330217276EC003A200E /* RandomFontsViewController.h */,
-				BBE4E331217276EC003A200E /* RandomFontsViewController.m */,
+				BBE4E330217276EC003A200E /* TKMFontsViewController.h */,
+				BBE4E331217276EC003A200E /* TKMFontsViewController.m */,
 				63CAAB0D1FD7FA5D00E09DA1 /* Reachability.h */,
 				63CAAB0C1FD7FA5D00E09DA1 /* Reachability.m */,
 				63CAAAFB1FCD693500E09DA1 /* ReviewItem.h */,
@@ -960,9 +960,6 @@
 				63BFA78F218EB7AB0058E885 /* TKMDownloadModelItem.h */,
 				63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */,
 				63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */,
-				BBE4E33321728AE9003A200E /* TKMFontModelItem.h */,
-				BBE4E33421728AE9003A200E /* TKMFontModelItem.m */,
-				BBE4E33521728AE9003A200E /* TKMFontModelItem.xib */,
 				63E9A8CF2110859800418CE1 /* TKMListSeparatorItem.h */,
 				63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */,
 				63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */,
@@ -1302,7 +1299,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BBE4E33721728AE9003A200E /* TKMFontModelItem.xib in Resources */,
 				63CAAAFA1FC6EADD00E09DA1 /* data.bin in Resources */,
 				6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */,
 				63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */,
@@ -1310,7 +1306,6 @@
 				63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */,
 				63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */,
 				63BFA78B218EB1B30058E885 /* TKMDownloadModelItem.xib in Resources */,
-				BB2909A6217FAF8B00B1816F /* fonts in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1396,6 +1391,7 @@
 				6319CB1A204429E200C31F87 /* BubbleChartData.swift in Sources */,
 				6319CAAA2044203E00C31F87 /* YAxisRendererHorizontalBarChart.swift in Sources */,
 				63453E4C20EF8C0500F20404 /* HNKSimpleFetcher.m in Sources */,
+				63E9E51121F424690022C16E /* TKMDownloadViewController.m in Sources */,
 				6319CB17204429E200C31F87 /* CandleChartDataSet.swift in Sources */,
 				63EDA429207F335500382CE3 /* RadarChartView.swift in Sources */,
 				6319CADA2044203E00C31F87 /* LineChartDataSet.swift in Sources */,
@@ -1412,7 +1408,7 @@
 				6319CAFC2044203F00C31F87 /* ChartHighlighter.swift in Sources */,
 				6319CAC92044203E00C31F87 /* IChartDataSet.swift in Sources */,
 				6319CAC32044203E00C31F87 /* ChartViewBase.swift in Sources */,
-				BBE4E332217276EC003A200E /* RandomFontsViewController.m in Sources */,
+				BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */,
 				6319CABA2044203E00C31F87 /* CombinedChartView.swift in Sources */,
 				6319CAF42044203F00C31F87 /* LegendRenderer.swift in Sources */,
 				63EDA41C207F335500382CE3 /* YAxisRendererRadarChart.swift in Sources */,
@@ -1509,7 +1505,6 @@
 				63453E5020EF8C0500F20404 /* HNKNetworkFetcher.m in Sources */,
 				6319CAD22044203E00C31F87 /* ComponentBase.swift in Sources */,
 				6319CAAD2044203E00C31F87 /* ChartDataProvider.swift in Sources */,
-				BBE4E33621728AE9003A200E /* TKMFontModelItem.m in Sources */,
 				63CAAAEA1FC6E1D400E09DA1 /* GPBUtilities.m in Sources */,
 				63CAAAF11FC6E1D400E09DA1 /* GPBMessage.m in Sources */,
 				63EDA41F207F335500382CE3 /* IPieChartDataSet.swift in Sources */,

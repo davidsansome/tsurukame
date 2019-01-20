@@ -51,6 +51,7 @@ typedef enum TKMDownloadModelItemState {
 @property(nonatomic) NSString *previewText;
 @property(nonatomic) NSString *previewFontName;
 @property(nonatomic) NSString *previewAccessibilityLabel;
+@property(nonatomic) UIImage *previewImage;
 
 @end
 

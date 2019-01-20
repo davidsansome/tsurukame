@@ -19,6 +19,9 @@
 
 #import "UserDefaults.h"
 
+NSString *const kTKMFontPreviewText =
+    @"色は匂へど散りぬるを我が世誰ぞ常ならん有為の奥山今日越えて浅き夢見じ酔ひもせず";
+
 struct FontDefinition {
   NSString *fontName;
   NSString *fileName;
@@ -26,16 +29,19 @@ struct FontDefinition {
   int64_t sizeBytes;
 };
 static const FontDefinition kFontDefinitions[] = {
-  {@"ArmedBanana", @"armedbanana.ttf", @"Armed Banana", 3298116},
-  {@"darts font", @"dartsfont.woff", @"Darts", 1349440},
-  {@"FC-Flower", @"fc_fl.ttf", @"FC Flower handwriting", 659800},
-  {@"Hosofuwafont", @"Hosohuwafont.ttf", @"Hoso Fuwa", 5910760},
-  {@"nagayama_kai", @"nagayama_kai08.otf", @"Nagayama Kai calligraphy", 15576732},
-  {@"santyoume-font", @"KUDOU.TTF", @"San Chou Me", 4428896},
+  {@"ArmedBanana", @"armed-banana.ttf", @"Armed Banana", 3298116},
+  {@"darts font", @"darts-font.woff", @"Darts", 1349440},
+  {@"FC-Flower", @"fc-flower.ttf", @"FC Flower handwriting", 659800},
+  {@"Hosofuwafont", @"hoso-fuwa.ttf", @"Hoso Fuwa", 5910760},
+  {@"nagayama_kai", @"nagayama-kai.otf", @"Nagayama Kai calligraphy", 15576732},
+  {@"santyoume-font", @"san-chou-me.ttf", @"San Chou Me", 4428896},
 };
 
 BOOL LoadFont(NSString *path) {
   NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
+  if (!data) {
+    return NO;
+  }
   
   CGDataProviderRef provider = CGDataProviderCreateWithCFData((CFDataRef)data);
   CGFontRef font = CGFontCreateWithDataProvider(provider);
@@ -55,6 +61,12 @@ BOOL LoadFont(NSString *path) {
 
 @implementation TKMFontLoader
 
++ (NSString *)cacheDirectoryPath {
+  NSArray<NSString *> *paths =
+      NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  return [NSString stringWithFormat:@"%@/fonts", paths.firstObject];
+}
+
 - (instancetype)init {
   self = [super init];
   if (self) {
@@ -65,6 +77,15 @@ BOOL LoadFont(NSString *path) {
     _allFonts = allFonts;
   }
   return self;
+}
+
+- (nullable TKMFont *)fontByName:(NSString *)fileName {
+  for (TKMFont *font in _allFonts) {
+    if ([font.fileName isEqual:fileName]) {
+      return font;
+    }
+  }
+  return nil;
 }
 
 @end
@@ -87,6 +108,10 @@ BOOL LoadFont(NSString *path) {
   return _definition.displayName;
 }
 
+- (NSString *)fileName {
+  return _definition.fileName;
+}
+
 - (NSString *)fontName {
   return _definition.fontName;
 }
@@ -99,9 +124,13 @@ BOOL LoadFont(NSString *path) {
   if (_available) {
     return;
   }
+  if ([UIFont fontNamesForFamilyName:self.fontName].count) {
+    _available = YES;
+    return;
+  }
   
   // Try to load a built-in font first.
-  NSString *resource = [NSString stringWithFormat:@"fonts/%@", _definition.fileName];
+  NSString *resource = [NSString stringWithFormat:@"fonts/%@", self.fileName];
   NSBundle *mainBundle = [NSBundle mainBundle];
   NSString *path = [mainBundle pathForResource:resource ofType:nil];
   if (LoadFont(path)) {
@@ -110,7 +139,20 @@ BOOL LoadFont(NSString *path) {
   }
   
   // Try to load the downloaded font.
-  // TODO: plz.
+  path = [NSString stringWithFormat:@"%@/%@", [TKMFontLoader cacheDirectoryPath], self.fileName];
+  NSLog(@"Loading font %@", path);
+  if (LoadFont(path)) {
+    _available = YES;
+    return;
+  }
+}
+
+- (void)didDelete {
+  _available = NO;
+}
+
+- (UIImage *)loadScreenshot {
+  return [UIImage imageNamed:[NSString stringWithFormat:@"%@", self.fontName]];
 }
 
 @end

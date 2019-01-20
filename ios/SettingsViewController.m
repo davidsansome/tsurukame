@@ -18,6 +18,7 @@
 #import "LoginViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "TKMFontsViewController.h"
 #import "UserDefaults.h"
 
 #import <UserNotifications/UserNotifications.h>
@@ -28,11 +29,15 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 @end
 
 @implementation SettingsViewController {
+  TKMServices *_services;
   TKMTableModel *_model;
   NSIndexPath *_groupMeaningReadingIndexPath;
-  NSIndexPath *_randomFontsIndexPath;
   
   NotificationPermissionHandler _notificationHandler;
+}
+
+- (void)setupWithServices:(TKMServices *)services {
+  _services = services;
 }
 
 - (void)viewDidLoad {
@@ -50,7 +55,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   
   [model addSection:@"Notifications"];
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                                     title:@"Notify for available reviews"
+                                                     title:@"Notify for all available reviews"
                                                   subtitle:nil
                                                         on:UserDefaults.notificationsAllReviews
                                                     target:self
@@ -70,23 +75,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                          accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                 target:self
                                                 action:@selector(didTapReviewOrder:)]];
-
-  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                                     title:@"Jitai"
-                                                  subtitle:@"Use a random font for each review"
-                                                        on:UserDefaults.usedFonts
-                                                    target:self
-                                                    action:@selector(randomFontsSwitchChanged:)]];
-
-  _randomFontsIndexPath = [model
-      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
-                                                 title:@"Selected Fonts"
-                                              subtitle:self.selectedFontsSubtitle
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                 title:@"Fonts"
+                                              subtitle:nil
                                          accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                 target:self
-                                                action:@selector(didTapRandomFonts:)]
-       hidden:!UserDefaults.randomFontsEnabled];
-
+                                                action:@selector(didTapFonts:)]];
   [model addItem:[[TKMSwitchModelItem alloc]
                      initWithStyle:UITableViewCellStyleSubtitle
                              title:@"Back-to-back"
@@ -177,15 +172,6 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   [model reloadTable];
 }
 
-- (NSString *)selectedFontsSubtitle {
-  NSArray<TKMFont *> *enabledFonts = [TKMFontLoader getEnabledFonts];
-  if (enabledFonts.count == 1) {
-    return enabledFonts.firstObject.fontName;
-  } else {
-    return [NSString stringWithFormat:@"%lu fonts", enabledFonts.count];
-  }
-}
-
 - (NSString *)reviewOrderValueText {
   switch (UserDefaults.reviewOrder) {
     case ReviewOrder_Random:
@@ -223,11 +209,6 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)animatePlusOneSwitchChanged:(UISwitch *)switchView {
   UserDefaults.animatePlusOne = switchView.on;
-}
-
-- (void)randomFontsSwitchChanged:(UISwitch *)switchView {
-  UserDefaults.randomFontsEnabled = switchView.on;
-  [_model setIndexPath:_randomFontsIndexPath isHidden:!switchView.on];
 }
 
 - (void)groupMeaningReadingSwitchChanged:(UISwitch *)switchView {
@@ -332,8 +313,8 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   [self performSegueWithIdentifier:@"reviewOrder" sender:self];
 }
 
-- (void)didTapRandomFonts:(TKMBasicModelItem *)item {
-  [self performSegueWithIdentifier:@"randomFonts" sender:self];
+- (void)didTapFonts:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"fonts" sender:self];
 }
 
 - (void)didTapTaskOrder:(TKMBasicModelItem *)item {
@@ -342,6 +323,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)didTapOfflineAudio:(id)sender {
   [self performSegueWithIdentifier:@"offlineAudio" sender:self];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+  if ([segue.identifier isEqualToString:@"fonts"]) {
+    TKMFontsViewController *vc = (TKMFontsViewController *)segue.destinationViewController;
+    [vc setupWithServices:_services];
+  }
 }
 
 - (void)didTapLogOut:(id)sender {

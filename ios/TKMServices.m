@@ -17,6 +17,7 @@
 #import "DataLoader.h"
 #import "Reachability.h"
 #import "TKMAudio.h"
+#import "TKMFontLoader.h"
 
 @interface TKMServices ()
 
@@ -33,6 +34,7 @@
                                                                           withExtension:@"bin"]];
     _reachability = [Reachability reachabilityForInternetConnection];
     _audio = [[TKMAudio alloc] initWithReachability:_reachability];
+    _fontLoader = [[TKMFontLoader alloc] init];
   }
   return self;
 }

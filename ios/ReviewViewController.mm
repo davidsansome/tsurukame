@@ -170,7 +170,7 @@ class AnimationContext {
   CGFloat _animationDuration;
   UIViewAnimationCurve _animationCurve;
 
-  NSString *_usedFontName;
+  NSString *_currentFontName;
   NSString *_normalFontName;
 }
 
@@ -293,8 +293,15 @@ class AnimationContext {
     _backButton.hidden = YES;
   }
 
-  _usedFontName = _questionLabel.font.fontName;
   _normalFontName = _questionLabel.font.fontName;
+  _currentFontName = _normalFontName;
+  
+  UILongPressGestureRecognizer *longPressRecognizer =
+      [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                    action:@selector(didLongPressQuestionLabel:)];
+  longPressRecognizer.minimumPressDuration = 0;
+  longPressRecognizer.allowableMovement = 500;
+  [_questionBackground addGestureRecognizer:longPressRecognizer];
 
   [self viewDidLayoutSubviews];
   [self randomTask];
@@ -480,10 +487,15 @@ class AnimationContext {
       assert(false);
   }
 
-  // Set random font
-  if (UserDefaults.randomFontsEnabled) {
-    TKMFont *randomFont = [TKMFontLoader getRandomFontToRender:_activeSubject.japaneseText.string];
-    _usedFontName = randomFont.fontName;
+  // Choose a random font.
+  _currentFontName = _normalFontName;
+  if (UserDefaults.selectedFonts.count) {
+    int fontIndex = arc4random_uniform((uint32_t)UserDefaults.selectedFonts.count);
+    NSString *filename = [UserDefaults.selectedFonts.allObjects objectAtIndex:fontIndex];
+    TKMFont *font = [_services.fontLoader fontByName:filename];
+    if (font.available) {
+      _currentFontName = font.fontName;
+    }
   }
 
   UIFont *boldFont = [UIFont boldSystemFontOfSize:self.promptLabel.font.pointSize];
@@ -521,8 +533,11 @@ class AnimationContext {
   // only one of the copies gets animated, and the other one just fades out in place.
   // To work around this we copy and fade each view manually, but animate both copies.
   auto setupContextBlock = ^(AnimationContext *context) {
-    if (![_questionLabel.attributedText isEqual:_activeSubject.japaneseText]) {
+    if (![_questionLabel.attributedText isEqual:_activeSubject.japaneseText] ||
+        ![_questionLabel.font.fontName isEqual:_currentFontName]) {
       context->AddFadingLabel(_questionLabel);
+      _questionLabel.font = [UIFont fontWithName:_currentFontName
+                                            size:_questionLabel.font.pointSize];
       _questionLabel.attributedText = _activeSubject.japaneseText;
     }
     if (![_successRateLabel.text isEqual:successRateText]) {
@@ -697,17 +712,20 @@ class AnimationContext {
   [self performSegueWithIdentifier:@"subjectDetails" sender:_previousSubject];
 }
 
-#pragma mark - Question Label Tapped
+#pragma mark - Question label fonts
 
-- (IBAction)questionLabelTapped:(id)sender {
-  if (!UserDefaults.randomFontsEnabled) {
-    return;
+- (void)setCustomQuestionLabelFont:(BOOL)useCustomFont {
+  NSString *fontName = useCustomFont ? _currentFontName : _normalFontName;
+  _questionLabel.font = [UIFont fontWithName:fontName size:_questionLabel.font.pointSize];
+}
+
+- (void)didLongPressQuestionLabel:(UILongPressGestureRecognizer *)gestureRecognizer {
+  BOOL answered = !_subjectDetailsView.hidden;
+  if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+    [self setCustomQuestionLabelFont:answered];
+  } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+    [self setCustomQuestionLabelFont:!answered];
   }
-  CGFloat size = [_questionLabel.font pointSize];
-  NSString *newFontName = [_questionLabel.font.fontName isEqualToString:_normalFontName]
-                              ? _usedFontName
-                              : _normalFontName;
-  [_questionLabel setFont:[UIFont fontWithName:newFontName size:size]];
 }
 
 #pragma mark - Back button
@@ -902,7 +920,14 @@ class AnimationContext {
 - (IBAction)revealAnswerButtonPressed:(id)sender {
   [_subjectDetailsView updateWithSubject:_activeSubject studyMaterials:_activeStudyMaterials];
 
-  [self animateSubjectDetailsViewShown:true setupContextBlock:nil];
+  auto setupContextBlock = ^(AnimationContext *context) {
+    if (![_questionLabel.font.fontName isEqual:_normalFontName]) {
+      context->AddFadingLabel(_questionLabel);
+      _questionLabel.font = [UIFont fontWithName:_normalFontName
+                                            size:_questionLabel.font.pointSize];
+    }
+  };
+  [self animateSubjectDetailsViewShown:true setupContextBlock:setupContextBlock];
 }
 
 #pragma mark - Ignoring incorrect answers

@@ -12,23 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "../TKMFontLoader.h"
-#import "TKMModelItem.h"
+#import <UIKit/UIKit.h>
+
+#import "TKMDownloadViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TKMFontModelView : TKMModelCell
+@class TKMServices;
 
-@end
+@interface TKMFontsViewController : TKMDownloadViewController
 
-@interface TKMFontModelItem : NSObject <TKMModelItem>
-
-- (instancetype)initWithFont:(TKMFont *)font NS_DESIGNATED_INITIALIZER;
-- (instancetype)init NS_UNAVAILABLE;
-
-- (void)setSelected:(BOOL)selected;
-
-@property(nonatomic, copy) TKMFont *font;
+- (void)setupWithServices:(TKMServices *)services;
 
 @end
 

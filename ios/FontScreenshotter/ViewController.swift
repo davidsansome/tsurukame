@@ -38,7 +38,7 @@ class ViewController: UIViewController, TKMDownloadModelDelegate {
       item.totalSizeBytes = font.sizeBytes;
       item.previewFontName = font.fontName
       item.previewAccessibilityLabel = font.fontName
-      item.previewText = "色は匂へど散りぬるを我が世誰ぞ常ならん有為の奥山今日越えて浅き夢見じ酔ひもせず"
+      item.previewText = kTKMFontPreviewText
       self.tableModel!.add(item)
     }
   }

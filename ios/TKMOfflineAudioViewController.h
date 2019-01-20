@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import "TKMDownloadViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TKMOfflineAudioViewController : UITableViewController
+@interface TKMOfflineAudioViewController : TKMDownloadViewController
 
 @end
 

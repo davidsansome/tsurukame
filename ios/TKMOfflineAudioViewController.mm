@@ -67,32 +67,23 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
   }
 }
 
-@interface TKMOfflineAudioViewController () <TKMDownloadModelDelegate, NSURLSessionDownloadDelegate>
+@interface TKMOfflineAudioViewController ()
 
 @end
 
 @implementation TKMOfflineAudioViewController {
-  NSURLSession *_urlSession;
   NSFileManager *_fileManager;
-  TKMTableModel *_model;
-  NSMutableDictionary<NSString *, NSURLSessionDownloadTask *> *_downloads;
-  NSMutableDictionary<NSString *, NSIndexPath *> *_indexPaths;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if (self) {
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    _urlSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
     _fileManager = [[NSFileManager alloc] init];
-    _downloads = [NSMutableDictionary dictionary];
   }
   return self;
 }
 
-- (void)rerender {
-  _indexPaths = [NSMutableDictionary dictionary];
-  TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
+- (void)populateModel:(TKMMutableTableModel *)model {
   [model addSection:@"" footer:@"Download audio to your phone so it plays without delay and "
       "is available when you're not connected to the internet."];
 
@@ -102,17 +93,16 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
                                                                        delegate:self];
     item.totalSizeBytes = package.sizeBytes;
 
-    if ([_downloads objectForKey:package.filename]) {
-      NSURLSessionDownloadTask *task = _downloads[package.filename];
-      item.downloadingProgressBytes = task.countOfBytesReceived;
+    NSURLSessionDownloadTask *download = [self activeDownloadFor:package.filename];
+    if (download) {
+      item.downloadingProgressBytes = download.countOfBytesReceived;
       item.state = TKMDownloadModelItemDownloading;
     } else if ([UserDefaults.installedAudioPackages containsObject:package.filename]) {
       item.state = TKMDownloadModelItemInstalledSelected;
     } else {
       item.state = TKMDownloadModelItemNotInstalled;
     }
-
-    _indexPaths[package.filename] = [model addItem:item];
+    [model addItem:item];
   }
   
   if ([_fileManager fileExistsAtPath:[TKMAudio cacheDirectoryPath]]) {
@@ -127,56 +117,18 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
     deleteItem.textColor = [UIColor redColor];
     [model addItem:deleteItem];
   }
-
-  _model = model;
-  [model reloadTable];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-  [super viewWillAppear:animated];
-  self.navigationController.navigationBarHidden = NO;
-
-  [self rerender];
+- (NSURL *)urlForFilename:(NSString *)filename {
+  return [NSURL URLWithString:[NSString stringWithFormat:kURLPattern, filename]];
 }
 
-- (void)didTapDownloadItem:(TKMDownloadModelItem *)item {
-  switch (item.state) {
-    case TKMDownloadModelItemNotInstalled:
-      [self startDownloadFor:item.filename];
-      break;
-    case TKMDownloadModelItemDownloading:
-      [self cancelDownloadFor:item.filename];
-      break;
-    default:
-      break;
-  }
-}
-
-- (void)startDownloadFor:(NSString *)filename {
-  NSString *urlString = [NSString stringWithFormat:kURLPattern, filename];
-  NSURLSessionDownloadTask *task =
-      [_urlSession downloadTaskWithURL:[NSURL URLWithString:urlString]];
-  _downloads[filename] = task;
-  [task resume];
-  [self rerender];
-}
-
-- (void)cancelDownloadFor:(NSString *)filename {
-  NSURLSessionDownloadTask *task = _downloads[filename];
-  [task cancel];
-  [_downloads removeObjectForKey:filename];
-  [self rerender];
-}
-
-- (void)URLSession:(NSURLSession *)session
-                 downloadTask:(NSURLSessionDownloadTask *)downloadTask
-    didFinishDownloadingToURL:(NSURL *)location {
-  NSURL *url = downloadTask.originalRequest.URL;
-  NSString *filename = url.lastPathComponent;
-
+- (void)didFinishDownloadFor:(NSString *)filename atURL:(NSURL *)location {
   NSData *lzfseData = [NSData dataWithContentsOfURL:location];
   if (!lzfseData) {
-    [self reportErrorOnMainThread:filename title:@"Error reading data" message:url.absoluteString];
+    [self reportErrorOnMainThread:filename
+                            title:@"Error reading data"
+                          message:[self urlForFilename:filename].absoluteString];
     return;
   }
 
@@ -184,7 +136,7 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
   if (!tarData) {
     [self reportErrorOnMainThread:filename
                             title:@"Error decompressing data"
-                          message:url.absoluteString];
+                          message:[self urlForFilename:filename].absoluteString];
     return;
   }
 
@@ -205,7 +157,7 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
   if (error) {
     [self reportErrorOnMainThread:filename
                             title:@"Error extracting data"
-                          message:url.absoluteString];
+                          message:[self urlForFilename:filename].absoluteString];
     return;
   }
 
@@ -215,76 +167,12 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
     [installedPackages addObject:filename];
     UserDefaults.installedAudioPackages = installedPackages;
 
-    [_downloads removeObjectForKey:filename];
-    [self rerender];
+    [self markDownloadComplete:filename];
   });
 }
 
-- (void)reportErrorOnMainThread:(nullable NSString *)filename
-                          title:(NSString *)title
-                        message:(NSString *)message {
-  dispatch_async(dispatch_get_main_queue(), ^{
-    if (filename) {
-      [_downloads removeObjectForKey:filename];
-    }
-
-    UIAlertController *alert =
-        [UIAlertController alertControllerWithTitle:title
-                                            message:message
-                                     preferredStyle:UIAlertControllerStyleAlert];
-
-    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
-                                                     style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction *action){
-                                                   }];
-    [alert addAction:action];
-    [self presentViewController:alert animated:YES completion:nil];
-    [self rerender];
-  });
-}
-
-- (void)URLSession:(NSURLSession *)session
-                    task:(NSURLSessionTask *)task
-    didCompleteWithError:(NSError *)error {
-  if (!error) {
-    return;
-  }
-  if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
-    return;
-  }
-
-  NSString *filename = task.originalRequest.URL.lastPathComponent;
-  [self reportErrorOnMainThread:filename
-                          title:error.localizedDescription
-                        message:task.originalRequest.URL.absoluteString];
-}
-
-- (void)URLSession:(NSURLSession *)session
-                 downloadTask:(NSURLSessionDownloadTask *)downloadTask
-                 didWriteData:(int64_t)bytesWritten
-            totalBytesWritten:(int64_t)totalBytesWritten
-    totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
-  NSString *filename = downloadTask.originalRequest.URL.lastPathComponent;
-
-  [self updateProgressOnMainThread:filename
-                       updateBlock:^(TKMDownloadModelItem *item) {
-                         item.state = TKMDownloadModelItemDownloading;
-                         item.downloadingProgressBytes = totalBytesWritten;
-                       }];
-}
-
-- (void)updateProgressOnMainThread:(NSString *)filename
-                       updateBlock:(void (^)(TKMDownloadModelItem *))updateBlock {
-  dispatch_async(dispatch_get_main_queue(), ^{
-    // Try to update the visible cell without reloading the whole table.  This is a bit of a hack.
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_indexPaths[filename]];
-    if (cell) {
-      TKMDownloadModelView *view = (TKMDownloadModelView *)cell;
-      TKMDownloadModelItem *item = (TKMDownloadModelItem *)view.item;
-      updateBlock(item);
-      [view updateProgress];
-    }
-  });
+- (void)toggleItem:(NSString *)filename selected:(BOOL)selected {
+  return;
 }
 
 - (void)didTapDeleteAllAudio:(id)sender {

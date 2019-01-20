@@ -13,28 +13,39 @@
 // limitations under the License.
 
 #import <CoreText/CoreText.h>
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @class TKMFont;
 
+NS_ASSUME_NONNULL_BEGIN
+
+extern NSString *const kTKMFontPreviewText;
+
 @interface TKMFontLoader : NSObject
+
++ (NSString *)cacheDirectoryPath;
 
 @property(nonatomic, readonly) NSArray<TKMFont *> *allFonts;
 
 - (instancetype)init;
+- (nullable TKMFont *)fontByName:(NSString *)fileName;
 
 @end
-
 
 @interface TKMFont : NSObject
 
 @property(nonatomic, readonly) NSString *fontName;
+@property(nonatomic, readonly) NSString *fileName;
 @property(nonatomic, readonly) NSString *displayName;
 @property(nonatomic, readonly) int64_t sizeBytes;
 @property(nonatomic, readonly) BOOL available;
-@property(nonatomic, readonly) BOOL enabled;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (void)reload;
+- (void)didDelete;
+
+- (UIImage *)loadScreenshot;
 
 @end
+
+NS_ASSUME_NONNULL_END

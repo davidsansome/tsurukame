@@ -20,11 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 @class LocalCachingClient;
 @class Reachability;
 @class TKMAudio;
+@class TKMFontLoader;
 
 @interface TKMServices : NSObject
 
 @property(nonatomic, readonly) TKMAudio *audio;
 @property(nonatomic, readonly) DataLoader *dataLoader;
+@property(nonatomic, readonly) TKMFontLoader *fontLoader;
 @property(nonatomic, readonly, nullable) LocalCachingClient *localCachingClient;
 @property(nonatomic, readonly) Reachability *reachability;
 

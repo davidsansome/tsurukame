@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,30 +21,49 @@
                     <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" axis="vertical" distribution="equalCentering" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="yNh-ru-bro">
                         <rect key="frame" x="16" y="11" width="343" height="56"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2oJ-ye-qHd">
-                                <rect key="frame" x="0.0" y="0.0" width="343" height="20.5"/>
-                                <accessibility key="accessibilityConfiguration" identifier="preview"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <view contentMode="scaleToFill" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="s5Z-Ht-X5C">
+                                <rect key="frame" x="0.0" y="0.0" width="343" height="48"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2oJ-ye-qHd">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="48"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="preview"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="w4O-6U-Z8p">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="48"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="w4O-6U-Z8p" secondAttribute="trailing" id="W30-hN-dHF"/>
+                                    <constraint firstAttribute="bottom" secondItem="2oJ-ye-qHd" secondAttribute="bottom" id="bOj-od-JVG"/>
+                                    <constraint firstItem="2oJ-ye-qHd" firstAttribute="top" secondItem="s5Z-Ht-X5C" secondAttribute="top" id="dcD-wo-AMq"/>
+                                    <constraint firstItem="w4O-6U-Z8p" firstAttribute="leading" secondItem="s5Z-Ht-X5C" secondAttribute="leading" id="fjO-JQ-cBc"/>
+                                    <constraint firstItem="2oJ-ye-qHd" firstAttribute="leading" secondItem="s5Z-Ht-X5C" secondAttribute="leading" id="ftA-cZ-gd2"/>
+                                    <constraint firstItem="w4O-6U-Z8p" firstAttribute="top" secondItem="s5Z-Ht-X5C" secondAttribute="top" id="nPv-Vw-6Nq"/>
+                                    <constraint firstAttribute="trailing" secondItem="2oJ-ye-qHd" secondAttribute="trailing" id="tvI-Ie-2dr"/>
+                                    <constraint firstItem="2oJ-ye-qHd" firstAttribute="bottom" secondItem="w4O-6U-Z8p" secondAttribute="bottom" id="wgh-a0-KVv"/>
+                                </constraints>
+                            </view>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="stS-CL-nMU">
-                                <rect key="frame" x="0.0" y="32" width="343" height="24"/>
+                                <rect key="frame" x="0.0" y="56" width="343" height="0.0"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Levels 1-10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eto-ka-nfe">
-                                        <rect key="frame" x="0.0" y="2" width="189.5" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="189.5" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="not installed - 19MB" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ti5-hJ-aj2">
-                                        <rect key="frame" x="197.5" y="5" width="113.5" height="14.5"/>
+                                        <rect key="frame" x="197.5" y="0.0" width="113.5" height="0.0"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="baseline_cloud_download_black_24pt" translatesAutoresizingMaskIntoConstraints="NO" id="Pw9-o8-2bI">
-                                        <rect key="frame" x="319" y="0.0" width="24" height="24"/>
+                                        <rect key="frame" x="319" y="0.0" width="24" height="0.0"/>
                                     </imageView>
                                 </subviews>
                             </stackView>
@@ -63,6 +83,8 @@
             <connections>
                 <outlet property="image" destination="Pw9-o8-2bI" id="Zfz-TA-JhT"/>
                 <outlet property="preview" destination="2oJ-ye-qHd" id="ASb-lN-k6F"/>
+                <outlet property="previewContainer" destination="s5Z-Ht-X5C" id="mTJ-Qa-0Bm"/>
+                <outlet property="previewImage" destination="w4O-6U-Z8p" id="4wV-eP-iz8"/>
                 <outlet property="subtitle" destination="Ti5-hJ-aj2" id="PUm-5y-POd"/>
                 <outlet property="title" destination="Eto-ka-nfe" id="QOX-hy-VM8"/>
             </connections>

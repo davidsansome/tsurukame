@@ -14,6 +14,14 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class TKMServices;
+
 @interface SettingsViewController : UITableViewController
 
+- (void)setupWithServices:(TKMServices *)services;
+
 @end
+
+NS_ASSUME_NONNULL_END

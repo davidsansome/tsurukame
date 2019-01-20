@@ -524,7 +524,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TY8-JV-WfA" customClass="TKMGradientView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TY8-JV-WfA" customClass="TKMGradientView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="563"/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="19G-qM-1qD" appends="YES" id="3Bz-Zh-VcU"/>
@@ -774,7 +774,7 @@
                         <segue destination="7Tc-3C-9Vx" kind="show" identifier="taskOrder" id="U7N-3Q-4cQ"/>
                         <segue destination="uj2-VH-hcW" kind="show" identifier="reviewOrder" id="7Yf-CB-TUU"/>
                         <segue destination="AG2-Tf-RDu" kind="show" identifier="offlineAudio" id="EkU-M7-aeu"/>
-                        <segue destination="QeO-rY-q75" kind="show" identifier="randomFonts" id="l0d-dJ-or1"/>
+                        <segue destination="QeO-rY-q75" kind="show" identifier="fonts" id="l0d-dJ-or1"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFO-Ke-JcM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1020,11 +1020,11 @@
         <!--Select Fonts-->
         <scene sceneID="Edv-Yt-Zoe">
             <objects>
-                <tableViewController title="Select Fonts" id="QeO-rY-q75" customClass="RandomFontsViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="75" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="I82-At-GcW">
+                <tableViewController title="Select Fonts" id="QeO-rY-q75" customClass="TKMFontsViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="I82-At-GcW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     </tableView>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BnI-lh-nSF" userLabel="First Responder" sceneMemberID="firstResponder"/>
