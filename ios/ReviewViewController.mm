@@ -53,7 +53,7 @@ enum TKMAnswerResult {
   TKMAnswerCorrect,
   TKMAnswerIncorrect,
   TKMOverrideAnswerCorrect,
-  TKMIgnoreAnswer,
+  TKMAskAgainLater,
 };
 
 static UILabel *CopyLabel(UILabel *original) {
@@ -818,6 +818,14 @@ class AnimationContext {
 }
 
 - (void)markAnswer:(TKMAnswerResult)result {
+  if (result == TKMAskAgainLater) {
+    // Take the task out of the queue so it comes back later.
+    [_activeQueue removeObjectAtIndex:_activeTaskIndex];
+    [self refillActiveQueue];
+    [self randomTask];
+    return;
+  }
+  
   const bool correct = result == TKMAnswerCorrect || result == TKMOverrideAnswerCorrect;
 
   if (correct) {
@@ -829,28 +837,18 @@ class AnimationContext {
   bool firstTimeAnswered = false;
   switch (_activeTaskType) {
     case kTKMTaskTypeMeaning:
-      if (result == TKMIgnoreAnswer) {
-        _activeTask.answer.meaningWrong = false;
-        _activeTask.answer.hasMeaningWrong = false;
-      } else {
-        firstTimeAnswered = !_activeTask.answer.hasMeaningWrong;
-        if (firstTimeAnswered ||
-            (_lastMarkAnswerWasFirstTime && result == TKMOverrideAnswerCorrect)) {
-          _activeTask.answer.meaningWrong = !correct;
-        }
+      firstTimeAnswered = !_activeTask.answer.hasMeaningWrong;
+      if (firstTimeAnswered ||
+          (_lastMarkAnswerWasFirstTime && result == TKMOverrideAnswerCorrect)) {
+        _activeTask.answer.meaningWrong = !correct;
       }
       _activeTask.answeredMeaning = correct;
       break;
     case kTKMTaskTypeReading:
-      if (result == TKMIgnoreAnswer) {
-        _activeTask.answer.readingWrong = false;
-        _activeTask.answer.hasReadingWrong = false;
-      } else {
-        firstTimeAnswered = !_activeTask.answer.hasReadingWrong;
-        if (firstTimeAnswered ||
-            (_lastMarkAnswerWasFirstTime && result == TKMOverrideAnswerCorrect)) {
-          _activeTask.answer.readingWrong = !correct;
-        }
+      firstTimeAnswered = !_activeTask.answer.hasReadingWrong;
+      if (firstTimeAnswered ||
+          (_lastMarkAnswerWasFirstTime && result == TKMOverrideAnswerCorrect)) {
+        _activeTask.answer.readingWrong = !correct;
       }
       _activeTask.answeredReading = correct;
       break;
@@ -870,8 +868,7 @@ class AnimationContext {
       _tasksAnswered++;
       break;
 
-    case TKMIgnoreAnswer:
-      _tasksAnswered--;
+    case TKMAskAgainLater:
       break;
 
     case TKMOverrideAnswerCorrect:
@@ -971,7 +968,7 @@ class AnimationContext {
                                       handler:^(UIAlertAction *_Nonnull action) {
                                         ReviewViewController *unsafeSelf = weakSelf;
                                         if (unsafeSelf) {
-                                          [unsafeSelf markAnswer:TKMIgnoreAnswer];
+                                          [unsafeSelf markAnswer:TKMAskAgainLater];
                                         }
                                       }]];
   if (_activeTaskType == kTKMTaskTypeMeaning) {
