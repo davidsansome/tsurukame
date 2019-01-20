@@ -89,8 +89,17 @@ class AnimationContext {
       UILabel *copy = pair.second;
 
       original.alpha = 1.f;
-      copy.center = original.center;
-      copy.bounds = original.bounds;
+      switch (original.textAlignment) {
+        case NSTextAlignmentNatural:
+        case NSTextAlignmentLeft:
+          copy.center = CGPointMake(CGRectGetMinX(original.frame) + copy.frame.size.width / 2,
+                                    CGRectGetMinY(original.frame) + copy.frame.size.height / 2);
+          break;
+        default:
+          copy.center = original.center;
+          copy.bounds = original.bounds;
+          break;
+      };
       copy.transform = original.transform;
       copy.alpha = 0.f;
     }
