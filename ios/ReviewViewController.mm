@@ -155,6 +155,8 @@ class AnimationContext {
 
   int _tasksAnsweredCorrectly;
   int _tasksAnswered;
+  
+  BOOL _lastMarkAnswerWasFirstTime;
 
   CAGradientLayer *_previousSubjectGradient;
 
@@ -815,15 +817,16 @@ class AnimationContext {
   }
 
   // Mark the task.
-  bool firstTimeWrong = false;
+  bool firstTimeAnswered = false;
   switch (_activeTaskType) {
     case kTKMTaskTypeMeaning:
       if (result == TKMIgnoreAnswer) {
         _activeTask.answer.meaningWrong = false;
         _activeTask.answer.hasMeaningWrong = false;
       } else {
-        firstTimeWrong = !_activeTask.answer.hasMeaningWrong;
-        if (firstTimeWrong || result == TKMOverrideAnswerCorrect) {
+        firstTimeAnswered = !_activeTask.answer.hasMeaningWrong;
+        if (firstTimeAnswered ||
+            (_lastMarkAnswerWasFirstTime && result == TKMOverrideAnswerCorrect)) {
           _activeTask.answer.meaningWrong = !correct;
         }
       }
@@ -834,8 +837,9 @@ class AnimationContext {
         _activeTask.answer.readingWrong = false;
         _activeTask.answer.hasReadingWrong = false;
       } else {
-        firstTimeWrong = !_activeTask.answer.hasReadingWrong;
-        if (firstTimeWrong || result == TKMOverrideAnswerCorrect) {
+        firstTimeAnswered = !_activeTask.answer.hasReadingWrong;
+        if (firstTimeAnswered ||
+            (_lastMarkAnswerWasFirstTime && result == TKMOverrideAnswerCorrect)) {
           _activeTask.answer.readingWrong = !correct;
         }
       }
@@ -844,6 +848,7 @@ class AnimationContext {
     case kTKMTaskType_Max:
       abort();
   }
+  _lastMarkAnswerWasFirstTime = firstTimeAnswered;
 
   // Update stats.
   switch (result) {
@@ -903,7 +908,7 @@ class AnimationContext {
   }
 
   // Otherwise show the correct answer.
-  if (!UserDefaults.showAnswerImmediately && firstTimeWrong) {
+  if (!UserDefaults.showAnswerImmediately && firstTimeAnswered) {
     _revealAnswerButton.hidden = NO;
     [UIView animateWithDuration:_animationDuration
                      animations:^{
