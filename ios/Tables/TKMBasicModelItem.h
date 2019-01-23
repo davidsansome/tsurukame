@@ -55,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN;
 
 @property(nonatomic) UITableViewCellAccessoryType accessoryType;
 
+@property(nonatomic) UIImage *image;
+
 @property(nonatomic, nullable, weak) id target;
 @property(nonatomic, nullable) SEL action;
 

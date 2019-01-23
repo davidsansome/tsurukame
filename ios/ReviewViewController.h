@@ -22,15 +22,12 @@ NS_ASSUME_NONNULL_BEGIN;
 
 @protocol ReviewViewControllerDelegate <NSObject>
 
-- (bool)reviewViewController:(ReviewViewController *)reviewViewController
-             allowsCheatsFor:(ReviewItem *)reviewItem;
-- (bool)reviewViewControllerShowsSubjectHistory:(ReviewViewController *)reviewViewController;
-
-- (void)reviewViewController:(ReviewViewController *)reviewViewController
-            tappedBackButton:(UIButton *)backButton;
-- (void)reviewViewController:(ReviewViewController *)reviewViewController
-          finishedReviewItem:(ReviewItem *)reviewItem;
+- (bool)reviewViewControllerAllowsCheatsFor:(ReviewItem *)reviewItem;
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController;
+
+@optional
+- (void)reviewViewController:(ReviewViewController *)reviewViewController
+            tappedMenuButton:(UIButton *)menuButton;
 
 @end
 
@@ -38,19 +35,16 @@ NS_ASSUME_NONNULL_BEGIN;
 
 - (void)setupWithServices:(TKMServices *)services
                     items:(NSArray<ReviewItem *> *)items
-           hideBackButton:(BOOL)hideBackButton
-                 delegate:(nullable id<ReviewViewControllerDelegate>)delegate;
+           showMenuButton:(BOOL)showMenuButton
+       showSubjectHistory:(BOOL)showSubjectHistory
+                 delegate:(id<ReviewViewControllerDelegate>)delegate;
 
 @property(nonatomic) bool wrappingUp;
 @property(nonatomic, readonly) int tasksAnsweredCorrectly;
 @property(nonatomic, readonly) int reviewsCompleted;
+@property(nonatomic, readonly) int activeQueueLength;
 
-@end
-
-@interface DefaultReviewViewControllerDelegate : NSObject <ReviewViewControllerDelegate>
-
-- (instancetype)initWithServices:(TKMServices *)services NS_DESIGNATED_INITIALIZER;
-- (instancetype)init NS_UNAVAILABLE;
+- (void)focusAnswerField;
 
 @end
 

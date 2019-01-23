@@ -20,8 +20,12 @@
 
 @property(nonatomic, readonly, weak) UITableView *tableView;
 @property(nonatomic, readonly) int sectionCount;
+@property(nonatomic, weak) id<UITableViewDelegate> delegate;
 
-- (instancetype)initWithTableView:(UITableView *)tableView NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithTableView:(UITableView *)tableView
+                         delegate:(nullable id<UITableViewDelegate>)delegate
+    NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithTableView:(UITableView *)tableView;
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void)setIndexPath:(NSIndexPath *)index isHidden:(BOOL)hidden;

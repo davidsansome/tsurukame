@@ -52,16 +52,22 @@
   }
 }
 
-- (instancetype)initWithTableView:(UITableView *)tableView {
+- (instancetype)initWithTableView:(UITableView *)tableView
+                         delegate:(nullable id<UITableViewDelegate>)delegate {
   self = [super init];
   if (self) {
     _tableView = tableView;
     _sections = [NSMutableArray array];
+    _delegate = delegate;
 
     _tableView.dataSource = self;
     _tableView.delegate = self;
   }
   return self;
+}
+
+- (instancetype)initWithTableView:(UITableView *)tableView {
+  return [self initWithTableView:tableView delegate:nil];
 }
 
 - (int)sectionCount {
@@ -185,6 +191,20 @@
     return [item rowHeight];
   }
   return tableView.rowHeight;
+}
+
+- (BOOL)respondsToSelector:(SEL)aSelector {
+  if ([self.delegate respondsToSelector:aSelector]) {
+    return YES;
+  }
+  return [super respondsToSelector:aSelector];
+}
+
+- (id)forwardingTargetForSelector:(SEL)aSelector {
+  if ([self.delegate respondsToSelector:aSelector]) {
+    return self.delegate;
+  }
+  return [super forwardingTargetForSelector:aSelector];
 }
 
 @end

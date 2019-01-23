@@ -285,7 +285,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="Mzz-hx-Bdo" kind="show" identifier="startReview" id="k6S-Yq-4g6"/>
+                                            <segue destination="CLc-42-KXf" kind="show" identifier="startReviews" id="Yl0-MD-a2U"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -429,11 +429,6 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dob-5V-x24" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="frF-FC-Bqf">
-                    <connections>
-                        <action selector="didTapOpenDashboard:" destination="ByY-Kf-IzJ" id="4z9-VV-RdB"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-92" y="176"/>
         </scene>
@@ -515,6 +510,52 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nhW-65-6ah" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-727" y="834"/>
+        </scene>
+        <!--Review Menu View Controller-->
+        <scene sceneID="vXK-vc-8c7">
+            <objects>
+                <viewController storyboardIdentifier="reviewMenuViewController" id="grn-VZ-wuf" customClass="TKMReviewMenuViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zGT-Ht-qXT">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="BPO-IH-trC">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="UfJ-l9-U0F" firstAttribute="trailing" secondItem="BPO-IH-trC" secondAttribute="trailing" id="b0x-9z-FQf"/>
+                            <constraint firstItem="BPO-IH-trC" firstAttribute="leading" secondItem="UfJ-l9-U0F" secondAttribute="leading" id="fxa-41-trm"/>
+                            <constraint firstItem="UfJ-l9-U0F" firstAttribute="bottom" secondItem="BPO-IH-trC" secondAttribute="bottom" id="nWZ-C8-RDQ"/>
+                            <constraint firstItem="BPO-IH-trC" firstAttribute="top" secondItem="UfJ-l9-U0F" secondAttribute="top" id="yZZ-7j-TS6"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="UfJ-l9-U0F"/>
+                    </view>
+                    <connections>
+                        <outlet property="rightConstraint" destination="b0x-9z-FQf" id="XfF-ci-DGf"/>
+                        <outlet property="tableView" destination="BPO-IH-trC" id="iBA-jA-7nq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iNI-Dc-s59" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-92" y="942"/>
+        </scene>
+        <!--Review Container View Controller-->
+        <scene sceneID="8Kn-zD-Fkz">
+            <objects>
+                <viewController id="CLc-42-KXf" customClass="TKMReviewContainerViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Gug-AB-yRH">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="p68-zW-cdx"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q1W-P6-zsB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="545" y="943"/>
         </scene>
         <!--Review View Controller-->
         <scene sceneID="Raa-L5-aFt">
@@ -622,14 +663,14 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hl2-BP-AQQ">
-                                <rect key="frame" x="0.0" y="25" width="70" height="44"/>
+                                <rect key="frame" x="0.0" y="25" width="56" height="56"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <inset key="contentEdgeInsets" minX="6" minY="10" maxX="6" maxY="10"/>
-                                <state key="normal" title="Back" image="back">
+                                <inset key="contentEdgeInsets" minX="16" minY="16" maxX="16" maxY="16"/>
+                                <state key="normal" image="baseline_menu_black_24pt">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="backButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="PW3-Bb-gvB"/>
+                                    <action selector="menuButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="ISu-1N-wnP"/>
                                 </connections>
                             </button>
                             <tableView hidden="YES" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="wFr-RK-iSqq" customClass="TKMSubjectDetailsView">
@@ -724,9 +765,9 @@
                         <outlet property="answerField" destination="M27-Di-5Wg" id="tGd-Sg-Pxy"/>
                         <outlet property="answerFieldToBottomConstraint" destination="y4K-ca-rw0" id="k5q-kB-zrB"/>
                         <outlet property="answerFieldToSubjectDetailsViewConstraint" destination="AzB-Jc-8ht" id="avk-hp-la4"/>
-                        <outlet property="backButton" destination="Hl2-BP-AQQ" id="Olm-G0-FHx"/>
                         <outlet property="doneIcon" destination="q5T-jg-CA5" id="1t5-oj-UVA"/>
                         <outlet property="doneLabel" destination="sr9-jm-3e3" id="goZ-ah-xxh"/>
+                        <outlet property="menuButton" destination="Hl2-BP-AQQ" id="UGi-eS-eOH"/>
                         <outlet property="previousSubjectButton" destination="GZq-HC-Qg5" id="bch-Uc-FQy"/>
                         <outlet property="previousSubjectButtonWidthConstraint" destination="rhJ-ad-91J" id="ulQ-x5-nI7"/>
                         <outlet property="progressBar" destination="Jee-0P-imk" id="jnu-m8-srf"/>
@@ -752,7 +793,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-92" y="834.33283358320841"/>
+            <point key="canvasLocation" x="1182" y="944"/>
         </scene>
         <!--Settings-->
         <scene sceneID="3hY-tc-sfR">
@@ -953,7 +994,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bkr-Ut-8pW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1177" y="834"/>
+            <point key="canvasLocation" x="2450" y="943"/>
         </scene>
         <!--Subject Details View Controller-->
         <scene sceneID="xr9-Lr-oHy">
@@ -1015,7 +1056,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iQS-Ea-xkf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="545" y="835"/>
+            <point key="canvasLocation" x="1818" y="944"/>
         </scene>
         <!--Select Fonts-->
         <scene sceneID="Edv-Yt-Zoe">
@@ -1035,6 +1076,7 @@
     <resources>
         <image name="add" width="22" height="22"/>
         <image name="back" width="24" height="24"/>
+        <image name="baseline_menu_black_24pt" width="24" height="24"/>
         <image name="confirm" width="28" height="27"/>
         <image name="ic_search_white" width="24" height="24"/>
         <image name="ic_settings_white" width="24" height="24"/>

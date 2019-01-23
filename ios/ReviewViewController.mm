@@ -118,7 +118,7 @@ class AnimationContext {
 
 @interface ReviewViewController () <UITextFieldDelegate, TKMSubjectDelegate>
 
-@property(weak, nonatomic) IBOutlet UIButton *backButton;
+@property(weak, nonatomic) IBOutlet UIButton *menuButton;
 @property(weak, nonatomic) IBOutlet TKMGradientView *questionBackground;
 @property(weak, nonatomic) IBOutlet TKMGradientView *promptBackground;
 @property(weak, nonatomic) IBOutlet UILabel *questionLabel;
@@ -147,10 +147,10 @@ class AnimationContext {
 @implementation ReviewViewController {
   TKMKanaInput *_kanaInput;
   TKMServices *_services;
-  BOOL _hideBackButton;
+  BOOL _showMenuButton;
+  BOOL _showSubjectHistory;
   __weak id<ReviewViewControllerDelegate> _delegate;
-  DefaultReviewViewControllerDelegate *_defaultDelegate;  // Required for the strong reference.
-
+  
   NSMutableArray<ReviewItem *> *_activeQueue;
   NSMutableArray<ReviewItem *> *_reviewQueue;
   NSMutableArray<ReviewItem *> *_completedReviews;
@@ -224,16 +224,13 @@ class AnimationContext {
 
 - (void)setupWithServices:(TKMServices *)services
                     items:(NSArray<ReviewItem *> *)items
-           hideBackButton:(BOOL)hideBackButton
-                 delegate:(nullable id<ReviewViewControllerDelegate>)delegate {
-  if (!delegate) {
-    _defaultDelegate = [[DefaultReviewViewControllerDelegate alloc] initWithServices:services];
-    delegate = _defaultDelegate;
-  }
-
+           showMenuButton:(BOOL)showMenuButton
+       showSubjectHistory:(BOOL)showSubjectHistory
+                 delegate:(id<ReviewViewControllerDelegate>)delegate {
   _services = services;
   [self setItems:items];
-  _hideBackButton = hideBackButton;
+  _showMenuButton = showMenuButton;
+  _showSubjectHistory = showSubjectHistory;
   _delegate = delegate;
 }
 
@@ -276,6 +273,10 @@ class AnimationContext {
   [self refillActiveQueue];
 }
 
+- (int)activeQueueLength {
+  return (int)_activeQueue.count;
+}
+
 #pragma mark - UIViewController
 
 - (void)viewDidLoad {
@@ -300,8 +301,8 @@ class AnimationContext {
                    action:@selector(answerFieldValueDidChange)
          forControlEvents:UIControlEventEditingChanged];
 
-  if (_hideBackButton) {
-    _backButton.hidden = YES;
+  if (!_showMenuButton) {
+    _menuButton.hidden = YES;
   }
 
   _normalFontName = _questionLabel.font.fontName;
@@ -334,8 +335,12 @@ class AnimationContext {
   [super viewDidAppear:animated];
   [_subjectDetailsView deselectLastSubjectChipTapped];
   dispatch_async(dispatch_get_main_queue(), ^{
-    [_answerField becomeFirstResponder];
+    [self focusAnswerField];
   });
+}
+
+- (void)focusAnswerField {
+  [_answerField becomeFirstResponder];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -392,7 +397,6 @@ class AnimationContext {
 
 - (void)refillActiveQueue {
   if (_wrappingUp) {
-    [self updateWrapUpButton];
     return;
   }
   while (_activeQueue.count < _activeQueueSize && _reviewQueue.count != 0) {
@@ -400,21 +404,6 @@ class AnimationContext {
     [_reviewQueue removeObjectAtIndex:0];
     [_activeQueue addObject:item];
   }
-}
-
-- (void)setWrappingUp:(bool)wrappingUp {
-  _wrappingUp = wrappingUp;
-  [self updateWrapUpButton];
-}
-
-- (void)updateWrapUpButton {
-  NSString *title;
-  if (_wrappingUp) {
-    title = [NSString stringWithFormat:@"Back (%lu)", (unsigned long)_activeQueue.count];
-  } else {
-    title = @"Back";
-  }
-  [_backButton setTitle:title forState:UIControlStateNormal];
 }
 
 - (void)randomTask {
@@ -576,7 +565,7 @@ class AnimationContext {
 
 - (void)animateSubjectDetailsViewShown:(bool)shown
                      setupContextBlock:(void (^_Nullable)(AnimationContext *))setupContextBlock {
-  bool cheats = [_delegate reviewViewController:self allowsCheatsFor:_activeTask];
+  bool cheats = [_delegate reviewViewControllerAllowsCheatsFor:_activeTask];
 
   if (shown) {
     _subjectDetailsView.hidden = NO;
@@ -739,10 +728,10 @@ class AnimationContext {
   }
 }
 
-#pragma mark - Back button
+#pragma mark - Menu button
 
-- (IBAction)backButtonPressed:(id)sender {
-  [_delegate reviewViewController:self tappedBackButton:_backButton];
+- (IBAction)menuButtonPressed:(id)sender {
+  [_delegate reviewViewController:self tappedMenuButton:_menuButton];
 }
 
 #pragma mark - Submitting answers
@@ -883,7 +872,7 @@ class AnimationContext {
   int newSrsStage =
       didLevelUp ? _activeTask.assignment.srsStage + 1 : _activeTask.assignment.srsStage - 1;
   if (isSubjectFinished) {
-    [_delegate reviewViewController:self finishedReviewItem:_activeTask];
+    [_services.localCachingClient sendProgress:@[ _activeTask.answer ]];
 
     _reviewsCompleted++;
     [_completedReviews addObject:_activeTask];
@@ -899,7 +888,7 @@ class AnimationContext {
     }
 
     UILabel *previousSubjectLabel = nil;
-    if (isSubjectFinished && [_delegate reviewViewControllerShowsSubjectHistory:self]) {
+    if (isSubjectFinished && _showSubjectHistory) {
       previousSubjectLabel = CopyLabel(_questionLabel);
       _previousSubject = _activeSubject;
     }
@@ -1002,78 +991,6 @@ class AnimationContext {
 
 - (void)didTapSubject:(TKMSubject *)subject {
   [self performSegueWithIdentifier:@"subjectDetails" sender:subject];
-}
-
-@end
-
-@implementation DefaultReviewViewControllerDelegate {
-  TKMServices *_services;
-}
-
-- (instancetype)initWithServices:(TKMServices *)services {
-  self = [super init];
-  if (self) {
-    _services = services;
-  }
-  return self;
-}
-
-- (bool)reviewViewController:(ReviewViewController *)reviewViewController
-             allowsCheatsFor:(ReviewItem *)reviewItem {
-  return UserDefaults.enableCheats;
-}
-
-- (bool)reviewViewControllerShowsSubjectHistory:(ReviewViewController *)reviewViewController {
-  return true;
-}
-
-- (void)reviewViewController:(ReviewViewController *)reviewViewController
-            tappedBackButton:(UIButton *)backButton {
-  if (reviewViewController.tasksAnsweredCorrectly == 0) {
-    [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
-    return;
-  }
-
-  __weak ReviewViewController *weakController = reviewViewController;
-  UIAlertController *c = [UIAlertController
-      alertControllerWithTitle:@"End review session?"
-                       message:@"You'll lose progress on any half-answered reviews"
-                preferredStyle:UIAlertControllerStyleActionSheet];
-  c.popoverPresentationController.sourceView = backButton;
-  c.popoverPresentationController.sourceRect = backButton.bounds;
-
-  [c addAction:[UIAlertAction actionWithTitle:@"End review session"
-                                        style:UIAlertActionStyleDestructive
-                                      handler:^(UIAlertAction *_Nonnull action) {
-                                        [weakController performSegueWithIdentifier:@"reviewSummary"
-                                                                            sender:weakController];
-                                      }]];
-  [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
-                                        style:UIAlertActionStyleCancel
-                                      handler:nil]];
-  if (reviewViewController.wrappingUp) {
-    [c addAction:[UIAlertAction actionWithTitle:@"Cancel wrap up"
-                                          style:UIAlertActionStyleDefault
-                                        handler:^(UIAlertAction *_Nonnull action) {
-                                          weakController.wrappingUp = false;
-                                        }]];
-  } else {
-    [c addAction:[UIAlertAction actionWithTitle:@"Wrap up"
-                                          style:UIAlertActionStyleDefault
-                                        handler:^(UIAlertAction *_Nonnull action) {
-                                          weakController.wrappingUp = true;
-                                        }]];
-  }
-  [reviewViewController presentViewController:c animated:YES completion:nil];
-}
-
-- (void)reviewViewController:(ReviewViewController *)reviewViewController
-          finishedReviewItem:(ReviewItem *)reviewItem {
-  [_services.localCachingClient sendProgress:@[ reviewItem.answer ]];
-}
-
-- (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
-  [reviewViewController performSegueWithIdentifier:@"reviewSummary" sender:reviewViewController];
 }
 
 @end

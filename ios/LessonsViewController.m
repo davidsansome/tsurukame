@@ -144,7 +144,8 @@
           [self.storyboard instantiateViewControllerWithIdentifier:@"reviewViewController"];
       [_reviewViewController setupWithServices:_services
                                          items:_items
-                                hideBackButton:YES
+                                showMenuButton:NO
+                            showSubjectHistory:NO
                                       delegate:self];
     }
     return _reviewViewController;
@@ -186,26 +187,11 @@
 
 #pragma mark - ReviewViewControllerDelegate
 
-- (bool)reviewViewController:(ReviewViewController *)reviewViewController
-             allowsCheatsFor:(ReviewItem *)reviewItem {
+- (bool)reviewViewControllerAllowsCheatsFor:(ReviewItem *)reviewItem {
   return false;
-}
-
-- (bool)reviewViewControllerShowsSubjectHistory:(ReviewViewController *)reviewViewController {
-  return false;
-}
-
-- (void)reviewViewController:(ReviewViewController *)reviewViewController
-          finishedReviewItem:(ReviewItem *)reviewItem {
-  [_services.localCachingClient sendProgress:@[ reviewItem.answer ]];
 }
 
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
-  [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
-}
-
-- (void)reviewViewController:(ReviewViewController *)reviewViewController
-            tappedBackButton:(UIButton *)button {
   [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
 }
 

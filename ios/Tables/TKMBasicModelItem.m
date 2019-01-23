@@ -92,6 +92,7 @@
   self.detailTextLabel.numberOfLines = item.numberOfSubtitleLines;
   self.accessoryType = item.accessoryType;
   self.textLabel.textColor = item.textColor;
+  self.imageView.image = item.image;
 }
 
 - (void)didSelectCell {

@@ -20,12 +20,12 @@
 #import "NSDate+TimeAgo.h"
 #import "NSString+MD5.h"
 #import "ReviewItem.h"
-#import "ReviewViewController.h"
 #import "SearchResultViewController.h"
 #import "SettingsViewController.h"
 #import "Style.h"
 #import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"
+#import "TKMReviewContainerViewController.h"
 #import "TKMServices.h"
 #import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
@@ -308,7 +308,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-  if ([segue.identifier isEqualToString:@"startReview"]) {
+  if ([segue.identifier isEqualToString:@"startReviews"]) {
     NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments
                                                               dataLoader:_services.dataLoader];
@@ -316,8 +316,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
       return;
     }
 
-    ReviewViewController *vc = (ReviewViewController *)segue.destinationViewController;
-    [vc setupWithServices:_services items:items hideBackButton:NO delegate:nil];
+    TKMReviewContainerViewController *vc =
+        (TKMReviewContainerViewController *)segue.destinationViewController;
+    [vc setupWithServices:_services items:items];
   } else if ([segue.identifier isEqualToString:@"startLessons"]) {
     NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments
