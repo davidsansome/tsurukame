@@ -75,4 +75,11 @@
 #undef COMPARE
 }
 
+- (void)reset {
+  _answer.hasMeaningWrong = NO;
+  _answer.hasReadingWrong = NO;
+  _answeredMeaning = NO;
+  _answeredReading = NO;
+}
+
 @end

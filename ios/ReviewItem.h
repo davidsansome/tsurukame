@@ -42,4 +42,6 @@ typedef NS_ENUM(NSInteger, TKMTaskType) {
 
 - (NSComparisonResult)compareForLessons:(ReviewItem *)other;
 
+- (void)reset;
+
 @end

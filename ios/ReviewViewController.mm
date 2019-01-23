@@ -810,6 +810,8 @@ class AnimationContext {
   if (result == TKMAskAgainLater) {
     // Take the task out of the queue so it comes back later.
     [_activeQueue removeObjectAtIndex:_activeTaskIndex];
+    [_activeTask reset];
+    [_reviewQueue addObject:_activeTask];
     [self refillActiveQueue];
     [self randomTask];
     return;
