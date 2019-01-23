@@ -75,13 +75,6 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                          accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                 target:self
                                                 action:@selector(didTapReviewOrder:)]];
-  [model
-      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                                 title:@"Fonts"
-                                              subtitle:nil
-                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
-                                                target:self
-                                                action:@selector(didTapFonts:)]];
   [model addItem:[[TKMSwitchModelItem alloc]
                      initWithStyle:UITableViewCellStyleSubtitle
                              title:@"Back-to-back"
@@ -104,6 +97,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                 on:UserDefaults.showAnswerImmediately
                             target:self
                             action:@selector(showAnswerImmediatelySwitchChanged:)]];
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                 title:@"Fonts"
+                                              subtitle:nil
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(didTapFonts:)]];
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                      title:@"Allow cheating"
                                                   subtitle:@"Ignore Typos and Add Synonym"
@@ -122,7 +122,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                     title:@"Offline audio"
                                                  subtitle:nil
-                                            accessoryType:UITableViewCellAccessoryNone
+                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                    target:self
                                                    action:@selector(didTapOfflineAudio:)]];
 
