@@ -95,7 +95,6 @@
     return;
   }
   
-  __weak TKMReviewContainerViewController *weakSelf = self;
   UIAlertController *c = [UIAlertController
                           alertControllerWithTitle:@"End review session?"
                           message:@"You'll lose progress on any half-answered reviews"
@@ -104,8 +103,7 @@
   [c addAction:[UIAlertAction actionWithTitle:@"End review session"
                                         style:UIAlertActionStyleDestructive
                                       handler:^(UIAlertAction *_Nonnull action) {
-                                        [weakSelf performSegueWithIdentifier:@"reviewSummary"
-                                                                      sender:weakSelf];
+                                        [_reviewVC endReviewSession];
                                       }]];
   [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                         style:UIAlertActionStyleCancel

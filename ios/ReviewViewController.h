@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN;
 @property(nonatomic, readonly) int activeQueueLength;
 
 - (void)focusAnswerField;
+- (void)endReviewSession;
 
 @end
 

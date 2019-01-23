@@ -393,6 +393,10 @@ class AnimationContext {
   }
 }
 
+- (void)endReviewSession {
+  [self performSegueWithIdentifier:@"reviewSummary" sender:self];
+}
+
 #pragma mark - Setup
 
 - (void)refillActiveQueue {
