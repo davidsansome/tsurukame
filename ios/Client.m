@@ -768,11 +768,19 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                      TKMUser *ret = [[TKMUser alloc] init];
                      ret.username = data[@"username"];
                      ret.level = [data[@"level"] intValue];
-                     ret.maxLevelGrantedBySubscription =
-                         [data[@"max_level_granted_by_subscription"] intValue];
                      ret.profileURL = data[@"profile_url"];
-                     ret.subscribed = [data[@"subscribed"] boolValue];
-
+                     
+                     NSDictionary<NSString *, id> *subscription = data[@"subscription"];
+                     ret.maxLevelGrantedBySubscription =
+                         [subscription[@"max_level_granted"] intValue];
+                     ret.subscribed = [subscription[@"active"] boolValue];
+                     
+                     if (subscription[@"period_ends_at"] != [NSNull null]) {
+                       ret.subscriptionEndsAt =
+                           [[Client parseISO8601Date:subscription[@"period_ends_at"]]
+                            timeIntervalSince1970];
+                     }
+                     
                      if (data[@"started_at"] != [NSNull null]) {
                        ret.startedAt =
                            [[Client parseISO8601Date:data[@"started_at"]] timeIntervalSince1970];
