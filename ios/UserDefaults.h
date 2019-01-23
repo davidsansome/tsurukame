@@ -47,6 +47,7 @@ DECLARE_BOOL(groupMeaningReading);
 DECLARE_BOOL(meaningFirst);
 DECLARE_BOOL(showAnswerImmediately);
 DECLARE_BOOL(enableCheats);
+DECLARE_BOOL(showOldMnemonic)
 
 // Offline audio.
 DECLARE_BOOL(playAudioAutomatically);

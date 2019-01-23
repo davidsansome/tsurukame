@@ -110,6 +110,12 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                         on:UserDefaults.enableCheats
                                                     target:self
                                                     action:@selector(enableCheatsSwitchChanged:)]];
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                     title:@"Show old mnemonics"
+                                                  subtitle:@"Display old mnemonics alongside new ones"
+                                                        on:UserDefaults.showOldMnemonic
+                                                    target:self
+                                                    action:@selector(showOldMnemonicChanged:)]];
 
   [model addSection:@"Audio"];
   [model addItem:[[TKMSwitchModelItem alloc]
@@ -222,6 +228,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)enableCheatsSwitchChanged:(UISwitch *)switchView {
   UserDefaults.enableCheats = switchView.on;
+}
+
+- (void)showOldMnemonicChanged:(UISwitch *)switchView {
+  UserDefaults.showOldMnemonic = switchView.on;
 }
 
 - (void)playAudioAutomaticallySwitchChanged:(UISwitch *)switchView {
