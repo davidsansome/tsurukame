@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "Wanikani+Convenience.h"
+#import "UserDefaults.h"
 
 #import <UIKit/UIKit.h>
 
@@ -137,7 +138,8 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 - (NSString *)commaSeparatedMeanings {
   NSMutableArray<NSString *> *strings = [NSMutableArray array];
   for (TKMMeaning *meaning in self.meaningsArray) {
-    if (meaning.type != TKMMeaning_Type_Blacklist) {
+    if (meaning.type != TKMMeaning_Type_Blacklist &&
+      (meaning.type != TKMMeaning_Type_AuxiliaryWhitelist || !self.hasRadical || UserDefaults.showOldMnemonic)) {
       [strings addObject:meaning.meaning];
     }
   }

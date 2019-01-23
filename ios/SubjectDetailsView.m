@@ -27,6 +27,7 @@
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "UIColor+HexString.h"
+#import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -54,10 +55,10 @@ static NSAttributedString *JoinAttributedStringArray(NSArray<NSAttributedString 
   return ret;
 }
 
-static NSAttributedString *RenderMeanings(NSArray<TKMMeaning *> *meanings,
+static NSAttributedString *RenderMeanings(TKMSubject *subject,
                                           TKMStudyMaterials *studyMaterials) {
   NSMutableArray<NSAttributedString *> *strings = [NSMutableArray array];
-  for (TKMMeaning *meaning in meanings) {
+  for (TKMMeaning *meaning in subject.meaningsArray) {
     if (meaning.type == TKMMeaning_Type_Primary) {
       [strings addObject:[[NSAttributedString alloc] initWithString:meaning.meaning]];
     }
@@ -68,9 +69,10 @@ static NSAttributedString *RenderMeanings(NSArray<TKMMeaning *> *meanings,
     };
     [strings addObject:[[NSAttributedString alloc] initWithString:meaning attributes:attributes]];
   }
-  for (TKMMeaning *meaning in meanings) {
+  for (TKMMeaning *meaning in subject.meaningsArray) {
     if (meaning.type != TKMMeaning_Type_Primary &&
-        meaning.type != TKMMeaning_Type_Blacklist) {
+        meaning.type != TKMMeaning_Type_Blacklist &&
+        (meaning.type != TKMMeaning_Type_AuxiliaryWhitelist || !subject.hasRadical || UserDefaults.showOldMnemonic)) {
       UIFont *font = [UIFont systemFontOfSize:kFont.pointSize weight:UIFontWeightLight];
       NSDictionary<NSAttributedStringKey, id> *attributes = @{
         NSFontAttributeName : font,
@@ -155,7 +157,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 - (void)addMeanings:(TKMSubject *)subject
      studyMaterials:(TKMStudyMaterials *)studyMaterials
             toModel:(TKMMutableTableModel *)model {
-  NSAttributedString *text = RenderMeanings(subject.meaningsArray, studyMaterials);
+  NSAttributedString *text = RenderMeanings(subject, studyMaterials);
   text = [text stringWithFontSize:kFontSize];
   TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
 
@@ -294,7 +296,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [model addSection:@"Mnemonic"];
     [self addFormattedText:subject.radical.formattedMnemonicArray isHint:false toModel:model];
     
-    if (subject.radical.formattedDeprecatedMnemonicArray_Count) {
+    if (UserDefaults.showOldMnemonic && subject.radical.formattedDeprecatedMnemonicArray_Count) {
       [model addSection:@"Old Mnemonic"];
       [self addFormattedText:subject.radical.formattedDeprecatedMnemonicArray
                       isHint:false
