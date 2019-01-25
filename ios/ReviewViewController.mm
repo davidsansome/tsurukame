@@ -58,6 +58,7 @@ enum TKMAnswerResult {
 
 static UILabel *CopyLabel(UILabel *original) {
   UILabel *copy = [[UILabel alloc] init];
+  copy.hidden = original.hidden;
   copy.transform = original.transform;
   copy.bounds = original.bounds;
   copy.center = original.center;
@@ -131,9 +132,11 @@ class AnimationContext {
 @property(weak, nonatomic) IBOutlet TKMSubjectDetailsView *subjectDetailsView;
 @property(weak, nonatomic) IBOutlet UIButton *previousSubjectButton;
 
+@property(weak, nonatomic) IBOutlet UILabel *wrapUpLabel;
 @property(weak, nonatomic) IBOutlet UILabel *successRateLabel;
 @property(weak, nonatomic) IBOutlet UILabel *doneLabel;
 @property(weak, nonatomic) IBOutlet UILabel *queueLabel;
+@property(weak, nonatomic) IBOutlet UIImageView *wrapUpIcon;
 @property(weak, nonatomic) IBOutlet UIImageView *successRateIcon;
 @property(weak, nonatomic) IBOutlet UIImageView *doneIcon;
 @property(weak, nonatomic) IBOutlet UIImageView *queueIcon;
@@ -283,6 +286,9 @@ class AnimationContext {
   [super viewDidLoad];
   TKMAddShadowToView(_questionLabel, 1, 0.2, 4);
   TKMAddShadowToView(_previousSubjectButton, 0, 0.7, 4);
+  
+  _wrapUpIcon.image = [[UIImage imageNamed:@"baseline_access_time_black_24pt"]
+                       imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 
   _previousSubjectGradient = [CAGradientLayer layer];
   _previousSubjectGradient.cornerRadius = 4.f;
@@ -427,6 +433,7 @@ class AnimationContext {
   int queueLength = (int)(_activeQueue.count + _reviewQueue.count);
   NSString *doneText = [NSString stringWithFormat:@"%d", _reviewsCompleted];
   NSString *queueText = [NSString stringWithFormat:@"%d", queueLength];
+  NSString *wrapUpText = [NSString stringWithFormat:@"%d", (int)_activeQueue.count];
 
   // Update the progress bar.
   int totalLength = queueLength + _reviewsCompleted;
@@ -543,6 +550,10 @@ class AnimationContext {
       _questionLabel.font = [UIFont fontWithName:_currentFontName
                                             size:_questionLabel.font.pointSize];
       _questionLabel.attributedText = _activeSubject.japaneseText;
+    }
+    if (![_wrapUpLabel.text isEqual:wrapUpText]) {
+      context->AddFadingLabel(_wrapUpLabel);
+      _wrapUpLabel.text = wrapUpText;
     }
     if (![_successRateLabel.text isEqual:successRateText]) {
       context->AddFadingLabel(_successRateLabel);
@@ -736,6 +747,15 @@ class AnimationContext {
 
 - (IBAction)menuButtonPressed:(id)sender {
   [_delegate reviewViewController:self tappedMenuButton:_menuButton];
+}
+
+#pragma mark - Wrapping up
+
+- (void)setWrappingUp:(bool)wrappingUp {
+  _wrappingUp = wrappingUp;
+  
+  _wrapUpIcon.hidden = !wrappingUp;
+  _wrapUpLabel.hidden = !wrappingUp;
 }
 
 #pragma mark - Submitting answers
