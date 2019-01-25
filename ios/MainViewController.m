@@ -100,6 +100,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   UISearchController *_searchController;
   __weak SearchResultViewController *_searchResultsViewController;
   __weak CAGradientLayer *_userGradientLayer;
+  NSTimer *_hourlyRefreshTimer;
 }
 
 - (void)setupWithServices:(TKMServices *)services {
@@ -117,9 +118,12 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
   // Add a refresh control for when the user pulls down.
   self.refreshControl = [[UIRefreshControl alloc] init];
-  self.refreshControl.tintColor = [UIColor darkGrayColor];
+  self.refreshControl.tintColor = [UIColor whiteColor];
   self.refreshControl.backgroundColor = nil;
-  NSAttributedString *title = [[NSAttributedString alloc] initWithString:@"Pull to refresh..."];
+  NSMutableAttributedString *title =
+      [[NSMutableAttributedString alloc] initWithString:@"Pull to refresh..."
+                                             attributes:@{NSForegroundColorAttributeName:
+                                                            [UIColor whiteColor]}];
   self.refreshControl.attributedTitle = title;
   [self.refreshControl addTarget:self
                           action:@selector(didPullToRefresh)
@@ -184,6 +188,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelVocabularyPieChartView
                                                  subjectType:TKMSubject_Type_Vocabulary
                                                   dataLoader:_services.dataLoader];
+  
+  [self updateHourlyTimer];
 
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
@@ -198,11 +204,28 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
          selector:@selector(userInfoChanged)
              name:kLocalCachingClientUserInfoChangedNotification
            object:_services.localCachingClient];
+  [nc addObserver:self
+         selector:@selector(applicationDidEnterBackground:)
+             name:UIApplicationDidEnterBackgroundNotification
+           object:nil];
+  [nc addObserver:self
+         selector:@selector(applicationWillEnterForeground:)
+             name:UIApplicationWillEnterForegroundNotification
+           object:nil];
+}
+
+#pragma mark - UIViewController
+
+- (void)viewWillDisappear:(BOOL)animated {
+  [super viewWillDisappear:animated];
+  
+  [self cancelHourlyTimer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
   [self refresh];
-
+  [self updateHourlyTimer];
+  
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = YES;
 }
@@ -211,22 +234,101 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   return UIStatusBarStyleLightContent;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-  if (indexPath.section == kUpcomingReviewsSection) {
-    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 360 : 120;
-  }
-
-  return [super tableView:tableView heightForRowAtIndexPath:indexPath];
-}
-
 - (void)viewWillLayoutSubviews {
   [super viewWillLayoutSubviews];
-
+  
   CGRect userGradientFrame = _userContainer.bounds;
   userGradientFrame.origin.y -= kUserGradientYOffset;
   userGradientFrame.size.height += kUserGradientYOffset;
   _userGradientLayer.frame = userGradientFrame;
+  
+  // Bring the refresh control above the gradient.
+  [self.refreshControl.superview bringSubviewToFront:self.refreshControl];
 }
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+  if ([segue.identifier isEqualToString:@"startReviews"]) {
+    NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
+    NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments
+                                                              dataLoader:_services.dataLoader];
+    if (!items.count) {
+      return;
+    }
+    
+    TKMReviewContainerViewController *vc =
+    (TKMReviewContainerViewController *)segue.destinationViewController;
+    [vc setupWithServices:_services items:items];
+  } else if ([segue.identifier isEqualToString:@"startLessons"]) {
+    NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
+    NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments
+                                                              dataLoader:_services.dataLoader];
+    if (!items.count) {
+      return;
+    }
+    
+    items = [items sortedArrayUsingSelector:@selector(compareForLessons:)];
+    if (items.count > kItemsPerLesson) {
+      items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
+    }
+    
+    LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;
+    [vc setupWithServices:_services items:items];
+  } else if ([segue.identifier isEqualToString:@"subjectCatalogue"]) {
+    SubjectCatalogueViewController *vc =
+    (SubjectCatalogueViewController *)segue.destinationViewController;
+    [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
+  } else if ([segue.identifier isEqual:@"settings"]) {
+    SettingsViewController *vc = (SettingsViewController *)segue.destinationViewController;
+    [vc setupWithServices:_services];
+  }
+}
+
+#pragma mark - UITableViewController
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+  if (indexPath.section == kUpcomingReviewsSection) {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 360 : 120;
+  }
+  
+  return [super tableView:tableView heightForRowAtIndexPath:indexPath];
+}
+
+#pragma mark - Refresh on the hour in the foreground
+
+- (void)updateHourlyTimer {
+  [self cancelHourlyTimer];
+  
+  NSDate *date = [[NSCalendar currentCalendar] nextDateAfterDate:[NSDate date]
+                                                    matchingUnit:NSCalendarUnitMinute
+                                                           value:0
+                                                         options:NSCalendarMatchNextTime];
+  __weak MainViewController *weakSelf = self;
+  _hourlyRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:[date timeIntervalSinceNow]
+                                                        repeats:NO
+                                                          block:^(NSTimer * _Nonnull timer) {
+                                                            [weakSelf hourlyTimerExpired];
+                                                          }];
+}
+
+- (void)cancelHourlyTimer {
+  [_hourlyRefreshTimer invalidate];
+  _hourlyRefreshTimer = nil;
+}
+
+- (void)hourlyTimerExpired {
+  [self refresh];
+  [self updateHourlyTimer];
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+  [self cancelHourlyTimer];
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+  [self updateHourlyTimer];
+}
+
+#pragma mark - Refreshing contents
 
 - (void)refresh {
   [self updateUserInfo];
@@ -304,45 +406,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)didPullToRefresh {
   [self.refreshControl endRefreshing];
-  [_services.localCachingClient sync:nil];
+  [self refresh];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-  if ([segue.identifier isEqualToString:@"startReviews"]) {
-    NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
-    NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments
-                                                              dataLoader:_services.dataLoader];
-    if (!items.count) {
-      return;
-    }
-
-    TKMReviewContainerViewController *vc =
-        (TKMReviewContainerViewController *)segue.destinationViewController;
-    [vc setupWithServices:_services items:items];
-  } else if ([segue.identifier isEqualToString:@"startLessons"]) {
-    NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
-    NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForLesson:assignments
-                                                              dataLoader:_services.dataLoader];
-    if (!items.count) {
-      return;
-    }
-    
-    items = [items sortedArrayUsingSelector:@selector(compareForLessons:)];
-    if (items.count > kItemsPerLesson) {
-      items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
-    }
-
-    LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;
-    [vc setupWithServices:_services items:items];
-  } else if ([segue.identifier isEqualToString:@"subjectCatalogue"]) {
-    SubjectCatalogueViewController *vc =
-        (SubjectCatalogueViewController *)segue.destinationViewController;
-    [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
-  } else if ([segue.identifier isEqual:@"settings"]) {
-    SettingsViewController *vc = (SettingsViewController *)segue.destinationViewController;
-    [vc setupWithServices:_services];
-  }
-}
+#pragma mark - Search
 
 - (IBAction)didTapSearchButton:(id)sender {
   [self presentViewController:_searchController animated:YES completion:nil];

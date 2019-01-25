@@ -257,6 +257,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   
   // Don't bother logging some common errors.
   if (([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorTimedOut) ||
+      ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorNotConnectedToInternet) ||
       ([error.domain isEqual:NSPOSIXErrorDomain] && error.code == ECONNABORTED)) {
     return;
   }
@@ -697,6 +698,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 
 - (void)sync:(CompletionHandler _Nullable)completionHandler {
   if (!_reachability.isReachable) {
+    [self invalidateCachedAvailableSubjectCounts];
     if (completionHandler) {
       completionHandler();
     }
