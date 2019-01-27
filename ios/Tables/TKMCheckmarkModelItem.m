@@ -14,6 +14,9 @@
 
 #import "TKMCheckmarkModelItem.h"
 
+static const CGFloat kTapAnimationWhiteness = 0.5f;
+static const NSTimeInterval kTapAnimationDuration = 0.4f;
+
 @interface TKMCheckmarkModelCell : TKMBasicModelCell
 @end
 
@@ -56,6 +59,14 @@
   item.on = !item.on;
   TKMSafePerformSelector(item.target, item.action, item);
   self.accessoryType = item.on ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+  
+  self.backgroundColor = [UIColor colorWithWhite:kTapAnimationWhiteness alpha:1.f];
+  [UIView animateWithDuration:kTapAnimationDuration
+                        delay:0.f
+                      options:UIViewAnimationOptionCurveEaseIn
+                   animations:^{
+                     self.backgroundColor = [UIColor clearColor];
+                   } completion:nil];
 }
 
 @end

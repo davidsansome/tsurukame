@@ -43,14 +43,14 @@
                                             action:@selector(enableCheatsSwitchChanged:)]];
   [model addItem:
       [[TKMCheckmarkModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                             title:@"Reveal answers automatically"
+                                             title:@"Autoreveal answers"
                                           subtitle:nil
                                                 on:UserDefaults.showAnswerImmediately
                                             target:self
                                             action:@selector(showAnswerImmediatelySwitchChanged:)]];
   [model addItem:
       [[TKMCheckmarkModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                             title:@"Play audio automatically"
+                                             title:@"Autoplay audio"
                                           subtitle:nil
                                                 on:UserDefaults.playAudioAutomatically
                                             target:self
@@ -112,11 +112,9 @@ willDisplayHeaderView:(UIView *)view
 forRowAtIndexPath:(NSIndexPath *)indexPath {
   cell.backgroundColor = self.tableView.backgroundColor;
   cell.textLabel.textColor = [UIColor whiteColor];
-  cell.textLabel.font =
-      [UIFont fontWithName:cell.textLabel.font.fontName
-                      size:[UIFont smallSystemFontSize]];
   cell.imageView.tintColor = [UIColor whiteColor];
   cell.tintColor = [UIColor whiteColor];
+  cell.separatorInset = UIEdgeInsetsZero;
 }
 
 #pragma mark - Handlers.
