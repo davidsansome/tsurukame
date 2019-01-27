@@ -499,15 +499,7 @@ class AnimationContext {
   }
 
   // Choose a random font.
-  _currentFontName = _normalFontName;
-  if (UserDefaults.selectedFonts.count) {
-    int fontIndex = arc4random_uniform((uint32_t)UserDefaults.selectedFonts.count);
-    NSString *filename = [UserDefaults.selectedFonts.allObjects objectAtIndex:fontIndex];
-    TKMFont *font = [_services.fontLoader fontByName:filename];
-    if (font.available) {
-      _currentFontName = font.fontName;
-    }
-  }
+  _currentFontName = [self randomFontThatCanRenderText:_activeSubject.japanese];
 
   UIFont *boldFont = [UIFont boldSystemFontOfSize:self.promptLabel.font.pointSize];
   NSMutableAttributedString *prompt = [[NSMutableAttributedString alloc]
@@ -574,6 +566,31 @@ class AnimationContext {
   };
 
   [self animateSubjectDetailsViewShown:false setupContextBlock:setupContextBlock];
+}
+
+#pragma mark - Random fonts
+
+- (NSString *)randomFontThatCanRenderText:(NSString *)text {
+  // Get the names of selected fonts.
+  NSMutableArray<NSString *> *selectedFontNames = [NSMutableArray array];
+  for (NSString *filename in UserDefaults.selectedFonts.allObjects) {
+    [selectedFontNames addObject:[_services.fontLoader fontByName:filename].fontName];
+  }
+  
+  // Pick a random one.
+  while (selectedFontNames.count) {
+    int fontIndex = arc4random_uniform((uint32_t)selectedFontNames.count);
+    NSString *fontName = selectedFontNames[fontIndex];
+    
+    // If the font can't render the text, try another one.
+    if (!TKMFontCanRenderText(fontName, text)) {
+      [selectedFontNames removeObjectAtIndex:fontIndex];
+      continue;
+    }
+    return fontName;
+  }
+  
+  return _normalFontName;
 }
 
 #pragma mark - Animation

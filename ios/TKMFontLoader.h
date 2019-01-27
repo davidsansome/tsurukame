@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const kTKMFontPreviewText;
 
+extern BOOL TKMFontCanRenderText(NSString *fontName, NSString *text);
+
 @interface TKMFontLoader : NSObject
 
 + (NSString *)cacheDirectoryPath;

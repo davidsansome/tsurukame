@@ -31,13 +31,12 @@ struct FontDefinition {
 static const FontDefinition kFontDefinitions[] = {
   {@"ArmedBanana", @"armed-banana.ttf", @"Armed Banana", 3298116},
   {@"darts font", @"darts-font.woff", @"Darts", 1349440},
-  {@"FC-Flower", @"fc-flower.ttf", @"FC Flower handwriting", 659800},
   {@"Hosofuwafont", @"hoso-fuwa.ttf", @"Hoso Fuwa", 5910760},
   {@"nagayama_kai", @"nagayama-kai.otf", @"Nagayama Kai calligraphy", 15576732},
   {@"santyoume-font", @"san-chou-me.ttf", @"San Chou Me", 4428896},
 };
 
-BOOL LoadFont(NSString *path) {
+static BOOL LoadFont(NSString *path) {
   NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
   if (!data) {
     return NO;
@@ -49,6 +48,23 @@ BOOL LoadFont(NSString *path) {
   CFRelease(font);
   CFRelease(provider);
   return ret;
+}
+
+BOOL TKMFontCanRenderText(NSString *fontName, NSString *text) {
+  CTFontRef fontRef = CTFontCreateWithName((CFStringRef)fontName, 0.0, NULL);
+  if (!fontRef) {
+    return NO;
+  }
+  
+  NSUInteger count = text.length;
+  unichar characters[count];
+  CGGlyph glyphs[count];
+  [text getCharacters:characters range:NSMakeRange(0, count)];
+  
+  BOOL canRender = CTFontGetGlyphsForCharacters(fontRef, characters, glyphs, count);
+  CFRelease(fontRef);
+  
+  return canRender;
 }
 
 
