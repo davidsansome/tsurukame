@@ -136,6 +136,19 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   }
 }
 
+static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
+  if (!a || !b) {
+    return NO;
+  }
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  NSDateComponents *componentsA = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:a];
+  NSDateComponents *componentsB = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:b];
+  return componentsA.hour == componentsB.hour &&
+         componentsA.day == componentsB.day &&
+         componentsA.month == componentsB.month &&
+         componentsA.year == componentsB.year;
+}
+
 @implementation LocalCachingClient {
   Client *_client;
   DataLoader *_dataLoader;
@@ -152,6 +165,7 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   bool _isCachedAvailableSubjectCountsStale;
   bool _isCachedPendingProgressStale;
   bool _isCachedPendingStudyMaterialsStale;
+  NSDate *_cachedAvailableSubjectCountsUpdated;
 }
 
 #pragma mark - Initialisers
@@ -477,40 +491,38 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
 
 - (int)availableReviewCount {
   @synchronized(self) {
-    if (_isCachedAvailableSubjectCountsStale) {
-      [self updateAvailableSubjectCounts];
-      _isCachedAvailableSubjectCountsStale = false;
-    }
+    [self maybeUpdateAvailableSubjectCounts];
     return _cachedAvailableReviewCount;
   }
 }
 
 - (int)availableLessonCount {
   @synchronized(self) {
-    if (_isCachedAvailableSubjectCountsStale) {
-      [self updateAvailableSubjectCounts];
-      _isCachedAvailableSubjectCountsStale = false;
-    }
+    [self maybeUpdateAvailableSubjectCounts];
     return _cachedAvailableLessonCount;
   }
 }
 
 - (NSArray<NSNumber *> *)upcomingReviews {
   @synchronized(self) {
-    if (_isCachedAvailableSubjectCountsStale) {
-      [self updateAvailableSubjectCounts];
-      _isCachedAvailableSubjectCountsStale = false;
-    }
+    [self maybeUpdateAvailableSubjectCounts];
     return _cachedUpcomingReviews;
   }
 }
 
-- (void)updateAvailableSubjectCounts {
+- (void)maybeUpdateAvailableSubjectCounts {
+  NSDate *now = [NSDate date];
+  if (!_isCachedAvailableSubjectCountsStale &&
+      !DatesAreSameHour(now, _cachedAvailableSubjectCountsUpdated)) {
+    [self invalidateCachedAvailableSubjectCounts];
+  }
+  if (!_isCachedAvailableSubjectCountsStale) {
+    return;
+  }
+  
   NSArray<TKMAssignment *> *assignments = [self getAllAssignments];
   int lessons = 0;
   int reviews = 0;
-
-  NSDate *now = [NSDate date];
 
   NSMutableArray<NSNumber *> *upcomingReviews = [NSMutableArray arrayWithCapacity:48];
   for (int i = 0; i < 24; i++) {
@@ -545,6 +557,8 @@ static void AddFakeAssignments(GPBInt32Array *subjectIDs,
   _cachedAvailableLessonCount = lessons;
   _cachedAvailableReviewCount = reviews;
   _cachedUpcomingReviews = upcomingReviews;
+  _isCachedAvailableSubjectCountsStale = false;
+  _cachedAvailableSubjectCountsUpdated = now;
 }
 
 #pragma mark - Invalidating cached data
