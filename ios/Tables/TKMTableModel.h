@@ -16,6 +16,8 @@
 
 #import "TKMModelItem.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TKMTableModel : NSObject <UITableViewDataSource, UITableViewDelegate>
 
 @property(nonatomic, readonly, weak) UITableView *tableView;
@@ -38,8 +40,8 @@
 @interface TKMMutableTableModel : TKMTableModel
 
 - (int)addSection;
-- (int)addSection:(NSString *)title;
-- (int)addSection:(NSString *)title footer:(NSString *)footer;
+- (int)addSection:(nullable NSString *)title;
+- (int)addSection:(nullable NSString *)title footer:(nullable NSString *)footer;
 - (NSIndexPath *)addItem:(id<TKMModelItem>)item;
 - (NSIndexPath *)addItem:(id<TKMModelItem>)item toSection:(int)section;
 - (NSIndexPath *)addItem:(id<TKMModelItem>)item hidden:(bool)hidden;
@@ -51,3 +53,5 @@
 - (void)reloadTable;
 
 @end
+
+NS_ASSUME_NONNULL_END

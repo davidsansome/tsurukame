@@ -215,11 +215,11 @@
   return [self addSection:nil footer:nil];
 }
 
-- (int)addSection:(NSString *)title {
+- (int)addSection:(nullable NSString *)title {
   return [self addSection:title footer:nil];
 }
 
-- (int)addSection:(NSString *)title footer:(NSString *)footer {
+- (int)addSection:(nullable NSString *)title footer:(nullable NSString *)footer {
   TKMTableModelSection *section = [[TKMTableModelSection alloc] init];
   section.headerTitle = title;
   section.footerTitle = footer;
