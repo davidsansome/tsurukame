@@ -75,13 +75,3 @@ func (c *Client) GetRadical(id int) (ret *Radical, err error) {
 	err = c.getSubject(id, "radical", &ret)
 	return
 }
-
-func (c *Client) GetKanji(id int) (ret *Kanji, err error) {
-	err = c.getSubject(id, "kanji", &ret)
-	return
-}
-
-func (c *Client) GetVocabulary(id int) (ret *Vocabulary, err error) {
-	err = c.getSubject(id, "vocabulary", &ret)
-	return
-}

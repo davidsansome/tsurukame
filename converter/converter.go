@@ -56,16 +56,33 @@ func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
 		}
 
 	case "kanji":
-		ret.Kanji = &pb.Kanji{}
+		ret.Kanji = &pb.Kanji{
+			MeaningMnemonic: proto.String(o.Data.MeaningMnemonic),
+			MeaningHint:     proto.String(o.Data.MeaningHint),
+			ReadingMnemonic: proto.String(o.Data.ReadingMnemonic),
+			ReadingHint:     proto.String(o.Data.ReadingHint),
+		}
 
 	case "vocabulary":
-		ret.Vocabulary = &pb.Vocabulary{}
+		ret.Vocabulary = &pb.Vocabulary{
+			MeaningExplanation: proto.String(o.Data.MeaningMnemonic),
+			ReadingExplanation: proto.String(o.Data.ReadingMnemonic),
+		}
+		if audioURL := bestAudio(o.Data.PronunciationAudios); audioURL != nil {
+			ret.Vocabulary.Audio = audioURL
+		}
 		for _, p := range o.Data.PartsOfSpeech {
 			pos, ok := convertPartOfSpeech(p)
 			if !ok {
 				return nil, fmt.Errorf("Unknown part of speech: %s\n", p)
 			}
 			ret.Vocabulary.PartsOfSpeech = append(ret.Vocabulary.PartsOfSpeech, pos)
+		}
+		for _, s := range o.Data.ContextSentences {
+			ret.Vocabulary.Sentences = append(ret.Vocabulary.Sentences, &pb.Vocabulary_Sentence{
+				Japanese: proto.String(s.Ja),
+				English:  proto.String(s.En),
+			})
 		}
 	}
 
@@ -79,6 +96,15 @@ func bestCharacterImageURL(id int, images []api.CharacterImage) string {
 		}
 	}
 	panic(fmt.Sprintf("No SVG found for radical %d", id))
+}
+
+func bestAudio(audio []api.Audio) *string {
+	for _, a := range audio {
+		if a.ContentType == "audio/mpeg" {
+			return &a.Url
+		}
+	}
+	return nil
 }
 
 func convertMeanings(m []api.MeaningObject, a []api.AuxiliaryMeaningObject) []*pb.Meaning {
@@ -192,24 +218,5 @@ func AddRadical(s *pb.Subject, r *jsonapi.Radical) {
 	s.Radical.Mnemonic = proto.String(r.Mnemonic)
 	if r.DeprecatedMnemonic != "" {
 		s.Radical.DeprecatedMnemonic = proto.String(r.DeprecatedMnemonic)
-	}
-}
-
-func AddKanji(s *pb.Subject, k *jsonapi.Kanji) {
-	s.Kanji.MeaningMnemonic = proto.String(k.MeaningMnemonic)
-	s.Kanji.MeaningHint = proto.String(k.MeaningHint)
-	s.Kanji.ReadingMnemonic = proto.String(k.ReadingMnemonic)
-	s.Kanji.ReadingHint = proto.String(k.ReadingHint)
-}
-
-func AddVocabulary(s *pb.Subject, v *jsonapi.Vocabulary) {
-	s.Vocabulary.MeaningExplanation = proto.String(v.MeaningExplanation)
-	s.Vocabulary.ReadingExplanation = proto.String(v.ReadingExplanation)
-	s.Vocabulary.Audio = proto.String(v.Audio)
-	for _, jp_en := range v.Sentences {
-		s.Vocabulary.Sentences = append(s.Vocabulary.Sentences, &pb.Vocabulary_Sentence{
-			Japanese: proto.String(jp_en[0]),
-			English:  proto.String(jp_en[1]),
-		})
 	}
 }

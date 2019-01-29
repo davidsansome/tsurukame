@@ -23,7 +23,6 @@ import (
 	"os/exec"
 	"path"
 	"strconv"
-	"strings"
 
 	"github.com/davidsansome/tsurukame/encoding"
 	"github.com/davidsansome/tsurukame/utils"
@@ -34,10 +33,6 @@ import (
 var (
 	inputPath = flag.String("in", "data", "Input file/directory")
 	out       = flag.String("out", "www/audio", "Output directory")
-)
-
-const (
-	urlPrefix = "https://cdn.wanikani.com/subjects/audio/"
 )
 
 func main() {
@@ -58,10 +53,8 @@ func Scrape() error {
 		if spb.Vocabulary == nil || spb.Vocabulary.Audio == nil {
 			return nil
 		}
-		url := urlPrefix + spb.Vocabulary.GetAudio()
+		url := spb.Vocabulary.GetAudio()
 
-		// Always request the mp3 - AVFoundation on iOS can't play oggs.
-		url = strings.Replace(url, "ogg", "mp3", 1)
 		outFilename := fmt.Sprintf("%s.mp3", strconv.Itoa(id))
 		outPath := path.Join(*out, outFilename)
 

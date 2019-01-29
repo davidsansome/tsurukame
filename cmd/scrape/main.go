@@ -18,8 +18,6 @@ import (
 	"flag"
 	"log"
 
-	"github.com/golang/protobuf/proto"
-
 	"github.com/davidsansome/tsurukame/api"
 	"github.com/davidsansome/tsurukame/converter"
 	"github.com/davidsansome/tsurukame/encoding"
@@ -31,7 +29,6 @@ var (
 	out      = flag.String("out", "data", "Output directory")
 	cookie   = flag.String("cookie", "", "Wanikani HTTP cookie")
 	apiToken = flag.String("api-token", "", "Wanikani API v2 token")
-	apiOnly  = flag.Bool("api-only", false, "Use the API only, merge with existing data")
 )
 
 func main() {
@@ -81,53 +78,19 @@ SubjectLoop:
 			return err
 		}
 
-		if *apiOnly {
-			existingSpb, err := s.directory.ReadSubject(subject.ID)
-			if err != nil {
-				return err
-			}
-			// Don't merge repeated fields.
-			existingSpb.Readings = nil
-			existingSpb.Meanings = nil
-			existingSpb.ComponentSubjectIds = nil
-			existingSpb.AmalgamationSubjectIds = nil
-			if existingSpb.Vocabulary != nil {
-				existingSpb.Vocabulary.PartsOfSpeech = nil
-			}
-			proto.Merge(existingSpb, spb)
-			spb = existingSpb
-		} else {
-			// Don't fetch this subject again if we've already got it.
+		// Fetch the other bits.  We only need to do this for Radicals now that
+		// more data is included in the real WaniKani API.
+		if spb.Radical != nil {
 			if s.directory.HasSubject(subject.ID) {
 				continue SubjectLoop
 			}
 
-			// Fetch the other bits.
-			switch {
-			case spb.Radical != nil:
-				r, err := s.jsonClient.GetRadical(subject.ID)
-				if err != nil {
-					log.Printf("Error getting radical %d: %v", subject.ID, err)
-					continue SubjectLoop
-				}
-				converter.AddRadical(spb, r)
-
-			case spb.Kanji != nil:
-				r, err := s.jsonClient.GetKanji(subject.ID)
-				if err != nil {
-					log.Printf("Error getting kanji %d: %v", subject.ID, err)
-					continue SubjectLoop
-				}
-				converter.AddKanji(spb, r)
-
-			case spb.Vocabulary != nil:
-				r, err := s.jsonClient.GetVocabulary(subject.ID)
-				if err != nil {
-					log.Printf("Error getting vocabulary %d: %v", subject.ID, err)
-					continue SubjectLoop
-				}
-				converter.AddVocabulary(spb, r)
+			r, err := s.jsonClient.GetRadical(subject.ID)
+			if err != nil {
+				log.Printf("Error getting radical %d: %v", subject.ID, err)
+				continue SubjectLoop
 			}
+			converter.AddRadical(spb, r)
 		}
 
 		// Write it to a file.

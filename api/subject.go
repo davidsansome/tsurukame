@@ -41,6 +41,12 @@ type SubjectObject struct {
 		ComponentSubjectIDs    []int                    `json:"component_subject_ids"`
 		AmalgamationSubjectIDs []int                    `json:"amalgamation_subject_ids"`
 		PartsOfSpeech          []string                 `json:"parts_of_speech"`
+		MeaningMnemonic        string                   `json:"meaning_mnemonic"`
+		MeaningHint            string                   `json:"meaning_hint"`
+		ReadingMnemonic        string                   `json:"reading_mnemonic"`
+		ReadingHint            string                   `json:"reading_hint"`
+		ContextSentences       []ContextSentence        `json:"context_sentences"`
+		PronunciationAudios    []Audio                  `json:"pronunciation_audios"`
 	} `json:"data"`
 }
 
@@ -71,4 +77,22 @@ type ReadingObject struct {
 	Primary        bool   `json:"primary"`
 	Reading        string `json:"reading"`
 	AcceptedAnswer bool   `json:"accepted_answer"`
+}
+
+type ContextSentence struct {
+	En string `json:"en"`
+	Ja string `json:"ja"`
+}
+
+type Audio struct {
+	Url      string `json:"url"`
+	Metadata struct {
+		Gender           string `json:"gender"`
+		SourceId         int    `json:"source_id"`
+		Pronunciation    string `json:"pronunciation"`
+		VoiceActorId     int    `json:"voice_actor_id"`
+		VoiceActorName   string `json:"voice_actor_name"`
+		VoiceDescription string `json:"voice_description"`
+	} `json:"metadata"`
+	ContentType string `json:"content_type"`
 }
