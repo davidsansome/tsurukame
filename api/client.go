@@ -97,9 +97,13 @@ func (c *subjectsCursor) Next() (*SubjectObject, error) {
 			return nil, err
 		}
 
-		c.next, err = url.Parse(coll.Pages.NextURL)
-		if err != nil {
-			return nil, err
+		if coll.Pages.NextURL == "" {
+			c.next = nil
+		} else {
+			c.next, err = url.Parse(coll.Pages.NextURL)
+			if err != nil {
+				return nil, err
+			}
 		}
 		c.ret = coll.Data
 	}
