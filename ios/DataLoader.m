@@ -45,7 +45,7 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
 }
 
 - (int)maxSubjectLevel {
-  return (int)_header.subjectsByLevelArray_Count - 1;
+  return (int)_header.subjectsByLevelArray_Count;
 }
 
 - (GPBInt32Array *)deletedSubjectIDs {
@@ -110,7 +110,7 @@ static uint32_t ReadUint32(NSFileHandle *file, size_t offset) {
 }
 
 - (nullable TKMSubjectsByLevel *)subjectsByLevel:(int)level {
-  if (level > self.maxLevelGrantedBySubscription) {
+  if (level <= 0 || level > self.maxLevelGrantedBySubscription) {
     return nil;
   }
   return _header.subjectsByLevelArray[level - 1];
