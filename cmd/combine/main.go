@@ -73,6 +73,25 @@ func Combine() error {
 	sk.Sort()
 
 	utils.Must(encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
+		// Check all the dependent subjects are present.
+		for _, sid := range spb.ComponentSubjectIds {
+			if !reader.HasSubject(int(sid)) {
+				return fmt.Errorf("missing subject %d (component of %d)", sid, id)
+			}
+		}
+		for _, sid := range spb.AmalgamationSubjectIds {
+			if !reader.HasSubject(int(sid)) {
+				return fmt.Errorf("missing subject %d (amalgamation of %d)", sid, id)
+			}
+		}
+		if spb.Kanji != nil {
+			for _, vsk := range spb.Kanji.VisuallySimilarKanji {
+				if !reader.HasSubject(int(vsk.GetId())) {
+					return fmt.Errorf("missing subject %d (similar kanji of %d)", vsk.GetId(), id)
+				}
+			}
+		}
+
 		// Remove fields we don't care about for the iOS app.
 		spb.DocumentUrl = nil
 		if spb.Radical != nil && spb.Radical.CharacterImage != nil {
