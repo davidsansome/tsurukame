@@ -790,6 +790,47 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                    }];
 }
 
+#pragma mark - Review stats
+
+- (void)getReviewStatsModifiedAfter:(NSString *)date handler:(ReviewStatsHandler)handler {
+  NSMutableArray<TKMReviewStats *> *ret = [NSMutableArray array];
+  
+  NSURLComponents *url = [NSURLComponents
+                          componentsWithString:[NSString stringWithFormat:@"%s/review_statistics", kURLBase]];
+  NSMutableArray<NSURLQueryItem *> *queryItems = [NSMutableArray array];
+  [queryItems addObject:[NSURLQueryItem queryItemWithName:@"hidden" value:@"false"]];
+  if (date && date.length) {
+    [queryItems addObject:[NSURLQueryItem queryItemWithName:@"updated_after" value:date]];
+  }
+  [url setQueryItems:queryItems];
+  
+  [self startPagedQueryFor:url.URL
+                   handler:^(NSArray *data, NSError *error) {
+                     if (error) {
+                       handler(error, nil);
+                       return;
+                     } else if (!data) {
+                       handler(nil, ret);
+                       return;
+                     }
+                     
+                     for (NSDictionary *d in data) {
+                       TKMReviewStats *stats = [TKMReviewStats message];
+                       stats.subjectId = [d[@"data"][@"subject_id"] intValue];
+                       stats.meaning.correct = [d[@"data"][@"meaning_correct"] intValue];
+                       stats.meaning.incorrect = [d[@"data"][@"meaning_incorrect"] intValue];
+                       stats.meaning.maxStreak = [d[@"data"][@"meaning_max_streak"] intValue];
+                       stats.meaning.currentStreak = [d[@"data"][@"meaning_current_streak"] intValue];
+                       stats.reading.correct = [d[@"data"][@"reading_correct"] intValue];
+                       stats.reading.incorrect = [d[@"data"][@"reading_incorrect"] intValue];
+                       stats.reading.maxStreak = [d[@"data"][@"reading_max_streak"] intValue];
+                       stats.reading.currentStreak = [d[@"data"][@"reading_current_streak"] intValue];
+                       
+                       [ret addObject:stats];
+                     }
+                   }];
+}
+
 @end
 
 NS_ASSUME_NONNULL_END

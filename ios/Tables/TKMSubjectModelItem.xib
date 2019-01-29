@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -30,23 +30,43 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o6x-7x-8Aq">
+                                <rect key="frame" x="30" y="0.0" width="40" height="22"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qsq-cr-edg">
+                                        <rect key="frame" x="0.0" y="0.0" width="30" height="22"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="22" id="yOU-WW-VZ0"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="Qsq-cr-edg" firstAttribute="centerY" secondItem="o6x-7x-8Aq" secondAttribute="centerY" id="2xW-Ds-9nz"/>
+                                    <constraint firstAttribute="width" constant="40" id="cLz-dY-SEL"/>
+                                    <constraint firstItem="Qsq-cr-edg" firstAttribute="leading" secondItem="o6x-7x-8Aq" secondAttribute="leading" id="dbZ-9k-M7z"/>
+                                    <constraint firstAttribute="trailing" secondItem="Qsq-cr-edg" secondAttribute="trailing" constant="10" id="mqq-if-YZf"/>
+                                </constraints>
+                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dyn-89-U7R">
-                                <rect key="frame" x="30" y="0.0" width="257.5" height="22"/>
+                                <rect key="frame" x="70" y="0.0" width="40" height="22"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="hFs-Wr-vk0">
-                                <rect key="frame" x="287.5" y="0.0" width="55.5" height="22"/>
+                                <rect key="frame" x="110" y="0.0" width="233" height="22"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Xw-0q-YTh">
-                                        <rect key="frame" x="0.0" y="0.0" width="55.5" height="11"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="233" height="11"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y8K-YK-cn3">
-                                        <rect key="frame" x="0.0" y="11" width="55.5" height="11"/>
+                                        <rect key="frame" x="0.0" y="11" width="233" height="11"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -70,6 +90,8 @@
                 <outlet property="levelLabel" destination="qRR-OX-bSu" id="evL-Nn-oBL"/>
                 <outlet property="meaningLabel" destination="y8K-YK-cn3" id="fuG-Lt-ybN"/>
                 <outlet property="readingLabel" destination="4Xw-0q-YTh" id="9Ge-HX-yxa"/>
+                <outlet property="srsStageContainer" destination="o6x-7x-8Aq" id="rP6-YS-k65"/>
+                <outlet property="srsStageLabel" destination="Qsq-cr-edg" id="D7B-pd-sSU"/>
                 <outlet property="subjectLabel" destination="dyn-89-U7R" id="94m-d7-fNO"/>
             </connections>
         </tableViewCell>

@@ -1549,6 +1549,148 @@ BOOL TKMFormattedText_Format_IsValidValue(int32_t value__) {
   }
 }
 
+#pragma mark - TKMReviewStats
+
+@implementation TKMReviewStats
+
+@dynamic hasSubjectId, subjectId;
+@dynamic hasMeaning, meaning;
+@dynamic hasReading, reading;
+
+typedef struct TKMReviewStats__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t subjectId;
+  TKMReviewStats_Metrics *meaning;
+  TKMReviewStats_Metrics *reading;
+} TKMReviewStats__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "subjectId",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMReviewStats_FieldNumber_SubjectId,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMReviewStats__storage_, subjectId),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "meaning",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMReviewStats_Metrics),
+        .number = TKMReviewStats_FieldNumber_Meaning,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TKMReviewStats__storage_, meaning),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "reading",
+        .dataTypeSpecific.className = GPBStringifySymbol(TKMReviewStats_Metrics),
+        .number = TKMReviewStats_FieldNumber_Reading,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(TKMReviewStats__storage_, reading),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMReviewStats class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMReviewStats__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - TKMReviewStats_Metrics
+
+@implementation TKMReviewStats_Metrics
+
+@dynamic hasCorrect, correct;
+@dynamic hasIncorrect, incorrect;
+@dynamic hasMaxStreak, maxStreak;
+@dynamic hasCurrentStreak, currentStreak;
+
+typedef struct TKMReviewStats_Metrics__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t correct;
+  int32_t incorrect;
+  int32_t maxStreak;
+  int32_t currentStreak;
+} TKMReviewStats_Metrics__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "correct",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMReviewStats_Metrics_FieldNumber_Correct,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMReviewStats_Metrics__storage_, correct),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "incorrect",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMReviewStats_Metrics_FieldNumber_Incorrect,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TKMReviewStats_Metrics__storage_, incorrect),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "maxStreak",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMReviewStats_Metrics_FieldNumber_MaxStreak,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(TKMReviewStats_Metrics__storage_, maxStreak),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "currentStreak",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMReviewStats_Metrics_FieldNumber_CurrentStreak,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(TKMReviewStats_Metrics__storage_, currentStreak),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMReviewStats_Metrics class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMReviewStats_Metrics__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(TKMReviewStats)];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 #pragma mark - TKMDataFileHeader
 
 @implementation TKMDataFileHeader

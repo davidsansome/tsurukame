@@ -35,22 +35,24 @@ NS_ASSUME_NONNULL_BEGIN;
                    readingWrong:(bool)readingWrong
                    meaningWrong:(bool)meaningWrong NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)initWithSubject:(TKMSubject *)subject
-                     assignment:(TKMAssignment *)assignment
-                       delegate:(id<TKMSubjectDelegate>)delegate;
-
 - (instancetype)initWithSubject:(TKMSubject *)subject delegate:(id<TKMSubjectDelegate>)delegate;
 
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic, copy) TKMSubject *subject;
-@property(nonatomic) TKMAssignment *assignment;
 @property(nonatomic, weak) id<TKMSubjectDelegate> delegate;
 @property(nonatomic) bool readingWrong;
 @property(nonatomic) bool meaningWrong;
 @property(nonatomic) bool showLevelNumber;
 @property(nonatomic) bool showAnswers;
+@property(nonatomic) bool showOnlyWrongPart;
+@property(nonatomic) bool showOnlyFirstMeaning;
+@property(nonatomic) bool showSRSStage;
 @property(nonatomic) NSArray<id> *gradientColors;
+
+// These don't mean anything to this object, but are helpful for storing extra data.
+@property(nonatomic) TKMAssignment *assignment;
+@property(nonatomic) TKMReviewStats *reviewStats;
 
 @end
 

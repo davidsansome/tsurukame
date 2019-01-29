@@ -57,8 +57,8 @@
     
     int section = subject.subjectType - 1;
     TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject
-                                                                  assignment:assignment
                                                                     delegate:self];
+    item.assignment = assignment;
     item.showLevelNumber = false;
     item.showAnswers = _showAnswers;
     if (!assignment.isReviewStage && !assignment.isLessonStage) {

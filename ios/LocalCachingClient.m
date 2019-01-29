@@ -87,10 +87,46 @@ static const char *kSchemaV4 =
     "  response_data TEXT"
     ");";
 
+static const char *kSchemaV5 =
+    "CREATE TABLE review_stats ("
+    "  id INTEGER PRIMARY KEY,"
+    "  pb BLOB"
+    ");"
+    "CREATE TABLE leeches ("
+    "  id INTEGER,"
+    "  type INTEGER,"
+    "  score INTEGER,"
+    "  CONSTRAINT leeches PRIMARY KEY (id, type)"
+    ");"
+    "CREATE INDEX idx_leeches_score ON leeches (score);"
+    "ALTER TABLE sync ADD COLUMN review_stats_updated_after;";
+
+static const int kLeechTypeMeaning = 0;
+static const int kLeechTypeReading = 1;
+
+// Add new database schema here!
+// Remember to:
+//   1. Add it to kSchemas below.
+//   2. Add any tables to kClearAllData.
+
+static NSArray<NSString *> *kSchemas;
+static void InitSchemas() {
+  static dispatch_once_t once;
+  dispatch_once(&once, ^(void) {
+    kSchemas = @[@(kSchemaV1),
+                 @(kSchemaV2),
+                 @(kSchemaV3),
+                 @(kSchemaV4),
+                 @(kSchemaV5),
+                 ];
+  });
+}
+
 static const char *kClearAllData =
     "UPDATE sync SET"
     "  assignments_updated_after = \"\","
-    "  study_materials_updated_after = \"\""
+    "  study_materials_updated_after = \"\","
+    "  review_stats_updated_after = \"\""
     ";"
     "DELETE FROM assignments;"
     "DELETE FROM pending_progress;"
@@ -98,7 +134,9 @@ static const char *kClearAllData =
     "DELETE FROM user;"
     "DELETE FROM pending_study_materials;"
     "DELETE FROM subject_progress;"
-    "DELETE FROM error_log;";
+    "DELETE FROM error_log;"
+    "DELETE FROM review_stats;"
+    "DELETE FROM leeches;";
 
 static void CheckUpdate(FMDatabase *db, NSString *sql, ...) {
   va_list args;
@@ -199,17 +237,8 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 - (void)openDatabase {
   FMDatabaseQueue *ret =
       [FMDatabaseQueue databaseQueueWithURL:[LocalCachingClient databaseFileUrl]];
-
-  static NSArray<NSString *> *kSchemas;
-  static dispatch_once_t once;
-  dispatch_once(&once, ^(void) {
-    kSchemas = @[
-      @(kSchemaV1),
-      @(kSchemaV2),
-      @(kSchemaV3),
-      @(kSchemaV4),
-    ];
-  });
+  
+  InitSchemas();
 
   __block bool shouldPopulateSubjectProgress = false;
 
@@ -465,6 +494,45 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   TKMUser *user = [self getUserInfo];
   int level = MIN(user.level, _dataLoader.maxLevelGrantedBySubscription);
   return [self getAssignmentsAtLevel:level];
+}
+
+- (NSArray<TKMReviewStats *> *)getLeeches {
+  __block NSArray<TKMReviewStats *> *ret = nil;
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
+    ret = [self getLeechesInTransaction:db];
+  }];
+  return ret;
+}
+
+- (NSArray<TKMReviewStats *> *)getLeechesInTransaction:(FMDatabase *)db {
+  NSMutableArray<TKMReviewStats *> *ret = [NSMutableArray array];
+  
+  FMResultSet *r = [db executeQuery:
+                    @"SELECT r.pb, l.type "
+                    "FROM review_stats AS r, "
+                    "     leeches AS l "
+                    "WHERE l.score > 400 AND"
+                    "      r.id = l.id "
+                    "ORDER BY l.score DESC"];
+  while ([r next]) {
+    NSError *error = nil;
+    TKMReviewStats *stats = [TKMReviewStats parseFromData:[r dataForColumnIndex:0] error:&error];
+    if (error) {
+      NSLog(@"Parsing TKMReviewStats failed: %@", error);
+      break;
+    }
+    int type = [r intForColumnIndex:1];
+    
+    if (type == kLeechTypeMeaning) {
+      stats.reading = nil;
+    } else {
+      stats.meaning = nil;
+    }
+    
+    [ret addObject:stats];
+  }
+  
+  return ret;
 }
 
 #pragma mark - Getting cached data
@@ -754,6 +822,10 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       [self updateUserInfo:^{
         dispatch_group_leave(updateGroup);
       }];
+      dispatch_group_enter(updateGroup);
+      [self updateReviewStats:^{
+        dispatch_group_leave(updateGroup);
+      }];
 
       dispatch_group_notify(updateGroup, dispatch_get_main_queue(), ^{
         _busy = false;
@@ -838,6 +910,44 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
                                }
                                handler();
                              }];
+}
+
+- (void)updateReviewStats:(CompletionHandler)handler {
+  // Get the last review stats update time.
+  __block NSString *lastDate;
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
+    lastDate = [db stringForQuery:@"SELECT review_stats_updated_after FROM sync"];
+  }];
+  
+  NSLog(@"Getting all review stats modified after %@", lastDate);
+  [_client
+   getReviewStatsModifiedAfter:lastDate
+   handler:^(NSError *error,
+             NSArray<TKMReviewStats *> *reviewStats) {
+     if (error) {
+       [self logError:error];
+     } else {
+       NSString *date = Client.currentISO8601Date;
+       [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
+         for (TKMReviewStats *reviewStat in reviewStats) {
+           CheckUpdate(db, @"REPLACE INTO review_stats (id, pb) VALUES (?, ?)",
+                       @(reviewStat.subjectId), reviewStat.data);
+           CheckUpdate(db, @"REPLACE INTO leeches (id, type, score) VALUES (?, ?, ?)",
+                       @(reviewStat.subjectId), @(kLeechTypeMeaning),
+                       @(reviewStat.meaning.score));
+           CheckUpdate(db, @"REPLACE INTO leeches (id, type, score) VALUES (?, ?, ?)",
+                       @(reviewStat.subjectId), @(kLeechTypeReading),
+                       @(reviewStat.reading.score));
+         }
+         CheckUpdate(db, @"UPDATE sync SET review_stats_updated_after = ?",
+                     date);
+       }];
+       NSLog(@"Recorded %lu new review stats at %@",
+             (unsigned long)reviewStats.count,
+             date);
+     }
+     handler();
+   }];
 }
 
 - (void)updateUserInfo:(CompletionHandler)handler {

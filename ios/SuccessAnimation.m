@@ -263,31 +263,12 @@ void RunSuccessAnimation(UIView *answerField,
   }
 
   if (isSubjectFinished && didLevelUp && UserDefaults.animateLevelUpPopup) {
-    UIColor *srsLevelColor;
-    switch (newSrsStage) {
-      case 2:
-        srsLevelColor = [UIColor colorWithRed:0.867 green:0 blue:0.576 alpha:1];  // #dd0093;
-        break;
-      case 5:
-        srsLevelColor = [UIColor colorWithRed:0.533 green:0.176 blue:0.62 alpha:1];  // #882d9e
-        break;
-      case 7:
-        srsLevelColor = [UIColor colorWithRed:0.161 green:0.302 blue:0.859 alpha:1];  // #294ddb
-        break;
-      case 8:
-        srsLevelColor = [UIColor colorWithRed:0 green:0.576 blue:0.867 alpha:1];  // #0093dd
-        break;
-      case 9:
-        srsLevelColor = [UIColor colorWithRed:0.263 green:0.263 blue:0.263 alpha:1];  // #434343
-        break;
-      default:
-        return;
-    }
+    UIColor *srsLevelColor = TKMSRSStageColor(newSrsStage);
     NSString *srsLevelString = TKMSRSStageName(newSrsStage);
 
     CreateSpringyBillboard(answerField, srsLevelString, [UIFont systemFontOfSize:16.0],
                            [UIColor whiteColor], srsLevelColor,
-                           5.0,    // Border radius.
+                           5.0,    // Corner radius.
                            6.0,    // Padding.
                            100.0,  // Distance.
                            3.0);   // Duration.
