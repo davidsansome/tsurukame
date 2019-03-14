@@ -186,6 +186,7 @@ class AnimationContext {
 
   NSString *_currentFontName;
   NSString *_normalFontName;
+  CGFloat _defaultFontSize;
 }
 
 #pragma mark - Constructors
@@ -317,12 +318,8 @@ class AnimationContext {
 
   _normalFontName = _questionLabel.font.fontName;
   _currentFontName = _normalFontName;
+  _defaultFontSize = _questionLabel.font.pointSize;
 
-  if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
-    CGFloat fontSize = _questionLabel.font.pointSize * 2.5;
-    _questionLabel.font = [UIFont fontWithName:_questionLabel.font.fontName size:fontSize];
-  }
-  
   UILongPressGestureRecognizer *longPressRecognizer =
       [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                     action:@selector(didLongPressQuestionLabel:)];
@@ -332,6 +329,10 @@ class AnimationContext {
 
   [self viewDidLayoutSubviews];
   [self randomTask];
+}
+
+- (void)viewWillLayoutSubviews {
+  _questionLabel.font = [UIFont fontWithName:_questionLabel.font.fontName size:[self questionFontSize]];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -549,7 +550,7 @@ class AnimationContext {
         ![_questionLabel.font.fontName isEqual:_currentFontName]) {
       context->AddFadingLabel(_questionLabel);
       _questionLabel.font = [UIFont fontWithName:_currentFontName
-                                            size:_questionLabel.font.pointSize];
+                                            size:[self questionFontSize]];
       _questionLabel.attributedText = _activeSubject.japaneseText;
     }
     if (![_wrapUpLabel.text isEqual:wrapUpText]) {
@@ -757,7 +758,7 @@ class AnimationContext {
 
 - (void)setCustomQuestionLabelFont:(BOOL)useCustomFont {
   NSString *fontName = useCustomFont ? _currentFontName : _normalFontName;
-  _questionLabel.font = [UIFont fontWithName:fontName size:_questionLabel.font.pointSize];
+  _questionLabel.font = [UIFont fontWithName:fontName size:[self questionFontSize]];
 }
 
 - (void)didLongPressQuestionLabel:(UILongPressGestureRecognizer *)gestureRecognizer {
@@ -766,6 +767,14 @@ class AnimationContext {
     [self setCustomQuestionLabelFont:answered];
   } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
     [self setCustomQuestionLabelFont:!answered];
+  }
+}
+
+- (CGFloat)questionFontSize {
+  if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
+    return _defaultFontSize * 2.5;
+  } else {
+    return _defaultFontSize;
   }
 }
 
@@ -976,7 +985,7 @@ class AnimationContext {
     if (![_questionLabel.font.fontName isEqual:_normalFontName]) {
       context->AddFadingLabel(_questionLabel);
       _questionLabel.font = [UIFont fontWithName:_normalFontName
-                                            size:_questionLabel.font.pointSize];
+                                            size:[self questionFontSize]];
     }
   };
   [self animateSubjectDetailsViewShown:true setupContextBlock:setupContextBlock];
