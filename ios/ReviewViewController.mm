@@ -313,6 +313,11 @@ class AnimationContext {
 
   _normalFontName = _questionLabel.font.fontName;
   _currentFontName = _normalFontName;
+
+  if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
+    CGFloat fontSize = _questionLabel.font.pointSize * 2.5;
+    _questionLabel.font = [UIFont fontWithName:_questionLabel.font.fontName size:fontSize];
+  }
   
   UILongPressGestureRecognizer *longPressRecognizer =
       [[UILongPressGestureRecognizer alloc] initWithTarget:self
