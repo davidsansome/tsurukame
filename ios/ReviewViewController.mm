@@ -280,6 +280,10 @@ class AnimationContext {
   return (int)_activeQueue.count;
 }
 
+- (BOOL)canBecomeFirstResponder {
+  return true;
+}
+
 #pragma mark - UIViewController
 
 - (void)viewDidLoad {
