@@ -25,7 +25,6 @@
 #import "Style.h"
 #import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"
-#import "TKMLeechesViewController.h"
 #import "TKMReviewContainerViewController.h"
 #import "TKMServices.h"
 #import "UpcomingReviewsChartController.h"
@@ -276,13 +275,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     [vc setupWithServices:_services items:items];
   } else if ([segue.identifier isEqualToString:@"subjectCatalogue"]) {
     SubjectCatalogueViewController *vc =
-        (SubjectCatalogueViewController *)segue.destinationViewController;
+    (SubjectCatalogueViewController *)segue.destinationViewController;
     [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
   } else if ([segue.identifier isEqual:@"settings"]) {
     SettingsViewController *vc = (SettingsViewController *)segue.destinationViewController;
-    [vc setupWithServices:_services];
-  } else if ([segue.identifier isEqual:@"leeches"]) {
-    TKMLeechesViewController *vc = (TKMLeechesViewController *)segue.destinationViewController;
     [vc setupWithServices:_services];
   }
 }

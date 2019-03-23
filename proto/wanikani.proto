@@ -203,19 +203,6 @@ message FormattedText {
   optional string link_url = 3;
 }
 
-message ReviewStats {
-  optional int32 subject_id = 1;
-
-  message Metrics {
-    optional int32 correct = 1;
-    optional int32 incorrect = 2;
-    optional int32 max_streak = 3;
-    optional int32 current_streak = 4;
-  }
-  optional Metrics meaning = 2;
-  optional Metrics reading = 3;
-}
-
 message DataFileHeader {
   repeated SubjectsByLevel subjects_by_level = 1;
 

@@ -17,26 +17,6 @@
 
 #import <UIKit/UIKit.h>
 
-UIColor *TKMSRSStageColor(int srsStage) {
-  switch (srsStage) {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-      return [UIColor colorWithRed:0.867 green:0 blue:0.576 alpha:1];  // #dd0093;
-    case 5:
-    case 6:
-      return [UIColor colorWithRed:0.533 green:0.176 blue:0.62 alpha:1];  // #882d9e
-    case 7:
-      return [UIColor colorWithRed:0.161 green:0.302 blue:0.859 alpha:1];  // #294ddb
-    case 8:
-      return [UIColor colorWithRed:0 green:0.576 blue:0.867 alpha:1];  // #0093dd
-    case 9:
-      return [UIColor colorWithRed:0.263 green:0.263 blue:0.263 alpha:1];  // #434343
-  }
-  return nil;
-}
-
 NSString *TKMSRSStageName(int srsStage) {
   switch (srsStage) {
     case 1:
@@ -307,14 +287,6 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 
 - (NSDate *)startedAtDate {
   return [NSDate dateWithTimeIntervalSince1970:self.startedAt];
-}
-
-@end
-
-@implementation TKMReviewStats_Metrics (Convenience)
-
-- (int)score {
-  return (self.incorrect * 100) / self.currentStreak;
 }
 
 @end

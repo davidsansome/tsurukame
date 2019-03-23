@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 #import "Wanikani.pbobjc.h"
 
-extern UIColor *TKMSRSStageColor(int srsStage);
 extern NSString *TKMSRSStageName(int srsStage);
 extern NSString *TKMDetailedSRSStageName(int srsStage);
 
@@ -63,11 +62,5 @@ extern NSString *TKMDetailedSRSStageName(int srsStage);
 @interface TKMUser (Convenience)
 
 @property(nonatomic, readonly) NSDate *startedAtDate;
-
-@end
-
-@interface TKMReviewStats_Metrics (Convenience)
-
-@property(nonatomic, readonly) int score;
 
 @end

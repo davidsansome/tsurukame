@@ -33,7 +33,6 @@ CF_EXTERN_C_BEGIN
 @class TKMMeaning;
 @class TKMRadical;
 @class TKMReading;
-@class TKMReviewStats_Metrics;
 @class TKMSubject;
 @class TKMSubjectsByLevel;
 @class TKMVisuallySimilarKanji;
@@ -638,54 +637,6 @@ typedef GPB_ENUM(TKMFormattedText_FieldNumber) {
 /** Test to see if @c linkURL has been set. */
 @property(nonatomic, readwrite) BOOL hasLinkURL;
 
-@end
-
-#pragma mark - TKMReviewStats
-
-typedef GPB_ENUM(TKMReviewStats_FieldNumber) {
-  TKMReviewStats_FieldNumber_SubjectId = 1,
-  TKMReviewStats_FieldNumber_Meaning = 2,
-  TKMReviewStats_FieldNumber_Reading = 3,
-};
-
-@interface TKMReviewStats : GPBMessage
-
-@property(nonatomic, readwrite) int32_t subjectId;
-
-@property(nonatomic, readwrite) BOOL hasSubjectId;
-@property(nonatomic, readwrite, strong, null_resettable) TKMReviewStats_Metrics *meaning;
-/** Test to see if @c meaning has been set. */
-@property(nonatomic, readwrite) BOOL hasMeaning;
-
-@property(nonatomic, readwrite, strong, null_resettable) TKMReviewStats_Metrics *reading;
-/** Test to see if @c reading has been set. */
-@property(nonatomic, readwrite) BOOL hasReading;
-
-@end
-
-#pragma mark - TKMReviewStats_Metrics
-
-typedef GPB_ENUM(TKMReviewStats_Metrics_FieldNumber) {
-  TKMReviewStats_Metrics_FieldNumber_Correct = 1,
-  TKMReviewStats_Metrics_FieldNumber_Incorrect = 2,
-  TKMReviewStats_Metrics_FieldNumber_MaxStreak = 3,
-  TKMReviewStats_Metrics_FieldNumber_CurrentStreak = 4,
-};
-
-@interface TKMReviewStats_Metrics : GPBMessage
-
-@property(nonatomic, readwrite) int32_t correct;
-
-@property(nonatomic, readwrite) BOOL hasCorrect;
-@property(nonatomic, readwrite) int32_t incorrect;
-
-@property(nonatomic, readwrite) BOOL hasIncorrect;
-@property(nonatomic, readwrite) int32_t maxStreak;
-
-@property(nonatomic, readwrite) BOOL hasMaxStreak;
-@property(nonatomic, readwrite) int32_t currentStreak;
-
-@property(nonatomic, readwrite) BOOL hasCurrentStreak;
 @end
 
 #pragma mark - TKMDataFileHeader

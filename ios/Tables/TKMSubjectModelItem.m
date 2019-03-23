@@ -26,8 +26,6 @@ static UIFont *kIncorrectFont;
 
 @interface TKMSubjectModelView ()
 @property(weak, nonatomic) IBOutlet UILabel *levelLabel;
-@property(weak, nonatomic) IBOutlet UIView *srsStageContainer;
-@property(weak, nonatomic) IBOutlet UILabel *srsStageLabel;
 @property(weak, nonatomic) IBOutlet UILabel *subjectLabel;
 @property(weak, nonatomic) IBOutlet UILabel *readingLabel;
 @property(weak, nonatomic) IBOutlet UILabel *meaningLabel;
@@ -48,6 +46,16 @@ static UIFont *kIncorrectFont;
     _readingWrong = readingWrong;
     _showLevelNumber = true;
     _showAnswers = true;
+  }
+  return self;
+}
+
+- (instancetype)initWithSubject:(TKMSubject *)subject
+                     assignment:(TKMAssignment *)assignment
+                       delegate:(id<TKMSubjectDelegate>)delegate {
+  self = [self initWithSubject:subject delegate:delegate readingWrong:false meaningWrong:false];
+  if (self) {
+    self.assignment = assignment;
   }
   return self;
 }
@@ -86,20 +94,9 @@ static UIFont *kIncorrectFont;
 - (void)layoutSubviews {
   [super layoutSubviews];
   _gradient.frame = self.contentView.bounds;
-  _srsStageLabel.layer.cornerRadius = 5.f;
-  _srsStageLabel.layer.borderColor = [UIColor whiteColor].CGColor;
-  _srsStageLabel.layer.borderWidth = 0.5;
-  _srsStageLabel.clipsToBounds = YES;
 }
 
 #pragma mark - TKMModelCell
-
-- (NSString *)meaningText:(TKMSubjectModelItem *)item {
-  if (item.showOnlyFirstMeaning) {
-    return item.subject.primaryMeaning;
-  }
-  return item.subject.commaSeparatedMeanings;
-}
 
 - (void)updateWithItem:(TKMSubjectModelItem *)item {
   [super updateWithItem:item];
@@ -109,27 +106,20 @@ static UIFont *kIncorrectFont;
     self.levelLabel.text = [NSString stringWithFormat:@"%d", item.subject.level];
   }
   _gradient.colors = item.gradientColors ?: TKMGradientForSubject(item.subject);
-  
-  self.srsStageContainer.hidden = !item.showSRSStage;
-  if (item.showSRSStage) {
-    int stage = item.assignment.srsStage;
-    self.srsStageLabel.text = [NSString stringWithFormat:@"%d", stage];
-    self.srsStageLabel.backgroundColor = TKMSRSStageColor(stage);
-  }
 
   self.subjectLabel.attributedText =
       [item.subject japaneseTextWithImageSize:kJapaneseTextImageSize];
   if (item.subject.hasRadical) {
     [self.readingLabel setHidden:YES];
-    self.meaningLabel.text = [self meaningText:item];
+    self.meaningLabel.text = item.subject.commaSeparatedMeanings;
   } else if (item.subject.hasKanji) {
     [self.readingLabel setHidden:NO];
     self.readingLabel.text = item.subject.commaSeparatedPrimaryReadings;
-    self.meaningLabel.text = [self meaningText:item];
+    self.meaningLabel.text = item.subject.commaSeparatedMeanings;
   } else if (item.subject.hasVocabulary) {
     [self.readingLabel setHidden:NO];
     self.readingLabel.text = item.subject.commaSeparatedReadings;
-    self.meaningLabel.text = [self meaningText:item];
+    self.meaningLabel.text = item.subject.commaSeparatedMeanings;
   }
 
   if (!item.readingWrong && !item.meaningWrong) {
@@ -139,9 +129,6 @@ static UIFont *kIncorrectFont;
     self.readingLabel.font = item.readingWrong ? kIncorrectFont : kCorrectFont;
     self.meaningLabel.font = item.meaningWrong ? kIncorrectFont : kCorrectFont;
   }
-  
-  self.readingLabel.hidden = item.showOnlyWrongPart && !item.readingWrong;
-  self.meaningLabel.hidden = item.showOnlyWrongPart && !item.meaningWrong;
 
   [self setShowAnswers:item.showAnswers animated:false];
 }

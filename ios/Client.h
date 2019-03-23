@@ -31,8 +31,6 @@ typedef void (^ApiTokenHandler)(NSError *_Nullable error,
 typedef void (^AssignmentHandler)(NSError *_Nullable error,
                                   NSArray<TKMAssignment *> *_Nullable assignments);
 typedef void (^ProgressHandler)(NSError *_Nullable error);
-typedef void (^ReviewStatsHandler)(NSError *_Nullable error,
-                                   NSArray<TKMReviewStats *> *_Nullable reviewStats);
 typedef void (^StudyMaterialsHandler)(NSError *_Nullable error,
                                       NSArray<TKMStudyMaterials *> *_Nullable studyMaterials);
 typedef void (^UserInfoHandler)(NSError *_Nullable error, TKMUser *_Nullable user);
@@ -68,7 +66,6 @@ extern bool TKMIsClientError(NSError *error);
 - (void)sendProgress:(NSArray<TKMProgress *> *)progress handler:(ProgressHandler _Nullable)handler;
 - (void)getStudyMaterialsModifiedAfter:(NSString *)date handler:(StudyMaterialsHandler)handler;
 - (void)getUserInfo:(UserInfoHandler)handler;
-- (void)getReviewStatsModifiedAfter:(NSString *)date handler:(ReviewStatsHandler)handler;
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material
                     handler:(UpdateStudyMaterialHandler)handler;
 
