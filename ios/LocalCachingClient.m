@@ -293,7 +293,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     CheckUpdate(db, @"INSERT INTO error_log"
                 "(stack, code, description, request_url, response_url,"
                 " request_data, request_headers, response_headers, response_data) "
-                "VALUES (?,?,?,?,?,?,?,?)",
+                "VALUES (?,?,?,?,?,?,?,?,?)",
                 stack, @(ce.code), ce.localizedDescription,
                 ce.request.URL.description,
                 ce.response.URL.description,

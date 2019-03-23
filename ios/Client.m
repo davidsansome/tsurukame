@@ -25,13 +25,21 @@ static const char *kLessonProgressURL = "https://www.wanikani.com/json/lesson/co
 static const char *kStudyMaterialsURLBase = "https://www.wanikani.com/study_materials";
 static const char *kReviewSessionURL = "https://www.wanikani.com/review/session";
 static const char *kAccountURL = "https://www.wanikani.com/settings/account";
+static const char *kAccessTokenURL = "https://www.wanikani.com/settings/personal_access_tokens";
+static const char *kNewAccessTokenURL = "https://www.wanikani.com/settings/personal_access_tokens/new";
 static const char *kLoginURL = "https://www.wanikani.com/login";
 static const char *kDashboardURL = "https://www.wanikani.com/dashboard";
 
 static const char *kCSRFTokenREPattern = "<meta name=\"csrf-token\" content=\"([^\"]*)";
 static const char *kEmailAddressREPattern = "<input[^>]+value=\"([^\"]+)\"[^>]+id=\"user_email\"";
 static const char *kAPITokenREPattern =
-    "<input[^>]+value=\"([^\"]+)\"[^>]+name=\"user_api_key_v2\"";
+    "personal-access-token-description\">\\s*"
+    "Tsurukame\\s*"
+    "</td>\\s*"
+    "<td class=\"personal-access-token-token\">\\s*"
+    "<code>([a-f0-9-]{36})</code>";
+static const char *kAuthenticityTokenREPattern =
+    "name=\"authenticity_token\" value=\"([^\"]+)\"";
 
 static NSString *const kFormDataContentType = @"application/x-www-form-urlencoded";
 static NSString *const kJSONContentType = @"application/json";
@@ -107,6 +115,7 @@ static const NSTimeInterval kCSRFTokenValidity = 2 * 60 * 60;  // 2 hours.
 static NSRegularExpression *sCSRFTokenRE;
 static NSRegularExpression *sEmailAddressRE;
 static NSRegularExpression *sAPITokenRE;
+static NSRegularExpression *sAuthenticityTokenRE;
 static NSArray<NSDateFormatter *> *sDateFormatters;
 
 typedef void (^PartialResponseHandler)(id _Nullable data, NSError *_Nullable error);
@@ -124,6 +133,7 @@ static void EnsureInitialised() {
     sAPITokenRE = [NSRegularExpression regularExpressionWithPattern:@(kAPITokenREPattern)
                                                             options:0
                                                               error:nil];
+    sAuthenticityTokenRE = [NSRegularExpression regularExpressionWithPattern:@(kAuthenticityTokenREPattern) options:0 error:nil];
 
     NSDateFormatter * (^makeDateFormatter)(NSString *format) = ^(NSString *format) {
       NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -455,50 +465,173 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 + (void)getApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler {
   EnsureInitialised();
+  [self getApiTokenForCookie:cookie handler:handler createIfNotFound:YES];
+}
 
-  NSURLRequest *req = [Client authorizeUserRequest:[NSURL URLWithString:@(kAccountURL)]
++ (void)getApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler createIfNotFound:(BOOL)createIfNotFound {
+  NSLog(@"Getting API token...");
+  NSURLRequest *req = [Client authorizeUserRequest:[NSURL URLWithString:@(kAccessTokenURL)]
                                         withCookie:cookie];
   NSURLSession *session = [NSURLSession sharedSession];
   NSURLSessionDataTask *task = [session
       dataTaskWithRequest:req
         completionHandler:^(
             NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-          if (error != nil) {
-            handler(error, nil, nil);
-            return;
-          }
-          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-          if (httpResponse.statusCode != 200) {
-            handler([TKMClientError httpErrorWithRequest:req response:response responseData:data], nil, nil);
-            return;
-          }
-
-          NSString *body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
-          NSTextCheckingResult *apiTokenResult =
-              [sAPITokenRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
-          if (!apiTokenResult || apiTokenResult.range.location == NSNotFound) {
-            handler([TKMClientError httpErrorWithMessage:@"API token not found in page"
-                                                 request:req
-                                                response:response
-                                            responseData:data], nil, nil);
-            return;
-          }
-
-          NSTextCheckingResult *emailAddressResult =
-              [sEmailAddressRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
-          if (!emailAddressResult || emailAddressResult.range.location == NSNotFound) {
-            handler([TKMClientError httpErrorWithMessage:@"Email address not found in page"
-                                                 request:req
-                                                response:response
-                                            responseData:data], nil, nil);
-            return;
-          }
-
-          NSString *token = [body substringWithRange:[apiTokenResult rangeAtIndex:1]];
-          NSString *emailAddress = [body substringWithRange:[emailAddressResult rangeAtIndex:1]];
-          handler(nil, token, emailAddress);
+          [self handleGetApiTokenData:data
+                              request:req
+                             response:response
+                                error:error
+                            forCookie:cookie
+                              handler:handler
+                     createIfNotFound:createIfNotFound];
         }];
+  [task resume];
+}
+
++ (void)handleGetApiTokenData:(nullable NSData *)data
+                      request:(NSURLRequest *)req
+                     response:(nullable NSURLResponse *)response
+                        error:(nullable NSError *)error
+                    forCookie:(NSString *)cookie
+                      handler:(ApiTokenHandler)handler
+             createIfNotFound:(BOOL)createIfNotFound {
+  if (error != nil) {
+    handler(error, nil, nil);
+    return;
+  }
+  NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+  if (httpResponse.statusCode != 200) {
+    handler([TKMClientError httpErrorWithRequest:req response:response responseData:data], nil, nil);
+    return;
+  }
+  
+  NSString *body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+  
+  NSTextCheckingResult *result =
+  [sAPITokenRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
+  if (!result || result.range.location == NSNotFound) {
+    if (createIfNotFound) {
+      NSLog(@"API token not found - creating a new one");
+      [self createApiTokenForCookie:cookie handler:handler];
+    } else {
+      handler([TKMClientError httpErrorWithMessage:@"API token not found in page"
+                                           request:req
+                                          response:response
+                                      responseData:data], nil, nil);
+    }
+    return;
+  }
+  
+  NSString *token = [body substringWithRange:[result rangeAtIndex:1]];
+  NSLog(@"API token found: %@", token);
+  [self getEmailForCookie:cookie accessToken:token handler:handler];
+}
+
++ (void)getEmailForCookie:(NSString *)cookie accessToken:(NSString *)token handler:(ApiTokenHandler)handler {
+  NSURLRequest *req = [Client authorizeUserRequest:[NSURL URLWithString:@(kAccountURL)]
+                                        withCookie:cookie];
+  NSURLSession *session = [NSURLSession sharedSession];
+  NSURLSessionDataTask *task = [session
+                                dataTaskWithRequest:req
+                                completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
+                                  if (error != nil) {
+                                    handler(error, nil, nil);
+                                    return;
+                                  }
+                                  NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                  if (httpResponse.statusCode != 200) {
+                                    handler([TKMClientError httpErrorWithRequest:req response:response responseData:data], nil, nil);
+                                    return;
+                                  }
+                                  
+                                  NSString *body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                                  
+                                  NSTextCheckingResult *result =
+                                      [sEmailAddressRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
+                                  if (!result || result.range.location == NSNotFound) {
+                                    handler([TKMClientError httpErrorWithMessage:@"Email address not found in page"
+                                                                         request:req
+                                                                        response:response
+                                                                    responseData:data], nil, nil);
+                                    return;
+                                  }
+  
+                                  NSString *emailAddress = [body substringWithRange:[result rangeAtIndex:1]];
+                                  NSLog(@"Email found: %@", emailAddress);
+                                  handler(nil, token, emailAddress);
+                                }];
+  [task resume];
+}
+
++ (void)createApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler {
+  NSURLRequest *req = [Client authorizeUserRequest:[NSURL URLWithString:@(kNewAccessTokenURL)]
+                                        withCookie:cookie];
+  NSURLSession *session = [NSURLSession sharedSession];
+  NSURLSessionDataTask *task = [session
+                                dataTaskWithRequest:req
+                                completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
+                                  if (error != nil) {
+                                    handler(error, nil, nil);
+                                    return;
+                                  }
+                                  NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                  if (httpResponse.statusCode != 200) {
+                                    handler([TKMClientError httpErrorWithRequest:req response:response responseData:data], nil, nil);
+                                    return;
+                                  }
+                                  
+                                  NSString *body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                                  
+                                  NSTextCheckingResult *result =
+                                      [sAuthenticityTokenRE firstMatchInString:body options:0 range:NSMakeRange(0, body.length)];
+                                  if (!result || result.range.location == NSNotFound) {
+                                    handler([TKMClientError httpErrorWithMessage:@"Authenticity token not found in page"
+                                                                         request:req
+                                                                        response:response
+                                                                    responseData:data], nil, nil);
+                                    return;
+                                  }
+                                  
+                                  NSString *authenticityToken = [body substringWithRange:[result rangeAtIndex:1]];
+                                  NSLog(@"authenticityToken found: %@", authenticityToken);
+                                  [self createApiTokenForCookie:cookie authenticityToken:authenticityToken handler:handler];
+                                }];
+  [task resume];
+}
+
++ (void)createApiTokenForCookie:(NSString *)cookie authenticityToken:(NSString *)authenticityToken handler:(ApiTokenHandler)handler {
+  NSMutableURLRequest *req = [Client authorizeUserRequest:[NSURL URLWithString:@(kAccessTokenURL)]
+                                               withCookie:cookie];
+  NSMutableDictionary<NSString *, NSString *> *postData = [NSMutableDictionary dictionary];
+  postData[@"authenticity_token"] = authenticityToken;
+  postData[@"personal_access_token[description]"] = @"Tsurukame";
+  postData[@"personal_access_token[permissions][assignments][start]"] = @"1";
+  postData[@"personal_access_token[permissions][reviews][create]"] = @"1";
+  postData[@"personal_access_token[permissions][reviews][update]"] = @"1";
+  postData[@"personal_access_token[permissions][study_materials][create]"] = @"1";
+  postData[@"personal_access_token[permissions][study_materials][update]"] = @"1";
+  postData[@"utf8"] = @"✓";
+  NSData *postDataBytes = EncodeQueryString(postData);
+  
+  req.HTTPBody = postDataBytes;
+  req.HTTPMethod = @"POST";
+  [req addValue:@"application/x-www-form-urlencoded"
+      forHTTPHeaderField:@"Content-Type"];
+  [req addValue:[@(postDataBytes.length) stringValue]
+      forHTTPHeaderField:@"Content-Length"];
+  
+  NSURLSession *session = [NSURLSession sharedSession];
+  NSURLSessionDataTask *task = [session
+                                    dataTaskWithRequest:req
+                                    completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
+                                      [self handleGetApiTokenData:data
+                                                          request:req
+                                                         response:response
+                                                            error:error
+                                                        forCookie:cookie
+                                                          handler:handler
+                                                 createIfNotFound:NO];
+                                    }];
   [task resume];
 }
 
