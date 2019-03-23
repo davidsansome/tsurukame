@@ -28,6 +28,8 @@ NSNotificationName kLocalCachingClientPendingItemsChangedNotification =
     @"kLocalCachingClientPendingItemsChangedNotification";
 NSNotificationName kLocalCachingClientUserInfoChangedNotification =
     @"kLocalCachingClientUserInfoChangedNotification";
+NSNotificationName kLocalCachingClientUnauthorizedNotification =
+    @"kLocalCachingClientUnauthorizedNotification";
 
 static const char *kSchemaV1 =
     "CREATE TABLE sync ("
@@ -843,6 +845,9 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 - (void)updateUserInfo:(CompletionHandler)handler {
   [_client getUserInfo:^(NSError *_Nullable error, TKMUser *_Nullable user) {
     if (error) {
+      if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 401) {
+        [self postNotificationOnMainThread:kLocalCachingClientUnauthorizedNotification];
+      }
       [self logError:error];
     } else {
       [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {

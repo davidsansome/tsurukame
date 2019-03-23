@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSNotificationName kLocalCachingClientAvailableItemsChangedNotification;
 extern NSNotificationName kLocalCachingClientPendingItemsChangedNotification;
 extern NSNotificationName kLocalCachingClientUserInfoChangedNotification;
+extern NSNotificationName kLocalCachingClientUnauthorizedNotification;
 
 typedef void (^CompletionHandler)(void);
 

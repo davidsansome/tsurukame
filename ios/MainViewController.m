@@ -17,6 +17,7 @@
 #import "CurrentLevelChartController.h"
 #import "LessonsViewController.h"
 #import "LocalCachingClient.h"
+#import "LoginViewController.h"
 #import "NSDate+TimeAgo.h"
 #import "NSString+MD5.h"
 #import "ReviewItem.h"
@@ -101,6 +102,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   __weak SearchResultViewController *_searchResultsViewController;
   __weak CAGradientLayer *_userGradientLayer;
   NSTimer *_hourlyRefreshTimer;
+  BOOL _isShowingUnauthorizedAlert;
 }
 
 - (void)setupWithServices:(TKMServices *)services {
@@ -203,6 +205,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   [nc addObserver:self
          selector:@selector(userInfoChanged)
              name:kLocalCachingClientUserInfoChangedNotification
+           object:_services.localCachingClient];
+  [nc addObserver:self
+         selector:@selector(clientIsUnauthorized)
+             name:kLocalCachingClientUnauthorizedNotification
            object:_services.localCachingClient];
   [nc addObserver:self
          selector:@selector(applicationDidEnterBackground:)
@@ -402,6 +408,30 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   _userLevelLabel.text =
       [NSString stringWithFormat:@"Level %d \u00B7 started %@", user.level,
                                  [user.startedAtDate timeAgoSinceNow:[NSDate date]]];
+}
+
+- (void)clientIsUnauthorized {
+  if (_isShowingUnauthorizedAlert) {
+    return;
+  }
+  _isShowingUnauthorizedAlert = YES;
+  UIAlertController *ac =
+      [UIAlertController alertControllerWithTitle:@"Logged out"
+                                          message:@"Your API Token expired - please log in again"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+  
+  __weak MainViewController *weakSelf = self;
+  [ac addAction:[UIAlertAction actionWithTitle:@"OK"
+                                         style:UIAlertActionStyleDefault
+                                       handler:^(UIAlertAction * _Nonnull action) {
+                                         MainViewController *strongSelf = weakSelf;
+                                         if (strongSelf) {
+                                           strongSelf->_isShowingUnauthorizedAlert = NO;
+                                         }
+                                         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+                                         [nc postNotificationName:kLogoutNotification object:weakSelf];
+                                       }]];
+  [self presentViewController:ac animated:YES completion:nil];
 }
 
 - (void)didPullToRefresh {
