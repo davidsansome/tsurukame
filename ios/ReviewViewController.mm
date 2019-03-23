@@ -332,10 +332,6 @@ class AnimationContext {
   [self randomTask];
 }
 
-- (void)viewWillLayoutSubviews {
-  _questionLabel.font = [UIFont fontWithName:_questionLabel.font.fontName size:[self questionLabelFontSize]];
-}
-
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
 
@@ -775,7 +771,7 @@ class AnimationContext {
 }
 
 - (CGFloat)questionLabelFontSize {
-  if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
+  if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
     return _defaultFontSize * 2.5;
   } else {
     return _defaultFontSize;
