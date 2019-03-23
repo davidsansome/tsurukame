@@ -81,6 +81,18 @@
                             direction:UIPageViewControllerNavigationDirectionForward
                              animated:NO
                            completion:nil];
+
+  UIKeyCommand *nextCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputRightArrow
+                                                  modifierFlags:0
+                                                         action:@selector(nextPage)
+                                           discoverabilityTitle:@"Next"];
+  [self addKeyCommand:nextCommand];
+
+  UIKeyCommand *prevCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputLeftArrow
+                                                  modifierFlags:0
+                                                         action:@selector(prevPage)
+                                           discoverabilityTitle:@"Previous"];
+  [self addKeyCommand:prevCommand];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -193,6 +205,28 @@
 
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
   [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
+}
+
+#pragma mark - Keyboard navigation
+
+- (BOOL)canBecomeFirstResponder {
+  return true;
+}
+
+- (void)nextPage {
+  if (_pageControl.currentPageIndex < [_items count]) {
+    _pageControl.currentPageIndex += 1;
+    [self pageChanged];
+  }
+}
+
+- (void)prevPage {
+  NSUInteger quizPageIndex = [_items count];
+  // Allow paging backwards unless we are already doing the quiz, which is the last page
+  if (_pageControl.currentPageIndex > 0 && _pageControl.currentPageIndex != quizPageIndex) {
+    _pageControl.currentPageIndex -= 1;
+    [self pageChanged];
+  }
 }
 
 @end
