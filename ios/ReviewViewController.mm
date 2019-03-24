@@ -144,6 +144,7 @@ class AnimationContext {
 @property(nonatomic) IBOutlet NSLayoutConstraint *answerFieldToBottomConstraint;
 @property(nonatomic) IBOutlet NSLayoutConstraint *answerFieldToSubjectDetailsViewConstraint;
 @property(weak, nonatomic) IBOutlet NSLayoutConstraint *previousSubjectButtonWidthConstraint;
+@property(weak, nonatomic) IBOutlet NSLayoutConstraint *previousSubjectButtonHeightConstraint;
 
 @end
 
@@ -186,6 +187,7 @@ class AnimationContext {
 
   NSString *_currentFontName;
   NSString *_normalFontName;
+  CGFloat _defaultFontSize;
 }
 
 #pragma mark - Constructors
@@ -317,12 +319,8 @@ class AnimationContext {
 
   _normalFontName = _questionLabel.font.fontName;
   _currentFontName = _normalFontName;
+  _defaultFontSize = _questionLabel.font.pointSize;
 
-  if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
-    CGFloat fontSize = _questionLabel.font.pointSize * 2.5;
-    _questionLabel.font = [UIFont fontWithName:_questionLabel.font.fontName size:fontSize];
-  }
-  
   UILongPressGestureRecognizer *longPressRecognizer =
       [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                     action:@selector(didLongPressQuestionLabel:)];
@@ -549,7 +547,7 @@ class AnimationContext {
         ![_questionLabel.font.fontName isEqual:_currentFontName]) {
       context->AddFadingLabel(_questionLabel);
       _questionLabel.font = [UIFont fontWithName:_currentFontName
-                                            size:_questionLabel.font.pointSize];
+                                            size:[self questionLabelFontSize]];
       _questionLabel.attributedText = _activeSubject.japaneseText;
     }
     if (![_wrapUpLabel.text isEqual:wrapUpText]) {
@@ -703,7 +701,9 @@ class AnimationContext {
   label.center = oldLabelCenter;
 
   CGFloat newButtonWidth =
-      kPreviousSubjectButtonPadding * 2 + labelBounds.size.width * kPreviousSubjectScale;
+    kPreviousSubjectButtonPadding * 2 + labelBounds.size.width * kPreviousSubjectScale;
+  CGFloat newButtonHeight =
+    kPreviousSubjectButtonPadding * 2 + labelBounds.size.height * kPreviousSubjectScale;
 
   NSArray<id> *newGradient = TKMGradientForSubject(_previousSubject);
 
@@ -734,6 +734,7 @@ class AnimationContext {
         [self.view addConstraints:@[ centerXConstraint, centerYConstraint ]];
 
         _previousSubjectButtonWidthConstraint.constant = newButtonWidth;
+        _previousSubjectButtonHeightConstraint.constant = newButtonHeight;
         [self.view layoutIfNeeded];
 
         _previousSubjectGradient.colors = newGradient;
@@ -757,7 +758,7 @@ class AnimationContext {
 
 - (void)setCustomQuestionLabelFont:(BOOL)useCustomFont {
   NSString *fontName = useCustomFont ? _currentFontName : _normalFontName;
-  _questionLabel.font = [UIFont fontWithName:fontName size:_questionLabel.font.pointSize];
+  _questionLabel.font = [UIFont fontWithName:fontName size:[self questionLabelFontSize]];
 }
 
 - (void)didLongPressQuestionLabel:(UILongPressGestureRecognizer *)gestureRecognizer {
@@ -766,6 +767,14 @@ class AnimationContext {
     [self setCustomQuestionLabelFont:answered];
   } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
     [self setCustomQuestionLabelFont:!answered];
+  }
+}
+
+- (CGFloat)questionLabelFontSize {
+  if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    return _defaultFontSize * 2.5;
+  } else {
+    return _defaultFontSize;
   }
 }
 
@@ -976,7 +985,7 @@ class AnimationContext {
     if (![_questionLabel.font.fontName isEqual:_normalFontName]) {
       context->AddFadingLabel(_questionLabel);
       _questionLabel.font = [UIFont fontWithName:_normalFontName
-                                            size:_questionLabel.font.pointSize];
+                                            size:[self questionLabelFontSize]];
     }
   };
   [self animateSubjectDetailsViewShown:true setupContextBlock:setupContextBlock];
