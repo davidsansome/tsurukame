@@ -16,6 +16,7 @@ package converter
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/golang/protobuf/proto"
 
@@ -169,6 +170,7 @@ func convertSubjectIDArray(c []int) []int32 {
 }
 
 func convertPartOfSpeech(p string) (pb.Vocabulary_PartOfSpeech, bool) {
+	p = strings.Replace(p, " ", "_", -1)
 	switch p {
 	case "noun":
 		return pb.Vocabulary_NOUN, true
@@ -180,19 +182,19 @@ func convertPartOfSpeech(p string) (pb.Vocabulary_PartOfSpeech, bool) {
 		return pb.Vocabulary_ICHIDAN_VERB, true
 	case "transitive_verb":
 		return pb.Vocabulary_TRANSITIVE_VERB, true
-	case "no_adjective":
+	case "no_adjective", "の_adjective":
 		return pb.Vocabulary_NO_ADJECTIVE, true
 	case "godan_verb":
 		return pb.Vocabulary_GODAN_VERB, true
-	case "na_adjective":
+	case "na_adjective", "な_adjective":
 		return pb.Vocabulary_NA_ADJECTIVE, true
-	case "i_adjective":
+	case "i_adjective", "い_adjective":
 		return pb.Vocabulary_I_ADJECTIVE, true
 	case "suffix":
 		return pb.Vocabulary_SUFFIX, true
 	case "adverb":
 		return pb.Vocabulary_ADVERB, true
-	case "suru_verb":
+	case "suru_verb", "する_verb":
 		return pb.Vocabulary_SURU_VERB, true
 	case "prefix":
 		return pb.Vocabulary_PREFIX, true
