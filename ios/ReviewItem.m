@@ -49,6 +49,17 @@
   return ret;
 }
 
+- (NSUInteger)getSubjectTypeIndex:(TKMSubject_Type)type {
+  if (type == TKMSubject_Type_Radical) {
+    return [UserDefaults.lessonOrder indexOfObject:@"Radicals"];
+  } else if (type == TKMSubject_Type_Kanji) {
+    return [UserDefaults.lessonOrder indexOfObject:@"Kanji"];
+  } else if (type == TKMSubject_Type_Vocabulary) {
+    return [UserDefaults.lessonOrder indexOfObject:@"Vocabulary"];
+  }
+  return 0;
+}
+
 - (instancetype)initFromAssignment:(TKMAssignment *)assignment {
   if (self = [super init]) {
     _assignment = assignment;
@@ -66,10 +77,20 @@
     return UserDefaults.prioritizeCurrentLevel ? NSOrderedAscending : NSOrderedDescending ;
   }
 
-  if (self.assignment.subjectType < other.assignment.subjectType) {
-    return NSOrderedAscending;
-  } else if (self.assignment.subjectType > other.assignment.subjectType) {
-    return NSOrderedDescending;
+  if ([UserDefaults.lessonOrder count]) {
+    NSUInteger selfIndex = [self getSubjectTypeIndex:self.assignment.subjectType];
+    NSUInteger otherIndex = [self getSubjectTypeIndex:other.assignment.subjectType];
+    if (selfIndex < otherIndex) {
+      return NSOrderedAscending;
+    } else if (selfIndex > otherIndex) {
+      return NSOrderedDescending;
+    }
+  } else {
+    if (self.assignment.subjectType < other.assignment.subjectType) {
+      return NSOrderedAscending;
+    } else if (self.assignment.subjectType > other.assignment.subjectType) {
+      return NSOrderedDescending;
+    }
   }
 
   if (self.assignment.subjectId < other.assignment.subjectId) {

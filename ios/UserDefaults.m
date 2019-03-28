@@ -65,6 +65,7 @@ DEFINE_BOOL(animateLevelUpPopup, setAnimateLevelUpPopup, YES);
 DEFINE_BOOL(animatePlusOne, setAnimatePlusOne, YES);
 
 DEFINE_BOOL(prioritizeCurrentLevel, setPrioritizeCurrentLevel, NO);
+DEFINE_OBJECT(NSMutableArray<NSString *>, lessonOrder, setLessonOrder);
 
 DEFINE_ENUM(ReviewOrder, reviewOrder, setReviewOrder, ReviewOrder_Random);
 DEFINE_OBJECT(NSSet<NSString *>, selectedFonts, setSelectedFonts);

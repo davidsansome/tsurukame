@@ -74,6 +74,14 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                         on:UserDefaults.prioritizeCurrentLevel
                                                     target:self
                                                     action:@selector(prioritizeCurrentLevelChanged:)]];
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                 title:@"Lesson order"
+                                              subtitle:self.lessonOrderValueText
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(didTapLessonOrder:)]];
+
   [model addSection:@"Reviews"];
   [model
       addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
@@ -183,6 +191,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
   _model = model;
   [model reloadTable];
+}
+
+- (NSString *)lessonOrderValueText {
+  return [UserDefaults.lessonOrder componentsJoinedByString:@", "];
 }
 
 - (NSString *)reviewOrderValueText {
@@ -328,6 +340,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
     }
     _notificationHandler(granted);
   }];
+}
+
+- (void)didTapLessonOrder:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"lessonOrder" sender:self];
 }
 
 - (void)didTapReviewOrder:(TKMBasicModelItem *)item {

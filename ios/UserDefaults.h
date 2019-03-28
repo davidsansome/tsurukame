@@ -42,6 +42,7 @@ DECLARE_BOOL(animatePlusOne);
 
 // Lesson settings.
 DECLARE_BOOL(prioritizeCurrentLevel);
+DECLARE_OBJECT(NSMutableArray<NSString *>, lessonOrder);
 
 // Review settings.
 DECLARE_ENUM(ReviewOrder, reviewOrder);
