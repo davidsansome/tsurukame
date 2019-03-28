@@ -23,6 +23,12 @@ subject: <
   >
 >
 subject: <
+  id: 3649
+  vocabulary: <
+    reading_explanation: "The reading for <ja>都</ja> is an exception from what you learned with the kanji. To remember this, just think about someone who does something at their own convenience. They say, I'm going <reading>to go</reading> (<ja>つごう</ja>) where I want, when I want, at my own convenience.\r\n\r\nThe <ja>合 (ごう)</ja> part is a reading you know from the kanji, though, so if you can get to \"to go\" with the mnemonic, you should be able to put two and two together to know that it's a long vowel <ja>ごう</ja>."
+  >
+>
+subject: <
   id: 7688
   vocabulary: <
     reading_explanation: "The readings for this word are both kun'yomi readings, but it's like the hiragana that normally sticks out is stuffed in. <ja>\345\276\205\343\201\241</ja> \342\206\222 <ja>\345\276\205</ja>, <ja>\345\220\210\343\201\204</ja> \342\206\222 <ja>\345\220\210</ja> and is pronounced the same too. I know it's confusing, but once you get it down you'll never forget!"
