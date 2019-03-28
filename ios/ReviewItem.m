@@ -14,6 +14,7 @@
 
 #import "ReviewItem.h"
 #import "DataLoader.h"
+#import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 
 @implementation ReviewItem
@@ -59,20 +60,25 @@
 }
 
 - (NSComparisonResult)compareForLessons:(ReviewItem *)other {
-#define COMPARE(field)            \
-  if (self.field < other.field) { \
-    return NSOrderedAscending;    \
-  }                               \
-  if (self.field > other.field) { \
-    return NSOrderedDescending;   \
+  if (self.assignment.level < other.assignment.level) {
+    return UserDefaults.prioritizeCurrentLevel ? NSOrderedDescending : NSOrderedAscending;
+  } else if (self.assignment.level > other.assignment.level) {
+    return UserDefaults.prioritizeCurrentLevel ? NSOrderedAscending : NSOrderedDescending ;
   }
 
-  COMPARE(assignment.level);
-  COMPARE(assignment.subjectType);
-  COMPARE(assignment.subjectId);
-  return NSOrderedSame;
+  if (self.assignment.subjectType < other.assignment.subjectType) {
+    return NSOrderedAscending;
+  } else if (self.assignment.subjectType > other.assignment.subjectType) {
+    return NSOrderedDescending;
+  }
 
-#undef COMPARE
+  if (self.assignment.subjectId < other.assignment.subjectId) {
+    return NSOrderedAscending;
+  } else if (self.assignment.subjectId > other.assignment.subjectId) {
+    return NSOrderedDescending;
+  }
+
+  return NSOrderedSame;
 }
 
 - (void)reset {

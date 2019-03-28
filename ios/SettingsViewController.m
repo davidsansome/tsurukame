@@ -67,6 +67,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                     target:self
                                                     action:@selector(badgingSwitchChanged:)]];
 
+  [model addSection:@"Lessons"];
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                     title:@"Prioritize current level"
+                                                  subtitle:@"Teach items from the current level first"
+                                                        on:UserDefaults.prioritizeCurrentLevel
+                                                    target:self
+                                                    action:@selector(prioritizeCurrentLevelChanged:)]];
   [model addSection:@"Reviews"];
   [model
       addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
@@ -215,6 +222,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)animatePlusOneSwitchChanged:(UISwitch *)switchView {
   UserDefaults.animatePlusOne = switchView.on;
+}
+
+- (void)prioritizeCurrentLevelChanged:(UISwitch *)switchView {
+  UserDefaults.prioritizeCurrentLevel = switchView.on;
 }
 
 - (void)groupMeaningReadingSwitchChanged:(UISwitch *)switchView {

@@ -40,6 +40,9 @@ DECLARE_BOOL(animateParticleExplosion);
 DECLARE_BOOL(animateLevelUpPopup);
 DECLARE_BOOL(animatePlusOne);
 
+// Lesson settings.
+DECLARE_BOOL(prioritizeCurrentLevel);
+
 // Review settings.
 DECLARE_ENUM(ReviewOrder, reviewOrder);
 DECLARE_OBJECT(NSSet<NSString *>, selectedFonts);
