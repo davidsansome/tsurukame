@@ -113,4 +113,22 @@
   [self.navigationController pushViewController:vc animated:YES];
 }
 
+#pragma mark - Keyboard navigation
+
+- (BOOL)canBecomeFirstResponder {
+  return true;
+}
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
+  return @[
+    [UIKeyCommand keyCommandWithInput:@" "
+                        modifierFlags:0
+                               action:@selector(playAudio)]
+  ];
+}
+
+- (void)playAudio {
+  [_subjectDetailsView playAudio];
+}
+
 @end
