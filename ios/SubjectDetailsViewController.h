@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN;
                     index:(NSInteger)index;
 
 - (void)setupWithServices:(TKMServices *)services subject:(TKMSubject *)subject;
+- (void)playAudio;
 
 /* The index of this subject in some other collection.  Unused, for convenience only. */
 @property(nonatomic, readonly) NSInteger index;

@@ -211,6 +211,15 @@
     [UIKeyCommand keyCommandWithInput:@"\r"
                         modifierFlags:0
                                action:@selector(nextPage)],
+    [UIKeyCommand keyCommandWithInput:UIKeyInputLeftArrow
+                        modifierFlags:0
+                               action:@selector(prevPage)
+                 discoverabilityTitle:@"Previous"],
+    [UIKeyCommand keyCommandWithInput:@" "
+                        modifierFlags:0
+                               action:@selector(playAudio)
+                 discoverabilityTitle:@"Play reading"]
+
   ];
 }
 
@@ -227,6 +236,13 @@
   if (_pageControl.currentPageIndex > 0 && _pageControl.currentPageIndex != quizPageIndex) {
     _pageControl.currentPageIndex -= 1;
     [self pageChanged];
+  }
+}
+
+- (void)playAudio {
+  UIViewController *vc = _pageController.viewControllers[0];
+  if ([vc isKindOfClass:SubjectDetailsViewController.class]) {
+    [(SubjectDetailsViewController *)vc playAudio];
   }
 }
 
