@@ -27,6 +27,7 @@
 @interface LessonsViewController () <ReviewViewControllerDelegate>
 @property(weak, nonatomic) IBOutlet LessonsPageControl *pageControl;
 @property(weak, nonatomic) IBOutlet UIButton *backButton;
+@property(nonatomic, readonly) NSArray<UIKeyCommand *> *keyCommands;
 @end
 
 @implementation LessonsViewController {
@@ -81,18 +82,6 @@
                             direction:UIPageViewControllerNavigationDirectionForward
                              animated:NO
                            completion:nil];
-
-  UIKeyCommand *nextCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputRightArrow
-                                                  modifierFlags:0
-                                                         action:@selector(nextPage)
-                                           discoverabilityTitle:@"Next"];
-  [self addKeyCommand:nextCommand];
-
-  UIKeyCommand *prevCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputLeftArrow
-                                                  modifierFlags:0
-                                                         action:@selector(prevPage)
-                                           discoverabilityTitle:@"Previous"];
-  [self addKeyCommand:prevCommand];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -211,6 +200,18 @@
 
 - (BOOL)canBecomeFirstResponder {
   return true;
+}
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
+  return @[
+    [UIKeyCommand keyCommandWithInput:UIKeyInputRightArrow
+                        modifierFlags:0
+                               action:@selector(nextPage)
+                 discoverabilityTitle:@"Next"],
+    [UIKeyCommand keyCommandWithInput:@"\r"
+                        modifierFlags:0
+                               action:@selector(nextPage)],
+  ];
 }
 
 - (void)nextPage {
