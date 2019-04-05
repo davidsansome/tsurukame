@@ -218,11 +218,6 @@ class AnimationContext {
 
     _animationDuration = kDefaultAnimationDuration;
     _animationCurve = kDefaultAnimationCurve;
-
-    UIKeyCommand *enterCommand = [UIKeyCommand keyCommandWithInput:@"\r"
-                                                     modifierFlags:0
-                                                            action:@selector(enterKeyPressed)];
-    [self addKeyCommand:enterCommand];
   }
   return self;
 }
@@ -280,10 +275,6 @@ class AnimationContext {
 
 - (int)activeQueueLength {
   return (int)_activeQueue.count;
-}
-
-- (BOOL)canBecomeFirstResponder {
-  return true;
 }
 
 #pragma mark - UIViewController
@@ -1052,6 +1043,27 @@ class AnimationContext {
 
 - (void)didTapSubject:(TKMSubject *)subject {
   [self performSegueWithIdentifier:@"subjectDetails" sender:subject];
+}
+
+#pragma mark - Keyboard navigation
+
+- (BOOL)canBecomeFirstResponder {
+  return true;
+}
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
+  return @[
+    [UIKeyCommand keyCommandWithInput:@"\r"
+                       modifierFlags:0
+                              action:@selector(enterKeyPressed)],
+    [UIKeyCommand keyCommandWithInput:@" "
+                       modifierFlags:0
+                              action:@selector(playAudio)]
+  ];
+}
+
+- (void)playAudio {
+  [_subjectDetailsView playAudio];
 }
 
 @end
