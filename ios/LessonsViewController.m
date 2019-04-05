@@ -203,7 +203,16 @@
 }
 
 - (NSArray<UIKeyCommand *> *)keyCommands {
+  // No keyboard nav on the quiz page, answer the quiz
+  if (_pageControl.currentPageIndex == _items.count) {
+    return @[];
+  }
+
   return @[
+    [UIKeyCommand keyCommandWithInput:UIKeyInputLeftArrow
+                        modifierFlags:0
+                               action:@selector(prevPage)
+                 discoverabilityTitle:@"Previous"],
     [UIKeyCommand keyCommandWithInput:UIKeyInputRightArrow
                         modifierFlags:0
                                action:@selector(nextPage)
@@ -211,10 +220,6 @@
     [UIKeyCommand keyCommandWithInput:@"\r"
                         modifierFlags:0
                                action:@selector(nextPage)],
-    [UIKeyCommand keyCommandWithInput:UIKeyInputLeftArrow
-                        modifierFlags:0
-                               action:@selector(prevPage)
-                 discoverabilityTitle:@"Previous"],
     [UIKeyCommand keyCommandWithInput:@" "
                         modifierFlags:0
                                action:@selector(playAudio)
@@ -231,9 +236,7 @@
 }
 
 - (void)prevPage {
-  NSUInteger quizPageIndex = [_items count];
-  // Allow paging backwards unless we are already doing the quiz, which is the last page
-  if (_pageControl.currentPageIndex > 0 && _pageControl.currentPageIndex != quizPageIndex) {
+  if (_pageControl.currentPageIndex > 0) {
     _pageControl.currentPageIndex -= 1;
     [self pageChanged];
   }
