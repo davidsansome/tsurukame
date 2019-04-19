@@ -29,11 +29,17 @@
   return TKMReadingModelCell.class;
 }
 
+- (void)playAudio {
+  if (_audio.currentState == TKMAudioPlaying) {
+    [_audio stopPlayback];
+  } else {
+    [_audio playAudioForSubjectID:_audioSubjectID delegate:_audioDelegate];
+  }
+}
+
 @end
 
-@implementation TKMReadingModelCell {
-  UIButton *_audioButton;
-}
+@implementation TKMReadingModelCell
 
 - (void)updateWithItem:(TKMReadingModelItem *)item {
   [super updateWithItem:item];
@@ -41,26 +47,18 @@
   if (item.audioSubjectID) {
     if (!self.rightButton) {
       self.rightButton = [[UIButton alloc] init];
-      [self.rightButton addTarget:self
-                           action:@selector(didTapButton)
+      [self.rightButton addTarget:item
+                           action:@selector(playAudio)
                  forControlEvents:UIControlEventTouchUpInside];
       [self addSubview:self.rightButton];
     }
     [self.rightButton setImage:[UIImage imageNamed:@"baseline_volume_up_black_24pt"]
                       forState:UIControlStateNormal];
+    item.audioDelegate = self;
   } else {
     [self.rightButton removeFromSuperview];
     self.rightButton = nil;
-  }
-}
-
-- (void)didTapButton {
-  TKMReadingModelItem *item = (TKMReadingModelItem *)self.item;
-
-  if (item.audio.currentState == TKMAudioPlaying) {
-    [item.audio stopPlayback];
-  } else {
-    [item.audio playAudioForSubjectID:item.audioSubjectID delegate:self];
+    item.audioDelegate = nil;
   }
 }
 

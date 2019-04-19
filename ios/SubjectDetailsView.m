@@ -116,6 +116,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   __weak id<TKMSubjectDelegate> _subjectDelegate;
 
   TKMTableModel *_tableModel;
+  TKMReadingModelItem *_readingItem;
 
   __weak TKMSubjectChip *_lastSubjectChipTapped;
 }
@@ -174,6 +175,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [item setAudio:_services.audio subjectID:subject.id_p];
   }
 
+  _readingItem = item;
   [model addSection:@"Reading"];
   [model addItem:item];
 }
@@ -289,6 +291,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 
 - (void)updateWithSubject:(TKMSubject *)subject studyMaterials:(TKMStudyMaterials *)studyMaterials {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self];
+  _readingItem = nil;
 
   if (subject.hasRadical) {
     [self addMeanings:subject studyMaterials:studyMaterials toModel:model];
@@ -348,6 +351,10 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 
 - (void)deselectLastSubjectChipTapped {
   _lastSubjectChipTapped.backgroundColor = nil;
+}
+
+- (void)playAudio {
+  [_readingItem playAudio];
 }
 
 #pragma mark - TKMSubjectChipDelegate

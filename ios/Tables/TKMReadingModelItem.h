@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "TKMAttributedModelItem.h"
+#import "TKMAudio.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,9 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TKMReadingModelItem : TKMAttributedModelItem
 
 - (void)setAudio:(TKMAudio *)audio subjectID:(int)subjectID;
+- (void)playAudio;
 
 @property(nonatomic, readonly) TKMAudio *audio;
 @property(nonatomic, readonly) int audioSubjectID;
+@property(nonatomic, weak) id<TKMAudioDelegate> audioDelegate;
 
 @end
 

@@ -27,6 +27,7 @@
 @interface LessonsViewController () <ReviewViewControllerDelegate>
 @property(weak, nonatomic) IBOutlet LessonsPageControl *pageControl;
 @property(weak, nonatomic) IBOutlet UIButton *backButton;
+@property(nonatomic, readonly) NSArray<UIKeyCommand *> *keyCommands;
 @end
 
 @implementation LessonsViewController {
@@ -81,18 +82,6 @@
                             direction:UIPageViewControllerNavigationDirectionForward
                              animated:NO
                            completion:nil];
-
-  UIKeyCommand *nextCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputRightArrow
-                                                  modifierFlags:0
-                                                         action:@selector(nextPage)
-                                           discoverabilityTitle:@"Next"];
-  [self addKeyCommand:nextCommand];
-
-  UIKeyCommand *prevCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputLeftArrow
-                                                  modifierFlags:0
-                                                         action:@selector(prevPage)
-                                           discoverabilityTitle:@"Previous"];
-  [self addKeyCommand:prevCommand];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -213,6 +202,32 @@
   return true;
 }
 
+- (NSArray<UIKeyCommand *> *)keyCommands {
+  // No keyboard nav on the quiz page, answer the quiz
+  if (_pageControl.currentPageIndex == _items.count) {
+    return @[];
+  }
+
+  return @[
+    [UIKeyCommand keyCommandWithInput:UIKeyInputLeftArrow
+                        modifierFlags:0
+                               action:@selector(prevPage)
+                 discoverabilityTitle:@"Previous"],
+    [UIKeyCommand keyCommandWithInput:UIKeyInputRightArrow
+                        modifierFlags:0
+                               action:@selector(nextPage)
+                 discoverabilityTitle:@"Next"],
+    [UIKeyCommand keyCommandWithInput:@"\r"
+                        modifierFlags:0
+                               action:@selector(nextPage)],
+    [UIKeyCommand keyCommandWithInput:@" "
+                        modifierFlags:0
+                               action:@selector(playAudio)
+                 discoverabilityTitle:@"Play reading"]
+
+  ];
+}
+
 - (void)nextPage {
   if (_pageControl.currentPageIndex < [_items count]) {
     _pageControl.currentPageIndex += 1;
@@ -221,11 +236,16 @@
 }
 
 - (void)prevPage {
-  NSUInteger quizPageIndex = [_items count];
-  // Allow paging backwards unless we are already doing the quiz, which is the last page
-  if (_pageControl.currentPageIndex > 0 && _pageControl.currentPageIndex != quizPageIndex) {
+  if (_pageControl.currentPageIndex > 0) {
     _pageControl.currentPageIndex -= 1;
     [self pageChanged];
+  }
+}
+
+- (void)playAudio {
+  UIViewController *vc = _pageController.viewControllers[0];
+  if ([vc isKindOfClass:SubjectDetailsViewController.class]) {
+    [(SubjectDetailsViewController *)vc playAudio];
   }
 }
 

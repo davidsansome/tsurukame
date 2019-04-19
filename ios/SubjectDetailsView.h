@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
           subjectDelegate:(id<TKMSubjectDelegate>)subjectDelegate;
 
 - (void)updateWithSubject:(TKMSubject *)subject studyMaterials:(TKMStudyMaterials *)studyMaterials;
-
+- (void)playAudio;
 - (void)deselectLastSubjectChipTapped;
 
 @end
