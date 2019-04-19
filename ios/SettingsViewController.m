@@ -67,6 +67,21 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                     target:self
                                                     action:@selector(badgingSwitchChanged:)]];
 
+  [model addSection:@"Lessons"];
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                     title:@"Prioritize current level"
+                                                  subtitle:@"Teach items from the current level first"
+                                                        on:UserDefaults.prioritizeCurrentLevel
+                                                    target:self
+                                                    action:@selector(prioritizeCurrentLevelChanged:)]];
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                 title:@"Lesson order"
+                                              subtitle:self.lessonOrderValueText
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(didTapLessonOrder:)]];
+
   [model addSection:@"Reviews"];
   [model
       addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
@@ -178,6 +193,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   [model reloadTable];
 }
 
+- (NSString *)lessonOrderValueText {
+  return [UserDefaults.lessonOrder componentsJoinedByString:@", "];
+}
+
 - (NSString *)reviewOrderValueText {
   switch (UserDefaults.reviewOrder) {
     case ReviewOrder_Random:
@@ -215,6 +234,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)animatePlusOneSwitchChanged:(UISwitch *)switchView {
   UserDefaults.animatePlusOne = switchView.on;
+}
+
+- (void)prioritizeCurrentLevelChanged:(UISwitch *)switchView {
+  UserDefaults.prioritizeCurrentLevel = switchView.on;
 }
 
 - (void)groupMeaningReadingSwitchChanged:(UISwitch *)switchView {
@@ -317,6 +340,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
     }
     _notificationHandler(granted);
   }];
+}
+
+- (void)didTapLessonOrder:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"lessonOrder" sender:self];
 }
 
 - (void)didTapReviewOrder:(TKMBasicModelItem *)item {

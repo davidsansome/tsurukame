@@ -32,6 +32,8 @@ typedef NS_ENUM(NSInteger, TKMTaskType) {
 + (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<TKMAssignment *> *)assignments
                                           dataLoader:(DataLoader *)dataLoader;
 
+- (NSUInteger)getSubjectTypeIndex:(TKMSubject_Type)type;
+
 - (instancetype)initFromAssignment:(TKMAssignment *)assignment NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 

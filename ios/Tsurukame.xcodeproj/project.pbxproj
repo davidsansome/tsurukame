@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3DA8BAFC224C9580009E925B /* LessonOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */; };
 		630ADB6921F816E400BC9801 /* MMDrawerBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ADB6021F816E400BC9801 /* MMDrawerBarButtonItem.m */; };
 		630ADB6A21F816E400BC9801 /* UIViewController+MMDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ADB6121F816E400BC9801 /* UIViewController+MMDrawerController.m */; };
 		630ADB6B21F816E400BC9801 /* MMDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ADB6221F816E400BC9801 /* MMDrawerController.m */; };
@@ -287,6 +288,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3DA8BAFA224C957F009E925B /* LessonOrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LessonOrderViewController.h; sourceTree = "<group>"; };
+		3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LessonOrderViewController.m; sourceTree = "<group>"; };
 		630ADB6021F816E400BC9801 /* MMDrawerBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDrawerBarButtonItem.m; sourceTree = "<group>"; };
 		630ADB6121F816E400BC9801 /* UIViewController+MMDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+MMDrawerController.m"; sourceTree = "<group>"; };
 		630ADB6221F816E400BC9801 /* MMDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDrawerController.m; sourceTree = "<group>"; };
@@ -1007,6 +1010,8 @@
 				63C42A3621B6A290008CA938 /* FontScreenshotterUITests.xctest */,
 				63CAAB0F1FD7FAC500E09DA1 /* Frameworks */,
 				63EEFEC21FC45CB10070C05F /* Info.plist */,
+				3DA8BAFA224C957F009E925B /* LessonOrderViewController.h */,
+				3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */,
 				63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */,
 				637C12DC203D779D009E92DB /* LessonsPageControl.h */,
 				637C12DD203D779D009E92DB /* LessonsPageControl.m */,
@@ -1743,6 +1748,7 @@
 				633632EC201F3011006D582B /* LoginViewController.m in Sources */,
 				63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */,
 				630ADB6921F816E400BC9801 /* MMDrawerBarButtonItem.m in Sources */,
+				3DA8BAFC224C9580009E925B /* LessonOrderViewController.m in Sources */,
 				630ADD8C21FEB34C00BC9801 /* BarLineScatterCandleBubbleChartData.swift in Sources */,
 				63453E4920EF8C0500F20404 /* HNKCache.m in Sources */,
 				63CAAAEC1FC6E1D400E09DA1 /* GPBUnknownField.m in Sources */,
