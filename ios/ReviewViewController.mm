@@ -218,11 +218,6 @@ class AnimationContext {
 
     _animationDuration = kDefaultAnimationDuration;
     _animationCurve = kDefaultAnimationCurve;
-
-    UIKeyCommand *enterCommand = [UIKeyCommand keyCommandWithInput:@"\r"
-                                                     modifierFlags:0
-                                                            action:@selector(enterKeyPressed)];
-    [self addKeyCommand:enterCommand];
   }
   return self;
 }
@@ -280,10 +275,6 @@ class AnimationContext {
 
 - (int)activeQueueLength {
   return (int)_activeQueue.count;
-}
-
-- (BOOL)canBecomeFirstResponder {
-  return true;
 }
 
 #pragma mark - UIViewController
@@ -1010,7 +1001,7 @@ class AnimationContext {
                                       handler:^(UIAlertAction *_Nonnull action) {
                                         ReviewViewController *unsafeSelf = weakSelf;
                                         if (unsafeSelf) {
-                                          [unsafeSelf markAnswer:TKMOverrideAnswerCorrect];
+                                          [unsafeSelf markCorrect];
                                         }
                                       }]];
   [c addAction:[UIAlertAction actionWithTitle:@"Ask again later"
@@ -1018,7 +1009,7 @@ class AnimationContext {
                                       handler:^(UIAlertAction *_Nonnull action) {
                                         ReviewViewController *unsafeSelf = weakSelf;
                                         if (unsafeSelf) {
-                                          [unsafeSelf markAnswer:TKMAskAgainLater];
+                                          [unsafeSelf askAgain];
                                         }
                                       }]];
   if (_activeTaskType == kTKMTaskTypeMeaning) {
@@ -1028,7 +1019,6 @@ class AnimationContext {
                                           ReviewViewController *unsafeSelf = weakSelf;
                                           if (unsafeSelf) {
                                             [unsafeSelf addSynonym];
-                                            [unsafeSelf markAnswer:TKMOverrideAnswerCorrect];
                                           }
                                         }]];
   }
@@ -1036,6 +1026,14 @@ class AnimationContext {
                                         style:UIAlertActionStyleCancel
                                       handler:nil]];
   [self presentViewController:c animated:YES completion:nil];
+}
+
+- (void)markCorrect {
+  [self markAnswer:TKMOverrideAnswerCorrect];
+}
+
+- (void)askAgain {
+  [self markAnswer:TKMAskAgainLater];
 }
 
 - (void)addSynonym {
@@ -1046,12 +1044,52 @@ class AnimationContext {
   }
   [_activeStudyMaterials.meaningSynonymsArray addObject:_answerField.text];
   [_services.localCachingClient updateStudyMaterial:_activeStudyMaterials];
+  [self markAnswer:TKMOverrideAnswerCorrect];
 }
 
 #pragma mark - TKMSubjectDelegate
 
 - (void)didTapSubject:(TKMSubject *)subject {
   [self performSegueWithIdentifier:@"subjectDetails" sender:subject];
+}
+
+#pragma mark - Keyboard navigation
+
+- (BOOL)canBecomeFirstResponder {
+  return true;
+}
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
+  if (_subjectDetailsView.hidden) { return @[]; }
+
+  return @[
+    [UIKeyCommand keyCommandWithInput:@"\r"
+                        modifierFlags:0
+                               action:@selector(enterKeyPressed)
+                 discoverabilityTitle:@"Continue"],
+    [UIKeyCommand keyCommandWithInput:@" "
+                        modifierFlags:0
+                               action:@selector(playAudio)
+                 discoverabilityTitle:@"Play reading"],
+    [UIKeyCommand keyCommandWithInput:@"a"
+                        modifierFlags:0
+                               action:@selector(askAgain)
+                 discoverabilityTitle:@"Ask again later"],
+    [UIKeyCommand keyCommandWithInput:@"c"
+                        modifierFlags:0
+                               action:@selector(markCorrect)
+                 discoverabilityTitle:@"Mark correct"],
+    [UIKeyCommand keyCommandWithInput:@"s"
+                        modifierFlags:0
+                               action:@selector(addSynonym)
+                 discoverabilityTitle:@"Add as synonym"]
+  ];
+}
+
+- (void)playAudio {
+  if (!_subjectDetailsView.hidden) {
+    [_subjectDetailsView playAudio];
+  }
 }
 
 @end

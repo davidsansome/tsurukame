@@ -123,7 +123,8 @@
   return @[
     [UIKeyCommand keyCommandWithInput:@" "
                         modifierFlags:0
-                               action:@selector(playAudio)]
+                               action:@selector(playAudio)
+                 discoverabilityTitle:@"Play reading"]
   ];
 }
 
