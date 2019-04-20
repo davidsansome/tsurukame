@@ -50,12 +50,10 @@
 }
 
 - (NSUInteger)getSubjectTypeIndex:(TKMSubject_Type)type {
-  if (type == TKMSubject_Type_Radical) {
-    return [UserDefaults.lessonOrder indexOfObject:@"Radicals"];
-  } else if (type == TKMSubject_Type_Kanji) {
-    return [UserDefaults.lessonOrder indexOfObject:@"Kanji"];
-  } else if (type == TKMSubject_Type_Vocabulary) {
-    return [UserDefaults.lessonOrder indexOfObject:@"Vocabulary"];
+  for (int i = 0; i < UserDefaults.lessonOrder.count; i++) {
+    if ([UserDefaults.lessonOrder objectAtIndex:i].intValue == type) {
+      return i;
+    }
   }
   return 0;
 }
@@ -83,12 +81,6 @@
     if (selfIndex < otherIndex) {
       return NSOrderedAscending;
     } else if (selfIndex > otherIndex) {
-      return NSOrderedDescending;
-    }
-  } else {
-    if (self.assignment.subjectType < other.assignment.subjectType) {
-      return NSOrderedAscending;
-    } else if (self.assignment.subjectType > other.assignment.subjectType) {
       return NSOrderedDescending;
     }
   }

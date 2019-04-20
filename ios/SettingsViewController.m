@@ -20,6 +20,7 @@
 #import "Tables/TKMTableModel.h"
 #import "TKMFontsViewController.h"
 #import "UserDefaults.h"
+#import "proto/Wanikani+Convenience.h"
 
 #import <UserNotifications/UserNotifications.h>
 
@@ -194,7 +195,12 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (NSString *)lessonOrderValueText {
-  return [UserDefaults.lessonOrder componentsJoinedByString:@", "];
+  NSMutableArray<NSString *> *lessonOrderText = [NSMutableArray array];
+  for (int i = 0; i < UserDefaults.lessonOrder.count; i++) {
+    TKMSubject_Type type = [UserDefaults.lessonOrder objectAtIndex:i].intValue;
+    [lessonOrderText addObject:TKMSubjectTypeName(type)];
+  }
+  return [lessonOrderText componentsJoinedByString:@", "];
 }
 
 - (NSString *)reviewOrderValueText {

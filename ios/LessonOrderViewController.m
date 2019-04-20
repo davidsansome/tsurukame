@@ -14,6 +14,22 @@
 
 #import "LessonOrderViewController.h"
 #import "UserDefaults.h"
+#import "proto/Wanikani+Convenience.h"
+
+@interface TKMLessonOrderCell : UITableViewCell
+
+@property (nonatomic) TKMSubject_Type subjectType;
+
+@end
+
+@implementation TKMLessonOrderCell
+
+- (void)setSubjectType:(TKMSubject_Type)subjectType {
+  _subjectType = subjectType;
+  self.textLabel.text = TKMSubjectTypeName(subjectType);
+}
+
+@end
 
 @interface LessonOrderViewController ()
 @end
@@ -22,10 +38,6 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  if (![UserDefaults.lessonOrder count]) {
-    UserDefaults.lessonOrder = [[NSMutableArray alloc] initWithObjects:@"Radicals",@"Kanji",@"Vocabulary",nil];
-  }
-
   self.tableView.editing = YES;
 }
 
@@ -34,11 +46,11 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-  UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cellIdentifier"];
-  if(cell == nil) {
-    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIdentifier"];  
+  TKMLessonOrderCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"];
+  if (cell == nil) {
+    cell = [[TKMLessonOrderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
   }
-  cell.textLabel.text = [UserDefaults.lessonOrder objectAtIndex:indexPath.row];
+  cell.subjectType = [UserDefaults.lessonOrder objectAtIndex:indexPath.row].intValue;
   return cell;
 }
 
@@ -51,11 +63,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-  NSMutableArray *copy = [[NSMutableArray alloc] initWithArray:UserDefaults.lessonOrder copyItems:YES];
-  NSString *item = [copy objectAtIndex:sourceIndexPath.row];
-  [copy removeObject:item];
-  [copy insertObject:item atIndex:destinationIndexPath.row];
-  UserDefaults.lessonOrder = copy;
+  TKMLessonOrderCell *cell = [tableView cellForRowAtIndexPath:sourceIndexPath];
+  
+  NSMutableArray<NSNumber *> *lessonOrder = [UserDefaults.lessonOrder mutableCopy];
+  [lessonOrder removeObjectAtIndex:sourceIndexPath.row];
+  [lessonOrder insertObject:@(cell.subjectType) atIndex:destinationIndexPath.row];
+  UserDefaults.lessonOrder = lessonOrder;
 }
 
 @end

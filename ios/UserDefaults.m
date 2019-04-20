@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "UserDefaults.h"
+#import "proto/Wanikani.pbobjc.h"
 
 #define DEFINE_OBJECT(type, name, setterName)                                       \
   +(type *)name {                                                                   \
@@ -56,6 +57,25 @@
 
 @implementation UserDefaults
 
++ (void)initializeDefaultsOnStartup {
+  // lessonOrder was briefly an array of strings.  Detect this and reset it to
+  // an empty array.
+  // TODO: delete this after 1.11.
+  if (UserDefaults.lessonOrder.count &&
+      [UserDefaults.lessonOrder.firstObject isKindOfClass:NSString.class]) {
+    UserDefaults.lessonOrder = [NSArray array];
+  }
+  
+  // Set the default lesson order.
+  if (![UserDefaults.lessonOrder count]) {
+    NSMutableArray<NSNumber *> *lessonOrder = [NSMutableArray array];
+    [lessonOrder addObject:@(TKMSubject_Type_Radical)];
+    [lessonOrder addObject:@(TKMSubject_Type_Kanji)];
+    [lessonOrder addObject:@(TKMSubject_Type_Vocabulary)];
+    UserDefaults.lessonOrder = lessonOrder;
+  }
+}
+
 DEFINE_OBJECT(NSString, userCookie, setUserCookie);
 DEFINE_OBJECT(NSString, userEmailAddress, setUserEmailAddress);
 DEFINE_OBJECT(NSString, userApiToken, setUserApiToken);
@@ -65,7 +85,7 @@ DEFINE_BOOL(animateLevelUpPopup, setAnimateLevelUpPopup, YES);
 DEFINE_BOOL(animatePlusOne, setAnimatePlusOne, YES);
 
 DEFINE_BOOL(prioritizeCurrentLevel, setPrioritizeCurrentLevel, NO);
-DEFINE_OBJECT(NSMutableArray<NSString *>, lessonOrder, setLessonOrder);
+DEFINE_OBJECT(NSArray<NSNumber *>, lessonOrder, setLessonOrder);
 
 DEFINE_ENUM(ReviewOrder, reviewOrder, setReviewOrder, ReviewOrder_Random);
 DEFINE_OBJECT(NSSet<NSString *>, selectedFonts, setSelectedFonts);

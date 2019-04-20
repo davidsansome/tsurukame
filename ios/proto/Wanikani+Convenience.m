@@ -17,6 +17,17 @@
 
 #import <UIKit/UIKit.h>
 
+NSString *TKMSubjectTypeName(TKMSubject_Type subjectType) {
+  switch (subjectType) {
+    case TKMSubject_Type_Radical:
+      return @"Radical";
+    case TKMSubject_Type_Kanji:
+      return @"Kanji";
+    case TKMSubject_Type_Vocabulary:
+      return @"Vocabulary";
+  }
+}
+
 NSString *TKMSRSStageName(int srsStage) {
   switch (srsStage) {
     case 1:

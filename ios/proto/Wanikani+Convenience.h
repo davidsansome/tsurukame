@@ -16,6 +16,7 @@
 
 #import "Wanikani.pbobjc.h"
 
+extern NSString *TKMSubjectTypeName(TKMSubject_Type subjectType);
 extern NSString *TKMSRSStageName(int srsStage);
 extern NSString *TKMDetailedSRSStageName(int srsStage);
 

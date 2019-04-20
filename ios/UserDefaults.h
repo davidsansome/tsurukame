@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "TKMFontLoader.h"
+#import "third_party/protobuf/GPBArray.h"
 
 #import <Foundation/Foundation.h>
 
@@ -30,6 +31,8 @@ typedef enum : NSUInteger {
 
 @interface UserDefaults : NSObject
 
++ (void)initializeDefaultsOnStartup;
+
 // User credentials.
 DECLARE_OBJECT(NSString, userCookie);
 DECLARE_OBJECT(NSString, userEmailAddress);
@@ -42,7 +45,7 @@ DECLARE_BOOL(animatePlusOne);
 
 // Lesson settings.
 DECLARE_BOOL(prioritizeCurrentLevel);
-DECLARE_OBJECT(NSMutableArray<NSString *>, lessonOrder);
+DECLARE_OBJECT(NSArray<NSNumber *>, lessonOrder);
 
 // Review settings.
 DECLARE_ENUM(ReviewOrder, reviewOrder);
