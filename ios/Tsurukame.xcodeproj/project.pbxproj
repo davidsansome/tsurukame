@@ -195,6 +195,7 @@
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */; };
 		63B1DE411FE7D81600FAB9C2 /* SubjectDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */; };
+		63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */; };
 		63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
 		63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */; };
 		63BFA789218DB6840058E885 /* TKMReadingModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA788218DB6840058E885 /* TKMReadingModelItem.m */; };
@@ -525,6 +526,8 @@
 		63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewSummaryViewController.m; sourceTree = "<group>"; };
 		63B1DE3F1FE7D81600FAB9C2 /* SubjectDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectDetailsViewController.h; sourceTree = "<group>"; };
 		63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectDetailsViewController.m; sourceTree = "<group>"; };
+		63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMLessonBatchSizeViewController.h; sourceTree = "<group>"; };
+		63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMLessonBatchSizeViewController.m; sourceTree = "<group>"; };
 		63BDA9A5200E04E500D75DA2 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		63BDA9A6200E04E500D75DA2 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SuccessAnimation.h; sourceTree = "<group>"; };
@@ -1048,6 +1051,8 @@
 				633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */,
 				63EEFECA1FC45D800070C05F /* ReviewViewController.h */,
 				63EEFEC71FC45D800070C05F /* ReviewViewController.mm */,
+				63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */,
+				63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */,
 				63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */,
 				63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */,
 				6321E60F2068F3A9003460BC /* SettingsViewController.h */,
@@ -1569,6 +1574,7 @@
 				630ADD8721FEB34B00BC9801 /* CombinedChartData.swift in Sources */,
 				630ADD4F21FEB34B00BC9801 /* ChartHighlighter.swift in Sources */,
 				630ADD3221FEB34B00BC9801 /* ScatterChartRenderer.swift in Sources */,
+				63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */,
 				630ADDAC21FEB34C00BC9801 /* LineChartDataProvider.swift in Sources */,
 				63453E4C20EF8C0500F20404 /* HNKSimpleFetcher.m in Sources */,
 				630ADD7821FEB34B00BC9801 /* MarkerView.swift in Sources */,

@@ -53,6 +53,18 @@
     [[NSUserDefaults standardUserDefaults] setBool:value forKey:@ #name]; \
   }
 
+#define DEFINE_INT(name, setterName, defaultValue)                           \
+  +(int)name {                                                               \
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];              \
+    if ([ud objectForKey:@ #name] == nil) {                                  \
+      return defaultValue;                                                   \
+    }                                                                        \
+    return [ud integerForKey:@ #name];                                       \
+  }                                                                          \
+  +(void)setterName : (int)value {                                           \
+    [[NSUserDefaults standardUserDefaults] setInteger:value forKey:@ #name]; \
+  }
+
 @class TKMFont;
 
 @implementation UserDefaults
@@ -86,6 +98,7 @@ DEFINE_BOOL(animatePlusOne, setAnimatePlusOne, YES);
 
 DEFINE_BOOL(prioritizeCurrentLevel, setPrioritizeCurrentLevel, NO);
 DEFINE_OBJECT(NSArray<NSNumber *>, lessonOrder, setLessonOrder);
+DEFINE_INT(lessonBatchSize, setLessonBatchSize, 5);
 
 DEFINE_ENUM(ReviewOrder, reviewOrder, setReviewOrder, ReviewOrder_Random);
 DEFINE_OBJECT(NSSet<NSString *>, selectedFonts, setSelectedFonts);

@@ -36,8 +36,6 @@
 @class CombinedChartView;
 @class PieChartView;
 
-static const NSInteger kItemsPerLesson = 5;
-
 static const char *kDefaultProfileImageURL =
     "https://cdn.wanikani.com/default-avatar-300x300-20121121.png";
 static const int kProfileImageSize = 80;
@@ -272,8 +270,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     }
 
     items = [items sortedArrayUsingSelector:@selector(compareForLessons:)];
-    if (items.count > kItemsPerLesson) {
-      items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
+    if (items.count > UserDefaults.lessonBatchSize) {
+      items = [items subarrayWithRange:NSMakeRange(0, UserDefaults.lessonBatchSize)];
     }
 
     LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;

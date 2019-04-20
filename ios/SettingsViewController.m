@@ -83,6 +83,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                          accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                 target:self
                                                 action:@selector(didTapLessonOrder:)]];
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                 title:@"Lesson batch size"
+                                              subtitle:self.lessonBatchSizeText
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(didTapLessonBatchSize:)]];
 
   [model addSection:@"Reviews"];
   [model
@@ -204,6 +211,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
     [lessonOrderText addObject:TKMSubjectTypeName(type)];
   }
   return [lessonOrderText componentsJoinedByString:@", "];
+}
+
+- (NSString *)lessonBatchSizeText {
+  return [NSString stringWithFormat:@"%d", UserDefaults.lessonBatchSize];
 }
 
 - (NSString *)reviewOrderValueText {
@@ -359,6 +370,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)didTapLessonOrder:(TKMBasicModelItem *)item {
   [self performSegueWithIdentifier:@"lessonOrder" sender:self];
+}
+
+- (void)didTapLessonBatchSize:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"lessonBatchSize" sender:self];
 }
 
 - (void)didTapReviewOrder:(TKMBasicModelItem *)item {

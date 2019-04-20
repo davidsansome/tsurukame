@@ -177,8 +177,7 @@
       NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];
       UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
       if (UserDefaults.notificationsAllReviews) {
-        content.body = [NSString stringWithFormat:@"%d review%@ available",
-                                                  cumulativeReviews,
+        content.body = [NSString stringWithFormat:@"%d review%@ available", cumulativeReviews,
                                                   cumulativeReviews == 1 ? @"" : @"s"];
       }
       if (UserDefaults.notificationsBadging) {

@@ -73,7 +73,7 @@ BOOL TKMFontCanRenderText(NSString *fontName, NSString *text) {
       CGPathRelease(path);
     }
   }
-  
+
   CFRelease(fontRef);
 
   return canRender;

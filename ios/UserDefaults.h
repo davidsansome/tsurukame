@@ -23,6 +23,8 @@
 
 #define DECLARE_BOOL(name) @property(class, nonatomic) BOOL name;
 
+#define DECLARE_INT(name) @property(class, nonatomic) int name;
+
 typedef enum : NSUInteger {
   ReviewOrder_Random = 1,
   ReviewOrder_BySRSStage = 2,
@@ -47,6 +49,7 @@ DECLARE_BOOL(animatePlusOne);
 // Lesson settings.
 DECLARE_BOOL(prioritizeCurrentLevel);
 DECLARE_OBJECT(NSArray<NSNumber *>, lessonOrder);
+DECLARE_INT(lessonBatchSize);
 
 // Review settings.
 DECLARE_ENUM(ReviewOrder, reviewOrder);
