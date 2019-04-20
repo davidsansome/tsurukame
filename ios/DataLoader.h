@@ -48,7 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** Returns all subjects in levels granted by the user's subscription.  This is quite slow. */
 - (NSArray<TKMSubject *> *)loadAllSubjects;
 
-/** Returns the IDs of subjects in the given level, or nil if higher than maxLevelGrantedBySubscription. */
+/** Returns the IDs of subjects in the given level, or nil if higher than
+ * maxLevelGrantedBySubscription. */
 - (nullable TKMSubjectsByLevel *)subjectsByLevel:(int)level;
 
 @end

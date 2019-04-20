@@ -30,8 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // A download finished.  The subclass must move the file at the URL to the destination, and then
 // call either reportErrorOnMainThread or markDownloadComplete.
-- (void)didFinishDownloadFor:(NSString *)filename
-                       atURL:(NSURL *)location;
+- (void)didFinishDownloadFor:(NSString *)filename atURL:(NSURL *)location;
 
 // Toggle a downloaded item's selected state to the given state.
 - (void)toggleItem:(NSString *)filename selected:(BOOL)selected;

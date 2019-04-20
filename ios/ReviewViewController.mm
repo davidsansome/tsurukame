@@ -154,7 +154,7 @@ class AnimationContext {
   BOOL _showMenuButton;
   BOOL _showSubjectHistory;
   __weak id<ReviewViewControllerDelegate> _delegate;
-  
+
   NSMutableArray<ReviewItem *> *_activeQueue;
   NSMutableArray<ReviewItem *> *_reviewQueue;
   NSMutableArray<ReviewItem *> *_completedReviews;
@@ -168,7 +168,7 @@ class AnimationContext {
 
   int _tasksAnsweredCorrectly;
   int _tasksAnswered;
-  
+
   BOOL _lastMarkAnswerWasFirstTime;
 
   CAGradientLayer *_previousSubjectGradient;
@@ -292,9 +292,9 @@ class AnimationContext {
   [super viewDidLoad];
   TKMAddShadowToView(_questionLabel, 1, 0.2, 4);
   TKMAddShadowToView(_previousSubjectButton, 0, 0.7, 4);
-  
+
   _wrapUpIcon.image = [[UIImage imageNamed:@"baseline_access_time_black_24pt"]
-                       imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+      imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 
   _previousSubjectGradient = [CAGradientLayer layer];
   _previousSubjectGradient.cornerRadius = 4.f;
@@ -381,7 +381,7 @@ class AnimationContext {
                                             toView:self.view.window];
   CGFloat windowBottom = CGRectGetMaxY(self.view.window.bounds);
   CGFloat distanceFromViewBottomToWindowBottom = windowBottom - viewBottomLeft.y;
-  
+
   _answerFieldToBottomConstraint.constant = height - distanceFromViewBottomToWindowBottom;
 
   [UIView beginAnimations:nil context:nil];
@@ -583,12 +583,12 @@ class AnimationContext {
   for (NSString *filename in UserDefaults.selectedFonts.allObjects) {
     [selectedFontNames addObject:[_services.fontLoader fontByName:filename].fontName];
   }
-  
+
   // Pick a random one.
   while (selectedFontNames.count) {
     int fontIndex = arc4random_uniform((uint32_t)selectedFontNames.count);
     NSString *fontName = selectedFontNames[fontIndex];
-    
+
     // If the font can't render the text, try another one.
     if (!TKMFontCanRenderText(fontName, text)) {
       [selectedFontNames removeObjectAtIndex:fontIndex];
@@ -596,7 +596,7 @@ class AnimationContext {
     }
     return fontName;
   }
-  
+
   return _normalFontName;
 }
 
@@ -703,9 +703,9 @@ class AnimationContext {
   label.center = oldLabelCenter;
 
   CGFloat newButtonWidth =
-    kPreviousSubjectButtonPadding * 2 + labelBounds.size.width * kPreviousSubjectScale;
+      kPreviousSubjectButtonPadding * 2 + labelBounds.size.width * kPreviousSubjectScale;
   CGFloat newButtonHeight =
-    kPreviousSubjectButtonPadding * 2 + labelBounds.size.height * kPreviousSubjectScale;
+      kPreviousSubjectButtonPadding * 2 + labelBounds.size.height * kPreviousSubjectScale;
 
   NSArray<id> *newGradient = TKMGradientForSubject(_previousSubject);
 
@@ -790,7 +790,7 @@ class AnimationContext {
 
 - (void)setWrappingUp:(bool)wrappingUp {
   _wrappingUp = wrappingUp;
-  
+
   _wrapUpIcon.hidden = !wrappingUp;
   _wrapUpLabel.hidden = !wrappingUp;
 }
@@ -877,7 +877,7 @@ class AnimationContext {
     [self randomTask];
     return;
   }
-  
+
   const bool correct = result == TKMAnswerCorrect || result == TKMOverrideAnswerCorrect;
 
   if (correct) {
@@ -986,8 +986,7 @@ class AnimationContext {
   auto setupContextBlock = ^(AnimationContext *context) {
     if (![_questionLabel.font.fontName isEqual:_normalFontName]) {
       context->AddFadingLabel(_questionLabel);
-      _questionLabel.font = [UIFont fontWithName:_normalFontName
-                                            size:[self questionLabelFontSize]];
+      _questionLabel.font = [UIFont fontWithName:_normalFontName size:[self questionLabelFontSize]];
     }
   };
   [self animateSubjectDetailsViewShown:true setupContextBlock:setupContextBlock];
@@ -1071,7 +1070,9 @@ class AnimationContext {
 }
 
 - (NSArray<UIKeyCommand *> *)keyCommands {
-  if (_subjectDetailsView.hidden) { return @[]; }
+  if (_subjectDetailsView.hidden) {
+    return @[];
+  }
 
   return @[
     [UIKeyCommand keyCommandWithInput:@"\r"

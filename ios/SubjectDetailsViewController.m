@@ -120,12 +120,10 @@
 }
 
 - (NSArray<UIKeyCommand *> *)keyCommands {
-  return @[
-    [UIKeyCommand keyCommandWithInput:@" "
-                        modifierFlags:0
-                               action:@selector(playAudio)
-                 discoverabilityTitle:@"Play reading"]
-  ];
+  return @[ [UIKeyCommand keyCommandWithInput:@" "
+                                modifierFlags:0
+                                       action:@selector(playAudio)
+                         discoverabilityTitle:@"Play reading"] ];
 }
 
 - (void)playAudio {

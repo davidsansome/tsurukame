@@ -65,7 +65,7 @@
       [UserDefaults.lessonOrder.firstObject isKindOfClass:NSString.class]) {
     UserDefaults.lessonOrder = [NSArray array];
   }
-  
+
   // Set the default lesson order.
   if (![UserDefaults.lessonOrder count]) {
     NSMutableArray<NSNumber *> *lessonOrder = [NSMutableArray array];

@@ -26,7 +26,7 @@
     if (![dataLoader isValidSubjectID:assignment.subjectId]) {
       continue;
     }
-    
+
     if (assignment.isReviewStage && assignment.availableAtDate.timeIntervalSinceNow < 0) {
       [ret addObject:[[ReviewItem alloc] initFromAssignment:assignment]];
     }
@@ -72,7 +72,7 @@
   if (self.assignment.level < other.assignment.level) {
     return UserDefaults.prioritizeCurrentLevel ? NSOrderedDescending : NSOrderedAscending;
   } else if (self.assignment.level > other.assignment.level) {
-    return UserDefaults.prioritizeCurrentLevel ? NSOrderedAscending : NSOrderedDescending ;
+    return UserDefaults.prioritizeCurrentLevel ? NSOrderedAscending : NSOrderedDescending;
   }
 
   if ([UserDefaults.lessonOrder count]) {

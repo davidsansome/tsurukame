@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "Wanikani+Convenience.h"
 #import "UserDefaults.h"
+#import "Wanikani+Convenience.h"
 
 #import <UIKit/UIKit.h>
 
@@ -150,7 +150,8 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
   NSMutableArray<NSString *> *strings = [NSMutableArray array];
   for (TKMMeaning *meaning in self.meaningsArray) {
     if (meaning.type != TKMMeaning_Type_Blacklist &&
-      (meaning.type != TKMMeaning_Type_AuxiliaryWhitelist || !self.hasRadical || UserDefaults.showOldMnemonic)) {
+        (meaning.type != TKMMeaning_Type_AuxiliaryWhitelist || !self.hasRadical ||
+         UserDefaults.showOldMnemonic)) {
       [strings addObject:meaning.meaning];
     }
   }
@@ -282,7 +283,8 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 @implementation TKMProgress (Convenience)
 
 - (NSString *)reviewFormParameters {
-  return [NSString stringWithFormat:@"%d%%5B%%5D=%@&%d%%5B%%5D=%@", self.assignment.subjectId,
+  return [NSString stringWithFormat:@"%d%%5B%%5D=%@&%d%%5B%%5D=%@",
+                                    self.assignment.subjectId,
                                     self.hasMeaningWrong ? (self.meaningWrong ? @"1" : @"0") : @"",
                                     self.assignment.subjectId,
                                     self.hasReadingWrong ? (self.readingWrong ? @"1" : @"0") : @""];

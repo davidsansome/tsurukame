@@ -86,7 +86,7 @@ static NSString *FriendlySize(int64_t bytes) {
       [_image setTintColor:[UIColor lightGrayColor]];
       break;
   }
-  
+
   _preview.hidden = YES;
   _previewImage.hidden = YES;
   if (item.previewText.length) {

@@ -84,8 +84,10 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
 }
 
 - (void)populateModel:(TKMMutableTableModel *)model {
-  [model addSection:@"" footer:@"Download audio to your phone so it plays without delay and "
-      "is available when you're not connected to the internet."];
+  [model addSection:@""
+             footer:
+                 @"Download audio to your phone so it plays without delay and "
+                  "is available when you're not connected to the internet."];
 
   for (const AvailablePackage &package : kAvailablePackages) {
     TKMDownloadModelItem *item = [[TKMDownloadModelItem alloc] initWithFilename:package.filename
@@ -104,7 +106,7 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
     }
     [model addItem:item];
   }
-  
+
   if ([_fileManager fileExistsAtPath:[TKMAudio cacheDirectoryPath]]) {
     [model addSection];
     TKMBasicModelItem *deleteItem =
@@ -180,12 +182,11 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
   UIAlertController *c = [UIAlertController alertControllerWithTitle:@"Delete all offline audio"
                                                              message:@"Are you sure?"
                                                       preferredStyle:UIAlertControllerStyleAlert];
-  [c addAction:[UIAlertAction
-                actionWithTitle:@"Delete"
-                style:UIAlertActionStyleDestructive
-                handler:^(UIAlertAction *_Nonnull action) {
-                  [weakSelf deleteAllAudio];
-                }]];
+  [c addAction:[UIAlertAction actionWithTitle:@"Delete"
+                                        style:UIAlertActionStyleDestructive
+                                      handler:^(UIAlertAction *_Nonnull action) {
+                                        [weakSelf deleteAllAudio];
+                                      }]];
   [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                         style:UIAlertActionStyleCancel
                                       handler:nil]];

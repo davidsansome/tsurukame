@@ -20,8 +20,8 @@
 
 @interface TKMReviewMenuViewController () <UITableViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *rightConstraint;
+@property(weak, nonatomic) IBOutlet UITableView *tableView;
+@property(weak, nonatomic) IBOutlet NSLayoutConstraint *rightConstraint;
 
 @end
 
@@ -32,30 +32,30 @@
 - (void)rerender {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView
                                                                        delegate:self];
-  
+
   [model addSection:@"Quick settings"];
-  [model addItem:
-      [[TKMCheckmarkModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                             title:@"Allow cheating"
-                                          subtitle:nil
-                                                on:UserDefaults.enableCheats
-                                            target:self
-                                            action:@selector(enableCheatsSwitchChanged:)]];
-  [model addItem:
-      [[TKMCheckmarkModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                             title:@"Autoreveal answers"
-                                          subtitle:nil
-                                                on:UserDefaults.showAnswerImmediately
-                                            target:self
-                                            action:@selector(showAnswerImmediatelySwitchChanged:)]];
-  [model addItem:
-      [[TKMCheckmarkModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                             title:@"Autoplay audio"
-                                          subtitle:nil
-                                                on:UserDefaults.playAudioAutomatically
-                                            target:self
-                                            action:@selector(playAudioAutomaticallySwitchChanged:)]];
-  
+  [model
+      addItem:[[TKMCheckmarkModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                     title:@"Allow cheating"
+                                                  subtitle:nil
+                                                        on:UserDefaults.enableCheats
+                                                    target:self
+                                                    action:@selector(enableCheatsSwitchChanged:)]];
+  [model addItem:[[TKMCheckmarkModelItem alloc]
+                     initWithStyle:UITableViewCellStyleDefault
+                             title:@"Autoreveal answers"
+                          subtitle:nil
+                                on:UserDefaults.showAnswerImmediately
+                            target:self
+                            action:@selector(showAnswerImmediatelySwitchChanged:)]];
+  [model addItem:[[TKMCheckmarkModelItem alloc]
+                     initWithStyle:UITableViewCellStyleDefault
+                             title:@"Autoplay audio"
+                          subtitle:nil
+                                on:UserDefaults.playAudioAutomatically
+                            target:self
+                            action:@selector(playAudioAutomaticallySwitchChanged:)]];
+
   [model addSection:@"End review session"];
   TKMBasicModelItem *endReviewSession =
       [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
@@ -66,7 +66,7 @@
                                         action:@selector(endSession:)];
   endReviewSession.image = [UIImage imageNamed:@"baseline_cancel_black_24pt"];
   [model addItem:endReviewSession];
-  
+
   NSString *wrapUpText;
   int wrapUpCount = [_delegate wrapUpCount];
   if (wrapUpCount) {
@@ -74,7 +74,7 @@
   } else {
     wrapUpText = @"Wrap up";
   }
-  
+
   TKMBasicModelItem *wrapUp =
       [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                          title:wrapUpText
@@ -84,7 +84,7 @@
                                         action:@selector(wrapUp:)];
   wrapUp.image = [UIImage imageNamed:@"baseline_access_time_black_24pt"];
   [model addItem:wrapUp];
-  
+
   _model = model;
   [self.tableView reloadData];
 }
@@ -101,15 +101,15 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView
-willDisplayHeaderView:(UIView *)view
-       forSection:(NSInteger)section {
+    willDisplayHeaderView:(UIView *)view
+               forSection:(NSInteger)section {
   UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
   header.textLabel.textColor = [UIColor lightGrayColor];
 }
 
 - (void)tableView:(UITableView *)tableView
-  willDisplayCell:(UITableViewCell *)cell
-forRowAtIndexPath:(NSIndexPath *)indexPath {
+      willDisplayCell:(UITableViewCell *)cell
+    forRowAtIndexPath:(NSIndexPath *)indexPath {
   cell.backgroundColor = self.tableView.backgroundColor;
   cell.textLabel.textColor = [UIColor whiteColor];
   cell.imageView.tintColor = [UIColor whiteColor];

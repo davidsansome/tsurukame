@@ -16,9 +16,9 @@
 
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
+#import "TKMFontsViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
-#import "TKMFontsViewController.h"
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 
@@ -33,7 +33,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   TKMServices *_services;
   TKMTableModel *_model;
   NSIndexPath *_groupMeaningReadingIndexPath;
-  
+
   NotificationPermissionHandler _notificationHandler;
 }
 
@@ -43,7 +43,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  
+
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
          selector:@selector(applicationDidBecomeActive:)
@@ -53,7 +53,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)rerender {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
-  
+
   [model addSection:@"Notifications"];
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                      title:@"Notify for all available reviews"
@@ -69,12 +69,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                     action:@selector(badgingSwitchChanged:)]];
 
   [model addSection:@"Lessons"];
-  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                                     title:@"Prioritize current level"
-                                                  subtitle:@"Teach items from the current level first"
-                                                        on:UserDefaults.prioritizeCurrentLevel
-                                                    target:self
-                                                    action:@selector(prioritizeCurrentLevelChanged:)]];
+  [model
+      addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                  title:@"Prioritize current level"
+                                               subtitle:@"Teach items from the current level first"
+                                                     on:UserDefaults.prioritizeCurrentLevel
+                                                 target:self
+                                                 action:@selector(prioritizeCurrentLevelChanged:)]];
   [model
       addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
                                                  title:@"Lesson order"
@@ -126,12 +127,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                         on:UserDefaults.enableCheats
                                                     target:self
                                                     action:@selector(enableCheatsSwitchChanged:)]];
-  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                                     title:@"Show old mnemonics"
-                                                  subtitle:@"Display old mnemonics alongside new ones"
-                                                        on:UserDefaults.showOldMnemonic
-                                                    target:self
-                                                    action:@selector(showOldMnemonicChanged:)]];
+  [model
+      addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                  title:@"Show old mnemonics"
+                                               subtitle:@"Display old mnemonics alongside new ones"
+                                                     on:UserDefaults.showOldMnemonic
+                                                 target:self
+                                                 action:@selector(showOldMnemonicChanged:)]];
 
   [model addSection:@"Audio"];
   [model addItem:[[TKMSwitchModelItem alloc]
@@ -141,12 +143,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                 on:UserDefaults.playAudioAutomatically
                             target:self
                             action:@selector(playAudioAutomaticallySwitchChanged:)]];
-  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                                    title:@"Offline audio"
-                                                 subtitle:nil
-                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
-                                                   target:self
-                                                   action:@selector(didTapOfflineAudio:)]];
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                 title:@"Offline audio"
+                                              subtitle:nil
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(didTapOfflineAudio:)]];
 
   [model addSection:@"Animations" footer:@"You can turn off any animations you find distracting"];
   [model addItem:[[TKMSwitchModelItem alloc]
@@ -270,15 +273,17 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (void)allReviewsSwitchChanged:(UISwitch *)switchView {
-  [self promptForNotifications:switchView handler:^(BOOL granted) {
-    UserDefaults.notificationsAllReviews = granted;
-  }];
+  [self promptForNotifications:switchView
+                       handler:^(BOOL granted) {
+                         UserDefaults.notificationsAllReviews = granted;
+                       }];
 }
 
 - (void)badgingSwitchChanged:(UISwitch *)switchView {
-  [self promptForNotifications:switchView handler:^(BOOL granted) {
-    UserDefaults.notificationsBadging = granted;
-  }];
+  [self promptForNotifications:switchView
+                       handler:^(BOOL granted) {
+                         UserDefaults.notificationsBadging = granted;
+                       }];
 }
 
 - (void)promptForNotifications:(UISwitch *)switchView
@@ -290,7 +295,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
     handler(NO);
     return;
   }
-  
+
   [switchView setOn:NO animated:YES];
   switchView.enabled = NO;
   __weak SettingsViewController *weakSelf = self;
@@ -299,41 +304,42 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
       switchView.enabled = YES;
       [switchView setOn:granted animated:YES];
       handler(granted);
-      
+
       SettingsViewController *strongSelf = weakSelf;
       if (strongSelf) {
         strongSelf->_notificationHandler = nil;
       }
     });
   };
-  
+
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   UNAuthorizationOptions options = UNAuthorizationOptionBadge | UNAuthorizationOptionAlert;
   UIApplication *application = [UIApplication sharedApplication];
-  [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *_Nonnull settings) {
-    switch (settings.authorizationStatus) {
-      case UNAuthorizationStatusAuthorized:
-      case UNAuthorizationStatusProvisional: {
-        _notificationHandler(YES);
-        break;
-      }
-      case UNAuthorizationStatusNotDetermined: {
-        [center requestAuthorizationWithOptions:options
-                              completionHandler:^(BOOL granted, NSError *_Nullable error) {
-                                _notificationHandler(granted);
-                              }];
-        break;
-      }
-      case UNAuthorizationStatusDenied: {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          [application openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
-                       options:[NSDictionary dictionary]
-             completionHandler:nil];
-        });
-        break;
-      }
-    }
-  }];
+  [center
+      getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *_Nonnull settings) {
+        switch (settings.authorizationStatus) {
+          case UNAuthorizationStatusAuthorized:
+          case UNAuthorizationStatusProvisional: {
+            _notificationHandler(YES);
+            break;
+          }
+          case UNAuthorizationStatusNotDetermined: {
+            [center requestAuthorizationWithOptions:options
+                                  completionHandler:^(BOOL granted, NSError *_Nullable error) {
+                                    _notificationHandler(granted);
+                                  }];
+            break;
+          }
+          case UNAuthorizationStatusDenied: {
+            dispatch_async(dispatch_get_main_queue(), ^{
+              [application openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
+                            options:[NSDictionary dictionary]
+                  completionHandler:nil];
+            });
+            break;
+          }
+        }
+      }];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
@@ -341,13 +347,14 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
     return;
   }
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-  [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *_Nonnull settings) {
-    BOOL granted = settings.authorizationStatus == UNAuthorizationStatusAuthorized;
-    if (@available(iOS 12.0, *)) {
-      granted |= settings.authorizationStatus == UNAuthorizationStatusProvisional;
-    }
-    _notificationHandler(granted);
-  }];
+  [center
+      getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *_Nonnull settings) {
+        BOOL granted = settings.authorizationStatus == UNAuthorizationStatusAuthorized;
+        if (@available(iOS 12.0, *)) {
+          granted |= settings.authorizationStatus == UNAuthorizationStatusProvisional;
+        }
+        _notificationHandler(granted);
+      }];
 }
 
 - (void)didTapLessonOrder:(TKMBasicModelItem *)item {

@@ -67,10 +67,9 @@
   // Summary section.
   NSString *summaryText;
   if (items.count) {
-    summaryText = [NSString stringWithFormat:@"%d%% (%d/%lu)",
-                   (int)((double)(correct) / items.count * 100),
-                   correct,
-                   (unsigned long)items.count];
+    summaryText =
+        [NSString stringWithFormat:@"%d%% (%d/%lu)", (int)((double)(correct) / items.count * 100),
+                                   correct, (unsigned long)items.count];
   } else {
     summaryText = @"0%";
   }

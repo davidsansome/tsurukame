@@ -38,31 +38,30 @@
   ReviewViewController *_reviewVC;
 }
 
-- (void)setupWithServices:(TKMServices *)services
-                    items:(NSArray *)items {
-  _reviewVC =
-      [self.storyboard instantiateViewControllerWithIdentifier:@"reviewViewController"];
+- (void)setupWithServices:(TKMServices *)services items:(NSArray *)items {
+  _reviewVC = [self.storyboard instantiateViewControllerWithIdentifier:@"reviewViewController"];
   [_reviewVC setupWithServices:services
                          items:items
                 showMenuButton:YES
             showSubjectHistory:YES
                       delegate:self];
-  
+
   TKMReviewMenuViewController *menuVC =
       [self.storyboard instantiateViewControllerWithIdentifier:@"reviewMenuViewController"];
   menuVC.delegate = self;
-  
+
   [self setCenterViewController:_reviewVC];
   [self setLeftDrawerViewController:menuVC];
   self.shouldStretchDrawer = NO;
   self.closeDrawerGestureModeMask = MMCloseDrawerGestureModeAll;
   self.centerHiddenInteractionMode = MMDrawerOpenCenterInteractionModeNone;
-  [self setDrawerVisualStateBlock:[MMDrawerVisualState parallaxVisualStateBlockWithParallaxFactor:1.f]];
+  [self setDrawerVisualStateBlock:[MMDrawerVisualState
+                                      parallaxVisualStateBlockWithParallaxFactor:1.f]];
 }
 
 - (void)setAnimatingDrawer:(BOOL)animatingDrawer {
   [super setAnimatingDrawer:animatingDrawer];
-  
+
   // Hide the keyboard if we're opening the drawer, show it if we're closing it.
   if ((animatingDrawer && self.openSide == MMDrawerSideNone) ||
       (!animatingDrawer && self.openSide != MMDrawerSideNone)) {
@@ -94,12 +93,12 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
     return;
   }
-  
+
   UIAlertController *c = [UIAlertController
-                          alertControllerWithTitle:@"End review session?"
-                          message:@"You'll lose progress on any half-answered reviews"
-                          preferredStyle:UIAlertControllerStyleActionSheet];
-  
+      alertControllerWithTitle:@"End review session?"
+                       message:@"You'll lose progress on any half-answered reviews"
+                preferredStyle:UIAlertControllerStyleActionSheet];
+
   [c addAction:[UIAlertAction actionWithTitle:@"End review session"
                                         style:UIAlertActionStyleDestructive
                                       handler:^(UIAlertAction *_Nonnull action) {

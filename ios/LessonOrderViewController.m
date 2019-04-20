@@ -18,7 +18,7 @@
 
 @interface TKMLessonOrderCell : UITableViewCell
 
-@property (nonatomic) TKMSubject_Type subjectType;
+@property(nonatomic) TKMSubject_Type subjectType;
 
 @end
 
@@ -45,26 +45,32 @@
   return UserDefaults.lessonOrder.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   TKMLessonOrderCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"];
   if (cell == nil) {
-    cell = [[TKMLessonOrderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+    cell = [[TKMLessonOrderCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                     reuseIdentifier:@"cell"];
   }
   cell.subjectType = [UserDefaults.lessonOrder objectAtIndex:indexPath.row].intValue;
   return cell;
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
+           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
   return UITableViewCellEditingStyleNone;
 }
 
-- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+- (BOOL)tableView:(UITableView *)tableView
+    shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
   return NO;
 }
 
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+- (void)tableView:(UITableView *)tableView
+    moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath
+           toIndexPath:(NSIndexPath *)destinationIndexPath {
   TKMLessonOrderCell *cell = [tableView cellForRowAtIndexPath:sourceIndexPath];
-  
+
   NSMutableArray<NSNumber *> *lessonOrder = [UserDefaults.lessonOrder mutableCopy];
   [lessonOrder removeObjectAtIndex:sourceIndexPath.row];
   [lessonOrder insertObject:@(cell.subjectType) atIndex:destinationIndexPath.row];

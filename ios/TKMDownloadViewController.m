@@ -47,8 +47,7 @@
   [self doesNotRecognizeSelector:_cmd];
   return nil;
 }
-- (void)didFinishDownloadFor:(NSString *)filename
-                       atURL:(NSURL *)location {
+- (void)didFinishDownloadFor:(NSString *)filename atURL:(NSURL *)location {
   [self doesNotRecognizeSelector:_cmd];
 }
 - (void)toggleItem:(NSString *)filename selected:(BOOL)selected {
@@ -64,7 +63,7 @@
 - (void)rerender {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
   [self populateModel:model];
-  
+
   // Index the items.
   _indexPaths = [NSMutableDictionary dictionary];
   for (int section = 0; section < model.sectionCount; ++section) {
@@ -84,7 +83,7 @@
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = NO;
-  
+
   [self rerender];
 }
 
@@ -125,20 +124,20 @@
 }
 
 - (void)URLSession:(NSURLSession *)session
-      downloadTask:(NSURLSessionDownloadTask *)downloadTask
-didFinishDownloadingToURL:(NSURL *)location {
+                 downloadTask:(NSURLSessionDownloadTask *)downloadTask
+    didFinishDownloadingToURL:(NSURL *)location {
   NSURL *url = downloadTask.originalRequest.URL;
   NSString *filename = url.lastPathComponent;
-  
+
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)downloadTask.response;
   if (httpResponse.statusCode != 200) {
     [self reportErrorOnMainThread:filename
-                            title:[NSString stringWithFormat:@"HTTP error %d",
-                                   httpResponse.statusCode]
+                            title:[NSString
+                                      stringWithFormat:@"HTTP error %d", httpResponse.statusCode]
                           message:url.absoluteString];
     return;
   }
-  
+
   [self didFinishDownloadFor:filename atURL:location];
 };
 
@@ -163,12 +162,12 @@ didFinishDownloadingToURL:(NSURL *)location {
     if (filename) {
       [_downloads removeObjectForKey:filename];
     }
-    
+
     UIAlertController *alert =
-    [UIAlertController alertControllerWithTitle:title
-                                        message:message
-                                 preferredStyle:UIAlertControllerStyleAlert];
-    
+        [UIAlertController alertControllerWithTitle:title
+                                            message:message
+                                     preferredStyle:UIAlertControllerStyleAlert];
+
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
                                                      style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction *action){
@@ -185,7 +184,7 @@ didFinishDownloadingToURL:(NSURL *)location {
 }
 
 - (void)URLSession:(NSURLSession *)session
-              task:(NSURLSessionTask *)task
+                    task:(NSURLSessionTask *)task
     didCompleteWithError:(NSError *)error {
   if (!error) {
     return;
@@ -193,7 +192,7 @@ didFinishDownloadingToURL:(NSURL *)location {
   if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
     return;
   }
-  
+
   NSString *filename = task.originalRequest.URL.lastPathComponent;
   [self reportErrorOnMainThread:filename
                           title:error.localizedDescription
@@ -201,12 +200,12 @@ didFinishDownloadingToURL:(NSURL *)location {
 }
 
 - (void)URLSession:(NSURLSession *)session
-      downloadTask:(NSURLSessionDownloadTask *)downloadTask
-      didWriteData:(int64_t)bytesWritten
-    totalBytesWritten:(int64_t)totalBytesWritten
+                 downloadTask:(NSURLSessionDownloadTask *)downloadTask
+                 didWriteData:(int64_t)bytesWritten
+            totalBytesWritten:(int64_t)totalBytesWritten
     totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
   NSString *filename = downloadTask.originalRequest.URL.lastPathComponent;
-  
+
   [self updateProgressOnMainThread:filename
                        updateBlock:^(TKMDownloadModelItem *item) {
                          item.state = TKMDownloadModelItemDownloading;

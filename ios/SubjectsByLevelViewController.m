@@ -54,7 +54,7 @@
     if (!subject) {
       continue;
     }
-    
+
     int section = subject.subjectType - 1;
     TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject
                                                                   assignment:assignment

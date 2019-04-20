@@ -22,8 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TKMReviewContainerViewController : MMDrawerController
 
-- (void)setupWithServices:(TKMServices *)services
-                    items:(NSArray *)items;
+- (void)setupWithServices:(TKMServices *)services items:(NSArray *)items;
 
 @end
 

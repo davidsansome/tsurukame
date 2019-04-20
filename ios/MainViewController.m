@@ -122,10 +122,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   self.refreshControl = [[UIRefreshControl alloc] init];
   self.refreshControl.tintColor = [UIColor whiteColor];
   self.refreshControl.backgroundColor = nil;
-  NSMutableAttributedString *title =
-      [[NSMutableAttributedString alloc] initWithString:@"Pull to refresh..."
-                                             attributes:@{NSForegroundColorAttributeName:
-                                                            [UIColor whiteColor]}];
+  NSMutableAttributedString *title = [[NSMutableAttributedString alloc]
+      initWithString:@"Pull to refresh..."
+          attributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
   self.refreshControl.attributedTitle = title;
   [self.refreshControl addTarget:self
                           action:@selector(didPullToRefresh)
@@ -190,7 +189,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelVocabularyPieChartView
                                                  subjectType:TKMSubject_Type_Vocabulary
                                                   dataLoader:_services.dataLoader];
-  
+
   [self updateHourlyTimer];
 
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -224,14 +223,14 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)viewWillDisappear:(BOOL)animated {
   [super viewWillDisappear:animated];
-  
+
   [self cancelHourlyTimer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
   [self refresh];
   [self updateHourlyTimer];
-  
+
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = YES;
 }
@@ -242,12 +241,12 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)viewWillLayoutSubviews {
   [super viewWillLayoutSubviews];
-  
+
   CGRect userGradientFrame = _userContainer.bounds;
   userGradientFrame.origin.y -= kUserGradientYOffset;
   userGradientFrame.size.height += kUserGradientYOffset;
   _userGradientLayer.frame = userGradientFrame;
-  
+
   // Bring the refresh control above the gradient.
   [self.refreshControl.superview bringSubviewToFront:self.refreshControl];
 }
@@ -260,9 +259,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     if (!items.count) {
       return;
     }
-    
+
     TKMReviewContainerViewController *vc =
-    (TKMReviewContainerViewController *)segue.destinationViewController;
+        (TKMReviewContainerViewController *)segue.destinationViewController;
     [vc setupWithServices:_services items:items];
   } else if ([segue.identifier isEqualToString:@"startLessons"]) {
     NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
@@ -271,17 +270,17 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     if (!items.count) {
       return;
     }
-    
+
     items = [items sortedArrayUsingSelector:@selector(compareForLessons:)];
     if (items.count > kItemsPerLesson) {
       items = [items subarrayWithRange:NSMakeRange(0, kItemsPerLesson)];
     }
-    
+
     LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;
     [vc setupWithServices:_services items:items];
   } else if ([segue.identifier isEqualToString:@"subjectCatalogue"]) {
     SubjectCatalogueViewController *vc =
-    (SubjectCatalogueViewController *)segue.destinationViewController;
+        (SubjectCatalogueViewController *)segue.destinationViewController;
     [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
   } else if ([segue.identifier isEqual:@"settings"]) {
     SettingsViewController *vc = (SettingsViewController *)segue.destinationViewController;
@@ -295,7 +294,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   if (indexPath.section == kUpcomingReviewsSection) {
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 360 : 120;
   }
-  
+
   return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
 
@@ -303,7 +302,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)updateHourlyTimer {
   [self cancelHourlyTimer];
-  
+
   NSDate *date = [[NSCalendar currentCalendar] nextDateAfterDate:[NSDate date]
                                                     matchingUnit:NSCalendarUnitMinute
                                                            value:0
@@ -311,7 +310,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   __weak MainViewController *weakSelf = self;
   _hourlyRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:[date timeIntervalSinceNow]
                                                         repeats:NO
-                                                          block:^(NSTimer * _Nonnull timer) {
+                                                          block:^(NSTimer *_Nonnull timer) {
                                                             [weakSelf hourlyTimerExpired];
                                                           }];
 }
@@ -419,18 +418,19 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
       [UIAlertController alertControllerWithTitle:@"Logged out"
                                           message:@"Your API Token expired - please log in again"
                                    preferredStyle:UIAlertControllerStyleAlert];
-  
+
   __weak MainViewController *weakSelf = self;
-  [ac addAction:[UIAlertAction actionWithTitle:@"OK"
-                                         style:UIAlertActionStyleDefault
-                                       handler:^(UIAlertAction * _Nonnull action) {
-                                         MainViewController *strongSelf = weakSelf;
-                                         if (strongSelf) {
-                                           strongSelf->_isShowingUnauthorizedAlert = NO;
-                                         }
-                                         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-                                         [nc postNotificationName:kLogoutNotification object:weakSelf];
-                                       }]];
+  [ac addAction:[UIAlertAction
+                    actionWithTitle:@"OK"
+                              style:UIAlertActionStyleDefault
+                            handler:^(UIAlertAction *_Nonnull action) {
+                              MainViewController *strongSelf = weakSelf;
+                              if (strongSelf) {
+                                strongSelf->_isShowingUnauthorizedAlert = NO;
+                              }
+                              NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+                              [nc postNotificationName:kLogoutNotification object:weakSelf];
+                            }]];
   [self presentViewController:ac animated:YES completion:nil];
 }
 

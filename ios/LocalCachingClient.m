@@ -58,8 +58,7 @@ static const char *kSchemaV1 =
     ");"
     "CREATE TABLE pending_study_materials ("
     "  id INTEGER PRIMARY KEY"
-    ");"
-;
+    ");";
 
 static const char *kSchemaV2 =
     "DELETE FROM assignments;"
@@ -143,12 +142,12 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     return NO;
   }
   NSCalendar *calendar = [NSCalendar currentCalendar];
-  NSDateComponents *componentsA = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:a];
-  NSDateComponents *componentsB = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:b];
-  return componentsA.hour == componentsB.hour &&
-         componentsA.day == componentsB.day &&
-         componentsA.month == componentsB.month &&
-         componentsA.year == componentsB.year;
+  NSDateComponents *componentsA = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute)
+                                              fromDate:a];
+  NSDateComponents *componentsB = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute)
+                                              fromDate:b];
+  return componentsA.hour == componentsB.hour && componentsA.day == componentsB.day &&
+         componentsA.month == componentsB.month && componentsA.year == componentsB.year;
 }
 
 @implementation LocalCachingClient {
@@ -253,9 +252,9 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       }
     }];
   }
-  
+
   // Remove any deleted subjects from the database.
-  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+  [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
     GPBInt32Array *deletedSubjectIDs = _dataLoader.deletedSubjectIDs;
     for (int i = 0; i < deletedSubjectIDs.count; ++i) {
       int subjectID = [deletedSubjectIDs valueAtIndex:i];
@@ -270,38 +269,39 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 - (void)logError:(NSError *)error {
   NSString *stack = [NSThread callStackSymbols].description;
   NSLog(@"Error %@ at:\n%@", error, stack);
-  
+
   // Don't bother logging some common errors.
   if (([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorTimedOut) ||
       ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorNotConnectedToInternet) ||
       ([error.domain isEqual:NSPOSIXErrorDomain] && error.code == ECONNABORTED)) {
     return;
   }
-  
-  [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+
+  [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
     // Delete old log entries.
-    CheckUpdate(db, @"DELETE FROM error_log WHERE ROWID IN ("
-                "  SELECT ROWID FROM error_log ORDER BY ROWID DESC LIMIT -1 OFFSET 99"
-                ")");
-    
+    CheckUpdate(db,
+                @"DELETE FROM error_log WHERE ROWID IN ("
+                 "  SELECT ROWID FROM error_log ORDER BY ROWID DESC LIMIT -1 OFFSET 99"
+                 ")");
+
     if (!TKMIsClientError(error)) {
-      CheckUpdate(db, @"INSERT INTO error_log (stack, code, description) "
-                  "VALUES (?,?,?)",
+      CheckUpdate(db,
+                  @"INSERT INTO error_log (stack, code, description) "
+                   "VALUES (?,?,?)",
                   stack, @(error.code), error.description);
       return;
     }
-    
+
     TKMClientError *ce = (TKMClientError *)error;
-    CheckUpdate(db, @"INSERT INTO error_log"
-                "(stack, code, description, request_url, response_url,"
-                " request_data, request_headers, response_headers, response_data) "
-                "VALUES (?,?,?,?,?,?,?,?,?)",
-                stack, @(ce.code), ce.localizedDescription,
-                ce.request.URL.description,
+    CheckUpdate(db,
+                @"INSERT INTO error_log"
+                 "(stack, code, description, request_url, response_url,"
+                 " request_data, request_headers, response_headers, response_data) "
+                 "VALUES (?,?,?,?,?,?,?,?,?)",
+                stack, @(ce.code), ce.localizedDescription, ce.request.URL.description,
                 ce.response.URL.description,
                 [[NSString alloc] initWithData:ce.request.HTTPBody encoding:NSUTF8StringEncoding],
-                ce.request.allHTTPHeaderFields.description,
-                ce.response.allHeaderFields.description,
+                ce.request.allHTTPHeaderFields.description, ce.response.allHeaderFields.description,
                 [[NSString alloc] initWithData:ce.responseData encoding:NSUTF8StringEncoding]);
   }];
 }
@@ -455,7 +455,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   if (level > _dataLoader.maxLevelGrantedBySubscription) {
     return nil;
   }
-  
+
   __block NSArray<TKMAssignment *> *ret = nil;
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     ret = [self getAssignmentsAtLevel:level inTransaction:db];
@@ -521,7 +521,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   if (!_isCachedAvailableSubjectCountsStale) {
     return;
   }
-  
+
   NSArray<TKMAssignment *> *assignments = [self getAllAssignments];
   int lessons = 0;
   int reviews = 0;
@@ -537,7 +537,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     if (![_dataLoader isValidSubjectID:assignment.subjectId]) {
       continue;
     }
-    
+
     if (assignment.isLessonStage) {
       lessons++;
     } else if (assignment.isReviewStage) {

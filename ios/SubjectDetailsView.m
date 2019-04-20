@@ -55,8 +55,7 @@ static NSAttributedString *JoinAttributedStringArray(NSArray<NSAttributedString 
   return ret;
 }
 
-static NSAttributedString *RenderMeanings(TKMSubject *subject,
-                                          TKMStudyMaterials *studyMaterials) {
+static NSAttributedString *RenderMeanings(TKMSubject *subject, TKMStudyMaterials *studyMaterials) {
   NSMutableArray<NSAttributedString *> *strings = [NSMutableArray array];
   for (TKMMeaning *meaning in subject.meaningsArray) {
     if (meaning.type == TKMMeaning_Type_Primary) {
@@ -70,9 +69,9 @@ static NSAttributedString *RenderMeanings(TKMSubject *subject,
     [strings addObject:[[NSAttributedString alloc] initWithString:meaning attributes:attributes]];
   }
   for (TKMMeaning *meaning in subject.meaningsArray) {
-    if (meaning.type != TKMMeaning_Type_Primary &&
-        meaning.type != TKMMeaning_Type_Blacklist &&
-        (meaning.type != TKMMeaning_Type_AuxiliaryWhitelist || !subject.hasRadical || UserDefaults.showOldMnemonic)) {
+    if (meaning.type != TKMMeaning_Type_Primary && meaning.type != TKMMeaning_Type_Blacklist &&
+        (meaning.type != TKMMeaning_Type_AuxiliaryWhitelist || !subject.hasRadical ||
+         UserDefaults.showOldMnemonic)) {
       UIFont *font = [UIFont systemFontOfSize:kFont.pointSize weight:UIFontWeightLight];
       NSDictionary<NSAttributedStringKey, id> *attributes = @{
         NSFontAttributeName : font,
@@ -224,11 +223,11 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
       [amalgamationSubjects addObject:amalgamationSubject];
     }
   }
-  
+
   if (!amalgamationSubjects.count) {
     return;
   }
-  
+
   [model addSection:@"Used in"];
   for (TKMSubject *amalgamationSubject in amalgamationSubjects) {
     [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:amalgamationSubject
@@ -245,12 +244,12 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   if (!formattedText.count) {
     return;
   }
-  
+
   NSDictionary<NSAttributedStringKey, id> *standardAttributes;
   if (isHint) {
-    standardAttributes = @{ NSForegroundColorAttributeName: kHintTextColor };
+    standardAttributes = @{NSForegroundColorAttributeName : kHintTextColor};
   }
-  
+
   NSMutableAttributedString *text = TKMRenderFormattedText(formattedText, standardAttributes);
   [text replaceFontSize:kFontSize];
 
@@ -269,7 +268,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
     [text appendAttributedString:[[NSAttributedString alloc] initWithString:sentence.english]];
     [text replaceFontSize:kFontSize];
-    
+
     TKMAttributedModelItem *item = [[TKMAttributedModelItem alloc] initWithText:text];
     [model addItem:item];
   }
@@ -280,7 +279,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   if (!text.length) {
     return;
   }
-  
+
   [model addSection:@"Part of Speech"];
   TKMBasicModelItem *item = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                                title:text
@@ -298,7 +297,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 
     [model addSection:@"Mnemonic"];
     [self addFormattedText:subject.radical.formattedMnemonicArray isHint:false toModel:model];
-    
+
     if (UserDefaults.showOldMnemonic && subject.radical.formattedDeprecatedMnemonicArray_Count) {
       [model addSection:@"Old Mnemonic"];
       [self addFormattedText:subject.radical.formattedDeprecatedMnemonicArray
@@ -338,7 +337,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [self addFormattedText:subject.vocabulary.formattedReadingExplanationArray
                     isHint:false
                    toModel:model];
-    
+
     [self addPartsOfSpeech:subject.vocabulary toModel:model];
     [self addContextSentences:subject toModel:model];
   }

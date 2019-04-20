@@ -38,7 +38,7 @@
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // Uncomment to slow the animation speed on a real device.
   // [self.window.layer setSpeed:.1f];
-  
+
   [UserDefaults initializeDefaultsOnStartup];
 
   [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
@@ -53,7 +53,10 @@
              name:kLoginCompleteNotification
            object:nil];
   [nc addObserver:self selector:@selector(logout:) name:kLogoutNotification object:nil];
-  [nc addObserver:self selector:@selector(userInfoChanged:) name:kLocalCachingClientUserInfoChangedNotification object:nil];
+  [nc addObserver:self
+         selector:@selector(userInfoChanged:)
+             name:kLocalCachingClientUserInfoChangedNotification
+           object:nil];
 
   if (UserDefaults.userApiToken && UserDefaults.userCookie) {
     [self loginComplete:nil];
@@ -141,11 +144,10 @@
 }
 
 - (void)updateAppBadgeCount {
-  if (!UserDefaults.notificationsAllReviews &&
-      !UserDefaults.notificationsBadging) {
+  if (!UserDefaults.notificationsAllReviews && !UserDefaults.notificationsBadging) {
     return;
   }
-  
+
   int reviewCount = _services.localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
 
@@ -154,11 +156,10 @@
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:reviewCount];
     [center removeAllPendingNotificationRequests];
 
-    NSDate *startDate = [[NSCalendar currentCalendar]
-        nextDateAfterDate:[NSDate date]
-             matchingUnit:NSCalendarUnitMinute
-                    value:0
-                  options:NSCalendarMatchNextTime];
+    NSDate *startDate = [[NSCalendar currentCalendar] nextDateAfterDate:[NSDate date]
+                                                           matchingUnit:NSCalendarUnitMinute
+                                                                  value:0
+                                                                options:NSCalendarMatchNextTime];
     NSTimeInterval startInterval = [startDate timeIntervalSinceNow];
     int cumulativeReviews = reviewCount;
     for (int hour = 0; hour < upcomingReviews.count; hour++) {
@@ -176,7 +177,9 @@
       NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];
       UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
       if (UserDefaults.notificationsAllReviews) {
-        content.body = [NSString stringWithFormat:@"%d review%@ available", cumulativeReviews, cumulativeReviews == 1 ? @"" : @"s"];
+        content.body = [NSString stringWithFormat:@"%d review%@ available",
+                                                  cumulativeReviews,
+                                                  cumulativeReviews == 1 ? @"" : @"s"];
       }
       if (UserDefaults.notificationsBadging) {
         content.badge = @(cumulativeReviews);

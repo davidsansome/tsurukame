@@ -217,9 +217,7 @@
                         modifierFlags:0
                                action:@selector(nextPage)
                  discoverabilityTitle:@"Next"],
-    [UIKeyCommand keyCommandWithInput:@"\r"
-                        modifierFlags:0
-                               action:@selector(nextPage)],
+    [UIKeyCommand keyCommandWithInput:@"\r" modifierFlags:0 action:@selector(nextPage)],
     [UIKeyCommand keyCommandWithInput:@" "
                         modifierFlags:0
                                action:@selector(playAudio)

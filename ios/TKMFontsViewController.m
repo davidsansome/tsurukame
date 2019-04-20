@@ -44,16 +44,19 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
 }
 
 - (void)populateModel:(TKMMutableTableModel *)model {
-  [model addSection:@"" footer:@"Choose the fonts you want to use while doing reviews. "
-   "Tsurukame will pick a random font from the ones you've selected for every new word."];
-  
+  [model addSection:@""
+             footer:
+                 @"Choose the fonts you want to use while doing reviews. "
+                  "Tsurukame will pick a random font from the ones you've selected for every new "
+                  "word."];
+
   [model addSection];
   for (TKMFont *font in _services.fontLoader.allFonts) {
     TKMDownloadModelItem *item = [[TKMDownloadModelItem alloc] initWithFilename:font.fileName
                                                                           title:font.displayName
                                                                        delegate:self];
     item.totalSizeBytes = font.sizeBytes;
-    
+
     NSURLSessionDownloadTask *download = [self activeDownloadFor:font.fileName];
     if (download) {
       item.previewImage = [font loadScreenshot];
@@ -72,7 +75,7 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
     }
     [model addItem:item];
   }
-  
+
   if ([_fileManager fileExistsAtPath:[TKMFontLoader cacheDirectoryPath]]) {
     [model addSection];
     TKMBasicModelItem *deleteItem =
@@ -104,10 +107,11 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
                           message:error.localizedDescription];
     return;
   }
-  
+
   // Move the downloaded file to the cache directory.
-  NSURL *destination = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@",
-                                              [TKMFontLoader cacheDirectoryPath], filename]];
+  NSURL *destination = [NSURL
+      fileURLWithPath:[NSString
+                          stringWithFormat:@"%@/%@", [TKMFontLoader cacheDirectoryPath], filename]];
   [_fileManager moveItemAtURL:location toURL:destination error:&error];
   if (error) {
     [self reportErrorOnMainThread:filename
@@ -115,7 +119,7 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
                           message:error.localizedDescription];
     return;
   }
-  
+
   dispatch_async(dispatch_get_main_queue(), ^{
     [[_services.fontLoader fontByName:filename] reload];
     [self toggleItem:filename selected:YES];
@@ -124,8 +128,7 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
 }
 
 - (void)toggleItem:(NSString *)filename selected:(BOOL)selected {
-  NSMutableSet<NSString *> *selectedFonts =
-      [NSMutableSet setWithSet:UserDefaults.selectedFonts];
+  NSMutableSet<NSString *> *selectedFonts = [NSMutableSet setWithSet:UserDefaults.selectedFonts];
   if (selected) {
     [selectedFonts addObject:filename];
   } else {
@@ -139,12 +142,11 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
   UIAlertController *c = [UIAlertController alertControllerWithTitle:@"Delete all downloaded fonts"
                                                              message:@"Are you sure?"
                                                       preferredStyle:UIAlertControllerStyleAlert];
-  [c addAction:[UIAlertAction
-                actionWithTitle:@"Delete"
-                style:UIAlertActionStyleDestructive
-                handler:^(UIAlertAction *_Nonnull action) {
-                  [weakSelf deleteAllFonts];
-                }]];
+  [c addAction:[UIAlertAction actionWithTitle:@"Delete"
+                                        style:UIAlertActionStyleDestructive
+                                      handler:^(UIAlertAction *_Nonnull action) {
+                                        [weakSelf deleteAllFonts];
+                                      }]];
   [c addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                         style:UIAlertActionStyleCancel
                                       handler:nil]];

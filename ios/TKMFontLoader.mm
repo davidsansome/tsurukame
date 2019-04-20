@@ -29,11 +29,11 @@ struct FontDefinition {
   int64_t sizeBytes;
 };
 static const FontDefinition kFontDefinitions[] = {
-  {@"ArmedBanana", @"armed-banana.ttf", @"Armed Banana", 3298116},
-  {@"darts font", @"darts-font.woff", @"Darts", 1349440},
-  {@"Hosofuwafont", @"hoso-fuwa.ttf", @"Hoso Fuwa", 5910760},
-  {@"nagayama_kai", @"nagayama-kai.otf", @"Nagayama Kai calligraphy", 15576732},
-  {@"santyoume-font", @"san-chou-me.ttf", @"San Chou Me", 4428896},
+    {@"ArmedBanana", @"armed-banana.ttf", @"Armed Banana", 3298116},
+    {@"darts font", @"darts-font.woff", @"Darts", 1349440},
+    {@"Hosofuwafont", @"hoso-fuwa.ttf", @"Hoso Fuwa", 5910760},
+    {@"nagayama_kai", @"nagayama-kai.otf", @"Nagayama Kai calligraphy", 15576732},
+    {@"santyoume-font", @"san-chou-me.ttf", @"San Chou Me", 4428896},
 };
 
 static BOOL LoadFont(NSString *path) {
@@ -41,7 +41,7 @@ static BOOL LoadFont(NSString *path) {
   if (!data) {
     return NO;
   }
-  
+
   CGDataProviderRef provider = CGDataProviderCreateWithCFData((CFDataRef)data);
   CGFontRef font = CGFontCreateWithDataProvider(provider);
   BOOL ret = CTFontManagerRegisterGraphicsFont(font, nil);
@@ -55,25 +55,23 @@ BOOL TKMFontCanRenderText(NSString *fontName, NSString *text) {
   if (!fontRef) {
     return NO;
   }
-  
+
   NSUInteger count = text.length;
   unichar characters[count];
   CGGlyph glyphs[count];
   [text getCharacters:characters range:NSMakeRange(0, count)];
-  
+
   BOOL canRender = CTFontGetGlyphsForCharacters(fontRef, characters, glyphs, count);
   CFRelease(fontRef);
-  
+
   return canRender;
 }
-
 
 @interface TKMFont ()
 
 - (instancetype)initFromDefinition:(const FontDefinition &)definition;
 
 @end
-
 
 @implementation TKMFontLoader
 
@@ -105,7 +103,6 @@ BOOL TKMFontCanRenderText(NSString *fontName, NSString *text) {
 }
 
 @end
-
 
 @implementation TKMFont {
   FontDefinition _definition;
@@ -144,7 +141,7 @@ BOOL TKMFontCanRenderText(NSString *fontName, NSString *text) {
     _available = YES;
     return;
   }
-  
+
   // Try to load a built-in font first.
   NSString *resource = [NSString stringWithFormat:@"fonts/%@", self.fileName];
   NSBundle *mainBundle = [NSBundle mainBundle];
@@ -153,7 +150,7 @@ BOOL TKMFontCanRenderText(NSString *fontName, NSString *text) {
     _available = YES;
     return;
   }
-  
+
   // Try to load the downloaded font.
   path = [NSString stringWithFormat:@"%@/%@", [TKMFontLoader cacheDirectoryPath], self.fileName];
   NSLog(@"Loading font %@", path);
