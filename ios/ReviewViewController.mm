@@ -603,8 +603,10 @@ class AnimationContext {
       _addSynonymButton.hidden = NO;
     }
   } else {
-    _previousSubjectLabel.hidden = NO;
-    _previousSubjectButton.hidden = NO;
+    if (_previousSubject) {
+      _previousSubjectLabel.hidden = NO;
+      _previousSubjectButton.hidden = NO;
+    }
   }
 
   // Change the submit button icon.
