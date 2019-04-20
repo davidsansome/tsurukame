@@ -62,6 +62,18 @@ BOOL TKMFontCanRenderText(NSString *fontName, NSString *text) {
   [text getCharacters:characters range:NSMakeRange(0, count)];
 
   BOOL canRender = CTFontGetGlyphsForCharacters(fontRef, characters, glyphs, count);
+  if (canRender) {
+    // CTFontGetGlyphsForCharacters can return a glyph that has no path, so will be invisible when
+    // drawn.  Check every glyph has a path as well.
+    for (int i = 0; i < count; ++i) {
+      CGPathRef path = CTFontCreatePathForGlyph(fontRef, glyphs[i], NULL);
+      if (!path) {
+        return NO;
+      }
+      CGPathRelease(path);
+    }
+  }
+  
   CFRelease(fontRef);
 
   return canRender;
