@@ -342,6 +342,10 @@ class AnimationContext {
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   self.navigationController.navigationBarHidden = YES;
+  if (_subjectDetailsView.hidden) {
+    [_answerField becomeFirstResponder];
+    [_answerField reloadInputViews];
+  }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
