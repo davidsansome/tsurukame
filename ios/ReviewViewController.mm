@@ -250,7 +250,7 @@ class AnimationContext {
   switch (UserDefaults.reviewOrder) {
     case ReviewOrder_Random:
       break;
-    case ReviewOrder_BySRSLevel:
+    case ReviewOrder_BySRSStage:
       [_reviewQueue sortUsingComparator:^NSComparisonResult(ReviewItem *a, ReviewItem *b) {
         if (a.assignment.srsStage < b.assignment.srsStage) return NSOrderedAscending;
         if (a.assignment.srsStage > b.assignment.srsStage) return NSOrderedDescending;
@@ -263,6 +263,15 @@ class AnimationContext {
       [_reviewQueue sortUsingComparator:^NSComparisonResult(ReviewItem *a, ReviewItem *b) {
         if (a.assignment.level < b.assignment.level) return NSOrderedDescending;
         if (a.assignment.level > b.assignment.level) return NSOrderedAscending;
+        if (a.assignment.subjectType < b.assignment.subjectType) return NSOrderedAscending;
+        if (a.assignment.subjectType > b.assignment.subjectType) return NSOrderedDescending;
+        return NSOrderedSame;
+      }];
+      break;
+    case ReviewOrder_LowestLevelFirst:
+      [_reviewQueue sortUsingComparator:^NSComparisonResult(ReviewItem *a, ReviewItem *b) {
+        if (a.assignment.level < b.assignment.level) return NSOrderedAscending;
+        if (a.assignment.level > b.assignment.level) return NSOrderedDescending;
         if (a.assignment.subjectType < b.assignment.subjectType) return NSOrderedAscending;
         if (a.assignment.subjectType > b.assignment.subjectType) return NSOrderedDescending;
         return NSOrderedSame;
