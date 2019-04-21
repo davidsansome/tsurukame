@@ -44,7 +44,15 @@ typedef void (^UpdateStudyMaterialHandler)(NSError *_Nullable error);
 
 @end
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern bool TKMIsClientError(NSError *error);
+  
+#ifdef __cplusplus
+}
+#endif
 
 @interface Client : NSObject
 

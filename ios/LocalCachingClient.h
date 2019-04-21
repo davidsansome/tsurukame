@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSNotificationName kLocalCachingClientAvailableItemsChangedNotification;
 extern NSNotificationName kLocalCachingClientPendingItemsChangedNotification;
 extern NSNotificationName kLocalCachingClientUserInfoChangedNotification;
+extern NSNotificationName kLocalCachingClientGuruSubjectCountsChangedNotification;
 extern NSNotificationName kLocalCachingClientUnauthorizedNotification;
 
 typedef void (^CompletionHandler)(void);
@@ -56,6 +57,7 @@ typedef void (^CompletionHandler)(void);
 - (TKMAssignment *)getAssignmentForID:(int)subjectID;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
+- (int)getGuruSubjectCountByType:(TKMSubject_Type)type;
 
 // Setters: save the data to the database and return immediately, make network requests in the
 // background.

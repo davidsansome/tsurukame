@@ -247,7 +247,7 @@
 		63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
 		63CAAB0E1FD7FA5E00E09DA1 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB0C1FD7FA5D00E09DA1 /* Reachability.m */; };
 		63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */; };
-		63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.m */; };
+		63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */; };
 		63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766221F47100002A417B /* TKMReviewContainerViewController.m */; };
 		63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766521F47669002A417B /* TKMReviewMenuViewController.m */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
@@ -633,7 +633,7 @@
 		63CAAB0D1FD7FA5D00E09DA1 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		63CAAB121FD7FEA400E09DA1 /* LocalCachingClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalCachingClient.h; sourceTree = "<group>"; };
-		63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalCachingClient.m; sourceTree = "<group>"; };
+		63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LocalCachingClient.mm; sourceTree = "<group>"; };
 		63CE766121F47100002A417B /* TKMReviewContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewContainerViewController.h; sourceTree = "<group>"; };
 		63CE766221F47100002A417B /* TKMReviewContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMReviewContainerViewController.m; sourceTree = "<group>"; };
 		63CE766421F47669002A417B /* TKMReviewMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewMenuViewController.h; sourceTree = "<group>"; };
@@ -1021,7 +1021,7 @@
 				637C12D6203847BE009E92DB /* LessonsViewController.h */,
 				637C12D7203847BE009E92DB /* LessonsViewController.m */,
 				63CAAB121FD7FEA400E09DA1 /* LocalCachingClient.h */,
-				63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.m */,
+				63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */,
 				633632EA201F3011006D582B /* LoginViewController.h */,
 				633632EB201F3011006D582B /* LoginViewController.m */,
 				63EEFEB81FC45C440070C05F /* main.m */,
@@ -1695,7 +1695,7 @@
 				630ADD6621FEB34B00BC9801 /* IValueFormatter.swift in Sources */,
 				630ADD6721FEB34B00BC9801 /* Fill.swift in Sources */,
 				630ADD3D21FEB34B00BC9801 /* CircleShapeRenderer.swift in Sources */,
-				63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.m in Sources */,
+				63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.mm in Sources */,
 				630ADD2D21FEB34B00BC9801 /* BubbleChartRenderer.swift in Sources */,
 				63CAAAEF1FC6E1D400E09DA1 /* GPBDescriptor.m in Sources */,
 				630ADD4C21FEB34B00BC9801 /* HorizontalBarHighlighter.swift in Sources */,

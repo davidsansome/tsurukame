@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <array>
+
 #import "LocalCachingClient.h"
 #import "DataLoader.h"
 
@@ -30,6 +32,8 @@ NSNotificationName kLocalCachingClientUserInfoChangedNotification =
     @"kLocalCachingClientUserInfoChangedNotification";
 NSNotificationName kLocalCachingClientUnauthorizedNotification =
     @"kLocalCachingClientUnauthorizedNotification";
+NSNotificationName kLocalCachingClientGuruSubjectCountsChangedNotification =
+    @"kLocalCachingClientGuruSubjectCountsChangedNotification";
 
 static const char *kSchemaV1 =
     "CREATE TABLE sync ("
@@ -163,9 +167,11 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   NSArray<NSNumber *> *_cachedUpcomingReviews;
   int _cachedPendingProgress;
   int _cachedPendingStudyMaterials;
+  std::array<int, 3> _cachedGuruSubjectCounts;
   bool _isCachedAvailableSubjectCountsStale;
   bool _isCachedPendingProgressStale;
   bool _isCachedPendingStudyMaterialsStale;
+  bool _isCachedGuruSubjectCountsStale;
   NSDate *_cachedAvailableSubjectCountsUpdated;
 }
 
@@ -186,6 +192,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedAvailableSubjectCountsStale = true;
     _isCachedPendingProgressStale = true;
     _isCachedPendingStudyMaterialsStale = true;
+    _isCachedGuruSubjectCountsStale = true;
   }
   return self;
 }
@@ -432,7 +439,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       assignment = [TKMAssignment message];
       assignment.subjectId = [r intForColumnIndex:0];
       assignment.level = [r intForColumnIndex:1];
-      assignment.subjectType = [r intForColumnIndex:3];
+      assignment.subjectType = static_cast<TKMSubject_Type>([r intForColumnIndex:3]);
     }
     assignment.srsStage = [r intForColumnIndex:2];
     [ret addObject:assignment];
@@ -563,6 +570,34 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   _cachedAvailableSubjectCountsUpdated = now;
 }
 
+- (int)getGuruSubjectCountByType:(TKMSubject_Type)type {
+  @synchronized(self) {
+    [self maybeUpdateCachedGuruSubjectCounts];
+    return _cachedGuruSubjectCounts[type];
+  }
+}
+
+- (void)maybeUpdateCachedGuruSubjectCounts {
+  if (!_isCachedGuruSubjectCountsStale) {
+    return;
+  }
+  
+  _cachedGuruSubjectCounts.fill(0);
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
+    FMResultSet *r = [db executeQuery:@"SELECT subject_type, COUNT(*) FROM subject_progress WHERE srs_stage >= 5 GROUP BY subject_type"];
+    while ([r next]) {
+      int subject_type = [r intForColumnIndex:0];
+      int count = [r intForColumnIndex:1];
+      if (subject_type >= sizeof(_cachedGuruSubjectCounts)) {
+        continue;
+      }
+      _cachedGuruSubjectCounts[subject_type] = count;
+    }
+  }];
+  
+  _isCachedGuruSubjectCountsStale = false;
+}
+
 #pragma mark - Invalidating cached data
 
 - (void)postNotificationOnMainThread:(NSNotificationName)name {
@@ -593,6 +628,13 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   [self postNotificationOnMainThread:kLocalCachingClientPendingItemsChangedNotification];
 }
 
+- (void)invalidateCachedGuruSubjectCounts {
+  @synchronized (self) {
+    _isCachedGuruSubjectCountsStale = true;
+  }
+  [self postNotificationOnMainThread:kLocalCachingClientGuruSubjectCountsChangedNotification];
+}
+
 #pragma mark - Send progress
 
 - (void)sendProgress:(NSArray<TKMProgress *> *)progress {
@@ -620,6 +662,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   }];
   [self invalidateCachedPendingProgress];
   [self invalidateCachedAvailableSubjectCounts];
+  [self invalidateCachedGuruSubjectCounts];
 
   [self sendPendingProgress:progress handler:nil];
 }
@@ -760,6 +803,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       dispatch_group_notify(updateGroup, dispatch_get_main_queue(), ^{
         _busy = false;
         [self invalidateCachedAvailableSubjectCounts];
+        [self invalidateCachedGuruSubjectCounts];
         [self postNotificationOnMainThread:kLocalCachingClientUserInfoChangedNotification];
         if (completionHandler) {
           completionHandler();
