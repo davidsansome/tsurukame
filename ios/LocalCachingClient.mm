@@ -14,8 +14,8 @@
 
 #include <array>
 
-#import "LocalCachingClient.h"
 #import "DataLoader.h"
+#import "LocalCachingClient.h"
 
 #import "proto/Wanikani+Convenience.h"
 #import "third_party/FMDB/FMDB.h"
@@ -581,10 +581,12 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   if (!_isCachedGuruSubjectCountsStale) {
     return;
   }
-  
+
   _cachedGuruSubjectCounts.fill(0);
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
-    FMResultSet *r = [db executeQuery:@"SELECT subject_type, COUNT(*) FROM subject_progress WHERE srs_stage >= 5 GROUP BY subject_type"];
+    FMResultSet *r = [db executeQuery:
+                             @"SELECT subject_type, COUNT(*) FROM subject_progress WHERE srs_stage "
+                             @">= 5 GROUP BY subject_type"];
     while ([r next]) {
       int subject_type = [r intForColumnIndex:0];
       int count = [r intForColumnIndex:1];
@@ -594,7 +596,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       _cachedGuruSubjectCounts[subject_type] = count;
     }
   }];
-  
+
   _isCachedGuruSubjectCountsStale = false;
 }
 
@@ -629,7 +631,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 - (void)invalidateCachedGuruSubjectCounts {
-  @synchronized (self) {
+  @synchronized(self) {
     _isCachedGuruSubjectCountsStale = true;
   }
   [self postNotificationOnMainThread:kLocalCachingClientGuruSubjectCountsChangedNotification];

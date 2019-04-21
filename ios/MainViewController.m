@@ -412,8 +412,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
   _userNameLabel.text = user.username;
   _userLevelLabel.text =
-      [NSString stringWithFormat:@"Level %d \u00B7 learned %d kanji", user.level,
-                                 guruKanji];
+      [NSString stringWithFormat:@"Level %d \u00B7 learned %d kanji", user.level, guruKanji];
 }
 
 - (void)clientIsUnauthorized {
