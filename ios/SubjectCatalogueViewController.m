@@ -16,6 +16,7 @@
 #import "DataLoader.h"
 #import "SubjectsByLevelViewController.h"
 #import "TKMServices.h"
+#import "UserDefaults.h"
 
 @interface SubjectCatalogueViewController () <UIPageViewControllerDataSource,
                                               UIPageViewControllerDelegate>
@@ -39,7 +40,7 @@
   self.dataSource = self;
 
   _answerSwitch = [[UISwitch alloc] init];
-  _answerSwitch.on = YES;
+  _answerSwitch.on = UserDefaults.subjectCatalogueViewShowAnswers;
   [_answerSwitch addTarget:self
                     action:@selector(answerSwitchChanged:)
           forControlEvents:UIControlEventValueChanged];
@@ -61,6 +62,7 @@
 
 - (void)answerSwitchChanged:(UISwitch *)sender {
   SubjectsByLevelViewController *vc = self.viewControllers.firstObject;
+  UserDefaults.subjectCatalogueViewShowAnswers = self.showAnswers;
   [vc setShowAnswers:self.showAnswers animated:true];
 }
 
