@@ -114,4 +114,5 @@ DEFINE_OBJECT(NSSet<NSString *>, installedAudioPackages, setInstalledAudioPackag
 DEFINE_BOOL(notificationsAllReviews, setNotificationsAllReviews, NO);
 DEFINE_BOOL(notificationsBadging, setNotificationsBadging, YES);
 
+DEFINE_BOOL(subjectCatalogueViewShowAnswers, setSubjectCatalogueViewShowAnswers, YES);
 @end
