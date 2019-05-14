@@ -167,7 +167,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   NSArray<NSNumber *> *_cachedUpcomingReviews;
   int _cachedPendingProgress;
   int _cachedPendingStudyMaterials;
-  std::array<int, 3> _cachedGuruSubjectCounts;
+  std::array<int, 4> _cachedGuruSubjectCounts;
   bool _isCachedAvailableSubjectCountsStale;
   bool _isCachedPendingProgressStale;
   bool _isCachedPendingStudyMaterialsStale;
@@ -590,7 +590,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     while ([r next]) {
       int subject_type = [r intForColumnIndex:0];
       int count = [r intForColumnIndex:1];
-      if (subject_type >= sizeof(_cachedGuruSubjectCounts)) {
+      if (subject_type >= _cachedGuruSubjectCounts.size()) {
         continue;
       }
       _cachedGuruSubjectCounts[subject_type] = count;
