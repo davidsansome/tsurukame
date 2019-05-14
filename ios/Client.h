@@ -71,7 +71,7 @@ extern bool TKMIsClientError(NSError *error);
                      handler:(CookieHandler)handler;
 + (void)getApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler;
 - (void)getAssignmentsModifiedAfter:(NSString *)date handler:(AssignmentHandler)handler;
-- (void)sendProgress:(NSArray<TKMProgress *> *)progress handler:(ProgressHandler _Nullable)handler;
+- (void)sendProgress:(TKMProgress *)progress handler:(ProgressHandler)handler;
 - (void)getStudyMaterialsModifiedAfter:(NSString *)date handler:(StudyMaterialsHandler)handler;
 - (void)getUserInfo:(UserInfoHandler)handler;
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material

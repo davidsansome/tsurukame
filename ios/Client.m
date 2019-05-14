@@ -22,7 +22,6 @@ const char *kWanikaniSessionCookieName = "_wanikani_session";
 static const char *kURLBase = "https://api.wanikani.com/v2";
 static const char *kReviewProgressURL = "https://www.wanikani.com/json/progress";
 static const char *kLessonProgressURL = "https://www.wanikani.com/json/lesson/completed";
-static const char *kStudyMaterialsURLBase = "https://www.wanikani.com/study_materials";
 static const char *kReviewSessionURL = "https://www.wanikani.com/review/session";
 static const char *kAccountURL = "https://www.wanikani.com/settings/account";
 static const char *kAccessTokenURL = "https://www.wanikani.com/settings/personal_access_tokens";
@@ -40,9 +39,6 @@ static const char *kAPITokenREPattern =
     "<td class=\"personal-access-token-token\">\\s*"
     "<code>([a-f0-9-]{36})</code>";
 static const char *kAuthenticityTokenREPattern = "name=\"authenticity_token\" value=\"([^\"]+)\"";
-
-static NSString *const kFormDataContentType = @"application/x-www-form-urlencoded";
-static NSString *const kJSONContentType = @"application/json";
 
 NSErrorDomain const kTKMClientErrorDomain = @"kTKMClientErrorDomain";
 static NSErrorUserInfoKey const kTKMClientErrorRequestKey = @"kTKMClientErrorRequestKey";
@@ -108,7 +104,6 @@ bool TKMIsClientError(NSError *error) { return [error.domain isEqual:kTKMClientE
 
 @end
 
-static const NSTimeInterval kCSRFTokenValidity = 2 * 60 * 60;  // 2 hours.
 static NSRegularExpression *sCSRFTokenRE;
 static NSRegularExpression *sEmailAddressRE;
 static NSRegularExpression *sAPITokenRE;
@@ -116,7 +111,6 @@ static NSRegularExpression *sAuthenticityTokenRE;
 static NSArray<NSDateFormatter *> *sDateFormatters;
 
 typedef void (^PartialResponseHandler)(id _Nullable data, NSError *_Nullable error);
-typedef void (^PUTResponseHandler)(NSError *_Nullable error);
 
 static void EnsureInitialised() {
   static dispatch_once_t onceToken;
@@ -218,8 +212,6 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   NSString *_cookie;
   DataLoader *_dataLoader;
   NSURLSession *_urlSession;
-  NSString *_csrfToken;
-  NSDate *_csrfTokenUpdated;
 }
 
 - (instancetype)initWithApiToken:(NSString *)apiToken
@@ -292,40 +284,29 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   [task resume];
 }
 
-- (void)putWithCSRFToken:(NSURL *)url
-             contentType:(NSString *)contentType
-                    data:(NSData *)data
-                 handler:(PUTResponseHandler)handler {
+- (void)submitJSONToURL:(NSURL *)url
+             withMethod:(NSString *)method
+                   data:(NSData *)data
+                handler:(PartialResponseHandler)handler {
   if (self.pretendToBeOfflineForTesting) {
-    handler([TKMClientError errorWithMessage:@"Offline for testing" code:42]);
+    handler(nil, [TKMClientError errorWithMessage:@"Offline for testing" code:42]);
     return;
   }
 
-  NSMutableURLRequest *req = [self authorizeUserRequest:url];
-  [req addValue:_csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
-  [req addValue:contentType forHTTPHeaderField:@"Content-Type"];
+  NSMutableURLRequest *req = [self authorizeAPIRequest:url];
+  [req addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
   [req addValue:[@(data.length) stringValue] forHTTPHeaderField:@"Content-Length"];
-  req.HTTPMethod = @"PUT";
+  req.HTTPMethod = method;
   req.HTTPBody = data;
 
   // Start the request.
   NSLog(
-      @"PUT %@ to %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding], req.URL);
+      @"%@ %@ to %@", method, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding], req.URL);
   NSURLSessionDataTask *task = [_urlSession
       dataTaskWithRequest:req
         completionHandler:^(
             NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-          if (error) {
-            handler(error);
-            return;
-          }
-          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-          if (httpResponse.statusCode != 200) {
-            handler([TKMClientError httpErrorWithRequest:req response:response responseData:data]);
-            return;
-          }
-
-          handler(nil);
+          [self parseJsonResponse:data request:req response:response error:error handler:handler];
         }];
   [task resume];
 }
@@ -713,123 +694,25 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 #pragma mark - Progress
 
-- (void)fetchCSRFToken:(ProgressHandler)handler {
-  NSURLRequest *req = [self authorizeUserRequest:[NSURL URLWithString:@(kReviewSessionURL)]];
-  NSURLSessionDataTask *task = [_urlSession
-      dataTaskWithRequest:req
-        completionHandler:^(
-            NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-          if (error != nil) {
-            handler(error);
-            return;
-          }
-          _csrfToken = ParseCSRFTokenFromResponse(data, req, response, &error);
-          if (!error) {
-            _csrfTokenUpdated = [NSDate date];
-          }
-          handler(error);
-        }];
-  [task resume];
-}
-
-- (bool)isCSRFTokenValid {
-  return _csrfToken.length && -[_csrfTokenUpdated timeIntervalSinceNow] < kCSRFTokenValidity;
-}
-
-- (void)ensureValidCSRFTokenAndThen:(void (^)(NSError *_Nullable))handler {
-  // Fetch a new CSRF token if it's invalid or expired.
-  if ([self isCSRFTokenValid]) {
-    handler(nil);
-  } else {
-    [self fetchCSRFToken:handler];
-  }
-}
-
-- (void)sendProgress:(NSArray<TKMProgress *> *)progress handler:(ProgressHandler _Nullable)handler {
-  if (progress.count == 0) {
-    handler(nil);
-    return;
-  }
-
-  // Split the progress array into reviews and lessons.
-  NSMutableArray<TKMProgress *> *reviewProgress = [NSMutableArray array];
-  NSMutableArray<TKMProgress *> *lessonProgress = [NSMutableArray array];
-  for (TKMProgress *p in progress) {
-    if (p.isLesson) {
-      [lessonProgress addObject:p];
-    } else {
-      [reviewProgress addObject:p];
-    }
-  }
-
-  [self ensureValidCSRFTokenAndThen:^(NSError *_Nullable error) {
-    if (error != nil) {
-      handler(error);
-      return;
-    }
-
-    __block NSError *lastError = nil;
-
-    dispatch_group_t dispatchGroup = dispatch_group_create();
-    if (reviewProgress.count) {
-      dispatch_group_enter(dispatchGroup);
-      [self sendReviewProgress:reviewProgress
-                       handler:^(NSError *_Nullable error) {
-                         if (error != nil) {
-                           lastError = error;
-                           NSLog(@"Failed to send review progress: %@", error);
-                         }
-                         dispatch_group_leave(dispatchGroup);
-                       }];
-    }
-    if (lessonProgress.count) {
-      dispatch_group_enter(dispatchGroup);
-      [self sendLessonProgress:lessonProgress
-                       handler:^(NSError *_Nullable error) {
-                         if (error != nil) {
-                           lastError = error;
-                           NSLog(@"Failed to send lesson progress: %@", error);
-                         }
-                         dispatch_group_leave(dispatchGroup);
-                       }];
-    }
-
-    dispatch_queue_t queue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0);
-    dispatch_group_notify(dispatchGroup, queue, ^{
-      handler(lastError);
-    });
-  }];
-}
-
-- (void)sendReviewProgress:(NSArray<TKMProgress *> *)progress handler:(ProgressHandler)handler {
+- (void)sendProgress:(TKMProgress *)progress handler:(ProgressHandler)handler {
   // Encode the data to send in the request.
-  NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
-  for (TKMProgress *p in progress) {
-    [formParameters addObject:p.reviewFormParameters];
-  }
-  NSData *data =
-      [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
-
-  [self putWithCSRFToken:[NSURL URLWithString:@(kReviewProgressURL)]
-             contentType:kFormDataContentType
-                    data:data
-                 handler:handler];
-}
-
-- (void)sendLessonProgress:(NSArray<TKMProgress *> *)progress
-                   handler:(ProgressHandler _Nullable)handler {
-  // Encode the data to send in the request.
-  NSMutableArray<NSString *> *formParameters = [NSMutableArray array];
-  for (TKMProgress *p in progress) {
-    [formParameters addObject:p.lessonFormParameters];
-  }
-  NSData *data =
-      [[formParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
-
-  [self putWithCSRFToken:[NSURL URLWithString:@(kLessonProgressURL)]
-             contentType:kFormDataContentType
-                    data:data
-                 handler:handler];
+  NSMutableDictionary *review = [NSMutableDictionary dictionary];
+  [review setObject:@(progress.assignment.id_p) forKey:@"assignment_id"];
+  [review setObject:@(progress.meaningWrong ? 1 : 0) forKey:@"incorrect_meaning_answers"];
+  [review setObject:@(progress.readingWrong ? 1 : 0) forKey:@"incorrect_reading_answers"];
+  // TODO: set the created_at field as well.
+  
+  NSMutableDictionary *payload = [NSMutableDictionary dictionary];
+  [payload setObject:review forKey:@"review"];
+  NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:0 error:nil];
+  
+  NSString *urlString = [NSString stringWithFormat:@"%s/reviews/", kURLBase];
+  [self submitJSONToURL:[NSURL URLWithString:urlString]
+             withMethod:@"POST"
+                   data:data
+                handler:^(id  _Nullable data, NSError * _Nullable error) {
+                  handler(error);
+                }];
 }
 
 #pragma mark - Study Materials
@@ -877,25 +760,48 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material
                     handler:(UpdateStudyMaterialHandler)handler {
-  [self ensureValidCSRFTokenAndThen:^(NSError *_Nullable error) {
-    if (error != nil) {
+  NSURL *queryURL =
+      [NSURL URLWithString:[NSString stringWithFormat:@"%s/study_materials?subject_ids=%d",
+                            kURLBase,
+                            material.subjectId]];
+  
+  // We need to check if the study material exists already.
+  [self startPagedQueryFor:queryURL handler:^(NSArray *_Nullable response,
+                                              NSError * _Nullable error) {
+    if (error) {
       handler(error);
       return;
     }
-
+    if (!response) {
+      return;
+    }
+    
     // Encode the data to send in the request.
+    NSMutableDictionary *studyMaterial = [NSMutableDictionary dictionary];
+    [studyMaterial setObject:material.meaningSynonymsArray forKey:@"meaning_synonyms"];
+    
     NSMutableDictionary *payload = [NSMutableDictionary dictionary];
-    [payload setObject:@(material.subjectId) forKey:@"subject_id"];
-    [payload setObject:material.subjectType forKey:@"subject_type"];
-    [payload setObject:material.meaningSynonymsArray forKey:@"meaning_synonyms"];
+    [payload setObject:studyMaterial forKey:@"study_material"];
+    
+    NSString *urlString;
+    NSString *method;
+    if (response.count) {
+      int materialID = [response[0][@"id"] intValue];
+      urlString = [NSString stringWithFormat:@"%s/study_materials/%d", kURLBase, materialID];
+      method = @"PUT";
+    } else {
+      [studyMaterial setObject:@(material.subjectId) forKey:@"subject_id"];
+      urlString = [NSString stringWithFormat:@"%s/study_materials", kURLBase];
+      method = @"POST";
+    }
+    
     NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:0 error:nil];
-
-    NSString *urlString =
-        [NSString stringWithFormat:@"%s/%d", kStudyMaterialsURLBase, material.subjectId];
-    [self putWithCSRFToken:[NSURL URLWithString:urlString]
-               contentType:kJSONContentType
-                      data:data
-                   handler:handler];
+    [self submitJSONToURL:[NSURL URLWithString:urlString]
+               withMethod:method
+                     data:data
+                  handler:^(id  _Nullable data, NSError * _Nullable error) {
+                    handler(error);
+                  }];
   }];
 }
 
