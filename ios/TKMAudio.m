@@ -40,7 +40,10 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
     _currentState = TKMAudioFinished;
 
     AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [session setCategory:AVAudioSessionCategoryPlayback
+             withOptions:AVAudioSessionCategoryOptionDuckOthers |
+                         AVAudioSessionCategoryOptionInterruptSpokenAudioAndMixWithOthers
+                   error:nil];
 
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self
@@ -55,6 +58,18 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
   if (state != _currentState) {
     _currentState = state;
     [_delegate audioPlaybackStateChanged:_currentState];
+  }
+  
+  AVAudioSession *session = [AVAudioSession sharedInstance];
+  if (state == TKMAudioPlaying) {
+    [session setActive:YES
+           withOptions:NO
+                 error:nil];
+  }
+  else if (state == TKMAudioFinished) {
+    [session setActive:NO
+           withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
+                 error:nil];
   }
 }
 
