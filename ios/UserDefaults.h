@@ -68,4 +68,7 @@ DECLARE_OBJECT(NSSet<NSString *>, installedAudioPackages);
 DECLARE_BOOL(notificationsAllReviews);
 DECLARE_BOOL(notificationsBadging);
 
+// Subject Catalogue View internal settings.
+DECLARE_BOOL(subjectCatalogueViewShowAnswers)
+
 @end
