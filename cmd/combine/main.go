@@ -18,6 +18,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"sort"
 	"strings"
 
 	"github.com/golang/protobuf/proto"
@@ -109,6 +110,7 @@ func Combine() error {
 		if err := ReorderComponentSubjectIDs(reader, spb); err != nil {
 			return err
 		}
+		SortSubjectIDsByLevel(reader, spb.AmalgamationSubjectIds)
 		UnsetEmptyFields(spb)
 
 		// Override fields.
@@ -186,6 +188,20 @@ func ReorderComponentSubjectIDs(reader encoding.Reader, spb *pb.Subject) error {
 
 	spb.ComponentSubjectIds = newComponentIDs
 	return nil
+}
+
+func SortSubjectIDsByLevel(reader encoding.Reader, subjectIDs []int32) {
+	sort.Slice(subjectIDs, func(i, j int) bool {
+		iPb, err := reader.ReadSubject(int(subjectIDs[i]))
+		if err != nil {
+			return false
+		}
+		jPb, err := reader.ReadSubject(int(subjectIDs[j]))
+		if err != nil {
+			return false
+		}
+		return iPb.GetLevel() < jPb.GetLevel()
+	})
 }
 
 func UnsetEmptyFields(spb *pb.Subject) {
