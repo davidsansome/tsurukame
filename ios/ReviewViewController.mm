@@ -493,7 +493,8 @@ class AnimationContext {
   switch (_activeTaskType) {
     case kTKMTaskTypeMeaning:
       _kanaInput.enabled = false;
-      taskTypePrompt = @"Meaning";
+      taskTypePrompt =
+          _activeTask.assignment.subjectType == TKMSubject_Type_Radical ? @"Name" : @"Meaning";
       promptGradient = kMeaningGradient;
       promptTextColor = kMeaningTextColor;
       taskTypePlaceholder = @"Your Response";
