@@ -19,10 +19,7 @@
 #import "proto/Wanikani+Convenience.h"
 
 static const CGFloat kJapaneseTextImageSize = 26.f;
-
-static UIFont *kNormalFont;
-static UIFont *kCorrectFont;
-static UIFont *kIncorrectFont;
+static const CGFloat kFontSize = 14.f;
 
 @interface TKMSubjectModelView ()
 @property(weak, nonatomic) IBOutlet UILabel *levelLabel;
@@ -75,13 +72,6 @@ static UIFont *kIncorrectFont;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    kNormalFont = [UIFont systemFontOfSize:14.0f];
-    kCorrectFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightThin];
-    kIncorrectFont = [UIFont systemFontOfSize:14.0f weight:UIFontWeightBold];
-  });
-
   self = [super initWithCoder:aDecoder];
   if (self) {
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
@@ -107,6 +97,7 @@ static UIFont *kIncorrectFont;
   }
   _gradient.colors = item.gradientColors ?: TKMGradientForSubject(item.subject);
 
+  self.subjectLabel.font = TKMJapaneseFont(self.subjectLabel.font.pointSize);
   self.subjectLabel.attributedText =
       [item.subject japaneseTextWithImageSize:kJapaneseTextImageSize];
   if (item.subject.hasRadical) {
@@ -122,13 +113,9 @@ static UIFont *kIncorrectFont;
     self.meaningLabel.text = item.subject.commaSeparatedMeanings;
   }
 
-  if (!item.readingWrong && !item.meaningWrong) {
-    self.readingLabel.font = kNormalFont;
-    self.meaningLabel.font = kNormalFont;
-  } else {
-    self.readingLabel.font = item.readingWrong ? kIncorrectFont : kCorrectFont;
-    self.meaningLabel.font = item.meaningWrong ? kIncorrectFont : kCorrectFont;
-  }
+  self.readingLabel.font = item.readingWrong ? TKMJapaneseFontBold(kFontSize) : TKMJapaneseFont(kFontSize);
+  self.meaningLabel.font = item.meaningWrong ? [UIFont systemFontOfSize:kFontSize weight:UIFontWeightBold]
+    : [UIFont systemFontOfSize:kFontSize];
 
   [self setShowAnswers:item.showAnswers animated:false];
 }
@@ -220,7 +207,6 @@ static UIFont *kIncorrectFont;
     int subjectID = [item.subjects valueAtIndex:i];
     TKMSubject *subject = [item.dataLoader loadSubject:subjectID];
     TKMSubjectChip *chip = [[TKMSubjectChip alloc] initWithSubject:subject
-                                                              font:item.font
                                                        showMeaning:true
                                                           delegate:item.delegate];
     [self.contentView addSubview:chip];

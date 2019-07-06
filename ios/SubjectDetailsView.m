@@ -92,7 +92,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   }
   for (TKMReading *reading in readings) {
     if (!primaryOnly && !reading.isPrimary) {
-      UIFont *font = [UIFont systemFontOfSize:kFont.pointSize weight:UIFontWeightLight];
+      UIFont *font = TKMJapaneseFontLight(kFontSize);
       NSDictionary<NSAttributedStringKey, id> *attributes = @{
         NSFontAttributeName : font,
       };
@@ -125,7 +125,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   dispatch_once(&onceToken, ^{
     kMeaningSynonymColor = [UIColor colorWithRed:0.231 green:0.6 blue:0.988 alpha:1];  // #3b99fc
     kHintTextColor = [UIColor colorWithWhite:0.3f alpha:1.f];
-    kFont = [UIFont systemFontOfSize:kFontSize];
+    kFont = TKMJapaneseFont(kFontSize);
   });
 
   self = [super initWithCoder:coder];
@@ -186,7 +186,6 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
       [[TKMSubjectCollectionModelItem alloc] initWithSubjects:subject.componentSubjectIdsArray
                                                    dataLoader:_services.dataLoader
                                                      delegate:self];
-  item.font = kFont;
 
   [model addSection:title];
   [model addItem:item];
@@ -264,7 +263,14 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   [model addSection:@"Context Sentences"];
   for (TKMVocabulary_Sentence *sentence in subject.vocabulary.sentencesArray) {
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
-    [text appendAttributedString:[[NSAttributedString alloc] initWithString:sentence.japanese]];
+    
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    [attributes setObject:TKMJapaneseFont(kFontSize) forKey:NSFontAttributeName];
+    NSAttributedString *japaneseString = [[NSAttributedString alloc]
+                                          initWithString:sentence.japanese
+                                          attributes:attributes];
+    
+    [text appendAttributedString:japaneseString];
     [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
     [text appendAttributedString:[[NSAttributedString alloc] initWithString:sentence.english]];
     [text replaceFontSize:kFontSize];

@@ -95,3 +95,17 @@ NSArray<id> *TKMGradientForSubject(TKMSubject *subject) {
   }
   return nil;
 }
+
+NSString *kTKMJapaneseFontName = @"Hiragino Sans";
+
+UIFont *TKMJapaneseFont(CGFloat size) {
+  return [UIFont fontWithName:kTKMJapaneseFontName size:size];
+}
+
+UIFont *TKMJapaneseFontLight(CGFloat size) {
+  return [UIFont fontWithName:[NSString stringWithFormat:@"%@ W2", kTKMJapaneseFontName] size:size];
+}
+
+UIFont *TKMJapaneseFontBold(CGFloat size) {
+  return [UIFont fontWithName:[NSString stringWithFormat:@"%@ W7", kTKMJapaneseFontName] size:size];
+}

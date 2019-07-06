@@ -45,7 +45,6 @@
   // Create a chip for each subject.
   for (TKMSubject *subject in subjects) {
     TKMSubjectChip *chip = [[TKMSubjectChip alloc] initWithSubject:subject
-                                                              font:nil
                                                        showMeaning:false
                                                           delegate:self];
     [self addSubview:chip];
@@ -56,7 +55,6 @@
   NSAttributedString *quizText = [[NSAttributedString alloc] initWithString:@"Quiz"];
   NSArray *chipGradient = @[ (id)TKMGreyColor().CGColor, (id)TKMGreyColor().CGColor ];
   TKMSubjectChip *quizChip = [[TKMSubjectChip alloc] initWithSubject:nil
-                                                                font:nil
                                                             chipText:quizText
                                                             sideText:nil
                                                        chipTextColor:[UIColor whiteColor]

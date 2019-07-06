@@ -70,6 +70,7 @@
       [_services.localCachingClient getStudyMaterialForID:_subject.id_p];
   [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
 
+  _subjectTitle.font = TKMJapaneseFont(_subjectTitle.font.pointSize);
   _subjectTitle.attributedText = [_subject japaneseTextWithImageSize:40.f];
   _gradientLayer = [CAGradientLayer layer];
   _gradientLayer.colors = TKMGradientForSubject(_subject);

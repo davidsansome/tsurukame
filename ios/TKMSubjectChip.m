@@ -87,7 +87,6 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
 }
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
-                           font:(nullable UIFont *)font
                     showMeaning:(bool)showMeaning
                        delegate:(id<TKMSubjectChipDelegate>)delegate {
   NSAttributedString *japaneseText = [subject japaneseTextWithImageSize:kLabelHeight];
@@ -95,7 +94,6 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
     NSAttributedString *sideText =
         [[NSAttributedString alloc] initWithString:subject.primaryMeaning];
     return [self initWithSubject:subject
-                            font:font
                         chipText:japaneseText
                         sideText:sideText
                    chipTextColor:[UIColor whiteColor]
@@ -103,7 +101,6 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
                         delegate:delegate];
   } else {
     return [self initWithSubject:subject
-                            font:font
                         chipText:japaneseText
                         sideText:nil
                    chipTextColor:[UIColor whiteColor]
@@ -113,13 +110,12 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
 }
 
 - (instancetype)initWithSubject:(nullable TKMSubject *)subject
-                           font:(nullable UIFont *)font
                        chipText:(NSAttributedString *)chipText
                        sideText:(nullable NSAttributedString *)sideText
                   chipTextColor:(UIColor *)chipTextColor
                    chipGradient:(NSArray<id> *)chipGradient
                        delegate:(id<TKMSubjectChipDelegate>)delegate {
-  UIFont *chipFont = [UIFont systemFontOfSize:kLabelHeight];
+  UIFont *chipFont = TKMJapaneseFont(kLabelHeight);
   CGRect chipLabelFrame =
       CGRectMake(kLabelInset, kLabelInset, TextWidth(chipText, chipFont), kLabelHeight);
   CGRect chipGradientFrame = CGRectMake(0, 0, CGRectGetMaxX(chipLabelFrame) + kLabelInset,
@@ -146,13 +142,14 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
 
   UILabel *sideTextLabel = nil;
   if (sideText) {
+    UIFont *sideTextFont = [UIFont systemFontOfSize:14.f];
     CGRect sideTextFrame =
         CGRectMake(CGRectGetMaxX(chipGradientFrame) + kChipHorizontalSpacing, 0,
-                   TextWidth(sideText, font) + kChipHorizontalSpacing, kChipHeight);
+                   TextWidth(sideText, sideTextFont) + kChipHorizontalSpacing, kChipHeight);
     sideTextLabel = [[UILabel alloc] initWithFrame:sideTextFrame];
+    sideTextLabel.font = sideTextFont;
     sideTextLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
     sideTextLabel.attributedText = sideText;
-    sideTextLabel.font = font;
     sideTextLabel.userInteractionEnabled = NO;
 
     totalFrame = CGRectUnion(totalFrame, sideTextFrame);

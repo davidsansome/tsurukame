@@ -317,7 +317,7 @@ class AnimationContext {
     _menuButton.hidden = YES;
   }
 
-  _normalFontName = _questionLabel.font.fontName;
+  _normalFontName = kTKMJapaneseFontName;
   _currentFontName = _normalFontName;
   _defaultFontSize = _questionLabel.font.pointSize;
 

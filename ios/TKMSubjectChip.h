@@ -33,12 +33,10 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
 @interface TKMSubjectChip : UIView
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
-                           font:(nullable UIFont *)font
                     showMeaning:(bool)showMeaning
                        delegate:(id<TKMSubjectChipDelegate>)delegate;
 
 - (instancetype)initWithSubject:(nullable TKMSubject *)subject
-                           font:(nullable UIFont *)font
                        chipText:(NSAttributedString *)chipText
                        sideText:(nullable NSAttributedString *)sideText
                   chipTextColor:(UIColor *)chipTextColor

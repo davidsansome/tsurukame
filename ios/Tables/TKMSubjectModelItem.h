@@ -63,7 +63,6 @@ NS_ASSUME_NONNULL_BEGIN;
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic, copy) GPBInt32Array *subjects;
-@property(nonatomic, nullable) UIFont *font;
 @property(nonatomic) DataLoader *dataLoader;
 @property(nonatomic, weak) id<TKMSubjectChipDelegate> delegate;
 
