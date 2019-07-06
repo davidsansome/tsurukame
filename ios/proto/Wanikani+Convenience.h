@@ -36,6 +36,12 @@ extern NSString *TKMDetailedSRSStageName(int srsStage);
 
 @end
 
+@interface TKMReading (Convenience)
+
+@property(nonatomic, readonly) NSString *displayText;
+
+@end
+
 @interface TKMVocabulary (Convenience)
 
 @property(nonatomic, readonly) NSString *commaSeparatedPartsOfSpeech;

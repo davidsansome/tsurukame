@@ -87,7 +87,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   NSMutableArray<NSAttributedString *> *strings = [NSMutableArray array];
   for (TKMReading *reading in readings) {
     if (reading.isPrimary) {
-      [strings addObject:[[NSAttributedString alloc] initWithString:reading.reading]];
+      [strings addObject:[[NSAttributedString alloc] initWithString:reading.displayText]];
     }
   }
   for (TKMReading *reading in readings) {
@@ -96,7 +96,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
       NSDictionary<NSAttributedStringKey, id> *attributes = @{
         NSFontAttributeName : font,
       };
-      [strings addObject:[[NSAttributedString alloc] initWithString:reading.reading
+      [strings addObject:[[NSAttributedString alloc] initWithString:reading.displayText
                                                          attributes:attributes]];
     }
   }

@@ -18,12 +18,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *TKMConvertKanaText(NSString *text);
 
+typedef NS_ENUM(NSInteger, TKMAlphabet) {
+  kTKMAlphabetHiragana,
+  kTKMAlphabetKatakana,
+};
+
 @interface TKMKanaInput : NSObject <UITextFieldDelegate>
 
 - (instancetype)initWithDelegate:(id<UITextFieldDelegate>)delegate NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic) bool enabled;
+@property(nonatomic) TKMAlphabet alphabet;
 
 @end
 

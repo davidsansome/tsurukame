@@ -169,9 +169,22 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 - (NSString *)commaSeparatedPrimaryReadings {
   NSMutableArray<NSString *> *strings = [NSMutableArray array];
   for (TKMReading *reading in self.primaryReadings) {
-    [strings addObject:reading.reading];
+    [strings addObject:reading.displayText];
   }
   return [strings componentsJoinedByString:@", "];
+}
+
+@end
+
+@implementation TKMReading (Convenience)
+
+- (NSString *)displayText {
+  if (self.hasType &&
+      self.type == TKMReading_Type_Onyomi && UserDefaults.useKatakanaForOnyomi) {
+    return [self.reading
+            stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:NO];
+  }
+  return self.reading;
 }
 
 @end

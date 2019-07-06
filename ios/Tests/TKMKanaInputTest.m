@@ -215,49 +215,4 @@ static NSArray<NSString *> *_tsuConsonantsArray;
   }
 }
 
-- (void)testShouldChangeCharactersInRangeReplacesUppercaseRomanizationPatternsWithKatakana {
-  // when there is the start of a pattern, the first letter of the patten is uppercase and you type
-  // the last letter of the pattern it should be replaced by the given replacement in katakana and
-  // the returnValue should be false
-
-  for (NSString *replacement in [kReplacements keyEnumerator]) {
-    // this pattern is checked by another case...for this function it doesn't matter if it is in the
-    // kReplacements CharacterSet
-    if ([replacement isEqualToString:@"n "]) {
-      continue;
-    }
-
-    NSString *capitalizedReplacement = [replacement capitalizedString];
-
-    NSString *lastReplacementCharacter =
-        [capitalizedReplacement substringFromIndex:capitalizedReplacement.length - 1];
-
-    _textField.text = [capitalizedReplacement substringToIndex:capitalizedReplacement.length - 1];
-
-    BOOL returnValue = [_kanaInput textField:_textField
-               shouldChangeCharactersInRange:NSMakeRange(_textField.text.length, 0)
-                           replacementString:lastReplacementCharacter];
-    XCTAssertFalse(returnValue);
-    XCTAssertEqualObjects(ConvertHiraganaToKatakana(kReplacements[replacement]), _textField.text);
-  }
-}
-
-- (void)testConvertHiraganaToKatakanaConvertsAllTheHiraganaToKatakana {
-  // hopefully I got all the combinations :D
-  NSString *hiraganaInput =
-      @"あいうえおかきくけこきゃきゅきょさしすせそしゃしゅしょたちつてとちゃちゅちょなにぬねのにゃ"
-      @"にゅにょはひふへほひゃひゅひょまみむめもみゃみゅみょやゆよらりるれろりゃりゅりょわゐゑをん"
-      @"がぎぐげごぎゃぎゅぎょざじずぜぞじゃじゅじょだぢづでどぢゃぢゅぢょばびぶべぼびゃびゅびょぱ"
-      @"ぴぷぺぽぴゃぴゅぴょっ";
-
-  NSString *katakanaOutput =
-      @"アイウエオカキクケコキャキュキョサシスセソシャシュショタチツテトチャチュチョナニヌネノニャ"
-      @"ニュニョハヒフヘホヒャヒュヒョマミムメモミャミュミョヤユヨラリルレロリャリュリョワヰヱヲン"
-      @"ガギグゲゴギャギュギョザジズゼゾジャジュジョダヂヅデドヂャヂュヂョバビブベボビャビュビョパ"
-      @"ピプペポピャピュピョッ";
-  NSString *converted = ConvertHiraganaToKatakana(hiraganaInput);
-
-  XCTAssertEqualObjects(katakanaOutput, converted);
-}
-
 @end

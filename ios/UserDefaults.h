@@ -58,7 +58,8 @@ DECLARE_BOOL(groupMeaningReading);
 DECLARE_BOOL(meaningFirst);
 DECLARE_BOOL(showAnswerImmediately);
 DECLARE_BOOL(enableCheats);
-DECLARE_BOOL(showOldMnemonic)
+DECLARE_BOOL(showOldMnemonic);
+DECLARE_BOOL(useKatakanaForOnyomi);
 
 // Offline audio.
 DECLARE_BOOL(playAudioAutomatically);

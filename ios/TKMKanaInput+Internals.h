@@ -26,6 +26,5 @@ static NSCharacterSet *kCanFollowN;
 static dispatch_once_t sOnceToken;
 
 extern void EnsureInitialised(void);
-extern NSString *ConvertHiraganaToKatakana(NSString *string);
 
 #endif

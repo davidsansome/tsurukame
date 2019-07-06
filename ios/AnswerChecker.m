@@ -106,20 +106,23 @@ TKMAnswerCheckerResult CheckAnswer(NSString **answer,
   *answer = FormattedString(*answer);
 
   switch (taskType) {
-    case kTKMTaskTypeReading:
+    case kTKMTaskTypeReading: {
       *answer = [*answer stringByReplacingOccurrencesOfString:@"n" withString:@"ん"];
       *answer = [*answer stringByReplacingOccurrencesOfString:@" " withString:@""];
+      NSString *hiraganaAnswer = [*answer
+          stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:YES];
+      
       if (IsAsciiPresent(*answer)) {
         return kTKMAnswerContainsInvalidCharacters;
       }
 
       for (TKMReading *reading in subject.primaryReadings) {
-        if ([reading.reading isEqualToString:*answer]) {
+        if ([reading.reading isEqualToString:hiraganaAnswer]) {
           return kTKMAnswerPrecise;
         }
       }
       for (TKMReading *reading in subject.alternateReadings) {
-        if ([reading.reading isEqualToString:*answer]) {
+        if ([reading.reading isEqualToString:hiraganaAnswer]) {
           return subject.hasKanji ? kTKMAnswerOtherKanjiReading : kTKMAnswerPrecise;
         }
       }
@@ -138,6 +141,7 @@ TKMAnswerCheckerResult CheckAnswer(NSString **answer,
         return kTKMAnswerOtherKanjiReading;
       }
       break;
+    }
 
     case kTKMTaskTypeMeaning: {
       NSMutableArray<NSString *> *meaningTexts =

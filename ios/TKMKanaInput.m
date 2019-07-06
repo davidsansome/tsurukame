@@ -14,6 +14,7 @@
 
 #import "TKMKanaInput.h"
 #import "TKMKanaInput+Internals.h"
+#import "UserDefaults.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -318,20 +319,6 @@ void EnsureInitialised() {
   });
 }
 
-NSString *ConvertHiraganaToKatakana(NSString *string) {
-  unichar stringBuffer[string.length];
-  [string getCharacters:stringBuffer range:NSMakeRange(0, string.length)];
-
-  for (int i = 0; i < string.length; ++i) {
-    // if the character is in Hiragana Unicode Block
-    if (stringBuffer[i] >= kHiraganaMin && stringBuffer[i] <= kHiraganaMax) {
-      stringBuffer[i] = stringBuffer[i] + kDistanceHiraganaKatakanaCodeblock;
-    }
-  }
-
-  return [[NSString alloc] initWithCharacters:stringBuffer length:string.length];
-}
-
 NSString *TKMConvertKanaText(NSString *input) {
   EnsureInitialised();
 
@@ -447,8 +434,9 @@ NSString *TKMConvertKanaText(NSString *input) {
 
     NSString *replacement = kReplacements[text];
     if (replacement) {
-      if (firstCharacterIsUppercase) {
-        replacement = ConvertHiraganaToKatakana(replacement);
+      if (firstCharacterIsUppercase || _alphabet == kTKMAlphabetKatakana) {
+        replacement = [replacement
+         stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:NO];
       }
       textField.text = [textField.text stringByReplacingCharactersInRange:replacementRange
                                                                withString:replacement];

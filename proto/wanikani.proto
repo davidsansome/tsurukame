@@ -42,6 +42,7 @@ message Reading {
   // TODO: use the accepted_answer field instead.
   optional bool is_primary = 2;
 
+  // Type is only set for Kanji readings - not for Vocabulary.
   enum Type {
     ONYOMI = 1;
     KUNYOMI = 2;

@@ -59,7 +59,7 @@
     if ([ud objectForKey:@ #name] == nil) {                                  \
       return defaultValue;                                                   \
     }                                                                        \
-    return [ud integerForKey:@ #name];                                       \
+    return (int)[ud integerForKey:@ #name];                                       \
   }                                                                          \
   +(void)setterName : (int)value {                                           \
     [[NSUserDefaults standardUserDefaults] setInteger:value forKey:@ #name]; \
@@ -107,6 +107,7 @@ DEFINE_BOOL(meaningFirst, setMeaningFirst, YES);
 DEFINE_BOOL(showAnswerImmediately, setShowAnswerImmediately, YES);
 DEFINE_BOOL(enableCheats, setEnableCheats, YES);
 DEFINE_BOOL(showOldMnemonic, setShowOldMnemonic, YES);
+DEFINE_BOOL(useKatakanaForOnyomi, setUseKatakanaForOnyomi, NO);
 
 DEFINE_BOOL(playAudioAutomatically, setPlayAudioAutomatically, NO);
 DEFINE_OBJECT(NSSet<NSString *>, installedAudioPackages, setInstalledAudioPackages);
