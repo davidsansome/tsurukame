@@ -59,14 +59,11 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
     _currentState = state;
     [_delegate audioPlaybackStateChanged:_currentState];
   }
-  
+
   AVAudioSession *session = [AVAudioSession sharedInstance];
   if (state == TKMAudioPlaying) {
-    [session setActive:YES
-           withOptions:NO
-                 error:nil];
-  }
-  else if (state == TKMAudioFinished) {
+    [session setActive:YES withOptions:NO error:nil];
+  } else if (state == TKMAudioFinished) {
     [session setActive:NO
            withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
                  error:nil];

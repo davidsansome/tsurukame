@@ -300,8 +300,10 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   req.HTTPBody = data;
 
   // Start the request.
-  NSLog(
-      @"%@ %@ to %@", method, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding], req.URL);
+  NSLog(@"%@ %@ to %@",
+        method,
+        [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
+        req.URL);
   NSURLSessionDataTask *task = [_urlSession
       dataTaskWithRequest:req
         completionHandler:^(
@@ -701,16 +703,16 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   [review setObject:@(progress.meaningWrong ? 1 : 0) forKey:@"incorrect_meaning_answers"];
   [review setObject:@(progress.readingWrong ? 1 : 0) forKey:@"incorrect_reading_answers"];
   // TODO: set the created_at field as well.
-  
+
   NSMutableDictionary *payload = [NSMutableDictionary dictionary];
   [payload setObject:review forKey:@"review"];
   NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:0 error:nil];
-  
+
   NSString *urlString = [NSString stringWithFormat:@"%s/reviews/", kURLBase];
   [self submitJSONToURL:[NSURL URLWithString:urlString]
              withMethod:@"POST"
                    data:data
-                handler:^(id  _Nullable data, NSError * _Nullable error) {
+                handler:^(id _Nullable data, NSError *_Nullable error) {
                   handler(error);
                 }];
 }
@@ -762,47 +764,51 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                     handler:(UpdateStudyMaterialHandler)handler {
   NSURL *queryURL =
       [NSURL URLWithString:[NSString stringWithFormat:@"%s/study_materials?subject_ids=%d",
-                            kURLBase,
-                            material.subjectId]];
-  
+                                                      kURLBase,
+                                                      material.subjectId]];
+
   // We need to check if the study material exists already.
-  [self startPagedQueryFor:queryURL handler:^(NSArray *_Nullable response,
-                                              NSError * _Nullable error) {
-    if (error) {
-      handler(error);
-      return;
-    }
-    if (!response) {
-      return;
-    }
-    
-    // Encode the data to send in the request.
-    NSMutableDictionary *studyMaterial = [NSMutableDictionary dictionary];
-    [studyMaterial setObject:material.meaningSynonymsArray forKey:@"meaning_synonyms"];
-    
-    NSMutableDictionary *payload = [NSMutableDictionary dictionary];
-    [payload setObject:studyMaterial forKey:@"study_material"];
-    
-    NSString *urlString;
-    NSString *method;
-    if (response.count) {
-      int materialID = [response[0][@"id"] intValue];
-      urlString = [NSString stringWithFormat:@"%s/study_materials/%d", kURLBase, materialID];
-      method = @"PUT";
-    } else {
-      [studyMaterial setObject:@(material.subjectId) forKey:@"subject_id"];
-      urlString = [NSString stringWithFormat:@"%s/study_materials", kURLBase];
-      method = @"POST";
-    }
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:0 error:nil];
-    [self submitJSONToURL:[NSURL URLWithString:urlString]
-               withMethod:method
-                     data:data
-                  handler:^(id  _Nullable data, NSError * _Nullable error) {
-                    handler(error);
-                  }];
-  }];
+  [self startPagedQueryFor:queryURL
+                   handler:^(NSArray *_Nullable response, NSError *_Nullable error) {
+                     if (error) {
+                       handler(error);
+                       return;
+                     }
+                     if (!response) {
+                       return;
+                     }
+
+                     // Encode the data to send in the request.
+                     NSMutableDictionary *studyMaterial = [NSMutableDictionary dictionary];
+                     [studyMaterial setObject:material.meaningSynonymsArray
+                                       forKey:@"meaning_synonyms"];
+
+                     NSMutableDictionary *payload = [NSMutableDictionary dictionary];
+                     [payload setObject:studyMaterial forKey:@"study_material"];
+
+                     NSString *urlString;
+                     NSString *method;
+                     if (response.count) {
+                       int materialID = [response[0][@"id"] intValue];
+                       urlString = [NSString
+                           stringWithFormat:@"%s/study_materials/%d", kURLBase, materialID];
+                       method = @"PUT";
+                     } else {
+                       [studyMaterial setObject:@(material.subjectId) forKey:@"subject_id"];
+                       urlString = [NSString stringWithFormat:@"%s/study_materials", kURLBase];
+                       method = @"POST";
+                     }
+
+                     NSData *data = [NSJSONSerialization dataWithJSONObject:payload
+                                                                    options:0
+                                                                      error:nil];
+                     [self submitJSONToURL:[NSURL URLWithString:urlString]
+                                withMethod:method
+                                      data:data
+                                   handler:^(id _Nullable data, NSError *_Nullable error) {
+                                     handler(error);
+                                   }];
+                   }];
 }
 
 #pragma mark - User Info

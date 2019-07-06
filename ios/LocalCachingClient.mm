@@ -677,17 +677,20 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 - (void)sendPendingProgress:(NSArray<TKMProgress *> *)progress
                     handler:(CompletionHandler _Nullable)handler {
   for (TKMProgress *p in progress) {
-    [_client sendProgress:p handler:^(NSError * _Nullable error) {
-      if (error) {
-        [self logError:error];
-      } else {
-        // Delete the local pending progress.
-        [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
-          CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
-        }];
-        [self invalidateCachedPendingProgress];
-      }
-    }];
+    [_client
+        sendProgress:p
+             handler:^(NSError *_Nullable error) {
+               if (error) {
+                 [self logError:error];
+               } else {
+                 // Delete the local pending progress.
+                 [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
+                   CheckUpdate(
+                       db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
+                 }];
+                 [self invalidateCachedPendingProgress];
+               }
+             }];
   }
   if (handler) {
     handler();
