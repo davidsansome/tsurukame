@@ -697,6 +697,18 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 #pragma mark - Progress
 
 - (void)sendProgress:(TKMProgress *)progress handler:(ProgressHandler)handler {
+  if (progress.isLesson) {
+    NSString *urlString = [NSString stringWithFormat:@"%s/assignments/%d/start",
+                           kURLBase, progress.assignment.id_p];
+    [self submitJSONToURL:[NSURL URLWithString:urlString]
+               withMethod:@"PUT"
+                     data:[@"{}" dataUsingEncoding:NSUTF8StringEncoding]
+                  handler:^(id _Nullable data, NSError *_Nullable error) {
+                    handler(error);
+                  }];
+    return;
+  }
+  
   // Encode the data to send in the request.
   NSMutableDictionary *review = [NSMutableDictionary dictionary];
   [review setObject:@(progress.assignment.id_p) forKey:@"assignment_id"];
