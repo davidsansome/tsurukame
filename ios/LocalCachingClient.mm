@@ -682,19 +682,30 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
              handler:^(NSError *_Nullable error) {
                if (error) {
                  [self logError:error];
+
+                 // Drop the data if the server is clearly telling us our data is invalid and cannot be accepted.
+                 // This most commonly happens when doing reviews before progress from elsewhere has synced,
+                 // leaving the app trying to report progress on reviews you already did elsewhere.
+                 if (error.code == 422) {
+                   [self clearPendingProgress: p];
+                 }
                } else {
-                 // Delete the local pending progress.
-                 [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
-                   CheckUpdate(
-                       db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
-                 }];
-                 [self invalidateCachedPendingProgress];
+                 [self clearPendingProgress: p];
                }
              }];
   }
   if (handler) {
     handler();
   }
+}
+
+- (void)clearPendingProgress:(TKMProgress *)p {
+  // Delete the local pending progress.
+  [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
+    CheckUpdate(
+                db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
+  }];
+  [self invalidateCachedPendingProgress];
 }
 
 #pragma mark - Send study materials
