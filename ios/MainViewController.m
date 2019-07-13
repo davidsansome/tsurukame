@@ -298,7 +298,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
   if (indexPath.section == kUpcomingReviewsSection) {
-    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 360 : 120;
+    return ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) ? 360 : 120;
   }
 
   return [super tableView:tableView heightForRowAtIndexPath:indexPath];
