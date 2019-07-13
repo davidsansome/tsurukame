@@ -32,8 +32,8 @@ NSNotificationName kLocalCachingClientUserInfoChangedNotification =
     @"kLocalCachingClientUserInfoChangedNotification";
 NSNotificationName kLocalCachingClientUnauthorizedNotification =
     @"kLocalCachingClientUnauthorizedNotification";
-NSNotificationName kLocalCachingClientGuruSubjectCountsChangedNotification =
-    @"kLocalCachingClientGuruSubjectCountsChangedNotification";
+NSNotificationName kLocalCachingClientSrsLevelCountsChangedNotification =
+    @"kLocalCachingClientSrsLevelCountsChangedNotification";
 
 static const char *kSchemaV1 =
     "CREATE TABLE sync ("
@@ -167,11 +167,12 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   NSArray<NSNumber *> *_cachedUpcomingReviews;
   int _cachedPendingProgress;
   int _cachedPendingStudyMaterials;
-  std::array<int, 4> _cachedGuruSubjectCounts;
+  int _cachedGuruKanjiCount;
+  std::array<int, 6> _cachedSrsLevelCounts;
   bool _isCachedAvailableSubjectCountsStale;
   bool _isCachedPendingProgressStale;
   bool _isCachedPendingStudyMaterialsStale;
-  bool _isCachedGuruSubjectCountsStale;
+  bool _isCachedSrsLevelCountsStale;
   NSDate *_cachedAvailableSubjectCountsUpdated;
 }
 
@@ -192,7 +193,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedAvailableSubjectCountsStale = true;
     _isCachedPendingProgressStale = true;
     _isCachedPendingStudyMaterialsStale = true;
-    _isCachedGuruSubjectCountsStale = true;
+    _isCachedSrsLevelCountsStale = true;
   }
   return self;
 }
@@ -570,34 +571,62 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   _cachedAvailableSubjectCountsUpdated = now;
 }
 
-- (int)getGuruSubjectCountByType:(TKMSubject_Type)type {
+- (int)getGuruKanjiCount {
   @synchronized(self) {
-    [self maybeUpdateCachedGuruSubjectCounts];
-    return _cachedGuruSubjectCounts[type];
+    [self maybeUpdateCachedSrsLevelCounts];
+    return _cachedGuruKanjiCount;
   }
 }
 
-- (void)maybeUpdateCachedGuruSubjectCounts {
-  if (!_isCachedGuruSubjectCountsStale) {
+- (void)maybeUpdateCachedSrsLevelCounts {
+  if (!_isCachedSrsLevelCountsStale) {
     return;
   }
 
-  _cachedGuruSubjectCounts.fill(0);
+  _cachedSrsLevelCounts.fill(0);
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
+    FMResultSet *gr = [db executeQuery:
+                             @"SELECT COUNT(*) FROM subject_progress WHERE srs_stage "
+                             @">= 5 AND subject_type = ? GROUP BY subject_type",
+                             @(TKMSubject_Type_Kanji)];
+    while ([gr next]) {
+      _cachedGuruKanjiCount = [gr intForColumnIndex:0];
+    }
+
     FMResultSet *r = [db executeQuery:
-                             @"SELECT subject_type, COUNT(*) FROM subject_progress WHERE srs_stage "
-                             @">= 5 GROUP BY subject_type"];
+                             @"SELECT srs_stage, COUNT(*) FROM subject_progress "
+                             @"WHERE srs_stage >= 2 GROUP BY srs_stage"];
     while ([r next]) {
-      int subject_type = [r intForColumnIndex:0];
+      int srs_stage = [r intForColumnIndex:0];
       int count = [r intForColumnIndex:1];
-      if (subject_type >= _cachedGuruSubjectCounts.size()) {
-        continue;
+      int srs_level = 0;
+      switch(srs_stage) {
+        case 2:
+        case 3:
+        case 4:
+          srs_level = 1;
+          break;
+        case 5:
+        case 6:
+          srs_level = 2;
+          break;
+        case 7:
+          srs_level = 3;
+          break;
+        case 8:
+          srs_level = 4;
+          break;
+        case 9:
+          srs_level = 5;
+          break;
+        default:
+          return;
       }
-      _cachedGuruSubjectCounts[subject_type] = count;
+      _cachedSrsLevelCounts[srs_level] += count;
     }
   }];
 
-  _isCachedGuruSubjectCountsStale = false;
+  _isCachedSrsLevelCountsStale = false;
 }
 
 #pragma mark - Invalidating cached data
@@ -630,11 +659,11 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   [self postNotificationOnMainThread:kLocalCachingClientPendingItemsChangedNotification];
 }
 
-- (void)invalidateCachedGuruSubjectCounts {
+- (void)invalidateCachedSrsLevelCounts {
   @synchronized(self) {
-    _isCachedGuruSubjectCountsStale = true;
+    _isCachedSrsLevelCountsStale = true;
   }
-  [self postNotificationOnMainThread:kLocalCachingClientGuruSubjectCountsChangedNotification];
+  [self postNotificationOnMainThread:kLocalCachingClientSrsLevelCountsChangedNotification];
 }
 
 #pragma mark - Send progress
@@ -664,7 +693,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   }];
   [self invalidateCachedPendingProgress];
   [self invalidateCachedAvailableSubjectCounts];
-  [self invalidateCachedGuruSubjectCounts];
+  [self invalidateCachedSrsLevelCounts];
 
   [self sendPendingProgress:progress handler:nil];
 }
@@ -816,7 +845,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       dispatch_group_notify(updateGroup, dispatch_get_main_queue(), ^{
         _busy = false;
         [self invalidateCachedAvailableSubjectCounts];
-        [self invalidateCachedGuruSubjectCounts];
+        [self invalidateCachedSrsLevelCounts];
         [self postNotificationOnMainThread:kLocalCachingClientUserInfoChangedNotification];
         if (completionHandler) {
           completionHandler();

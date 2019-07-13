@@ -205,8 +205,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
              name:kLocalCachingClientUserInfoChangedNotification
            object:_services.localCachingClient];
   [nc addObserver:self
-         selector:@selector(guruSubjectCountsChanged)
-             name:kLocalCachingClientGuruSubjectCountsChangedNotification
+         selector:@selector(srsLevelCountsChanged)
+             name:kLocalCachingClientSrsLevelCountsChangedNotification
            object:_services.localCachingClient];
   [nc addObserver:self
          selector:@selector(clientIsUnauthorized)
@@ -400,13 +400,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   [self updateUserInfo];
 }
 
-- (void)guruSubjectCountsChanged {
-  [self updateUserInfo];
-}
-
 - (void)updateUserInfo {
   TKMUser *user = [_services.localCachingClient getUserInfo];
-  int guruKanji = [_services.localCachingClient getGuruSubjectCountByType:TKMSubject_Type_Kanji];
+  int guruKanji = [_services.localCachingClient getGuruKanjiCount];
 
   NSString *email = [UserDefaults userEmailAddress];
   if (email.length) {
@@ -417,6 +413,15 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   _userNameLabel.text = user.username;
   _userLevelLabel.text =
       [NSString stringWithFormat:@"Level %d \u00B7 learned %d kanji", user.level, guruKanji];
+}
+
+- (void)srsLevelCountsChanged {
+  [self updateUserInfo];
+  [self updateAllLevels];
+}
+
+- (void)updateAllLevels {
+  NSLog(@"need to update all level numbers here");
 }
 
 - (void)clientIsUnauthorized {
