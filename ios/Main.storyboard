@@ -581,10 +581,15 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="49W-hQ-Zo2"/>
                     <connections>
+                        <outlet property="apprenticeCount" destination="gM7-sv-BPi" id="qf4-2l-7cB"/>
+                        <outlet property="burnedCount" destination="vjF-kH-6SD" id="TAW-qd-a5z"/>
                         <outlet property="currentLevelKanjiPieChartView" destination="q21-KY-dgl" id="SPK-4h-Hk8"/>
                         <outlet property="currentLevelRadicalsPieChartView" destination="TPS-zV-AWU" id="lQ6-3p-umh"/>
                         <outlet property="currentLevelVocabularyPieChartView" destination="2D9-xR-5vE" id="SRs-YF-UIk"/>
+                        <outlet property="enlightenedCount" destination="grY-8e-0wl" id="3AD-71-myK"/>
+                        <outlet property="guruCount" destination="wei-td-xkx" id="Ahn-G6-sOX"/>
                         <outlet property="lessonsCell" destination="cHi-TB-m7d" id="I2l-ag-Z07"/>
+                        <outlet property="masterCount" destination="1lb-QA-MDg" id="Qau-G6-Uz9"/>
                         <outlet property="queuedItemsLabel" destination="ZMS-Lu-tge" id="oYP-du-0GD"/>
                         <outlet property="queuedItemsSubtitleLabel" destination="DCZ-py-fGX" id="23Q-AS-zU3"/>
                         <outlet property="reviewsCell" destination="GQA-UB-k55" id="BDV-S7-dFy"/>

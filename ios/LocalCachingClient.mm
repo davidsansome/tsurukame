@@ -571,6 +571,13 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   _cachedAvailableSubjectCountsUpdated = now;
 }
 
+- (int)getSrsLevelCount:(int)level {
+  @synchronized(self) {
+    [self maybeUpdateCachedSrsLevelCounts];
+    return _cachedSrsLevelCounts[level];
+  }
+}
+
 - (int)getGuruKanjiCount {
   @synchronized(self) {
     [self maybeUpdateCachedSrsLevelCounts];

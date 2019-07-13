@@ -57,6 +57,7 @@ typedef void (^CompletionHandler)(void);
 - (TKMAssignment *)getAssignmentForID:(int)subjectID;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
+- (int)getSrsLevelCount:(int)level;
 - (int)getGuruKanjiCount;
 
 // Setters: save the data to the database and return immediately, make network requests in the
