@@ -26,6 +26,7 @@
 #import "Style.h"
 #import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"
+#import "SubjectsRemainingViewController.h"
 #import "TKMReviewContainerViewController.h"
 #import "TKMServices.h"
 #import "UpcomingReviewsChartController.h"
@@ -283,6 +284,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   } else if ([segue.identifier isEqualToString:@"subjectCatalogue"]) {
     SubjectCatalogueViewController *vc =
         (SubjectCatalogueViewController *)segue.destinationViewController;
+    [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
+  } else if ([segue.identifier isEqualToString:@"subjectsRemaining"]) {
+    SubjectsRemainingViewController *vc = segue.destinationViewController;
     [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
   } else if ([segue.identifier isEqual:@"settings"]) {
     SettingsViewController *vc = (SettingsViewController *)segue.destinationViewController;
