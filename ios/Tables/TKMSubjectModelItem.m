@@ -101,28 +101,15 @@ static const CGFloat kFontSize = 14.f;
   double guruInterval = 0;
   bool isAccelerated = _subject.level <= 2;
 
-  if (isAccelerated) {
-    switch (itemLevel) {
-      case 1:
-        guruInterval += 7200;
-      case 2:
-        guruInterval += 14400;
-      case 3:
-        guruInterval += 28800;
-      case 4:
-        guruInterval += 82800;
-    }
-  } else {
-    switch (itemLevel) {
-      case 1:
-        guruInterval += 14400;
-      case 2:
-        guruInterval += 28800;
-      case 3:
-        guruInterval += 82800;
-      case 4:
-        guruInterval += 169200;
-    }
+ switch (itemLevel) {
+    case 1:
+      guruInterval += (isAccelerated ? 7200 : 14400);
+    case 2:
+      guruInterval += (isAccelerated ? 14400 : 28800);
+    case 3:
+      guruInterval += (isAccelerated ? 28800 : 82800);
+    case 4:
+      guruInterval += (isAccelerated ? 82800 : 169200);
   }
 
   return [reviewDate dateByAddingTimeInterval:guruInterval];
