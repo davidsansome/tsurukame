@@ -66,15 +66,11 @@ static const CGFloat kFontSize = 14.f;
   return @"TKMSubjectModelItem";
 }
 
-- (NSDate *)startOfHour:(NSDate *)date {
-  NSCalendar* calendar = [NSCalendar currentCalendar];
-  NSDateComponents* components = [calendar components:(NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour) fromDate:[NSDate date]];
-  return [calendar dateFromComponents: components];
-}
-
 - (NSDate *)reviewDate {
   // If it's available now, treat it like it will be reviewed this hour.
-  NSDate* reviewDate = [self startOfHour: [NSDate date]];
+  NSCalendar* calendar = [NSCalendar currentCalendar];
+  NSDateComponents* components = [calendar components:(NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour) fromDate:[NSDate date]];
+  NSDate* reviewDate = [calendar dateFromComponents: components];
 
   // If it's not available now, treat it like it will be reviewed within the hour it comes available.
   if ([reviewDate compare: _assignment.availableAtDate] == NSOrderedAscending) {
