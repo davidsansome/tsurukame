@@ -287,7 +287,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
   } else if ([segue.identifier isEqualToString:@"subjectsRemaining"]) {
     SubjectsRemainingViewController *vc = segue.destinationViewController;
-    [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
+    [vc setupWithServices:_services];
   } else if ([segue.identifier isEqual:@"settings"]) {
     SettingsViewController *vc = (SettingsViewController *)segue.destinationViewController;
     [vc setupWithServices:_services];

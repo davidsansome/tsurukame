@@ -20,6 +20,6 @@
 
 @property(nonatomic, readonly) int level;
 
-- (void)setupWithServices:(TKMServices *)services level:(int)level;
+- (void)setupWithServices:(TKMServices *)services;
 
 @end

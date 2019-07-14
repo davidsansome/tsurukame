@@ -30,24 +30,23 @@
 
 @implementation SubjectsRemainingViewController {
   TKMServices *_services;
-  int _level;
   TKMTableModel *_model;
 }
 
-- (void)setupWithServices:(TKMServices *)services level:(int)level {
+- (void)setupWithServices:(TKMServices *)services {
   _services = services;
-  _level = level;
 }
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  self.navigationItem.title = [NSString stringWithFormat:@"Remaining in Level %d", _level];
+  int level = [_services.localCachingClient getUserInfo].level;
+  self.navigationItem.title = [NSString stringWithFormat:@"Remaining in Level %d", level];
 
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
   [model addSection:@"Radicals"];
   [model addSection:@"Kanji"];
 
-  for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtLevel:_level]) {
+  for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtUsersCurrentLevel]) {
     if (assignment.srsStage > 4) {
       continue;
     }
