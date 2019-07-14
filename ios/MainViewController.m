@@ -16,6 +16,7 @@
 
 #import "CurrentLevelChartController.h"
 #import "LessonsViewController.h"
+#import "LevelTimeRemainingLabel.h"
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "NSDate+TimeAgo.h"
@@ -81,9 +82,6 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 @property(weak, nonatomic) IBOutlet UITableViewCell *lessonsCell;
 @property(weak, nonatomic) IBOutlet UITableViewCell *reviewsCell;
 
-@property(weak, nonatomic) IBOutlet UILabel *queuedItemsLabel;
-@property(weak, nonatomic) IBOutlet UILabel *queuedItemsSubtitleLabel;
-
 @property (weak, nonatomic) IBOutlet UILabel *apprenticeCount;
 @property (weak, nonatomic) IBOutlet UILabel *guruCount;
 @property (weak, nonatomic) IBOutlet UILabel *masterCount;
@@ -91,9 +89,14 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 @property (weak, nonatomic) IBOutlet UILabel *burnedCount;
 
 @property(weak, nonatomic) IBOutlet CombinedChartView *upcomingReviewsChartView;
+
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelRadicalsPieChartView;
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelKanjiPieChartView;
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelVocabularyPieChartView;
+@property (weak, nonatomic) IBOutlet LevelTimeRemainingLabel *levelTimeRemainingLabel;
+
+@property(weak, nonatomic) IBOutlet UILabel *queuedItemsLabel;
+@property(weak, nonatomic) IBOutlet UILabel *queuedItemsSubtitleLabel;
 
 @end
 
@@ -400,6 +403,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   [_currentLevelRadicalsChartController update:currentLevelAssignments];
   [_currentLevelKanjiChartController update:currentLevelAssignments];
   [_currentLevelVocabularyChartController update:currentLevelAssignments];
+  [_levelTimeRemainingLabel update:currentLevelAssignments];
 }
 
 - (void)userInfoChanged {
