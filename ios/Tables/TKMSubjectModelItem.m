@@ -67,6 +67,10 @@ static const CGFloat kFontSize = 14.f;
 }
 
 - (NSDate *)reviewDate {
+  if (!_assignment.hasAvailableAt) {
+    return [NSDate distantFuture];
+  }
+
   // If it's available now, treat it like it will be reviewed this hour.
   NSCalendar* calendar = [NSCalendar currentCalendar];
   NSDateComponents* components = [calendar components:(NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour) fromDate:[NSDate date]];
