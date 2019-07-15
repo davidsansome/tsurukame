@@ -594,7 +594,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     FMResultSet *gr = [db executeQuery:
                              @"SELECT COUNT(*) FROM subject_progress WHERE srs_stage "
-                             @">= 5 AND subject_type = ? GROUP BY subject_type",
+                             @">= 5 AND subject_type = ?",
                              @(TKMSubject_Type_Kanji)];
     while ([gr next]) {
       _cachedGuruKanjiCount = [gr intForColumnIndex:0];
