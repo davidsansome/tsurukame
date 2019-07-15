@@ -266,6 +266,7 @@
 		63EEFECD1FC45D810070C05F /* ReviewViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEC71FC45D800070C05F /* ReviewViewController.mm */; };
 		63EEFED31FC45E810070C05F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
+		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
 		BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* TKMFontsViewController.m */; };
@@ -668,6 +669,8 @@
 		63EEFED21FC45E810070C05F /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		63EEFED71FC46E720070C05F /* Client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		63EEFED81FC46E720070C05F /* Client.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
+		657E731C22DAD99C00F6F4C1 /* SubjectsRemainingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsRemainingViewController.h; sourceTree = "<group>"; };
+		657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsRemainingViewController.m; sourceTree = "<group>"; };
 		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMKanaInput+Internals.h"; sourceTree = "<group>"; };
 		BB2909A5217FAF8B00B1816F /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
@@ -1067,6 +1070,8 @@
 				63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */,
 				63E9A8CA210D6CC000418CE1 /* SubjectsByLevelViewController.h */,
 				63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */,
+				657E731C22DAD99C00F6F4C1 /* SubjectsRemainingViewController.h */,
+				657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */,
 				63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */,
 				63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */,
 				633DE93C20C2CA0600AC25F4 /* Tables */,
@@ -1632,6 +1637,7 @@
 				630ADDAD21FEB34C00BC9801 /* BarLineScatterCandleBubbleChartDataProvider.swift in Sources */,
 				63CAAACD1FC6E0BA00E09DA1 /* Any.pbobjc.m in Sources */,
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
+				657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */,
 				630ADD8821FEB34B00BC9801 /* LineChartData.swift in Sources */,
 				63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */,
 				633DE96120C5656B00AC25F4 /* TKMMarkupModelItem.m in Sources */,

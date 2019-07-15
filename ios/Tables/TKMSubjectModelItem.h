@@ -50,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN;
 @property(nonatomic) bool meaningWrong;
 @property(nonatomic) bool showLevelNumber;
 @property(nonatomic) bool showAnswers;
+@property(nonatomic) bool showRemaining;
 @property(nonatomic) NSArray<id> *gradientColors;
 
 @end

@@ -20,9 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 const char *kWanikaniSessionCookieName = "_wanikani_session";
 static const char *kURLBase = "https://api.wanikani.com/v2";
-static const char *kReviewProgressURL = "https://www.wanikani.com/json/progress";
-static const char *kLessonProgressURL = "https://www.wanikani.com/json/lesson/completed";
-static const char *kReviewSessionURL = "https://www.wanikani.com/review/session";
 static const char *kAccountURL = "https://www.wanikani.com/settings/account";
 static const char *kAccessTokenURL = "https://www.wanikani.com/settings/personal_access_tokens";
 static const char *kNewAccessTokenURL =
