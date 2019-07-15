@@ -198,6 +198,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
                                                  subjectType:TKMSubject_Type_Vocabulary
                                                   dataLoader:_services.dataLoader];
 
+  [_levelTimeRemainingLabel setupWithServices:_services];
+
   [self updateHourlyTimer];
 
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
