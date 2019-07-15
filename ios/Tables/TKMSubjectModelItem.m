@@ -167,6 +167,9 @@ static const CGFloat kFontSize = 14.f;
       [self.readingLabel setHidden:YES];
       [self.meaningLabel setHidden:YES];
     }
+
+    self.readingLabel.font = [UIFont systemFontOfSize:kFontSize];
+    self.meaningLabel.font = [UIFont systemFontOfSize:kFontSize];
   } else {
     if (item.subject.hasRadical) {
       [self.readingLabel setHidden:YES];
