@@ -194,6 +194,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedPendingProgressStale = true;
     _isCachedPendingStudyMaterialsStale = true;
     _isCachedSrsLevelCountsStale = true;
+    _cachedAvailableSubjectCountsUpdated = [NSDate distantPast];
   }
   return self;
 }
