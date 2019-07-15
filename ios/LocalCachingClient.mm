@@ -572,7 +572,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   _cachedAvailableSubjectCountsUpdated = now;
 }
 
-- (int)getSrsLevelCount:(int)level {
+- (int)getSrsLevelCount:(TKMSRSStageCategory)level {
   @synchronized(self) {
     [self maybeUpdateCachedSrsLevelCounts];
     return _cachedSrsLevelCounts[level];
@@ -607,30 +607,8 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     while ([r next]) {
       int srs_stage = [r intForColumnIndex:0];
       int count = [r intForColumnIndex:1];
-      int srs_level = 0;
-      switch(srs_stage) {
-        case 2:
-        case 3:
-        case 4:
-          srs_level = 1;
-          break;
-        case 5:
-        case 6:
-          srs_level = 2;
-          break;
-        case 7:
-          srs_level = 3;
-          break;
-        case 8:
-          srs_level = 4;
-          break;
-        case 9:
-          srs_level = 5;
-          break;
-        default:
-          return;
-      }
-      _cachedSrsLevelCounts[srs_level] += count;
+      TKMSRSStageCategory stageCategory = TKMSRSStageCategoryForStageLevel(srs_stage);
+      _cachedSrsLevelCounts[stageCategory] += count;
     }
   }];
 

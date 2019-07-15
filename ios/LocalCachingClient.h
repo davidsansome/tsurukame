@@ -16,6 +16,7 @@
 
 #import "Client.h"
 #import "Reachability.h"
+#import "proto/Wanikani+Convenience.h"
 #import "proto/Wanikani.pbobjc.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -57,7 +58,7 @@ typedef void (^CompletionHandler)(void);
 - (TKMAssignment *)getAssignmentForID:(int)subjectID;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
-- (int)getSrsLevelCount:(int)level;
+- (int)getSrsLevelCount:(TKMSRSStageCategory)level;
 - (int)getGuruKanjiCount;
 
 // Setters: save the data to the database and return immediately, make network requests in the

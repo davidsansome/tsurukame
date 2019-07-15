@@ -28,6 +28,28 @@ NSString *TKMSubjectTypeName(TKMSubject_Type subjectType) {
   }
 }
 
+TKMSRSStageCategory TKMStageCategoryForStageLevel(int srsStage) {
+  switch(srsStage) {
+    case 1:
+      return TKMSRSStageNovice;
+    case 2:
+    case 3:
+    case 4:
+      return TKMSRSStageApprentice;
+    case 5:
+    case 6:
+      return TKMSRSStageGuru;
+    case 7:
+      return TKMSRSStageMaster;
+    case 8:
+      return TKMSRSStageEnlightened;
+    case 9:
+      return TKMSRSStageBurned;
+    default:
+      return TKMSRSStageNovice;
+  }
+}
+
 NSString *TKMSRSStageName(int srsStage) {
   switch (srsStage) {
     case 1:

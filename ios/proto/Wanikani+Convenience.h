@@ -20,6 +20,16 @@ extern NSString *TKMSubjectTypeName(TKMSubject_Type subjectType);
 extern NSString *TKMSRSStageName(int srsStage);
 extern NSString *TKMDetailedSRSStageName(int srsStage);
 
+typedef enum {
+  TKMSRSStageNovice = 0,
+  TKMSRSStageApprentice = 1,
+  TKMSRSStageGuru = 2,
+  TKMSRSStageMaster = 3,
+  TKMSRSStageEnlightened = 4,
+  TKMSRSStageBurned = 5,
+} TKMSRSStageCategory;
+TKMSRSStageCategory TKMSRSStageCategoryForStageLevel(int srsStage);
+
 @interface TKMSubject (Convenience)
 
 @property(nonatomic, readonly) TKMSubject_Type subjectType;

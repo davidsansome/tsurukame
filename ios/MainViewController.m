@@ -429,7 +429,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 - (void)updateAllLevels {
   NSArray *labels = @[_apprenticeCount, _guruCount, _masterCount, _enlightenedCount, _burnedCount];
   [labels enumerateObjectsUsingBlock:^(UILabel* label, NSUInteger idx, BOOL *stop) {
-    int value = [_services.localCachingClient getSrsLevelCount: (int)(idx + 1)];
+    int value = [_services.localCachingClient getSrsLevelCount: (TKMSRSStageCategory)(idx + 1)];
     label.text = [@(value) stringValue];
   }];
 }
