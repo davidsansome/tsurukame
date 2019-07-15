@@ -103,16 +103,17 @@ static const CGFloat kFontSize = 14.f;
 
  switch (itemLevel) {
     case 1:
-      guruInterval += (isAccelerated ? 7200 : 14400);
+      guruInterval += (isAccelerated ? 2 : 4);
     case 2:
-      guruInterval += (isAccelerated ? 14400 : 28800);
+      guruInterval += (isAccelerated ? 4 : 8);
     case 3:
-      guruInterval += (isAccelerated ? 28800 : 82800);
+      guruInterval += (isAccelerated ? 8 : 23);
     case 4:
-      guruInterval += (isAccelerated ? 82800 : 169200);
+      guruInterval += (isAccelerated ? 23 : 47);
   }
 
-  return [reviewDate dateByAddingTimeInterval:guruInterval];
+  int guruSeconds = guruInterval * 60 * 60;
+  return [reviewDate dateByAddingTimeInterval:guruSeconds];
 }
 
 @end
