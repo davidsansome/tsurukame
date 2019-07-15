@@ -18,8 +18,6 @@
 
 @interface SubjectsRemainingViewController : UITableViewController
 
-@property(nonatomic, readonly) int level;
-
 - (void)setupWithServices:(TKMServices *)services;
 
 @end
