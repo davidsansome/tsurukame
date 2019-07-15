@@ -23,8 +23,14 @@
   NSDate* guruDate = [NSDate date];
 
   for (TKMAssignment* assignment in assignments) {
-    TKMSubject *subject = [_services.dataLoader loadSubject:assignment.subjectId];
+    if (assignment.hasPassedAt) { continue; }
 
+    if (!assignment.hasAvailableAt) {
+      self.text = @"Locked";
+      return;
+    }
+
+    TKMSubject *subject = [_services.dataLoader loadSubject:assignment.subjectId];
     TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject
                                                                   assignment:assignment
                                                                     delegate:self];
@@ -40,6 +46,10 @@
     return;
   }
 
+  self.text = [self intervalString:guruDate];
+}
+
+- (NSString *)intervalString:(NSDate *)date {
   NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
   formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleAbbreviated;
 
@@ -47,7 +57,7 @@
   NSDateComponents *components = [[NSCalendar currentCalendar]
                                   components:componentsBitMask
                                   fromDate:[NSDate date]
-                                  toDate:guruDate
+                                  toDate:date
                                   options:0];
 
   // Only show minutes after there are no hours left
@@ -55,7 +65,7 @@
     [components setMinute: 0];
   }
 
-  self.text = [formatter stringFromDateComponents:components];
+  return [formatter stringFromDateComponents:components];
 }
 
 - (void)didTapSubject:(TKMSubject *)subject {
