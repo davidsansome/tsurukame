@@ -101,7 +101,8 @@ static const CGFloat kFontSize = 14.f;
   double guruInterval = 0;
   bool isAccelerated = _subject.level <= 2;
 
- switch (itemLevel) {
+  // From https://docs.api.wanikani.com/20170710/#additional-information
+  switch (itemLevel) {
     case 1:
       guruInterval += (isAccelerated ? 2 : 4);
     case 2:
