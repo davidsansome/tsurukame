@@ -16,6 +16,8 @@
 #import "DataLoader.h"
 #import "proto/Wanikani+Convenience.h"
 
+#import "Tsurukame-Swift.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 const char *kWanikaniSessionCookieName = "_wanikani_session";
@@ -856,6 +858,28 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                      handler(nil, ret);
                    }];
 }
+
+- (void)getLevelInfo:(LevelInfoHandler)handler {
+  NSURLComponents *url =
+  [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/level_progressions", kURLBase]];
+  NSMutableArray<TKMLevel *> *levels = [NSMutableArray array];
+
+  [self startPagedQueryFor:url.URL
+                   handler:^(NSDictionary *data, NSError *error) {
+                     if (error) {
+                       handler(error, nil);
+                       return;
+                     }
+
+                     for (NSDictionary *d in data) {
+                       TKMLevel *level = [[TKMLevel alloc] initWithDict: d];
+                       [levels addObject:level];
+                     }
+                   }];
+
+  handler(nil, levels);
+}
+
 
 @end
 

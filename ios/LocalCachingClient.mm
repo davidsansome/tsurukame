@@ -479,6 +479,9 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 - (NSTimeInterval) averageLevelTime {
+  [_client getLevelInfo:^(NSError * _Nullable error, NSArray<TKMLevel *>* _Nullable levels) {
+    NSLog(@"%@", levels);
+  }];
   return NSTimeInterval(17*24*60*60);
 }
 

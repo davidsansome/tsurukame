@@ -266,6 +266,7 @@
 		63EEFECD1FC45D810070C05F /* ReviewViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEC71FC45D800070C05F /* ReviewViewController.mm */; };
 		63EEFED31FC45E810070C05F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
+		653AA1A122DD892900DB87AD /* TKMLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653AA1A022DD892900DB87AD /* TKMLevel.swift */; };
 		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
 		65C5D1EB22DBD0FD00304792 /* LevelTimeRemainingLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingLabel.m */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
@@ -670,6 +671,7 @@
 		63EEFED21FC45E810070C05F /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		63EEFED71FC46E720070C05F /* Client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		63EEFED81FC46E720070C05F /* Client.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
+		653AA1A022DD892900DB87AD /* TKMLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TKMLevel.swift; sourceTree = "<group>"; };
 		657E731C22DAD99C00F6F4C1 /* SubjectsRemainingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsRemainingViewController.h; sourceTree = "<group>"; };
 		657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsRemainingViewController.m; sourceTree = "<group>"; };
 		65C5D1E922DBD0FD00304792 /* LevelTimeRemainingLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelTimeRemainingLabel.h; sourceTree = "<group>"; };
@@ -1000,6 +1002,7 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				653AA1A022DD892900DB87AD /* TKMLevel.swift */,
 				65C5D1E922DBD0FD00304792 /* LevelTimeRemainingLabel.h */,
 				65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingLabel.m */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
@@ -1611,6 +1614,7 @@
 				6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */,
 				6392DBA220D130F0003019EB /* TKMSubjectModelItem.m in Sources */,
 				630ADD3A21FEB34B00BC9801 /* SquareShapeRenderer.swift in Sources */,
+				653AA1A122DD892900DB87AD /* TKMLevel.swift in Sources */,
 				630ADD3421FEB34B00BC9801 /* CandleStickChartRenderer.swift in Sources */,
 				630ADD5721FEB34B00BC9801 /* HorizontalBarChartView.swift in Sources */,
 				630ADD9121FEB34C00BC9801 /* BubbleChartData.swift in Sources */,
@@ -1872,6 +1876,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1935,6 +1940,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1967,6 +1973,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
+				DEFINES_MODULE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1990,6 +1997,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
+				DEFINES_MODULE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

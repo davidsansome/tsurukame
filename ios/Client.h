@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "proto/Wanikani.pbobjc.h"
-
 #import <Foundation/Foundation.h>
 
+#include "proto/Wanikani.pbobjc.h"
+@class TKMLevel;
 @class DataLoader;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -34,6 +34,7 @@ typedef void (^ProgressHandler)(NSError *_Nullable error);
 typedef void (^StudyMaterialsHandler)(NSError *_Nullable error,
                                       NSArray<TKMStudyMaterials *> *_Nullable studyMaterials);
 typedef void (^UserInfoHandler)(NSError *_Nullable error, TKMUser *_Nullable user);
+typedef void (^LevelInfoHandler)(NSError *_Nullable error, NSArray<TKMLevel *> *_Nullable level);
 typedef void (^UpdateStudyMaterialHandler)(NSError *_Nullable error);
 
 @interface TKMClientError : NSError
@@ -74,6 +75,7 @@ extern bool TKMIsClientError(NSError *error);
 - (void)sendProgress:(TKMProgress *)progress handler:(ProgressHandler)handler;
 - (void)getStudyMaterialsModifiedAfter:(NSString *)date handler:(StudyMaterialsHandler)handler;
 - (void)getUserInfo:(UserInfoHandler)handler;
+- (void)getLevelInfo:(LevelInfoHandler)handler;
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material
                     handler:(UpdateStudyMaterialHandler)handler;
 
