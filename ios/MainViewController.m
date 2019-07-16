@@ -84,6 +84,12 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 @property(weak, nonatomic) IBOutlet UILabel *queuedItemsLabel;
 @property(weak, nonatomic) IBOutlet UILabel *queuedItemsSubtitleLabel;
 
+@property (weak, nonatomic) IBOutlet UILabel *apprenticeCount;
+@property (weak, nonatomic) IBOutlet UILabel *guruCount;
+@property (weak, nonatomic) IBOutlet UILabel *masterCount;
+@property (weak, nonatomic) IBOutlet UILabel *enlightenedCount;
+@property (weak, nonatomic) IBOutlet UILabel *burnedCount;
+
 @property(weak, nonatomic) IBOutlet CombinedChartView *upcomingReviewsChartView;
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelRadicalsPieChartView;
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelKanjiPieChartView;
@@ -205,8 +211,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
              name:kLocalCachingClientUserInfoChangedNotification
            object:_services.localCachingClient];
   [nc addObserver:self
-         selector:@selector(guruSubjectCountsChanged)
-             name:kLocalCachingClientGuruSubjectCountsChangedNotification
+         selector:@selector(srsLevelCountsChanged)
+             name:kLocalCachingClientSrsLevelCountsChangedNotification
            object:_services.localCachingClient];
   [nc addObserver:self
          selector:@selector(clientIsUnauthorized)
@@ -298,7 +304,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
   if (indexPath.section == kUpcomingReviewsSection) {
-    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 360 : 120;
+    return ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) ? 360 : 120;
   }
 
   return [super tableView:tableView heightForRowAtIndexPath:indexPath];
@@ -400,13 +406,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   [self updateUserInfo];
 }
 
-- (void)guruSubjectCountsChanged {
-  [self updateUserInfo];
-}
-
 - (void)updateUserInfo {
   TKMUser *user = [_services.localCachingClient getUserInfo];
-  int guruKanji = [_services.localCachingClient getGuruSubjectCountByType:TKMSubject_Type_Kanji];
+  int guruKanji = [_services.localCachingClient getGuruKanjiCount];
 
   NSString *email = [UserDefaults userEmailAddress];
   if (email.length) {
@@ -417,6 +419,19 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   _userNameLabel.text = user.username;
   _userLevelLabel.text =
       [NSString stringWithFormat:@"Level %d \u00B7 learned %d kanji", user.level, guruKanji];
+}
+
+- (void)srsLevelCountsChanged {
+  [self updateUserInfo];
+  [self updateAllLevels];
+}
+
+- (void)updateAllLevels {
+  NSArray *labels = @[_apprenticeCount, _guruCount, _masterCount, _enlightenedCount, _burnedCount];
+  [labels enumerateObjectsUsingBlock:^(UILabel* label, NSUInteger idx, BOOL *stop) {
+    int value = [_services.localCachingClient getSrsLevelCount: (TKMSRSStageCategory)(idx + 1)];
+    label.text = [@(value) stringValue];
+  }];
 }
 
 - (void)clientIsUnauthorized {

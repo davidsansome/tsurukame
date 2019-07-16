@@ -16,6 +16,7 @@
 
 #import "Client.h"
 #import "Reachability.h"
+#import "proto/Wanikani+Convenience.h"
 #import "proto/Wanikani.pbobjc.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -25,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSNotificationName kLocalCachingClientAvailableItemsChangedNotification;
 extern NSNotificationName kLocalCachingClientPendingItemsChangedNotification;
 extern NSNotificationName kLocalCachingClientUserInfoChangedNotification;
-extern NSNotificationName kLocalCachingClientGuruSubjectCountsChangedNotification;
+extern NSNotificationName kLocalCachingClientSrsLevelCountsChangedNotification;
 extern NSNotificationName kLocalCachingClientUnauthorizedNotification;
 
 typedef void (^CompletionHandler)(void);
@@ -57,7 +58,8 @@ typedef void (^CompletionHandler)(void);
 - (TKMAssignment *)getAssignmentForID:(int)subjectID;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
-- (int)getGuruSubjectCountByType:(TKMSubject_Type)type;
+- (int)getSrsLevelCount:(TKMSRSStageCategory)level;
+- (int)getGuruKanjiCount;
 
 // Setters: save the data to the database and return immediately, make network requests in the
 // background.
