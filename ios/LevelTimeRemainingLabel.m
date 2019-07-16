@@ -10,6 +10,7 @@
 #import "Tables/TKMSubjectModelItem.h"
 #import "TKMServices.h"
 #import "DataLoader.h"
+#import "LocalCachingClient.h"
 
 @implementation LevelTimeRemainingLabel {
   TKMServices *_services;
@@ -26,7 +27,10 @@
     if (assignment.hasPassedAt) { continue; }
 
     if (!assignment.hasAvailableAt) {
-      self.text = @"Locked";
+      NSTimeInterval average = [_services.localCachingClient averageLevelTime];
+      NSDate* averageDate = [NSDate dateWithTimeIntervalSinceNow:average];
+      NSString* interval = [self intervalString:averageDate];
+      self.text = [NSString stringWithFormat: @"Average %@", interval ];
       return;
     }
 

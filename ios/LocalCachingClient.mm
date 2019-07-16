@@ -478,6 +478,10 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   return [self getAssignmentsAtLevel:level];
 }
 
+- (NSTimeInterval) averageLevelTime {
+  return NSTimeInterval(17*24*60*60);
+}
+
 #pragma mark - Getting cached data
 
 - (int)pendingProgress {
