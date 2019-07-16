@@ -16,6 +16,10 @@
 
 #import "Wanikani.pbobjc.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern NSString *TKMSubjectTypeName(TKMSubject_Type subjectType);
 extern NSString *TKMSRSStageName(int srsStage);
 extern NSString *TKMDetailedSRSStageName(int srsStage);
@@ -28,7 +32,11 @@ typedef enum {
   TKMSRSStageEnlightened = 4,
   TKMSRSStageBurned = 5,
 } TKMSRSStageCategory;
-TKMSRSStageCategory TKMSRSStageCategoryForStageLevel(int srsStage);
+extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
+
+#ifdef __cplusplus
+}
+#endif
 
 @interface TKMSubject (Convenience)
 

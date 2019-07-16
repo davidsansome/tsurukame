@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import <UIKit/UIKit.h>
+
 #import "UserDefaults.h"
 #import "Wanikani+Convenience.h"
-
-#import <UIKit/UIKit.h>
 
 NSString *TKMSubjectTypeName(TKMSubject_Type subjectType) {
   switch (subjectType) {
@@ -28,7 +28,7 @@ NSString *TKMSubjectTypeName(TKMSubject_Type subjectType) {
   }
 }
 
-TKMSRSStageCategory TKMStageCategoryForStageLevel(int srsStage) {
+TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage) {
   switch(srsStage) {
     case 1:
       return TKMSRSStageNovice;
@@ -47,6 +47,28 @@ TKMSRSStageCategory TKMStageCategoryForStageLevel(int srsStage) {
       return TKMSRSStageBurned;
     default:
       return TKMSRSStageNovice;
+  }
+}
+
+int TKMSRSStageCategoryIntForStage(int srsStage) {
+  switch(srsStage) {
+    case 1:
+      return 0;
+    case 2:
+    case 3:
+    case 4:
+      return 1;
+    case 5:
+    case 6:
+      return 2;
+    case 7:
+      return 3;
+    case 8:
+      return 4;
+    case 9:
+      return 5;
+    default:
+      return 0;
   }
 }
 

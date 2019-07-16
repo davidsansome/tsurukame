@@ -607,7 +607,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     while ([r next]) {
       int srs_stage = [r intForColumnIndex:0];
       int count = [r intForColumnIndex:1];
-      TKMSRSStageCategory stageCategory = TKMSRSStageCategoryForStageLevel(srs_stage);
+      TKMSRSStageCategory stageCategory = TKMSRSStageCategoryForStage(srs_stage);
       _cachedSrsLevelCounts[stageCategory] += count;
     }
   }];
