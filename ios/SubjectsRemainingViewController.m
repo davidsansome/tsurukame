@@ -43,8 +43,8 @@
   self.navigationItem.title = [NSString stringWithFormat:@"Remaining in Level %d", level];
 
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
-  [model addSection:@"Radicals"];
-  [model addSection:@"Kanji"];
+  NSMutableArray *radicals = [NSMutableArray array];
+  NSMutableArray *kanji = [NSMutableArray array];
 
   for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtUsersCurrentLevel]) {
     if (assignment.srsStage > 4) {
@@ -56,7 +56,6 @@
       continue;
     }
 
-    int section = subject.subjectType - 1;
     TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject
                                                                   assignment:assignment
                                                                     delegate:self];
@@ -66,7 +65,27 @@
     if (!assignment.isReviewStage && !assignment.isLessonStage) {
       item.gradientColors = TKMLockedGradient();
     }
-    [model addItem:item toSection:section];
+    if (item.subject.subjectType == TKMSubject_Type_Radical) {
+      [radicals addObject: item];
+    } else {
+      [kanji addObject: item];
+    }
+  }
+
+  if ([radicals count] > 0) {
+    [model addSection:@"Radicals"];
+    for (TKMSubjectModelItem *item in radicals) {
+      int section = [model sectionCount] - 1;
+      [model addItem:item toSection:section];
+    }
+  }
+
+  if ([kanji count] > 0) {
+    [model addSection:@"Kanji"];
+    for (TKMSubjectModelItem *item in kanji) {
+      int section = [model sectionCount] - 1;
+      [model addItem:item toSection:section];
+    }
   }
 
   NSComparator comparator = ^NSComparisonResult(TKMSubjectModelItem *a, TKMSubjectModelItem *b) {
@@ -78,10 +97,10 @@
     if (a.assignment.srsStage < b.assignment.srsStage) return NSOrderedDescending;
     return NSOrderedSame;
   };
-  [model sortSection:0 usingComparator:comparator];
-  [model sortSection:1 usingComparator:comparator];
 
   for (int section = 0; section < model.sectionCount; ++section) {
+    [model sortSection:section usingComparator:comparator];
+
     NSArray *items = [model itemsInSection:section];
     TKMAssignment *lastAssignment = nil;
     for (int index = 0; index < items.count; ++index) {
