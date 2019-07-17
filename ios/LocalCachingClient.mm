@@ -174,6 +174,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   bool _isCachedPendingStudyMaterialsStale;
   bool _isCachedSrsLevelCountsStale;
   NSDate *_cachedAvailableSubjectCountsUpdated;
+  NSTimeInterval _cachedAverageLevelTime;
 }
 
 #pragma mark - Initialisers
@@ -195,6 +196,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedPendingStudyMaterialsStale = true;
     _isCachedSrsLevelCountsStale = true;
     _cachedAvailableSubjectCountsUpdated = [NSDate distantPast];
+    _cachedAverageLevelTime = 0;
   }
   return self;
 }
@@ -478,13 +480,6 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   return [self getAssignmentsAtLevel:level];
 }
 
-- (NSTimeInterval) averageLevelTime {
-  [_client getLevelInfo:^(NSError * _Nullable error, NSArray<TKMLevel *>* _Nullable levels) {
-    NSLog(@"%@", levels);
-  }];
-  return NSTimeInterval(17*24*60*60);
-}
-
 #pragma mark - Getting cached data
 
 - (int)pendingProgress {
@@ -620,6 +615,15 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   }];
 
   _isCachedSrsLevelCountsStale = false;
+}
+
+- (NSTimeInterval) getAverageLevelTime {
+  if (_cachedAverageLevelTime == 0) {
+    [_client getAverageLevelTime:^(NSError * _Nullable error, NSNumber* _Nullable average) {
+      _cachedAverageLevelTime = [average doubleValue];
+    }];
+  }
+  return _cachedAverageLevelTime;
 }
 
 #pragma mark - Invalidating cached data

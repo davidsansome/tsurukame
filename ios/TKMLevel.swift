@@ -44,4 +44,9 @@ func dateFrom(dict: NSDictionary, keyPath: String) -> Date? {
     self.completedAt = dateFrom(dict: dict, keyPath: "data.completed_at")
     self.abandonedAt = dateFrom(dict: dict, keyPath: "data.abandoned_at")
   }
+
+  public func interval() -> Double {
+    guard passedAt != nil && unlockedAt != nil else { return 0 }
+    return passedAt!.timeIntervalSince(unlockedAt!)
+  }
 }

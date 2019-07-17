@@ -34,7 +34,7 @@ typedef void (^ProgressHandler)(NSError *_Nullable error);
 typedef void (^StudyMaterialsHandler)(NSError *_Nullable error,
                                       NSArray<TKMStudyMaterials *> *_Nullable studyMaterials);
 typedef void (^UserInfoHandler)(NSError *_Nullable error, TKMUser *_Nullable user);
-typedef void (^LevelInfoHandler)(NSError *_Nullable error, NSArray<TKMLevel *> *_Nullable level);
+typedef void (^LevelInfoHandler)(NSError *_Nullable error, NSNumber *_Nullable level);
 typedef void (^UpdateStudyMaterialHandler)(NSError *_Nullable error);
 
 @interface TKMClientError : NSError
@@ -75,7 +75,7 @@ extern bool TKMIsClientError(NSError *error);
 - (void)sendProgress:(TKMProgress *)progress handler:(ProgressHandler)handler;
 - (void)getStudyMaterialsModifiedAfter:(NSString *)date handler:(StudyMaterialsHandler)handler;
 - (void)getUserInfo:(UserInfoHandler)handler;
-- (void)getLevelInfo:(LevelInfoHandler)handler;
+- (void)getAverageLevelTime:(LevelInfoHandler)handler;
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material
                     handler:(UpdateStudyMaterialHandler)handler;
 

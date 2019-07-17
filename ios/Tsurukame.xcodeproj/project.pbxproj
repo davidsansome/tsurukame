@@ -1002,9 +1002,6 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
-				653AA1A022DD892900DB87AD /* TKMLevel.swift */,
-				65C5D1E922DBD0FD00304792 /* LevelTimeRemainingLabel.h */,
-				65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingLabel.m */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -1026,6 +1023,8 @@
 				63EEFEC21FC45CB10070C05F /* Info.plist */,
 				3DA8BAFA224C957F009E925B /* LessonOrderViewController.h */,
 				3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */,
+				65C5D1E922DBD0FD00304792 /* LevelTimeRemainingCell.h */,
+				65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */,
 				63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */,
 				637C12DC203D779D009E92DB /* LessonsPageControl.h */,
 				637C12DD203D779D009E92DB /* LessonsPageControl.m */,
@@ -1062,6 +1061,7 @@
 				633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */,
 				63EEFECA1FC45D800070C05F /* ReviewViewController.h */,
 				63EEFEC71FC45D800070C05F /* ReviewViewController.mm */,
+				653AA1A022DD892900DB87AD /* TKMLevel.swift */,
 				63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */,
 				63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */,
 				63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */,

@@ -859,7 +859,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                    }];
 }
 
-- (void)getLevelInfo:(LevelInfoHandler)handler {
+- (void)getAverageLevelTime:(LevelInfoHandler)handler {
   NSURLComponents *url =
   [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/level_progressions", kURLBase]];
   NSMutableArray<TKMLevel *> *levels = [NSMutableArray array];
@@ -875,9 +875,19 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                        TKMLevel *level = [[TKMLevel alloc] initWithDict: d];
                        [levels addObject:level];
                      }
-                   }];
 
-  handler(nil, levels);
+                     double sum = 0;
+                     double count = 0;
+                     for (TKMLevel* level in levels) {
+                       double interval = [level interval];
+                       if (interval > 0) {
+                         sum += interval;
+                         count += 1;
+                       }
+                     }
+
+                     handler(nil, [NSNumber numberWithDouble: sum / count]);
+                   }];
 }
 
 
