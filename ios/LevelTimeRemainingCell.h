@@ -1,5 +1,4 @@
 //
-//  LevelTimeRemainingLabel.h
 //  Tsurukame
 //
 //  Created by André Arko on 7/14/19.
@@ -14,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LevelTimeRemainingLabel : UILabel <TKMSubjectDelegate>
+@interface LevelTimeRemainingCell : UITableViewCell <TKMSubjectDelegate>
 
 - (void)setupWithServices:(TKMServices *)services;
 - (void)update:(NSArray<TKMAssignment *> *)assignments;

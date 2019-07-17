@@ -1,18 +1,17 @@
 //
-//  LevelTimeRemainingLabel.m
 //  Tsurukame
 //
 //  Created by André Arko on 7/14/19.
 //  Copyright © 2019 David Sansome. All rights reserved.
 //
 
-#import "LevelTimeRemainingLabel.h"
+#import "LevelTimeRemainingCell.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "TKMServices.h"
 #import "DataLoader.h"
 #import "LocalCachingClient.h"
 
-@implementation LevelTimeRemainingLabel {
+@implementation LevelTimeRemainingCell {
   TKMServices *_services;
 }
 
@@ -27,10 +26,11 @@
     if (assignment.hasPassedAt) { continue; }
 
     if (!assignment.hasAvailableAt) {
-      NSTimeInterval average = [_services.localCachingClient averageLevelTime];
+      NSTimeInterval average = [_services.localCachingClient getAverageLevelTime];
       NSDate* averageDate = [NSDate dateWithTimeIntervalSinceNow:average];
       NSString* interval = [self intervalString:averageDate];
-      self.text = [NSString stringWithFormat: @"Average %@", interval ];
+
+      [self setInterval: [NSString stringWithFormat: @"average %@", interval]];
       return;
     }
 
@@ -46,11 +46,15 @@
   }
 
   if ([[NSDate date] compare:guruDate] == NSOrderedDescending) {
-    self.text = @"Now";
+    [self setInterval:@"Now"];
     return;
   }
 
-  self.text = [self intervalString:guruDate];
+  [self setInterval:[self intervalString:guruDate]];
+}
+
+- (void)setInterval:(NSString *) text {
+  self.detailTextLabel.text = text;
 }
 
 - (NSString *)intervalString:(NSDate *)date {

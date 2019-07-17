@@ -268,7 +268,7 @@
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
 		653AA1A122DD892900DB87AD /* TKMLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653AA1A022DD892900DB87AD /* TKMLevel.swift */; };
 		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
-		65C5D1EB22DBD0FD00304792 /* LevelTimeRemainingLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingLabel.m */; };
+		65C5D1EB22DBD0FD00304792 /* LevelTimeRemainingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
 		BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* TKMFontsViewController.m */; };
@@ -674,8 +674,8 @@
 		653AA1A022DD892900DB87AD /* TKMLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TKMLevel.swift; sourceTree = "<group>"; };
 		657E731C22DAD99C00F6F4C1 /* SubjectsRemainingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsRemainingViewController.h; sourceTree = "<group>"; };
 		657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsRemainingViewController.m; sourceTree = "<group>"; };
-		65C5D1E922DBD0FD00304792 /* LevelTimeRemainingLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelTimeRemainingLabel.h; sourceTree = "<group>"; };
-		65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LevelTimeRemainingLabel.m; sourceTree = "<group>"; };
+		65C5D1E922DBD0FD00304792 /* LevelTimeRemainingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelTimeRemainingCell.h; sourceTree = "<group>"; };
+		65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LevelTimeRemainingCell.m; sourceTree = "<group>"; };
 		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMKanaInput+Internals.h"; sourceTree = "<group>"; };
 		BB2909A5217FAF8B00B1816F /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
@@ -1676,7 +1676,7 @@
 				630ADD3E21FEB34B00BC9801 /* CrossShapeRenderer.swift in Sources */,
 				630ADD9321FEB34C00BC9801 /* ScatterChartDataSet.swift in Sources */,
 				63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */,
-				65C5D1EB22DBD0FD00304792 /* LevelTimeRemainingLabel.m in Sources */,
+				65C5D1EB22DBD0FD00304792 /* LevelTimeRemainingCell.m in Sources */,
 				630ADD3F21FEB34B00BC9801 /* TriangleShapeRenderer.swift in Sources */,
 				6319C9B220441D3800C31F87 /* FMResultSet.m in Sources */,
 				630ADD4121FEB34B00BC9801 /* XAxisRendererHorizontalBarChart.swift in Sources */,

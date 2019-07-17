@@ -353,7 +353,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="nkQ-lF-bti" detailTextLabel="Me6-QS-wbB" style="IBUITableViewCellStyleValue1" id="kjb-LI-1oe">
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="nkQ-lF-bti" detailTextLabel="Me6-QS-wbB" style="IBUITableViewCellStyleValue1" id="kjb-LI-1oe" customClass="LevelTimeRemainingCell">
                                         <rect key="frame" x="0.0" y="541.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kjb-LI-1oe" id="hOM-MC-jGF">
@@ -367,9 +367,9 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Me6-QS-wbB" customClass="LevelTimeRemainingLabel">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="right" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Me6-QS-wbB">
                                                     <rect key="frame" x="315" y="12" width="44" height="20.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -613,7 +613,7 @@
                         <outlet property="enlightenedCount" destination="grY-8e-0wl" id="3AD-71-myK"/>
                         <outlet property="guruCount" destination="wei-td-xkx" id="Ahn-G6-sOX"/>
                         <outlet property="lessonsCell" destination="cHi-TB-m7d" id="I2l-ag-Z07"/>
-                        <outlet property="levelTimeRemainingLabel" destination="Me6-QS-wbB" id="BJg-jE-0gL"/>
+                        <outlet property="levelTimeRemainingCell" destination="kjb-LI-1oe" id="LMR-Xc-gui"/>
                         <outlet property="masterCount" destination="1lb-QA-MDg" id="Qau-G6-Uz9"/>
                         <outlet property="queuedItemsLabel" destination="ZMS-Lu-tge" id="oYP-du-0GD"/>
                         <outlet property="queuedItemsSubtitleLabel" destination="DCZ-py-fGX" id="23Q-AS-zU3"/>
