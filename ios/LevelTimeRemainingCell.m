@@ -24,6 +24,7 @@
 
   for (TKMAssignment* assignment in assignments) {
     if (assignment.hasPassedAt) { continue; }
+    if (assignment.subjectType == TKMSubject_Type_Vocabulary) { continue; }
 
     if (!assignment.hasAvailableAt) {
       NSTimeInterval average = [_services.localCachingClient getAverageLevelTime];
