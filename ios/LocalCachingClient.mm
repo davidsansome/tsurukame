@@ -174,7 +174,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   bool _isCachedPendingStudyMaterialsStale;
   bool _isCachedSrsLevelCountsStale;
   NSDate *_cachedAvailableSubjectCountsUpdated;
-  NSTimeInterval _cachedAverageLevelTime;
+  NSArray<NSNumber *> *_cachedLevelTimes;
 }
 
 #pragma mark - Initialisers
@@ -196,7 +196,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedPendingStudyMaterialsStale = true;
     _isCachedSrsLevelCountsStale = true;
     _cachedAvailableSubjectCountsUpdated = [NSDate distantPast];
-    _cachedAverageLevelTime = 0;
+    _cachedLevelTimes = [NSArray array];
   }
   return self;
 }
@@ -617,13 +617,30 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   _isCachedSrsLevelCountsStale = false;
 }
 
-- (NSTimeInterval) getAverageLevelTime {
-  if (_cachedAverageLevelTime == 0) {
-    [_client getAverageLevelTime:^(NSError * _Nullable error, NSNumber* _Nullable average) {
-      _cachedAverageLevelTime = [average doubleValue];
+- (NSTimeInterval) getAverageRemainingLevelTime {
+  if ([_cachedLevelTimes count] == 0) {
+    [_client getLevelTimes:^(NSError * _Nullable error, NSArray* _Nullable levelTimes) {
+      if (levelTimes) {
+        _cachedLevelTimes = levelTimes;
+      }
     }];
+
+    return 0;
   }
-  return _cachedAverageLevelTime;
+
+  NSNumber* currentLevelTime = [_cachedLevelTimes lastObject];
+  u_long lastPassIndex = [_cachedLevelTimes count] - 1;
+
+  // Use the median 50% to calculate the average time
+  u_long lowerIndex = lastPassIndex / 4 + (lastPassIndex % 4 == 3 ? 1 : 0);
+  u_long upperIndex = lastPassIndex * 3 / 4 + (lastPassIndex == 1 ? 1 : 0);
+
+  NSRange medianPassRange = NSMakeRange(lowerIndex, upperIndex);
+  NSArray* medianPassTimes = [_cachedLevelTimes subarrayWithRange:medianPassRange];
+  NSNumber* averageTime = [medianPassTimes valueForKeyPath:@"@avg.self"];
+  NSTimeInterval remainingTime = [averageTime doubleValue] - [currentLevelTime doubleValue];
+
+  return remainingTime;
 }
 
 #pragma mark - Invalidating cached data

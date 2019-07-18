@@ -27,11 +27,9 @@
     if (assignment.subjectType == TKMSubject_Type_Vocabulary) { continue; }
 
     if (!assignment.hasAvailableAt) {
-      NSTimeInterval average = [_services.localCachingClient getAverageLevelTime];
+      NSTimeInterval average = [_services.localCachingClient getAverageRemainingLevelTime];
       NSDate* averageDate = [NSDate dateWithTimeIntervalSinceNow:average];
-      NSString* interval = [self intervalString:averageDate];
-
-      [self setInterval: [NSString stringWithFormat: @"average %@", interval]];
+      [self setRemaining: averageDate average: YES];
       return;
     }
 
@@ -46,16 +44,21 @@
     }
   }
 
-  if ([[NSDate date] compare:guruDate] == NSOrderedDescending) {
-    [self setInterval:@"Now"];
-    return;
-  }
-
-  [self setInterval:[self intervalString:guruDate]];
+  [self setRemaining:guruDate average: NO];
 }
 
-- (void)setInterval:(NSString *) text {
-  self.detailTextLabel.text = text;
+- (void)setRemaining:(NSDate *) finish average:(BOOL) average {
+  if (average) {
+    self.textLabel.text = @"Time Remaining (average)";
+  } else {
+    self.textLabel.text = @"Time Remaining";
+  }
+
+  if ([[NSDate date] compare:finish] == NSOrderedDescending) {
+    self.detailTextLabel.text = @"Now";
+  } else {
+    self.detailTextLabel.text = [self intervalString:finish];
+  }
 }
 
 - (NSString *)intervalString:(NSDate *)date {

@@ -38,7 +38,7 @@ typedef void (^CompletionHandler)(void);
 @property(nonatomic, readonly) NSArray<NSNumber *> *upcomingReviews;
 @property(nonatomic, readonly) int pendingProgress;
 @property(nonatomic, readonly) int pendingStudyMaterials;
-@property(nonatomic, readonly) NSTimeInterval getAverageLevelTime;
+@property(nonatomic, readonly) NSTimeInterval getAverageRemainingLevelTime;
 
 + (NSURL *)databaseFileUrl;
 
