@@ -876,7 +876,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                        [levels addObject:level];
                      }
 
-                     NSArray* intervals = [levels valueForKeyPath:@"timeSpentCurrent"];
+                     NSArray<NSNumber *> *intervals = [levels valueForKeyPath:@"timeSpentCurrent"];
                      handler(nil, intervals);
                    }];
 }

@@ -43,8 +43,8 @@
   self.navigationItem.title = [NSString stringWithFormat:@"Remaining in Level %d", level];
 
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
-  NSMutableArray *radicals = [NSMutableArray array];
-  NSMutableArray *kanji = [NSMutableArray array];
+  NSMutableArray<TKMSubjectModelItem *> *radicals = [NSMutableArray array];
+  NSMutableArray<TKMSubjectModelItem *> *kanji = [NSMutableArray array];
 
   for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtUsersCurrentLevel]) {
     if (assignment.srsStage > 4) {
@@ -75,16 +75,14 @@
   if ([radicals count] > 0) {
     [model addSection:@"Radicals"];
     for (TKMSubjectModelItem *item in radicals) {
-      int section = [model sectionCount] - 1;
-      [model addItem:item toSection:section];
+      [model addItem:item];
     }
   }
 
   if ([kanji count] > 0) {
     [model addSection:@"Kanji"];
     for (TKMSubjectModelItem *item in kanji) {
-      int section = [model sectionCount] - 1;
-      [model addItem:item toSection:section];
+      [model addItem:item];
     }
   }
 

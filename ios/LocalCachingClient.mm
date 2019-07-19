@@ -619,7 +619,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 
 - (NSTimeInterval) getAverageRemainingLevelTime {
   if ([_cachedLevelTimes count] == 0) {
-    [_client getLevelTimes:^(NSError * _Nullable error, NSArray* _Nullable levelTimes) {
+    [_client getLevelTimes:^(NSError * _Nullable error, NSArray<NSNumber *> * _Nullable levelTimes) {
       if (levelTimes) {
         _cachedLevelTimes = levelTimes;
       }
@@ -629,11 +629,11 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   }
 
   NSNumber* currentLevelTime = [_cachedLevelTimes lastObject];
-  u_long lastPassIndex = [_cachedLevelTimes count] - 1;
+  NSUInteger lastPassIndex = [_cachedLevelTimes count] - 1;
 
   // Use the median 50% to calculate the average time
-  u_long lowerIndex = lastPassIndex / 4 + (lastPassIndex % 4 == 3 ? 1 : 0);
-  u_long upperIndex = lastPassIndex * 3 / 4 + (lastPassIndex == 1 ? 1 : 0);
+  NSUInteger lowerIndex = lastPassIndex / 4 + (lastPassIndex % 4 == 3 ? 1 : 0);
+  NSUInteger upperIndex = lastPassIndex * 3 / 4 + (lastPassIndex == 1 ? 1 : 0);
 
   NSRange medianPassRange = NSMakeRange(lowerIndex, upperIndex);
   NSArray* medianPassTimes = [_cachedLevelTimes subarrayWithRange:medianPassRange];

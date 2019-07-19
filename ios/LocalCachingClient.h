@@ -38,7 +38,6 @@ typedef void (^CompletionHandler)(void);
 @property(nonatomic, readonly) NSArray<NSNumber *> *upcomingReviews;
 @property(nonatomic, readonly) int pendingProgress;
 @property(nonatomic, readonly) int pendingStudyMaterials;
-@property(nonatomic, readonly) NSTimeInterval getAverageRemainingLevelTime;
 
 + (NSURL *)databaseFileUrl;
 
@@ -61,6 +60,7 @@ typedef void (^CompletionHandler)(void);
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
 - (int)getSrsLevelCount:(TKMSRSStageCategory)level;
 - (int)getGuruKanjiCount;
+- (NSTimeInterval)getAverageRemainingLevelTime;
 
 // Setters: save the data to the database and return immediately, make network requests in the
 // background.
