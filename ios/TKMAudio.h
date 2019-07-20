@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import <Foundation/Foundation.h>
+#import "TKMServices.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,7 +37,7 @@ typedef enum TKMAudioPlaybackState {
 
 + (NSString *)cacheDirectoryPath;
 
-- (instancetype)initWithReachability:(Reachability *)reachability NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithServices:(TKMServices *)services NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void)playAudioForSubjectID:(int)subjectID delegate:(nullable id<TKMAudioDelegate>)delegate;
