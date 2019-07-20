@@ -14,6 +14,8 @@
 
 #import "TKMAudio.h"
 #import "Reachability.h"
+#import "DataLoader.h"
+#import "proto/Wanikani.pbobjc.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
@@ -23,6 +25,7 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
 
 @implementation TKMAudio {
   Reachability *_reachability;
+  TKMServices *_services;
   AVPlayer *_player;
   __weak id<TKMAudioDelegate> _delegate;
 }
@@ -33,10 +36,11 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
   return [NSString stringWithFormat:@"%@/audio", paths.firstObject];
 }
 
-- (instancetype)initWithReachability:(Reachability *)reachability {
+- (instancetype)initWithServices:(TKMServices *) services {
   self = [super init];
   if (self) {
-    _reachability = reachability;
+    _services = services;
+    _reachability = services.reachability;
     _currentState = TKMAudioFinished;
 
     AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -84,7 +88,8 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
     return;
   }
 
-  NSString *urlString = [NSString stringWithFormat:kURLPattern, subjectID];
+  TKMSubject *subject = [_services.dataLoader loadSubject:subjectID];
+  NSString *urlString = [[subject vocabulary] audio];
   [self playURL:[NSURL URLWithString:urlString] delegate:delegate];
 }
 
