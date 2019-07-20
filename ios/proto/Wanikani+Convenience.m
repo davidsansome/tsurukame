@@ -360,3 +360,41 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 }
 
 @end
+
+@implementation TKMLevel (Convenience)
+
+- (NSDate *)unlockedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.unlockedAt];
+}
+
+- (NSDate *)startedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.startedAt];
+}
+
+- (NSDate *)passedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.passedAt];
+}
+
+- (NSDate *)abandonedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.abandonedAt];
+}
+
+- (NSDate *)completedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.completedAt];
+}
+
+- (NSDate *)createdAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.createdAt];
+}
+
+- (NSTimeInterval)timeSpentCurrent {
+  if (!self.hasUnlockedAt) { return 0; }
+
+  if (self.hasPassedAt) {
+    return [[self passedAtDate] timeIntervalSinceDate: [self unlockedAtDate]];
+  } else {
+    return [[NSDate date] timeIntervalSinceDate: [self unlockedAtDate]];
+  }
+}
+
+@end

@@ -266,7 +266,6 @@
 		63EEFECD1FC45D810070C05F /* ReviewViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEC71FC45D800070C05F /* ReviewViewController.mm */; };
 		63EEFED31FC45E810070C05F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
-		653AA1A122DD892900DB87AD /* TKMLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653AA1A022DD892900DB87AD /* TKMLevel.swift */; };
 		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
 		65C5D1EB22DBD0FD00304792 /* LevelTimeRemainingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
@@ -671,7 +670,6 @@
 		63EEFED21FC45E810070C05F /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		63EEFED71FC46E720070C05F /* Client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		63EEFED81FC46E720070C05F /* Client.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
-		653AA1A022DD892900DB87AD /* TKMLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TKMLevel.swift; sourceTree = "<group>"; };
 		657E731C22DAD99C00F6F4C1 /* SubjectsRemainingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsRemainingViewController.h; sourceTree = "<group>"; };
 		657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsRemainingViewController.m; sourceTree = "<group>"; };
 		65C5D1E922DBD0FD00304792 /* LevelTimeRemainingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelTimeRemainingCell.h; sourceTree = "<group>"; };
@@ -1061,7 +1059,6 @@
 				633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */,
 				63EEFECA1FC45D800070C05F /* ReviewViewController.h */,
 				63EEFEC71FC45D800070C05F /* ReviewViewController.mm */,
-				653AA1A022DD892900DB87AD /* TKMLevel.swift */,
 				63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */,
 				63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */,
 				63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */,
@@ -1614,7 +1611,6 @@
 				6356E7811FDFEFAB009CE7C1 /* SubjectDetailsView.m in Sources */,
 				6392DBA220D130F0003019EB /* TKMSubjectModelItem.m in Sources */,
 				630ADD3A21FEB34B00BC9801 /* SquareShapeRenderer.swift in Sources */,
-				653AA1A122DD892900DB87AD /* TKMLevel.swift in Sources */,
 				630ADD3421FEB34B00BC9801 /* CandleStickChartRenderer.swift in Sources */,
 				630ADD5721FEB34B00BC9801 /* HorizontalBarChartView.swift in Sources */,
 				630ADD9121FEB34C00BC9801 /* BubbleChartData.swift in Sources */,

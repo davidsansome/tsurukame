@@ -225,3 +225,13 @@ message SubjectsByLevel {
   repeated int32 vocabulary = 3;
 }
 
+message Level {
+  optional int32 id = 1;
+  optional int32 level = 2;
+  optional int32 abandoned_at = 3;
+  optional int32 completed_at = 4;
+  optional int32 created_at = 5;
+  optional int32 passed_at = 6;
+  optional int32 started_at = 7;
+  optional int32 unlocked_at = 8;
+}

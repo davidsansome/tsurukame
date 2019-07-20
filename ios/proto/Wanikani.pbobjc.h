@@ -64,6 +64,7 @@ BOOL TKMMeaning_Type_IsValidValue(int32_t value);
 
 #pragma mark - Enum TKMReading_Type
 
+/** Type is only set for Kanji readings - not for Vocabulary. */
 typedef GPB_ENUM(TKMReading_Type) {
   TKMReading_Type_Onyomi = 1,
   TKMReading_Type_Kunyomi = 2,
@@ -699,6 +700,47 @@ typedef GPB_ENUM(TKMSubjectsByLevel_FieldNumber) {
 /** The number of items in @c vocabularyArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger vocabularyArray_Count;
 
+@end
+
+#pragma mark - TKMLevel
+
+typedef GPB_ENUM(TKMLevel_FieldNumber) {
+  TKMLevel_FieldNumber_Id_p = 1,
+  TKMLevel_FieldNumber_Level = 2,
+  TKMLevel_FieldNumber_AbandonedAt = 3,
+  TKMLevel_FieldNumber_CompletedAt = 4,
+  TKMLevel_FieldNumber_CreatedAt = 5,
+  TKMLevel_FieldNumber_PassedAt = 6,
+  TKMLevel_FieldNumber_StartedAt = 7,
+  TKMLevel_FieldNumber_UnlockedAt = 8,
+};
+
+@interface TKMLevel : GPBMessage
+
+@property(nonatomic, readwrite) int32_t id_p;
+
+@property(nonatomic, readwrite) BOOL hasId_p;
+@property(nonatomic, readwrite) int32_t level;
+
+@property(nonatomic, readwrite) BOOL hasLevel;
+@property(nonatomic, readwrite) int32_t abandonedAt;
+
+@property(nonatomic, readwrite) BOOL hasAbandonedAt;
+@property(nonatomic, readwrite) int32_t completedAt;
+
+@property(nonatomic, readwrite) BOOL hasCompletedAt;
+@property(nonatomic, readwrite) int32_t createdAt;
+
+@property(nonatomic, readwrite) BOOL hasCreatedAt;
+@property(nonatomic, readwrite) int32_t passedAt;
+
+@property(nonatomic, readwrite) BOOL hasPassedAt;
+@property(nonatomic, readwrite) int32_t startedAt;
+
+@property(nonatomic, readwrite) BOOL hasStartedAt;
+@property(nonatomic, readwrite) int32_t unlockedAt;
+
+@property(nonatomic, readwrite) BOOL hasUnlockedAt;
 @end
 
 NS_ASSUME_NONNULL_END

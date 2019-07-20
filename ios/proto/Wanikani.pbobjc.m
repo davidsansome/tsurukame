@@ -13,7 +13,9 @@
  #import "GPBProtocolBuffers_RuntimeSupport.h"
 #endif
 
- #import "Wanikani.pbobjc.h"
+#import <stdatomic.h>
+
+#import "Wanikani.pbobjc.h"
 // @@protoc_insertion_point(imports)
 
 #pragma clang diagnostic push
@@ -102,7 +104,7 @@ typedef struct TKMMeaning__storage_ {
 #pragma mark - Enum TKMMeaning_Type
 
 GPBEnumDescriptor *TKMMeaning_Type_EnumDescriptor(void) {
-  static GPBEnumDescriptor *descriptor = NULL;
+  static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
         "Primary\000Secondary\000AuxiliaryWhitelist\000Bla"
@@ -119,7 +121,8 @@ GPBEnumDescriptor *TKMMeaning_Type_EnumDescriptor(void) {
                                            values:values
                                             count:(uint32_t)(sizeof(values) / sizeof(int32_t))
                                      enumVerifier:TKMMeaning_Type_IsValidValue];
-    if (!OSAtomicCompareAndSwapPtrBarrier(nil, worker, (void * volatile *)&descriptor)) {
+    GPBEnumDescriptor *expected = nil;
+    if (!atomic_compare_exchange_strong(&descriptor, &expected, worker)) {
       [worker release];
     }
   }
@@ -208,7 +211,7 @@ typedef struct TKMReading__storage_ {
 #pragma mark - Enum TKMReading_Type
 
 GPBEnumDescriptor *TKMReading_Type_EnumDescriptor(void) {
-  static GPBEnumDescriptor *descriptor = NULL;
+  static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
         "Onyomi\000Kunyomi\000Nanori\000";
@@ -223,7 +226,8 @@ GPBEnumDescriptor *TKMReading_Type_EnumDescriptor(void) {
                                            values:values
                                             count:(uint32_t)(sizeof(values) / sizeof(int32_t))
                                      enumVerifier:TKMReading_Type_IsValidValue];
-    if (!OSAtomicCompareAndSwapPtrBarrier(nil, worker, (void * volatile *)&descriptor)) {
+    GPBEnumDescriptor *expected = nil;
+    if (!atomic_compare_exchange_strong(&descriptor, &expected, worker)) {
       [worker release];
     }
   }
@@ -645,7 +649,7 @@ typedef struct TKMVocabulary__storage_ {
 #pragma mark - Enum TKMVocabulary_PartOfSpeech
 
 GPBEnumDescriptor *TKMVocabulary_PartOfSpeech_EnumDescriptor(void) {
-  static GPBEnumDescriptor *descriptor = NULL;
+  static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
         "Noun\000Numeral\000IntransitiveVerb\000IchidanVer"
@@ -682,7 +686,8 @@ GPBEnumDescriptor *TKMVocabulary_PartOfSpeech_EnumDescriptor(void) {
                                            values:values
                                             count:(uint32_t)(sizeof(values) / sizeof(int32_t))
                                      enumVerifier:TKMVocabulary_PartOfSpeech_IsValidValue];
-    if (!OSAtomicCompareAndSwapPtrBarrier(nil, worker, (void * volatile *)&descriptor)) {
+    GPBEnumDescriptor *expected = nil;
+    if (!atomic_compare_exchange_strong(&descriptor, &expected, worker)) {
       [worker release];
     }
   }
@@ -944,7 +949,7 @@ typedef struct TKMSubject__storage_ {
 #pragma mark - Enum TKMSubject_Type
 
 GPBEnumDescriptor *TKMSubject_Type_EnumDescriptor(void) {
-  static GPBEnumDescriptor *descriptor = NULL;
+  static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
         "Radical\000Kanji\000Vocabulary\000";
@@ -959,7 +964,8 @@ GPBEnumDescriptor *TKMSubject_Type_EnumDescriptor(void) {
                                            values:values
                                             count:(uint32_t)(sizeof(values) / sizeof(int32_t))
                                      enumVerifier:TKMSubject_Type_IsValidValue];
-    if (!OSAtomicCompareAndSwapPtrBarrier(nil, worker, (void * volatile *)&descriptor)) {
+    GPBEnumDescriptor *expected = nil;
+    if (!atomic_compare_exchange_strong(&descriptor, &expected, worker)) {
       [worker release];
     }
   }
@@ -1505,7 +1511,7 @@ typedef struct TKMFormattedText__storage_ {
 #pragma mark - Enum TKMFormattedText_Format
 
 GPBEnumDescriptor *TKMFormattedText_Format_EnumDescriptor(void) {
-  static GPBEnumDescriptor *descriptor = NULL;
+  static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
         "Radical\000Kanji\000Japanese\000Reading\000Vocabular"
@@ -1526,7 +1532,8 @@ GPBEnumDescriptor *TKMFormattedText_Format_EnumDescriptor(void) {
                                            values:values
                                             count:(uint32_t)(sizeof(values) / sizeof(int32_t))
                                      enumVerifier:TKMFormattedText_Format_IsValidValue];
-    if (!OSAtomicCompareAndSwapPtrBarrier(nil, worker, (void * volatile *)&descriptor)) {
+    GPBEnumDescriptor *expected = nil;
+    if (!atomic_compare_exchange_strong(&descriptor, &expected, worker)) {
       [worker release];
     }
   }
@@ -1681,6 +1688,126 @@ typedef struct TKMSubjectsByLevel__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMSubjectsByLevel__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - TKMLevel
+
+@implementation TKMLevel
+
+@dynamic hasId_p, id_p;
+@dynamic hasLevel, level;
+@dynamic hasAbandonedAt, abandonedAt;
+@dynamic hasCompletedAt, completedAt;
+@dynamic hasCreatedAt, createdAt;
+@dynamic hasPassedAt, passedAt;
+@dynamic hasStartedAt, startedAt;
+@dynamic hasUnlockedAt, unlockedAt;
+
+typedef struct TKMLevel__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t id_p;
+  int32_t level;
+  int32_t abandonedAt;
+  int32_t completedAt;
+  int32_t createdAt;
+  int32_t passedAt;
+  int32_t startedAt;
+  int32_t unlockedAt;
+} TKMLevel__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "id_p",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMLevel_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMLevel__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "level",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMLevel_FieldNumber_Level,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TKMLevel__storage_, level),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "abandonedAt",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMLevel_FieldNumber_AbandonedAt,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(TKMLevel__storage_, abandonedAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "completedAt",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMLevel_FieldNumber_CompletedAt,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(TKMLevel__storage_, completedAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "createdAt",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMLevel_FieldNumber_CreatedAt,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(TKMLevel__storage_, createdAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "passedAt",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMLevel_FieldNumber_PassedAt,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(TKMLevel__storage_, passedAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "startedAt",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMLevel_FieldNumber_StartedAt,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(TKMLevel__storage_, startedAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "unlockedAt",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMLevel_FieldNumber_UnlockedAt,
+        .hasIndex = 7,
+        .offset = (uint32_t)offsetof(TKMLevel__storage_, unlockedAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMLevel class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMLevel__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
