@@ -67,6 +67,11 @@ static const CGFloat kFontSize = 14.f;
 }
 
 - (NSDate *)reviewDate {
+  // If it's available in a lesson, assume it will be quizzed this hour.
+  if (!_assignment.hasAvailableAt) {
+    return [NSDate date];
+  }
+
   // If it's available now, treat it like it will be reviewed this hour.
   NSCalendar* calendar = [NSCalendar currentCalendar];
   NSDateComponents* components = [calendar components:(NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour) fromDate:[NSDate date]];
