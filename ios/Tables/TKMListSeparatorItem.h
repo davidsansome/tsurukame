@@ -22,3 +22,7 @@
 @property(nonatomic, readonly) NSString *label;
 
 @end
+
+@interface TKMListSeparatorCell : TKMModelCell
+@property(nonatomic, weak) IBOutlet UILabel *label;
+@end

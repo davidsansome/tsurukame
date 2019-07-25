@@ -15,10 +15,6 @@
 #import "TKMListSeparatorItem.h"
 #import "Style.h"
 
-@interface TKMListSeparatorCell : TKMModelCell
-@property(nonatomic, weak) IBOutlet UILabel *label;
-@end
-
 @implementation TKMListSeparatorItem
 
 - (instancetype)initWithLabel:(NSString *)label {
