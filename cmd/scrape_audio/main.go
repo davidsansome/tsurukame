@@ -55,7 +55,7 @@ func Scrape() error {
 		audio_ids := spb.Vocabulary.GetAudioIds()
 
 		for _, audio_id := range audio_ids {
-			outFilename := fmt.Sprintf("%d.mp3", audio_id)
+			outFilename := fmt.Sprintf("a%d.mp3", audio_id)
 			outPath := path.Join(*out, outFilename)
 
 			level := int(spb.GetLevel())

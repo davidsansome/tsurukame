@@ -22,7 +22,7 @@
 #import <UIKit/UIKit.h>
 
 static NSString *const kURLPattern = @"https://cdn.wanikani.com/audios/%d-subject-%d.mp3";
-static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
+static NSString *const kOfflineFilePattern = @"%@/a%d.mp3";
 
 @implementation TKMAudio {
   Reachability *_reachability;
