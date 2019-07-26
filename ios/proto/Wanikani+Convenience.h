@@ -51,6 +51,7 @@ extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
 @property(nonatomic, readonly) NSAttributedString *japaneseText;
 
 - (NSAttributedString *)japaneseTextWithImageSize:(CGFloat)imageSize;
+- (int)randomAudioID;
 
 @end
 
