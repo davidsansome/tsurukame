@@ -64,6 +64,7 @@ BOOL TKMMeaning_Type_IsValidValue(int32_t value);
 
 #pragma mark - Enum TKMReading_Type
 
+/** Type is only set for Kanji readings - not for Vocabulary. */
 typedef GPB_ENUM(TKMReading_Type) {
   TKMReading_Type_Onyomi = 1,
   TKMReading_Type_Kunyomi = 2,
@@ -325,10 +326,9 @@ typedef GPB_ENUM(TKMVocabulary_FieldNumber) {
   TKMVocabulary_FieldNumber_ReadingExplanation = 2,
   TKMVocabulary_FieldNumber_SentencesArray = 3,
   TKMVocabulary_FieldNumber_PartsOfSpeechArray = 4,
-  TKMVocabulary_FieldNumber_Audio = 5,
+  TKMVocabulary_FieldNumber_AudioIdsArray = 5,
   TKMVocabulary_FieldNumber_FormattedMeaningExplanationArray = 6,
   TKMVocabulary_FieldNumber_FormattedReadingExplanationArray = 7,
-  TKMVocabulary_FieldNumber_HasAudioFile = 8,
 };
 
 @interface TKMVocabulary : GPBMessage
@@ -358,14 +358,10 @@ typedef GPB_ENUM(TKMVocabulary_FieldNumber) {
 /** The number of items in @c partsOfSpeechArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger partsOfSpeechArray_Count;
 
-/** Not present in final data. */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *audio;
-/** Test to see if @c audio has been set. */
-@property(nonatomic, readwrite) BOOL hasAudio;
+@property(nonatomic, readwrite, strong, null_resettable) GPBInt32Array *audioIdsArray;
+/** The number of items in @c audioIdsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger audioIdsArray_Count;
 
-@property(nonatomic, readwrite) BOOL hasAudioFile;
-
-@property(nonatomic, readwrite) BOOL hasHasAudioFile;
 @end
 
 #pragma mark - TKMVocabulary_Sentence
