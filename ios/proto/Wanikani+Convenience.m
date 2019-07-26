@@ -390,10 +390,11 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 - (NSTimeInterval)timeSpentCurrent {
   if (!self.hasUnlockedAt) { return 0; }
 
+  NSDate* startDate = self.hasStartedAt ? [self startedAtDate] : [self unlockedAtDate];
   if (self.hasPassedAt) {
-    return [[self passedAtDate] timeIntervalSinceDate: [self unlockedAtDate]];
+    return [[self passedAtDate] timeIntervalSinceDate: startDate];
   } else {
-    return [[NSDate date] timeIntervalSinceDate: [self unlockedAtDate]];
+    return [[NSDate date] timeIntervalSinceDate: startDate];
   }
 }
 
