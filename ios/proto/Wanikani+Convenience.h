@@ -89,3 +89,9 @@ extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
 @property(nonatomic, readonly) NSDate *startedAtDate;
 
 @end
+
+@interface TKMLevel (Convenience)
+
+-(NSTimeInterval)timeSpentCurrent;
+
+@end
