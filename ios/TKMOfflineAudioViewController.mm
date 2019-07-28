@@ -24,20 +24,21 @@
 #import <compression.h>
 #import <memory>
 
-static NSString *const kURLPattern = @"https://tsurukame.app/audio/%@";
+static NSString *const kURLPattern = @"https://cl.ly/%@";
 
 struct AvailablePackage {
   NSString *filename;
   NSString *title;
   int64_t sizeBytes;
 };
+
 static const AvailablePackage kAvailablePackages[] = {
-    {@"levels-1-10.tar.lzfse", @"Levels 1-10", 15967576},
-    {@"levels-11-20.tar.lzfse", @"Levels 11-20", 25708984},
-    {@"levels-21-30.tar.lzfse", @"Levels 21-30", 25927270},
-    {@"levels-31-40.tar.lzfse", @"Levels 31-40", 23220050},
-    {@"levels-41-50.tar.lzfse", @"Levels 41-50", 23442286},
-    {@"levels-51-60.tar.lzfse", @"Levels 51-60", 30460589},
+  {@"dd7e588e3eec/download/levels-1-10.tar.lzfse", @"Levels 1-10", 9898032},
+  {@"052845a8a5b5/download/levels-11-20.tar.lzfse", @"Levels 11-20", 12748506},
+  {@"6cb75b807119/download/levels-21-30.tar.lzfse", @"Levels 21-30", 12146332},
+  {@"ae376a50eed1/download/levels-31-40.tar.lzfse", @"Levels 31-40", 11709328},
+  {@"e8b8642e8258/download/levels-41-50.tar.lzfse", @"Levels 41-50", 10863843},
+  {@"f3909232e6b3/download/levels-51-60.tar.lzfse", @"Levels 51-60", 9574157},
 };
 
 static NSData *DecompressLZFSE(NSData *compressedData) {
