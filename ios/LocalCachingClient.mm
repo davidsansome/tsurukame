@@ -175,6 +175,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   bool _isCachedSrsLevelCountsStale;
   NSDate *_cachedAvailableSubjectCountsUpdated;
   NSArray<NSNumber *> *_cachedLevelTimes;
+  bool _isCachedLevelTimesStale;
 }
 
 #pragma mark - Initialisers
@@ -197,6 +198,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedSrsLevelCountsStale = true;
     _cachedAvailableSubjectCountsUpdated = [NSDate distantPast];
     _cachedLevelTimes = [NSArray array];
+    _isCachedLevelTimesStale = true;
   }
   return self;
 }
@@ -617,13 +619,16 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 - (NSTimeInterval)getAverageRemainingLevelTime {
-  if ([_cachedLevelTimes count] == 0) {
+  if (_isCachedLevelTimesStale) {
     [_client getLevelTimes:^(NSError *_Nullable error, NSArray<NSNumber *> *_Nullable levelTimes) {
+      _isCachedLevelTimesStale = false;
       if (levelTimes) {
         _cachedLevelTimes = levelTimes;
       }
     }];
+  }
 
+  if ([_cachedLevelTimes count] == 0) {
     return 0;
   }
 
@@ -677,6 +682,12 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedSrsLevelCountsStale = true;
   }
   [self postNotificationOnMainThread:kLocalCachingClientSrsLevelCountsChangedNotification];
+}
+
+- (void)invalidateCachedLevelTimes {
+  @synchronized(self) {
+    _isCachedLevelTimesStale = true;
+  }
 }
 
 #pragma mark - Send progress
@@ -941,6 +952,8 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 - (void)updateUserInfo:(CompletionHandler)handler {
+  int originalLevel = [[self getUserInfo] currentLevel];
+
   [_client getUserInfo:^(NSError *_Nullable error, TKMUser *_Nullable user) {
     if (error) {
       if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 401) {
@@ -953,6 +966,11 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       }];
       NSLog(@"Got user info: %@", user);
     }
+
+    if ([[self getUserInfo] currentLevel] != originalLevel) {
+      [self invalidateCachedLevelTimes];
+    }
+
     handler();
   }];
 }
