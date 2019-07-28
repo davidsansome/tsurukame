@@ -481,4 +481,32 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
                                         }];
 }
 
+#pragma mark - Keyboard navigation
+
+- (BOOL)canBecomeFirstResponder {
+  return true;
+}
+
+- (void)startReviews {
+  [self performSegueWithIdentifier:@"startReviews" sender:self];
+}
+
+- (void)startLessons {
+  [self performSegueWithIdentifier:@"startLessons" sender:self];
+}
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
+  return @[
+           [UIKeyCommand keyCommandWithInput:@"r"
+                               modifierFlags:UIKeyModifierCommand
+                                      action:@selector(startReviews)
+                        discoverabilityTitle:@"Start reviews"],
+           [UIKeyCommand keyCommandWithInput:@"l"
+                               modifierFlags:UIKeyModifierCommand
+                                      action:@selector(startLessons)
+                        discoverabilityTitle:@"Start lessons"]
+           ];
+}
+
+
 @end
