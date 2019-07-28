@@ -82,18 +82,18 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 @property(weak, nonatomic) IBOutlet UITableViewCell *lessonsCell;
 @property(weak, nonatomic) IBOutlet UITableViewCell *reviewsCell;
 
-@property (weak, nonatomic) IBOutlet UILabel *apprenticeCount;
-@property (weak, nonatomic) IBOutlet UILabel *guruCount;
-@property (weak, nonatomic) IBOutlet UILabel *masterCount;
-@property (weak, nonatomic) IBOutlet UILabel *enlightenedCount;
-@property (weak, nonatomic) IBOutlet UILabel *burnedCount;
+@property(weak, nonatomic) IBOutlet UILabel *apprenticeCount;
+@property(weak, nonatomic) IBOutlet UILabel *guruCount;
+@property(weak, nonatomic) IBOutlet UILabel *masterCount;
+@property(weak, nonatomic) IBOutlet UILabel *enlightenedCount;
+@property(weak, nonatomic) IBOutlet UILabel *burnedCount;
 
 @property(weak, nonatomic) IBOutlet CombinedChartView *upcomingReviewsChartView;
 
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelRadicalsPieChartView;
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelKanjiPieChartView;
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelVocabularyPieChartView;
-@property (weak, nonatomic) IBOutlet LevelTimeRemainingCell *levelTimeRemainingCell;
+@property(weak, nonatomic) IBOutlet LevelTimeRemainingCell *levelTimeRemainingCell;
 
 @property(weak, nonatomic) IBOutlet UILabel *queuedItemsLabel;
 @property(weak, nonatomic) IBOutlet UILabel *queuedItemsSubtitleLabel;
@@ -433,9 +433,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)updateAllLevels {
-  NSArray *labels = @[_apprenticeCount, _guruCount, _masterCount, _enlightenedCount, _burnedCount];
-  [labels enumerateObjectsUsingBlock:^(UILabel* label, NSUInteger idx, BOOL *stop) {
-    int value = [_services.localCachingClient getSrsLevelCount: (TKMSRSStageCategory)(idx + 1)];
+  NSArray *labels =
+      @[ _apprenticeCount, _guruCount, _masterCount, _enlightenedCount, _burnedCount ];
+  [labels enumerateObjectsUsingBlock:^(UILabel *label, NSUInteger idx, BOOL *stop) {
+    int value = [_services.localCachingClient getSrsLevelCount:(TKMSRSStageCategory)(idx + 1)];
     label.text = [@(value) stringValue];
   }];
 }

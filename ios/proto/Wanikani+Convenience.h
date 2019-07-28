@@ -92,6 +92,6 @@ extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
 
 @interface TKMLevel (Convenience)
 
--(NSTimeInterval)timeSpentCurrent;
+- (NSTimeInterval)timeSpentCurrent;
 
 @end

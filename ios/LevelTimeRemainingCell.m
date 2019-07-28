@@ -13,10 +13,10 @@
 // limitations under the License.
 
 #import "LevelTimeRemainingCell.h"
-#import "Tables/TKMSubjectModelItem.h"
-#import "TKMServices.h"
 #import "DataLoader.h"
 #import "LocalCachingClient.h"
+#import "TKMServices.h"
+#import "Tables/TKMSubjectModelItem.h"
 
 @implementation LevelTimeRemainingCell {
   TKMServices *_services;
@@ -27,16 +27,20 @@
 }
 
 - (void)update:(NSArray<TKMAssignment *> *)assignments {
-  NSDate* guruDate = [NSDate date];
+  NSDate *guruDate = [NSDate date];
 
-  for (TKMAssignment* assignment in assignments) {
-    if (assignment.hasPassedAt) { continue; }
-    if (assignment.subjectType == TKMSubject_Type_Vocabulary) { continue; }
+  for (TKMAssignment *assignment in assignments) {
+    if (assignment.hasPassedAt) {
+      continue;
+    }
+    if (assignment.subjectType == TKMSubject_Type_Vocabulary) {
+      continue;
+    }
 
     if (!assignment.hasAvailableAt) {
       NSTimeInterval average = [_services.localCachingClient getAverageRemainingLevelTime];
-      NSDate* averageDate = [NSDate dateWithTimeIntervalSinceNow:average];
-      [self setRemaining: averageDate average: YES];
+      NSDate *averageDate = [NSDate dateWithTimeIntervalSinceNow:average];
+      [self setRemaining:averageDate average:YES];
       return;
     }
 
@@ -45,16 +49,16 @@
                                                                   assignment:assignment
                                                                     delegate:self];
 
-    NSDate* itemDate = [item guruDate];
+    NSDate *itemDate = [item guruDate];
     if ([itemDate compare:guruDate] == NSOrderedDescending) {
       guruDate = itemDate;
     }
   }
 
-  [self setRemaining:guruDate average: NO];
+  [self setRemaining:guruDate average:NO];
 }
 
-- (void)setRemaining:(NSDate *) finish average:(BOOL) average {
+- (void)setRemaining:(NSDate *)finish average:(BOOL)average {
   if (average) {
     self.textLabel.text = @"Time Remaining (average)";
   } else {
@@ -72,16 +76,15 @@
   NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
   formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleAbbreviated;
 
-  int componentsBitMask = NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute;
-  NSDateComponents *components = [[NSCalendar currentCalendar]
-                                  components:componentsBitMask
-                                  fromDate:[NSDate date]
-                                  toDate:date
-                                  options:0];
+  int componentsBitMask = NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute;
+  NSDateComponents *components = [[NSCalendar currentCalendar] components:componentsBitMask
+                                                                 fromDate:[NSDate date]
+                                                                   toDate:date
+                                                                  options:0];
 
   // Only show minutes after there are no hours left
   if (components.hour > 0) {
-    [components setMinute: 0];
+    [components setMinute:0];
   }
 
   return [formatter stringFromDateComponents:components];

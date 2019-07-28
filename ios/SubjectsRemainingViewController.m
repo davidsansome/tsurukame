@@ -46,7 +46,8 @@
   NSMutableArray<TKMSubjectModelItem *> *radicals = [NSMutableArray array];
   NSMutableArray<TKMSubjectModelItem *> *kanji = [NSMutableArray array];
 
-  for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtUsersCurrentLevel]) {
+  for (TKMAssignment *assignment in
+       [_services.localCachingClient getAssignmentsAtUsersCurrentLevel]) {
     if (assignment.srsStage > 4) {
       continue;
     }
@@ -66,9 +67,9 @@
       item.gradientColors = TKMLockedGradient();
     }
     if (item.subject.subjectType == TKMSubject_Type_Radical) {
-      [radicals addObject: item];
+      [radicals addObject:item];
     } else {
-      [kanji addObject: item];
+      [kanji addObject:item];
     }
   }
 
@@ -135,7 +136,7 @@
 
 - (void)didTapSubject:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =
-  [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
+      [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   [vc setupWithServices:_services subject:subject];
   [self.navigationController pushViewController:vc animated:YES];
 }

@@ -142,12 +142,12 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                  target:self
                                                  action:@selector(showOldMnemonicChanged:)]];
   [model
-   addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                               title:@"Use katakana for onyomi readings"
-                                            subtitle:nil
-                                                  on:UserDefaults.useKatakanaForOnyomi
-                                              target:self
-                                              action:@selector(useKatakanaForOnyomiChanged:)]];
+      addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                  title:@"Use katakana for onyomi readings"
+                                               subtitle:nil
+                                                     on:UserDefaults.useKatakanaForOnyomi
+                                                 target:self
+                                                 action:@selector(useKatakanaForOnyomiChanged:)]];
 
   [model addSection:@"Audio"];
   [model addItem:[[TKMSwitchModelItem alloc]

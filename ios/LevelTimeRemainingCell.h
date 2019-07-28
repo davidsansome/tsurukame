@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "proto/Wanikani+Convenience.h"
 #import "TKMSubjectDelegate.h"
+#import "proto/Wanikani+Convenience.h"
 
 @class TKMServices;
 

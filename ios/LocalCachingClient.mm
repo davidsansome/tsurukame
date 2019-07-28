@@ -596,9 +596,9 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   _cachedSrsLevelCounts.fill(0);
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     FMResultSet *gr = [db executeQuery:
-                             @"SELECT COUNT(*) FROM subject_progress WHERE srs_stage "
-                             @">= 5 AND subject_type = ?",
-                             @(TKMSubject_Type_Kanji)];
+                              @"SELECT COUNT(*) FROM subject_progress WHERE srs_stage "
+                              @">= 5 AND subject_type = ?",
+                              @(TKMSubject_Type_Kanji)];
     while ([gr next]) {
       _cachedGuruKanjiCount = [gr intForColumnIndex:0];
     }
@@ -617,9 +617,9 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   _isCachedSrsLevelCountsStale = false;
 }
 
-- (NSTimeInterval) getAverageRemainingLevelTime {
+- (NSTimeInterval)getAverageRemainingLevelTime {
   if ([_cachedLevelTimes count] == 0) {
-    [_client getLevelTimes:^(NSError * _Nullable error, NSArray<NSNumber *> * _Nullable levelTimes) {
+    [_client getLevelTimes:^(NSError *_Nullable error, NSArray<NSNumber *> *_Nullable levelTimes) {
       if (levelTimes) {
         _cachedLevelTimes = levelTimes;
       }
@@ -628,7 +628,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     return 0;
   }
 
-  NSNumber* currentLevelTime = [_cachedLevelTimes lastObject];
+  NSNumber *currentLevelTime = [_cachedLevelTimes lastObject];
   NSUInteger lastPassIndex = [_cachedLevelTimes count] - 1;
 
   // Use the median 50% to calculate the average time
@@ -636,8 +636,8 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   NSUInteger upperIndex = lastPassIndex * 3 / 4 + (lastPassIndex == 1 ? 1 : 0);
 
   NSRange medianPassRange = NSMakeRange(lowerIndex, upperIndex);
-  NSArray* medianPassTimes = [_cachedLevelTimes subarrayWithRange:medianPassRange];
-  NSNumber* averageTime = [medianPassTimes valueForKeyPath:@"@avg.self"];
+  NSArray *medianPassTimes = [_cachedLevelTimes subarrayWithRange:medianPassRange];
+  NSNumber *averageTime = [medianPassTimes valueForKeyPath:@"@avg.self"];
   NSTimeInterval remainingTime = [averageTime doubleValue] - [currentLevelTime doubleValue];
 
   return remainingTime;
@@ -720,22 +720,22 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 - (void)sendPendingProgress:(NSArray<TKMProgress *> *)progress
                     handler:(CompletionHandler _Nullable)handler {
   for (TKMProgress *p in progress) {
-    [_client
-        sendProgress:p
-             handler:^(NSError *_Nullable error) {
-               if (error) {
-                 [self logError:error];
+    [_client sendProgress:p
+                  handler:^(NSError *_Nullable error) {
+                    if (error) {
+                      [self logError:error];
 
-                 // Drop the data if the server is clearly telling us our data is invalid and cannot be accepted.
-                 // This most commonly happens when doing reviews before progress from elsewhere has synced,
-                 // leaving the app trying to report progress on reviews you already did elsewhere.
-                 if (error.code == 422) {
-                   [self clearPendingProgress: p];
-                 }
-               } else {
-                 [self clearPendingProgress: p];
-               }
-             }];
+                      // Drop the data if the server is clearly telling us our data is invalid and
+                      // cannot be accepted. This most commonly happens when doing reviews before
+                      // progress from elsewhere has synced, leaving the app trying to report
+                      // progress on reviews you already did elsewhere.
+                      if (error.code == 422) {
+                        [self clearPendingProgress:p];
+                      }
+                    } else {
+                      [self clearPendingProgress:p];
+                    }
+                  }];
   }
   if (handler) {
     handler();
@@ -745,8 +745,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 - (void)clearPendingProgress:(TKMProgress *)p {
   // Delete the local pending progress.
   [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
-    CheckUpdate(
-                db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
+    CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
   }];
   [self invalidateCachedPendingProgress];
 }

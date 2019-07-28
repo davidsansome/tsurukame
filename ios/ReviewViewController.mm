@@ -540,11 +540,12 @@ class AnimationContext {
 
   _answerField.text = nil;
   _answerField.placeholder = taskTypePlaceholder;
-  _kanaInput.alphabet = (
-      _activeSubject.primaryReadings.firstObject.hasType &&
-      _activeSubject.primaryReadings.firstObject.type == TKMReading_Type_Onyomi &&
-       UserDefaults.useKatakanaForOnyomi) ?
-          kTKMAlphabetKatakana : kTKMAlphabetHiragana;
+  _kanaInput.alphabet =
+      (_activeSubject.primaryReadings.firstObject.hasType &&
+       _activeSubject.primaryReadings.firstObject.type == TKMReading_Type_Onyomi &&
+       UserDefaults.useKatakanaForOnyomi)
+          ? kTKMAlphabetKatakana
+          : kTKMAlphabetHiragana;
 
   // We're changing the position of lots of labels at the same time as changing their contents.
   // To animate the contents change we have to do a UIView transition, which actually creates a new

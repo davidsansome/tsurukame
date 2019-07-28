@@ -697,8 +697,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 - (void)sendProgress:(TKMProgress *)progress handler:(ProgressHandler)handler {
   if (progress.isLesson) {
-    NSString *urlString = [NSString stringWithFormat:@"%s/assignments/%d/start",
-                           kURLBase, progress.assignment.id_p];
+    NSString *urlString =
+        [NSString stringWithFormat:@"%s/assignments/%d/start", kURLBase, progress.assignment.id_p];
     [self submitJSONToURL:[NSURL URLWithString:urlString]
                withMethod:@"PUT"
                      data:[@"{}" dataUsingEncoding:NSUTF8StringEncoding]
@@ -707,7 +707,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                   }];
     return;
   }
-  
+
   // Encode the data to send in the request.
   NSMutableDictionary *review = [NSMutableDictionary dictionary];
   [review setObject:@(progress.assignment.id_p) forKey:@"assignment_id"];
@@ -860,8 +860,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 }
 
 - (void)getLevelTimes:(LevelInfoHandler)handler {
-  NSURLComponents *url =
-  [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/level_progressions", kURLBase]];
+  NSURLComponents *url = [NSURLComponents
+      componentsWithString:[NSString stringWithFormat:@"%s/level_progressions", kURLBase]];
   NSMutableArray<TKMLevel *> *levels = [NSMutableArray array];
 
   [self startPagedQueryFor:url.URL
@@ -877,27 +877,33 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                        level.level = [d[@"data"][@"level"] intValue];
 
                        if (d[@"data"][@"abandoned_at"] != [NSNull null]) {
-                         level.abandonedAt = [[Client parseISO8601Date:d[@"data"][@"abandoned_at"]] timeIntervalSince1970];
+                         level.abandonedAt = [[Client parseISO8601Date:d[@"data"][@"abandoned_at"]]
+                             timeIntervalSince1970];
                        }
 
                        if (d[@"data"][@"completed_at"] != [NSNull null]) {
-                         level.completedAt = [[Client parseISO8601Date:d[@"data"][@"completed_at"]] timeIntervalSince1970];
+                         level.completedAt = [[Client parseISO8601Date:d[@"data"][@"completed_at"]]
+                             timeIntervalSince1970];
                        }
 
                        if (d[@"data"][@"created_at"] != [NSNull null]) {
-                         level.createdAt = [[Client parseISO8601Date:d[@"data"][@"created_at"]] timeIntervalSince1970];
+                         level.createdAt = [[Client parseISO8601Date:d[@"data"][@"created_at"]]
+                             timeIntervalSince1970];
                        }
 
                        if (d[@"data"][@"passed_at"] != [NSNull null]) {
-                         level.passedAt = [[Client parseISO8601Date:d[@"data"][@"passed_at"]] timeIntervalSince1970];
+                         level.passedAt = [[Client parseISO8601Date:d[@"data"][@"passed_at"]]
+                             timeIntervalSince1970];
                        }
 
                        if (d[@"data"][@"started_at"] != [NSNull null]) {
-                         level.startedAt = [[Client parseISO8601Date:d[@"data"][@"started_at"]] timeIntervalSince1970];
+                         level.startedAt = [[Client parseISO8601Date:d[@"data"][@"started_at"]]
+                             timeIntervalSince1970];
                        }
 
                        if (d[@"data"][@"unlocked_at"] != [NSNull null]) {
-                         level.unlockedAt = [[Client parseISO8601Date:d[@"data"][@"unlocked_at"]] timeIntervalSince1970];
+                         level.unlockedAt = [[Client parseISO8601Date:d[@"data"][@"unlocked_at"]]
+                             timeIntervalSince1970];
                        }
 
                        [levels addObject:level];
@@ -907,7 +913,6 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                      handler(nil, intervals);
                    }];
 }
-
 
 @end
 

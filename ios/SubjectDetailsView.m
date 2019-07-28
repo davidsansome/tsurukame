@@ -263,13 +263,12 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   [model addSection:@"Context Sentences"];
   for (TKMVocabulary_Sentence *sentence in subject.vocabulary.sentencesArray) {
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
-    
+
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
     [attributes setObject:TKMJapaneseFont(kFontSize) forKey:NSFontAttributeName];
-    NSAttributedString *japaneseString = [[NSAttributedString alloc]
-                                          initWithString:sentence.japanese
-                                          attributes:attributes];
-    
+    NSAttributedString *japaneseString =
+        [[NSAttributedString alloc] initWithString:sentence.japanese attributes:attributes];
+
     [text appendAttributedString:japaneseString];
     [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
     [text appendAttributedString:[[NSAttributedString alloc] initWithString:sentence.english]];
