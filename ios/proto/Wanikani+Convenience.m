@@ -357,6 +357,10 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
   return [NSDate dateWithTimeIntervalSince1970:self.startedAt];
 }
 
+- (int)currentLevel {
+  return MIN(self.level, self.maxLevelGrantedBySubscription);
+}
+
 @end
 
 @implementation TKMLevel (Convenience)

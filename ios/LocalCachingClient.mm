@@ -476,8 +476,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
   TKMUser *user = [self getUserInfo];
-  int level = MIN(user.level, _dataLoader.maxLevelGrantedBySubscription);
-  return [self getAssignmentsAtLevel:level];
+  return [self getAssignmentsAtLevel:[user currentLevel]];
 }
 
 #pragma mark - Getting cached data
