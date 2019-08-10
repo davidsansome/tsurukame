@@ -1081,7 +1081,12 @@ class AnimationContext {
 
 - (NSArray<UIKeyCommand *> *)keyCommands {
   if (_subjectDetailsView.hidden) {
-    return @[];
+    return @[
+      [UIKeyCommand keyCommandWithInput:@"\t"
+                          modifierFlags:0
+                                 action:@selector(toggleFont)
+                   discoverabilityTitle:@"Toggle font"]
+      ];
   }
 
   return @[
@@ -1112,6 +1117,11 @@ class AnimationContext {
   if (!_subjectDetailsView.hidden) {
     [_subjectDetailsView playAudio];
   }
+}
+
+- (void)toggleFont {
+  BOOL useCustomFont = [_questionLabel.font isEqual:TKMJapaneseFontLight(_questionLabel.font.pointSize)];
+  [self setCustomQuestionLabelFont:useCustomFont];
 }
 
 @end
