@@ -69,16 +69,19 @@ static const CGFloat kFontSize = 14.f;
 - (NSDate *)reviewDate {
   // If it's available in a lesson, assume it will be quizzed this hour.
   if (!_assignment.hasAvailableAt) {
-    return [NSDate date];
+    return [NSDate distantFuture];
   }
 
   // If it's available now, treat it like it will be reviewed this hour.
-  NSCalendar* calendar = [NSCalendar currentCalendar];
-  NSDateComponents* components = [calendar components:(NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour) fromDate:[NSDate date]];
-  NSDate* reviewDate = [calendar dateFromComponents: components];
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  NSDateComponents *components = [calendar
+      components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour)
+        fromDate:[NSDate date]];
+  NSDate *reviewDate = [calendar dateFromComponents:components];
 
-  // If it's not available now, treat it like it will be reviewed within the hour it comes available.
-  if ([reviewDate compare: _assignment.availableAtDate] == NSOrderedAscending) {
+  // If it's not available now, treat it like it will be reviewed within the hour it comes
+  // available.
+  if ([reviewDate compare:_assignment.availableAtDate] == NSOrderedAscending) {
     reviewDate = _assignment.availableAtDate;
   }
 
@@ -97,7 +100,7 @@ static const CGFloat kFontSize = 14.f;
     return [NSDate distantPast];
   }
 
-  NSDate* reviewDate = [self reviewDate];
+  NSDate *reviewDate = [self reviewDate];
 
   if (itemLevel == guruLevel) {
     return reviewDate;
@@ -156,17 +159,17 @@ static const CGFloat kFontSize = 14.f;
 
   self.subjectLabel.font = TKMJapaneseFont(self.subjectLabel.font.pointSize);
   self.subjectLabel.attributedText =
-  [item.subject japaneseTextWithImageSize:kJapaneseTextImageSize];
+      [item.subject japaneseTextWithImageSize:kJapaneseTextImageSize];
 
   if (item.showRemaining) {
     if (item.assignment.isReviewStage) {
       [self.readingLabel setHidden:NO];
-      self.readingLabel.text = [self formattedIntervalUntil: [item reviewDate] label: @"Review"];
+      self.readingLabel.text = [self formattedIntervalUntil:[item reviewDate] label:@"Review"];
       [self.meaningLabel setHidden:NO];
-      self.meaningLabel.text = [self formattedIntervalUntil: [item guruDate] label: @"Guru"];
+      self.meaningLabel.text = [self formattedIntervalUntil:[item guruDate] label:@"Guru"];
     } else if (item.assignment.isLessonStage) {
       [self.readingLabel setHidden:NO];
-      self.readingLabel.text = [self formattedIntervalUntil: [item guruDate] label: @"Guru"];
+      self.readingLabel.text = [self formattedIntervalUntil:[item guruDate] label:@"Guru"];
       [self.meaningLabel setHidden:YES];
     } else {
       [self.readingLabel setHidden:YES];
@@ -189,17 +192,18 @@ static const CGFloat kFontSize = 14.f;
       self.meaningLabel.text = item.subject.commaSeparatedMeanings;
     }
 
-    self.readingLabel.font = item.readingWrong ? TKMJapaneseFontBold(kFontSize) : TKMJapaneseFont(kFontSize);
-    self.meaningLabel.font = item.meaningWrong ? [UIFont systemFontOfSize:kFontSize weight:UIFontWeightBold]
-      : [UIFont systemFontOfSize:kFontSize];
+    self.readingLabel.font =
+        item.readingWrong ? TKMJapaneseFontBold(kFontSize) : TKMJapaneseFont(kFontSize);
+    self.meaningLabel.font = item.meaningWrong
+                                 ? [UIFont systemFontOfSize:kFontSize weight:UIFontWeightBold]
+                                 : [UIFont systemFontOfSize:kFontSize];
   }
 
   bool showDetail = item.showAnswers || item.showRemaining;
   [self setShowAnswers:showDetail animated:false];
 }
 
-- (NSString *)formattedIntervalUntil:(NSDate *)toDate
-                               label:(NSString*)label {
+- (NSString *)formattedIntervalUntil:(NSDate *)toDate label:(NSString *)label {
   if ([[NSDate date] compare:toDate] == NSOrderedDescending) {
     return [NSString stringWithFormat:@"%@ available", label];
   }
@@ -207,19 +211,18 @@ static const CGFloat kFontSize = 14.f;
   NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
   formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleAbbreviated;
 
-  int componentsBitMask = NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute;
-  NSDateComponents *components = [[NSCalendar currentCalendar]
-                                  components:componentsBitMask
-                                  fromDate:[NSDate date]
-                                  toDate:toDate
-                                  options:0];
+  int componentsBitMask = NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute;
+  NSDateComponents *components = [[NSCalendar currentCalendar] components:componentsBitMask
+                                                                 fromDate:[NSDate date]
+                                                                   toDate:toDate
+                                                                  options:0];
 
   // Only show minutes after there are no hours left
   if (components.hour > 0) {
-    [components setMinute: 0];
+    [components setMinute:0];
   }
 
-  NSString* interval = [formatter stringFromDateComponents:components];
+  NSString *interval = [formatter stringFromDateComponents:components];
   return [NSString stringWithFormat:@"%@ in %@", label, interval];
 }
 

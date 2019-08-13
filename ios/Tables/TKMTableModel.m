@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "TKMTableModel.h"
+#import "TKMListSeparatorItem.h"
 
 @interface TKMTableModelSection : NSObject
 
@@ -179,6 +180,11 @@
 }
 
 #pragma mark - UITableViewDelegate
+
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  TKMModelCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+  return (cell.class == TKMListSeparatorCell.class) ? nil : indexPath;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   TKMModelCell *cell = [tableView cellForRowAtIndexPath:indexPath];

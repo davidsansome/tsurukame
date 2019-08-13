@@ -109,9 +109,9 @@ TKMAnswerCheckerResult CheckAnswer(NSString **answer,
     case kTKMTaskTypeReading: {
       *answer = [*answer stringByReplacingOccurrencesOfString:@"n" withString:@"ん"];
       *answer = [*answer stringByReplacingOccurrencesOfString:@" " withString:@""];
-      NSString *hiraganaAnswer = [*answer
-          stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:YES];
-      
+      NSString *hiraganaAnswer =
+          [*answer stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:YES];
+
       if (IsAsciiPresent(*answer)) {
         return kTKMAnswerContainsInvalidCharacters;
       }

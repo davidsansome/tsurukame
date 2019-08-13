@@ -1,6 +1,6 @@
 #!/bin/sh
 
-find -not '(' \
+find . -not '(' \
        -path '*/third_party/*' -or \
        -name 'Reachability.*' -or \
        -name '*.pbobjc.*' \

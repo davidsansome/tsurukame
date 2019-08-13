@@ -39,7 +39,7 @@ extern NSArray<id> *TKMVocabularyGradient(void);
 extern NSArray<id> *TKMLockedGradient(void);
 extern NSArray<id> *TKMGradientForAssignment(TKMAssignment *assignment);
 extern NSArray<id> *TKMGradientForSubject(TKMSubject *subject);
-  
+
 // Fonts that render Chinese characters in Japanese glyphs.  This is useful because iOS chooses
 // a Chinese font to render these characters if the user hasn't selected Japanese as a secondary
 // system font.

@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN;
 @property(nonatomic) bool showRemaining;
 @property(nonatomic) NSArray<id> *gradientColors;
 
+- (NSDate *)guruDate;
+
 @end
 
 @interface TKMSubjectCollectionModelItem : NSObject <TKMModelItem>

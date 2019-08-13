@@ -16,6 +16,7 @@
 
 #import "CurrentLevelChartController.h"
 #import "LessonsViewController.h"
+#import "LevelTimeRemainingCell.h"
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "NSDate+TimeAgo.h"
@@ -81,19 +82,21 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 @property(weak, nonatomic) IBOutlet UITableViewCell *lessonsCell;
 @property(weak, nonatomic) IBOutlet UITableViewCell *reviewsCell;
 
-@property(weak, nonatomic) IBOutlet UILabel *queuedItemsLabel;
-@property(weak, nonatomic) IBOutlet UILabel *queuedItemsSubtitleLabel;
-
-@property (weak, nonatomic) IBOutlet UILabel *apprenticeCount;
-@property (weak, nonatomic) IBOutlet UILabel *guruCount;
-@property (weak, nonatomic) IBOutlet UILabel *masterCount;
-@property (weak, nonatomic) IBOutlet UILabel *enlightenedCount;
-@property (weak, nonatomic) IBOutlet UILabel *burnedCount;
+@property(weak, nonatomic) IBOutlet UILabel *apprenticeCount;
+@property(weak, nonatomic) IBOutlet UILabel *guruCount;
+@property(weak, nonatomic) IBOutlet UILabel *masterCount;
+@property(weak, nonatomic) IBOutlet UILabel *enlightenedCount;
+@property(weak, nonatomic) IBOutlet UILabel *burnedCount;
 
 @property(weak, nonatomic) IBOutlet CombinedChartView *upcomingReviewsChartView;
+
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelRadicalsPieChartView;
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelKanjiPieChartView;
 @property(weak, nonatomic) IBOutlet PieChartView *currentLevelVocabularyPieChartView;
+@property(weak, nonatomic) IBOutlet LevelTimeRemainingCell *levelTimeRemainingCell;
+
+@property(weak, nonatomic) IBOutlet UILabel *queuedItemsLabel;
+@property(weak, nonatomic) IBOutlet UILabel *queuedItemsSubtitleLabel;
 
 @end
 
@@ -194,6 +197,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
       [[CurrentLevelChartController alloc] initWithChartView:_currentLevelVocabularyPieChartView
                                                  subjectType:TKMSubject_Type_Vocabulary
                                                   dataLoader:_services.dataLoader];
+
+  [_levelTimeRemainingCell setupWithServices:_services];
 
   [self updateHourlyTimer];
 
@@ -400,6 +405,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   [_currentLevelRadicalsChartController update:currentLevelAssignments];
   [_currentLevelKanjiChartController update:currentLevelAssignments];
   [_currentLevelVocabularyChartController update:currentLevelAssignments];
+  [_levelTimeRemainingCell update:currentLevelAssignments];
 }
 
 - (void)userInfoChanged {
@@ -427,9 +433,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)updateAllLevels {
-  NSArray *labels = @[_apprenticeCount, _guruCount, _masterCount, _enlightenedCount, _burnedCount];
-  [labels enumerateObjectsUsingBlock:^(UILabel* label, NSUInteger idx, BOOL *stop) {
-    int value = [_services.localCachingClient getSrsLevelCount: (TKMSRSStageCategory)(idx + 1)];
+  NSArray *labels =
+      @[ _apprenticeCount, _guruCount, _masterCount, _enlightenedCount, _burnedCount ];
+  [labels enumerateObjectsUsingBlock:^(UILabel *label, NSUInteger idx, BOOL *stop) {
+    int value = [_services.localCachingClient getSrsLevelCount:(TKMSRSStageCategory)(idx + 1)];
     label.text = [@(value) stringValue];
   }];
 }
@@ -480,5 +487,33 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
                                                                                animated:YES];
                                         }];
 }
+
+#pragma mark - Keyboard navigation
+
+- (BOOL)canBecomeFirstResponder {
+  return true;
+}
+
+- (void)startReviews {
+  [self performSegueWithIdentifier:@"startReviews" sender:self];
+}
+
+- (void)startLessons {
+  [self performSegueWithIdentifier:@"startLessons" sender:self];
+}
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
+  return @[
+           [UIKeyCommand keyCommandWithInput:@"r"
+                               modifierFlags:UIKeyModifierCommand
+                                      action:@selector(startReviews)
+                        discoverabilityTitle:@"Start reviews"],
+           [UIKeyCommand keyCommandWithInput:@"l"
+                               modifierFlags:UIKeyModifierCommand
+                                      action:@selector(startLessons)
+                        discoverabilityTitle:@"Start lessons"]
+           ];
+}
+
 
 @end

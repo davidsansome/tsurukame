@@ -12,17 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "TKMModelItem.h"
+#import <UIKit/UIKit.h>
+#import "TKMSubjectDelegate.h"
+#import "proto/Wanikani+Convenience.h"
 
-@interface TKMListSeparatorItem : NSObject <TKMModelItem>
+@class TKMServices;
 
-- (instancetype)initWithLabel:(NSString *)label NS_DESIGNATED_INITIALIZER;
-- (instancetype)init NS_UNAVAILABLE;
+NS_ASSUME_NONNULL_BEGIN
 
-@property(nonatomic, readonly) NSString *label;
+@interface LevelTimeRemainingCell : UITableViewCell <TKMSubjectDelegate>
+
+- (void)setupWithServices:(TKMServices *)services;
+- (void)update:(NSArray<TKMAssignment *> *)assignments;
 
 @end
 
-@interface TKMListSeparatorCell : TKMModelCell
-@property(nonatomic, weak) IBOutlet UILabel *label;
-@end
+NS_ASSUME_NONNULL_END
