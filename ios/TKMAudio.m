@@ -25,6 +25,7 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
   Reachability *_reachability;
   AVPlayer *_player;
   __weak id<TKMAudioDelegate> _delegate;
+  BOOL _waitingToPlay;
 }
 
 + (NSString *)cacheDirectoryPath {
@@ -38,6 +39,7 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
   if (self) {
     _reachability = reachability;
     _currentState = TKMAudioFinished;
+    _waitingToPlay = false;
 
     AVAudioSession *session = [AVAudioSession sharedInstance];
     [session setCategory:AVAudioSessionCategoryPlayback
@@ -99,7 +101,7 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
 
   AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
   [_player replaceCurrentItemWithPlayerItem:item];
-  [_player play];
+  _waitingToPlay = true;
 }
 
 - (void)stopPlayback {
@@ -123,7 +125,11 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
         break;
 
       case AVPlayerItemStatusReadyToPlay:
-        [self setCurrentState:TKMAudioPlaying];
+        if (_waitingToPlay) {
+          _waitingToPlay = false;
+          [self setCurrentState:TKMAudioPlaying];
+          [_player play];
+        }
         break;
     }
   }
