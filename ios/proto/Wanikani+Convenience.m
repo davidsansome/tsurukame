@@ -314,7 +314,7 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 }
 
 - (bool)isReviewStage {
-  return self.hasId_p && self.hasAvailableAt && self.srsStage != 0;
+  return self.hasId_p && self.hasAvailableAt;
 }
 
 - (bool)isBurned {
