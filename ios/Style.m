@@ -103,9 +103,13 @@ UIFont *TKMJapaneseFont(CGFloat size) {
 }
 
 UIFont *TKMJapaneseFontLight(CGFloat size) {
-  return [UIFont fontWithName:[NSString stringWithFormat:@"%@ W3", kTKMJapaneseFontName] size:size];
+  return [UIFont fontWithName:[NSString stringWithFormat:@"%@-W3",
+                               [kTKMJapaneseFontName stringByReplacingOccurrencesOfString:@" " withString:@""]]
+                                                    size:size];
 }
 
 UIFont *TKMJapaneseFontBold(CGFloat size) {
-  return [UIFont fontWithName:[NSString stringWithFormat:@"%@ W8", kTKMJapaneseFontName] size:size];
+  return [UIFont fontWithName:[NSString stringWithFormat:@"%@-W8",
+                               [kTKMJapaneseFontName stringByReplacingOccurrencesOfString:@" " withString:@""]]
+                                                   size:size];
 }
