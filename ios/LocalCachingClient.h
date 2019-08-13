@@ -60,6 +60,7 @@ typedef void (^CompletionHandler)(void);
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
 - (int)getSrsLevelCount:(TKMSRSStageCategory)level;
 - (int)getGuruKanjiCount;
+- (NSTimeInterval)getAverageRemainingLevelTime;
 
 // Setters: save the data to the database and return immediately, make network requests in the
 // background.

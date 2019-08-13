@@ -59,7 +59,7 @@
     if ([ud objectForKey:@ #name] == nil) {                                  \
       return defaultValue;                                                   \
     }                                                                        \
-    return (int)[ud integerForKey:@ #name];                                       \
+    return (int)[ud integerForKey:@ #name];                                  \
   }                                                                          \
   +(void)setterName : (int)value {                                           \
     [[NSUserDefaults standardUserDefaults] setInteger:value forKey:@ #name]; \

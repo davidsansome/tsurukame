@@ -29,7 +29,7 @@ NSString *TKMSubjectTypeName(TKMSubject_Type subjectType) {
 }
 
 TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage) {
-  switch(srsStage) {
+  switch (srsStage) {
     case 1:
       return TKMSRSStageNovice;
     case 2:
@@ -51,7 +51,7 @@ TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage) {
 }
 
 int TKMSRSStageCategoryIntForStage(int srsStage) {
-  switch(srsStage) {
+  switch (srsStage) {
     case 1:
       return 0;
     case 2:
@@ -223,10 +223,8 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 @implementation TKMReading (Convenience)
 
 - (NSString *)displayText {
-  if (self.hasType &&
-      self.type == TKMReading_Type_Onyomi && UserDefaults.useKatakanaForOnyomi) {
-    return [self.reading
-            stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:NO];
+  if (self.hasType && self.type == TKMReading_Type_Onyomi && UserDefaults.useKatakanaForOnyomi) {
+    return [self.reading stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:NO];
   }
   return self.reading;
 }
@@ -357,6 +355,51 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 
 - (NSDate *)startedAtDate {
   return [NSDate dateWithTimeIntervalSince1970:self.startedAt];
+}
+
+- (int)currentLevel {
+  return MIN(self.level, self.maxLevelGrantedBySubscription);
+}
+
+@end
+
+@implementation TKMLevel (Convenience)
+
+- (NSDate *)unlockedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.unlockedAt];
+}
+
+- (NSDate *)startedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.startedAt];
+}
+
+- (NSDate *)passedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.passedAt];
+}
+
+- (NSDate *)abandonedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.abandonedAt];
+}
+
+- (NSDate *)completedAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.completedAt];
+}
+
+- (NSDate *)createdAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.createdAt];
+}
+
+- (NSTimeInterval)timeSpentCurrent {
+  if (!self.hasUnlockedAt) {
+    return 0;
+  }
+
+  NSDate *startDate = self.hasStartedAt ? [self startedAtDate] : [self unlockedAtDate];
+  if (self.hasPassedAt) {
+    return [[self passedAtDate] timeIntervalSinceDate:startDate];
+  } else {
+    return [[NSDate date] timeIntervalSinceDate:startDate];
+  }
 }
 
 @end

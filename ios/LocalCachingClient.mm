@@ -174,6 +174,8 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   bool _isCachedPendingStudyMaterialsStale;
   bool _isCachedSrsLevelCountsStale;
   NSDate *_cachedAvailableSubjectCountsUpdated;
+  NSArray<NSNumber *> *_cachedLevelTimes;
+  bool _isCachedLevelTimesStale;
 }
 
 #pragma mark - Initialisers
@@ -195,6 +197,8 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedPendingStudyMaterialsStale = true;
     _isCachedSrsLevelCountsStale = true;
     _cachedAvailableSubjectCountsUpdated = [NSDate distantPast];
+    _cachedLevelTimes = [NSArray array];
+    _isCachedLevelTimesStale = true;
   }
   return self;
 }
@@ -474,8 +478,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
   TKMUser *user = [self getUserInfo];
-  int level = MIN(user.level, _dataLoader.maxLevelGrantedBySubscription);
-  return [self getAssignmentsAtLevel:level];
+  return [self getAssignmentsAtLevel:[user currentLevel]];
 }
 
 #pragma mark - Getting cached data
@@ -594,9 +597,9 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   _cachedSrsLevelCounts.fill(0);
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     FMResultSet *gr = [db executeQuery:
-                             @"SELECT COUNT(*) FROM subject_progress WHERE srs_stage "
-                             @">= 5 AND subject_type = ?",
-                             @(TKMSubject_Type_Kanji)];
+                              @"SELECT COUNT(*) FROM subject_progress WHERE srs_stage "
+                              @">= 5 AND subject_type = ?",
+                              @(TKMSubject_Type_Kanji)];
     while ([gr next]) {
       _cachedGuruKanjiCount = [gr intForColumnIndex:0];
     }
@@ -613,6 +616,35 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   }];
 
   _isCachedSrsLevelCountsStale = false;
+}
+
+- (NSTimeInterval)getAverageRemainingLevelTime {
+  if (_isCachedLevelTimesStale) {
+    [_client getLevelTimes:^(NSError *_Nullable error, NSArray<NSNumber *> *_Nullable levelTimes) {
+      _isCachedLevelTimesStale = false;
+      if (levelTimes) {
+        _cachedLevelTimes = levelTimes;
+      }
+    }];
+  }
+
+  if ([_cachedLevelTimes count] == 0) {
+    return 0;
+  }
+
+  NSNumber *currentLevelTime = [_cachedLevelTimes lastObject];
+  NSUInteger lastPassIndex = [_cachedLevelTimes count] - 1;
+
+  // Use the median 50% to calculate the average time
+  NSUInteger lowerIndex = lastPassIndex / 4 + (lastPassIndex % 4 == 3 ? 1 : 0);
+  NSUInteger upperIndex = lastPassIndex * 3 / 4 + (lastPassIndex == 1 ? 1 : 0);
+
+  NSRange medianPassRange = NSMakeRange(lowerIndex, upperIndex);
+  NSArray *medianPassTimes = [_cachedLevelTimes subarrayWithRange:medianPassRange];
+  NSNumber *averageTime = [medianPassTimes valueForKeyPath:@"@avg.self"];
+  NSTimeInterval remainingTime = [averageTime doubleValue] - [currentLevelTime doubleValue];
+
+  return remainingTime;
 }
 
 #pragma mark - Invalidating cached data
@@ -650,6 +682,12 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedSrsLevelCountsStale = true;
   }
   [self postNotificationOnMainThread:kLocalCachingClientSrsLevelCountsChangedNotification];
+}
+
+- (void)invalidateCachedLevelTimes {
+  @synchronized(self) {
+    _isCachedLevelTimesStale = true;
+  }
 }
 
 #pragma mark - Send progress
@@ -692,22 +730,22 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 - (void)sendPendingProgress:(NSArray<TKMProgress *> *)progress
                     handler:(CompletionHandler _Nullable)handler {
   for (TKMProgress *p in progress) {
-    [_client
-        sendProgress:p
-             handler:^(NSError *_Nullable error) {
-               if (error) {
-                 [self logError:error];
+    [_client sendProgress:p
+                  handler:^(NSError *_Nullable error) {
+                    if (error) {
+                      [self logError:error];
 
-                 // Drop the data if the server is clearly telling us our data is invalid and cannot be accepted.
-                 // This most commonly happens when doing reviews before progress from elsewhere has synced,
-                 // leaving the app trying to report progress on reviews you already did elsewhere.
-                 if (error.code == 422) {
-                   [self clearPendingProgress: p];
-                 }
-               } else {
-                 [self clearPendingProgress: p];
-               }
-             }];
+                      // Drop the data if the server is clearly telling us our data is invalid and
+                      // cannot be accepted. This most commonly happens when doing reviews before
+                      // progress from elsewhere has synced, leaving the app trying to report
+                      // progress on reviews you already did elsewhere.
+                      if (error.code == 422) {
+                        [self clearPendingProgress:p];
+                      }
+                    } else {
+                      [self clearPendingProgress:p];
+                    }
+                  }];
   }
   if (handler) {
     handler();
@@ -717,8 +755,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 - (void)clearPendingProgress:(TKMProgress *)p {
   // Delete the local pending progress.
   [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
-    CheckUpdate(
-                db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
+    CheckUpdate(db, @"DELETE FROM pending_progress WHERE id = ?", @(p.assignment.subjectId));
   }];
   [self invalidateCachedPendingProgress];
 }
@@ -915,6 +952,8 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 - (void)updateUserInfo:(CompletionHandler)handler {
+  int originalLevel = [[self getUserInfo] currentLevel];
+
   [_client getUserInfo:^(NSError *_Nullable error, TKMUser *_Nullable user) {
     if (error) {
       if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 401) {
@@ -927,6 +966,11 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       }];
       NSLog(@"Got user info: %@", user);
     }
+
+    if ([[self getUserInfo] currentLevel] != originalLevel) {
+      [self invalidateCachedLevelTimes];
+    }
+
     handler();
   }];
 }

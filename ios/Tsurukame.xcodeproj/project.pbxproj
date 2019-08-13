@@ -267,6 +267,7 @@
 		63EEFED31FC45E810070C05F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
 		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
+		65C5D1EB22DBD0FD00304792 /* LevelTimeRemainingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
 		BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* TKMFontsViewController.m */; };
@@ -671,6 +672,8 @@
 		63EEFED81FC46E720070C05F /* Client.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
 		657E731C22DAD99C00F6F4C1 /* SubjectsRemainingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsRemainingViewController.h; sourceTree = "<group>"; };
 		657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsRemainingViewController.m; sourceTree = "<group>"; };
+		65C5D1E922DBD0FD00304792 /* LevelTimeRemainingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelTimeRemainingCell.h; sourceTree = "<group>"; };
+		65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LevelTimeRemainingCell.m; sourceTree = "<group>"; };
 		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMKanaInput+Internals.h"; sourceTree = "<group>"; };
 		BB2909A5217FAF8B00B1816F /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
@@ -1018,6 +1021,8 @@
 				63EEFEC21FC45CB10070C05F /* Info.plist */,
 				3DA8BAFA224C957F009E925B /* LessonOrderViewController.h */,
 				3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */,
+				65C5D1E922DBD0FD00304792 /* LevelTimeRemainingCell.h */,
+				65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */,
 				63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */,
 				637C12DC203D779D009E92DB /* LessonsPageControl.h */,
 				637C12DD203D779D009E92DB /* LessonsPageControl.m */,
@@ -1667,6 +1672,7 @@
 				630ADD3E21FEB34B00BC9801 /* CrossShapeRenderer.swift in Sources */,
 				630ADD9321FEB34C00BC9801 /* ScatterChartDataSet.swift in Sources */,
 				63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */,
+				65C5D1EB22DBD0FD00304792 /* LevelTimeRemainingCell.m in Sources */,
 				630ADD3F21FEB34B00BC9801 /* TriangleShapeRenderer.swift in Sources */,
 				6319C9B220441D3800C31F87 /* FMResultSet.m in Sources */,
 				630ADD4121FEB34B00BC9801 /* XAxisRendererHorizontalBarChart.swift in Sources */,
@@ -1866,6 +1872,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1929,6 +1936,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1961,6 +1969,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
+				DEFINES_MODULE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1984,6 +1993,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
+				DEFINES_MODULE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
