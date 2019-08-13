@@ -67,6 +67,7 @@ static const CGFloat kFontSize = 14.f;
 }
 
 - (NSDate *)reviewDate {
+  // If it's available in a lesson, assume it will be quizzed this hour.
   if (!_assignment.hasAvailableAt) {
     return [NSDate distantFuture];
   }
