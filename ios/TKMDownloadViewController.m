@@ -128,7 +128,7 @@
                  downloadTask:(NSURLSessionDownloadTask *)downloadTask
     didFinishDownloadingToURL:(NSURL *)location {
   NSURL *url = downloadTask.originalRequest.URL;
-  NSString *filename = [url.path substringFromIndex:1];
+  NSString *filename = url.lastPathComponent;
 
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)downloadTask.response;
   if (httpResponse.statusCode != 200) {

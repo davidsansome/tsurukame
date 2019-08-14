@@ -51,20 +51,26 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
   size_t bufferSize = compressedData.length * 1.25;
 
   while (true) {
+    NSLog(@"Decompressing data of size %lu into buffer of size %zu",
+          (unsigned long)compressedData.length, bufferSize);
+    
     uint8_t *buffer = (uint8_t *)malloc(bufferSize);
     size_t decodedSize =
         compression_decode_buffer(buffer, bufferSize, (const uint8_t *)compressedData.bytes,
                                   compressedData.length, nil, COMPRESSION_LZFSE);
     if (decodedSize == 0) {
+      NSLog(@"Decompression error");
       free(buffer);
       return nil;
     }
     if (decodedSize == bufferSize) {
+      NSLog(@"Buffer wasn't big enough - trying again");
       // The buffer wasn't big enough - try again.
       free(buffer);
       bufferSize *= 1.25;
       continue;
     }
+    NSLog(@"Decompressed %lu bytes", decodedSize);
     return [NSData dataWithBytesNoCopy:buffer length:decodedSize];
   }
 }
