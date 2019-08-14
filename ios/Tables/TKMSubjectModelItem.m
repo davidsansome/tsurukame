@@ -20,6 +20,25 @@
 
 static const CGFloat kJapaneseTextImageSize = 26.f;
 static const CGFloat kFontSize = 14.f;
+static const int kGuruStage = 5;
+
+int TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
+  const bool isAccelerated = itemLevel <= 2;
+  
+  int hours = 0;
+  // From https://docs.api.wanikani.com/20170710/#additional-information
+  switch (srsStage) {
+    case 1:
+      hours += (isAccelerated ? 2 : 4);
+    case 2:
+      hours += (isAccelerated ? 4 : 8);
+    case 3:
+      hours += (isAccelerated ? 8 : 23);
+    case 4:
+      hours += (isAccelerated ? 23 : 47);
+  }
+  return hours * 60 * 60;
+}
 
 @interface TKMSubjectModelView ()
 @property(weak, nonatomic) IBOutlet UILabel *levelLabel;
@@ -69,7 +88,7 @@ static const CGFloat kFontSize = 14.f;
 - (NSDate *)reviewDate {
   // If it's available in a lesson, assume it will be quizzed this hour.
   if (!_assignment.hasAvailableAt) {
-    return [NSDate distantFuture];
+    return [NSDate date];
   }
 
   // If it's available now, treat it like it will be reviewed this hour.
@@ -93,35 +112,12 @@ static const CGFloat kFontSize = 14.f;
     return _assignment.passedAtDate;
   }
 
-  int itemLevel = _assignment.srsStage + 1;
-  int guruLevel = 5;
-
-  if (itemLevel > guruLevel) {
+  if (_assignment.srsStage >= kGuruStage) {
     return [NSDate distantPast];
   }
 
   NSDate *reviewDate = [self reviewDate];
-
-  if (itemLevel == guruLevel) {
-    return reviewDate;
-  }
-
-  double guruInterval = 0;
-  bool isAccelerated = _subject.level <= 2;
-
-  // From https://docs.api.wanikani.com/20170710/#additional-information
-  switch (itemLevel) {
-    case 1:
-      guruInterval += (isAccelerated ? 2 : 4);
-    case 2:
-      guruInterval += (isAccelerated ? 4 : 8);
-    case 3:
-      guruInterval += (isAccelerated ? 8 : 23);
-    case 4:
-      guruInterval += (isAccelerated ? 23 : 47);
-  }
-
-  int guruSeconds = guruInterval * 60 * 60;
+  int guruSeconds = TKMMinimumTimeUntilGuruSeconds(_subject.level, _assignment.srsStage + 1);
   return [reviewDate dateByAddingTimeInterval:guruSeconds];
 }
 

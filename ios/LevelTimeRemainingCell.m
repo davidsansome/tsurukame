@@ -38,9 +38,17 @@
     }
 
     if (!assignment.hasAvailableAt) {
+      // This item is still locked so we don't know how long the user will take to
+      // unlock it.  Use their average level time, minus the time they've spent at
+      // this level so far, as an estimate.
       NSTimeInterval average = [_services.localCachingClient getAverageRemainingLevelTime];
+      
+      // But ensure it can't be less than the time it would take to get a fresh item
+      // to Guru, if they've spent longer at the current level than the average.
+      average = MAX(average, TKMMinimumTimeUntilGuruSeconds(assignment.level, 1));
+      
       NSDate *averageDate = [NSDate dateWithTimeIntervalSinceNow:average];
-      [self setRemaining:averageDate average:YES];
+      [self setRemaining:averageDate isEstimate:YES];
       return;
     }
 
@@ -55,14 +63,14 @@
     }
   }
 
-  [self setRemaining:guruDate average:NO];
+  [self setRemaining:guruDate isEstimate:NO];
 }
 
-- (void)setRemaining:(NSDate *)finish average:(BOOL)average {
-  if (average) {
-    self.textLabel.text = @"Time Remaining (average)";
+- (void)setRemaining:(NSDate *)finish isEstimate:(BOOL)isEstimate {
+  if (isEstimate) {
+    self.textLabel.text = @"Time remaining (estimated)";
   } else {
-    self.textLabel.text = @"Time Remaining";
+    self.textLabel.text = @"Time remaining";
   }
 
   if ([[NSDate date] compare:finish] == NSOrderedDescending) {

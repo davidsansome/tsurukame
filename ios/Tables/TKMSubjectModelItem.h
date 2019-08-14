@@ -21,6 +21,10 @@
 
 NS_ASSUME_NONNULL_BEGIN;
 
+// Returns the minimum time it would take to get an item at the given level and
+// SRS stage up to the Guru level.
+int TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage);
+
 @interface TKMSubjectModelView : TKMModelCell
 
 - (void)setShowAnswers:(bool)showAnswers animated:(bool)animated;
