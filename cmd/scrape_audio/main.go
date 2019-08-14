@@ -62,7 +62,7 @@ func Scrape() error {
 			filenamesByLevel[level] = append(filenamesByLevel[level], outFilename)
 			if _, err := os.Stat(outPath); !os.IsNotExist(err) {
 				fmt.Printf("Skipping %s (already exists)\n", outPath)
-				return nil
+				continue
 			}
 
 			// Fetch the audio file.

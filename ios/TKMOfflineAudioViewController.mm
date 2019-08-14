@@ -33,12 +33,12 @@ struct AvailablePackage {
 };
 
 static const AvailablePackage kAvailablePackages[] = {
-  {@"a-levels-1-10.tar.lzfse", @"Levels 1-10", 9899351},
-  {@"a-levels-11-20.tar.lzfse", @"Levels 11-20", 12749503},
-  {@"a-levels-21-30.tar.lzfse", @"Levels 21-30", 12146915},
-  {@"a-levels-31-40.tar.lzfse", @"Levels 31-40", 11710108},
-  {@"a-levels-41-50.tar.lzfse", @"Levels 41-50", 10864494},
-  {@"a-levels-51-60.tar.lzfse", @"Levels 51-60", 9574802},
+  {@"a-levels-1-10.tar.lzfse", @"Levels 1-10", 20929198},
+  {@"a-levels-11-20.tar.lzfse", @"Levels 11-20", 26205096},
+  {@"a-levels-21-30.tar.lzfse", @"Levels 21-30", 25755242},
+  {@"a-levels-31-40.tar.lzfse", @"Levels 31-40", 23207068},
+  {@"a-levels-41-50.tar.lzfse", @"Levels 41-50", 20776153},
+  {@"a-levels-51-60.tar.lzfse", @"Levels 51-60", 18827575},
 };
 
 
