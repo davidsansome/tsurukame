@@ -101,10 +101,6 @@ func Combine() error {
 				spb.Radical.HasCharacterImageFile = proto.Bool(true)
 			}
 		}
-		if spb.Vocabulary != nil {
-			spb.Vocabulary.Audio = nil
-			spb.Vocabulary.HasAudioFile = proto.Bool(true)
-		}
 
 		// Clean up the data.
 		if err := ReorderComponentSubjectIDs(reader, spb); err != nil {

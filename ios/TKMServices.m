@@ -33,7 +33,7 @@
     _dataLoader = [[DataLoader alloc] initFromURL:[[NSBundle mainBundle] URLForResource:@"data"
                                                                           withExtension:@"bin"]];
     _reachability = [Reachability reachabilityForInternetConnection];
-    _audio = [[TKMAudio alloc] initWithReachability:_reachability];
+    _audio = [[TKMAudio alloc] initWithServices: self];
     _fontLoader = [[TKMFontLoader alloc] init];
   }
   return self;

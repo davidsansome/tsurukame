@@ -218,6 +218,15 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
   return [strings componentsJoinedByString:@", "];
 }
 
+- (int)randomAudioID {
+  if (!self.hasVocabulary || self.vocabulary.audioIdsArray_Count < 1) {
+    return 0;
+  }
+
+  uint idx = arc4random_uniform((uint)self.vocabulary.audioIdsArray_Count);
+  return [self.vocabulary.audioIdsArray valueAtIndex:idx];
+}
+
 @end
 
 @implementation TKMReading (Convenience)

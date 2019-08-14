@@ -170,7 +170,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   NSAttributedString *text = RenderReadings(subject.readingsArray, primaryOnly);
   text = [text stringWithFontSize:kFontSize];
   TKMReadingModelItem *item = [[TKMReadingModelItem alloc] initWithText:text];
-  if (subject.hasVocabulary && subject.vocabulary.hasAudioFile) {
+  if (subject.hasVocabulary && subject.vocabulary.audioIdsArray_Count > 0) {
     [item setAudio:_services.audio subjectID:subject.id_p];
   }
 

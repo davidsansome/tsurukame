@@ -17,6 +17,7 @@ package converter
 import (
 	"fmt"
 	"strings"
+	"strconv"
 
 	"github.com/golang/protobuf/proto"
 
@@ -69,8 +70,8 @@ func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
 			MeaningExplanation: proto.String(o.Data.MeaningMnemonic),
 			ReadingExplanation: proto.String(o.Data.ReadingMnemonic),
 		}
-		if audioURL := bestAudio(o.Data.PronunciationAudios); audioURL != nil {
-			ret.Vocabulary.Audio = audioURL
+		if audio_ids := audioIds(o.Data.PronunciationAudios); audio_ids != nil {
+			ret.Vocabulary.AudioIds = audio_ids
 		}
 		for _, p := range o.Data.PartsOfSpeech {
 			pos, ok := convertPartOfSpeech(p)
@@ -99,13 +100,16 @@ func bestCharacterImageURL(id int, images []api.CharacterImage) string {
 	panic(fmt.Sprintf("No SVG found for radical %d", id))
 }
 
-func bestAudio(audio []api.Audio) *string {
+func audioIds(audio []api.Audio) []int32 {
+	audios := make([]int32, 0)
 	for _, a := range audio {
 		if a.ContentType == "audio/mpeg" {
-			return &a.Url
+			dash := strings.Index(a.Url, "-")
+			id, _ := strconv.Atoi(a.Url[32:dash])
+			audios = append(audios, int32(id))
 		}
 	}
-	return nil
+	return audios
 }
 
 func convertMeanings(m []api.MeaningObject, a []api.AuxiliaryMeaningObject) []*pb.Meaning {

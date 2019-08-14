@@ -110,6 +110,7 @@
 
 - (void)startDownloadFor:(TKMDownloadModelItem *)item {
   NSURL *url = [self urlForFilename:item.filename];
+  NSLog(@"Downloading %@", url);
   NSURLSessionDownloadTask *task = [_urlSession downloadTaskWithURL:url];
   _downloads[item.filename] = task;
   [task resume];
@@ -127,7 +128,7 @@
                  downloadTask:(NSURLSessionDownloadTask *)downloadTask
     didFinishDownloadingToURL:(NSURL *)location {
   NSURL *url = downloadTask.originalRequest.URL;
-  NSString *filename = url.lastPathComponent;
+  NSString *filename = [url.path substringFromIndex:1];
 
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)downloadTask.response;
   if (httpResponse.statusCode != 200) {

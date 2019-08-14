@@ -14,15 +14,19 @@
 
 #import "TKMAudio.h"
 #import "Reachability.h"
+#import "DataLoader.h"
+#import "proto/Wanikani.pbobjc.h"
+#import "proto/Wanikani+Convenience.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
 
-static NSString *const kURLPattern = @"https://tsurukame.app/audio/%d.mp3";
-static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
+static NSString *const kURLPattern = @"https://cdn.wanikani.com/audios/%d-subject-%d.mp3";
+static NSString *const kOfflineFilePattern = @"%@/a%d.mp3";
 
 @implementation TKMAudio {
   Reachability *_reachability;
+  TKMServices *_services;
   AVPlayer *_player;
   __weak id<TKMAudioDelegate> _delegate;
   BOOL _waitingToPlay;
@@ -34,10 +38,11 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
   return [NSString stringWithFormat:@"%@/audio", paths.firstObject];
 }
 
-- (instancetype)initWithReachability:(Reachability *)reachability {
+- (instancetype)initWithServices:(TKMServices *) services {
   self = [super init];
   if (self) {
-    _reachability = reachability;
+    _services = services;
+    _reachability = services.reachability;
     _currentState = TKMAudioFinished;
     _waitingToPlay = false;
 
@@ -73,9 +78,12 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
 }
 
 - (void)playAudioForSubjectID:(int)subjectID delegate:(nullable id<TKMAudioDelegate>)delegate {
+  TKMSubject *subject = [_services.dataLoader loadSubject:subjectID];
+  int audioID = [subject randomAudioID];
+
   // Is the audio available offline?
   NSString *filename =
-      [NSString stringWithFormat:kOfflineFilePattern, [TKMAudio cacheDirectoryPath], subjectID];
+      [NSString stringWithFormat:kOfflineFilePattern, [TKMAudio cacheDirectoryPath], audioID];
   if ([[NSFileManager defaultManager] fileExistsAtPath:filename]) {
     [self playURL:[NSURL fileURLWithPath:filename] delegate:delegate];
     return;
@@ -86,7 +94,7 @@ static NSString *const kOfflineFilePattern = @"%@/%d.mp3";
     return;
   }
 
-  NSString *urlString = [NSString stringWithFormat:kURLPattern, subjectID];
+  NSString *urlString = [NSString stringWithFormat:kURLPattern, audioID, subjectID];
   [self playURL:[NSURL URLWithString:urlString] delegate:delegate];
 }
 

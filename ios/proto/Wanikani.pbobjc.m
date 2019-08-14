@@ -93,7 +93,9 @@ typedef struct TKMMeaning__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescriptionWithDefault))
                                    storageSize:sizeof(TKMMeaning__storage_)
                                          flags:GPBDescriptorInitializationFlag_FieldsWithDefault];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -200,7 +202,9 @@ typedef struct TKMReading__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescriptionWithDefault))
                                    storageSize:sizeof(TKMReading__storage_)
                                          flags:GPBDescriptorInitializationFlag_FieldsWithDefault];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -334,7 +338,9 @@ typedef struct TKMRadical__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMRadical__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -388,7 +394,9 @@ typedef struct TKMVisuallySimilarKanji__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMVisuallySimilarKanji__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -519,7 +527,9 @@ typedef struct TKMKanji__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMKanji__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -537,8 +547,7 @@ typedef struct TKMKanji__storage_ {
 @dynamic formattedReadingExplanationArray, formattedReadingExplanationArray_Count;
 @dynamic sentencesArray, sentencesArray_Count;
 @dynamic partsOfSpeechArray, partsOfSpeechArray_Count;
-@dynamic hasAudio, audio;
-@dynamic hasHasAudioFile, hasAudioFile;
+@dynamic audioIdsArray, audioIdsArray_Count;
 
 typedef struct TKMVocabulary__storage_ {
   uint32_t _has_storage_[1];
@@ -546,7 +555,7 @@ typedef struct TKMVocabulary__storage_ {
   NSString *readingExplanation;
   NSMutableArray *sentencesArray;
   GPBEnumArray *partsOfSpeechArray;
-  NSString *audio;
+  GPBInt32Array *audioIdsArray;
   NSMutableArray *formattedMeaningExplanationArray;
   NSMutableArray *formattedReadingExplanationArray;
 } TKMVocabulary__storage_;
@@ -594,13 +603,13 @@ typedef struct TKMVocabulary__storage_ {
         .dataType = GPBDataTypeEnum,
       },
       {
-        .name = "audio",
+        .name = "audioIdsArray",
         .dataTypeSpecific.className = NULL,
-        .number = TKMVocabulary_FieldNumber_Audio,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(TKMVocabulary__storage_, audio),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
+        .number = TKMVocabulary_FieldNumber_AudioIdsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMVocabulary__storage_, audioIdsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeInt32,
       },
       {
         .name = "formattedMeaningExplanationArray",
@@ -620,15 +629,6 @@ typedef struct TKMVocabulary__storage_ {
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeMessage,
       },
-      {
-        .name = "hasAudioFile",
-        .dataTypeSpecific.className = NULL,
-        .number = TKMVocabulary_FieldNumber_HasAudioFile,
-        .hasIndex = 3,
-        .offset = 4,  // Stored in _has_storage_ to save space.
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeBool,
-      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[TKMVocabulary class]
@@ -638,7 +638,9 @@ typedef struct TKMVocabulary__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMVocabulary__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -769,7 +771,9 @@ typedef struct TKMVocabulary_Sentence__storage_ {
                                    storageSize:sizeof(TKMVocabulary_Sentence__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(TKMVocabulary)];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -938,7 +942,9 @@ typedef struct TKMSubject__storage_ {
         "\001\004\010\241!!\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -1103,7 +1109,9 @@ typedef struct TKMAssignment__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescriptionWithDefault))
                                    storageSize:sizeof(TKMAssignment__storage_)
                                          flags:GPBDescriptorInitializationFlag_FieldsWithDefault];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -1176,7 +1184,9 @@ typedef struct TKMProgress__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMProgress__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -1274,7 +1284,9 @@ typedef struct TKMStudyMaterials__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMStudyMaterials__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -1387,7 +1399,9 @@ typedef struct TKMUser__storage_ {
         "\001\004\007\241!!\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -1430,7 +1444,9 @@ typedef struct TKMSubjectOverrides__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMSubjectOverrides__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -1500,7 +1516,9 @@ typedef struct TKMFormattedText__storage_ {
         "\001\003\004\241!!\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -1624,7 +1642,9 @@ typedef struct TKMDataFileHeader__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMDataFileHeader__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;
@@ -1689,7 +1709,9 @@ typedef struct TKMSubjectsByLevel__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMSubjectsByLevel__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
     descriptor = localDescriptor;
   }
   return descriptor;

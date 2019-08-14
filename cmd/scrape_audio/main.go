@@ -22,7 +22,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"strconv"
 
 	"github.com/davidsansome/tsurukame/encoding"
 	"github.com/davidsansome/tsurukame/utils"
@@ -50,40 +49,43 @@ func Scrape() error {
 	filenamesByLevel := map[int][]string{}
 
 	if err := encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
-		if spb.Vocabulary == nil || spb.Vocabulary.Audio == nil {
+		if spb.Vocabulary == nil || spb.Vocabulary.AudioIds == nil {
 			return nil
 		}
-		url := spb.Vocabulary.GetAudio()
+		audio_ids := spb.Vocabulary.GetAudioIds()
 
-		outFilename := fmt.Sprintf("%s.mp3", strconv.Itoa(id))
-		outPath := path.Join(*out, outFilename)
+		for _, audio_id := range audio_ids {
+			outFilename := fmt.Sprintf("a%d.mp3", audio_id)
+			outPath := path.Join(*out, outFilename)
 
-		level := int(spb.GetLevel())
-		filenamesByLevel[level] = append(filenamesByLevel[level], outFilename)
-		if _, err := os.Stat(outPath); !os.IsNotExist(err) {
-			fmt.Printf("Skipping %s (already exists)\n", outPath)
-			return nil
-		}
+			level := int(spb.GetLevel())
+			filenamesByLevel[level] = append(filenamesByLevel[level], outFilename)
+			if _, err := os.Stat(outPath); !os.IsNotExist(err) {
+				fmt.Printf("Skipping %s (already exists)\n", outPath)
+				return nil
+			}
 
-		// Fetch the audio file.
-		fmt.Printf("Fetching %s to %s\n", url, outPath)
-		resp, err := http.Get(url)
-		utils.Must(err)
-		if resp.StatusCode != http.StatusOK {
-			return fmt.Errorf("HTTP %d from %s", resp.StatusCode, resp.Request.URL)
-		}
-		defer resp.Body.Close()
+			// Fetch the audio file.
+			url := fmt.Sprintf("https://cdn.wanikani.com/audios/%d-subject-%d.mp3", audio_id, id)
+			fmt.Printf("Fetching %s to %s\n", url, outPath)
+			resp, err := http.Get(url)
+			utils.Must(err)
+			if resp.StatusCode != http.StatusOK {
+				return fmt.Errorf("HTTP %d from %s", resp.StatusCode, resp.Request.URL)
+			}
+			defer resp.Body.Close()
 
-		// Open the output file.
-		fh, err := os.Create(outPath)
-		if err != nil {
-			return err
-		}
-		defer fh.Close()
+			// Open the output file.
+			fh, err := os.Create(outPath)
+			if err != nil {
+				return err
+			}
+			defer fh.Close()
 
-		// Write the output file.
-		if _, err := io.Copy(fh, resp.Body); err != nil {
-			return err
+			// Write the output file.
+			if _, err := io.Copy(fh, resp.Body); err != nil {
+				return err
+			}
 		}
 		return nil
 	}); err != nil {
@@ -99,7 +101,7 @@ func Scrape() error {
 		for level := startLevel; level <= endLevel; level++ {
 			subjectIDs = append(subjectIDs, filenamesByLevel[level]...)
 		}
-		filename := fmt.Sprintf("levels-%d-%d", startLevel, endLevel)
+		filename := fmt.Sprintf("a-levels-%d-%d", startLevel, endLevel)
 		sizeBytes, err := createArchive(filename, subjectIDs)
 		if err != nil {
 			return err

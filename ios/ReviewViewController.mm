@@ -957,7 +957,7 @@ class AnimationContext {
   // Show a new task if it was correct.
   if (result != TKMAnswerIncorrect) {
     if (UserDefaults.playAudioAutomatically && _activeTaskType == kTKMTaskTypeReading &&
-        _activeSubject.hasVocabulary && _activeSubject.vocabulary.hasAudioFile) {
+        _activeSubject.hasVocabulary && _activeSubject.vocabulary.audioIdsArray_Count > 0) {
       [_services.audio playAudioForSubjectID:_activeSubject.id_p delegate:nil];
     }
 
