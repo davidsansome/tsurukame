@@ -34,7 +34,7 @@ typedef void (^ProgressHandler)(NSError *_Nullable error);
 typedef void (^StudyMaterialsHandler)(NSError *_Nullable error,
                                       NSArray<TKMStudyMaterials *> *_Nullable studyMaterials);
 typedef void (^UserInfoHandler)(NSError *_Nullable error, TKMUser *_Nullable user);
-typedef void (^LevelInfoHandler)(NSError *_Nullable error, NSArray<NSNumber *> *_Nullable level);
+typedef void (^LevelInfoHandler)(NSError *_Nullable error, NSArray<TKMLevel *> *_Nullable levels);
 typedef void (^UpdateStudyMaterialHandler)(NSError *_Nullable error);
 
 @interface TKMClientError : NSError

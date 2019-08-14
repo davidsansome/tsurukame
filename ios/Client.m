@@ -862,12 +862,15 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 - (void)getLevelTimes:(LevelInfoHandler)handler {
   NSURLComponents *url = [NSURLComponents
       componentsWithString:[NSString stringWithFormat:@"%s/level_progressions", kURLBase]];
-  NSMutableArray<TKMLevel *> *levels = [NSMutableArray array];
 
+  NSMutableArray<TKMLevel *> *levels = [NSMutableArray array];
   [self startPagedQueryFor:url.URL
                    handler:^(NSDictionary *data, NSError *error) {
                      if (error) {
                        handler(error, nil);
+                       return;
+                     } else if (!data) {
+                       handler(nil, levels);
                        return;
                      }
 
@@ -908,9 +911,6 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
                        [levels addObject:level];
                      }
-
-                     NSArray<NSNumber *> *intervals = [levels valueForKeyPath:@"timeSpentCurrent"];
-                     handler(nil, intervals);
                    }];
 }
 

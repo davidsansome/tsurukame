@@ -92,6 +92,13 @@ static const char *kSchemaV4 =
     "  response_data TEXT"
     ");";
 
+static const char *kSchemaV5 =
+    "CREATE TABLE level_progressions ("
+    "  id INTEGER PRIMARY KEY,"
+    "  level INTEGER,"
+    "  pb BLOB"
+    ");";
+
 static const char *kClearAllData =
     "UPDATE sync SET"
     "  assignments_updated_after = \"\","
@@ -103,7 +110,8 @@ static const char *kClearAllData =
     "DELETE FROM user;"
     "DELETE FROM pending_study_materials;"
     "DELETE FROM subject_progress;"
-    "DELETE FROM error_log;";
+    "DELETE FROM error_log;"
+    "DELETE FROM level_progressions;";
 
 static void CheckUpdate(FMDatabase *db, NSString *sql, ...) {
   va_list args;
@@ -174,8 +182,6 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   bool _isCachedPendingStudyMaterialsStale;
   bool _isCachedSrsLevelCountsStale;
   NSDate *_cachedAvailableSubjectCountsUpdated;
-  NSArray<NSNumber *> *_cachedLevelTimes;
-  bool _isCachedLevelTimesStale;
 }
 
 #pragma mark - Initialisers
@@ -197,8 +203,6 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedPendingStudyMaterialsStale = true;
     _isCachedSrsLevelCountsStale = true;
     _cachedAvailableSubjectCountsUpdated = [NSDate distantPast];
-    _cachedLevelTimes = [NSArray array];
-    _isCachedLevelTimesStale = true;
   }
   return self;
 }
@@ -222,6 +226,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       @(kSchemaV2),
       @(kSchemaV3),
       @(kSchemaV4),
+      @(kSchemaV5),
     ];
   });
 
@@ -481,6 +486,43 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   return [self getAssignmentsAtLevel:[user currentLevel]];
 }
 
+- (NSArray<NSNumber *> *)getTimeSpentAtEachLevel {
+  __block NSMutableArray<NSNumber *> *ret = [NSMutableArray array];
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
+    FMResultSet *r = [db executeQuery:@"SELECT pb FROM level_progressions"];
+    while ([r next]) {
+      NSError *error = nil;
+      TKMLevel *level = [TKMLevel parseFromData:[r dataForColumnIndex:0] error:&error];
+      if (error) {
+        NSLog(@"Parsing TKMLevel failed: %@", error);
+      }
+      [ret addObject:@([level timeSpentCurrent])];
+    }
+  }];
+  return ret;
+}
+
+- (NSTimeInterval)getAverageRemainingLevelTime {
+  NSArray<NSNumber *> *timeSpentAtEachLevel = [self getTimeSpentAtEachLevel];
+  if ([timeSpentAtEachLevel count] == 0) {
+    return 0;
+  }
+  
+  NSNumber *currentLevelTime = [timeSpentAtEachLevel lastObject];
+  NSUInteger lastPassIndex = [timeSpentAtEachLevel count] - 1;
+  
+  // Use the median 50% to calculate the average time
+  NSUInteger lowerIndex = lastPassIndex / 4 + (lastPassIndex % 4 == 3 ? 1 : 0);
+  NSUInteger upperIndex = lastPassIndex * 3 / 4 + (lastPassIndex == 1 ? 1 : 0);
+  
+  NSRange medianPassRange = NSMakeRange(lowerIndex, upperIndex - lowerIndex);
+  NSArray *medianPassTimes = [timeSpentAtEachLevel subarrayWithRange:medianPassRange];
+  NSNumber *averageTime = [medianPassTimes valueForKeyPath:@"@avg.self"];
+  NSTimeInterval remainingTime = [averageTime doubleValue] - [currentLevelTime doubleValue];
+  
+  return remainingTime;
+}
+
 #pragma mark - Getting cached data
 
 - (int)pendingProgress {
@@ -618,35 +660,6 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   _isCachedSrsLevelCountsStale = false;
 }
 
-- (NSTimeInterval)getAverageRemainingLevelTime {
-  if (_isCachedLevelTimesStale) {
-    [_client getLevelTimes:^(NSError *_Nullable error, NSArray<NSNumber *> *_Nullable levelTimes) {
-      _isCachedLevelTimesStale = false;
-      if (levelTimes) {
-        _cachedLevelTimes = levelTimes;
-      }
-    }];
-  }
-
-  if ([_cachedLevelTimes count] == 0) {
-    return 0;
-  }
-
-  NSNumber *currentLevelTime = [_cachedLevelTimes lastObject];
-  NSUInteger lastPassIndex = [_cachedLevelTimes count] - 1;
-
-  // Use the median 50% to calculate the average time
-  NSUInteger lowerIndex = lastPassIndex / 4 + (lastPassIndex % 4 == 3 ? 1 : 0);
-  NSUInteger upperIndex = lastPassIndex * 3 / 4 + (lastPassIndex == 1 ? 1 : 0);
-
-  NSRange medianPassRange = NSMakeRange(lowerIndex, upperIndex);
-  NSArray *medianPassTimes = [_cachedLevelTimes subarrayWithRange:medianPassRange];
-  NSNumber *averageTime = [medianPassTimes valueForKeyPath:@"@avg.self"];
-  NSTimeInterval remainingTime = [averageTime doubleValue] - [currentLevelTime doubleValue];
-
-  return remainingTime;
-}
-
 #pragma mark - Invalidating cached data
 
 - (void)postNotificationOnMainThread:(NSNotificationName)name {
@@ -682,12 +695,6 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
     _isCachedSrsLevelCountsStale = true;
   }
   [self postNotificationOnMainThread:kLocalCachingClientSrsLevelCountsChangedNotification];
-}
-
-- (void)invalidateCachedLevelTimes {
-  @synchronized(self) {
-    _isCachedLevelTimesStale = true;
-  }
 }
 
 #pragma mark - Send progress
@@ -864,6 +871,10 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       [self updateUserInfo:^{
         dispatch_group_leave(updateGroup);
       }];
+      dispatch_group_enter(updateGroup);
+      [self updateLevelProgression:^{
+        dispatch_group_leave(updateGroup);
+      }];
 
       dispatch_group_notify(updateGroup, dispatch_get_main_queue(), ^{
         _busy = false;
@@ -952,8 +963,6 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 - (void)updateUserInfo:(CompletionHandler)handler {
-  int originalLevel = [[self getUserInfo] currentLevel];
-
   [_client getUserInfo:^(NSError *_Nullable error, TKMUser *_Nullable user) {
     if (error) {
       if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 401) {
@@ -967,10 +976,24 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       NSLog(@"Got user info: %@", user);
     }
 
-    if ([[self getUserInfo] currentLevel] != originalLevel) {
-      [self invalidateCachedLevelTimes];
-    }
+    handler();
+  }];
+}
 
+- (void)updateLevelProgression:(CompletionHandler)handler {
+  [_client getLevelTimes:^(NSError *_Nullable error, NSArray<TKMLevel *> *levels) {
+    if (error) {
+      [self logError:error];
+    } else {
+      [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        for (TKMLevel *level in levels) {
+          CheckUpdate(db, @"REPLACE INTO level_progressions (id, level, pb) VALUES (?, ?, ?)",
+                      @(level.id_p), @(level.level), level.data);
+        }
+        NSLog(@"Recorded %lu level progressions", (unsigned long)levels.count);
+      }];
+    }
+    
     handler();
   }];
 }
