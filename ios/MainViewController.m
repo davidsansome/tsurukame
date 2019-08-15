@@ -273,6 +273,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     if (!items.count) {
       return;
     }
+    
+#ifdef APP_STORE_SCREENSHOTS
+    items = [items subarrayWithRange:NSMakeRange(0, 32)];
+#endif  // APP_STORE_SCREENSHOTS
 
     TKMReviewContainerViewController *vc =
         (TKMReviewContainerViewController *)segue.destinationViewController;

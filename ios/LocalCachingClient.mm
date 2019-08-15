@@ -546,6 +546,10 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 - (int)availableReviewCount {
+#ifdef APP_STORE_SCREENSHOTS
+  return 9;
+#endif  // APP_STORE_SCREENSHOTS
+  
   @synchronized(self) {
     [self maybeUpdateAvailableSubjectCounts];
     return _cachedAvailableReviewCount;
@@ -553,6 +557,10 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 - (int)availableLessonCount {
+#ifdef APP_STORE_SCREENSHOTS
+  return 10;
+#endif  // APP_STORE_SCREENSHOTS
+  
   @synchronized(self) {
     [self maybeUpdateAvailableSubjectCounts];
     return _cachedAvailableLessonCount;
@@ -560,6 +568,11 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 - (NSArray<NSNumber *> *)upcomingReviews {
+#ifdef APP_STORE_SCREENSHOTS
+  return @[@(14), @(8), @(2), @(1), @(12), @(42), @(17), @(9), @(2), @(0), @(2), @(17), @(0),
+           @(0), @(6), @(0), @(0), @(0), @(0), @(4), @(11), @(0), @(8), @(6)];
+#endif  // APP_STORE_SCREENSHOTS
+  
   @synchronized(self) {
     [self maybeUpdateAvailableSubjectCounts];
     return _cachedUpcomingReviews;
