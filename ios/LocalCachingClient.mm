@@ -507,19 +507,19 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   if ([timeSpentAtEachLevel count] == 0) {
     return 0;
   }
-  
+
   NSNumber *currentLevelTime = [timeSpentAtEachLevel lastObject];
   NSUInteger lastPassIndex = [timeSpentAtEachLevel count] - 1;
-  
+
   // Use the median 50% to calculate the average time
   NSUInteger lowerIndex = lastPassIndex / 4 + (lastPassIndex % 4 == 3 ? 1 : 0);
   NSUInteger upperIndex = lastPassIndex * 3 / 4 + (lastPassIndex == 1 ? 1 : 0);
-  
+
   NSRange medianPassRange = NSMakeRange(lowerIndex, upperIndex - lowerIndex);
   NSArray *medianPassTimes = [timeSpentAtEachLevel subarrayWithRange:medianPassRange];
   NSNumber *averageTime = [medianPassTimes valueForKeyPath:@"@avg.self"];
   NSTimeInterval remainingTime = [averageTime doubleValue] - [currentLevelTime doubleValue];
-  
+
   return remainingTime;
 }
 
@@ -549,7 +549,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 #ifdef APP_STORE_SCREENSHOTS
   return 9;
 #endif  // APP_STORE_SCREENSHOTS
-  
+
   @synchronized(self) {
     [self maybeUpdateAvailableSubjectCounts];
     return _cachedAvailableReviewCount;
@@ -560,7 +560,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 #ifdef APP_STORE_SCREENSHOTS
   return 10;
 #endif  // APP_STORE_SCREENSHOTS
-  
+
   @synchronized(self) {
     [self maybeUpdateAvailableSubjectCounts];
     return _cachedAvailableLessonCount;
@@ -569,10 +569,12 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 
 - (NSArray<NSNumber *> *)upcomingReviews {
 #ifdef APP_STORE_SCREENSHOTS
-  return @[@(14), @(8), @(2), @(1), @(12), @(42), @(17), @(9), @(2), @(0), @(2), @(17), @(0),
-           @(0), @(6), @(0), @(0), @(0), @(0), @(4), @(11), @(0), @(8), @(6)];
+  return @[
+    @(14), @(8), @(2), @(1), @(12), @(42), @(17), @(9), @(2),  @(0), @(2), @(17),
+    @(0),  @(0), @(6), @(0), @(0),  @(0),  @(0),  @(4), @(11), @(0), @(8), @(6)
+  ];
 #endif  // APP_STORE_SCREENSHOTS
-  
+
   @synchronized(self) {
     [self maybeUpdateAvailableSubjectCounts];
     return _cachedUpcomingReviews;
@@ -750,26 +752,27 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 - (void)sendPendingProgress:(NSArray<TKMProgress *> *)progress
                     handler:(CompletionHandler _Nullable)handler {
   for (TKMProgress *p in progress) {
-    [_client sendProgress:p
-                  handler:^(NSError *_Nullable error) {
-                    if (error) {
-                      [self logError:error];
-                      
-                      if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 401) {
-                        [self postNotificationOnMainThread:kLocalCachingClientUnauthorizedNotification];
-                      }
+    [_client
+        sendProgress:p
+             handler:^(NSError *_Nullable error) {
+               if (error) {
+                 [self logError:error];
 
-                      // Drop the data if the server is clearly telling us our data is invalid and
-                      // cannot be accepted. This most commonly happens when doing reviews before
-                      // progress from elsewhere has synced, leaving the app trying to report
-                      // progress on reviews you already did elsewhere.
-                      if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 422) {
-                        [self clearPendingProgress:p];
-                      }
-                    } else {
-                      [self clearPendingProgress:p];
-                    }
-                  }];
+                 if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 401) {
+                   [self postNotificationOnMainThread:kLocalCachingClientUnauthorizedNotification];
+                 }
+
+                 // Drop the data if the server is clearly telling us our data is invalid and
+                 // cannot be accepted. This most commonly happens when doing reviews before
+                 // progress from elsewhere has synced, leaving the app trying to report
+                 // progress on reviews you already did elsewhere.
+                 if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 422) {
+                   [self clearPendingProgress:p];
+                 }
+               } else {
+                 [self clearPendingProgress:p];
+               }
+             }];
   }
   if (handler) {
     handler();
@@ -1010,7 +1013,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
         NSLog(@"Recorded %lu level progressions", (unsigned long)levels.count);
       }];
     }
-    
+
     handler();
   }];
 }

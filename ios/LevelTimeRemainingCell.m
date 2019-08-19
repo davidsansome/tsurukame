@@ -42,11 +42,11 @@
       // unlock it.  Use their average level time, minus the time they've spent at
       // this level so far, as an estimate.
       NSTimeInterval average = [_services.localCachingClient getAverageRemainingLevelTime];
-      
+
       // But ensure it can't be less than the time it would take to get a fresh item
       // to Guru, if they've spent longer at the current level than the average.
       average = MAX(average, TKMMinimumTimeUntilGuruSeconds(assignment.level, 1));
-      
+
       NSDate *averageDate = [NSDate dateWithTimeIntervalSinceNow:average];
       [self setRemaining:averageDate isEstimate:YES];
       return;

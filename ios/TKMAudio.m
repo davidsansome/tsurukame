@@ -13,10 +13,10 @@
 // limitations under the License.
 
 #import "TKMAudio.h"
-#import "Reachability.h"
 #import "DataLoader.h"
-#import "proto/Wanikani.pbobjc.h"
+#import "Reachability.h"
 #import "proto/Wanikani+Convenience.h"
+#import "proto/Wanikani.pbobjc.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
@@ -38,7 +38,7 @@ static NSString *const kOfflineFilePattern = @"%@/a%d.mp3";
   return [NSString stringWithFormat:@"%@/audio", paths.firstObject];
 }
 
-- (instancetype)initWithServices:(TKMServices *) services {
+- (instancetype)initWithServices:(TKMServices *)services {
   self = [super init];
   if (self) {
     _services = services;

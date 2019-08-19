@@ -46,7 +46,7 @@ static NSString *const kPrivacyPolicyURL =
   TKMAddShadowToView(_signInLabel, 0.f, 1.f, 5.f);
   TKMAddShadowToView(_privacyPolicyLabel, 0.f, 1.f, 2.f);
   TKMAddShadowToView(_privacyPolicyButton, 0.f, 1.f, 2.f);
-  
+
   if (_forcedUsername.length) {
     _usernameField.text = _forcedUsername;
     _usernameField.enabled = NO;

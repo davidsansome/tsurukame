@@ -69,10 +69,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   cell.detailTextLabel.enabled = enabled;
 }
 
-@interface MainViewController () <
-    LoginViewControllerDelegate,
-    SearchResultViewControllerDelegate,
-    UISearchControllerDelegate>
+@interface MainViewController () <LoginViewControllerDelegate,
+                                  SearchResultViewControllerDelegate,
+                                  UISearchControllerDelegate>
 
 @property(weak, nonatomic) IBOutlet UIView *userContainer;
 @property(weak, nonatomic) IBOutlet UIView *userImageContainer;
@@ -276,7 +275,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     if (!items.count) {
       return;
     }
-    
+
 #ifdef APP_STORE_SCREENSHOTS
     items = [items subarrayWithRange:NSMakeRange(0, 32)];
 #endif  // APP_STORE_SCREENSHOTS
@@ -455,20 +454,20 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   _isShowingUnauthorizedAlert = YES;
   UIAlertController *ac =
       [UIAlertController alertControllerWithTitle:@"Logged out"
-                                          message:@"Your API Token expired - please log in again. "
-                                                   "You won't lose your review progress"
+                                          message:
+                                              @"Your API Token expired - please log in again. "
+                                               "You won't lose your review progress"
                                    preferredStyle:UIAlertControllerStyleAlert];
 
   __weak MainViewController *weakSelf = self;
-  [ac addAction:[UIAlertAction
-                    actionWithTitle:@"OK"
-                              style:UIAlertActionStyleDefault
-                            handler:^(UIAlertAction *_Nonnull action) {
-                              MainViewController *strongSelf = weakSelf;
-                              if (strongSelf) {
-                                [strongSelf loginAgain];
-                              }
-                            }]];
+  [ac addAction:[UIAlertAction actionWithTitle:@"OK"
+                                         style:UIAlertActionStyleDefault
+                                       handler:^(UIAlertAction *_Nonnull action) {
+                                         MainViewController *strongSelf = weakSelf;
+                                         if (strongSelf) {
+                                           [strongSelf loginAgain];
+                                         }
+                                       }]];
   [self presentViewController:ac animated:YES completion:nil];
 }
 
@@ -525,16 +524,15 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (NSArray<UIKeyCommand *> *)keyCommands {
   return @[
-           [UIKeyCommand keyCommandWithInput:@"r"
-                               modifierFlags:UIKeyModifierCommand
-                                      action:@selector(startReviews)
-                        discoverabilityTitle:@"Start reviews"],
-           [UIKeyCommand keyCommandWithInput:@"l"
-                               modifierFlags:UIKeyModifierCommand
-                                      action:@selector(startLessons)
-                        discoverabilityTitle:@"Start lessons"]
-           ];
+    [UIKeyCommand keyCommandWithInput:@"r"
+                        modifierFlags:UIKeyModifierCommand
+                               action:@selector(startReviews)
+                 discoverabilityTitle:@"Start reviews"],
+    [UIKeyCommand keyCommandWithInput:@"l"
+                        modifierFlags:UIKeyModifierCommand
+                               action:@selector(startLessons)
+                 discoverabilityTitle:@"Start lessons"]
+  ];
 }
-
 
 @end

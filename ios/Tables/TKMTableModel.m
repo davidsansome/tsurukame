@@ -181,7 +181,8 @@
 
 #pragma mark - UITableViewDelegate
 
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (NSIndexPath *)tableView:(UITableView *)tableView
+    willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   TKMModelCell *cell = [tableView cellForRowAtIndexPath:indexPath];
   return (cell.class == TKMListSeparatorCell.class) ? nil : indexPath;
 }

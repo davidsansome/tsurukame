@@ -24,7 +24,7 @@ static const int kGuruStage = 5;
 
 int TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   const bool isAccelerated = itemLevel <= 2;
-  
+
   int hours = 0;
   // From https://docs.api.wanikani.com/20170710/#additional-information
   switch (srsStage) {

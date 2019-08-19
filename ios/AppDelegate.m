@@ -74,22 +74,22 @@
   Client *client = [[Client alloc] initWithApiToken:UserDefaults.userApiToken
                                              cookie:UserDefaults.userCookie
                                          dataLoader:_services.dataLoader];
-  
+
   _services.localCachingClient = [[LocalCachingClient alloc] initWithClient:client
                                                                  dataLoader:_services.dataLoader
                                                                reachability:_services.reachability];
-  
+
   // Ask for notification permissions.
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   UNAuthorizationOptions options = UNAuthorizationOptionBadge | UNAuthorizationOptionAlert;
   [center requestAuthorizationWithOptions:options
                         completionHandler:^(BOOL granted, NSError *_Nullable error){
                         }];
-  
+
   void (^pushMainViewController)(void) = ^() {
     MainViewController *vc = [_storyboard instantiateViewControllerWithIdentifier:@"main"];
     [vc setupWithServices:_services];
-    
+
     [_navigationController setViewControllers:@[ vc ] animated:animated];
   };
   // Do a sync before pushing the main view controller if this was a new login.
