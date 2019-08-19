@@ -25,7 +25,7 @@
 
 #import <UserNotifications/UserNotifications.h>
 
-@interface AppDelegate ()
+@interface AppDelegate () <LoginViewControllerDelegate>
 @end
 
 @implementation AppDelegate {
@@ -48,10 +48,6 @@
   _services = [[TKMServices alloc] init];
 
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-  [nc addObserver:self
-         selector:@selector(loginComplete:)
-             name:kLoginCompleteNotification
-           object:nil];
   [nc addObserver:self selector:@selector(logout:) name:kLogoutNotification object:nil];
   [nc addObserver:self
          selector:@selector(userInfoChanged:)
@@ -59,7 +55,7 @@
            object:nil];
 
   if (UserDefaults.userApiToken && UserDefaults.userCookie) {
-    [self loginComplete:nil];
+    [self setMainViewControllerAnimated:NO clearUserData:NO];
   } else {
     [self pushLoginViewController];
   }
@@ -70,39 +66,44 @@
 - (void)pushLoginViewController {
   LoginViewController *loginViewController =
       [_storyboard instantiateViewControllerWithIdentifier:@"login"];
+  loginViewController.delegate = self;
   [_navigationController setViewControllers:@[ loginViewController ] animated:NO];
 }
 
-- (void)loginComplete:(NSNotification *)notification {
+- (void)setMainViewControllerAnimated:(BOOL)animated clearUserData:(BOOL)clearUserData {
   Client *client = [[Client alloc] initWithApiToken:UserDefaults.userApiToken
                                              cookie:UserDefaults.userCookie
                                          dataLoader:_services.dataLoader];
-
+  
   _services.localCachingClient = [[LocalCachingClient alloc] initWithClient:client
                                                                  dataLoader:_services.dataLoader
                                                                reachability:_services.reachability];
-
+  
   // Ask for notification permissions.
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   UNAuthorizationOptions options = UNAuthorizationOptionBadge | UNAuthorizationOptionAlert;
   [center requestAuthorizationWithOptions:options
                         completionHandler:^(BOOL granted, NSError *_Nullable error){
                         }];
-
+  
   void (^pushMainViewController)(void) = ^() {
     MainViewController *vc = [_storyboard instantiateViewControllerWithIdentifier:@"main"];
     [vc setupWithServices:_services];
-
-    [_navigationController setViewControllers:@[ vc ] animated:(notification == nil) ? NO : YES];
+    
+    [_navigationController setViewControllers:@[ vc ] animated:animated];
   };
   // Do a sync before pushing the main view controller if this was a new login.
-  if (notification) {
+  if (clearUserData) {
     [_services.localCachingClient clearAllData];
     [_services.localCachingClient sync:pushMainViewController];
   } else {
     [self userInfoChanged:nil];  // Set the user's max level.
     pushMainViewController();
   }
+}
+
+- (void)loginComplete {
+  [self setMainViewControllerAnimated:YES clearUserData:YES];
 }
 
 - (void)logout:(NSNotification *)notification {

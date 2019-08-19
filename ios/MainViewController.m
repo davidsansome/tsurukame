@@ -69,7 +69,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   cell.detailTextLabel.enabled = enabled;
 }
 
-@interface MainViewController () <SearchResultViewControllerDelegate, UISearchControllerDelegate>
+@interface MainViewController () <
+    LoginViewControllerDelegate,
+    SearchResultViewControllerDelegate,
+    UISearchControllerDelegate>
 
 @property(weak, nonatomic) IBOutlet UIView *userContainer;
 @property(weak, nonatomic) IBOutlet UIView *userImageContainer;
@@ -452,7 +455,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   _isShowingUnauthorizedAlert = YES;
   UIAlertController *ac =
       [UIAlertController alertControllerWithTitle:@"Logged out"
-                                          message:@"Your API Token expired - please log in again"
+                                          message:@"Your API Token expired - please log in again. "
+                                                   "You won't lose your review progress"
                                    preferredStyle:UIAlertControllerStyleAlert];
 
   __weak MainViewController *weakSelf = self;
@@ -462,12 +466,25 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
                             handler:^(UIAlertAction *_Nonnull action) {
                               MainViewController *strongSelf = weakSelf;
                               if (strongSelf) {
-                                strongSelf->_isShowingUnauthorizedAlert = NO;
+                                [strongSelf loginAgain];
                               }
-                              NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-                              [nc postNotificationName:kLogoutNotification object:weakSelf];
                             }]];
   [self presentViewController:ac animated:YES completion:nil];
+}
+
+- (void)loginAgain {
+  LoginViewController *loginViewController =
+      [self.storyboard instantiateViewControllerWithIdentifier:@"login"];
+  loginViewController.delegate = self;
+  loginViewController.forcedUsername = [_services.localCachingClient getUserInfo].username;
+  [self.navigationController pushViewController:loginViewController animated:YES];
+}
+
+- (void)loginComplete {
+  [_services.localCachingClient.client updateApiToken:UserDefaults.userApiToken
+                                               cookie:UserDefaults.userCookie];
+  [self.navigationController popViewControllerAnimated:YES];
+  _isShowingUnauthorizedAlert = NO;
 }
 
 - (void)didPullToRefresh {

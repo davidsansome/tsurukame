@@ -16,10 +16,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSNotificationName kLoginCompleteNotification;
 extern NSNotificationName kLogoutNotification;
 
+@protocol LoginViewControllerDelegate <NSObject>
+
+- (void)loginComplete;
+
+@end
+
 @interface LoginViewController : UIViewController
+
+@property(nonatomic, weak) id<LoginViewControllerDelegate> delegate;
+@property(nonatomic) NSString *forcedUsername;
+
 @end
 
 NS_ASSUME_NONNULL_END

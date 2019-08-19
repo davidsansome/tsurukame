@@ -20,7 +20,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NSNotificationName kLoginCompleteNotification = @"kLoginCompleteNotification";
 NSNotificationName kLogoutNotification = @"kLogoutNotification";
 
 static NSString *const kPrivacyPolicyURL =
@@ -47,6 +46,11 @@ static NSString *const kPrivacyPolicyURL =
   TKMAddShadowToView(_signInLabel, 0.f, 1.f, 5.f);
   TKMAddShadowToView(_privacyPolicyLabel, 0.f, 1.f, 2.f);
   TKMAddShadowToView(_privacyPolicyButton, 0.f, 1.f, 2.f);
+  
+  if (_forcedUsername.length) {
+    _usernameField.text = _forcedUsername;
+    _usernameField.enabled = NO;
+  }
 
   _usernameField.delegate = self;
   _passwordField.delegate = self;
@@ -132,8 +136,7 @@ static NSString *const kPrivacyPolicyURL =
   UserDefaults.userApiToken = apiToken;
 
   dispatch_async(dispatch_get_main_queue(), ^{
-    [[NSNotificationCenter defaultCenter] postNotificationName:kLoginCompleteNotification
-                                                        object:self];
+    [_delegate loginComplete];
   });
 }
 

@@ -16,6 +16,7 @@
 
 #import "DataLoader.h"
 #import "LocalCachingClient.h"
+#import "UserDefaults.h"
 
 #import "proto/Wanikani+Convenience.h"
 #import "third_party/FMDB/FMDB.h"
@@ -163,7 +164,6 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 @implementation LocalCachingClient {
-  Client *_client;
   DataLoader *_dataLoader;
   Reachability *_reachability;
   FMDatabaseQueue *_db;
@@ -754,12 +754,16 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
                   handler:^(NSError *_Nullable error) {
                     if (error) {
                       [self logError:error];
+                      
+                      if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 401) {
+                        [self postNotificationOnMainThread:kLocalCachingClientUnauthorizedNotification];
+                      }
 
                       // Drop the data if the server is clearly telling us our data is invalid and
                       // cannot be accepted. This most commonly happens when doing reviews before
                       // progress from elsewhere has synced, leaving the app trying to report
                       // progress on reviews you already did elsewhere.
-                      if (error.code == 422) {
+                      if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 422) {
                         [self clearPendingProgress:p];
                       }
                     } else {

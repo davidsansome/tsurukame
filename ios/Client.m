@@ -227,6 +227,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   return self;
 }
 
+- (void)updateApiToken:(NSString *)apiToken cookie:(NSString *)cookie {
+  _apiToken = apiToken;
+  _cookie = cookie;
+}
+
 #pragma mark - Date functions
 
 + (NSString *)currentISO8601Date {

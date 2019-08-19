@@ -71,6 +71,9 @@ extern bool TKMIsClientError(NSError *error);
                     password:(NSString *)password
                      handler:(CookieHandler)handler;
 + (void)getApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler;
+
+- (void)updateApiToken:(NSString *)apiToken
+                cookie:(NSString *)cookie;
 - (void)getAssignmentsModifiedAfter:(NSString *)date handler:(AssignmentHandler)handler;
 - (void)sendProgress:(TKMProgress *)progress handler:(ProgressHandler)handler;
 - (void)getStudyMaterialsModifiedAfter:(NSString *)date handler:(StudyMaterialsHandler)handler;

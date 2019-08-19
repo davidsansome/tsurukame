@@ -33,6 +33,7 @@ typedef void (^CompletionHandler)(void);
 
 @interface LocalCachingClient : NSObject
 
+@property(nonatomic, readonly) Client *client;
 @property(nonatomic, readonly) int availableLessonCount;
 @property(nonatomic, readonly) int availableReviewCount;
 @property(nonatomic, readonly) NSArray<NSNumber *> *upcomingReviews;
