@@ -98,6 +98,21 @@ static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
   return NO;
 }
 
+NSString *ConvertHiraganaToKatakana(NSString *text) {
+  // NSStringTransformHiraganaToKatakana munges long-dashes so we need to special case strings that
+  // contain those.
+  NSRange dash = [text rangeOfString:@"ー"];
+  if (dash.location == NSNotFound) {
+    return [text stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:YES];
+  }
+  
+  NSMutableString *ret = [NSMutableString string];
+  [ret appendString:ConvertHiraganaToKatakana([text substringToIndex:dash.location])];
+  [ret appendString:@"ー"];
+  [ret appendString:ConvertHiraganaToKatakana([text substringFromIndex:dash.location + 1])];
+  return ret;
+}
+
 TKMAnswerCheckerResult CheckAnswer(NSString **answer,
                                    TKMSubject *subject,
                                    TKMStudyMaterials *studyMaterials,
@@ -109,8 +124,7 @@ TKMAnswerCheckerResult CheckAnswer(NSString **answer,
     case kTKMTaskTypeReading: {
       *answer = [*answer stringByReplacingOccurrencesOfString:@"n" withString:@"ん"];
       *answer = [*answer stringByReplacingOccurrencesOfString:@" " withString:@""];
-      NSString *hiraganaAnswer =
-          [*answer stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:YES];
+      NSString *hiraganaAnswer = ConvertHiraganaToKatakana(*answer);
 
       if (IsAsciiPresent(*answer)) {
         return kTKMAnswerContainsInvalidCharacters;
