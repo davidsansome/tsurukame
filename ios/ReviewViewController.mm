@@ -1098,15 +1098,15 @@ class AnimationContext {
                                action:@selector(playAudio)
                  discoverabilityTitle:@"Play reading"],
     [UIKeyCommand keyCommandWithInput:@"a"
-                        modifierFlags:0
+                        modifierFlags:UIKeyModifierCommand
                                action:@selector(askAgain)
                  discoverabilityTitle:@"Ask again later"],
     [UIKeyCommand keyCommandWithInput:@"c"
-                        modifierFlags:0
+                        modifierFlags:UIKeyModifierCommand
                                action:@selector(markCorrect)
                  discoverabilityTitle:@"Mark correct"],
     [UIKeyCommand keyCommandWithInput:@"s"
-                        modifierFlags:0
+                        modifierFlags:UIKeyModifierCommand
                                action:@selector(addSynonym)
                  discoverabilityTitle:@"Add as synonym"]
   ];
