@@ -1068,6 +1068,13 @@ class AnimationContext {
   [self markAnswer:TKMOverrideAnswerCorrect];
 }
 
+// For no particularly apparent reason, this seemingly pointless implementation
+// means that holding down the command key after (say) pressing ⌘C does not
+// repeat the action continuously on all subsequent reviews
+-(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
+  return [super canPerformAction:action withSender:sender];
+}
+
 #pragma mark - TKMSubjectDelegate
 
 - (void)didTapSubject:(TKMSubject *)subject {
@@ -1098,15 +1105,15 @@ class AnimationContext {
                                action:@selector(playAudio)
                  discoverabilityTitle:@"Play reading"],
     [UIKeyCommand keyCommandWithInput:@"a"
-                        modifierFlags:0
+                        modifierFlags:UIKeyModifierCommand
                                action:@selector(askAgain)
                  discoverabilityTitle:@"Ask again later"],
     [UIKeyCommand keyCommandWithInput:@"c"
-                        modifierFlags:0
+                        modifierFlags:UIKeyModifierCommand
                                action:@selector(markCorrect)
                  discoverabilityTitle:@"Mark correct"],
     [UIKeyCommand keyCommandWithInput:@"s"
-                        modifierFlags:0
+                        modifierFlags:UIKeyModifierCommand
                                action:@selector(addSynonym)
                  discoverabilityTitle:@"Add as synonym"]
   ];
