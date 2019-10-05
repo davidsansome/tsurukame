@@ -73,6 +73,7 @@ extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
 @property(nonatomic, readonly) bool isLessonStage;
 @property(nonatomic, readonly) bool isReviewStage;
 @property(nonatomic, readonly) bool isBurned;
+@property(nonatomic, readonly) bool isLocked;
 @property(nonatomic, readonly) NSDate *availableAtDate;
 @property(nonatomic, readonly) NSDate *startedAtDate;
 @property(nonatomic, readonly) NSDate *passedAtDate;

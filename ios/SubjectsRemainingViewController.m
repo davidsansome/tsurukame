@@ -63,7 +63,7 @@
     item.showLevelNumber = false;
     item.showAnswers = false;
     item.showRemaining = true;
-    if (!assignment.isReviewStage && !assignment.isLessonStage) {
+    if (assignment.isLocked) {
       item.gradientColors = TKMLockedGradient();
     }
     if (item.subject.subjectType == TKMSubject_Type_Radical) {
@@ -88,6 +88,8 @@
   }
 
   NSComparator comparator = ^NSComparisonResult(TKMSubjectModelItem *a, TKMSubjectModelItem *b) {
+    if (a.assignment.isLocked && !b.assignment.isLocked) return NSOrderedDescending;
+    if (!a.assignment.isLocked && b.assignment.isLocked) return NSOrderedAscending;
     if (a.assignment.isReviewStage && !b.assignment.isReviewStage) return NSOrderedAscending;
     if (!a.assignment.isReviewStage && b.assignment.isReviewStage) return NSOrderedDescending;
     if (a.assignment.isLessonStage && !b.assignment.isLessonStage) return NSOrderedAscending;
@@ -108,12 +110,13 @@
           lastAssignment.isReviewStage != assignment.isReviewStage ||
           lastAssignment.isLessonStage != assignment.isLessonStage) {
         NSString *label;
-        if (assignment.isReviewStage || assignment.isBurned) {
-          label = TKMDetailedSRSStageName(assignment.srsStage);
+        if (assignment.isLocked) {
+          NSLog(@"%@", assignment);
+          label = @"Locked";
         } else if (assignment.isLessonStage) {
           label = @"Available in Lessons";
         } else {
-          label = @"Locked";
+          label = TKMDetailedSRSStageName(assignment.srsStage);
         }
         [model insertItem:[[TKMListSeparatorItem alloc] initWithLabel:label]
                   atIndex:index

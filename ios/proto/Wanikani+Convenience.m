@@ -335,15 +335,19 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 @implementation TKMAssignment (Convenience)
 
 - (bool)isLessonStage {
-  return self.hasId_p && !self.hasStartedAt && self.srsStage == 0;
+  return !self.isLocked && !self.hasStartedAt && self.srsStage == 0;
 }
 
 - (bool)isReviewStage {
-  return self.hasId_p && self.hasAvailableAt;
+  return !self.isLocked && self.hasAvailableAt;
 }
 
 - (bool)isBurned {
   return self.srsStage == 9;
+}
+
+- (bool)isLocked {
+  return !self.hasSrsStage;
 }
 
 - (NSDate *)availableAtDate {
