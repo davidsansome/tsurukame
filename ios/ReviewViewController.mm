@@ -555,7 +555,7 @@ class AnimationContext {
   // To work around this we copy and fade each view manually, but animate both copies.
   auto setupContextBlock = ^(AnimationContext *context) {
     if (![_questionLabel.attributedText isEqual:_activeSubject.japaneseText] ||
-        ![_questionLabel.font.fontName isEqual:_currentFontName]) {
+        ![_questionLabel.font.familyName isEqual:_currentFontName]) {
       context->AddFadingLabel(_questionLabel);
       _questionLabel.font = [UIFont fontWithName:_currentFontName
                                             size:[self questionLabelFontSize]];
@@ -995,7 +995,7 @@ class AnimationContext {
   [_subjectDetailsView updateWithSubject:_activeSubject studyMaterials:_activeStudyMaterials];
 
   auto setupContextBlock = ^(AnimationContext *context) {
-    if (![_questionLabel.font.fontName isEqual:_normalFontName]) {
+    if (![_questionLabel.font.familyName isEqual:_normalFontName]) {
       context->AddFadingLabel(_questionLabel);
       _questionLabel.font = [UIFont fontWithName:_normalFontName size:[self questionLabelFontSize]];
     }
