@@ -289,7 +289,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   TKMBasicModelItem *item = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                                title:text
                                                             subtitle:nil];
-  item.titleFont = kFont;
+  item.titleFont = [UIFont systemFontOfSize:kFontSize];
   [model addItem:item];
 }
 
