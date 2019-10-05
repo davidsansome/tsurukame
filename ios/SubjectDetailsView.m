@@ -14,6 +14,7 @@
 
 #import "SubjectDetailsView.h"
 
+#import "AnswerChecker.h"
 #import "DataLoader.h"
 #import "LocalCachingClient.h"
 #import "NSMutableAttributedString+Replacements.h"
@@ -266,10 +267,31 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
 
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
     [attributes setObject:TKMJapaneseFont(kFontSize) forKey:NSFontAttributeName];
-    NSAttributedString *japaneseString =
-        [[NSAttributedString alloc] initWithString:sentence.japanese attributes:attributes];
+    NSMutableAttributedString *japanese =
+        [[NSMutableAttributedString alloc] initWithString:sentence.japanese
+                                               attributes:attributes];
+    
+    // Highlight occurences of this subject in the Japanese text.
+    NSString *textToHighlight = subject.japanese;
+    if (subject.vocabulary.isVerb) {
+      textToHighlight = [textToHighlight stringByTrimmingCharactersInSet:TKMKanaCharacterSet()];
+    }
+    NSUInteger startPos = 0;
+    while (true) {
+      NSRange searchRange = NSMakeRange(startPos, sentence.japanese.length - startPos);
+      NSRange highlightRange = [sentence.japanese rangeOfString:textToHighlight
+                                                        options:0
+                                                          range:searchRange];
+      if (highlightRange.location == NSNotFound) {
+        break;
+      }
+      [japanese addAttribute:NSForegroundColorAttributeName
+                       value:[UIColor redColor]
+                       range:highlightRange];
+      startPos = highlightRange.location + highlightRange.length;
+    }
 
-    [text appendAttributedString:japaneseString];
+    [text appendAttributedString:japanese];
     [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
     [text appendAttributedString:[[NSAttributedString alloc] initWithString:sentence.english]];
     [text replaceFontSize:kFontSize];

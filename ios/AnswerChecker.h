@@ -22,6 +22,8 @@
 extern "C" {
 #endif
 
+extern NSCharacterSet *TKMKanaCharacterSet(void);
+
 typedef NS_ENUM(NSInteger, TKMAnswerCheckerResult) {
   kTKMAnswerPrecise,
   kTKMAnswerImprecise,

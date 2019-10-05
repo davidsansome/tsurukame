@@ -62,12 +62,17 @@ static int DistanceTolerance(NSString *answer) {
   return 2 + 1 * floor((double)(answer.length) / 7);
 }
 
-static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
+NSCharacterSet *TKMKanaCharacterSet() {
   static dispatch_once_t onceToken;
   static NSCharacterSet *kKanaCharacterSet;
   dispatch_once(&onceToken, ^{
     kKanaCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@(kKanaCharacters)];
   });
+  return kKanaCharacterSet;
+}
+
+static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
+  NSCharacterSet *kanaCharacterSet = TKMKanaCharacterSet();
 
   if (answer.length < japanese.length) {
     return NO;
@@ -75,7 +80,7 @@ static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
 
   for (int i = 0; i < japanese.length; ++i) {
     unichar japaneseChar = [japanese characterAtIndex:i];
-    if (![kKanaCharacterSet characterIsMember:japaneseChar]) {
+    if (![kanaCharacterSet characterIsMember:japaneseChar]) {
       break;
     }
     unichar answerChar = [answer characterAtIndex:i];
@@ -86,7 +91,7 @@ static BOOL MismatchingOkurigana(NSString *answer, NSString *japanese) {
 
   for (int i = 1; i <= japanese.length; ++i) {
     unichar japaneseChar = [japanese characterAtIndex:japanese.length - i];
-    if (![kKanaCharacterSet characterIsMember:japaneseChar]) {
+    if (![kanaCharacterSet characterIsMember:japaneseChar]) {
       break;
     }
     unichar answerChar = [answer characterAtIndex:answer.length - i];

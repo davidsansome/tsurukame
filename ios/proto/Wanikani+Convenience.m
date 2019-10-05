@@ -314,6 +314,22 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
   return [parts componentsJoinedByString:@", "];
 }
 
+- (bool)isVerb {
+  for (int i = 0; i < self.partsOfSpeechArray.count; ++i) {
+    switch ([self.partsOfSpeechArray valueAtIndex:i]) {
+      case TKMVocabulary_PartOfSpeech_GodanVerb:
+      case TKMVocabulary_PartOfSpeech_IchidanVerb:
+      case TKMVocabulary_PartOfSpeech_SuruVerb:
+      case TKMVocabulary_PartOfSpeech_TransitiveVerb:
+      case TKMVocabulary_PartOfSpeech_IntransitiveVerb:
+        return true;
+      default:
+        break;
+    }
+  }
+  return false;
+}
+
 @end
 
 @implementation TKMAssignment (Convenience)

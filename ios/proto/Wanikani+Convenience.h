@@ -64,6 +64,7 @@ extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
 @interface TKMVocabulary (Convenience)
 
 @property(nonatomic, readonly) NSString *commaSeparatedPartsOfSpeech;
+@property(nonatomic, readonly) bool isVerb;
 
 @end
 
