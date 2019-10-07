@@ -19,10 +19,10 @@
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "UserDefaults.h"
-#import "third_party/Light-Untar/NSFileManager+Tar.h"
 
 #import <compression.h>
 #import <memory>
+#import <Light-Untar-umbrella.h>
 
 static NSString *const kURLPattern = @"https://tsurukame.app/audio/%@";
 

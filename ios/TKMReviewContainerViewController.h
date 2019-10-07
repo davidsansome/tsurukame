@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "third_party/MMDrawerController/MMDrawerController.h"
+#import <MMDrawerController/MMDrawerController.h>
 
 @class ReviewItem;
 @class TKMServices;

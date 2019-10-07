@@ -20,8 +20,8 @@
 #import "TKMReviewMenuViewController.h"
 #import "TKMServices.h"
 #import "UserDefaults.h"
-#import "third_party/MMDrawerController/MMDrawerController+Subclass.h"
-#import "third_party/MMDrawerController/MMDrawerVisualState.h"
+
+#import <MMDrawerController/MMDrawerVisualState.h>
 
 @interface MMDrawerController (Secret)
 

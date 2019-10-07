@@ -13,9 +13,9 @@
 // limitations under the License.
 
 #import "TKMFontLoader.h"
-#import "third_party/protobuf/GPBArray.h"
 
 #import <Foundation/Foundation.h>
+#import <Protobuf-umbrella.h>
 
 #define DECLARE_OBJECT(type, name) @property(class, nonatomic, copy) type *name;
 

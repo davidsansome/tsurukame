@@ -15,8 +15,9 @@
 #import "UpcomingReviewsChartController.h"
 
 #import "Style.h"
-
 #import "Tsurukame-Swift.h"
+
+#import <Charts/Charts-Swift.h>
 
 @interface UpcomingReviewsXAxisValueFormatter : NSObject <IChartAxisValueFormatter>
 - (instancetype)initWithStartTime:(NSDate *)startTime;
@@ -89,7 +90,7 @@
     }
   }
 
-  LineChartDataSet *lineDataSet = [[LineChartDataSet alloc] initWithValues:cumulativeData
+  LineChartDataSet *lineDataSet = [[LineChartDataSet alloc] initWithEntries:cumulativeData
                                                                      label:nil];
   lineDataSet.drawValuesEnabled = NO;
   lineDataSet.drawCircleHoleEnabled = NO;
@@ -97,7 +98,7 @@
   lineDataSet.colors = @[ TKMVocabularyColor2() ];
   lineDataSet.circleColors = @[ TKMVocabularyColor2() ];
 
-  BarChartDataSet *barDataSet = [[BarChartDataSet alloc] initWithValues:hourlyData label:nil];
+  BarChartDataSet *barDataSet = [[BarChartDataSet alloc] initWithEntries:hourlyData label:nil];
   barDataSet.axisDependency = AxisDependencyRight;
   barDataSet.colors = @[ TKMRadicalColor2() ];
   barDataSet.valueFormatter = [[ChartDefaultValueFormatter alloc] initWithDecimals:0];

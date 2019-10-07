@@ -33,7 +33,8 @@
 #import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
-#import "third_party/Haneke/Haneke.h"
+
+#import <Haneke/Haneke.h>
 
 @class CombinedChartView;
 @class PieChartView;

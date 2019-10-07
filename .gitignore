@@ -1,8 +1,7 @@
 /data
 /data.bin
 .DS_Store
-/ios/Tsurukame.xcodeproj/project.xcworkspace/xcuserdata/
-/ios/Tsurukame.xcodeproj/project.xcworkspace/xcshareddata/
-/ios/Tsurukame.xcodeproj/xcuserdata/
 /ios/build/
 /sqlite3-extension/proto.so
+**/xcuserdata/
+**/xcshareddata/

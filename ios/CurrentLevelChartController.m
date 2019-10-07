@@ -15,9 +15,10 @@
 #import "CurrentLevelChartController.h"
 
 #import "Style.h"
+#import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
-#import "Tsurukame-Swift.h"
+#import <Charts/Charts-Swift.h>
 
 enum PieSlice {
   LockedPieSlice,
@@ -75,7 +76,7 @@ static UIColor *PieSliceColor(enum PieSlice slice, UIColor *baseColor) {
 
 static void UnsetAllLabels(ChartViewBase *view) {
   PieChartDataSet *dataSet = (PieChartDataSet *)view.data.dataSets[0];
-  for (PieChartDataEntry *otherEntry in dataSet.values) {
+  for (PieChartDataEntry *otherEntry in dataSet.entries) {
     otherEntry.label = nil;
   }
 }
@@ -141,7 +142,7 @@ static void UnsetAllLabels(ChartViewBase *view) {
     [colors addObject:PieSliceColor(i, baseColor)];
   }
 
-  PieChartDataSet *dataSet = [[PieChartDataSet alloc] initWithValues:values];
+  PieChartDataSet *dataSet = [[PieChartDataSet alloc] initWithEntries:values];
   dataSet.valueTextColor = [UIColor darkGrayColor];
   dataSet.entryLabelColor = [UIColor blackColor];
   dataSet.valueFont = [UIFont systemFontOfSize:10.f];

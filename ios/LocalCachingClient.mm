@@ -18,12 +18,12 @@
 #import "UserDefaults.h"
 
 #import "proto/Wanikani+Convenience.h"
-#import "third_party/FMDB/FMDB.h"
 
 #import <sys/errno.h>
 
 extern "C" {
 #import "Tsurukame-Swift.h"
+#import <FMDB/FMDB.h>
 }
 
 NS_ASSUME_NONNULL_BEGIN

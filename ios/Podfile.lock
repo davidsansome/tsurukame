@@ -1,0 +1,51 @@
+PODS:
+  - Charts (3.3.0):
+    - Charts/Core (= 3.3.0)
+  - Charts/Core (3.3.0)
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
+  - Haneke (1.0.2)
+  - Light-Untar (0.3.0)
+  - MMDrawerController (0.6.0):
+    - MMDrawerController/Core (= 0.6.0)
+    - MMDrawerController/MMDrawerBarButtonItem (= 0.6.0)
+    - MMDrawerController/MMDrawerVisualStates (= 0.6.0)
+    - MMDrawerController/Subclass (= 0.6.0)
+  - MMDrawerController/Core (0.6.0)
+  - MMDrawerController/MMDrawerBarButtonItem (0.6.0):
+    - MMDrawerController/Core
+  - MMDrawerController/MMDrawerVisualStates (0.6.0):
+    - MMDrawerController/Core
+  - MMDrawerController/Subclass (0.6.0):
+    - MMDrawerController/Core
+  - Protobuf (3.10.0)
+
+DEPENDENCIES:
+  - Charts (~> 3.3.0)
+  - FMDB (~> 2.7.5)
+  - Haneke (~> 1.0.2)
+  - Light-Untar (~> 0.3.0)
+  - MMDrawerController (~> 0.6.0)
+  - Protobuf (~> 3.10.0)
+
+SPEC REPOS:
+  trunk:
+    - Charts
+    - FMDB
+    - Haneke
+    - Light-Untar
+    - MMDrawerController
+    - Protobuf
+
+SPEC CHECKSUMS:
+  Charts: e0dd4cd8f257bccf98407b58183ddca8e8d5b578
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  Haneke: 01454a67322faa0dd9d81fc0f447885044e71521
+  Light-Untar: e901c312974d36f3910aec73436296a5a3faf799
+  MMDrawerController: e3a54a5570388463ad3b36975251575b50c4e1a0
+  Protobuf: a4dc852ad69c027ca2166ed287b856697814375b
+
+PODFILE CHECKSUM: 01b77c9dabd73a3fe4b22190959773003d84e359
+
+COCOAPODS: 1.8.3

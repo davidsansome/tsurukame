@@ -1,0 +1,35 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '11.0'
+
+target 'FontScreenshotter' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for FontScreenshotter
+
+  target 'FontScreenshotterUITests' do
+    # Pods for testing
+  end
+
+end
+
+target 'Tsurukame' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for Tsurukame
+  pod 'Charts', '~> 3.3.0'
+  pod 'FMDB', '~> 2.7.5'
+  pod 'Haneke', '~> 1.0.2'
+  pod 'Light-Untar', '~> 0.3.0'
+  pod 'MMDrawerController', '~> 0.6.0'
+  pod 'Protobuf', '~> 3.10.0'
+end
+
+target 'Tsurukame (App Store screenshots)' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for Tsurukame (App Store screenshots)
+
+end
