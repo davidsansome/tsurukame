@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "ReviewViewController.h"
-#import "AnswerChecker.h"
 #import "LocalCachingClient.h"
 #import "NSMutableArray+Shuffle.h"
 #import "ReviewSummaryViewController.h"
@@ -844,24 +843,26 @@ class AnimationContext {
 }
 
 - (void)submit {
-  NSString *answer = [_answerField.text copy];
-  TKMAnswerCheckerResult result = CheckAnswer(&answer, _activeSubject, _activeStudyMaterials,
-                                              _activeTaskType, _services.dataLoader);
-  _answerField.text = answer;
+  _answerField.text = [AnswerChecker normalizedString:_answerField.text taskType:_activeTaskType];
+  AnswerCheckerResult result = [AnswerChecker checkAnswer:_answerField.text
+                                                  subject:_activeSubject
+                                           studyMaterials:_activeStudyMaterials
+                                                 taskType:_activeTaskType
+                                               dataLoader:_services.dataLoader];
 
   switch (result) {
-    case kTKMAnswerPrecise:
-    case kTKMAnswerImprecise: {
+    case AnswerCheckerResultPrecise:
+    case AnswerCheckerResultImprecise: {
       [self markAnswer:TKMAnswerCorrect];
       break;
     }
-    case kTKMAnswerIncorrect:
+    case AnswerCheckerResultIncorrect:
       [self markAnswer:TKMAnswerIncorrect];
       break;
-    case kTKMAnswerOtherKanjiReading:
+    case AnswerCheckerResultOtherKanjiReading:
       [self shakeView:_answerField];
       break;
-    case kTKMAnswerContainsInvalidCharacters:
+    case AnswerCheckerResultContainsInvalidCharacters:
       [self shakeView:_answerField];
       break;
   }

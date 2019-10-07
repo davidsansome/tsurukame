@@ -24,6 +24,10 @@ target 'Tsurukame' do
   pod 'Light-Untar', '~> 0.3.0'
   pod 'MMDrawerController', '~> 0.6.0'
   pod 'Protobuf', '~> 3.10.0'
+
+  target 'Tests' do
+    inherit! :search_paths
+  end
 end
 
 target 'Tsurukame (App Store screenshots)' do

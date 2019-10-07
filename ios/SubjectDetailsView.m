@@ -14,7 +14,6 @@
 
 #import "SubjectDetailsView.h"
 
-#import "AnswerChecker.h"
 #import "LocalCachingClient.h"
 #import "NSMutableAttributedString+Replacements.h"
 #import "Style.h"
@@ -273,7 +272,8 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     // Highlight occurences of this subject in the Japanese text.
     NSString *textToHighlight = subject.japanese;
     if (subject.vocabulary.isVerb) {
-      textToHighlight = [textToHighlight stringByTrimmingCharactersInSet:TKMKanaCharacterSet()];
+      textToHighlight =
+          [textToHighlight stringByTrimmingCharactersInSet:AnswerChecker.kKanaCharacterSet];
     }
     NSUInteger startPos = 0;
     while (true) {

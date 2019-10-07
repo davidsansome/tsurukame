@@ -17,6 +17,12 @@
 		6319C9A320426EBB00C31F87 /* UpcomingReviewsChartController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */; };
 		631CAD5F234AC508008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
 		631CAD60234AC508008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
+		631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
+		631CAD64234AD5FC008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
+		631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */; };
+		631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
+		631CAD69234B0F0C008CEA73 /* ReviewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */; };
+		631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
 		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
 		633632EC201F3011006D582B /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EB201F3011006D582B /* LoginViewController.m */; };
 		633632EF201F3490006D582B /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* UserDefaults.m */; };
@@ -93,7 +99,6 @@
 		63AD5C0623056863006B3308 /* Wanikani+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB011FCD755300E09DA1 /* Wanikani+Convenience.m */; };
 		63AD5C0823056863006B3308 /* NSMutableAttributedString+Replacements.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */; };
 		63AD5C0A23056863006B3308 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
-		63AD5C1623056863006B3308 /* AnswerChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */; };
 		63AD5C1823056863006B3308 /* TKMDownloadModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */; };
 		63AD5C1B23056863006B3308 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
 		63AD5C1E23056863006B3308 /* TKMTableModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95120C5634A00AC25F4 /* TKMTableModel.m */; };
@@ -138,7 +143,6 @@
 		63CAAAFA1FC6EADD00E09DA1 /* data.bin in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAAF91FC6EADC00E09DA1 /* data.bin */; };
 		63CAAAFD1FCD693500E09DA1 /* ReviewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */; };
 		63CAAB031FCD755300E09DA1 /* Wanikani+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB011FCD755300E09DA1 /* Wanikani+Convenience.m */; };
-		63CAAB061FD2B7E500E09DA1 /* AnswerChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */; };
 		63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */; };
 		63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
 		63CAAB0E1FD7FA5E00E09DA1 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB0C1FD7FA5D00E09DA1 /* Reachability.m */; };
@@ -168,6 +172,7 @@
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
 		BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* TKMFontsViewController.m */; };
+		FCFB23015B2EB50B28EF6BCD /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -188,11 +193,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		20A6D3E1C6F7A492EB9DDF0C /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		21894D9E0883B0107075DD6F /* Pods-Tsurukame.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame.release.xcconfig"; path = "Target Support Files/Pods-Tsurukame/Pods-Tsurukame.release.xcconfig"; sourceTree = "<group>"; };
 		301BAAC2C21E4A99238D1E80 /* Pods-FontScreenshotter-FontScreenshotterUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter-FontScreenshotterUITests.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests.release.xcconfig"; sourceTree = "<group>"; };
 		34E86AD95515CD815B3086D0 /* Pods-Tsurukame.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame.debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame/Pods-Tsurukame.debug.xcconfig"; sourceTree = "<group>"; };
 		3DA8BAFA224C957F009E925B /* LessonOrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LessonOrderViewController.h; sourceTree = "<group>"; };
 		3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LessonOrderViewController.m; sourceTree = "<group>"; };
+		568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		630ADB6D21F8256E00BC9801 /* TKMCheckmarkModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMCheckmarkModelItem.h; sourceTree = "<group>"; };
 		630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMCheckmarkModelItem.m; sourceTree = "<group>"; };
 		6319C99B20400E3500C31F87 /* NSDate+TimeAgo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDate+TimeAgo.h"; sourceTree = "<group>"; };
@@ -203,6 +210,9 @@
 		6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpcomingReviewsChartController.m; sourceTree = "<group>"; };
 		6319C9B520441DE200C31F87 /* Tsurukame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tsurukame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		631CAD5E234AC507008CEA73 /* DataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
+		631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerChecker.swift; sourceTree = "<group>"; };
+		631CAD65234AF961008CEA73 /* Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Bridging-Header.h"; sourceTree = "<group>"; };
+		631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCheckerTest.swift; sourceTree = "<group>"; };
 		6321E60F2068F3A9003460BC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		6321E6102068F3A9003460BC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		633632EA201F3011006D582B /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
@@ -290,8 +300,6 @@
 		63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewItem.m; sourceTree = "<group>"; };
 		63CAAB011FCD755300E09DA1 /* Wanikani+Convenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Wanikani+Convenience.m"; path = "proto/Wanikani+Convenience.m"; sourceTree = "<group>"; };
 		63CAAB021FCD755300E09DA1 /* Wanikani+Convenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Wanikani+Convenience.h"; path = "proto/Wanikani+Convenience.h"; sourceTree = "<group>"; };
-		63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnswerChecker.h; sourceTree = "<group>"; };
-		63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnswerChecker.m; sourceTree = "<group>"; };
 		63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+LevenshteinDistance.h"; sourceTree = "<group>"; };
 		63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+LevenshteinDistance.m"; sourceTree = "<group>"; };
 		63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -339,6 +347,7 @@
 		65C5D1E922DBD0FD00304792 /* LevelTimeRemainingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelTimeRemainingCell.h; sourceTree = "<group>"; };
 		65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LevelTimeRemainingCell.m; sourceTree = "<group>"; };
 		68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame__App_Store_screenshots_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).debug.xcconfig"; sourceTree = "<group>"; };
 		82721E7B5A9C5562CC8D3B9B /* Pods-FontScreenshotter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.release.xcconfig"; sourceTree = "<group>"; };
 		B9AC7A65B58200A25756A40A /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter_FontScreenshotterUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -395,6 +404,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCFB23015B2EB50B28EF6BCD /* Pods_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,9 +414,9 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
 				631CAD5E234AC507008CEA73 /* DataLoader.swift */,
-				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
-				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
+				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
 				63EEFEB61FC45C440070C05F /* AppDelegate.m */,
 				63EEFEBC1FC45C440070C05F /* Assets.xcassets */,
@@ -523,6 +533,7 @@
 				63AD5C5323056863006B3308 /* Tsurukame (App Store screenshots).app */,
 				63AD5C5423056864006B3308 /* Tsurukame copy-Info.plist */,
 				684AE501E6BF8ED5D65DA298 /* Pods */,
+				631CAD65234AF961008CEA73 /* Tests-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -600,6 +611,7 @@
 				B9AC7A65B58200A25756A40A /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */,
 				F0FB8F6AE66ACCEFE37ADDB2 /* Pods_Tsurukame.framework */,
 				68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */,
+				568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -625,6 +637,8 @@
 				21894D9E0883B0107075DD6F /* Pods-Tsurukame.release.xcconfig */,
 				7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */,
 				D9929E537851D24D07F47938 /* Pods-Tsurukame (App Store screenshots).release.xcconfig */,
+				6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */,
+				20A6D3E1C6F7A492EB9DDF0C /* Pods-Tests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -711,6 +725,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 63E9A8E921199C8500418CE1 /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
+				7FE9DC587EA0191626D4E150 /* [CP] Check Pods Manifest.lock */,
 				63E9A8DE21199C8500418CE1 /* Sources */,
 				63E9A8DF21199C8500418CE1 /* Frameworks */,
 				63E9A8E021199C8500418CE1 /* Resources */,
@@ -759,6 +774,7 @@
 					};
 					63E9A8E121199C8500418CE1 = {
 						CreatedOnToolsVersion = 9.4;
+						LastSwiftMigration = 1100;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 630FD6121FC45BDF00D21C1F;
 					};
@@ -910,6 +926,28 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tsurukame/Pods-Tsurukame-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		7FE9DC587EA0191626D4E150 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		AC9F4EB6C45321235EDA9EDE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1002,6 +1040,7 @@
 				6392DBA220D130F0003019EB /* TKMSubjectModelItem.m in Sources */,
 				6392DB9F20CCE29E003019EB /* TKMAttributedModelItem.m in Sources */,
 				633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */,
+				631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
 				63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */,
 				63EEFEBF1FC45C440070C05F /* main.m in Sources */,
 				BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */,
@@ -1031,7 +1070,6 @@
 				63CAAB031FCD755300E09DA1 /* Wanikani+Convenience.m in Sources */,
 				6392DBAB20DBB841003019EB /* NSMutableAttributedString+Replacements.m in Sources */,
 				63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */,
-				63CAAB061FD2B7E500E09DA1 /* AnswerChecker.m in Sources */,
 				63BFA791218EB7AB0058E885 /* TKMDownloadModelItem.m in Sources */,
 				63EEFED31FC45E810070C05F /* MainViewController.m in Sources */,
 				631CAD5F234AC508008CEA73 /* DataLoader.swift in Sources */,
@@ -1072,6 +1110,7 @@
 				63AD5BA023056863006B3308 /* TKMSubjectModelItem.m in Sources */,
 				63AD5BA623056863006B3308 /* TKMAttributedModelItem.m in Sources */,
 				63AD5BA923056863006B3308 /* ReviewOrderViewController.m in Sources */,
+				631CAD64234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
 				63AD5BAB23056863006B3308 /* NSString+LevenshteinDistance.m in Sources */,
 				63AD5BB023056863006B3308 /* main.m in Sources */,
 				63AD5BB423056863006B3308 /* TKMFontLoader.mm in Sources */,
@@ -1101,7 +1140,6 @@
 				63AD5C0623056863006B3308 /* Wanikani+Convenience.m in Sources */,
 				63AD5C0823056863006B3308 /* NSMutableAttributedString+Replacements.m in Sources */,
 				63AD5C0A23056863006B3308 /* UIColor+HexString.m in Sources */,
-				63AD5C1623056863006B3308 /* AnswerChecker.m in Sources */,
 				63AD5C1823056863006B3308 /* TKMDownloadModelItem.m in Sources */,
 				63AD5C1B23056863006B3308 /* MainViewController.m in Sources */,
 				631CAD60234AC508008CEA73 /* DataLoader.swift in Sources */,
@@ -1147,7 +1185,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				63E9A8EC21199C9700418CE1 /* ClientTest.m in Sources */,
+				631CAD69234B0F0C008CEA73 /* ReviewItem.m in Sources */,
+				631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */,
 				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
+				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
+				631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1503,9 +1545,11 @@
 		};
 		63E9A8EA21199C8500418CE1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
@@ -1514,7 +1558,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.Tests;
+				PRODUCT_MODULE_NAME = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Tsurukame-Swift.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tsurukame.app/Tsurukame";
 			};
@@ -1522,9 +1571,11 @@
 		};
 		63E9A8EB21199C8500418CE1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 20A6D3E1C6F7A492EB9DDF0C /* Pods-Tests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
@@ -1533,7 +1584,11 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.Tests;
+				PRODUCT_MODULE_NAME = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Tsurukame-Swift.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tsurukame.app/Tsurukame";
 			};
