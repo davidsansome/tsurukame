@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TKMReviewMenuDelegate <NSObject>
 
-- (void)didTapEndReviewSession;
+- (void)didTapEndReviewSession:(UIView *)button;
 - (void)didTapWrapUp;
 - (int)wrapUpCount;
 

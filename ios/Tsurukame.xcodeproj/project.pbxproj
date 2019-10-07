@@ -544,6 +544,8 @@
 				6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */,
 				633DE94D20C5634900AC25F4 /* TKMBasicModelItem.h */,
 				633DE95220C5634A00AC25F4 /* TKMBasicModelItem.m */,
+				630ADB6D21F8256E00BC9801 /* TKMCheckmarkModelItem.h */,
+				630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */,
 				63BFA78F218EB7AB0058E885 /* TKMDownloadModelItem.h */,
 				63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */,
 				63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */,
@@ -563,8 +565,6 @@
 				633DE95020C5634A00AC25F4 /* TKMSwitchModelItem.m */,
 				633DE94E20C5634A00AC25F4 /* TKMTableModel.h */,
 				633DE95120C5634A00AC25F4 /* TKMTableModel.m */,
-				630ADB6D21F8256E00BC9801 /* TKMCheckmarkModelItem.h */,
-				630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */,
 			);
 			path = Tables;
 			sourceTree = "<group>";

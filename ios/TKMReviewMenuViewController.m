@@ -132,7 +132,7 @@
 }
 
 - (void)endSession:(TKMBasicModelItem *)item {
-  [self.delegate didTapEndReviewSession];
+  [self.delegate didTapEndReviewSession:item.cell];
 }
 
 - (void)wrapUp:(TKMBasicModelItem *)item {

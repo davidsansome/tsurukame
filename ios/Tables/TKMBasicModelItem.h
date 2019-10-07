@@ -62,6 +62,8 @@ NS_ASSUME_NONNULL_BEGIN;
 
 @property(nonatomic) UIColor *textColor;
 
+@property(nonatomic, nullable, weak) TKMBasicModelCell *cell;
+
 @end
 
 #define TKM_BASIC_MODEL_ITEM_INITIALISERS_UNAVAILABLE                                           \

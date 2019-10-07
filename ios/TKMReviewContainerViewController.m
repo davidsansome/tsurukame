@@ -88,7 +88,7 @@
 
 #pragma mark - TKMReviewMenuDelegate
 
-- (void)didTapEndReviewSession {
+- (void)didTapEndReviewSession:(UIView *)button {
   if (_reviewVC.tasksAnsweredCorrectly == 0) {
     [self.navigationController popToRootViewControllerAnimated:YES];
     return;
@@ -98,6 +98,8 @@
       alertControllerWithTitle:@"End review session?"
                        message:@"You'll lose progress on any half-answered reviews"
                 preferredStyle:UIAlertControllerStyleActionSheet];
+  c.popoverPresentationController.sourceView = button;
+  c.popoverPresentationController.sourceRect = button.bounds;
 
   [c addAction:[UIAlertAction actionWithTitle:@"End review session"
                                         style:UIAlertActionStyleDestructive

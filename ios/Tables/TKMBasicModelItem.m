@@ -93,6 +93,8 @@
   self.accessoryType = item.accessoryType;
   self.textLabel.textColor = item.textColor;
   self.imageView.image = item.image;
+  
+  item.cell = self;
 }
 
 - (void)didSelectCell {
