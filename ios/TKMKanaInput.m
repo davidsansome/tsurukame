@@ -401,7 +401,8 @@ NSString *TKMConvertKanaText(NSString *input) {
     // Test for sokuon.
     if (![kN characterIsMember:newChar] && newChar == lastChar &&
         [kConsonants characterIsMember:newChar] && [kConsonants characterIsMember:lastChar]) {
-      NSString *replacementString = lastCharWasUppercase ? @"ッ" : @"っ";
+      NSString *replacementString =
+          (lastCharWasUppercase || _alphabet == kTKMAlphabetKatakana) ? @"ッ" : @"っ";
       textField.text =
           [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
                                                   withString:replacementString];
@@ -411,7 +412,8 @@ NSString *TKMConvertKanaText(NSString *input) {
     // Replace n followed by a consonant.
     if (newChar != 'n' && [kN characterIsMember:lastChar] &&
         ![kCanFollowN characterIsMember:newChar]) {
-      NSString *replacementString = lastCharWasUppercase ? @"ン" : @"ん";
+      NSString *replacementString =
+          (lastCharWasUppercase || _alphabet == kTKMAlphabetKatakana) ? @"ン" : @"ん";
       textField.text =
           [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
                                                   withString:replacementString];
