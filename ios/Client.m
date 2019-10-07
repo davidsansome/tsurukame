@@ -233,9 +233,13 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 #pragma mark - Date functions
 
-+ (NSString *)currentISO8601Date {
++ (NSString *)formatISO8601Date:(NSDate *)date {
   EnsureInitialised();
-  return [sDateFormatters.firstObject stringFromDate:[NSDate date]];
+  return [sDateFormatters.firstObject stringFromDate:date];
+}
+
++ (NSString *)currentISO8601Date {
+  return [self formatISO8601Date:[NSDate date]];
 }
 
 + (NSDate *)parseISO8601Date:(NSString *)string {
@@ -701,11 +705,16 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 - (void)sendProgress:(TKMProgress *)progress handler:(ProgressHandler)handler {
   if (progress.isLesson) {
+    NSMutableDictionary *payload = [NSMutableDictionary dictionary];
+    if (progress.hasCreatedAt) {
+      [payload setObject:[Client formatISO8601Date:progress.createdAtDate] forKey:@"started_at"];
+    }
+    
     NSString *urlString =
         [NSString stringWithFormat:@"%s/assignments/%d/start", kURLBase, progress.assignment.id_p];
     [self submitJSONToURL:[NSURL URLWithString:urlString]
                withMethod:@"PUT"
-                     data:[@"{}" dataUsingEncoding:NSUTF8StringEncoding]
+                     data:[NSJSONSerialization dataWithJSONObject:payload options:0 error:nil]
                   handler:^(id _Nullable data, NSError *_Nullable error) {
                     handler(error);
                   }];
@@ -717,7 +726,9 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   [review setObject:@(progress.assignment.id_p) forKey:@"assignment_id"];
   [review setObject:@(progress.meaningWrong ? 1 : 0) forKey:@"incorrect_meaning_answers"];
   [review setObject:@(progress.readingWrong ? 1 : 0) forKey:@"incorrect_reading_answers"];
-  // TODO: set the created_at field as well.
+  if (progress.hasCreatedAt) {
+    [review setObject:[Client formatISO8601Date:progress.createdAtDate] forKey:@"created_at"];
+  }
 
   NSMutableDictionary *payload = [NSMutableDictionary dictionary];
   [payload setObject:review forKey:@"review"];

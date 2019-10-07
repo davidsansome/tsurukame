@@ -378,6 +378,10 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
   return [NSString stringWithFormat:@"keys%%5B%%5D=%d", self.assignment.subjectId];
 }
 
+- (NSDate *)createdAtDate {
+  return [NSDate dateWithTimeIntervalSince1970:self.createdAt];
+}
+
 @end
 
 @implementation TKMUser (Convenience)

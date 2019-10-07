@@ -1127,9 +1127,11 @@ typedef struct TKMAssignment__storage_ {
 @dynamic hasReadingWrong, readingWrong;
 @dynamic hasIsLesson, isLesson;
 @dynamic hasAssignment, assignment;
+@dynamic hasCreatedAt, createdAt;
 
 typedef struct TKMProgress__storage_ {
   uint32_t _has_storage_[1];
+  int32_t createdAt;
   TKMAssignment *assignment;
 } TKMProgress__storage_;
 
@@ -1174,6 +1176,15 @@ typedef struct TKMProgress__storage_ {
         .offset = (uint32_t)offsetof(TKMProgress__storage_, assignment),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "createdAt",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMProgress_FieldNumber_CreatedAt,
+        .hasIndex = 7,
+        .offset = (uint32_t)offsetof(TKMProgress__storage_, createdAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
       },
     };
     GPBDescriptor *localDescriptor =

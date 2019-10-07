@@ -947,6 +947,11 @@ class AnimationContext {
   int newSrsStage =
       didLevelUp ? _activeTask.assignment.srsStage + 1 : _activeTask.assignment.srsStage - 1;
   if (isSubjectFinished) {
+    NSTimeInterval date = [NSDate date].timeIntervalSince1970;
+    if (date > _activeTask.assignment.availableAt) {
+      _activeTask.answer.createdAt = date;
+    }
+    
     [_services.localCachingClient sendProgress:@[ _activeTask.answer ]];
 
     _reviewsCompleted++;

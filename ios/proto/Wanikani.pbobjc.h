@@ -501,6 +501,7 @@ typedef GPB_ENUM(TKMProgress_FieldNumber) {
   TKMProgress_FieldNumber_ReadingWrong = 4,
   TKMProgress_FieldNumber_IsLesson = 5,
   TKMProgress_FieldNumber_Assignment = 6,
+  TKMProgress_FieldNumber_CreatedAt = 7,
 };
 
 @interface TKMProgress : GPBMessage
@@ -518,6 +519,9 @@ typedef GPB_ENUM(TKMProgress_FieldNumber) {
 /** Test to see if @c assignment has been set. */
 @property(nonatomic, readwrite) BOOL hasAssignment;
 
+@property(nonatomic, readwrite) int32_t createdAt;
+
+@property(nonatomic, readwrite) BOOL hasCreatedAt;
 @end
 
 #pragma mark - TKMStudyMaterials

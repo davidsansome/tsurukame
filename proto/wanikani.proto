@@ -162,6 +162,7 @@ message Progress {
   optional bool reading_wrong = 4;
   optional bool is_lesson = 5;
   optional Assignment assignment = 6;
+  optional int32 created_at = 7;
 }
 
 message StudyMaterials {

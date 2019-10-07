@@ -84,6 +84,7 @@ extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
 
 @property(nonatomic, readonly) NSString *reviewFormParameters;
 @property(nonatomic, readonly) NSString *lessonFormParameters;
+@property(nonatomic, readonly) NSDate *createdAtDate;
 
 @end
 
