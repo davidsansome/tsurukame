@@ -14,7 +14,6 @@
 
 #import "CurrentLevelChartController.h"
 
-#import "DataLoader.h"
 #import "Style.h"
 #import "proto/Wanikani+Convenience.h"
 

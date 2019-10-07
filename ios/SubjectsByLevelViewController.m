@@ -14,7 +14,7 @@
 
 #import "SubjectsByLevelViewController.h"
 
-#import "DataLoader.h"
+#import "Tsurukame-Swift.h"
 #import "LocalCachingClient.h"
 #import "Style.h"
 #import "SubjectDetailsViewController.h"

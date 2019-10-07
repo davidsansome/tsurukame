@@ -14,7 +14,6 @@
 
 #include <array>
 
-#import "DataLoader.h"
 #import "LocalCachingClient.h"
 #import "UserDefaults.h"
 
@@ -22,6 +21,10 @@
 #import "third_party/FMDB/FMDB.h"
 
 #import <sys/errno.h>
+
+extern "C" {
+#import "Tsurukame-Swift.h"
+}
 
 NS_ASSUME_NONNULL_BEGIN
 

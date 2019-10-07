@@ -14,7 +14,7 @@
 
 #import "AppDelegate.h"
 #import "Client.h"
-#import "DataLoader.h"
+#import "Tsurukame-Swift.h"
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "MainViewController.h"

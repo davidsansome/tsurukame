@@ -21,8 +21,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class DataLoader;
-
 extern NSNotificationName kLocalCachingClientAvailableItemsChangedNotification;
 extern NSNotificationName kLocalCachingClientPendingItemsChangedNotification;
 extern NSNotificationName kLocalCachingClientUserInfoChangedNotification;

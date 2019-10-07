@@ -13,9 +13,9 @@
 // limitations under the License.
 
 #import "SubjectCatalogueViewController.h"
-#import "DataLoader.h"
 #import "SubjectsByLevelViewController.h"
 #import "TKMServices.h"
+#import "Tsurukame-Swift.h"
 #import "UserDefaults.h"
 
 @interface SubjectCatalogueViewController () <UIPageViewControllerDataSource,

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "ReviewItem.h"
-#import "DataLoader.h"
+#import "Tsurukame-Swift.h"
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "TKMSubjectModelItem.h"
-#import "DataLoader.h"
+#import "Tsurukame-Swift.h"
 #import "Style.h"
 #import "TKMSubjectChip.h"
 #import "proto/Wanikani+Convenience.h"

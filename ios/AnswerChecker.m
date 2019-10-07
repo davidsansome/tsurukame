@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import "AnswerChecker.h"
-#import "DataLoader.h"
 #import "NSString+LevenshteinDistance.h"
+#import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
 static const char *kKanaCharacters =

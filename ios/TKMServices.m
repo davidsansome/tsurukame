@@ -14,7 +14,7 @@
 
 #import "TKMServices+Internals.h"
 
-#import "DataLoader.h"
+#import "Tsurukame-Swift.h"
 #import "Reachability.h"
 #import "TKMAudio.h"
 #import "TKMFontLoader.h"
@@ -31,7 +31,8 @@
   self = [super init];
   if (self) {
     _dataLoader = [[DataLoader alloc] initFromURL:[[NSBundle mainBundle] URLForResource:@"data"
-                                                                          withExtension:@"bin"]];
+                                                                          withExtension:@"bin"]
+                                            error:nil];
     _reachability = [Reachability reachabilityForInternetConnection];
     _audio = [[TKMAudio alloc] initWithServices:self];
     _fontLoader = [[TKMFontLoader alloc] init];

@@ -14,7 +14,7 @@
 
 #import "SearchResultViewController.h"
 
-#import "DataLoader.h"
+#import "Tsurukame-Swift.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMKanaInput.h"
 #import "TKMServices.h"
@@ -86,7 +86,7 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
 
 - (void)ensureAllSubjectsLoaded {
   if (_allSubjects == nil) {
-    _allSubjects = [_services.dataLoader loadAllSubjects];
+    _allSubjects = [_services.dataLoader loadAll];
   }
 }
 

@@ -15,7 +15,7 @@
 #import "SubjectDetailsView.h"
 
 #import "AnswerChecker.h"
-#import "DataLoader.h"
+#import "Tsurukame-Swift.h"
 #import "LocalCachingClient.h"
 #import "NSMutableAttributedString+Replacements.h"
 #import "Style.h"

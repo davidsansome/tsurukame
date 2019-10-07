@@ -157,6 +157,8 @@
 		6319C9B220441D3800C31F87 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C9A820441D3700C31F87 /* FMResultSet.m */; };
 		6319C9B320441D3800C31F87 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C9AC20441D3800C31F87 /* FMDatabase.m */; };
 		6319C9B420441D3800C31F87 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C9AE20441D3800C31F87 /* FMDatabaseAdditions.m */; };
+		631CAD5F234AC508008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
+		631CAD60234AC508008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
 		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
 		633632EC201F3011006D582B /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EB201F3011006D582B /* LoginViewController.m */; };
 		633632EF201F3490006D582B /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* UserDefaults.m */; };
@@ -392,7 +394,6 @@
 		63AD5C1923056863006B3308 /* PieChartDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630ADD0621FEB34B00BC9801 /* PieChartDataSet.swift */; };
 		63AD5C1A23056863006B3308 /* PieHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630ADCB821FEB34B00BC9801 /* PieHighlighter.swift */; };
 		63AD5C1B23056863006B3308 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
-		63AD5C1C23056863006B3308 /* DataLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAF71FC6E23300E09DA1 /* DataLoader.m */; };
 		63AD5C1D23056863006B3308 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630ADCC321FEB34B00BC9801 /* LineChartView.swift */; };
 		63AD5C1E23056863006B3308 /* TKMTableModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95120C5634A00AC25F4 /* TKMTableModel.m */; };
 		63AD5C1F23056863006B3308 /* XAxis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630ADCE821FEB34B00BC9801 /* XAxis.swift */; };
@@ -487,7 +488,6 @@
 		63CAAAF31FC6E1D400E09DA1 /* GPBWellKnownTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAE51FC6E1D300E09DA1 /* GPBWellKnownTypes.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAAF41FC6E1D400E09DA1 /* GPBWireFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAE61FC6E1D400E09DA1 /* GPBWireFormat.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAAF51FC6E1D400E09DA1 /* GPBArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAE71FC6E1D400E09DA1 /* GPBArray.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		63CAAAF81FC6E23300E09DA1 /* DataLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAF71FC6E23300E09DA1 /* DataLoader.m */; };
 		63CAAAFA1FC6EADD00E09DA1 /* data.bin in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAAF91FC6EADC00E09DA1 /* data.bin */; };
 		63CAAAFD1FCD693500E09DA1 /* ReviewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */; };
 		63CAAB031FCD755300E09DA1 /* Wanikani+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB011FCD755300E09DA1 /* Wanikani+Convenience.m */; };
@@ -707,6 +707,7 @@
 		6319C9AE20441D3800C31F87 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = third_party/FMDB/FMDatabaseAdditions.m; sourceTree = SOURCE_ROOT; };
 		6319C9AF20441D3800C31F87 /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabasePool.h; path = third_party/FMDB/FMDatabasePool.h; sourceTree = SOURCE_ROOT; };
 		6319C9B520441DE200C31F87 /* Tsurukame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tsurukame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		631CAD5E234AC507008CEA73 /* DataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
 		6321E60F2068F3A9003460BC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		6321E6102068F3A9003460BC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		633632EA201F3011006D582B /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
@@ -870,8 +871,6 @@
 		63CAAAE51FC6E1D300E09DA1 /* GPBWellKnownTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GPBWellKnownTypes.m; path = third_party/protobuf/GPBWellKnownTypes.m; sourceTree = SOURCE_ROOT; };
 		63CAAAE61FC6E1D400E09DA1 /* GPBWireFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GPBWireFormat.m; path = third_party/protobuf/GPBWireFormat.m; sourceTree = SOURCE_ROOT; };
 		63CAAAE71FC6E1D400E09DA1 /* GPBArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GPBArray.m; path = third_party/protobuf/GPBArray.m; sourceTree = SOURCE_ROOT; };
-		63CAAAF61FC6E23300E09DA1 /* DataLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataLoader.h; sourceTree = "<group>"; };
-		63CAAAF71FC6E23300E09DA1 /* DataLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataLoader.m; sourceTree = "<group>"; };
 		63CAAAF91FC6EADC00E09DA1 /* data.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = data.bin; path = ../data.bin; sourceTree = "<group>"; };
 		63CAAAFB1FCD693500E09DA1 /* ReviewItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewItem.h; sourceTree = "<group>"; };
 		63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewItem.m; sourceTree = "<group>"; };
@@ -1259,6 +1258,7 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				631CAD5E234AC507008CEA73 /* DataLoader.swift */,
 				63CAAB041FD2B7E500E09DA1 /* AnswerChecker.h */,
 				63CAAB051FD2B7E500E09DA1 /* AnswerChecker.m */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -1269,8 +1269,6 @@
 				63EDA42A207F38BE00382CE3 /* CurrentLevelChartController.h */,
 				63EDA42B207F38BE00382CE3 /* CurrentLevelChartController.m */,
 				63CAAAF91FC6EADC00E09DA1 /* data.bin */,
-				63CAAAF61FC6E23300E09DA1 /* DataLoader.h */,
-				63CAAAF71FC6E23300E09DA1 /* DataLoader.m */,
 				BB2909A5217FAF8B00B1816F /* fonts */,
 				63C42A2421B6A28D008CA938 /* FontScreenshotter */,
 				63C42A2321B6A28D008CA938 /* FontScreenshotter.app */,
@@ -2029,7 +2027,7 @@
 				630ADD9021FEB34C00BC9801 /* PieChartDataSet.swift in Sources */,
 				630ADD4B21FEB34B00BC9801 /* PieHighlighter.swift in Sources */,
 				63EEFED31FC45E810070C05F /* MainViewController.m in Sources */,
-				63CAAAF81FC6E23300E09DA1 /* DataLoader.m in Sources */,
+				631CAD5F234AC508008CEA73 /* DataLoader.swift in Sources */,
 				630ADD5521FEB34B00BC9801 /* LineChartView.swift in Sources */,
 				633DE95620C5634A00AC25F4 /* TKMTableModel.m in Sources */,
 				630ADD7621FEB34B00BC9801 /* XAxis.swift in Sources */,
@@ -2277,7 +2275,7 @@
 				63AD5C1923056863006B3308 /* PieChartDataSet.swift in Sources */,
 				63AD5C1A23056863006B3308 /* PieHighlighter.swift in Sources */,
 				63AD5C1B23056863006B3308 /* MainViewController.m in Sources */,
-				63AD5C1C23056863006B3308 /* DataLoader.m in Sources */,
+				631CAD60234AC508008CEA73 /* DataLoader.swift in Sources */,
 				63AD5C1D23056863006B3308 /* LineChartView.swift in Sources */,
 				63AD5C1E23056863006B3308 /* TKMTableModel.m in Sources */,
 				63AD5C1F23056863006B3308 /* XAxis.swift in Sources */,
@@ -2521,9 +2519,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2545,8 +2543,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2573,7 +2571,7 @@
 				PRODUCT_MODULE_NAME = Tsurukame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2599,7 +2597,7 @@
 				PRODUCT_MODULE_NAME = Tsurukame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

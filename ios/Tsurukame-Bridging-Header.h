@@ -15,6 +15,7 @@
 #ifndef Tsurukame_Bridging_Header_h
 #define Tsurukame_Bridging_Header_h
 
+#import "proto/Wanikani.pbobjc.h"
 #import "TKMFontLoader.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"

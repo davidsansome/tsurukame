@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "ReviewSummaryViewController.h"
-#import "DataLoader.h"
+#import "Tsurukame-Swift.h"
 #import "LocalCachingClient.h"
 #import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"

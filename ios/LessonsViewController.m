@@ -14,7 +14,7 @@
 
 #import "LessonsViewController.h"
 
-#import "DataLoader.h"
+#import "Tsurukame-Swift.h"
 #import "LessonsPageControl.h"
 #import "LocalCachingClient.h"
 #import "ReviewItem.h"

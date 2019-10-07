@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import "TKMAudio.h"
-#import "DataLoader.h"
 #import "Reachability.h"
+#import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 #import "proto/Wanikani.pbobjc.h"
 

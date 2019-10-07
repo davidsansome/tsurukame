@@ -14,7 +14,7 @@
 
 #import "ReviewViewController.h"
 #import "AnswerChecker.h"
-#import "DataLoader.h"
+#import "Tsurukame-Swift.h"
 #import "LocalCachingClient.h"
 #import "NSMutableArray+Shuffle.h"
 #import "ReviewSummaryViewController.h"

@@ -14,7 +14,6 @@
 
 #import "SubjectDetailsViewController.h"
 
-#import "DataLoader.h"
 #import "LocalCachingClient.h"
 #import "NavigationController.h"
 #import "Style.h"
