@@ -33,3 +33,5 @@ target 'Tsurukame (App Store screenshots)' do
   # Pods for Tsurukame (App Store screenshots)
 
 end
+
+pod 'SwiftFormat/CLI'

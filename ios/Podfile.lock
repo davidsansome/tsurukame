@@ -20,6 +20,7 @@ PODS:
   - MMDrawerController/Subclass (0.6.0):
     - MMDrawerController/Core
   - Protobuf (3.10.0)
+  - SwiftFormat/CLI (0.40.12)
 
 DEPENDENCIES:
   - Charts (~> 3.3.0)
@@ -28,6 +29,7 @@ DEPENDENCIES:
   - Light-Untar (~> 0.3.0)
   - MMDrawerController (~> 0.6.0)
   - Protobuf (~> 3.10.0)
+  - SwiftFormat/CLI
 
 SPEC REPOS:
   trunk:
@@ -37,6 +39,7 @@ SPEC REPOS:
     - Light-Untar
     - MMDrawerController
     - Protobuf
+    - SwiftFormat
 
 SPEC CHECKSUMS:
   Charts: e0dd4cd8f257bccf98407b58183ddca8e8d5b578
@@ -45,7 +48,8 @@ SPEC CHECKSUMS:
   Light-Untar: e901c312974d36f3910aec73436296a5a3faf799
   MMDrawerController: e3a54a5570388463ad3b36975251575b50c4e1a0
   Protobuf: a4dc852ad69c027ca2166ed287b856697814375b
+  SwiftFormat: 73667bbb741386b0febf0bd1a1b8c502aa9d1c98
 
-PODFILE CHECKSUM: 01b77c9dabd73a3fe4b22190959773003d84e359
+PODFILE CHECKSUM: edff4bd1dc7751e9d5a539490e7f28a9630a8e45
 
 COCOAPODS: 1.8.3

@@ -22,8 +22,8 @@
 #import <sys/errno.h>
 
 extern "C" {
-#import "Tsurukame-Swift.h"
 #import <FMDB/FMDB.h>
+#import "Tsurukame-Swift.h"
 }
 
 NS_ASSUME_NONNULL_BEGIN

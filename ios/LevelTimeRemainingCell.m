@@ -13,10 +13,10 @@
 // limitations under the License.
 
 #import "LevelTimeRemainingCell.h"
-#import "Tsurukame-Swift.h"
 #import "LocalCachingClient.h"
 #import "TKMServices.h"
 #import "Tables/TKMSubjectModelItem.h"
+#import "Tsurukame-Swift.h"
 
 @implementation LevelTimeRemainingCell {
   TKMServices *_services;

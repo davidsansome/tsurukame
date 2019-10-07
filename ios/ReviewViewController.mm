@@ -14,7 +14,6 @@
 
 #import "ReviewViewController.h"
 #import "AnswerChecker.h"
-#import "Tsurukame-Swift.h"
 #import "LocalCachingClient.h"
 #import "NSMutableArray+Shuffle.h"
 #import "ReviewSummaryViewController.h"
@@ -28,6 +27,7 @@
 #import "TKMKanaInput.h"
 #import "TKMServices.h"
 #import "Tables/TKMSubjectModelItem.h"
+#import "Tsurukame-Swift.h"
 #import "UIView+SafeAreaInsets.h"
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
@@ -1071,7 +1071,7 @@ class AnimationContext {
 // For no particularly apparent reason, this seemingly pointless implementation
 // means that holding down the command key after (say) pressing ⌘C does not
 // repeat the action continuously on all subsequent reviews
--(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
   return [super canPerformAction:action withSender:sender];
 }
 

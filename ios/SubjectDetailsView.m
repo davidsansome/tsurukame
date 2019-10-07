@@ -15,7 +15,6 @@
 #import "SubjectDetailsView.h"
 
 #import "AnswerChecker.h"
-#import "Tsurukame-Swift.h"
 #import "LocalCachingClient.h"
 #import "NSMutableAttributedString+Replacements.h"
 #import "Style.h"
@@ -27,6 +26,7 @@
 #import "Tables/TKMReadingModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "Tsurukame-Swift.h"
 #import "UIColor+HexString.h"
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
@@ -268,9 +268,8 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
     [attributes setObject:TKMJapaneseFont(kFontSize) forKey:NSFontAttributeName];
     NSMutableAttributedString *japanese =
-        [[NSMutableAttributedString alloc] initWithString:sentence.japanese
-                                               attributes:attributes];
-    
+        [[NSMutableAttributedString alloc] initWithString:sentence.japanese attributes:attributes];
+
     // Highlight occurences of this subject in the Japanese text.
     NSString *textToHighlight = subject.japanese;
     if (subject.vocabulary.isVerb) {

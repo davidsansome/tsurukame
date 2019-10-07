@@ -91,7 +91,7 @@
   }
 
   LineChartDataSet *lineDataSet = [[LineChartDataSet alloc] initWithEntries:cumulativeData
-                                                                     label:nil];
+                                                                      label:nil];
   lineDataSet.drawValuesEnabled = NO;
   lineDataSet.drawCircleHoleEnabled = NO;
   lineDataSet.circleRadius = 1.5f;

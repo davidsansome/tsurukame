@@ -1,4 +1,4 @@
-// Copyright 2018 David Sansome
+// Copyright 2019 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
-  
-  func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+
+  func application(_: UIApplication,
+                   didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
     let vc = ViewController()
-    self.window = UIWindow(frame: UIScreen.main.bounds)
-    self.window?.rootViewController = vc
-    self.window?.makeKeyAndVisible()
+    window = UIWindow(frame: UIScreen.main.bounds)
+    window?.rootViewController = vc
+    window?.makeKeyAndVisible()
     return true
   }
 }

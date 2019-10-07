@@ -1,7 +1,7 @@
 #!/bin/sh
 
 find . -not '(' \
-       -path '*/third_party/*' -or \
+       -path '*/Pods/*' -or \
        -name 'Reachability.*' -or \
        -name '*.pbobjc.*' \
      ')' -and '(' \

@@ -14,7 +14,6 @@
 
 #import "SubjectsByLevelViewController.h"
 
-#import "Tsurukame-Swift.h"
 #import "LocalCachingClient.h"
 #import "Style.h"
 #import "SubjectDetailsViewController.h"
@@ -23,6 +22,7 @@
 #import "Tables/TKMModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
 @interface SubjectsByLevelViewController () <TKMSubjectDelegate>

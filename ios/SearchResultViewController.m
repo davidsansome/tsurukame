@@ -14,12 +14,12 @@
 
 #import "SearchResultViewController.h"
 
-#import "Tsurukame-Swift.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMKanaInput.h"
 #import "TKMServices.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "Tsurukame-Swift.h"
 #import "proto/Wanikani.pbobjc.h"
 
 static const int kMaxResults = 50;

@@ -1,4 +1,4 @@
-// Copyright 2018 David Sansome
+// Copyright 2019 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,34 +17,32 @@ import UIKit
 class ViewController: UIViewController, TKMDownloadModelDelegate {
   var tableModel: TKMMutableTableModel?
   var tableView: UITableView?
-  
-  func didTapDownloadItem(_ item: TKMDownloadModelItem) {
-  }
-  
+
+  func didTapDownloadItem(_: TKMDownloadModelItem) {}
+
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.view.backgroundColor = UIColor.white
-    
-    self.tableView = UITableView()
-    self.view.addSubview(self.tableView!)
-    
-    self.tableModel = TKMMutableTableModel(tableView: tableView)
-    
+    view.backgroundColor = UIColor.white
+
+    tableView = UITableView()
+    view.addSubview(tableView!)
+
+    tableModel = TKMMutableTableModel(tableView: tableView)
+
     let fontLoader = TKMFontLoader()
     for font in fontLoader!.allFonts {
       assert(font.available)
-      
+
       let item = TKMDownloadModelItem(filename: "", title: font.fontName, delegate: self)
-      item.totalSizeBytes = font.sizeBytes;
+      item.totalSizeBytes = font.sizeBytes
       item.previewFontName = font.fontName
       item.previewAccessibilityLabel = font.fontName
       item.previewText = kTKMFontPreviewText
-      self.tableModel!.add(item)
+      tableModel!.add(item)
     }
   }
-  
+
   override func viewWillLayoutSubviews() {
-    self.tableView!.frame = self.view.frame
+    tableView!.frame = view.frame
   }
 }
-

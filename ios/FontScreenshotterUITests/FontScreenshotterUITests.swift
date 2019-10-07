@@ -1,4 +1,4 @@
-// Copyright 2018 David Sansome
+// Copyright 2019 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ import XCTest
 
 class FontScreenshotterUITests: XCTestCase {
   let app: XCUIApplication = XCUIApplication()
-  
+
   override func setUp() {
     continueAfterFailure = false
     app.launch()
@@ -24,18 +24,17 @@ class FontScreenshotterUITests: XCTestCase {
 
   func testScreenshotFontPreviews() {
     // Find all the font preview elements.
-    let elements = self.app.tables.cells.staticTexts.matching(identifier: "preview")
-    for i in 0...elements.count {
+    let elements = app.tables.cells.staticTexts.matching(identifier: "preview")
+    for i in 0 ... elements.count {
       let element = elements.element(boundBy: i)
-      if (!element.exists) {
-        continue;
+      if !element.exists {
+        continue
       }
-      
-      let s = XCTAttachment.init(screenshot: element.screenshot())
+
+      let s = XCTAttachment(screenshot: element.screenshot())
       s.lifetime = XCTAttachment.Lifetime.keepAlways
-      s.name = element.label  // The label is the font name.
-      self.add(s)
+      s.name = element.label // The label is the font name.
+      add(s)
     }
   }
-
 }

@@ -110,7 +110,7 @@ NSString *ConvertHiraganaToKatakana(NSString *text) {
   if (dash.location == NSNotFound) {
     return [text stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:YES];
   }
-  
+
   NSMutableString *ret = [NSMutableString string];
   [ret appendString:ConvertHiraganaToKatakana([text substringToIndex:dash.location])];
   [ret appendString:@"ー"];

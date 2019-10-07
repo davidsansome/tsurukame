@@ -14,10 +14,10 @@
 
 #import "TKMServices+Internals.h"
 
-#import "Tsurukame-Swift.h"
 #import "Reachability.h"
 #import "TKMAudio.h"
 #import "TKMFontLoader.h"
+#import "Tsurukame-Swift.h"
 
 @interface TKMServices ()
 

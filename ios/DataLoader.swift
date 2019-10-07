@@ -17,19 +17,19 @@ import Foundation
 private func readUInt32(_ fh: FileHandle, _ offset: UInt64) -> UInt32 {
   fh.seek(toFileOffset: offset)
   let data = fh.readData(ofLength: 4)
-  return data.withUnsafeBytes({
+  return data.withUnsafeBytes {
     (p: UnsafeRawBufferPointer) in
-      p.bindMemory(to: UInt32.self).first!
-    })
+    p.bindMemory(to: UInt32.self).first!
+  }
 }
 
 @objcMembers
-class DataLoader : NSObject {
+class DataLoader: NSObject {
   let header: TKMDataFileHeader
 
   private let file: FileHandle
   private let firstSubjectOffset: UInt32
-  
+
   public init(fromURL url: URL) throws {
     // Open the file.
     file = try FileHandle(forReadingFrom: url)
@@ -44,7 +44,7 @@ class DataLoader : NSObject {
   }
 
   func levelOf(subjectID id: Int) -> Int {
-    if (id < 0 || id >= header.levelBySubjectArray.count) {
+    if id < 0 || id >= header.levelBySubjectArray.count {
       return 0
     }
     return Int(header.levelBySubjectArray.value(at: UInt(id)))
@@ -58,7 +58,7 @@ class DataLoader : NSObject {
 
   @objc(loadSubject:)
   func load(subjectID id: Int) -> TKMSubject? {
-    if (!isValid(subjectID: id)) {
+    if !isValid(subjectID: id) {
       return nil
     }
 
@@ -67,7 +67,7 @@ class DataLoader : NSObject {
       file.seek(toFileOffset: UInt64(offset))
 
       var data: Data
-      if (id == header.subjectByteOffsetArray.count - 1) {
+      if id == header.subjectByteOffsetArray.count - 1 {
         data = file.readDataToEndOfFile()
       } else {
         // Read the offset of the next subject and compare to determine the length.
@@ -99,24 +99,24 @@ class DataLoader : NSObject {
     }
   }
 
-  func loadAll() -> Array<TKMSubject> {
-    var ret = Array<TKMSubject>()
-    for id in 1...header.subjectByteOffsetArray.count {
+  func loadAll() -> [TKMSubject] {
+    var ret = [TKMSubject]()
+    for id in 1 ... header.subjectByteOffsetArray.count {
       if let subject = load(subjectID: Int(id)) {
         ret.append(subject)
       }
     }
     return ret
   }
-  
+
   func subjects(byLevel level: Int) -> TKMSubjectsByLevel? {
-    if level <= 0 && level > maxLevelGrantedBySubscription {
-      return nil;
+    if level <= 0, level > maxLevelGrantedBySubscription {
+      return nil
     }
-    
+
     return header.subjectsByLevelArray?[level - 1] as? TKMSubjectsByLevel
   }
-  
+
   var deletedSubjectIDs: GPBInt32Array {
     header.deletedSubjectIdsArray
   }

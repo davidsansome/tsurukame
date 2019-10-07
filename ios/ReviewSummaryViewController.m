@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "ReviewSummaryViewController.h"
-#import "Tsurukame-Swift.h"
 #import "LocalCachingClient.h"
 #import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"
@@ -21,6 +20,7 @@
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "Tsurukame-Swift.h"
 
 @interface ReviewSummaryViewController () <TKMSubjectDelegate>
 
