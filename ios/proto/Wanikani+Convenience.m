@@ -386,14 +386,14 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   if (self.isBurned || self.isLocked) {
     return nil;
   }
-  
+
   // If it's available now, treat it like it will be reviewed this hour.
   NSCalendar *calendar = [NSCalendar currentCalendar];
   NSDateComponents *components = [calendar
       components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour)
         fromDate:[NSDate date]];
   NSDate *reviewDate = [calendar dateFromComponents:components];
-  
+
   if (!self.hasAvailableAt) {
     return reviewDate;
   }
@@ -413,7 +413,7 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   if (self.srsStage >= kGuruStage) {
     return [NSDate distantPast];
   }
-  
+
   NSDate *reviewDate = [self reviewDate];
   int guruSeconds = TKMMinimumTimeUntilGuruSeconds(subject.level, self.srsStage + 1);
   return [reviewDate dateByAddingTimeInterval:guruSeconds];

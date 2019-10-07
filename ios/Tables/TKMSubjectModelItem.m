@@ -106,12 +106,17 @@ static const CGFloat kFontSize = 14.f;
   if (item.showRemaining) {
     if (item.assignment.isReviewStage) {
       [self.readingLabel setHidden:NO];
-      self.readingLabel.text = [self formattedIntervalUntil:item.assignment.reviewDate label:@"Review"];
+      self.readingLabel.text = [self formattedIntervalUntil:item.assignment.reviewDate
+                                                      label:@"Review"];
       [self.meaningLabel setHidden:NO];
-      self.meaningLabel.text = [self formattedIntervalUntil:[item.assignment guruDateForSubject:item.subject] label:@"Guru"];
+      self.meaningLabel.text =
+          [self formattedIntervalUntil:[item.assignment guruDateForSubject:item.subject]
+                                 label:@"Guru"];
     } else if (item.assignment.isLessonStage) {
       [self.readingLabel setHidden:NO];
-      self.readingLabel.text = [self formattedIntervalUntil:[item.assignment guruDateForSubject:item.subject] label:@"Guru"];
+      self.readingLabel.text =
+          [self formattedIntervalUntil:[item.assignment guruDateForSubject:item.subject]
+                                 label:@"Guru"];
       [self.meaningLabel setHidden:YES];
     } else {
       [self.readingLabel setHidden:YES];

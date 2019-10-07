@@ -15,8 +15,8 @@
 #ifndef Tsurukame_Bridging_Header_h
 #define Tsurukame_Bridging_Header_h
 
-#import "NSString+LevenshteinDistance.h"
 #import "LocalCachingClient.h"
+#import "NSString+LevenshteinDistance.h"
 #import "ReviewItem.h"
 #import "TKMFontLoader.h"
 #import "TKMServices.h"

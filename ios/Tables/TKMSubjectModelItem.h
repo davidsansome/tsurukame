@@ -60,7 +60,8 @@ NS_ASSUME_NONNULL_BEGIN;
 
 - (instancetype)initWithSubjects:(GPBInt32Array *)subjects
                       dataLoader:(DataLoader *)dataLoader
-                        delegate:(nullable id<TKMSubjectChipDelegate>)delegate NS_DESIGNATED_INITIALIZER;
+                        delegate:(nullable id<TKMSubjectChipDelegate>)delegate
+    NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 

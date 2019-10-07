@@ -951,7 +951,7 @@ class AnimationContext {
     if (date > _activeTask.assignment.availableAt) {
       _activeTask.answer.createdAt = date;
     }
-    
+
     [_services.localCachingClient sendProgress:@[ _activeTask.answer ]];
 
     _reviewsCompleted++;

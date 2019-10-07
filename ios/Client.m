@@ -709,7 +709,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     if (progress.hasCreatedAt) {
       [payload setObject:[Client formatISO8601Date:progress.createdAtDate] forKey:@"started_at"];
     }
-    
+
     NSString *urlString =
         [NSString stringWithFormat:@"%s/assignments/%d/start", kURLBase, progress.assignment.id_p];
     [self submitJSONToURL:[NSURL URLWithString:urlString]
