@@ -16,8 +16,11 @@
 #define Tsurukame_Bridging_Header_h
 
 #import "NSString+LevenshteinDistance.h"
+#import "LocalCachingClient.h"
 #import "ReviewItem.h"
 #import "TKMFontLoader.h"
+#import "TKMServices.h"
+#import "TKMSubjectModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"
 

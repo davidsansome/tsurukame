@@ -349,7 +349,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="nkQ-lF-bti" detailTextLabel="Me6-QS-wbB" style="IBUITableViewCellStyleValue1" id="kjb-LI-1oe" customClass="LevelTimeRemainingCell">
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="nkQ-lF-bti" detailTextLabel="Me6-QS-wbB" style="IBUITableViewCellStyleValue1" id="kjb-LI-1oe" customClass="LevelTimeRemainingCell" customModule="Tsurukame" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="541.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kjb-LI-1oe" id="hOM-MC-jGF">

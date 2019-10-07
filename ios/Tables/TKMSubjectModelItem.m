@@ -22,7 +22,7 @@ static const CGFloat kJapaneseTextImageSize = 26.f;
 static const CGFloat kFontSize = 14.f;
 static const int kGuruStage = 5;
 
-int TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
+NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   const bool isAccelerated = itemLevel <= 2;
 
   int hours = 0;
@@ -51,7 +51,7 @@ int TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
 @implementation TKMSubjectModelItem
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
-                       delegate:(id<TKMSubjectDelegate>)delegate
+                       delegate:(nullable id<TKMSubjectDelegate>)delegate
                    readingWrong:(bool)readingWrong
                    meaningWrong:(bool)meaningWrong {
   self = [super init];
@@ -69,7 +69,7 @@ int TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
                      assignment:(TKMAssignment *)assignment
-                       delegate:(id<TKMSubjectDelegate>)delegate {
+                       delegate:(nullable id<TKMSubjectDelegate>)delegate {
   self = [self initWithSubject:subject delegate:delegate readingWrong:false meaningWrong:false];
   if (self) {
     self.assignment = assignment;
@@ -77,7 +77,8 @@ int TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   return self;
 }
 
-- (instancetype)initWithSubject:(TKMSubject *)subject delegate:(id<TKMSubjectDelegate>)delegate {
+- (instancetype)initWithSubject:(TKMSubject *)subject
+                       delegate:(nullable id<TKMSubjectDelegate>)delegate {
   return [self initWithSubject:subject delegate:delegate readingWrong:false meaningWrong:false];
 }
 

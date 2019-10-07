@@ -16,7 +16,6 @@
 
 #import "CurrentLevelChartController.h"
 #import "LessonsViewController.h"
-#import "LevelTimeRemainingCell.h"
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "NSDate+TimeAgo.h"
@@ -30,6 +29,7 @@
 #import "SubjectsRemainingViewController.h"
 #import "TKMReviewContainerViewController.h"
 #import "TKMServices.h"
+#import "Tsurukame-Swift.h"
 #import "UpcomingReviewsChartController.h"
 #import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"

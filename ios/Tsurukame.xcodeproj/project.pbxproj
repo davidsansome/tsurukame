@@ -23,6 +23,8 @@
 		631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
 		631CAD69234B0F0C008CEA73 /* ReviewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */; };
 		631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
+		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingCell.swift */; };
+		631CAD70234B3B8E008CEA73 /* LevelTimeRemainingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingCell.swift */; };
 		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
 		633632EC201F3011006D582B /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EB201F3011006D582B /* LoginViewController.m */; };
 		633632EF201F3490006D582B /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* UserDefaults.m */; };
@@ -85,7 +87,6 @@
 		63AD5BD123056863006B3308 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
 		63AD5BDA23056863006B3308 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99C20400E3500C31F87 /* NSDate+TimeAgo.m */; };
 		63AD5BDE23056863006B3308 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEB61FC45C440070C05F /* AppDelegate.m */; };
-		63AD5BDF23056863006B3308 /* LevelTimeRemainingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */; };
 		63AD5BE623056863006B3308 /* TKMOfflineAudioViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA78D218EB6890058E885 /* TKMOfflineAudioViewController.mm */; };
 		63AD5BEA23056863006B3308 /* LessonsPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12DD203D779D009E92DB /* LessonsPageControl.m */; };
 		63AD5BED23056863006B3308 /* SearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */; };
@@ -167,7 +168,6 @@
 		63EEFED31FC45E810070C05F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
 		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
-		65C5D1EB22DBD0FD00304792 /* LevelTimeRemainingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */; };
 		A7655070EBDAE5F32A74088A /* Pods_Tsurukame__App_Store_screenshots_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
@@ -213,6 +213,7 @@
 		631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerChecker.swift; sourceTree = "<group>"; };
 		631CAD65234AF961008CEA73 /* Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Bridging-Header.h"; sourceTree = "<group>"; };
 		631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCheckerTest.swift; sourceTree = "<group>"; };
+		631CAD6B234B2B60008CEA73 /* LevelTimeRemainingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelTimeRemainingCell.swift; sourceTree = "<group>"; };
 		6321E60F2068F3A9003460BC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		6321E6102068F3A9003460BC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		633632EA201F3011006D582B /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
@@ -263,7 +264,6 @@
 		63A2375F1FE9264300C48657 /* UIColor+HexString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
 		63A237601FE9264300C48657 /* UIColor+HexString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
 		63AD5C5323056863006B3308 /* Tsurukame (App Store screenshots).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tsurukame (App Store screenshots).app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		63AD5C5423056864006B3308 /* Tsurukame copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Tsurukame copy-Info.plist"; path = "/Users/david/wk/ios/Tsurukame copy-Info.plist"; sourceTree = "<absolute>"; };
 		63B1DE391FE7BCDA00FAB9C2 /* ReviewSummaryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewSummaryViewController.h; sourceTree = "<group>"; };
 		63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewSummaryViewController.m; sourceTree = "<group>"; };
 		63B1DE3F1FE7D81600FAB9C2 /* SubjectDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectDetailsViewController.h; sourceTree = "<group>"; };
@@ -344,8 +344,6 @@
 		63EEFED81FC46E720070C05F /* Client.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Client.m; sourceTree = "<group>"; };
 		657E731C22DAD99C00F6F4C1 /* SubjectsRemainingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsRemainingViewController.h; sourceTree = "<group>"; };
 		657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsRemainingViewController.m; sourceTree = "<group>"; };
-		65C5D1E922DBD0FD00304792 /* LevelTimeRemainingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelTimeRemainingCell.h; sourceTree = "<group>"; };
-		65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LevelTimeRemainingCell.m; sourceTree = "<group>"; };
 		68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame__App_Store_screenshots_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).debug.xcconfig"; sourceTree = "<group>"; };
@@ -439,8 +437,7 @@
 				637C12DD203D779D009E92DB /* LessonsPageControl.m */,
 				637C12D6203847BE009E92DB /* LessonsViewController.h */,
 				637C12D7203847BE009E92DB /* LessonsViewController.m */,
-				65C5D1E922DBD0FD00304792 /* LevelTimeRemainingCell.h */,
-				65C5D1EA22DBD0FD00304792 /* LevelTimeRemainingCell.m */,
+				631CAD6B234B2B60008CEA73 /* LevelTimeRemainingCell.swift */,
 				63CAAB121FD7FEA400E09DA1 /* LocalCachingClient.h */,
 				63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */,
 				633632EA201F3011006D582B /* LoginViewController.h */,
@@ -523,7 +520,6 @@
 				6392DBA620D14915003019EB /* TKMSubjectChip.m */,
 				6392DBA820D14997003019EB /* TKMSubjectDelegate.h */,
 				63AD5C5323056863006B3308 /* Tsurukame (App Store screenshots).app */,
-				63AD5C5423056864006B3308 /* Tsurukame copy-Info.plist */,
 				63C42A4421B6A703008CA938 /* Tsurukame-Bridging-Header.h */,
 				6319C9B520441DE200C31F87 /* Tsurukame.app */,
 				63A2375F1FE9264300C48657 /* UIColor+HexString.h */,
@@ -1056,7 +1052,6 @@
 				6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */,
 				6319C99D20400E3500C31F87 /* NSDate+TimeAgo.m in Sources */,
 				63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */,
-				65C5D1EB22DBD0FD00304792 /* LevelTimeRemainingCell.m in Sources */,
 				63BFA78E218EB6890058E885 /* TKMOfflineAudioViewController.mm in Sources */,
 				637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */,
 				63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */,
@@ -1076,6 +1071,7 @@
 				633DE95620C5634A00AC25F4 /* TKMTableModel.m in Sources */,
 				63CAAAFD1FCD693500E09DA1 /* ReviewItem.m in Sources */,
 				633DE95720C5634A00AC25F4 /* TKMBasicModelItem.m in Sources */,
+				631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingCell.swift in Sources */,
 				6319C9A0204015B900C31F87 /* NSString+MD5.m in Sources */,
 				633DE95D20C5635A00AC25F4 /* TKMKanaInput.m in Sources */,
 				63EEFECD1FC45D810070C05F /* ReviewViewController.mm in Sources */,
@@ -1126,7 +1122,6 @@
 				63AD5BD123056863006B3308 /* SettingsViewController.m in Sources */,
 				63AD5BDA23056863006B3308 /* NSDate+TimeAgo.m in Sources */,
 				63AD5BDE23056863006B3308 /* AppDelegate.m in Sources */,
-				63AD5BDF23056863006B3308 /* LevelTimeRemainingCell.m in Sources */,
 				63AD5BE623056863006B3308 /* TKMOfflineAudioViewController.mm in Sources */,
 				63AD5BEA23056863006B3308 /* LessonsPageControl.m in Sources */,
 				63AD5BED23056863006B3308 /* SearchResultViewController.m in Sources */,
@@ -1146,6 +1141,7 @@
 				63AD5C1E23056863006B3308 /* TKMTableModel.m in Sources */,
 				63AD5C2623056863006B3308 /* ReviewItem.m in Sources */,
 				63AD5C2823056863006B3308 /* TKMBasicModelItem.m in Sources */,
+				631CAD70234B3B8E008CEA73 /* LevelTimeRemainingCell.swift in Sources */,
 				63AD5C2A23056863006B3308 /* NSString+MD5.m in Sources */,
 				63AD5C2F23056863006B3308 /* TKMKanaInput.m in Sources */,
 				63AD5C3323056863006B3308 /* ReviewViewController.mm in Sources */,

@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN;
 
 // Returns the minimum time it would take to get an item at the given level and
 // SRS stage up to the Guru level.
-int TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage);
+NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage);
 
 @interface TKMSubjectModelView : TKMModelCell
 
@@ -35,21 +35,22 @@ int TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage);
 
 /** Used for review summary.  Shows the meaning or reading in bold if they were wrong. */
 - (instancetype)initWithSubject:(TKMSubject *)subject
-                       delegate:(id<TKMSubjectDelegate>)delegate
+                       delegate:(nullable id<TKMSubjectDelegate>)delegate
                    readingWrong:(bool)readingWrong
                    meaningWrong:(bool)meaningWrong NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
                      assignment:(TKMAssignment *)assignment
-                       delegate:(id<TKMSubjectDelegate>)delegate;
+                       delegate:(nullable id<TKMSubjectDelegate>)delegate;
 
-- (instancetype)initWithSubject:(TKMSubject *)subject delegate:(id<TKMSubjectDelegate>)delegate;
+- (instancetype)initWithSubject:(TKMSubject *)subject
+                       delegate:(nullable id<TKMSubjectDelegate>)delegate;
 
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic, copy) TKMSubject *subject;
 @property(nonatomic) TKMAssignment *assignment;
-@property(nonatomic, weak) id<TKMSubjectDelegate> delegate;
+@property(nonatomic, nullable, weak) id<TKMSubjectDelegate> delegate;
 @property(nonatomic) bool readingWrong;
 @property(nonatomic) bool meaningWrong;
 @property(nonatomic) bool showLevelNumber;
@@ -65,13 +66,13 @@ int TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage);
 
 - (instancetype)initWithSubjects:(GPBInt32Array *)subjects
                       dataLoader:(DataLoader *)dataLoader
-                        delegate:(id<TKMSubjectChipDelegate>)delegate NS_DESIGNATED_INITIALIZER;
+                        delegate:(nullable id<TKMSubjectChipDelegate>)delegate NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic, copy) GPBInt32Array *subjects;
 @property(nonatomic) DataLoader *dataLoader;
-@property(nonatomic, weak) id<TKMSubjectChipDelegate> delegate;
+@property(nonatomic, nullable, weak) id<TKMSubjectChipDelegate> delegate;
 
 @end
 
