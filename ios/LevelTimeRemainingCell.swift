@@ -25,13 +25,10 @@ class LevelTimeRemainingCell: UITableViewCell {
 
   @objc
   func update(_ assignments: [TKMAssignment]) {
-    var guruDate: Date?
+    var guruDates = [Date]()
 
     for assignment in assignments {
-      if assignment.hasPassedAt {
-        continue
-      }
-      if assignment.subjectType == TKMSubject_Type.vocabulary {
+      if assignment.subjectType != TKMSubject_Type.kanji {
         continue
       }
 
@@ -52,15 +49,17 @@ class LevelTimeRemainingCell: UITableViewCell {
       guard let subject = services!.dataLoader.load(subjectID: Int(assignment.subjectId)) else {
         continue
       }
-      let item = TKMSubjectModelItem(subject: subject, assignment: assignment, delegate: nil)
 
-      let itemDate = item.guruDate()
-      if guruDate == nil || itemDate > guruDate! {
-        guruDate = itemDate
-      }
+      guruDates.append(assignment.guruDate(for: subject))
     }
 
-    setRemaining(guruDate!, isEstimate: false)
+    // Sort the list of dates and remove the most distant 10%.
+    guruDates.sort()
+    guruDates.removeLast(Int(Double(guruDates.count) * 0.1))
+
+    if let lastDate = guruDates.last {
+      setRemaining(lastDate, isEstimate: false)
+    }
   }
 
   private func setRemaining(_ finish: Date, isEstimate: Bool) {

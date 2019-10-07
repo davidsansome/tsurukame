@@ -17,6 +17,8 @@
 #import "UserDefaults.h"
 #import "Wanikani+Convenience.h"
 
+static const int kGuruStage = 5;
+
 NSString *TKMSubjectTypeName(TKMSubject_Type subjectType) {
   switch (subjectType) {
     case TKMSubject_Type_Radical:
@@ -115,6 +117,24 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
       return @"Burned";
   }
   return nil;
+}
+
+NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
+  const bool isAccelerated = itemLevel <= 2;
+
+  int hours = 0;
+  // From https://docs.api.wanikani.com/20170710/#additional-information
+  switch (srsStage) {
+    case 1:
+      hours += (isAccelerated ? 2 : 4);
+    case 2:
+      hours += (isAccelerated ? 4 : 8);
+    case 3:
+      hours += (isAccelerated ? 8 : 23);
+    case 4:
+      hours += (isAccelerated ? 23 : 47);
+  }
+  return hours * 60 * 60;
 }
 
 @implementation TKMSubject (Convenience)
@@ -360,6 +380,43 @@ NSString *TKMDetailedSRSStageName(int srsStage) {
 
 - (NSDate *)passedAtDate {
   return [NSDate dateWithTimeIntervalSince1970:self.passedAt];
+}
+
+- (NSDate *)reviewDate {
+  if (self.isBurned || self.isLocked) {
+    return nil;
+  }
+  
+  // If it's available now, treat it like it will be reviewed this hour.
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  NSDateComponents *components = [calendar
+      components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour)
+        fromDate:[NSDate date]];
+  NSDate *reviewDate = [calendar dateFromComponents:components];
+  
+  if (!self.hasAvailableAt) {
+    return reviewDate;
+  }
+
+  // If it's not available now, treat it like it will be reviewed within the hour it comes
+  // available.
+  if ([reviewDate compare:self.availableAtDate] == NSOrderedAscending) {
+    reviewDate = self.availableAtDate;
+  }
+  return reviewDate;
+}
+
+- (NSDate *)guruDateForSubject:(TKMSubject *)subject {
+  if (self.hasPassedAt) {
+    return self.passedAtDate;
+  }
+  if (self.srsStage >= kGuruStage) {
+    return [NSDate distantPast];
+  }
+  
+  NSDate *reviewDate = [self reviewDate];
+  int guruSeconds = TKMMinimumTimeUntilGuruSeconds(subject.level, self.srsStage + 1);
+  return [reviewDate dateByAddingTimeInterval:guruSeconds];
 }
 
 @end

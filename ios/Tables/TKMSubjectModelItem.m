@@ -20,25 +20,6 @@
 
 static const CGFloat kJapaneseTextImageSize = 26.f;
 static const CGFloat kFontSize = 14.f;
-static const int kGuruStage = 5;
-
-NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
-  const bool isAccelerated = itemLevel <= 2;
-
-  int hours = 0;
-  // From https://docs.api.wanikani.com/20170710/#additional-information
-  switch (srsStage) {
-    case 1:
-      hours += (isAccelerated ? 2 : 4);
-    case 2:
-      hours += (isAccelerated ? 4 : 8);
-    case 3:
-      hours += (isAccelerated ? 8 : 23);
-    case 4:
-      hours += (isAccelerated ? 23 : 47);
-  }
-  return hours * 60 * 60;
-}
 
 @interface TKMSubjectModelView ()
 @property(weak, nonatomic) IBOutlet UILabel *levelLabel;
@@ -86,42 +67,6 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   return @"TKMSubjectModelItem";
 }
 
-- (NSDate *)reviewDate {
-  // If it's available in a lesson, assume it will be quizzed this hour.
-  if (!_assignment.hasAvailableAt) {
-    return [NSDate date];
-  }
-
-  // If it's available now, treat it like it will be reviewed this hour.
-  NSCalendar *calendar = [NSCalendar currentCalendar];
-  NSDateComponents *components = [calendar
-      components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour)
-        fromDate:[NSDate date]];
-  NSDate *reviewDate = [calendar dateFromComponents:components];
-
-  // If it's not available now, treat it like it will be reviewed within the hour it comes
-  // available.
-  if ([reviewDate compare:_assignment.availableAtDate] == NSOrderedAscending) {
-    reviewDate = _assignment.availableAtDate;
-  }
-
-  return reviewDate;
-}
-
-- (NSDate *)guruDate {
-  if (_assignment.hasPassedAt) {
-    return _assignment.passedAtDate;
-  }
-
-  if (_assignment.srsStage >= kGuruStage) {
-    return [NSDate distantPast];
-  }
-
-  NSDate *reviewDate = [self reviewDate];
-  int guruSeconds = TKMMinimumTimeUntilGuruSeconds(_subject.level, _assignment.srsStage + 1);
-  return [reviewDate dateByAddingTimeInterval:guruSeconds];
-}
-
 @end
 
 @implementation TKMSubjectModelView {
@@ -161,12 +106,12 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   if (item.showRemaining) {
     if (item.assignment.isReviewStage) {
       [self.readingLabel setHidden:NO];
-      self.readingLabel.text = [self formattedIntervalUntil:[item reviewDate] label:@"Review"];
+      self.readingLabel.text = [self formattedIntervalUntil:item.assignment.reviewDate label:@"Review"];
       [self.meaningLabel setHidden:NO];
-      self.meaningLabel.text = [self formattedIntervalUntil:[item guruDate] label:@"Guru"];
+      self.meaningLabel.text = [self formattedIntervalUntil:[item.assignment guruDateForSubject:item.subject] label:@"Guru"];
     } else if (item.assignment.isLessonStage) {
       [self.readingLabel setHidden:NO];
-      self.readingLabel.text = [self formattedIntervalUntil:[item guruDate] label:@"Guru"];
+      self.readingLabel.text = [self formattedIntervalUntil:[item.assignment guruDateForSubject:item.subject] label:@"Guru"];
       [self.meaningLabel setHidden:YES];
     } else {
       [self.readingLabel setHidden:YES];

@@ -20,9 +20,17 @@
 extern "C" {
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *TKMSubjectTypeName(TKMSubject_Type subjectType);
 extern NSString *TKMSRSStageName(int srsStage);
 extern NSString *TKMDetailedSRSStageName(int srsStage);
+
+/**
+ * Returns the minimum time it would take to get an item at the given level and SRS stage up to the
+ * Guru level.
+ */
+NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage);
 
 typedef enum {
   TKMSRSStageNovice = 0,
@@ -78,6 +86,15 @@ extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
 @property(nonatomic, readonly) NSDate *startedAtDate;
 @property(nonatomic, readonly) NSDate *passedAtDate;
 
+/**
+ * The date the assignment can be reviewed (or now, if it's already available), rounded to the
+ * nearest hour. nil if the item is burned or locked.
+ */
+@property(nonatomic, nullable, readonly) NSDate *reviewDate;
+
+/** The earliest date possible to get this item to Guru level. */
+- (NSDate *)guruDateForSubject:(TKMSubject *)subject;
+
 @end
 
 @interface TKMProgress (Convenience)
@@ -100,3 +117,5 @@ extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
 - (NSTimeInterval)timeSpentCurrent;
 
 @end
+
+NS_ASSUME_NONNULL_END
