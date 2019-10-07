@@ -843,7 +843,9 @@ class AnimationContext {
 }
 
 - (void)submit {
-  _answerField.text = [AnswerChecker normalizedString:_answerField.text taskType:_activeTaskType];
+  _answerField.text = [AnswerChecker normalizedString:_answerField.text
+                                             taskType:_activeTaskType
+                                             alphabet:_kanaInput.alphabet];
   AnswerCheckerResult result = [AnswerChecker checkAnswer:_answerField.text
                                                   subject:_activeSubject
                                            studyMaterials:_activeStudyMaterials

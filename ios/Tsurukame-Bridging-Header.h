@@ -19,6 +19,7 @@
 #import "NSString+LevenshteinDistance.h"
 #import "ReviewItem.h"
 #import "TKMFontLoader.h"
+#import "TKMKanaInput.h"
 #import "TKMServices.h"
 #import "TKMSubjectModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"

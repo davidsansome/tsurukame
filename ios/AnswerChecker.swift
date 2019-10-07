@@ -94,7 +94,8 @@ import Foundation
     return text.applyingTransform(StringTransform.hiraganaToKatakana, reverse: true)!
   }
 
-  @objc class func normalizedString(_ text: String, taskType: TKMTaskType) -> String {
+  @objc class func normalizedString(_ text: String, taskType: TKMTaskType,
+                                    alphabet: TKMAlphabet = TKMAlphabet.hiragana) -> String {
     var s =
       text.trimmingCharacters(in: CharacterSet.whitespaces)
       .lowercased()
@@ -103,7 +104,7 @@ import Foundation
       .replacingOccurrences(of: "'", with: "")
       .replacingOccurrences(of: "/", with: "")
     if taskType == TKMTaskType.reading {
-      s = s.replacingOccurrences(of: "n", with: "ん")
+      s = s.replacingOccurrences(of: "n", with: alphabet == TKMAlphabet.hiragana ? "ん" : "ン")
       s = s.replacingOccurrences(of: " ", with: "")
     }
     return s
