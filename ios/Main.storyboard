@@ -655,9 +655,9 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tcr-27-sa4">
-                                <rect key="frame" x="0.0" y="0.0" width="70" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="70" height="56"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <inset key="contentEdgeInsets" minX="6" minY="10" maxX="6" maxY="10"/>
+                                <inset key="contentEdgeInsets" minX="6" minY="16" maxX="6" maxY="16"/>
                                 <state key="normal" title="Back" image="back">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
