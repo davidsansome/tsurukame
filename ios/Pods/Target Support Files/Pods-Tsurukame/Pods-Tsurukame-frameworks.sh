@@ -167,6 +167,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Light-Untar/Light_Untar.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/MMDrawerController/MMDrawerController.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Protobuf/protobuf.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Charts/Charts.framework"
@@ -175,6 +176,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Light-Untar/Light_Untar.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/MMDrawerController/MMDrawerController.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Protobuf/protobuf.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

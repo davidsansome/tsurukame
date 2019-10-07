@@ -57,7 +57,6 @@
 		63AD5B5F23056863006B3308 /* UpcomingReviewsChartController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */; };
 		63AD5B6323056863006B3308 /* Wanikani.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63AD5B6823056863006B3308 /* TKMListSeparatorItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */; };
-		63AD5B7223056863006B3308 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB0C1FD7FA5D00E09DA1 /* Reachability.m */; };
 		63AD5B7E23056863006B3308 /* TKMServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA79721904D520058E885 /* TKMServices.m */; };
 		63AD5B7F23056863006B3308 /* SubjectDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */; };
 		63AD5B8723056863006B3308 /* TKMLessonBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */; };
@@ -146,7 +145,6 @@
 		63CAAB031FCD755300E09DA1 /* Wanikani+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB011FCD755300E09DA1 /* Wanikani+Convenience.m */; };
 		63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */; };
 		63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
-		63CAAB0E1FD7FA5E00E09DA1 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB0C1FD7FA5D00E09DA1 /* Reachability.m */; };
 		63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */; };
 		63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */; };
 		63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766221F47100002A417B /* TKMReviewContainerViewController.m */; };
@@ -302,8 +300,6 @@
 		63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+LevenshteinDistance.h"; sourceTree = "<group>"; };
 		63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+LevenshteinDistance.m"; sourceTree = "<group>"; };
 		63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		63CAAB0C1FD7FA5D00E09DA1 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		63CAAB0D1FD7FA5D00E09DA1 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		63CAAB121FD7FEA400E09DA1 /* LocalCachingClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalCachingClient.h; sourceTree = "<group>"; };
 		63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LocalCachingClient.mm; sourceTree = "<group>"; };
@@ -457,8 +453,6 @@
 				6319C99F204015B900C31F87 /* NSString+MD5.m */,
 				684AE501E6BF8ED5D65DA298 /* Pods */,
 				63CAAAD61FC6E0BF00E09DA1 /* proto */,
-				63CAAB0D1FD7FA5D00E09DA1 /* Reachability.h */,
-				63CAAB0C1FD7FA5D00E09DA1 /* Reachability.m */,
 				63CAAAFB1FCD693500E09DA1 /* ReviewItem.h */,
 				63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */,
 				633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */,
@@ -905,6 +899,7 @@
 				"${BUILT_PRODUCTS_DIR}/Light-Untar/Light_Untar.framework",
 				"${BUILT_PRODUCTS_DIR}/MMDrawerController/MMDrawerController.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -914,6 +909,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Light_Untar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMDrawerController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1019,7 +1015,6 @@
 				6319C9A320426EBB00C31F87 /* UpcomingReviewsChartController.m in Sources */,
 				63CAAAD91FC6E0CB00E09DA1 /* Wanikani.pbobjc.m in Sources */,
 				63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */,
-				63CAAB0E1FD7FA5E00E09DA1 /* Reachability.m in Sources */,
 				63BFA79821904D520058E885 /* TKMServices.m in Sources */,
 				63B1DE411FE7D81600FAB9C2 /* SubjectDetailsViewController.m in Sources */,
 				63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */,
@@ -1089,7 +1084,6 @@
 				63AD5B5F23056863006B3308 /* UpcomingReviewsChartController.m in Sources */,
 				63AD5B6323056863006B3308 /* Wanikani.pbobjc.m in Sources */,
 				63AD5B6823056863006B3308 /* TKMListSeparatorItem.m in Sources */,
-				63AD5B7223056863006B3308 /* Reachability.m in Sources */,
 				63AD5B7E23056863006B3308 /* TKMServices.m in Sources */,
 				63AD5B7F23056863006B3308 /* SubjectDetailsViewController.m in Sources */,
 				63AD5B8723056863006B3308 /* TKMLessonBatchSizeViewController.m in Sources */,
