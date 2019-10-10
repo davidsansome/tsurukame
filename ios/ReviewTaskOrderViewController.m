@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "ReviewTaskOrderViewController.h"
-#import "UserDefaults.h"
+#import "Settings.h"
 
 @interface ReviewTaskOrderViewController ()
 @end
@@ -23,7 +23,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  NSInteger selectedRow = UserDefaults.meaningFirst ? 0 : 1;
+  NSInteger selectedRow = Settings.meaningFirst ? 0 : 1;
   if (selectedRow < 0 || selectedRow >= [self.tableView numberOfRowsInSection:0]) {
     selectedRow = 0;
   }
@@ -34,7 +34,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  UserDefaults.meaningFirst = indexPath.row == 0;
+  Settings.meaningFirst = indexPath.row == 0;
   [self.navigationController popViewControllerAnimated:YES];
 }
 

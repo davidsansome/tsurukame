@@ -16,10 +16,10 @@
 
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
+#import "Settings.h"
 #import "TKMFontsViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
-#import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 
 #import <UserNotifications/UserNotifications.h>
@@ -58,13 +58,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                      title:@"Notify for all available reviews"
                                                   subtitle:nil
-                                                        on:UserDefaults.notificationsAllReviews
+                                                        on:Settings.notificationsAllReviews
                                                     target:self
                                                     action:@selector(allReviewsSwitchChanged:)]];
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                      title:@"Badge the app icon"
                                                   subtitle:nil
-                                                        on:UserDefaults.notificationsBadging
+                                                        on:Settings.notificationsBadging
                                                     target:self
                                                     action:@selector(badgingSwitchChanged:)]];
 
@@ -73,7 +73,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
       addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                   title:@"Prioritize current level"
                                                subtitle:@"Teach items from the current level first"
-                                                     on:UserDefaults.prioritizeCurrentLevel
+                                                     on:Settings.prioritizeCurrentLevel
                                                  target:self
                                                  action:@selector(prioritizeCurrentLevelChanged:)]];
   [model
@@ -103,7 +103,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                      initWithStyle:UITableViewCellStyleSubtitle
                              title:@"Back-to-back"
                           subtitle:@"Group Meaning and Reading together"
-                                on:UserDefaults.groupMeaningReading
+                                on:Settings.groupMeaningReading
                             target:self
                             action:@selector(groupMeaningReadingSwitchChanged:)]];
   _groupMeaningReadingIndexPath = [model
@@ -113,12 +113,12 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                          accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                 target:self
                                                 action:@selector(didTapTaskOrder:)]
-       hidden:!UserDefaults.groupMeaningReading];
+       hidden:!Settings.groupMeaningReading];
   [model addItem:[[TKMSwitchModelItem alloc]
                      initWithStyle:UITableViewCellStyleDefault
                              title:@"Reveal answer automatically"
                           subtitle:nil
-                                on:UserDefaults.showAnswerImmediately
+                                on:Settings.showAnswerImmediately
                             target:self
                             action:@selector(showAnswerImmediatelySwitchChanged:)]];
   [model
@@ -131,21 +131,21 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                      title:@"Allow cheating"
                                                   subtitle:@"Ignore Typos and Add Synonym"
-                                                        on:UserDefaults.enableCheats
+                                                        on:Settings.enableCheats
                                                     target:self
                                                     action:@selector(enableCheatsSwitchChanged:)]];
   [model
       addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                   title:@"Show old mnemonics"
                                                subtitle:@"Display old mnemonics alongside new ones"
-                                                     on:UserDefaults.showOldMnemonic
+                                                     on:Settings.showOldMnemonic
                                                  target:self
                                                  action:@selector(showOldMnemonicChanged:)]];
   [model
       addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                   title:@"Use katakana for onyomi readings"
                                                subtitle:nil
-                                                     on:UserDefaults.useKatakanaForOnyomi
+                                                     on:Settings.useKatakanaForOnyomi
                                                  target:self
                                                  action:@selector(useKatakanaForOnyomiChanged:)]];
 
@@ -154,7 +154,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                      initWithStyle:UITableViewCellStyleSubtitle
                              title:@"Play audio automatically"
                           subtitle:@"When you answer correctly"
-                                on:UserDefaults.playAudioAutomatically
+                                on:Settings.playAudioAutomatically
                             target:self
                             action:@selector(playAudioAutomaticallySwitchChanged:)]];
   [model
@@ -170,21 +170,21 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                      initWithStyle:UITableViewCellStyleDefault
                              title:@"Particle explosion"
                           subtitle:nil
-                                on:UserDefaults.animateParticleExplosion
+                                on:Settings.animateParticleExplosion
                             target:self
                             action:@selector(animateParticleExplosionSwitchChanged:)]];
   [model addItem:[[TKMSwitchModelItem alloc]
                      initWithStyle:UITableViewCellStyleDefault
                              title:@"Level up popup"
                           subtitle:nil
-                                on:UserDefaults.animateLevelUpPopup
+                                on:Settings.animateLevelUpPopup
                             target:self
                             action:@selector(animateLevelUpPopupSwitchChanged:)]];
   [model
       addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                   title:@"+1"
                                                subtitle:nil
-                                                     on:UserDefaults.animatePlusOne
+                                                     on:Settings.animatePlusOne
                                                  target:self
                                                  action:@selector(animatePlusOneSwitchChanged:)]];
 
@@ -213,19 +213,19 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (NSString *)lessonOrderValueText {
   NSMutableArray<NSString *> *lessonOrderText = [NSMutableArray array];
-  for (int i = 0; i < UserDefaults.lessonOrder.count; i++) {
-    TKMSubject_Type type = [UserDefaults.lessonOrder objectAtIndex:i].intValue;
+  for (int i = 0; i < Settings.lessonOrder.count; i++) {
+    TKMSubject_Type type = [Settings.lessonOrder objectAtIndex:i].intValue;
     [lessonOrderText addObject:TKMSubjectTypeName(type)];
   }
   return [lessonOrderText componentsJoinedByString:@", "];
 }
 
 - (NSString *)lessonBatchSizeText {
-  return [NSString stringWithFormat:@"%d", UserDefaults.lessonBatchSize];
+  return [NSString stringWithFormat:@"%d", Settings.lessonBatchSize];
 }
 
 - (NSString *)reviewOrderValueText {
-  switch (UserDefaults.reviewOrder) {
+  switch (Settings.reviewOrder) {
     case ReviewOrder_Random:
       return @"Random";
     case ReviewOrder_BySRSStage:
@@ -239,7 +239,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (NSString *)taskOrderValueText {
-  if (UserDefaults.meaningFirst) {
+  if (Settings.meaningFirst) {
     return @"Meaning first";
   } else {
     return @"Reading first";
@@ -254,57 +254,57 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (void)animateParticleExplosionSwitchChanged:(UISwitch *)switchView {
-  UserDefaults.animateParticleExplosion = switchView.on;
+  Settings.animateParticleExplosion = switchView.on;
 }
 
 - (void)animateLevelUpPopupSwitchChanged:(UISwitch *)switchView {
-  UserDefaults.animateLevelUpPopup = switchView.on;
+  Settings.animateLevelUpPopup = switchView.on;
 }
 
 - (void)animatePlusOneSwitchChanged:(UISwitch *)switchView {
-  UserDefaults.animatePlusOne = switchView.on;
+  Settings.animatePlusOne = switchView.on;
 }
 
 - (void)prioritizeCurrentLevelChanged:(UISwitch *)switchView {
-  UserDefaults.prioritizeCurrentLevel = switchView.on;
+  Settings.prioritizeCurrentLevel = switchView.on;
 }
 
 - (void)groupMeaningReadingSwitchChanged:(UISwitch *)switchView {
-  UserDefaults.groupMeaningReading = switchView.on;
+  Settings.groupMeaningReading = switchView.on;
   [_model setIndexPath:_groupMeaningReadingIndexPath isHidden:!switchView.on];
 }
 
 - (void)showAnswerImmediatelySwitchChanged:(UISwitch *)switchView {
-  UserDefaults.showAnswerImmediately = switchView.on;
+  Settings.showAnswerImmediately = switchView.on;
 }
 
 - (void)enableCheatsSwitchChanged:(UISwitch *)switchView {
-  UserDefaults.enableCheats = switchView.on;
+  Settings.enableCheats = switchView.on;
 }
 
 - (void)showOldMnemonicChanged:(UISwitch *)switchView {
-  UserDefaults.showOldMnemonic = switchView.on;
+  Settings.showOldMnemonic = switchView.on;
 }
 
 - (void)useKatakanaForOnyomiChanged:(UISwitch *)switchView {
-  UserDefaults.useKatakanaForOnyomi = switchView.on;
+  Settings.useKatakanaForOnyomi = switchView.on;
 }
 
 - (void)playAudioAutomaticallySwitchChanged:(UISwitch *)switchView {
-  UserDefaults.playAudioAutomatically = switchView.on;
+  Settings.playAudioAutomatically = switchView.on;
 }
 
 - (void)allReviewsSwitchChanged:(UISwitch *)switchView {
   [self promptForNotifications:switchView
                        handler:^(BOOL granted) {
-                         UserDefaults.notificationsAllReviews = granted;
+                         Settings.notificationsAllReviews = granted;
                        }];
 }
 
 - (void)badgingSwitchChanged:(UISwitch *)switchView {
   [self promptForNotifications:switchView
                        handler:^(BOOL granted) {
-                         UserDefaults.notificationsBadging = granted;
+                         Settings.notificationsBadging = granted;
                        }];
 }
 

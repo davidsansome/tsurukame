@@ -22,6 +22,7 @@
 #import "NSString+MD5.h"
 #import "ReviewItem.h"
 #import "SearchResultViewController.h"
+#import "Settings.h"
 #import "SettingsViewController.h"
 #import "Style.h"
 #import "SubjectCatalogueViewController.h"
@@ -31,7 +32,6 @@
 #import "TKMServices.h"
 #import "Tsurukame-Swift.h"
 #import "UpcomingReviewsChartController.h"
-#import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 
 #import <Haneke/Haneke.h>
@@ -293,8 +293,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
     }
 
     items = [items sortedArrayUsingSelector:@selector(compareForLessons:)];
-    if (items.count > UserDefaults.lessonBatchSize) {
-      items = [items subarrayWithRange:NSMakeRange(0, UserDefaults.lessonBatchSize)];
+    if (items.count > Settings.lessonBatchSize) {
+      items = [items subarrayWithRange:NSMakeRange(0, Settings.lessonBatchSize)];
     }
 
     LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;
@@ -423,7 +423,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   TKMUser *user = [_services.localCachingClient getUserInfo];
   int guruKanji = [_services.localCachingClient getGuruKanjiCount];
 
-  NSString *email = [UserDefaults userEmailAddress];
+  NSString *email = [Settings userEmailAddress];
   if (email.length) {
     NSURL *imageURL = UserProfileImageURL(email);
     [_userImageView hnk_setImageFromURL:imageURL];
@@ -481,8 +481,8 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)loginComplete {
-  [_services.localCachingClient.client updateApiToken:UserDefaults.userApiToken
-                                               cookie:UserDefaults.userCookie];
+  [_services.localCachingClient.client updateApiToken:Settings.userApiToken
+                                               cookie:Settings.userCookie];
   [self.navigationController popViewControllerAnimated:YES];
   _isShowingUnauthorizedAlert = NO;
 }

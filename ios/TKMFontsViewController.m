@@ -13,12 +13,12 @@
 // limitations under the License.
 
 #import "TKMFontsViewController.h"
+#import "Settings.h"
 #import "TKMFontLoader.h"
 #import "TKMServices.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"
-#import "UserDefaults.h"
 
 static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
 
@@ -64,7 +64,7 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
     } else if (font.available) {
       item.previewText = kTKMFontPreviewText;
       item.previewFontName = font.fontName;
-      if ([UserDefaults.selectedFonts containsObject:font.fileName]) {
+      if ([Settings.selectedFonts containsObject:font.fileName]) {
         item.state = TKMDownloadModelItemInstalledSelected;
       } else {
         item.state = TKMDownloadModelItemInstalledNotSelected;
@@ -128,13 +128,13 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
 }
 
 - (void)toggleItem:(NSString *)filename selected:(BOOL)selected {
-  NSMutableSet<NSString *> *selectedFonts = [NSMutableSet setWithSet:UserDefaults.selectedFonts];
+  NSMutableSet<NSString *> *selectedFonts = [NSMutableSet setWithSet:Settings.selectedFonts];
   if (selected) {
     [selectedFonts addObject:filename];
   } else {
     [selectedFonts removeObject:filename];
   }
-  UserDefaults.selectedFonts = selectedFonts;
+  Settings.selectedFonts = selectedFonts;
 }
 
 - (void)didTapDeleteAllFonts:(id)sender {
@@ -160,7 +160,7 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
                             title:@"Error deleting files"
                           message:error.localizedDescription];
   } else {
-    UserDefaults.selectedFonts = [NSSet set];
+    Settings.selectedFonts = [NSSet set];
     for (TKMFont *font in _services.fontLoader.allFonts) {
       [font didDelete];
     }

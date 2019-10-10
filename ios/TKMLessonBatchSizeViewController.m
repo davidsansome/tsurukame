@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "TKMLessonBatchSizeViewController.h"
-#import "UserDefaults.h"
+#import "Settings.h"
 
 @interface TKMLessonBatchSizeViewController ()
 
@@ -24,7 +24,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  NSInteger selectedRow = UserDefaults.lessonBatchSize - 3;
+  NSInteger selectedRow = Settings.lessonBatchSize - 3;
   if (selectedRow < 0 || selectedRow >= [self.tableView numberOfRowsInSection:0]) {
     selectedRow = 0;
   }
@@ -35,7 +35,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  UserDefaults.lessonBatchSize = (int)indexPath.row + 3;
+  Settings.lessonBatchSize = (int)indexPath.row + 3;
   [self.navigationController popViewControllerAnimated:YES];
 }
 

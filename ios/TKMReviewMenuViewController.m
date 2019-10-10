@@ -14,9 +14,9 @@
 
 #import "TKMReviewMenuViewController.h"
 
+#import "Settings.h"
 #import "Tables/TKMCheckmarkModelItem.h"
 #import "Tables/TKMTableModel.h"
-#import "UserDefaults.h"
 
 @interface TKMReviewMenuViewController () <UITableViewDelegate>
 
@@ -38,21 +38,21 @@
       addItem:[[TKMCheckmarkModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                      title:@"Allow cheating"
                                                   subtitle:nil
-                                                        on:UserDefaults.enableCheats
+                                                        on:Settings.enableCheats
                                                     target:self
                                                     action:@selector(enableCheatsSwitchChanged:)]];
   [model addItem:[[TKMCheckmarkModelItem alloc]
                      initWithStyle:UITableViewCellStyleDefault
                              title:@"Autoreveal answers"
                           subtitle:nil
-                                on:UserDefaults.showAnswerImmediately
+                                on:Settings.showAnswerImmediately
                             target:self
                             action:@selector(showAnswerImmediatelySwitchChanged:)]];
   [model addItem:[[TKMCheckmarkModelItem alloc]
                      initWithStyle:UITableViewCellStyleDefault
                              title:@"Autoplay audio"
                           subtitle:nil
-                                on:UserDefaults.playAudioAutomatically
+                                on:Settings.playAudioAutomatically
                             target:self
                             action:@selector(playAudioAutomaticallySwitchChanged:)]];
 
@@ -120,15 +120,15 @@
 #pragma mark - Handlers.
 
 - (void)enableCheatsSwitchChanged:(TKMCheckmarkModelItem *)item {
-  UserDefaults.enableCheats = item.on;
+  Settings.enableCheats = item.on;
 }
 
 - (void)showAnswerImmediatelySwitchChanged:(TKMCheckmarkModelItem *)item {
-  UserDefaults.showAnswerImmediately = item.on;
+  Settings.showAnswerImmediately = item.on;
 }
 
 - (void)playAudioAutomaticallySwitchChanged:(TKMCheckmarkModelItem *)item {
-  UserDefaults.playAudioAutomatically = item.on;
+  Settings.playAudioAutomatically = item.on;
 }
 
 - (void)endSession:(TKMBasicModelItem *)item {

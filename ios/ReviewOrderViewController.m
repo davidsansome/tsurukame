@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "ReviewOrderViewController.h"
-#import "UserDefaults.h"
+#import "Settings.h"
 
 @interface ReviewOrderViewController ()
 @end
@@ -23,7 +23,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  NSInteger selectedRow = UserDefaults.reviewOrder - 1;
+  NSInteger selectedRow = Settings.reviewOrder - 1;
   if (selectedRow < 0 || selectedRow >= [self.tableView numberOfRowsInSection:0]) {
     selectedRow = 0;
   }
@@ -34,7 +34,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  UserDefaults.reviewOrder = indexPath.row + 1;
+  Settings.reviewOrder = indexPath.row + 1;
   [self.navigationController popViewControllerAnimated:YES];
 }
 

@@ -16,10 +16,10 @@
 
 #import "LocalCachingClient.h"
 #import "ReviewItem.h"
-#import "ReviewViewController.h"
+#import "Settings.h"
 #import "TKMReviewMenuViewController.h"
 #import "TKMServices.h"
-#import "UserDefaults.h"
+#import "Tsurukame-Swift.h"
 
 #import <MMDrawerController/MMDrawerVisualState.h>
 
@@ -73,8 +73,8 @@
 
 #pragma mark - ReviewViewControllerDelegate
 
-- (bool)reviewViewControllerAllowsCheatsFor:(ReviewItem *)reviewItem {
-  return UserDefaults.enableCheats;
+- (bool)reviewViewControllerAllowsCheatsForReviewItem:(ReviewItem *)reviewItem {
+  return Settings.enableCheats;
 }
 
 - (void)reviewViewController:(ReviewViewController *)reviewViewController
@@ -119,7 +119,7 @@
 
 - (int)wrapUpCount {
   if (_reviewVC.wrappingUp) {
-    return _reviewVC.activeQueueLength;
+    return (int)_reviewVC.activeQueueLength;
   }
   return 0;
 }

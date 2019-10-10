@@ -17,7 +17,6 @@
 #import "LessonsPageControl.h"
 #import "LocalCachingClient.h"
 #import "ReviewItem.h"
-#import "ReviewViewController.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMServices.h"
 #import "Tsurukame-Swift.h"
@@ -188,7 +187,7 @@
 
 #pragma mark - ReviewViewControllerDelegate
 
-- (bool)reviewViewControllerAllowsCheatsFor:(ReviewItem *)reviewItem {
+- (bool)reviewViewControllerAllowsCheatsForReviewItem:(ReviewItem *)reviewItem {
   return false;
 }
 

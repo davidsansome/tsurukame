@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import "ReviewItem.h"
+#import "Settings.h"
 #import "Tsurukame-Swift.h"
-#import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 
 @implementation ReviewItem
@@ -50,8 +50,8 @@
 }
 
 - (NSUInteger)getSubjectTypeIndex:(TKMSubject_Type)type {
-  for (int i = 0; i < UserDefaults.lessonOrder.count; i++) {
-    if ([UserDefaults.lessonOrder objectAtIndex:i].intValue == type) {
+  for (int i = 0; i < Settings.lessonOrder.count; i++) {
+    if ([Settings.lessonOrder objectAtIndex:i].intValue == type) {
       return i;
     }
   }
@@ -70,12 +70,12 @@
 
 - (NSComparisonResult)compareForLessons:(ReviewItem *)other {
   if (self.assignment.level < other.assignment.level) {
-    return UserDefaults.prioritizeCurrentLevel ? NSOrderedDescending : NSOrderedAscending;
+    return Settings.prioritizeCurrentLevel ? NSOrderedDescending : NSOrderedAscending;
   } else if (self.assignment.level > other.assignment.level) {
-    return UserDefaults.prioritizeCurrentLevel ? NSOrderedAscending : NSOrderedDescending;
+    return Settings.prioritizeCurrentLevel ? NSOrderedAscending : NSOrderedDescending;
   }
 
-  if ([UserDefaults.lessonOrder count]) {
+  if ([Settings.lessonOrder count]) {
     NSUInteger selfIndex = [self getSubjectTypeIndex:self.assignment.subjectType];
     NSUInteger otherIndex = [self getSubjectTypeIndex:other.assignment.subjectType];
     if (selfIndex < otherIndex) {

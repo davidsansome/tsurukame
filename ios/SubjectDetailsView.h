@@ -27,7 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
                 showHints:(BOOL)showHints
           subjectDelegate:(id<TKMSubjectDelegate>)subjectDelegate;
 
-- (void)updateWithSubject:(TKMSubject *)subject studyMaterials:(TKMStudyMaterials *)studyMaterials;
+- (void)updateWithSubject:(TKMSubject *)subject
+           studyMaterials:(nullable TKMStudyMaterials *)studyMaterials;
 - (void)playAudio;
 - (void)deselectLastSubjectChipTapped;
 

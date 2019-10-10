@@ -14,7 +14,7 @@
 
 #import "SuccessAnimation.h"
 
-#import "UserDefaults.h"
+#import "Settings.h"
 #import "proto/Wanikani+Convenience.h"
 
 static CGFloat RandFloat(CGFloat min, CGFloat max) {
@@ -250,11 +250,11 @@ void RunSuccessAnimation(UIView *answerField,
                          bool isSubjectFinished,
                          bool didLevelUp,
                          int newSrsStage) {
-  if (UserDefaults.animateParticleExplosion) {
+  if (Settings.animateParticleExplosion) {
     CreateExplosion(answerField);
   }
 
-  if (isSubjectFinished && UserDefaults.animatePlusOne) {
+  if (isSubjectFinished && Settings.animatePlusOne) {
     CreatePlusOneText(doneLabel,
                       @"+1",
                       [UIFont boldSystemFontOfSize:20.0],
@@ -262,7 +262,7 @@ void RunSuccessAnimation(UIView *answerField,
                       1.5);  // Duration.
   }
 
-  if (isSubjectFinished && didLevelUp && UserDefaults.animateLevelUpPopup) {
+  if (isSubjectFinished && didLevelUp && Settings.animateLevelUpPopup) {
     UIColor *srsLevelColor;
     switch (newSrsStage) {
       case 2:

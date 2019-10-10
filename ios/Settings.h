@@ -32,7 +32,7 @@ typedef enum : NSUInteger {
   ReviewOrder_LowestLevelFirst = 4,
 } ReviewOrder;
 
-@interface UserDefaults : NSObject
+@interface Settings : NSObject
 
 + (void)initializeDefaultsOnStartup;
 

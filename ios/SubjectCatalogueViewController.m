@@ -13,10 +13,10 @@
 // limitations under the License.
 
 #import "SubjectCatalogueViewController.h"
+#import "Settings.h"
 #import "SubjectsByLevelViewController.h"
 #import "TKMServices.h"
 #import "Tsurukame-Swift.h"
-#import "UserDefaults.h"
 
 @interface SubjectCatalogueViewController () <UIPageViewControllerDataSource,
                                               UIPageViewControllerDelegate>
@@ -31,7 +31,7 @@
 
 - (void)setupWithServices:(TKMServices *)services level:(int)level {
   _services = services;
-  _level = MIN(level, _services.dataLoader.maxLevelGrantedBySubscription);
+  _level = (int)MIN(level, _services.dataLoader.maxLevelGrantedBySubscription);
 }
 
 - (void)viewDidLoad {
@@ -40,7 +40,7 @@
   self.dataSource = self;
 
   _answerSwitch = [[UISwitch alloc] init];
-  _answerSwitch.on = UserDefaults.subjectCatalogueViewShowAnswers;
+  _answerSwitch.on = Settings.subjectCatalogueViewShowAnswers;
   [_answerSwitch addTarget:self
                     action:@selector(answerSwitchChanged:)
           forControlEvents:UIControlEventValueChanged];
@@ -62,7 +62,7 @@
 
 - (void)answerSwitchChanged:(UISwitch *)sender {
   SubjectsByLevelViewController *vc = self.viewControllers.firstObject;
-  UserDefaults.subjectCatalogueViewShowAnswers = self.showAnswers;
+  Settings.subjectCatalogueViewShowAnswers = self.showAnswers;
   [vc setShowAnswers:self.showAnswers animated:true];
 }
 

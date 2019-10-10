@@ -15,8 +15,8 @@
 #import "LoginViewController.h"
 
 #import "Client.h"
+#import "Settings.h"
 #import "Style.h"
-#import "UserDefaults.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -112,7 +112,7 @@ static NSString *const kPrivacyPolicyURL =
     return;
   }
 
-  UserDefaults.userCookie = cookie;
+  Settings.userCookie = cookie;
 
   __weak LoginViewController *weakSelf = self;
   [Client getApiTokenForCookie:cookie
@@ -132,8 +132,8 @@ static NSString *const kPrivacyPolicyURL =
     return;
   }
 
-  UserDefaults.userEmailAddress = emailAddress;
-  UserDefaults.userApiToken = apiToken;
+  Settings.userEmailAddress = emailAddress;
+  Settings.userApiToken = apiToken;
 
   dispatch_async(dispatch_get_main_queue(), ^{
     [_delegate loginComplete];

@@ -16,6 +16,7 @@
 
 #import "LocalCachingClient.h"
 #import "NSMutableAttributedString+Replacements.h"
+#import "Settings.h"
 #import "Style.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMAudio.h"
@@ -27,7 +28,6 @@
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
 #import "UIColor+HexString.h"
-#import "UserDefaults.h"
 #import "proto/Wanikani+Convenience.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -71,7 +71,7 @@ static NSAttributedString *RenderMeanings(TKMSubject *subject, TKMStudyMaterials
   for (TKMMeaning *meaning in subject.meaningsArray) {
     if (meaning.type != TKMMeaning_Type_Primary && meaning.type != TKMMeaning_Type_Blacklist &&
         (meaning.type != TKMMeaning_Type_AuxiliaryWhitelist || !subject.hasRadical ||
-         UserDefaults.showOldMnemonic)) {
+         Settings.showOldMnemonic)) {
       UIFont *font = [UIFont systemFontOfSize:kFont.pointSize weight:UIFontWeightLight];
       NSDictionary<NSAttributedStringKey, id> *attributes = @{
         NSFontAttributeName : font,
@@ -314,7 +314,8 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
   [model addItem:item];
 }
 
-- (void)updateWithSubject:(TKMSubject *)subject studyMaterials:(TKMStudyMaterials *)studyMaterials {
+- (void)updateWithSubject:(TKMSubject *)subject
+           studyMaterials:(nullable TKMStudyMaterials *)studyMaterials {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self];
   _readingItem = nil;
 
@@ -324,7 +325,7 @@ static NSAttributedString *RenderReadings(NSArray<TKMReading *> *readings, bool 
     [model addSection:@"Mnemonic"];
     [self addFormattedText:subject.radical.formattedMnemonicArray isHint:false toModel:model];
 
-    if (UserDefaults.showOldMnemonic && subject.radical.formattedDeprecatedMnemonicArray_Count) {
+    if (Settings.showOldMnemonic && subject.radical.formattedDeprecatedMnemonicArray_Count) {
       [model addSection:@"Old Mnemonic"];
       [self addFormattedText:subject.radical.formattedDeprecatedMnemonicArray
                       isHint:false

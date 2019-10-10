@@ -14,7 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "UserDefaults.h"
+#import "Settings.h"
 #import "Wanikani+Convenience.h"
 
 static const int kGuruStage = 5;
@@ -215,7 +215,7 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   for (TKMMeaning *meaning in self.meaningsArray) {
     if (meaning.type != TKMMeaning_Type_Blacklist &&
         (meaning.type != TKMMeaning_Type_AuxiliaryWhitelist || !self.hasRadical ||
-         UserDefaults.showOldMnemonic)) {
+         Settings.showOldMnemonic)) {
       [strings addObject:meaning.meaning];
     }
   }
@@ -252,7 +252,7 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
 @implementation TKMReading (Convenience)
 
 - (NSString *)displayText {
-  if (self.hasType && self.type == TKMReading_Type_Onyomi && UserDefaults.useKatakanaForOnyomi) {
+  if (self.hasType && self.type == TKMReading_Type_Onyomi && Settings.useKatakanaForOnyomi) {
     return [self.reading stringByApplyingTransform:NSStringTransformHiraganaToKatakana reverse:NO];
   }
   return self.reading;

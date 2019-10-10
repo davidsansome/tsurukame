@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import "TKMKanaInput.h"
+#import "Settings.h"
 #import "TKMKanaInput+Internals.h"
-#import "UserDefaults.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

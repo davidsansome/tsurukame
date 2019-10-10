@@ -19,6 +19,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern NSString *const kTKMFontPreviewText;
 
 extern BOOL TKMFontCanRenderText(NSString *fontName, NSString *text);
@@ -49,5 +53,9 @@ extern BOOL TKMFontCanRenderText(NSString *fontName, NSString *text);
 - (UIImage *)loadScreenshot;
 
 @end
+
+#ifdef __cplusplus
+}
+#endif
 
 NS_ASSUME_NONNULL_END

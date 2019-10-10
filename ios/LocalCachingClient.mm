@@ -15,7 +15,7 @@
 #include <array>
 
 #import "LocalCachingClient.h"
-#import "UserDefaults.h"
+#import "Settings.h"
 
 #import "proto/Wanikani+Convenience.h"
 

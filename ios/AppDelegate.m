@@ -17,11 +17,10 @@
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "MainViewController.h"
-#import "ReviewViewController.h"
+#import "Settings.h"
 #import "TKMAudio.h"
 #import "TKMServices+Internals.h"
 #import "Tsurukame-Swift.h"
-#import "UserDefaults.h"
 
 #import <UserNotifications/UserNotifications.h>
 
@@ -39,7 +38,7 @@
   // Uncomment to slow the animation speed on a real device.
   // [self.window.layer setSpeed:.1f];
 
-  [UserDefaults initializeDefaultsOnStartup];
+  [Settings initializeDefaultsOnStartup];
 
   [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
 
@@ -54,7 +53,7 @@
              name:kLocalCachingClientUserInfoChangedNotification
            object:nil];
 
-  if (UserDefaults.userApiToken && UserDefaults.userCookie) {
+  if (Settings.userApiToken && Settings.userCookie) {
     [self setMainViewControllerAnimated:NO clearUserData:NO];
   } else {
     [self pushLoginViewController];
@@ -71,8 +70,8 @@
 }
 
 - (void)setMainViewControllerAnimated:(BOOL)animated clearUserData:(BOOL)clearUserData {
-  Client *client = [[Client alloc] initWithApiToken:UserDefaults.userApiToken
-                                             cookie:UserDefaults.userCookie
+  Client *client = [[Client alloc] initWithApiToken:Settings.userApiToken
+                                             cookie:Settings.userCookie
                                          dataLoader:_services.dataLoader];
 
   _services.localCachingClient = [[LocalCachingClient alloc] initWithClient:client
@@ -107,9 +106,9 @@
 }
 
 - (void)logout:(NSNotification *)notification {
-  UserDefaults.userCookie = nil;
-  UserDefaults.userApiToken = nil;
-  UserDefaults.userEmailAddress = nil;
+  Settings.userCookie = nil;
+  Settings.userApiToken = nil;
+  Settings.userEmailAddress = nil;
   [_services.localCachingClient clearAllDataAndClose];
   _services.localCachingClient = nil;
 
@@ -145,7 +144,7 @@
 }
 
 - (void)updateAppBadgeCount {
-  if (!UserDefaults.notificationsAllReviews && !UserDefaults.notificationsBadging) {
+  if (!Settings.notificationsAllReviews && !Settings.notificationsBadging) {
     return;
   }
 
@@ -177,11 +176,11 @@
       }
       NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];
       UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-      if (UserDefaults.notificationsAllReviews) {
+      if (Settings.notificationsAllReviews) {
         content.body = [NSString stringWithFormat:@"%d review%@ available", cumulativeReviews,
                                                   cumulativeReviews == 1 ? @"" : @"s"];
       }
-      if (UserDefaults.notificationsBadging) {
+      if (Settings.notificationsBadging) {
         content.badge = @(cumulativeReviews);
       }
       UNNotificationTrigger *trigger =

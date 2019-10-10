@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "UserDefaults.h"
+#import "Settings.h"
 #import "proto/Wanikani.pbobjc.h"
 
 #define DEFINE_OBJECT(type, name, setterName)                                       \
@@ -67,24 +67,24 @@
 
 @class TKMFont;
 
-@implementation UserDefaults
+@implementation Settings
 
 + (void)initializeDefaultsOnStartup {
   // lessonOrder was briefly an array of strings.  Detect this and reset it to
   // an empty array.
   // TODO: delete this after 1.11.
-  if (UserDefaults.lessonOrder.count &&
-      [UserDefaults.lessonOrder.firstObject isKindOfClass:NSString.class]) {
-    UserDefaults.lessonOrder = [NSArray array];
+  if (Settings.lessonOrder.count &&
+      [Settings.lessonOrder.firstObject isKindOfClass:NSString.class]) {
+    Settings.lessonOrder = [NSArray array];
   }
 
   // Set the default lesson order.
-  if (![UserDefaults.lessonOrder count]) {
+  if (![Settings.lessonOrder count]) {
     NSMutableArray<NSNumber *> *lessonOrder = [NSMutableArray array];
     [lessonOrder addObject:@(TKMSubject_Type_Radical)];
     [lessonOrder addObject:@(TKMSubject_Type_Kanji)];
     [lessonOrder addObject:@(TKMSubject_Type_Vocabulary)];
-    UserDefaults.lessonOrder = lessonOrder;
+    Settings.lessonOrder = lessonOrder;
   }
 }
 

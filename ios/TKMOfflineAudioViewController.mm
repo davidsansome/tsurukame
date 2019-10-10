@@ -14,11 +14,11 @@
 
 #import "TKMOfflineAudioViewController.h"
 
+#import "Settings.h"
 #import "TKMAudio.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"
-#import "UserDefaults.h"
 
 #import <Light-Untar-umbrella.h>
 #import <compression.h>
@@ -106,7 +106,7 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
     if (download) {
       item.downloadingProgressBytes = download.countOfBytesReceived;
       item.state = TKMDownloadModelItemDownloading;
-    } else if ([UserDefaults.installedAudioPackages containsObject:package.filename]) {
+    } else if ([Settings.installedAudioPackages containsObject:package.filename]) {
       item.state = TKMDownloadModelItemInstalledSelected;
     } else {
       item.state = TKMDownloadModelItemNotInstalled;
@@ -172,9 +172,9 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
 
   dispatch_async(dispatch_get_main_queue(), ^{
     NSMutableSet<NSString *> *installedPackages =
-        [NSMutableSet setWithSet:UserDefaults.installedAudioPackages];
+        [NSMutableSet setWithSet:Settings.installedAudioPackages];
     [installedPackages addObject:filename];
-    UserDefaults.installedAudioPackages = installedPackages;
+    Settings.installedAudioPackages = installedPackages;
 
     [self markDownloadComplete:filename];
   });
@@ -207,7 +207,7 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
                             title:@"Error deleting files"
                           message:error.localizedDescription];
   } else {
-    UserDefaults.installedAudioPackages = [NSSet set];
+    Settings.installedAudioPackages = [NSSet set];
     [self rerender];
   }
 }

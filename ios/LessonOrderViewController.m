@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "LessonOrderViewController.h"
-#import "UserDefaults.h"
+#import "Settings.h"
 #import "proto/Wanikani+Convenience.h"
 
 @interface TKMLessonOrderCell : UITableViewCell
@@ -42,7 +42,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return UserDefaults.lessonOrder.count;
+  return Settings.lessonOrder.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -52,7 +52,7 @@
     cell = [[TKMLessonOrderCell alloc] initWithStyle:UITableViewCellStyleDefault
                                      reuseIdentifier:@"cell"];
   }
-  cell.subjectType = [UserDefaults.lessonOrder objectAtIndex:indexPath.row].intValue;
+  cell.subjectType = [Settings.lessonOrder objectAtIndex:indexPath.row].intValue;
   return cell;
 }
 
@@ -71,10 +71,10 @@
            toIndexPath:(NSIndexPath *)destinationIndexPath {
   TKMLessonOrderCell *cell = [tableView cellForRowAtIndexPath:sourceIndexPath];
 
-  NSMutableArray<NSNumber *> *lessonOrder = [UserDefaults.lessonOrder mutableCopy];
+  NSMutableArray<NSNumber *> *lessonOrder = [Settings.lessonOrder mutableCopy];
   [lessonOrder removeObjectAtIndex:sourceIndexPath.row];
   [lessonOrder insertObject:@(cell.subjectType) atIndex:destinationIndexPath.row];
-  UserDefaults.lessonOrder = lessonOrder;
+  Settings.lessonOrder = lessonOrder;
 }
 
 @end
