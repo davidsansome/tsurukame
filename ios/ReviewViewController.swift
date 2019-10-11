@@ -116,7 +116,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   private var services: TKMServices!
   private var showMenuButton: Bool!
   private var showSubjectHistory: Bool!
-  private var delegate: ReviewViewControllerDelegate!
+  private weak var delegate: ReviewViewControllerDelegate!
 
   private var activeQueue = [ReviewItem]()
   private var reviewQueue = [ReviewItem]()
