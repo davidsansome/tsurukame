@@ -330,9 +330,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     // all the way to the bottom - the page selector view is below it.  Take this into account:
     // find out how far the bottom of our UIView is from the bottom of the window, and subtract that
     // distance from the constraint height.
+    guard let window = view.window else {
+      return
+    }
     let viewBottomLeft = view.convert(CGPoint(x: 0.0, y: view.bounds.maxY),
-                                      to: view.window)
-    let windowBottom = view.window!.bounds.maxY
+                                      to: window)
+    let windowBottom = window.bounds.maxY
     let distanceFromViewBottomToWindowBottom = windowBottom - viewBottomLeft.y
 
     answerFieldToBottomConstraint.constant = CGFloat(height) - distanceFromViewBottomToWindowBottom
