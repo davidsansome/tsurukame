@@ -488,10 +488,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     answerField.text = nil
     answerField.placeholder = taskTypePlaceholder
-    kanaInput.alphabet = (
-      activeSubject.primaryReadings.first!.hasType &&
-        activeSubject.primaryReadings.first!.type == .onyomi &&
-        Settings.useKatakanaForOnyomi) ? .katakana : .hiragana
+    if let firstReading = activeSubject.primaryReadings.first {
+      kanaInput.alphabet = (
+        firstReading.hasType && firstReading.type == .onyomi && Settings.useKatakanaForOnyomi) ?
+          .katakana : .hiragana
+    } else {
+      kanaInput.alphabet = .hiragana
+    }
 
     let setupContextFunc = {
       (ctx: AnimationContext) in
