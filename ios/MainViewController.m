@@ -169,9 +169,15 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   UIColor *originalSearchBarTintColor = searchBar.tintColor;
   searchBar.tintColor = [UIColor whiteColor];  // Make the button white.
 
-  for (UIView *view in _searchController.searchBar.subviews.firstObject.subviews) {
-    if ([view isKindOfClass:UITextField.class]) {
-      view.tintColor = originalSearchBarTintColor;  // Make the input field cursor dark blue.
+  if (@available(iOS 13, *)) {
+    UITextField *searchTextField = searchBar.searchTextField;
+    searchTextField.backgroundColor = [UIColor whiteColor];
+    searchTextField.tintColor = originalSearchBarTintColor;
+  } else {
+    for (UIView *view in _searchController.searchBar.subviews.firstObject.subviews) {
+      if ([view isKindOfClass:UITextField.class]) {
+        view.tintColor = originalSearchBarTintColor;  // Make the input field cursor dark blue.
+      }
     }
   }
 

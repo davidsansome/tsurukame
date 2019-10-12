@@ -491,7 +491,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     if let firstReading = activeSubject.primaryReadings.first {
       kanaInput.alphabet = (
         firstReading.hasType && firstReading.type == .onyomi && Settings.useKatakanaForOnyomi) ?
-          .katakana : .hiragana
+        .katakana : .hiragana
     } else {
       kanaInput.alphabet = .hiragana
     }
