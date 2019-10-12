@@ -61,7 +61,7 @@
                                                                     delegate:self];
     item.showLevelNumber = false;
     item.showAnswers = _showAnswers;
-    if (assignment.isLocked) {
+    if (assignment.isLocked || assignment.isBurned) {
       item.gradientColors = TKMLockedGradient();
     }
     [model addItem:item toSection:section];

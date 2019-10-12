@@ -63,7 +63,7 @@
     item.showLevelNumber = false;
     item.showAnswers = false;
     item.showRemaining = true;
-    if (assignment.isLocked) {
+    if (assignment.isLocked || assignment.isBurned) {
       item.gradientColors = TKMLockedGradient();
     }
     if (item.subject.subjectType == TKMSubject_Type_Radical) {
