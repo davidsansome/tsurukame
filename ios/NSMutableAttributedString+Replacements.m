@@ -16,7 +16,7 @@
 
 @implementation NSMutableAttributedString (Replacements)
 
-- (void)replaceFontSize:(CGFloat)newSize {
+- (NSMutableAttributedString *)replaceFontSize:(CGFloat)newSize {
   void (^block)(id value, NSRange range, BOOL *stop) = ^(id value, NSRange range, BOOL *stop) {
     UIFont *font = (UIFont *)value;
     UIFont *newFont;
@@ -35,9 +35,11 @@
                    options:0
                 usingBlock:block];
   [self endEditing];
+
+  return self;
 }
 
-- (void)replaceTextColor:(UIColor *)newColor {
+- (NSMutableAttributedString *)replaceTextColor:(UIColor *)newColor {
   void (^block)(id value, NSRange range, BOOL *stop) = ^(id value, NSRange range, BOOL *stop) {
     [self removeAttribute:NSForegroundColorAttributeName range:range];
     [self addAttribute:NSForegroundColorAttributeName value:newColor range:range];
@@ -49,6 +51,8 @@
                    options:0
                 usingBlock:block];
   [self endEditing];
+
+  return self;
 }
 
 @end

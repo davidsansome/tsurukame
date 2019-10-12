@@ -158,7 +158,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   @IBOutlet private var addSynonymButton: UIButton!
   @IBOutlet private var revealAnswerButton: UIButton!
   @IBOutlet private var progressBar: UIProgressView!
-  @IBOutlet private var subjectDetailsView: TKMSubjectDetailsView!
+  @IBOutlet private var subjectDetailsView: SubjectDetailsView!
   @IBOutlet private var previousSubjectButton: UIButton!
 
   @IBOutlet private var wrapUpLabel: UILabel!
@@ -255,7 +255,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
                                            name: UIResponder.keyboardWillShowNotification, object: nil)
 
-    subjectDetailsView.setup(with: services, showHints: false, subjectDelegate: self)
+    subjectDetailsView.setup(withServices: services, showHints: false, delegate: self)
 
     answerField.delegate = kanaInput
     answerField.addTarget(self, action: #selector(answerFieldValueDidChange), for: UIControl.Event.editingChanged)
@@ -646,6 +646,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   // MARK: - Previous subject button
 
   func animateLabelToPreviousSubjectButton(_ label: UILabel) {
+    guard let previousSubject = previousSubject else {
+      return
+    }
+
     let oldLabelCenter = label.center
     let labelBounds = CGRect(origin: CGPoint.zero, size: label.sizeThatFits(CGSize.zero))
     label.bounds = labelBounds
@@ -938,7 +942,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   @IBAction func revealAnswerButtonPressed(_: Any) {
-    subjectDetailsView.update(with: activeSubject, studyMaterials: activeStudyMaterials)
+    subjectDetailsView.update(withSubject: activeSubject, studyMaterials: activeStudyMaterials)
 
     let setupContextFunc = { (ctx: AnimationContext) in
       if self.questionLabel.font.familyName != self.normalFontName {

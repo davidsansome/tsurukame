@@ -14,10 +14,12 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSMutableAttributedString (Replacements)
 
-- (void)replaceFontSize:(CGFloat)newSize;
-- (void)replaceTextColor:(UIColor *)newColor;
+- (NSMutableAttributedString *)replaceFontSize:(CGFloat)newSize;
+- (NSMutableAttributedString *)replaceTextColor:(UIColor *)newColor;
 
 @end
 
@@ -27,3 +29,5 @@
 - (NSAttributedString *)stringWithTextColor:(UIColor *)newColor;
 
 @end
+
+NS_ASSUME_NONNULL_END

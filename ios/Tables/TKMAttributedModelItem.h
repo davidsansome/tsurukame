@@ -14,6 +14,8 @@
 
 #import "TKMBasicModelItem.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TKMAttributedModelItem : NSObject <TKMModelItem>
 
 - (instancetype)initWithText:(NSAttributedString *)text NS_DESIGNATED_INITIALIZER;
@@ -26,6 +28,8 @@
 
 @interface TKMAttributedModelCell : TKMModelCell
 
-@property(nonatomic) UIButton *rightButton;
+@property(nonatomic, nullable) UIButton *rightButton;
 
 @end
+
+NS_ASSUME_NONNULL_END

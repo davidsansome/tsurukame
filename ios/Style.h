@@ -16,6 +16,8 @@
 
 #import "proto/Wanikani.pbobjc.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -51,3 +53,5 @@ extern UIFont *TKMJapaneseFontBold(CGFloat size);
 #ifdef __cplusplus
 }
 #endif
+
+NS_ASSUME_NONNULL_END

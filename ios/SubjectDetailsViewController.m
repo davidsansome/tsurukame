@@ -17,9 +17,9 @@
 #import "LocalCachingClient.h"
 #import "NavigationController.h"
 #import "Style.h"
-#import "SubjectDetailsView.h"
 #import "TKMServices.h"
 #import "Tables/TKMSubjectModelItem.h"
+#import "Tsurukame-Swift.h"
 
 #import "proto/Wanikani+Convenience.h"
 
@@ -63,7 +63,7 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  [_subjectDetailsView setupWithServices:_services showHints:_showHints subjectDelegate:self];
+  [_subjectDetailsView setupWithServices:_services showHints:_showHints delegate:self];
 
   TKMStudyMaterials *studyMaterials =
       [_services.localCachingClient getStudyMaterialForID:_subject.id_p];

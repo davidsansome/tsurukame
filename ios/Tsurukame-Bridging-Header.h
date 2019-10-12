@@ -16,12 +16,12 @@
 #define Tsurukame_Bridging_Header_h
 
 #import "LocalCachingClient.h"
+#import "NSMutableAttributedString+Replacements.h"
 #import "NSString+LevenshteinDistance.h"
 #import "ReviewItem.h"
 #import "ReviewSummaryViewController.h"
 #import "Settings.h"
 #import "Style.h"
-#import "SubjectDetailsView.h"
 #import "SubjectDetailsViewController.h"
 #import "SuccessAnimation.h"
 #import "TKMAudio.h"
@@ -30,7 +30,11 @@
 #import "TKMKanaInput.h"
 #import "TKMServices.h"
 #import "TKMSubjectModelItem.h"
+#import "Tables/TKMAttributedModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
+#import "Tables/TKMMarkupModelItem.h"
+#import "Tables/TKMReadingModelItem.h"
+#import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "UIView+SafeAreaInsets.h"
 
