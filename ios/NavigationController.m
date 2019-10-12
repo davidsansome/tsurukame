@@ -31,7 +31,7 @@ static const CGFloat kVelocityThreshold = 60.f;
 
 // An object that looks enough like a UIPanGestureRecognizer to pass to UINavigationController's
 // builtin transition handler.
-@interface FakeGestureRecognizer : NSObject
+@interface FakeGestureRecognizer : UIPanGestureRecognizer
 @end
 
 @implementation FakeGestureRecognizer {
