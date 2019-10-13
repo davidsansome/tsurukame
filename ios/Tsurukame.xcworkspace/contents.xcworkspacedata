@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:third_party/Rexy/Rexy.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Tsurukame.xcodeproj">
    </FileRef>
    <FileRef

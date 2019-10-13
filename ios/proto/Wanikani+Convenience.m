@@ -350,6 +350,55 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   return false;
 }
 
+- (bool)isPartOfSpeech:(TKMVocabulary_PartOfSpeech)pos {
+  for (int i = 0; i < self.partsOfSpeechArray.count; ++i) {
+    if ([self.partsOfSpeechArray valueAtIndex:i] == pos) {
+      return true;
+    }
+  }
+  return false;
+}
+
+- (bool)isGodanVerb {
+  return [self isPartOfSpeech:TKMVocabulary_PartOfSpeech_GodanVerb];
+}
+
+- (bool)isSuruVerb {
+  return [self isPartOfSpeech:TKMVocabulary_PartOfSpeech_SuruVerb];
+}
+
+- (bool)isNoun {
+  return [self isPartOfSpeech:TKMVocabulary_PartOfSpeech_Noun];
+}
+
+- (bool)isAdjective {
+  for (int i = 0; i < self.partsOfSpeechArray.count; ++i) {
+    switch ([self.partsOfSpeechArray valueAtIndex:i]) {
+      case TKMVocabulary_PartOfSpeech_Adjective:
+      case TKMVocabulary_PartOfSpeech_NaAdjective:
+      case TKMVocabulary_PartOfSpeech_IAdjective:
+      case TKMVocabulary_PartOfSpeech_NoAdjective:
+        return true;
+      default:
+        break;
+    }
+  }
+  return false;
+}
+
+- (bool)isPrefixOrSuffix {
+  for (int i = 0; i < self.partsOfSpeechArray.count; ++i) {
+    switch ([self.partsOfSpeechArray valueAtIndex:i]) {
+      case TKMVocabulary_PartOfSpeech_Prefix:
+      case TKMVocabulary_PartOfSpeech_Suffix:
+        return true;
+      default:
+        break;
+    }
+  }
+  return false;
+}
+
 @end
 
 @implementation TKMAssignment (Convenience)

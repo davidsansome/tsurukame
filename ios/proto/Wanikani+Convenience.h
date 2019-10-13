@@ -72,7 +72,12 @@ extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
 @interface TKMVocabulary (Convenience)
 
 @property(nonatomic, readonly) NSString *commaSeparatedPartsOfSpeech;
+@property(nonatomic, readonly) bool isNoun;
 @property(nonatomic, readonly) bool isVerb;
+@property(nonatomic, readonly) bool isGodanVerb;
+@property(nonatomic, readonly) bool isSuruVerb;
+@property(nonatomic, readonly) bool isAdjective;
+@property(nonatomic, readonly) bool isPrefixOrSuffix;
 
 @end
 

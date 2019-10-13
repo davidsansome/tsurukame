@@ -28,10 +28,15 @@
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
 		631CAD73234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
 		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
+		633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */; };
+		633612162352D9EB00DD72A3 /* libRexy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 633612152352D9EB00DD72A3 /* libRexy.a */; };
 		633632EC201F3011006D582B /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EB201F3011006D582B /* LoginViewController.m */; };
 		633632EF201F3490006D582B /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* Settings.m */; };
 		633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE023516BE7004F732F /* SubjectDetailsView.swift */; };
 		633AFAE223516BE7004F732F /* SubjectDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE023516BE7004F732F /* SubjectDetailsView.swift */; };
+		633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */; };
+		633AFAE72352B6F2004F732F /* VocabularyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */; };
+		633AFAE92352B81E004F732F /* VocabularyHighlighterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */; };
 		633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */; };
 		633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */; };
 		633DE9382094DDA900AC25F4 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */; };
@@ -214,11 +219,15 @@
 		631CAD71234B4A96008CEA73 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		6321E60F2068F3A9003460BC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		6321E6102068F3A9003460BC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		633611E02352D8CC00DD72A3 /* Rexy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Rexy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		633612152352D9EB00DD72A3 /* libRexy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRexy.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		633632EA201F3011006D582B /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		633632EB201F3011006D582B /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		633632ED201F3490006D582B /* Settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		633632EE201F3490006D582B /* Settings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
 		633AFAE023516BE7004F732F /* SubjectDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsView.swift; sourceTree = "<group>"; };
+		633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyHighlighter.swift; sourceTree = "<group>"; };
+		633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyHighlighterTest.swift; sourceTree = "<group>"; };
 		633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewOrderViewController.h; sourceTree = "<group>"; };
 		633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewOrderViewController.m; sourceTree = "<group>"; };
 		633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewTaskOrderViewController.h; sourceTree = "<group>"; };
@@ -363,6 +372,7 @@
 			files = (
 				63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */,
 				32A4A0FD85D9F44608460373 /* Pods_Tsurukame.framework in Frameworks */,
+				633612162352D9EB00DD72A3 /* libRexy.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +415,8 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */,
+				633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -589,6 +601,8 @@
 		63CAAB0F1FD7FAC500E09DA1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				633612152352D9EB00DD72A3 /* libRexy.a */,
+				633611E02352D8CC00DD72A3 /* Rexy.framework */,
 				6356E7821FDFF0E3009CE7C1 /* WebKit.framework */,
 				63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */,
 				F33812F134DC80E5D981C40E /* Pods_FontScreenshotter.framework */,
@@ -1024,6 +1038,7 @@
 				6392DBA220D130F0003019EB /* TKMSubjectModelItem.m in Sources */,
 				6392DB9F20CCE29E003019EB /* TKMAttributedModelItem.m in Sources */,
 				633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */,
+				633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */,
 				631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
 				63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */,
 				63EEFEBF1FC45C440070C05F /* main.m in Sources */,
@@ -1093,6 +1108,7 @@
 				63AD5BA023056863006B3308 /* TKMSubjectModelItem.m in Sources */,
 				63AD5BA623056863006B3308 /* TKMAttributedModelItem.m in Sources */,
 				63AD5BA923056863006B3308 /* ReviewOrderViewController.m in Sources */,
+				633AFAE72352B6F2004F732F /* VocabularyHighlighter.swift in Sources */,
 				631CAD64234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
 				63AD5BAB23056863006B3308 /* NSString+LevenshteinDistance.m in Sources */,
 				63AD5BB023056863006B3308 /* main.m in Sources */,
@@ -1173,6 +1189,8 @@
 				631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */,
 				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
 				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
+				633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */,
+				633AFAE92352B81E004F732F /* VocabularyHighlighterTest.swift in Sources */,
 				631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1331,7 +1349,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 34E86AD95515CD815B3086D0 /* Pods-Tsurukame.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1356,7 +1373,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 21894D9E0883B0107075DD6F /* Pods-Tsurukame.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

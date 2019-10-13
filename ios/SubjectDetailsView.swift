@@ -205,29 +205,8 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     model.addSection("Context Sentences")
     for sentence in subject.vocabulary.sentencesArray as! [TKMVocabulary_Sentence] {
       let text = NSMutableAttributedString()
-
-      var attributes = [NSAttributedString.Key: Any]()
-      attributes[.font] = TKMJapaneseFont(kFontSize)
-
-      let japanese = NSMutableAttributedString(string: sentence.japanese, attributes: attributes)
-
-      // Highlight occurences of this subject in the Japanese text.
-      var textToHighlight = subject.japanese!
-      if subject.vocabulary.isVerb {
-        textToHighlight = textToHighlight.trimmingCharacters(in: AnswerChecker.kKanaCharacterSet)
-      }
-
-      var startPos = sentence.japanese.startIndex
-      while true {
-        let searchRange = startPos ..< sentence.japanese.endIndex
-        guard let highlightRange = sentence.japanese.range(of: textToHighlight, options: [], range: searchRange) else {
-          break
-        }
-        japanese.addAttribute(.foregroundColor, value: UIColor.red, range: NSRange(highlightRange, in: sentence.japanese))
-        startPos = sentence.japanese.index(after: highlightRange.upperBound)
-      }
-
-      text.append(japanese)
+      text.append(highlightOccurrences(of: subject, in: sentence.japanese) ??
+        NSAttributedString(string: sentence.japanese))
       text.append(NSAttributedString(string: "\n"))
       text.append(NSAttributedString(string: sentence.english))
       text.replaceFontSize(kFontSize)
