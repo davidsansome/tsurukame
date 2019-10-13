@@ -417,7 +417,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     // Choose whether to ask the meaning or the reading.
     if activeTask.answeredMeaning {
       activeTaskType = TKMTaskType.reading
-    } else if activeTask.answeredReading {
+    } else if activeTask.answeredReading || activeSubject.hasRadical {
       activeTaskType = TKMTaskType.meaning
     } else if Settings.groupMeaningReading {
       activeTaskType = Settings.meaningFirst ? TKMTaskType.meaning : TKMTaskType.reading
