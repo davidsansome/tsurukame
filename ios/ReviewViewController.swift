@@ -851,14 +851,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     case .meaning:
       firstTimeAnswered = !activeTask.answer.hasMeaningWrong
       if firstTimeAnswered ||
-        (lastMarkAnswerWasFirstTime && result == .Correct) {
+        (lastMarkAnswerWasFirstTime && result == .OverrideAnswerCorrect) {
         activeTask.answer.meaningWrong = !correct
       }
       activeTask.answeredMeaning = correct
     case .reading:
       firstTimeAnswered = !activeTask.answer.hasReadingWrong
       if firstTimeAnswered ||
-        (lastMarkAnswerWasFirstTime && result == .Correct) {
+        (lastMarkAnswerWasFirstTime && result == .OverrideAnswerCorrect) {
         activeTask.answer.readingWrong = !correct
       }
       activeTask.answeredReading = correct
