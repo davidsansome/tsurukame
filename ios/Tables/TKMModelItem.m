@@ -23,6 +23,11 @@ void TKMSafePerformSelector(id target, SEL selector, id object) {
 
 @implementation TKMModelCell : UITableViewCell
 
+- (UIEdgeInsets)layoutMargins {
+  // Override the default layout margins to match those from iOS < 13.
+  return UIEdgeInsetsMake(8, 16, 8, 16);
+}
+
 - (void)updateWithItem:(id<TKMModelItem>)item {
   _item = item;
 }
