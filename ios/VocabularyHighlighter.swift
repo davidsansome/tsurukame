@@ -58,8 +58,6 @@ private class ConjugationGroup {
                           volitional: String,
                           cha: String,
                           extraConjugations: [String] = []) -> ConjugationGroup {
-    let teFirstCharacter = String(te.first!)
-
     return ConjugationGroup(suffix: suffix, conjugations: [
       suffix,
       continuous,
