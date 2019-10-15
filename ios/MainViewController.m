@@ -529,16 +529,31 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (NSArray<UIKeyCommand *> *)keyCommands {
-  return @[
-    [UIKeyCommand keyCommandWithInput:@"r"
-                        modifierFlags:UIKeyModifierCommand
-                               action:@selector(startReviews)
-                 discoverabilityTitle:@"Start reviews"],
-    [UIKeyCommand keyCommandWithInput:@"l"
-                        modifierFlags:UIKeyModifierCommand
-                               action:@selector(startLessons)
-                 discoverabilityTitle:@"Start lessons"]
-  ];
+  BOOL lessons = self.lessonsCell.userInteractionEnabled;
+  BOOL reviews = self.reviewsCell.userInteractionEnabled;
+
+  NSMutableArray<UIKeyCommand *> *keyCommands = [NSMutableArray array];
+
+  // Command L to start lessons, if any
+  if (lessons) {
+    [keyCommands addObject:
+     [UIKeyCommand keyCommandWithInput:@"l"
+                         modifierFlags:UIKeyModifierCommand
+                                action:@selector(startLessons)
+                  discoverabilityTitle:@"Start lessons"]
+     ];
+  }
+
+  // Command R to start reviews, if any
+  if (reviews) {
+    [keyCommands addObject:
+     [UIKeyCommand keyCommandWithInput:@"r"
+                         modifierFlags:UIKeyModifierCommand
+                                action:@selector(startReviews)
+                  discoverabilityTitle:@"Start reviews"]];
+  }
+
+  return keyCommands;
 }
 
 @end
