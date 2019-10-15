@@ -818,7 +818,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   func shakeView(_ view: UIView) {
     let animation = CABasicAnimation(keyPath: "position")
-    animation.duration = 0.0
+    animation.duration = 0.1
     animation.repeatCount = 3
     animation.autoreverses = true
     animation.fromValue = NSValue(cgPoint: CGPoint(x: view.center.x - 10, y: view.center.y))
