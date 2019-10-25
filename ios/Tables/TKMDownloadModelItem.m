@@ -111,7 +111,7 @@ static NSString *FriendlySize(int64_t bytes) {
       break;
     case TKMDownloadModelItemInstalling:
       _subtitle.text =
-          [NSString stringWithFormat:@"instaling %d%%", (int)(item.installingProgress * 100)];
+          [NSString stringWithFormat:@"installing %d%%", (int)(item.installingProgress * 100)];
       break;
     default:
       break;
