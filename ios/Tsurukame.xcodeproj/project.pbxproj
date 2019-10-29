@@ -14,7 +14,6 @@
 		630ADB6F21F8256E00BC9801 /* TKMCheckmarkModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */; };
 		6319C99D20400E3500C31F87 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99C20400E3500C31F87 /* NSDate+TimeAgo.m */; };
 		6319C9A0204015B900C31F87 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99F204015B900C31F87 /* NSString+MD5.m */; };
-		6319C9A320426EBB00C31F87 /* UpcomingReviewsChartController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */; };
 		631CAD5F234AC508008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
 		631CAD60234AC508008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
 		631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
@@ -39,7 +38,6 @@
 		633AFAE92352B81E004F732F /* VocabularyHighlighterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */; };
 		633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */; };
 		633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */; };
-		633DE9382094DDA900AC25F4 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */; };
 		633DE95520C5634A00AC25F4 /* TKMSwitchModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95020C5634A00AC25F4 /* TKMSwitchModelItem.m */; };
 		633DE95620C5634A00AC25F4 /* TKMTableModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95120C5634A00AC25F4 /* TKMTableModel.m */; };
 		633DE95720C5634A00AC25F4 /* TKMBasicModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95220C5634A00AC25F4 /* TKMBasicModelItem.m */; };
@@ -62,7 +60,6 @@
 		63A2375E1FE9225700C48657 /* Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A2375D1FE9225700C48657 /* Style.m */; };
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63AD5B5623056863006B3308 /* Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A2375D1FE9225700C48657 /* Style.m */; };
-		63AD5B5F23056863006B3308 /* UpcomingReviewsChartController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */; };
 		63AD5B6323056863006B3308 /* Wanikani.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63AD5B6823056863006B3308 /* TKMListSeparatorItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */; };
 		63AD5B7E23056863006B3308 /* TKMServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA79721904D520058E885 /* TKMServices.m */; };
@@ -89,7 +86,6 @@
 		63AD5BC423056863006B3308 /* TKMMarkupModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE96020C5656B00AC25F4 /* TKMMarkupModelItem.m */; };
 		63AD5BC823056863006B3308 /* TKMReadingModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA788218DB6840058E885 /* TKMReadingModelItem.m */; };
 		63AD5BCD23056863006B3308 /* SubjectsByLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */; };
-		63AD5BCF23056863006B3308 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */; };
 		63AD5BD123056863006B3308 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
 		63AD5BDA23056863006B3308 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99C20400E3500C31F87 /* NSDate+TimeAgo.m */; };
 		63AD5BDE23056863006B3308 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEB61FC45C440070C05F /* AppDelegate.m */; };
@@ -171,6 +167,7 @@
 		63EEFED31FC45E810070C05F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
 		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
+		93B59B2A2367AF130097533C /* UpcomingReviewsChartController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B59B292367AF130097533C /* UpcomingReviewsChartController.swift */; };
 		A7655070EBDAE5F32A74088A /* Pods_Tsurukame__App_Store_screenshots_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
@@ -209,8 +206,6 @@
 		6319C99C20400E3500C31F87 /* NSDate+TimeAgo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDate+TimeAgo.m"; sourceTree = "<group>"; };
 		6319C99E204015B900C31F87 /* NSString+MD5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		6319C99F204015B900C31F87 /* NSString+MD5.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
-		6319C9A120426EBA00C31F87 /* UpcomingReviewsChartController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpcomingReviewsChartController.h; sourceTree = "<group>"; };
-		6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpcomingReviewsChartController.m; sourceTree = "<group>"; };
 		6319C9B520441DE200C31F87 /* Tsurukame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tsurukame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		631CAD5E234AC507008CEA73 /* DataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
 		631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerChecker.swift; sourceTree = "<group>"; };
@@ -232,8 +227,6 @@
 		633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewOrderViewController.m; sourceTree = "<group>"; };
 		633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewTaskOrderViewController.h; sourceTree = "<group>"; };
 		633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewTaskOrderViewController.m; sourceTree = "<group>"; };
-		633DE9362094DDA900AC25F4 /* NSMutableArray+Shuffle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Shuffle.h"; sourceTree = "<group>"; };
-		633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Shuffle.m"; sourceTree = "<group>"; };
 		633DE94D20C5634900AC25F4 /* TKMBasicModelItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMBasicModelItem.h; sourceTree = "<group>"; };
 		633DE94E20C5634A00AC25F4 /* TKMTableModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMTableModel.h; sourceTree = "<group>"; };
 		633DE94F20C5634A00AC25F4 /* TKMSwitchModelItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMSwitchModelItem.h; sourceTree = "<group>"; };
@@ -350,6 +343,7 @@
 		6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).debug.xcconfig"; sourceTree = "<group>"; };
 		82721E7B5A9C5562CC8D3B9B /* Pods-FontScreenshotter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.release.xcconfig"; sourceTree = "<group>"; };
+		93B59B292367AF130097533C /* UpcomingReviewsChartController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingReviewsChartController.swift; sourceTree = "<group>"; };
 		B9AC7A65B58200A25756A40A /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter_FontScreenshotterUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMKanaInput+Internals.h"; sourceTree = "<group>"; };
@@ -453,8 +447,6 @@
 				63EEFED21FC45E810070C05F /* MainViewController.m */,
 				63BDA9A5200E04E500D75DA2 /* NavigationController.h */,
 				63BDA9A6200E04E500D75DA2 /* NavigationController.m */,
-				633DE9362094DDA900AC25F4 /* NSMutableArray+Shuffle.h */,
-				633DE9372094DDA900AC25F4 /* NSMutableArray+Shuffle.m */,
 				6392DBA920DBB841003019EB /* NSMutableAttributedString+Replacements.h */,
 				6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */,
 				63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */,
@@ -528,8 +520,7 @@
 				63A237601FE9264300C48657 /* UIColor+HexString.m */,
 				63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */,
 				63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */,
-				6319C9A120426EBA00C31F87 /* UpcomingReviewsChartController.h */,
-				6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */,
+				93B59B292367AF130097533C /* UpcomingReviewsChartController.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1022,7 +1013,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				63A2375E1FE9225700C48657 /* Style.m in Sources */,
-				6319C9A320426EBB00C31F87 /* UpcomingReviewsChartController.m in Sources */,
 				63CAAAD91FC6E0CB00E09DA1 /* Wanikani.pbobjc.m in Sources */,
 				63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */,
 				63BFA79821904D520058E885 /* TKMServices.m in Sources */,
@@ -1051,11 +1041,11 @@
 				633DE96120C5656B00AC25F4 /* TKMMarkupModelItem.m in Sources */,
 				63BFA789218DB6840058E885 /* TKMReadingModelItem.m in Sources */,
 				63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */,
-				633DE9382094DDA900AC25F4 /* NSMutableArray+Shuffle.m in Sources */,
 				6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */,
 				6319C99D20400E3500C31F87 /* NSDate+TimeAgo.m in Sources */,
 				63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */,
 				63BFA78E218EB6890058E885 /* TKMOfflineAudioViewController.mm in Sources */,
+				93B59B2A2367AF130097533C /* UpcomingReviewsChartController.swift in Sources */,
 				637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */,
 				63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */,
 				637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */,
@@ -1092,7 +1082,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				63AD5B5623056863006B3308 /* Style.m in Sources */,
-				63AD5B5F23056863006B3308 /* UpcomingReviewsChartController.m in Sources */,
 				63AD5B6323056863006B3308 /* Wanikani.pbobjc.m in Sources */,
 				63AD5B6823056863006B3308 /* TKMListSeparatorItem.m in Sources */,
 				63AD5B7E23056863006B3308 /* TKMServices.m in Sources */,
@@ -1121,7 +1110,6 @@
 				63AD5BC423056863006B3308 /* TKMMarkupModelItem.m in Sources */,
 				63AD5BC823056863006B3308 /* TKMReadingModelItem.m in Sources */,
 				63AD5BCD23056863006B3308 /* SubjectsByLevelViewController.m in Sources */,
-				63AD5BCF23056863006B3308 /* NSMutableArray+Shuffle.m in Sources */,
 				63AD5BD123056863006B3308 /* SettingsViewController.m in Sources */,
 				63AD5BDA23056863006B3308 /* NSDate+TimeAgo.m in Sources */,
 				63AD5BDE23056863006B3308 /* AppDelegate.m in Sources */,

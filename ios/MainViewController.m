@@ -31,7 +31,6 @@
 #import "TKMReviewContainerViewController.h"
 #import "TKMServices.h"
 #import "Tsurukame-Swift.h"
-#import "UpcomingReviewsChartController.h"
 #import "proto/Wanikani+Convenience.h"
 
 #import <Haneke/Haneke.h>
@@ -414,7 +413,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   SetTableViewCellCount(self.reviewsCell, reviews);
   [_upcomingReviewsChartController update:upcomingReviews
                        currentReviewCount:reviews
-                                   atDate:[NSDate date]];
+                                   at:[NSDate date]];
   [_currentLevelRadicalsChartController update:currentLevelAssignments];
   [_currentLevelKanjiChartController update:currentLevelAssignments];
   [_currentLevelVocabularyChartController update:currentLevelAssignments];
