@@ -14,7 +14,6 @@
 		630ADB6F21F8256E00BC9801 /* TKMCheckmarkModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */; };
 		6319C99D20400E3500C31F87 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99C20400E3500C31F87 /* NSDate+TimeAgo.m */; };
 		6319C9A0204015B900C31F87 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99F204015B900C31F87 /* NSString+MD5.m */; };
-		6319C9A320426EBB00C31F87 /* UpcomingReviewsChartController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */; };
 		631CAD5F234AC508008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
 		631CAD60234AC508008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
 		631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
@@ -61,7 +60,6 @@
 		63A2375E1FE9225700C48657 /* Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A2375D1FE9225700C48657 /* Style.m */; };
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63AD5B5623056863006B3308 /* Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A2375D1FE9225700C48657 /* Style.m */; };
-		63AD5B5F23056863006B3308 /* UpcomingReviewsChartController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */; };
 		63AD5B6323056863006B3308 /* Wanikani.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63AD5B6823056863006B3308 /* TKMListSeparatorItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */; };
 		63AD5B7E23056863006B3308 /* TKMServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA79721904D520058E885 /* TKMServices.m */; };
@@ -169,6 +167,7 @@
 		63EEFED31FC45E810070C05F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
 		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
+		93B59B2A2367AF130097533C /* UpcomingReviewsChartController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B59B292367AF130097533C /* UpcomingReviewsChartController.swift */; };
 		A7655070EBDAE5F32A74088A /* Pods_Tsurukame__App_Store_screenshots_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
@@ -207,8 +206,6 @@
 		6319C99C20400E3500C31F87 /* NSDate+TimeAgo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDate+TimeAgo.m"; sourceTree = "<group>"; };
 		6319C99E204015B900C31F87 /* NSString+MD5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		6319C99F204015B900C31F87 /* NSString+MD5.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
-		6319C9A120426EBA00C31F87 /* UpcomingReviewsChartController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpcomingReviewsChartController.h; sourceTree = "<group>"; };
-		6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpcomingReviewsChartController.m; sourceTree = "<group>"; };
 		6319C9B520441DE200C31F87 /* Tsurukame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tsurukame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		631CAD5E234AC507008CEA73 /* DataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
 		631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerChecker.swift; sourceTree = "<group>"; };
@@ -346,6 +343,7 @@
 		6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).debug.xcconfig"; sourceTree = "<group>"; };
 		82721E7B5A9C5562CC8D3B9B /* Pods-FontScreenshotter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.release.xcconfig"; sourceTree = "<group>"; };
+		93B59B292367AF130097533C /* UpcomingReviewsChartController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingReviewsChartController.swift; sourceTree = "<group>"; };
 		B9AC7A65B58200A25756A40A /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter_FontScreenshotterUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMKanaInput+Internals.h"; sourceTree = "<group>"; };
@@ -522,8 +520,7 @@
 				63A237601FE9264300C48657 /* UIColor+HexString.m */,
 				63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */,
 				63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */,
-				6319C9A120426EBA00C31F87 /* UpcomingReviewsChartController.h */,
-				6319C9A220426EBB00C31F87 /* UpcomingReviewsChartController.m */,
+				93B59B292367AF130097533C /* UpcomingReviewsChartController.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1016,7 +1013,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				63A2375E1FE9225700C48657 /* Style.m in Sources */,
-				6319C9A320426EBB00C31F87 /* UpcomingReviewsChartController.m in Sources */,
 				63CAAAD91FC6E0CB00E09DA1 /* Wanikani.pbobjc.m in Sources */,
 				63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */,
 				63BFA79821904D520058E885 /* TKMServices.m in Sources */,
@@ -1049,6 +1045,7 @@
 				6319C99D20400E3500C31F87 /* NSDate+TimeAgo.m in Sources */,
 				63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */,
 				63BFA78E218EB6890058E885 /* TKMOfflineAudioViewController.mm in Sources */,
+				93B59B2A2367AF130097533C /* UpcomingReviewsChartController.swift in Sources */,
 				637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */,
 				63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */,
 				637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */,
@@ -1085,7 +1082,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				63AD5B5623056863006B3308 /* Style.m in Sources */,
-				63AD5B5F23056863006B3308 /* UpcomingReviewsChartController.m in Sources */,
 				63AD5B6323056863006B3308 /* Wanikani.pbobjc.m in Sources */,
 				63AD5B6823056863006B3308 /* TKMListSeparatorItem.m in Sources */,
 				63AD5B7E23056863006B3308 /* TKMServices.m in Sources */,
