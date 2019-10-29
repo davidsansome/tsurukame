@@ -199,6 +199,7 @@
 		34E86AD95515CD815B3086D0 /* Pods-Tsurukame.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame.debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame/Pods-Tsurukame.debug.xcconfig"; sourceTree = "<group>"; };
 		3DA8BAFA224C957F009E925B /* LessonOrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LessonOrderViewController.h; sourceTree = "<group>"; };
 		3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LessonOrderViewController.m; sourceTree = "<group>"; };
+		489894D423670CB000A20AF8 /* Tsurukame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tsurukame.entitlements; sourceTree = "<group>"; };
 		568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		630ADB6D21F8256E00BC9801 /* TKMCheckmarkModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMCheckmarkModelItem.h; sourceTree = "<group>"; };
 		630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMCheckmarkModelItem.m; sourceTree = "<group>"; };
@@ -409,6 +410,7 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				489894D423670CB000A20AF8 /* Tsurukame.entitlements */,
 				633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */,
 				633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
@@ -1339,9 +1341,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Tsurukame.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1350,6 +1354,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1363,9 +1368,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Tsurukame.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1374,6 +1381,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
