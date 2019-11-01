@@ -640,6 +640,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       if ctx.cheats {
         addSynonymButton.isHidden = true
       }
+      answerField.becomeFirstResponder()
     }
   }
 
