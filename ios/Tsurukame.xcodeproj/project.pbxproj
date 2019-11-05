@@ -407,31 +407,58 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		41897D922372287F00F6A0B7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */,
+				BB2909A5217FAF8B00B1816F /* fonts */,
+				489894D423670CB000A20AF8 /* Tsurukame.entitlements */,
+				63EEFEBC1FC45C440070C05F /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		41897D93237228F100F6A0B7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6392DBA920DBB841003019EB /* NSMutableAttributedString+Replacements.h */,
+				6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */,
+				63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */,
+				63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */,
+				6319C99E204015B900C31F87 /* NSString+MD5.h */,
+				6319C99F204015B900C31F87 /* NSString+MD5.m */,
+				63A2375F1FE9264300C48657 /* UIColor+HexString.h */,
+				63A237601FE9264300C48657 /* UIColor+HexString.m */,
+				63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */,
+				63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
-				489894D423670CB000A20AF8 /* Tsurukame.entitlements */,
+				63EEFEC21FC45CB10070C05F /* Info.plist */,
+				63C42A4421B6A703008CA938 /* Tsurukame-Bridging-Header.h */,
+				41897D93237228F100F6A0B7 /* Extensions */,
+				41897D922372287F00F6A0B7 /* Resources */,
 				633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */,
 				633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
 				63EEFEB61FC45C440070C05F /* AppDelegate.m */,
-				63EEFEBC1FC45C440070C05F /* Assets.xcassets */,
 				63EEFED71FC46E720070C05F /* Client.h */,
 				63EEFED81FC46E720070C05F /* Client.m */,
 				63EDA42A207F38BE00382CE3 /* CurrentLevelChartController.h */,
 				63EDA42B207F38BE00382CE3 /* CurrentLevelChartController.m */,
 				63CAAAF91FC6EADC00E09DA1 /* data.bin */,
 				631CAD5E234AC507008CEA73 /* DataLoader.swift */,
-				BB2909A5217FAF8B00B1816F /* fonts */,
 				63C42A2421B6A28D008CA938 /* FontScreenshotter */,
-				63C42A2321B6A28D008CA938 /* FontScreenshotter.app */,
 				63C42A3921B6A290008CA938 /* FontScreenshotterUITests */,
+				63C42A2321B6A28D008CA938 /* FontScreenshotter.app */,
 				63C42A3621B6A290008CA938 /* FontScreenshotterUITests.xctest */,
 				63CAAB0F1FD7FAC500E09DA1 /* Frameworks */,
-				63EEFEC21FC45CB10070C05F /* Info.plist */,
-				63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */,
 				3DA8BAFA224C957F009E925B /* LessonOrderViewController.h */,
 				3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */,
 				637C12DC203D779D009E92DB /* LessonsPageControl.h */,
@@ -449,12 +476,6 @@
 				63EEFED21FC45E810070C05F /* MainViewController.m */,
 				63BDA9A5200E04E500D75DA2 /* NavigationController.h */,
 				63BDA9A6200E04E500D75DA2 /* NavigationController.m */,
-				6392DBA920DBB841003019EB /* NSMutableAttributedString+Replacements.h */,
-				6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */,
-				63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */,
-				63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */,
-				6319C99E204015B900C31F87 /* NSString+MD5.h */,
-				6319C99F204015B900C31F87 /* NSString+MD5.m */,
 				684AE501E6BF8ED5D65DA298 /* Pods */,
 				63CAAAD61FC6E0BF00E09DA1 /* proto */,
 				63CAAAFB1FCD693500E09DA1 /* ReviewItem.h */,
@@ -516,12 +537,7 @@
 				6392DBA620D14915003019EB /* TKMSubjectChip.m */,
 				6392DBA820D14997003019EB /* TKMSubjectDelegate.h */,
 				63AD5C5323056863006B3308 /* Tsurukame (App Store screenshots).app */,
-				63C42A4421B6A703008CA938 /* Tsurukame-Bridging-Header.h */,
 				6319C9B520441DE200C31F87 /* Tsurukame.app */,
-				63A2375F1FE9264300C48657 /* UIColor+HexString.h */,
-				63A237601FE9264300C48657 /* UIColor+HexString.m */,
-				63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */,
-				63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */,
 				93B59B292367AF130097533C /* UpcomingReviewsChartController.swift */,
 			);
 			sourceTree = "<group>";
