@@ -134,7 +134,7 @@
   if (httpResponse.statusCode != 200) {
     [self reportErrorOnMainThread:filename
                             title:[NSString
-                                      stringWithFormat:@"HTTP error %d", httpResponse.statusCode]
+                                      stringWithFormat:@"HTTP error %ld", httpResponse.statusCode]
                           message:url.absoluteString];
     return;
   }
