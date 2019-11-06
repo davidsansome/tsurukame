@@ -15,6 +15,13 @@
 import XCTest
 
 class AnswerCheckerTest: XCTestCase {
+  var dataLoader: DataLoader!
+
+  override func setUp() {
+    dataLoader = try! DataLoader(fromURL: Bundle.main.url(forResource: "data", withExtension: "bin")!)
+    super.setUp()
+  }
+
   func testKatakanaToHiragana() {
     XCTAssertEqual(AnswerChecker.convertKatakanaToHiragana("ヒラガナ"), "ひらがな")
     XCTAssertEqual(AnswerChecker.convertKatakanaToHiragana("ビール"), "びーる")
@@ -25,5 +32,16 @@ class AnswerCheckerTest: XCTestCase {
   func testNormalizedString() {
     XCTAssertEqual(AnswerChecker.normalizedString(" Foo-B.a'/r nn ", taskType: TKMTaskType.meaning), "foo bar nn")
     XCTAssertEqual(AnswerChecker.normalizedString(" Foo-B.a'/r nn ", taskType: TKMTaskType.reading), "foobarんん")
+  }
+
+  func testBlacklistedReading() {
+    let subject = dataLoader.load(subjectID: 7535)!
+    XCTAssertEqual(AnswerChecker.checkAnswer("unintentionally", subject: subject,
+                                             studyMaterials: nil, taskType: TKMTaskType.meaning,
+                                             dataLoader: dataLoader),
+                   .Precise)
+    XCTAssertEqual(AnswerChecker.checkAnswer("intentionally", subject: subject, studyMaterials: nil,
+                                             taskType: TKMTaskType.meaning, dataLoader: dataLoader),
+                   .Incorrect)
   }
 }

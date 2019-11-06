@@ -116,21 +116,21 @@ import Foundation
                                taskType: TKMTaskType,
                                dataLoader: DataLoader) -> AnswerCheckerResult {
     switch taskType {
-    case TKMTaskType.reading:
+    case .reading:
       let hiraganaText = convertKatakanaToHiragana(answer)
 
       if containsAscii(answer) {
-        return AnswerCheckerResult.ContainsInvalidCharacters
+        return .ContainsInvalidCharacters
       }
 
       for reading in subject.primaryReadings {
         if reading.reading == hiraganaText {
-          return AnswerCheckerResult.Precise
+          return .Precise
         }
       }
       for reading in subject.alternateReadings {
         if reading.reading == hiraganaText {
-          return subject.hasKanji ? AnswerCheckerResult.OtherKanjiReading : AnswerCheckerResult.Precise
+          return subject.hasKanji ? .OtherKanjiReading : .Precise
         }
       }
       if subject.hasVocabulary, subject.japanese.count == 1,
@@ -139,30 +139,40 @@ import Foundation
         // reading instead of the vocabulary reading.
         if let kanji = dataLoader.load(subjectID: Int(subject.componentSubjectIdsArray!.value(at: 0))) {
           let result = checkAnswer(answer, subject: kanji, studyMaterials: nil, taskType: taskType, dataLoader: dataLoader)
-          if result == AnswerCheckerResult.Precise {
-            return AnswerCheckerResult.OtherKanjiReading
+          if result == .Precise {
+            return .OtherKanjiReading
           }
         }
       }
       if subject.hasVocabulary, mismatchingOkurigana(answer: answer, japanese: subject.japanese) {
-        return AnswerCheckerResult.OtherKanjiReading
+        return .OtherKanjiReading
       }
 
-    case TKMTaskType.meaning:
+    case .meaning:
+      // Check blacklisted meanings first.  If the answer matches one exactly, it's incorrect.
+      for meaning in subject.meaningsArray! as! [TKMMeaning] {
+        if meaning.type == .blacklist {
+          if normalizedString(meaning.meaning, taskType: taskType) == answer {
+            return .Incorrect
+          }
+        }
+      }
+
+      // Gather all possible meanings from synonyms and from the subject itself.
       var meaningTexts = [String]()
       if let studyMaterials = studyMaterials {
         meaningTexts.append(contentsOf: studyMaterials.meaningSynonymsArray as! [String])
       }
 
       for meaning in subject.meaningsArray! as! [TKMMeaning] {
-        if meaning.type != TKMMeaning_Type.blacklist {
+        if meaning.type != .blacklist {
           meaningTexts.append(meaning.meaning)
         }
       }
 
       for meaning in meaningTexts {
         if normalizedString(meaning, taskType: taskType) == answer {
-          return AnswerCheckerResult.Precise
+          return .Precise
         }
       }
       for meaning in meaningTexts {
@@ -170,16 +180,16 @@ import Foundation
         let distance = meaningText.levenshteinDistance(to: answer)
         let tolerance = distanceTolerance(meaningText)
         if Int(distance) <= tolerance {
-          return AnswerCheckerResult.Imprecise
+          return .Imprecise
         }
       }
 
-    case TKMTaskType._Max:
+    case ._Max:
       fallthrough
     @unknown default:
       fatalError()
     }
 
-    return AnswerCheckerResult.Incorrect
+    return .Incorrect
   }
 }
