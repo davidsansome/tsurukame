@@ -34,7 +34,7 @@ class AnswerCheckerTest: XCTestCase {
     XCTAssertEqual(AnswerChecker.normalizedString(" Foo-B.a'/r nn ", taskType: TKMTaskType.reading), "foobarんん")
   }
 
-  func testBlacklistedReading() {
+  func testBlacklistedMeaning() {
     let subject = dataLoader.load(subjectID: 7535)!
     XCTAssertEqual(AnswerChecker.checkAnswer("unintentionally", subject: subject,
                                              studyMaterials: nil, taskType: TKMTaskType.meaning,
