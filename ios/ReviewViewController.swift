@@ -535,7 +535,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       kanaInput.alphabet = .hiragana
     }
 
-    levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
+    if Settings.showSRSLevelIndicator {
+        levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
+    } else {
+        levelLabel.attributedText = nil
+    }
 
     let setupContextFunc = {
       (ctx: AnimationContext) in
