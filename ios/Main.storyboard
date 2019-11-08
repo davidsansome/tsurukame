@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Whd-2S-WNr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Whd-2S-WNr">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -788,7 +788,19 @@
                             </view>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gdi-7v-770" customClass="TKMGradientView">
                                 <rect key="frame" x="0.0" y="563" width="375" height="40"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•••••" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kc6-Lm-8sK" userLabel="SRS Level Label">
+                                        <rect key="frame" x="320" y="8" width="47" height="24"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="kc6-Lm-8sK" firstAttribute="centerY" secondItem="gdi-7v-770" secondAttribute="centerY" id="BMH-R7-0xe"/>
+                                    <constraint firstAttribute="trailing" secondItem="kc6-Lm-8sK" secondAttribute="trailing" constant="8" id="hnc-JP-Evv"/>
+                                </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="Nab-RQ-m49">
                                 <rect key="frame" x="0.0" y="20" width="375" height="543"/>
@@ -1000,6 +1012,7 @@
                         <outlet property="answerFieldToSubjectDetailsViewConstraint" destination="AzB-Jc-8ht" id="avk-hp-la4"/>
                         <outlet property="doneIcon" destination="q5T-jg-CA5" id="1t5-oj-UVA"/>
                         <outlet property="doneLabel" destination="sr9-jm-3e3" id="goZ-ah-xxh"/>
+                        <outlet property="levelLabel" destination="kc6-Lm-8sK" id="NSc-tq-Ds6"/>
                         <outlet property="menuButton" destination="Hl2-BP-AQQ" id="UGi-eS-eOH"/>
                         <outlet property="previousSubjectButton" destination="GZq-HC-Qg5" id="bch-Uc-FQy"/>
                         <outlet property="previousSubjectButtonHeightConstraint" destination="LSu-63-JjB" id="cDX-w8-wFG"/>
