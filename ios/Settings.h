@@ -60,6 +60,7 @@ DECLARE_BOOL(showAnswerImmediately);
 DECLARE_BOOL(enableCheats);
 DECLARE_BOOL(showOldMnemonic);
 DECLARE_BOOL(useKatakanaForOnyomi);
+DECLARE_BOOL(showSRSLevelIndicator);
 
 // Offline audio.
 DECLARE_BOOL(playAudioAutomatically);

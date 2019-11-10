@@ -57,6 +57,43 @@ private func copyLabel(_ original: UILabel) -> UILabel {
   return copy
 }
 
+private let kDotColorApprentice = UIColor(red: 0.87, green: 0.00, blue: 0.58, alpha: 1.0)
+private let kDotColorGuru = UIColor(red: 0.53, green: 0.18, blue: 0.62, alpha: 1.0)
+private let kDotColorMaster = UIColor(red: 0.16, green: 0.30, blue: 0.86, alpha: 1.0)
+private let kDotColorEnlightened = UIColor(red: 0.00, green: 0.58, blue: 0.87, alpha: 1.0)
+private let kDotColorBurned = UIColor(red: 0.26, green: 0.26, blue: 0.26, alpha: 1.0)
+
+private func getDotsForLevel(_ level: Int32) -> NSAttributedString? {
+  var string: NSMutableAttributedString?
+  switch level {
+  case 1:
+    string = NSMutableAttributedString(string: "•◦◦◦", attributes: [.foregroundColor: kDotColorApprentice])
+  case 2:
+    string = NSMutableAttributedString(string: "••◦◦", attributes: [.foregroundColor: kDotColorApprentice])
+  case 3:
+    string = NSMutableAttributedString(string: "•••◦", attributes: [.foregroundColor: kDotColorApprentice])
+  case 4:
+    string = NSMutableAttributedString(string: "••••◦", attributes: [.foregroundColor: kDotColorApprentice])
+    string?.addAttribute(.foregroundColor, value: kDotColorGuru, range: NSRange(location: 4, length: 1))
+  case 5:
+    string = NSMutableAttributedString(string: "•◦", attributes: [.foregroundColor: kDotColorGuru])
+  case 6:
+    string = NSMutableAttributedString(string: "••◦", attributes: [.foregroundColor: kDotColorGuru])
+    string?.addAttribute(.foregroundColor, value: kDotColorMaster, range: NSRange(location: 2, length: 1))
+  case 7:
+    string = NSMutableAttributedString(string: "•◦", attributes: [.foregroundColor: kDotColorMaster])
+    string?.addAttribute(.foregroundColor, value: kDotColorEnlightened, range: NSRange(location: 1, length: 1))
+  case 8:
+    string = NSMutableAttributedString(string: "•◦", attributes: [.foregroundColor: kDotColorEnlightened])
+    string?.addAttribute(.foregroundColor, value: kDotColorBurned, range: NSRange(location: 1, length: 1))
+  case 9:
+    string = NSMutableAttributedString(string: "•", attributes: [.foregroundColor: kDotColorBurned])
+  default:
+    string = nil
+  }
+  return string
+}
+
 private class AnimationContext {
   let cheats: Bool
   let subjectDetailsViewShown: Bool
@@ -169,6 +206,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   @IBOutlet private var successRateIcon: UIImageView!
   @IBOutlet private var doneIcon: UIImageView!
   @IBOutlet private var queueIcon: UIImageView!
+  @IBOutlet private var levelLabel: UILabel!
 
   @IBOutlet private var answerFieldToBottomConstraint: NSLayoutConstraint!
   @IBOutlet private var answerFieldToSubjectDetailsViewConstraint: NSLayoutConstraint!
@@ -485,6 +523,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     doneLabel.accessibilityLabel = doneText + " done"
     queueLabel.accessibilityLabel = queueText + " remaining"
     questionLabel.accessibilityLabel = "Japanese " + subjectTypePrompt + ". Question"
+    levelLabel.accessibilityLabel = "srs level \(activeTask.assignment.srsStage)"
 
     answerField.text = nil
     answerField.placeholder = taskTypePlaceholder
@@ -494,6 +533,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         .katakana : .hiragana
     } else {
       kanaInput.alphabet = .hiragana
+    }
+
+    if Settings.showSRSLevelIndicator {
+        levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
+    } else {
+        levelLabel.attributedText = nil
     }
 
     let setupContextFunc = {
