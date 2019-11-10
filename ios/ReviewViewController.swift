@@ -536,9 +536,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     }
 
     if Settings.showSRSLevelIndicator {
-        levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
+      levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
     } else {
-        levelLabel.attributedText = nil
+      levelLabel.attributedText = nil
     }
 
     let setupContextFunc = {
