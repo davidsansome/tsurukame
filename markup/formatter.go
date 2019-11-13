@@ -27,7 +27,7 @@ var (
 		`(?U)` +
 			`([^\[<]*)` +
 			`(?:[\[<]` +
-			`(/?(?:vocabulary|reading|ja|kanji|radical|b|em|i|strong|kan|a))` +
+			`(/?(?:vocabulary|reading|ja|jp|kanji|radical|b|em|i|strong|kan|a))` +
 			`(?: href="([^"]+)"[^>]*)?` +
 			`[\]>])`)
 )
@@ -71,7 +71,7 @@ func FormatText(completeText string) []*pb.FormattedText {
 			switch nextTag {
 			case "radical":
 				formatStack = append(formatStack, pb.FormattedText_RADICAL)
-			case "ja":
+			case "ja", "jp":
 				formatStack = append(formatStack, pb.FormattedText_JAPANESE)
 			case "reading":
 				formatStack = append(formatStack, pb.FormattedText_READING)

@@ -47,7 +47,9 @@ class UpcomingReviewsChartController: NSObject {
     chartView.xAxis.avoidFirstLastClippingEnabled = true
     chartView.xAxis.drawGridLinesEnabled = false
     chartView.xAxis.granularityEnabled = true
-    chartView.xAxis.labelPosition = XAxis.LabelPosition.bottom
+    chartView.xAxis.labelPosition = .bottom
+    chartView.rightAxis.drawGridLinesEnabled = false
+    chartView.rightAxis.drawLabelsEnabled = false
     chartView.legend.enabled = false
     chartView.chartDescription = nil
     chartView.isUserInteractionEnabled = false
