@@ -148,13 +148,12 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                      on:Settings.useKatakanaForOnyomi
                                                  target:self
                                                  action:@selector(useKatakanaForOnyomiChanged:)]];
-  [model
-      addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                                  title:@"Show SRS level indicator"
-                                               subtitle:nil
-                                                     on:Settings.showSRSLevelIndicator
-                                                 target:self
-                                                 action:@selector(showSRSLevelIndicator:)]];
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                     title:@"Show SRS level indicator"
+                                                  subtitle:nil
+                                                        on:Settings.showSRSLevelIndicator
+                                                    target:self
+                                                    action:@selector(showSRSLevelIndicator:)]];
 
   [model addSection:@"Audio"];
   [model addItem:[[TKMSwitchModelItem alloc]
