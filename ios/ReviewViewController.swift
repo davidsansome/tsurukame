@@ -537,6 +537,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     if Settings.showSRSLevelIndicator {
       levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
+      // Make sure the level up pop animation does not leave this transparent
       levelLabel.alpha = 1
     } else {
       levelLabel.attributedText = nil

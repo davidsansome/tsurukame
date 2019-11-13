@@ -248,7 +248,7 @@ static void CreateExplosion(UIView *view) {
 /**
  Specialized version of CreateExplosion that attempt to line up the sparks
  with the characters in the SRS level dots label. The arc is also skewed
- let so the sparks stay on screen.
+ left so the sparks stay on screen.
  */
 static void CreateDotExplosion(UILabel *view) {
   const CGFloat kSizeMin = 9.0;
