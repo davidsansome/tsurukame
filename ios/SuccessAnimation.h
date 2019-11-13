@@ -20,6 +20,7 @@ extern "C" {
 
 void RunSuccessAnimation(UIView *answerField,
                          UIView *doneLabel,
+                         UILabel *srsLevelLabel,
                          bool isSubjectFinished,
                          bool didLevelUp,
                          int newSrsLevel);

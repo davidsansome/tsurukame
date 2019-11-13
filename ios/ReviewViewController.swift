@@ -536,9 +536,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     }
 
     if Settings.showSRSLevelIndicator {
-        levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
+      levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
+      levelLabel.alpha = 1
     } else {
-        levelLabel.attributedText = nil
+      levelLabel.attributedText = nil
     }
 
     let setupContextFunc = {
@@ -962,10 +963,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         previousSubjectLabel = copyLabel(questionLabel)
         previousSubject = activeSubject
       }
-      randomTask()
       if correct {
-        RunSuccessAnimation(answerField, doneLabel, isSubjectFinished, didLevelUp, newSrsStage)
+        RunSuccessAnimation(answerField, doneLabel, levelLabel, isSubjectFinished, didLevelUp, newSrsStage)
       }
+      randomTask()
+
       if let previousSubjectLabel = previousSubjectLabel {
         animateLabelToPreviousSubjectButton(previousSubjectLabel)
       }
