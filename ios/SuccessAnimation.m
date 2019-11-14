@@ -245,8 +245,43 @@ static void CreateExplosion(UIView *view) {
   }
 }
 
+/**
+ Specialized version of CreateExplosion that attempt to line up the sparks
+ with the characters in the SRS level dots label. The arc is also skewed
+ left so the sparks stay on screen.
+ */
+static void CreateDotExplosion(UILabel *view) {
+  const CGFloat kSizeMin = 9.0;
+  const CGFloat kSizeMax = 11.0;
+  const CGFloat kDistanceMin = 30.0;
+  const CGFloat kDistanceMax = 80.0;
+  const CGFloat kDurationMin = 0.5;
+  const CGFloat kDurationMax = 0.7;
+  const CGFloat kAngleRange = M_PI * 0.3;
+
+  NSAttributedString *value = view.attributedText;
+  int dotCount = (int)value.length;
+    CGFloat letterWidth = view.bounds.size.width / dotCount;
+
+  UIView *superview = view.superview;
+  for (int i = 0; i < dotCount; ++i) {
+    CGFloat size = RandFloat(kSizeMin, kSizeMax);
+    CGFloat distance = RandFloat(kDistanceMin, kDistanceMax);
+    CGFloat duration = RandFloat(kDurationMin, kDurationMax);
+    CGFloat offset = RandFloat(-1.5, 0.0);
+    CGFloat angle = -kAngleRange * offset;
+    UIColor *color = [value attribute:NSForegroundColorAttributeName atIndex:i effectiveRange:nil];
+    CGPoint origin =
+        CGPointMake(view.frame.origin.x + (i * letterWidth), view.center.y);
+
+    CreateSpark(superview, origin, size, distance, angle, color, duration);
+  }
+}
+
+
 void RunSuccessAnimation(UIView *answerField,
                          UIView *doneLabel,
+                         UILabel *srsLevelLabel,
                          bool isSubjectFinished,
                          bool didLevelUp,
                          int newSrsStage) {
@@ -260,6 +295,11 @@ void RunSuccessAnimation(UIView *answerField,
                       [UIFont boldSystemFontOfSize:20.0],
                       [UIColor whiteColor],
                       1.5);  // Duration.
+  }
+
+  if (isSubjectFinished &&  Settings.showSRSLevelIndicator) {
+    CreateDotExplosion(srsLevelLabel);
+    srsLevelLabel.alpha = 0;
   }
 
   if (isSubjectFinished && didLevelUp && Settings.animateLevelUpPopup) {
