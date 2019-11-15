@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "idiom" : "universal",
+      "filename" : "kisspng-crab-food-scalable-vector-graphics-icon-vector-crab-5a7c6207ab3473.1242943515181009997013.png",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "kisspng-crab-food-scalable-vector-graphics-icon-vector-crab-5a7c6207ab3473.1242943515181009997013-1.png",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "kisspng-crab-food-scalable-vector-graphics-icon-vector-crab-5a7c6207ab3473.1242943515181009997013-2.png",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}

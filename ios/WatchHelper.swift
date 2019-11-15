@@ -56,6 +56,9 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
 
 @objc class WatchHelper: NSObject {
   public static let KeyReviewCount = "reviewCount"
+  public static let KeyReviewNextHourCount = "reviewHrCount"
+  public static let KeyReviewNextDayCount = "reviewDayCount"
+  public static let KeySentAt = "sent"
 
   private static let _sharedInstance = WatchHelper()
   private let session: WCSession? = WCSession.isSupported() ? WCSession.default : nil
@@ -81,10 +84,13 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
       }
     }
 
-    @objc func sendReviewCount(_ reviewCount: Int32) {
+    @objc func sendReviewCount(_ reviewCount: Int32, nextHour: Int32) {
       if let session = session, session.isPaired {
-        let packet = [WatchHelper.KeyReviewCount: reviewCount]
-        // session.transferUserInfo(packet)
+        let packet: [String: Any] = [
+          WatchHelper.KeyReviewCount: reviewCount,
+          WatchHelper.KeyReviewNextHourCount: nextHour,
+          WatchHelper.KeySentAt: Int32(Date().timeIntervalSince1970),
+        ]
         session.transferCurrentComplicationUserInfo(packet)
       }
     }
