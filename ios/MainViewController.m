@@ -405,6 +405,10 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 - (void)updateAvailableItems {
   int lessons = _services.localCachingClient.availableLessonCount;
   int reviews = _services.localCachingClient.availableReviewCount;
+
+    // TODO: This should happen in the background periodically. Just here for testing.
+    [[WatchHelper sharedInstance] sendReviewCount:reviews];
+
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
   NSArray<TKMAssignment *> *currentLevelAssignments =
       [_services.localCachingClient getAssignmentsAtUsersCurrentLevel];
