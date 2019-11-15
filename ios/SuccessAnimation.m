@@ -261,7 +261,7 @@ static void CreateDotExplosion(UILabel *view) {
 
   NSAttributedString *value = view.attributedText;
   int dotCount = (int)value.length;
-    CGFloat letterWidth = view.bounds.size.width / dotCount;
+  CGFloat letterWidth = view.bounds.size.width / dotCount;
 
   UIView *superview = view.superview;
   for (int i = 0; i < dotCount; ++i) {
@@ -299,7 +299,6 @@ void RunSuccessAnimation(UIView *answerField,
 
   if (isSubjectFinished &&  Settings.showSRSLevelIndicator) {
     CreateDotExplosion(srsLevelLabel);
-    srsLevelLabel.alpha = 0;
   }
 
   if (isSubjectFinished && didLevelUp && Settings.animateLevelUpPopup) {

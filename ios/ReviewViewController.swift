@@ -537,8 +537,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     if Settings.showSRSLevelIndicator {
       levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
-      // Make sure the level up pop animation does not leave this transparent
-      levelLabel.alpha = 1
     } else {
       levelLabel.attributedText = nil
     }
@@ -964,10 +962,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         previousSubjectLabel = copyLabel(questionLabel)
         previousSubject = activeSubject
       }
+      randomTask()
       if correct {
+        // We must start the success animations *after* all the UI elements have been moved to their
+        // new locations by randomTask(), so that, for example, the success sparkles animate from
+        // the final position of the answerField, not the original position.
         RunSuccessAnimation(answerField, doneLabel, levelLabel, isSubjectFinished, didLevelUp, newSrsStage)
       }
-      randomTask()
 
       if let previousSubjectLabel = previousSubjectLabel {
         animateLabelToPreviousSubjectButton(previousSubjectLabel)
