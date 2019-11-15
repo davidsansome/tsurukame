@@ -512,7 +512,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     promptLabel!.textColor = promptTextColor
 
     // Submit button.
-    submitButton.isEnabled = true
+    submitButton.isEnabled = false
 
     // Background gradients.
     questionBackground.animateColors(to: TKMGradientForAssignment(activeTask.assignment), duration: animationDuration)
