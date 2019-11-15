@@ -152,7 +152,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
         continue
       }
       if !addedSection {
-        model.addSection("Visually Similar Kanhi")
+        model.addSection("Visually Similar Kanji")
         addedSection = true
       }
 
