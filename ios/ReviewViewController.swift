@@ -293,7 +293,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
                                            name: UIResponder.keyboardWillShowNotification, object: nil)
 
-    subjectDetailsView.setup(withServices: services, showHints: false, delegate: self)
+    subjectDetailsView.setup(withServices: services, delegate: self)
 
     answerField.delegate = kanaInput
     answerField.addTarget(self, action: #selector(answerFieldValueDidChange), for: UIControl.Event.editingChanged)

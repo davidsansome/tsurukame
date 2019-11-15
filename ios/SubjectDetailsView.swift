@@ -96,16 +96,14 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   }
 
   private var services: TKMServices!
-  private var showHints: Bool!
   private weak var subjectDelegate: TKMSubjectDelegate!
 
   private var readingItem: TKMReadingModelItem?
   private var tableModel: TKMTableModel?
   private var lastSubjectChipTapped: TKMSubjectChip?
 
-  @objc public func setup(withServices services: TKMServices, showHints: Bool, delegate: TKMSubjectDelegate) {
+  @objc public func setup(withServices services: TKMServices, delegate: TKMSubjectDelegate) {
     self.services = services
-    self.showHints = showHints
     subjectDelegate = delegate
   }
 
@@ -181,9 +179,6 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   }
 
   private func addFormattedText(_ text: [TKMFormattedText], isHint: Bool, toModel model: TKMMutableTableModel) {
-    if isHint, !showHints {
-      return
-    }
     if text.isEmpty {
       return
     }

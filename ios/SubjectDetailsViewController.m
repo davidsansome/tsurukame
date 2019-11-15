@@ -63,7 +63,7 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  [_subjectDetailsView setupWithServices:_services showHints:_showHints delegate:self];
+  [_subjectDetailsView setupWithServices:_services delegate:self];
 
   TKMStudyMaterials *studyMaterials =
       [_services.localCachingClient getStudyMaterialForID:_subject.id_p];
