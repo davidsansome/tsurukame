@@ -128,6 +128,15 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                          accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                 target:self
                                                 action:@selector(didTapFonts:)]];
+  [model
+        addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                   title:@"Font size"
+                                                subtitle:self.fontSizeValueText
+                                           accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                  target:self
+                                                  action:@selector(fontSizeChanged:)]];
+
+
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                      title:@"Allow cheating"
                                                   subtitle:@"Ignore Typos and Add Synonym"
@@ -250,6 +259,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   } else {
     return @"Reading first";
   }
+}
+
+- (NSString *)fontSizeValueText {
+    if(Settings.fontSize){
+        return [NSString stringWithFormat:@"%d%%", (int)(Settings.fontSize * 100)];
+    }
+    return nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -395,6 +411,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)didTapLessonBatchSize:(TKMBasicModelItem *)item {
   [self performSegueWithIdentifier:@"lessonBatchSize" sender:self];
+}
+
+- (void)fontSizeChanged:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"fontSize" sender:self];
 }
 
 - (void)didTapReviewOrder:(TKMBasicModelItem *)item {
