@@ -16,7 +16,7 @@
 
 #import "Client.h"
 #import "Settings.h"
-#import "Style.h"
+#import "Tsurukame-Swift.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -43,9 +43,9 @@ static NSString *const kPrivacyPolicyURL =
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  TKMAddShadowToView(_signInLabel, 0.f, 1.f, 5.f);
-  TKMAddShadowToView(_privacyPolicyLabel, 0.f, 1.f, 2.f);
-  TKMAddShadowToView(_privacyPolicyButton, 0.f, 1.f, 2.f);
+  [TKMStyle addShadowToView:_signInLabel offset:0.f opacity:1.f radius:5.f];
+  [TKMStyle addShadowToView:_privacyPolicyLabel offset:0.f opacity:1.f radius:2.f];
+  [TKMStyle addShadowToView:_privacyPolicyButton offset:0.f opacity:1.f radius:2.f];
 
   if (_forcedUsername.length) {
     _usernameField.text = _forcedUsername;
@@ -83,7 +83,7 @@ static NSString *const kPrivacyPolicyURL =
 - (void)textFieldDidChange:(UITextField *)textField {
   bool enabled = _usernameField.text.length != 0 && _passwordField.text.length != 0;
   _signInButton.enabled = enabled;
-  _signInButton.backgroundColor = enabled ? TKMRadicalColor2() : [UIColor darkGrayColor];
+  _signInButton.backgroundColor = enabled ? TKMStyle.radicalColor2 : [UIColor darkGrayColor];
 }
 
 #pragma mark - Sign In flow

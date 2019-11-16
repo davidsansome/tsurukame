@@ -24,7 +24,6 @@
 #import "SearchResultViewController.h"
 #import "Settings.h"
 #import "SettingsViewController.h"
-#import "Style.h"
 #import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"
 #import "SubjectsRemainingViewController.h"
@@ -142,7 +141,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
   // Set a gradient background for the user cell.
   CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
-  userGradientLayer.colors = TKMRadicalGradient();
+  userGradientLayer.colors = TKMStyle.radicalGradient;
   userGradientLayer.startPoint = CGPointMake(0.5f, kUserGradientStartPoint);
   [_userContainer.layer insertSublayer:userGradientLayer atIndex:0];
   _userGradientLayer = userGradientLayer;
@@ -162,7 +161,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
   // Configure the search bar.
   UISearchBar *searchBar = _searchController.searchBar;
-  searchBar.barTintColor = TKMRadicalColor2();
+  searchBar.barTintColor = TKMStyle.radicalColor2;
   searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 
   UIColor *originalSearchBarTintColor = searchBar.tintColor;
@@ -181,9 +180,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   }
 
   // Add shadows to things in the user info view.
-  TKMAddShadowToView(_userImageContainer, 2.f, 0.4f, 4.f);
-  TKMAddShadowToView(_userNameLabel, 1.f, 0.4f, 4.f);
-  TKMAddShadowToView(_userLevelLabel, 1.f, 0.2f, 2.f);
+  [TKMStyle addShadowToView:_userImageContainer offset:2.f opacity:0.4f radius:4.f];
+  [TKMStyle addShadowToView:_userNameLabel offset:1.f opacity:0.4f radius:4.f];
+  [TKMStyle addShadowToView:_userLevelLabel offset:1.f opacity:0.2f radius:2.f];
 
   // Set rounded corners on the user image.
   CGFloat cornerRadius = _userImageContainer.bounds.size.height / 2;

@@ -83,12 +83,12 @@ class UpcomingReviewsChartController: NSObject {
     lineDataSet.drawValuesEnabled = false
     lineDataSet.drawCircleHoleEnabled = false
     lineDataSet.circleRadius = 1.5
-    lineDataSet.colors = [TKMVocabularyColor2()]
-    lineDataSet.circleColors = [TKMVocabularyColor2()]
+    lineDataSet.colors = [TKMStyle.vocabularyColor2]
+    lineDataSet.circleColors = [TKMStyle.vocabularyColor2]
 
     let barDataSet = BarChartDataSet(hourlyData)
     barDataSet.axisDependency = YAxis.AxisDependency.right
-    barDataSet.colors = [TKMRadicalColor2()]
+    barDataSet.colors = [TKMStyle.radicalColor2]
     barDataSet.valueFormatter = DefaultValueFormatter(decimals: 0)
 
     let data = CombinedChartData()

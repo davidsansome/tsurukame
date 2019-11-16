@@ -14,7 +14,6 @@
 
 #import "CurrentLevelChartController.h"
 
-#import "Style.h"
 #import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
@@ -131,7 +130,7 @@ static void UnsetAllLabels(ChartViewBase *view) {
     total++;
   }
 
-  UIColor *baseColor = TKMColor2ForSubjectType(_subjectType);
+  UIColor *baseColor = [TKMStyle color2ForSubjectType:_subjectType];
   NSMutableArray<PieChartDataEntry *> *values = [NSMutableArray array];
   NSMutableArray<UIColor *> *colors = [NSMutableArray array];
   for (int i = 0; i < PieSlice_Count; ++i) {

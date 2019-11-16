@@ -22,7 +22,7 @@ private let kVisuallySimilarKanjiScoreThreshold = 400
 
 private let kMeaningSynonymColor = UIColor(red: 0.231, green: 0.6, blue: 0.988, alpha: 1)
 private let kHintTextColor = UIColor(white: 0.3, alpha: 1.0)
-private let kFont = TKMJapaneseFont(kFontSize)
+private let kFont = TKMStyle.japaneseFont(size: kFontSize)
 
 private func join(_ arr: [NSAttributedString], with joinString: String) -> NSAttributedString {
   let ret = NSMutableAttributedString()
@@ -65,7 +65,7 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
     }
   }
   if !primaryOnly {
-    let font = TKMJapaneseFontLight(kFontSize)
+    let font = TKMStyle.japaneseFontLight(size: kFontSize)
     for reading in readings {
       if !reading.isPrimary {
         strings.append(NSAttributedString(string: reading.displayText, attributes: [.font: font]))
