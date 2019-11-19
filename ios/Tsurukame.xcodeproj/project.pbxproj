@@ -176,7 +176,6 @@
 		C90846B0237F1C770068A272 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C90846AE237F1C770068A272 /* Interface.storyboard */; };
 		C90846B2237F1C780068A272 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C90846B1237F1C780068A272 /* Assets.xcassets */; };
 		C90846B9237F1C790068A272 /* Tsurukame Complication Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C90846B8237F1C790068A272 /* Tsurukame Complication Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C90846BE237F1C790068A272 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90846BD237F1C790068A272 /* InterfaceController.swift */; };
 		C90846C0237F1C790068A272 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90846BF237F1C790068A272 /* ExtensionDelegate.swift */; };
 		C90846C2237F1C790068A272 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90846C1237F1C790068A272 /* ComplicationController.swift */; };
 		C90846C4237F1C790068A272 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C90846C3237F1C790068A272 /* Assets.xcassets */; };
@@ -414,7 +413,6 @@
 		C90846B1237F1C780068A272 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C90846B3237F1C780068A272 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C90846B8237F1C790068A272 /* Tsurukame Complication Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Tsurukame Complication Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C90846BD237F1C790068A272 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
 		C90846BF237F1C790068A272 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		C90846C1237F1C790068A272 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
 		C90846C3237F1C790068A272 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -759,7 +757,6 @@
 			isa = PBXGroup;
 			children = (
 				C92AB971237F2E8200F79904 /* DataManager.swift */,
-				C90846BD237F1C790068A272 /* InterfaceController.swift */,
 				C943D5AF2380D59A004A7969 /* SettingsController.swift */,
 				C90846BF237F1C790068A272 /* ExtensionDelegate.swift */,
 				C90846C1237F1C790068A272 /* ComplicationController.swift */,
@@ -1392,7 +1389,6 @@
 				C943D5B02380D59B004A7969 /* SettingsController.swift in Sources */,
 				C90846C0237F1C790068A272 /* ExtensionDelegate.swift in Sources */,
 				C92AB972237F2E8200F79904 /* DataManager.swift in Sources */,
-				C90846BE237F1C790068A272 /* InterfaceController.swift in Sources */,
 				C90846C2237F1C790068A272 /* ComplicationController.swift in Sources */,
 				C92AB970237F2DB600F79904 /* WatchHelper.swift in Sources */,
 			);

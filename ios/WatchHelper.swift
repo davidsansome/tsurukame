@@ -96,13 +96,22 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
     }
 
     @objc func sendReviewCount(_ reviewCount: Int32, nextHour: Int32) {
-      if let session = session, session.isPaired {
-        let packet: [String: Any] = [
-          WatchHelper.KeyReviewCount: reviewCount,
-          WatchHelper.KeyReviewNextHourCount: nextHour,
-          WatchHelper.KeySentAt: Int32(Date().timeIntervalSince1970),
-        ]
-        session.transferCurrentComplicationUserInfo(packet)
+      if let session = session {
+        var deadline = 0.0
+        if session.activationState != .activated {
+          // Session still initializing
+          deadline += 0.5
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + deadline) {
+          // TODO: Don't resend if the data is the same
+          let packet: [String: Any] = [
+            WatchHelper.KeyReviewCount: reviewCount,
+            WatchHelper.KeyReviewNextHourCount: nextHour,
+            WatchHelper.KeySentAt: Int32(Date().timeIntervalSince1970),
+          ]
+          session.transferCurrentComplicationUserInfo(packet)
+        }
       }
     }
   #endif
@@ -112,7 +121,6 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
     if let session = session {
       session.delegate = clientDelegate
       session.activate()
-      os_log("MZS - activated listener")
     }
   }
 }

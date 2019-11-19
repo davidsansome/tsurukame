@@ -410,7 +410,6 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   NSArray<TKMAssignment *> *currentLevelAssignments =
       [_services.localCachingClient getAssignmentsAtUsersCurrentLevel];
 
-    // TODO: This should happen in the background periodically. Just here for testing.
     int nextHourCount = [[upcomingReviews objectAtIndex:0] intValue];
     [[WatchHelper sharedInstance] sendReviewCount:reviews nextHour:nextHourCount];
 

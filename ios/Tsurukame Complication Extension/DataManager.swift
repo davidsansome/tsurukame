@@ -18,22 +18,37 @@ import os
 typealias UserData = [String: Any]
 
 protocol DataManagerDelegate {
-  func onDataUpdated(data: UserData)
+  func onDataUpdated(data: UserData, dataSource: ComplicationDataSource)
+}
+
+enum ComplicationDataSource: Int {
+  case ReviewCounts, Level
 }
 
 class DataManager {
+  private let UserDefaultsKeyData = "LastKnownData"
+  private let UserDefaultsKeySource = "DataSource"
   public static let sharedInstance = DataManager()
   var latestData: UserData?
   var delegates: [DataManagerDelegate] = []
+  public var dataSource: ComplicationDataSource = .ReviewCounts {
+    didSet {
+      UserDefaults.standard.set(dataSource.rawValue, forKey: UserDefaultsKeySource)
+    }
+  }
 
   private init() {
-    os_log("MZS - data manager init")
+    // Load the last known data from last time
+    latestData = UserDefaults.standard.dictionary(forKey: UserDefaultsKeyData)
+    dataSource = ComplicationDataSource(rawValue: UserDefaults.standard.integer(forKey: UserDefaultsKeySource)) ?? .ReviewCounts
+
     WatchHelper.sharedInstance().awaitMessages { userInfo in
-      os_log("MZS - new data arrived: %{public}@", userInfo)
       self.latestData = userInfo
 
+      UserDefaults.standard.set(userInfo, forKey: self.UserDefaultsKeyData)
+
       for delegate in self.delegates {
-        delegate.onDataUpdated(data: userInfo)
+        delegate.onDataUpdated(data: userInfo, dataSource: self.dataSource)
       }
     }
   }

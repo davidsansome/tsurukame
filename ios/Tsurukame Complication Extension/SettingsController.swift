@@ -16,30 +16,77 @@ import Foundation
 import os
 import WatchKit
 
-class SettingsController: WKInterfaceController {
+class SettingsController: WKInterfaceController, DataManagerDelegate {
+  @IBOutlet var updateAgeTimer: WKInterfaceTimer!
+  @IBOutlet var updateAgeHeader: WKInterfaceLabel!
   @IBOutlet var dataSourcePicker: WKInterfacePicker!
-  let dataSourceOptions: [(String, String)] = [
-    ("reviewCount", "Review Counts"),
-    ("level", "Level"),
+  let dataSourceOptions: [(ComplicationDataSource, String)] = [
+    (.ReviewCounts, "Review Counts"),
+    (.Level, "Level"),
   ]
 
   override func awake(withContext context: Any?) {
     super.awake(withContext: context)
 
-    let pickerOptions = dataSourceOptions.map { (caption, title) -> WKPickerItem in
+    let pickerOptions = dataSourceOptions.map { (_, title) -> WKPickerItem in
       let pickerItem = WKPickerItem()
-      pickerItem.caption = caption
+      pickerItem.caption = title
       pickerItem.title = title
       return pickerItem
     }
     // Configure interface objects here.
     dataSourcePicker.setItems(pickerOptions)
+
+    for (idx, (dataSource, _)) in dataSourceOptions.enumerated() {
+      if dataSource == DataManager.sharedInstance.dataSource {
+        dataSourcePicker.setSelectedItemIndex(idx)
+      }
+    }
   }
 
-  override func willActivate() {}
+  override func willActivate() {
+    if let userInfo = DataManager.sharedInstance.latestData {
+      onDataUpdated(data: userInfo, dataSource: DataManager.sharedInstance.dataSource)
+    } else {
+      updateAgeHeader.setText("Open app to update")
+      updateAgeTimer.setHidden(true)
+    }
+
+    DataManager.sharedInstance.addDelegate(self)
+  }
+
+  override func didDeactivate() {
+    // This method is called when watch view controller is no longer visible
+    super.didDeactivate()
+    DataManager.sharedInstance.removeDelegate(self)
+
+    // If we've been viewing settings make sure we refresh complication
+    // on return.
+    let server = CLKComplicationServer.sharedInstance()
+    if let complications = server.activeComplications {
+      for complication in complications {
+        server.reloadTimeline(for: complication)
+      }
+    }
+  }
+
+  // MARK: - DataManagerDelegate
+
+  func onDataUpdated(data: UserData, dataSource _: ComplicationDataSource) {
+    if let sentAtSecs = data[WatchHelper.KeySentAt] as? Int {
+      updateAgeHeader.setText("Last Updated")
+      updateAgeTimer.setHidden(false)
+      let date = Date(timeIntervalSince1970: TimeInterval(sentAtSecs))
+      updateAgeTimer.setDate(date)
+      updateAgeTimer.start()
+    } else {
+      updateAgeHeader.setText("Open app to update")
+      updateAgeTimer.setHidden(true)
+    }
+  }
 
   @IBAction func onPickerSelect(value: Int) {
     let selected = dataSourceOptions[value]
-    os_log("MZS - selected %{public}@", selected.1)
+    DataManager.sharedInstance.dataSource = selected.0
   }
 }
