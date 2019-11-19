@@ -15,6 +15,9 @@
 import Foundation
 import os
 import WatchConnectivity
+#if os(watchOS)
+  import ClockKit
+#endif
 
 typealias ClientDelegateCallback = (([String: Any]) -> Void)
 
@@ -44,6 +47,14 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
   }
 
   func session(_: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
+    #if os(watchOS)
+      let server = CLKComplicationServer.sharedInstance()
+      if let complications = server.activeComplications {
+        for complication in complications {
+          server.reloadTimeline(for: complication)
+        }
+      }
+    #endif
     callback(userInfo)
   }
 

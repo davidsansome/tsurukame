@@ -144,12 +144,16 @@
 }
 
 - (void)updateAppBadgeCount {
-  if (!Settings.notificationsAllReviews && !Settings.notificationsBadging) {
-    return;
-  }
+
 
   int reviewCount = _services.localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
+
+    [[WatchHelper sharedInstance] sendReviewCount:reviewCount nextHour:[[upcomingReviews objectAtIndex:0] intValue]];
+
+    if (!Settings.notificationsAllReviews && !Settings.notificationsBadging) {
+      return;
+    }
 
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   void (^updateBlock)(void) = ^() {

@@ -6,19 +6,50 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
     </dependencies>
     <scenes>
-        <!--Interface Controller-->
+        <!--Status-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Tsurukame_Complication" customModuleProvider="target">
+                <controller title="Status" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Tsurukame_Complication" customModuleProvider="target">
                     <items>
-                        <imageView alignment="left" image="mediumCrab" contentMode="scaleAspectFit" id="nzj-kA-tdZ"/>
+                        <label alignment="left" text="Last Update" textAlignment="left" numberOfLines="0" id="5Bb-m8-TVi">
+                            <color key="textColor" red="0.92239397759999997" green="0.37168154120000002" blue="0.21561616659999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
+                        <timer alignment="left" textAlignment="left" format="abbreviated" id="2Rm-O7-Jn7"/>
+                        <imageView height="0.5" alignment="left" image="mediumCrab" contentMode="scaleAspectFit" id="nzj-kA-tdZ"/>
                     </items>
+                    <connections>
+                        <outlet property="updateAgeHeader" destination="5Bb-m8-TVi" id="ctj-mY-b9N"/>
+                        <outlet property="updateAgeTimer" destination="2Rm-O7-Jn7" id="aAQ-OT-ZPs"/>
+                        <segue destination="cOX-I5-3Vp" kind="relationship" relationship="nextPage" id="pDh-dA-eRo"/>
+                    </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="25" y="29"/>
         </scene>
+        <!--Settings-->
+        <scene sceneID="f34-nY-bBB">
+            <objects>
+                <controller identifier="SettingController" title="Settings" id="cOX-I5-3Vp" customClass="SettingsController" customModule="Tsurukame_Complication_Extension">
+                    <items>
+                        <label alignment="left" text="Data Source" id="7rG-S1-c2R">
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
+                        <picker width="1" height="50" alignment="left" id="Kxu-r6-40N">
+                            <connections>
+                                <action selector="onPickerSelectWithValue:" destination="cOX-I5-3Vp" id="Jfw-iv-LbL"/>
+                            </connections>
+                        </picker>
+                    </items>
+                    <connections>
+                        <outlet property="dataSourcePicker" destination="Kxu-r6-40N" id="mcv-d2-n10"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="387" y="29"/>
+        </scene>
     </scenes>
     <resources>
-        <image name="mediumCrab" width="128" height="128"/>
+        <image name="mediumCrab" width="256" height="256"/>
     </resources>
 </document>

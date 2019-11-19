@@ -15,15 +15,32 @@
 import Foundation
 import os
 
+typealias UserData = [String: Any]
+
+protocol DataManagerDelegate {
+  func onDataUpdated(data: UserData)
+}
+
 class DataManager {
   public static let sharedInstance = DataManager()
-  var latestData: [String: Any]?
+  var latestData: UserData?
+  var delegates: [DataManagerDelegate] = []
 
   private init() {
     os_log("MZS - data manager init")
     WatchHelper.sharedInstance().awaitMessages { userInfo in
       os_log("MZS - new data arrived: %{public}@", userInfo)
       self.latestData = userInfo
+
+      for delegate in self.delegates {
+        delegate.onDataUpdated(data: userInfo)
+      }
     }
   }
+
+  func addDelegate(_ delegate: DataManagerDelegate) {
+    delegates.append(delegate)
+  }
+
+  func removeDelegate(_: DataManagerDelegate) {}
 }

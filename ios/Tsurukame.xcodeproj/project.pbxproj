@@ -184,6 +184,7 @@
 		C92AB96F237F280300F79904 /* WatchHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB96E237F280300F79904 /* WatchHelper.swift */; };
 		C92AB970237F2DB600F79904 /* WatchHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB96E237F280300F79904 /* WatchHelper.swift */; };
 		C92AB972237F2E8200F79904 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB971237F2E8200F79904 /* DataManager.swift */; };
+		C943D5B02380D59B004A7969 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943D5AF2380D59A004A7969 /* SettingsController.swift */; };
 		FCFB23015B2EB50B28EF6BCD /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -422,6 +423,7 @@
 		C90846D9237F21B30068A272 /* protobuf.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = protobuf.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92AB96E237F280300F79904 /* WatchHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHelper.swift; sourceTree = "<group>"; };
 		C92AB971237F2E8200F79904 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		C943D5AF2380D59A004A7969 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		D9929E537851D24D07F47938 /* Pods-Tsurukame (App Store screenshots).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).release.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).release.xcconfig"; sourceTree = "<group>"; };
 		E76D291A2528193C74A43C60 /* Pods-FontScreenshotter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.debug.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.debug.xcconfig"; sourceTree = "<group>"; };
 		F0FB8F6AE66ACCEFE37ADDB2 /* Pods_Tsurukame.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -758,6 +760,7 @@
 			children = (
 				C92AB971237F2E8200F79904 /* DataManager.swift */,
 				C90846BD237F1C790068A272 /* InterfaceController.swift */,
+				C943D5AF2380D59A004A7969 /* SettingsController.swift */,
 				C90846BF237F1C790068A272 /* ExtensionDelegate.swift */,
 				C90846C1237F1C790068A272 /* ComplicationController.swift */,
 				C90846C3237F1C790068A272 /* Assets.xcassets */,
@@ -1386,6 +1389,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C943D5B02380D59B004A7969 /* SettingsController.swift in Sources */,
 				C90846C0237F1C790068A272 /* ExtensionDelegate.swift in Sources */,
 				C92AB972237F2E8200F79904 /* DataManager.swift in Sources */,
 				C90846BE237F1C790068A272 /* InterfaceController.swift in Sources */,

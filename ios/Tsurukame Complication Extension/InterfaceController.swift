@@ -16,7 +16,10 @@ import Foundation
 import os
 import WatchKit
 
-class InterfaceController: WKInterfaceController {
+class InterfaceController: WKInterfaceController, DataManagerDelegate {
+  @IBOutlet var updateAgeTimer: WKInterfaceTimer!
+  @IBOutlet var updateAgeHeader: WKInterfaceLabel!
+
   override func awake(withContext context: Any?) {
     super.awake(withContext: context)
 
@@ -27,12 +30,34 @@ class InterfaceController: WKInterfaceController {
     // This method is called when watch view controller is about to be visible to user
     super.willActivate()
 
-    let userInfo = DataManager.sharedInstance.latestData
-    os_log("MZS - user info at UI display time: %{public}@", userInfo ?? "none")
+    if let userInfo = DataManager.sharedInstance.latestData {
+      onDataUpdated(data: userInfo)
+    } else {
+      updateAgeHeader.setText("Open app to update")
+      updateAgeTimer.setHidden(true)
+    }
+
+    DataManager.sharedInstance.addDelegate(self)
   }
 
   override func didDeactivate() {
     // This method is called when watch view controller is no longer visible
     super.didDeactivate()
+    DataManager.sharedInstance.removeDelegate(self)
+  }
+
+  // MARK: - DataManagerDelegate
+
+  func onDataUpdated(data: UserData) {
+    if let sentAtSecs = data[WatchHelper.KeySentAt] as? Int {
+      updateAgeHeader.setText("Last Updated")
+      updateAgeTimer.setHidden(false)
+      let date = Date(timeIntervalSince1970: TimeInterval(sentAtSecs))
+      updateAgeTimer.setDate(date)
+      updateAgeTimer.start()
+    } else {
+      updateAgeHeader.setText("Open app to update")
+      updateAgeTimer.setHidden(true)
+    }
   }
 }
