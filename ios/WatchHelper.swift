@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import CommonCrypto
 import Foundation
 import os
 import WatchConnectivity
@@ -68,13 +69,18 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
 @objc class WatchHelper: NSObject {
   public static let KeyReviewCount = "reviewCount"
   public static let KeyReviewNextHourCount = "reviewHrCount"
-  public static let KeyReviewNextDayCount = "reviewDayCount"
+  public static let KeyLevelCurrent = "level"
+  public static let KeyLevelLearned = "levelLearn"
+  public static let KeyLevelTotal = "levelTotal"
+  public static let KeyLevelHalf = "levelHalf"
+  public static let KeyNextReviewAt = "nextReview"
   public static let KeySentAt = "sent"
 
   private static let _sharedInstance = WatchHelper()
   private let session: WCSession? = WCSession.isSupported() ? WCSession.default : nil
   let serverDelegate = WatchConnectionServerDelegate()
   var clientDelegate: WatchConnectionClientDelegate?
+  var lastPacketSignature: String?
 
   override init() {
     super.init()
@@ -114,6 +120,66 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
         }
       }
     }
+
+    @objc func updatedData(client: LocalCachingClient) {
+      var halfLevel = false
+      var assignmentsAtCurrentLevel = client.getAssignmentsAtUsersCurrentLevel()
+      var learnedCount = assignmentsAtCurrentLevel?.filter { (assignment) -> Bool in
+        assignment.srsStage >= 5
+      }.count ?? 0
+
+      // If the user is in the vocab and technically levels up but has 0
+      // learned treat it as the prior level and set halfLevel=true
+      if learnedCount == 0,
+        let currentAssignments = assignmentsAtCurrentLevel,
+        let assignment = currentAssignments.first,
+        assignment.level > 0 {
+        halfLevel = true
+        assignmentsAtCurrentLevel = client.getAssignmentsAtLevel(assignment.level - 1)
+        learnedCount = assignmentsAtCurrentLevel?.filter { (assignment) -> Bool in
+          assignment.srsStage >= 5
+        }.count ?? 0
+      }
+
+      let now = Int(Date().timeIntervalSince1970)
+      let nextReviewEpoch = client.getAllAssignments()
+        .filter { a in a.isReviewStage && a.availableAt > now }
+        .map { a in a.availableAt }
+        .min() ?? 0
+
+      let packet: [String: Any] = [
+        WatchHelper.KeyReviewCount: client.availableReviewCount,
+        WatchHelper.KeyReviewNextHourCount: client.upcomingReviews.first?.intValue ?? 0,
+        WatchHelper.KeyLevelCurrent: assignmentsAtCurrentLevel?.first?.level ?? 0,
+        WatchHelper.KeyLevelTotal: assignmentsAtCurrentLevel?.count ?? 0,
+        WatchHelper.KeyLevelLearned: learnedCount,
+        WatchHelper.KeyLevelHalf: halfLevel,
+        WatchHelper.KeyNextReviewAt: nextReviewEpoch,
+      ]
+
+      let packetSignature = self.packetSignature(packet: packet)
+      if let lastSignature = self.lastPacketSignature {
+        if packetSignature == lastSignature {
+          // Re-sending the same data, skip
+          NSLog("Skipping re-send of same watch data packet")
+          return
+        }
+      }
+
+      if let session = session {
+        var deadline = 0.0
+        if session.activationState != .activated {
+          // Session still initializing
+          deadline += 0.5
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + deadline) {
+          let timestamp = [WatchHelper.KeySentAt: Int32(Date().timeIntervalSince1970)]
+          self.lastPacketSignature = packetSignature
+          session.transferCurrentComplicationUserInfo(packet.merging(timestamp, uniquingKeysWith: { current, _ in current }))
+        }
+      }
+    }
   #endif
 
   func awaitMessages(callback: @escaping ClientDelegateCallback) {
@@ -122,5 +188,13 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
       session.delegate = clientDelegate
       session.activate()
     }
+  }
+
+  func packetSignature(packet: [String: Any]) -> String {
+    var signature = ""
+    for key in packet.keys.sorted() {
+      signature += "\(key):\(packet[key] ?? "nil"),"
+    }
+    return signature
   }
 }

@@ -144,12 +144,10 @@
 }
 
 - (void)updateAppBadgeCount {
-
-
   int reviewCount = _services.localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
 
-    [[WatchHelper sharedInstance] sendReviewCount:reviewCount nextHour:[[upcomingReviews objectAtIndex:0] intValue]];
+    [[WatchHelper sharedInstance] updatedDataWithClient:_services.localCachingClient];
 
     if (!Settings.notificationsAllReviews && !Settings.notificationsBadging) {
       return;

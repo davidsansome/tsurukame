@@ -410,8 +410,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   NSArray<TKMAssignment *> *currentLevelAssignments =
       [_services.localCachingClient getAssignmentsAtUsersCurrentLevel];
 
-    int nextHourCount = [[upcomingReviews objectAtIndex:0] intValue];
-    [[WatchHelper sharedInstance] sendReviewCount:reviews nextHour:nextHourCount];
+    [[WatchHelper sharedInstance] updatedDataWithClient:_services.localCachingClient];
 
   SetTableViewCellCount(self.lessonsCell, lessons);
   SetTableViewCellCount(self.reviewsCell, reviews);
