@@ -65,17 +65,17 @@
     [[NSUserDefaults standardUserDefaults] setInteger:value forKey:@ #name]; \
   }
 
-#define DEFINE_FLOAT(name, setterName, defaultValue)                            \
-    +(float)name {                                                              \
-        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];             \
-        if ([ud objectForKey:@ #name] == nil) {                                 \
-            return defaultValue;                                                \
-        }                                                                       \
-        return (float)[ud floatForKey:@ #name];                               \
-    }                                                                           \
-    +(void)setterName : (float)value {                                          \
-        [[NSUserDefaults standardUserDefaults] setFloat:value forKey:@ #name];  \
-    }
+#define DEFINE_FLOAT(name, setterName, defaultValue)                       \
+  +(float)name {                                                           \
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];            \
+    if ([ud objectForKey:@ #name] == nil) {                                \
+      return defaultValue;                                                 \
+    }                                                                      \
+    return (float)[ud floatForKey:@ #name];                                \
+  }                                                                        \
+  +(void)setterName : (float)value {                                       \
+    [[NSUserDefaults standardUserDefaults] setFloat:value forKey:@ #name]; \
+  }
 
 @class TKMFont;
 

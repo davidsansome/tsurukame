@@ -129,13 +129,12 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                 target:self
                                                 action:@selector(didTapFonts:)]];
   [model
-        addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
-                                                   title:@"Font size"
-                                                subtitle:self.fontSizeValueText
-                                           accessoryType:UITableViewCellAccessoryDisclosureIndicator
-                                                  target:self
-                                                  action:@selector(fontSizeChanged:)]];
-
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                 title:@"Font size"
+                                              subtitle:self.fontSizeValueText
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(fontSizeChanged:)]];
 
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                      title:@"Allow cheating"
@@ -262,10 +261,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (NSString *)fontSizeValueText {
-    if(Settings.fontSize){
-        return [NSString stringWithFormat:@"%d%%", (int)(Settings.fontSize * 100)];
-    }
-    return nil;
+  if (Settings.fontSize) {
+    return [NSString stringWithFormat:@"%d%%", (int)(Settings.fontSize * 100)];
+  }
+  return nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
