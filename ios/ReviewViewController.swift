@@ -774,7 +774,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     if UI_USER_INTERFACE_IDIOM() == .pad {
       return CGFloat(defaultFontSize * 2.5)
     } else {
-      return CGFloat(defaultFontSize)
+      return CGFloat(defaultFontSize * Double(Settings.fontSize))
     }
   }
 

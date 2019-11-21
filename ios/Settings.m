@@ -65,6 +65,18 @@
     [[NSUserDefaults standardUserDefaults] setInteger:value forKey:@ #name]; \
   }
 
+#define DEFINE_FLOAT(name, setterName, defaultValue)                            \
+    +(float)name {                                                              \
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];             \
+        if ([ud objectForKey:@ #name] == nil) {                                 \
+            return defaultValue;                                                \
+        }                                                                       \
+        return (float)[ud floatForKey:@ #name];                               \
+    }                                                                           \
+    +(void)setterName : (float)value {                                          \
+        [[NSUserDefaults standardUserDefaults] setFloat:value forKey:@ #name];  \
+    }
+
 @class TKMFont;
 
 @implementation Settings
@@ -109,6 +121,7 @@ DEFINE_BOOL(enableCheats, setEnableCheats, YES);
 DEFINE_BOOL(showOldMnemonic, setShowOldMnemonic, YES);
 DEFINE_BOOL(useKatakanaForOnyomi, setUseKatakanaForOnyomi, NO);
 DEFINE_BOOL(showSRSLevelIndicator, setShowSRSLevelIndicator, NO);
+DEFINE_FLOAT(fontSize, setFontSize, 1.0);
 
 DEFINE_BOOL(playAudioAutomatically, setPlayAudioAutomatically, NO);
 DEFINE_OBJECT(NSSet<NSString *>, installedAudioPackages, setInstalledAudioPackages);
