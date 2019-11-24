@@ -54,6 +54,10 @@
 		636A63DF238A107A00902269 /* CurrentLevelChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */; };
 		636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */; };
 		636A63E2238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */; };
+		636A63E4238A5D6B00902269 /* MainHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 636A63E3238A5D6B00902269 /* MainHeaderView.xib */; };
+		636A63E5238A5D6B00902269 /* MainHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 636A63E3238A5D6B00902269 /* MainHeaderView.xib */; };
+		636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E6238A607A00902269 /* MainHeaderView.swift */; };
+		636A63E8238A607A00902269 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E6238A607A00902269 /* MainHeaderView.swift */; };
 		637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12D7203847BE009E92DB /* LessonsViewController.m */; };
 		637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12DD203D779D009E92DB /* LessonsPageControl.m */; };
 		6392DB9F20CCE29E003019EB /* TKMAttributedModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */; };
@@ -249,6 +253,8 @@
 		635D007B218DA308006CD711 /* TKMAudio.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMAudio.m; sourceTree = "<group>"; };
 		636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLevelChartItem.swift; sourceTree = "<group>"; };
 		636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSStageCategoryItem.swift; sourceTree = "<group>"; };
+		636A63E3238A5D6B00902269 /* MainHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainHeaderView.xib; sourceTree = "<group>"; };
+		636A63E6238A607A00902269 /* MainHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHeaderView.swift; sourceTree = "<group>"; };
 		637C12D6203847BE009E92DB /* LessonsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LessonsViewController.h; sourceTree = "<group>"; };
 		637C12D7203847BE009E92DB /* LessonsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LessonsViewController.m; sourceTree = "<group>"; };
 		637C12DC203D779D009E92DB /* LessonsPageControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LessonsPageControl.h; sourceTree = "<group>"; };
@@ -442,6 +448,8 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				636A63E3238A5D6B00902269 /* MainHeaderView.xib */,
+				636A63E6238A607A00902269 /* MainHeaderView.swift */,
 				636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
@@ -819,6 +827,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63CAAAFA1FC6EADD00E09DA1 /* data.bin in Resources */,
+				636A63E4238A5D6B00902269 /* MainHeaderView.xib in Resources */,
 				6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */,
 				63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */,
 				63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */,
@@ -833,6 +842,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63AD5C4923056863006B3308 /* data.bin in Resources */,
+				636A63E5238A5D6B00902269 /* MainHeaderView.xib in Resources */,
 				63AD5C4A23056863006B3308 /* TKMSubjectModelItem.xib in Resources */,
 				63AD5C4B23056863006B3308 /* LaunchScreen.storyboard in Resources */,
 				63AD5C4C23056863006B3308 /* TKMListSeparatorItem.xib in Resources */,
@@ -1063,6 +1073,7 @@
 				633DE96120C5656B00AC25F4 /* TKMMarkupModelItem.m in Sources */,
 				63BFA789218DB6840058E885 /* TKMReadingModelItem.m in Sources */,
 				63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */,
+				636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */,
 				6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */,
 				6319C99D20400E3500C31F87 /* NSDate+TimeAgo.m in Sources */,
 				63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */,
@@ -1159,6 +1170,7 @@
 				63AD5C1E23056863006B3308 /* TKMTableModel.m in Sources */,
 				63FCAE79237F75CC00DB1418 /* Style.swift in Sources */,
 				63AD5C2623056863006B3308 /* ReviewItem.m in Sources */,
+				636A63E8238A607A00902269 /* MainHeaderView.swift in Sources */,
 				63AD5C2823056863006B3308 /* TKMBasicModelItem.m in Sources */,
 				631CAD70234B3B8E008CEA73 /* LevelTimeRemainingItem.swift in Sources */,
 				63AD5C2A23056863006B3308 /* NSString+MD5.m in Sources */,

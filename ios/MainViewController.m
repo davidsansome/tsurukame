@@ -32,8 +32,6 @@
 #import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
-#import <Haneke/Haneke.h>
-
 @class CombinedChartView;
 @class PieChartView;
 
@@ -42,9 +40,6 @@ static const char *kDefaultProfileImageURL =
 static const int kProfileImageSize = 80;
 
 static const int kUpcomingReviewsSection = 1;
-
-static const CGFloat kUserGradientYOffset = 450;
-static const CGFloat kUserGradientStartPoint = 0.8f;
 
 static NSURL *UserProfileImageURL(NSString *emailAddress) {
   emailAddress =
@@ -56,7 +51,9 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
 
   return [NSURL
       URLWithString:[NSString stringWithFormat:@"https://www.gravatar.com/avatar/%@.jpg?s=%d&d=%s",
-                                               hash, size, kDefaultProfileImageURL]];
+                                               hash,
+                                               size,
+                                               kDefaultProfileImageURL]];
 }
 
 static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
@@ -66,16 +63,11 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 }
 
 @interface MainViewController () <LoginViewControllerDelegate,
+                                  MainHeaderViewDelegate,
                                   SearchResultViewControllerDelegate,
                                   UISearchControllerDelegate>
 
-@property(weak, nonatomic) IBOutlet UIView *userContainer;
-@property(weak, nonatomic) IBOutlet UIView *userImageContainer;
-@property(weak, nonatomic) IBOutlet UIImageView *userImageView;
-@property(weak, nonatomic) IBOutlet UILabel *userNameLabel;
-@property(weak, nonatomic) IBOutlet UILabel *userLevelLabel;
-@property(weak, nonatomic) IBOutlet UIButton *searchButton;
-@property(weak, nonatomic) IBOutlet UIButton *settingsButton;
+@property(weak, nonatomic) IBOutlet MainHeaderView *headerView;
 
 @end
 
@@ -84,7 +76,6 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   TKMTableModel *_model;
   UISearchController *_searchController;
   __weak SearchResultViewController *_searchResultsViewController;
-  __weak CAGradientLayer *_userGradientLayer;
   NSTimer *_hourlyRefreshTimer;
   BOOL _isShowingUnauthorizedAlert;
   BOOL _hasLessons;
@@ -98,6 +89,8 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+
+  _headerView.delegate = self;
 
   // Show a background image.
   UIImageView *backgroundView =
@@ -116,14 +109,6 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   [self.refreshControl addTarget:self
                           action:@selector(didPullToRefresh)
                 forControlEvents:UIControlEventValueChanged];
-
-  // Set a gradient background for the user cell.
-  CAGradientLayer *userGradientLayer = [CAGradientLayer layer];
-  userGradientLayer.colors = TKMStyle.radicalGradient;
-  userGradientLayer.startPoint = CGPointMake(0.5f, kUserGradientStartPoint);
-  [_userContainer.layer insertSublayer:userGradientLayer atIndex:0];
-  _userGradientLayer = userGradientLayer;
-  _userContainer.layer.masksToBounds = NO;
 
   // Create the search results view controller.
   SearchResultViewController *searchResultsViewController =
@@ -157,19 +142,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
     }
   }
 
-  // Add shadows to things in the user info view.
-  [TKMStyle addShadowToView:_userImageContainer offset:2.f opacity:0.4f radius:4.f];
-  [TKMStyle addShadowToView:_userNameLabel offset:1.f opacity:0.4f radius:4.f];
-  [TKMStyle addShadowToView:_userLevelLabel offset:1.f opacity:0.2f radius:2.f];
-
-  // Set rounded corners on the user image.
-  CGFloat cornerRadius = _userImageContainer.bounds.size.height / 2;
-  _userImageContainer.layer.cornerRadius = cornerRadius;
-  _userImageView.layer.cornerRadius = cornerRadius;
-  _userImageView.layer.masksToBounds = YES;
-
   [self updateHourlyTimer];
-
   [self recreateTableModel];
 
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -220,40 +193,45 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
   NSArray<TKMAssignment *> *currentLevelAssignments =
       [_services.localCachingClient getAssignmentsAtUsersCurrentLevel];
+  TKMUser *user = _services.localCachingClient.getUserInfo;
 
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
 
-  [model addSection:@"Currently Available"];
-  TKMBasicModelItem *lessonsItem =
-      [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
-                                         title:@"Lessons"
-                                      subtitle:@""
-                                 accessoryType:UITableViewCellAccessoryDisclosureIndicator
-                                        target:self
-                                        action:@selector(startLessons:)];
-  _hasLessons = SetTableViewCellCount(lessonsItem, lessons);
-  [model addItem:lessonsItem];
+  if (!user.hasVacationStartedAt) {
+    [model addSection:@"Currently available"];
+    TKMBasicModelItem *lessonsItem =
+        [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                           title:@"Lessons"
+                                        subtitle:@""
+                                   accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                          target:self
+                                          action:@selector(startLessons:)];
+    _hasLessons = SetTableViewCellCount(lessonsItem, lessons);
+    [model addItem:lessonsItem];
 
-  TKMBasicModelItem *reviewsItem =
-      [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
-                                         title:@"Reviews"
-                                      subtitle:@""
-                                 accessoryType:UITableViewCellAccessoryDisclosureIndicator
-                                        target:self
-                                        action:@selector(startReviews:)];
-  _hasReviews = SetTableViewCellCount(reviewsItem, reviews);
-  [model addItem:reviewsItem];
+    TKMBasicModelItem *reviewsItem =
+        [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                           title:@"Reviews"
+                                        subtitle:@""
+                                   accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                          target:self
+                                          action:@selector(startReviews:)];
+    _hasReviews = SetTableViewCellCount(reviewsItem, reviews);
+    [model addItem:reviewsItem];
 
-  [model addSection:@"Upcoming reviews"];
-  [model addItem:[[UpcomingReviewsChartItem alloc] init:upcomingReviews
-                                     currentReviewCount:reviews
-                                                     at:[NSDate date]]];
+    [model addSection:@"Upcoming reviews"];
+    [model addItem:[[UpcomingReviewsChartItem alloc] init:upcomingReviews
+                                       currentReviewCount:reviews
+                                                       at:[NSDate date]]];
+  }
 
   [model addSection:@"This level"];
   [model addItem:[[CurrentLevelChartItem alloc] initWithDataLoader:_services.dataLoader
                                            currentLevelAssignments:currentLevelAssignments]];
-  [model addItem:[[LevelTimeRemainingItem alloc] initWithServices:_services
-                                          currentLevelAssignments:currentLevelAssignments]];
+  if (!user.hasVacationStartedAt) {
+    [model addItem:[[LevelTimeRemainingItem alloc] initWithServices:_services
+                                            currentLevelAssignments:currentLevelAssignments]];
+  }
   [model
       addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
                                                  title:@"Show remaining"
@@ -271,7 +249,8 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 
   [model addSection:@"All levels"];
   for (TKMSRSStageCategory stageCategory = TKMSRSStageApprentice;
-       stageCategory <= TKMSRSStageBurned; ++stageCategory) {
+       stageCategory <= TKMSRSStageBurned;
+       ++stageCategory) {
     int count = [_services.localCachingClient getSrsLevelCount:stageCategory];
     [model addItem:[[SRSStageCategoryItem alloc] initWithStageCategory:stageCategory count:count]];
   }
@@ -280,6 +259,12 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 }
 
 #pragma mark - UIViewController
+
+- (void)viewDidLayoutSubviews {
+  [super viewDidLayoutSubviews];
+
+  [self updateUserInfo];
+}
 
 - (void)viewWillDisappear:(BOOL)animated {
   [super viewWillDisappear:animated];
@@ -301,11 +286,6 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 
 - (void)viewWillLayoutSubviews {
   [super viewWillLayoutSubviews];
-
-  CGRect userGradientFrame = _userContainer.bounds;
-  userGradientFrame.origin.y -= kUserGradientYOffset;
-  userGradientFrame.size.height += kUserGradientYOffset;
-  _userGradientLayer.frame = userGradientFrame;
 
   // Bring the refresh control above the gradient.
   [self.refreshControl.superview bringSubviewToFront:self.refreshControl];
@@ -363,6 +343,16 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   }
 
   return [super tableView:tableView heightForRowAtIndexPath:indexPath];
+}
+
+#pragma mark - MainHeaderViewDelegate
+
+- (void)searchButtonTapped {
+  [self presentViewController:_searchController animated:YES completion:nil];
+}
+
+- (void)settingsButtonTapped {
+  [self performSegueWithIdentifier:@"settings" sender:self];
 }
 
 #pragma mark - Refresh on the hour in the foreground
@@ -434,14 +424,23 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   int guruKanji = [_services.localCachingClient getGuruKanjiCount];
 
   NSString *email = [Settings userEmailAddress];
+  NSURL *imageURL;
   if (email.length) {
-    NSURL *imageURL = UserProfileImageURL(email);
-    [_userImageView hnk_setImageFromURL:imageURL];
+    imageURL = UserProfileImageURL(email);
   }
 
-  _userNameLabel.text = user.username;
-  _userLevelLabel.text =
-      [NSString stringWithFormat:@"Level %d \u00B7 learned %d kanji", user.level, guruKanji];
+  [_headerView updateWithUsername:user.username
+                            level:user.level
+                        guruKanji:guruKanji
+                         imageURL:imageURL
+                     vacationMode:user.hasVacationStartedAt];
+  [_headerView layoutIfNeeded];
+
+  // Make the header view as short as possible.
+  CGFloat height = [_headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+  CGRect frame = _headerView.frame;
+  frame.size.height = height;
+  _headerView.frame = frame;
 }
 
 - (void)srsLevelCountsChanged {
@@ -494,10 +493,6 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 }
 
 #pragma mark - Search
-
-- (IBAction)didTapSearchButton:(id)sender {
-  [self presentViewController:_searchController animated:YES completion:nil];
-}
 
 - (void)searchResultSelected:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =

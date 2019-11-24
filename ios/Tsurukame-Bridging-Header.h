@@ -41,4 +41,6 @@
 #import "proto/Wanikani+Convenience.h"
 #import "proto/Wanikani.pbobjc.h"
 
+#import <Haneke/Haneke.h>
+
 #endif /* Tsurukame_Bridging_Header_h */
