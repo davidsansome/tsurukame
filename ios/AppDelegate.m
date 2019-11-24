@@ -150,6 +150,12 @@
 
   int reviewCount = _services.localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
+  TKMUser *user = _services.localCachingClient.getUserInfo;
+  
+  if (user.hasVacationStartedAt) {
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    return;
+  }
 
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   void (^updateBlock)(void) = ^() {
