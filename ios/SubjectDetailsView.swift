@@ -76,12 +76,15 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
 }
 
 private func attrString(_ string: String, attrs: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
-  var combinedAttrs: [NSAttributedString.Key: Any] = [
+  let combinedAttrs = defaultStringAttrs().merging(attrs ?? [:]) { _, new in new }
+  return NSAttributedString(string: string, attributes: combinedAttrs)
+}
+
+private func defaultStringAttrs() -> [NSAttributedString.Key: Any] {
+  return [
     .foregroundColor: UIColor.label,
     .backgroundColor: UIColor.secondarySystemBackground,
   ]
-  combinedAttrs.merge(attrs ?? [:]) { _, new in new }
-  return NSAttributedString(string: string, attributes: combinedAttrs)
 }
 
 private func dateFormatter(dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> DateFormatter {
@@ -192,7 +195,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       return
     }
 
-    var attributes = [NSAttributedString.Key: Any]()
+    var attributes = defaultStringAttrs()
     if isHint {
       attributes[.foregroundColor] = kHintTextColor
     }
@@ -209,7 +212,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     model.addSection("Context Sentences")
     for sentence in subject.vocabulary.sentencesArray as! [TKMVocabulary_Sentence] {
       let text = NSMutableAttributedString()
-      text.append(highlightOccurrences(of: subject, in: sentence.japanese) ??
+      text.append(highlightOccurrences(of: subject, in: attrString(sentence.japanese)) ??
         attrString(sentence.japanese))
       text.append(attrString("\n"))
       text.append(attrString(sentence.english))

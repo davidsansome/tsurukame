@@ -275,7 +275,7 @@ public func patternToHighlight(for subject: TKMSubject) -> String {
   return "(" + patterns.joined(separator: "|") + ")"
 }
 
-public func highlightOccurrences(of subject: TKMSubject, in text: String) -> NSAttributedString? {
+public func highlightOccurrences(of subject: TKMSubject, in text: NSAttributedString) -> NSAttributedString? {
   if !subject.hasVocabulary {
     return nil
   }
@@ -287,14 +287,14 @@ public func highlightOccurrences(of subject: TKMSubject, in text: String) -> NSA
     NSLog("Invalid regex: %@", pattern)
     return nil
   }
-  let matches = re.matches(text)
+  let matches = re.matches(text.string)
   if matches.isEmpty {
     return nil
   }
 
-  let ret = NSMutableAttributedString(string: text)
+  let ret = NSMutableAttributedString(attributedString: text)
   for match in matches {
-    let range = NSRange(match.startIndex ..< match.endIndex, in: text)
+    let range = NSRange(match.startIndex ..< match.endIndex, in: text.string)
     ret.addAttribute(.foregroundColor, value: UIColor.systemRed, range: range)
   }
 
