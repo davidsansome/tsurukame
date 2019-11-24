@@ -73,7 +73,7 @@ static NSString *FriendlySize(int64_t bytes) {
     case TKMDownloadModelItemInstalling:
       [self updateProgress];
       [_image setImage:[UIImage imageNamed:@"baseline_cancel_black_24pt"]];
-      [_image setTintColor:[UIColor lightGrayColor]];
+      [_image setTintColor:[UIColor tertiaryLabelColor]];
       break;
     case TKMDownloadModelItemInstalledSelected:
       _subtitle.text = nil;
@@ -83,7 +83,7 @@ static NSString *FriendlySize(int64_t bytes) {
     case TKMDownloadModelItemInstalledNotSelected:
       _subtitle.text = nil;
       [_image setImage:[UIImage imageNamed:@"tick"]];
-      [_image setTintColor:[UIColor lightGrayColor]];
+      [_image setTintColor:[UIColor tertiaryLabelColor]];
       break;
   }
 

@@ -129,11 +129,11 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
   // Add a refresh control for when the user pulls down.
   self.refreshControl = [[UIRefreshControl alloc] init];
-  self.refreshControl.tintColor = [UIColor whiteColor];
+  self.refreshControl.tintColor = [UIColor labelColor];
   self.refreshControl.backgroundColor = nil;
   NSMutableAttributedString *title = [[NSMutableAttributedString alloc]
       initWithString:@"Pull to refresh..."
-          attributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
+          attributes:@{NSForegroundColorAttributeName : [UIColor labelColor]}];
   self.refreshControl.attributedTitle = title;
   [self.refreshControl addTarget:self
                           action:@selector(didPullToRefresh)
@@ -165,11 +165,11 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 
   UIColor *originalSearchBarTintColor = searchBar.tintColor;
-  searchBar.tintColor = [UIColor whiteColor];  // Make the button white.
+  searchBar.tintColor = [UIColor labelColor];  // Make the button white.
 
   if (@available(iOS 13, *)) {
     UITextField *searchTextField = searchBar.searchTextField;
-    searchTextField.backgroundColor = [UIColor whiteColor];
+    searchTextField.backgroundColor = [UIColor systemBackgroundColor];
     searchTextField.tintColor = originalSearchBarTintColor;
   } else {
     for (UIView *view in _searchController.searchBar.subviews.firstObject.subviews) {

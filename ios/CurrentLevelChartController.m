@@ -142,8 +142,8 @@ static void UnsetAllLabels(ChartViewBase *view) {
   }
 
   PieChartDataSet *dataSet = [[PieChartDataSet alloc] initWithEntries:values];
-  dataSet.valueTextColor = [UIColor darkGrayColor];
-  dataSet.entryLabelColor = [UIColor blackColor];
+  dataSet.valueTextColor = [UIColor secondaryLabelColor];
+  dataSet.entryLabelColor = [UIColor labelColor];
   dataSet.valueFont = [UIFont systemFontOfSize:10.f];
   dataSet.colors = colors;
   dataSet.sliceSpace = 1.f;       // Space between slices.

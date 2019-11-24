@@ -295,7 +295,7 @@ public func highlightOccurrences(of subject: TKMSubject, in text: String) -> NSA
   let ret = NSMutableAttributedString(string: text)
   for match in matches {
     let range = NSRange(match.startIndex ..< match.endIndex, in: text)
-    ret.addAttribute(.foregroundColor, value: UIColor.red, range: range)
+    ret.addAttribute(.foregroundColor, value: UIColor.systemRed, range: range)
   }
 
   return ret
