@@ -14,7 +14,6 @@
 
 #import "MainViewController.h"
 
-#import "CurrentLevelChartController.h"
 #import "LessonsViewController.h"
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
@@ -27,6 +26,7 @@
 #import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"
 #import "SubjectsRemainingViewController.h"
+#import "Tables/TKMTableModel.h"
 #import "TKMReviewContainerViewController.h"
 #import "TKMServices.h"
 #import "Tsurukame-Swift.h"
@@ -59,13 +59,10 @@ static NSURL *UserProfileImageURL(NSString *emailAddress) {
                                                hash, size, kDefaultProfileImageURL]];
 }
 
-static void SetTableViewCellCount(UITableViewCell *cell, int count) {
-  cell.detailTextLabel.text = (count < 0) ? @"-" : [@(count) stringValue];
-
-  BOOL enabled = count > 0;
-  cell.userInteractionEnabled = enabled;
-  cell.textLabel.enabled = enabled;
-  cell.detailTextLabel.enabled = enabled;
+static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
+  item.subtitle = (count < 0) ? @"-" : [@(count) stringValue];
+  item.enabled = count > 0;
+  return item.enabled;
 }
 
 @interface MainViewController () <LoginViewControllerDelegate,
@@ -80,38 +77,19 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 @property(weak, nonatomic) IBOutlet UIButton *searchButton;
 @property(weak, nonatomic) IBOutlet UIButton *settingsButton;
 
-@property(weak, nonatomic) IBOutlet UITableViewCell *lessonsCell;
-@property(weak, nonatomic) IBOutlet UITableViewCell *reviewsCell;
-
-@property(weak, nonatomic) IBOutlet UILabel *apprenticeCount;
-@property(weak, nonatomic) IBOutlet UILabel *guruCount;
-@property(weak, nonatomic) IBOutlet UILabel *masterCount;
-@property(weak, nonatomic) IBOutlet UILabel *enlightenedCount;
-@property(weak, nonatomic) IBOutlet UILabel *burnedCount;
-
-@property(weak, nonatomic) IBOutlet CombinedChartView *upcomingReviewsChartView;
-
-@property(weak, nonatomic) IBOutlet PieChartView *currentLevelRadicalsPieChartView;
-@property(weak, nonatomic) IBOutlet PieChartView *currentLevelKanjiPieChartView;
-@property(weak, nonatomic) IBOutlet PieChartView *currentLevelVocabularyPieChartView;
-@property(weak, nonatomic) IBOutlet LevelTimeRemainingCell *levelTimeRemainingCell;
-
-@property(weak, nonatomic) IBOutlet UILabel *queuedItemsLabel;
-@property(weak, nonatomic) IBOutlet UILabel *queuedItemsSubtitleLabel;
-
 @end
 
 @implementation MainViewController {
   TKMServices *_services;
-  UpcomingReviewsChartController *_upcomingReviewsChartController;
-  CurrentLevelChartController *_currentLevelRadicalsChartController;
-  CurrentLevelChartController *_currentLevelKanjiChartController;
-  CurrentLevelChartController *_currentLevelVocabularyChartController;
+  TKMTableModel *_model;
   UISearchController *_searchController;
   __weak SearchResultViewController *_searchResultsViewController;
   __weak CAGradientLayer *_userGradientLayer;
   NSTimer *_hourlyRefreshTimer;
   BOOL _isShowingUnauthorizedAlert;
+  BOOL _hasLessons;
+  BOOL _hasReviews;
+  BOOL _updatingTableModel;
 }
 
 - (void)setupWithServices:(TKMServices *)services {
@@ -190,24 +168,9 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   _userImageView.layer.cornerRadius = cornerRadius;
   _userImageView.layer.masksToBounds = YES;
 
-  _upcomingReviewsChartController =
-      [[UpcomingReviewsChartController alloc] initWithChartView:_upcomingReviewsChartView];
-  _currentLevelRadicalsChartController =
-      [[CurrentLevelChartController alloc] initWithChartView:_currentLevelRadicalsPieChartView
-                                                 subjectType:TKMSubject_Type_Radical
-                                                  dataLoader:_services.dataLoader];
-  _currentLevelKanjiChartController =
-      [[CurrentLevelChartController alloc] initWithChartView:_currentLevelKanjiPieChartView
-                                                 subjectType:TKMSubject_Type_Kanji
-                                                  dataLoader:_services.dataLoader];
-  _currentLevelVocabularyChartController =
-      [[CurrentLevelChartController alloc] initWithChartView:_currentLevelVocabularyPieChartView
-                                                 subjectType:TKMSubject_Type_Vocabulary
-                                                  dataLoader:_services.dataLoader];
-
-  [_levelTimeRemainingCell setupWithServices:_services];
-
   [self updateHourlyTimer];
+  
+  [self recreateTableModel];
 
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self
@@ -238,6 +201,75 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
          selector:@selector(applicationWillEnterForeground:)
              name:UIApplicationWillEnterForegroundNotification
            object:nil];
+}
+
+- (void)scheduleTableModelUpdate {
+  if (_updatingTableModel) {
+    return;
+  }
+  _updatingTableModel = true;
+  dispatch_async(dispatch_get_main_queue(), ^{
+    _updatingTableModel = false;
+    [self recreateTableModel];
+  });
+}
+
+- (void)recreateTableModel {
+  int lessons = _services.localCachingClient.availableLessonCount;
+  int reviews = _services.localCachingClient.availableReviewCount;
+  NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
+  NSArray<TKMAssignment *> *currentLevelAssignments =
+      [_services.localCachingClient getAssignmentsAtUsersCurrentLevel];
+
+  TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
+  
+  [model addSection:@"Currently Available"];
+  TKMBasicModelItem *lessonsItem = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                    title:@"Lessons"
+                                                 subtitle:@""
+                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                   target:self
+                                                   action:@selector(startLessons:)];
+  _hasLessons = SetTableViewCellCount(lessonsItem, lessons);
+  [model addItem:lessonsItem];
+  
+  TKMBasicModelItem *reviewsItem = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                    title:@"Reviews"
+                                                 subtitle:@""
+                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                   target:self
+                                                   action:@selector(startReviews:)];
+  _hasReviews = SetTableViewCellCount(reviewsItem, reviews);
+  [model addItem:reviewsItem];
+  
+  [model addSection:@"Upcoming reviews"];
+  [model addItem:[[UpcomingReviewsChartItem alloc] init:upcomingReviews currentReviewCount:reviews at:[NSDate date]]];
+  
+  [model addSection:@"This level"];
+  [model addItem:[[CurrentLevelChartItem alloc] initWithDataLoader:_services.dataLoader
+                                           currentLevelAssignments:currentLevelAssignments]];
+  [model addItem:[[LevelTimeRemainingItem alloc] initWithServices:_services
+                                          currentLevelAssignments:currentLevelAssignments]];
+  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                    title:@"Show remaining"
+                                                 subtitle:nil
+                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                   target:self
+                                                   action:@selector(showRemaining:)]];
+  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                    title:@"Show all"
+                                                 subtitle:nil
+                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                   target:self
+                                                   action:@selector(showAll:)]];
+  
+  [model addSection:@"All levels"];
+  for (TKMSRSStageCategory stageCategory = TKMSRSStageApprentice; stageCategory <= TKMSRSStageBurned; ++stageCategory) {
+    int count = [_services.localCachingClient getSrsLevelCount:stageCategory];
+    [model addItem:[[SRSStageCategoryItem alloc] initWithStageCategory:stageCategory count:count]];
+  }
+  
+  _model = model;
 }
 
 #pragma mark - UIViewController
@@ -303,11 +335,11 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
     LessonsViewController *vc = (LessonsViewController *)segue.destinationViewController;
     [vc setupWithServices:_services items:items];
-  } else if ([segue.identifier isEqualToString:@"subjectCatalogue"]) {
+  } else if ([segue.identifier isEqualToString:@"showAll"]) {
     SubjectCatalogueViewController *vc =
         (SubjectCatalogueViewController *)segue.destinationViewController;
     [vc setupWithServices:_services level:_services.localCachingClient.getUserInfo.level];
-  } else if ([segue.identifier isEqualToString:@"subjectsRemaining"]) {
+  } else if ([segue.identifier isEqualToString:@"showRemaining"]) {
     SubjectsRemainingViewController *vc = segue.destinationViewController;
     [vc setupWithServices:_services];
   } else if ([segue.identifier isEqual:@"settings"]) {
@@ -366,7 +398,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 - (void)refresh {
   [self updateUserInfo];
   [self updatePendingItems];
-  [self updateAvailableItems];
+  [self scheduleTableModelUpdate];
   [_services.localCachingClient sync:nil];
 }
 
@@ -377,46 +409,13 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 }
 
 - (void)updatePendingItems {
-  int pendingProgress = _services.localCachingClient.pendingProgress;
-  int pendingStudyMaterials = _services.localCachingClient.pendingStudyMaterials;
-  if (pendingProgress == 0 && pendingStudyMaterials == 0) {
-    _queuedItemsLabel.text = @"You're up to date!";
-    _queuedItemsSubtitleLabel.text = nil;
-    return;
-  }
-  NSMutableArray<NSString *> *sections = [NSMutableArray array];
-  if (pendingProgress != 0) {
-    [sections addObject:[NSString stringWithFormat:@"%d review progress", pendingProgress]];
-  }
-  if (pendingStudyMaterials != 0) {
-    [sections addObject:[NSString stringWithFormat:@"%d synonym updates", pendingStudyMaterials]];
-  }
-  _queuedItemsLabel.text = [sections componentsJoinedByString:@", "];
-  _queuedItemsSubtitleLabel.text = @"These will be uploaded when you're back online";
+  // TODO: Show a progress bar.
 }
 
 - (void)availableItemsChanged {
   if (self.view.window) {
-    [self updateAvailableItems];
+    [self scheduleTableModelUpdate];
   }
-}
-
-- (void)updateAvailableItems {
-  int lessons = _services.localCachingClient.availableLessonCount;
-  int reviews = _services.localCachingClient.availableReviewCount;
-  NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
-  NSArray<TKMAssignment *> *currentLevelAssignments =
-      [_services.localCachingClient getAssignmentsAtUsersCurrentLevel];
-
-  SetTableViewCellCount(self.lessonsCell, lessons);
-  SetTableViewCellCount(self.reviewsCell, reviews);
-  [_upcomingReviewsChartController update:upcomingReviews
-                       currentReviewCount:reviews
-                                       at:[NSDate date]];
-  [_currentLevelRadicalsChartController update:currentLevelAssignments];
-  [_currentLevelKanjiChartController update:currentLevelAssignments];
-  [_currentLevelVocabularyChartController update:currentLevelAssignments];
-  [_levelTimeRemainingCell update:currentLevelAssignments];
 }
 
 - (void)userInfoChanged {
@@ -440,16 +439,7 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
 
 - (void)srsLevelCountsChanged {
   [self updateUserInfo];
-  [self updateAllLevels];
-}
-
-- (void)updateAllLevels {
-  NSArray *labels =
-      @[ _apprenticeCount, _guruCount, _masterCount, _enlightenedCount, _burnedCount ];
-  [labels enumerateObjectsUsingBlock:^(UILabel *label, NSUInteger idx, BOOL *stop) {
-    int value = [_services.localCachingClient getSrsLevelCount:(TKMSRSStageCategory)(idx + 1)];
-    label.text = [@(value) stringValue];
-  }];
+  [self scheduleTableModelUpdate];
 }
 
 - (void)clientIsUnauthorized {
@@ -519,46 +509,51 @@ static void SetTableViewCellCount(UITableViewCell *cell, int count) {
   return true;
 }
 
-- (void)startReviews {
+- (void)startReviews:(id)sender {
   [self performSegueWithIdentifier:@"startReviews" sender:self];
 }
 
-- (void)startLessons {
+- (void)startLessons:(id)sender {
   [self performSegueWithIdentifier:@"startLessons" sender:self];
 }
 
-- (NSArray<UIKeyCommand *> *)keyCommands {
-  BOOL lessons = self.lessonsCell.userInteractionEnabled;
-  BOOL reviews = self.reviewsCell.userInteractionEnabled;
+- (void)showRemaining:(id)sender {
+  [self performSegueWithIdentifier:@"showRemaining" sender:self];
+}
 
+- (void)showAll:(id)sender {
+  [self performSegueWithIdentifier:@"showAll" sender:self];
+}
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
   NSMutableArray<UIKeyCommand *> *keyCommands = [NSMutableArray array];
 
   // Press return to keep studying, first lessons then reviews
-  if (lessons && !reviews) {
+  if (_hasLessons && !_hasReviews) {
     [keyCommands addObject:[UIKeyCommand keyCommandWithInput:@"\r"
                                                modifierFlags:0
-                                                      action:@selector(startLessons)
+                                                      action:@selector(startLessons:)
                                         discoverabilityTitle:@"Continue lessons"]];
-  } else if (reviews) {
+  } else if (_hasReviews) {
     [keyCommands addObject:[UIKeyCommand keyCommandWithInput:@"\r"
                                                modifierFlags:0
-                                                      action:@selector(startReviews)
+                                                      action:@selector(startReviews:)
                                         discoverabilityTitle:@"Continue reviews"]];
   }
 
   // Command L to start lessons, if any
-  if (lessons) {
+  if (_hasLessons) {
     [keyCommands addObject:[UIKeyCommand keyCommandWithInput:@"l"
                                                modifierFlags:UIKeyModifierCommand
-                                                      action:@selector(startLessons)
+                                                      action:@selector(startLessons:)
                                         discoverabilityTitle:@"Start lessons"]];
   }
 
   // Command R to start reviews, if any
-  if (reviews) {
+  if (_hasReviews) {
     [keyCommands addObject:[UIKeyCommand keyCommandWithInput:@"r"
                                                modifierFlags:UIKeyModifierCommand
-                                                      action:@selector(startReviews)
+                                                      action:@selector(startReviews:)
                                         discoverabilityTitle:@"Start reviews"]];
   }
 

@@ -22,8 +22,8 @@
 		631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
 		631CAD69234B0F0C008CEA73 /* ReviewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */; };
 		631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
-		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingCell.swift */; };
-		631CAD70234B3B8E008CEA73 /* LevelTimeRemainingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingCell.swift */; };
+		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
+		631CAD70234B3B8E008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
 		631CAD73234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
 		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
@@ -50,6 +50,10 @@
 		634EB1A321B6BC7000E1831C /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = BB2909A5217FAF8B00B1816F /* fonts */; };
 		635D0079218D94AA006CD711 /* TKMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D0078218D94AA006CD711 /* TKMGradientView.m */; };
 		635D007C218DA308006CD711 /* TKMAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D007B218DA308006CD711 /* TKMAudio.m */; };
+		636A63DE238A107A00902269 /* CurrentLevelChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */; };
+		636A63DF238A107A00902269 /* CurrentLevelChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */; };
+		636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */; };
+		636A63E2238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */; };
 		637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12D7203847BE009E92DB /* LessonsViewController.m */; };
 		637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12DD203D779D009E92DB /* LessonsPageControl.m */; };
 		6392DB9F20CCE29E003019EB /* TKMAttributedModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */; };
@@ -108,7 +112,6 @@
 		63AD5C2A23056863006B3308 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99F204015B900C31F87 /* NSString+MD5.m */; };
 		63AD5C2F23056863006B3308 /* TKMKanaInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95920C5635900AC25F4 /* TKMKanaInput.m */; };
 		63AD5C3423056863006B3308 /* TKMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D0078218D94AA006CD711 /* TKMGradientView.m */; };
-		63AD5C3923056863006B3308 /* CurrentLevelChartController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA42B207F38BE00382CE3 /* CurrentLevelChartController.m */; };
 		63AD5C3A23056863006B3308 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EB201F3011006D582B /* LoginViewController.m */; };
 		63AD5C3B23056863006B3308 /* TKMReviewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766221F47100002A417B /* TKMReviewContainerViewController.m */; };
 		63AD5C3D23056863006B3308 /* LessonOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */; };
@@ -157,7 +160,6 @@
 		63E9A8EC21199C9700418CE1 /* ClientTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8DC21199C2600418CE1 /* ClientTest.m */; };
 		63E9E51121F424690022C16E /* TKMDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9E51021F424690022C16E /* TKMDownloadViewController.m */; };
 		63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */; };
-		63EDA42C207F38BE00382CE3 /* CurrentLevelChartController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA42B207F38BE00382CE3 /* CurrentLevelChartController.m */; };
 		63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEB61FC45C440070C05F /* AppDelegate.m */; };
 		63EEFEBF1FC45C440070C05F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEB81FC45C440070C05F /* main.m */; };
 		63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63EEFEBC1FC45C440070C05F /* Assets.xcassets */; };
@@ -166,7 +168,7 @@
 		63FCAE78237F75CC00DB1418 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCAE77237F75CC00DB1418 /* Style.swift */; };
 		63FCAE79237F75CC00DB1418 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCAE77237F75CC00DB1418 /* Style.swift */; };
 		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
-		93B59B2A2367AF130097533C /* UpcomingReviewsChartController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B59B292367AF130097533C /* UpcomingReviewsChartController.swift */; };
+		93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */; };
 		A7655070EBDAE5F32A74088A /* Pods_Tsurukame__App_Store_screenshots_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
@@ -211,7 +213,7 @@
 		631CAD5E234AC507008CEA73 /* DataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
 		631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerChecker.swift; sourceTree = "<group>"; };
 		631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCheckerTest.swift; sourceTree = "<group>"; };
-		631CAD6B234B2B60008CEA73 /* LevelTimeRemainingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelTimeRemainingCell.swift; sourceTree = "<group>"; };
+		631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelTimeRemainingItem.swift; sourceTree = "<group>"; };
 		631CAD71234B4A96008CEA73 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		6321E60F2068F3A9003460BC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		6321E6102068F3A9003460BC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
@@ -245,6 +247,8 @@
 		635D0078218D94AA006CD711 /* TKMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMGradientView.m; sourceTree = "<group>"; };
 		635D007A218DA308006CD711 /* TKMAudio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMAudio.h; sourceTree = "<group>"; };
 		635D007B218DA308006CD711 /* TKMAudio.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMAudio.m; sourceTree = "<group>"; };
+		636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLevelChartItem.swift; sourceTree = "<group>"; };
+		636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSStageCategoryItem.swift; sourceTree = "<group>"; };
 		637C12D6203847BE009E92DB /* LessonsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LessonsViewController.h; sourceTree = "<group>"; };
 		637C12D7203847BE009E92DB /* LessonsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LessonsViewController.m; sourceTree = "<group>"; };
 		637C12DC203D779D009E92DB /* LessonsPageControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LessonsPageControl.h; sourceTree = "<group>"; };
@@ -325,8 +329,6 @@
 		63E9E51021F424690022C16E /* TKMDownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMDownloadViewController.m; sourceTree = "<group>"; };
 		63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchResultViewController.h; sourceTree = "<group>"; };
 		63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchResultViewController.m; sourceTree = "<group>"; };
-		63EDA42A207F38BE00382CE3 /* CurrentLevelChartController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CurrentLevelChartController.h; sourceTree = "<group>"; };
-		63EDA42B207F38BE00382CE3 /* CurrentLevelChartController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CurrentLevelChartController.m; sourceTree = "<group>"; };
 		63EEFEB61FC45C440070C05F /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		63EEFEB81FC45C440070C05F /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		63EEFEB91FC45C440070C05F /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -343,7 +345,7 @@
 		6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).debug.xcconfig"; sourceTree = "<group>"; };
 		82721E7B5A9C5562CC8D3B9B /* Pods-FontScreenshotter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.release.xcconfig"; sourceTree = "<group>"; };
-		93B59B292367AF130097533C /* UpcomingReviewsChartController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingReviewsChartController.swift; sourceTree = "<group>"; };
+		93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingReviewsChartItem.swift; sourceTree = "<group>"; };
 		B9AC7A65B58200A25756A40A /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter_FontScreenshotterUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMKanaInput+Internals.h"; sourceTree = "<group>"; };
@@ -440,14 +442,14 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
 				63EEFEB61FC45C440070C05F /* AppDelegate.m */,
 				63EEFED71FC46E720070C05F /* Client.h */,
 				63EEFED81FC46E720070C05F /* Client.m */,
-				63EDA42A207F38BE00382CE3 /* CurrentLevelChartController.h */,
-				63EDA42B207F38BE00382CE3 /* CurrentLevelChartController.m */,
+				636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */,
 				63CAAAF91FC6EADC00E09DA1 /* data.bin */,
 				631CAD5E234AC507008CEA73 /* DataLoader.swift */,
 				41897D93237228F100F6A0B7 /* Extensions */,
@@ -463,7 +465,7 @@
 				637C12DD203D779D009E92DB /* LessonsPageControl.m */,
 				637C12D6203847BE009E92DB /* LessonsViewController.h */,
 				637C12D7203847BE009E92DB /* LessonsViewController.m */,
-				631CAD6B234B2B60008CEA73 /* LevelTimeRemainingCell.swift */,
+				631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */,
 				63CAAB121FD7FEA400E09DA1 /* LocalCachingClient.h */,
 				63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */,
 				633632EA201F3011006D582B /* LoginViewController.h */,
@@ -536,7 +538,7 @@
 				63AD5C5323056863006B3308 /* Tsurukame (App Store screenshots).app */,
 				63C42A4421B6A703008CA938 /* Tsurukame-Bridging-Header.h */,
 				6319C9B520441DE200C31F87 /* Tsurukame.app */,
-				93B59B292367AF130097533C /* UpcomingReviewsChartController.swift */,
+				93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */,
 				633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */,
 				633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */,
 				F513FC0F23119D2C001EEEDA /* FontSizeViewController.m */,
@@ -1050,6 +1052,7 @@
 				633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */,
 				631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
 				63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */,
+				636A63DE238A107A00902269 /* CurrentLevelChartItem.swift in Sources */,
 				63EEFEBF1FC45C440070C05F /* main.m in Sources */,
 				BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */,
 				63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */,
@@ -1064,7 +1067,7 @@
 				6319C99D20400E3500C31F87 /* NSDate+TimeAgo.m in Sources */,
 				63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */,
 				63BFA78E218EB6890058E885 /* TKMOfflineAudioViewController.mm in Sources */,
-				93B59B2A2367AF130097533C /* UpcomingReviewsChartController.swift in Sources */,
+				93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */,
 				637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */,
 				63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */,
 				637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */,
@@ -1077,6 +1080,7 @@
 				63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.mm in Sources */,
 				631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */,
 				63CAAB031FCD755300E09DA1 /* Wanikani+Convenience.m in Sources */,
+				636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */,
 				6392DBAB20DBB841003019EB /* NSMutableAttributedString+Replacements.m in Sources */,
 				63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */,
 				63BFA791218EB7AB0058E885 /* TKMDownloadModelItem.m in Sources */,
@@ -1085,11 +1089,10 @@
 				633DE95620C5634A00AC25F4 /* TKMTableModel.m in Sources */,
 				63CAAAFD1FCD693500E09DA1 /* ReviewItem.m in Sources */,
 				633DE95720C5634A00AC25F4 /* TKMBasicModelItem.m in Sources */,
-				631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingCell.swift in Sources */,
+				631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */,
 				6319C9A0204015B900C31F87 /* NSString+MD5.m in Sources */,
 				633DE95D20C5635A00AC25F4 /* TKMKanaInput.m in Sources */,
 				635D0079218D94AA006CD711 /* TKMGradientView.m in Sources */,
-				63EDA42C207F38BE00382CE3 /* CurrentLevelChartController.m in Sources */,
 				633632EC201F3011006D582B /* LoginViewController.m in Sources */,
 				63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */,
 				63FCAE78237F75CC00DB1418 /* Style.swift in Sources */,
@@ -1110,6 +1113,7 @@
 				63AD5B8B23056863006B3308 /* TKMDownloadViewController.m in Sources */,
 				63AD5B8C23056863006B3308 /* TKMCheckmarkModelItem.m in Sources */,
 				63AD5B8D23056863006B3308 /* Settings.m in Sources */,
+				636A63E2238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */,
 				63AD5B9123056863006B3308 /* TKMAudio.m in Sources */,
 				63AD5B9423056863006B3308 /* NavigationController.m in Sources */,
 				63AD5B9623056863006B3308 /* SubjectCatalogueViewController.m in Sources */,
@@ -1132,6 +1136,7 @@
 				63AD5BCD23056863006B3308 /* SubjectsByLevelViewController.m in Sources */,
 				63AD5BD123056863006B3308 /* SettingsViewController.m in Sources */,
 				63AD5BDA23056863006B3308 /* NSDate+TimeAgo.m in Sources */,
+				636A63DF238A107A00902269 /* CurrentLevelChartItem.swift in Sources */,
 				63AD5BDE23056863006B3308 /* AppDelegate.m in Sources */,
 				63AD5BE623056863006B3308 /* TKMOfflineAudioViewController.mm in Sources */,
 				63AD5BEA23056863006B3308 /* LessonsPageControl.m in Sources */,
@@ -1155,11 +1160,10 @@
 				63FCAE79237F75CC00DB1418 /* Style.swift in Sources */,
 				63AD5C2623056863006B3308 /* ReviewItem.m in Sources */,
 				63AD5C2823056863006B3308 /* TKMBasicModelItem.m in Sources */,
-				631CAD70234B3B8E008CEA73 /* LevelTimeRemainingCell.swift in Sources */,
+				631CAD70234B3B8E008CEA73 /* LevelTimeRemainingItem.swift in Sources */,
 				63AD5C2A23056863006B3308 /* NSString+MD5.m in Sources */,
 				63AD5C2F23056863006B3308 /* TKMKanaInput.m in Sources */,
 				63AD5C3423056863006B3308 /* TKMGradientView.m in Sources */,
-				63AD5C3923056863006B3308 /* CurrentLevelChartController.m in Sources */,
 				63AD5C3A23056863006B3308 /* LoginViewController.m in Sources */,
 				63AD5C3B23056863006B3308 /* TKMReviewContainerViewController.m in Sources */,
 				63AD5C3D23056863006B3308 /* LessonOrderViewController.m in Sources */,

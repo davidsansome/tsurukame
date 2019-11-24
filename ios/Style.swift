@@ -49,6 +49,23 @@ class TKMStyle: NSObject {
   static let vocabularyGradient: [Any] = [vocabularyColor1.cgColor, vocabularyColor2.cgColor]
   static let lockedGradient: [Any] = [lockedColor1.cgColor, lockedColor2.cgColor]
 
+  class func color(forSRSStageCategory srsStageCategory: TKMSRSStageCategory) -> UIColor {
+    switch srsStageCategory {
+    case .apprentice:
+      return UIColor(red: 0.87, green: 0.00, blue: 0.58, alpha: 1.0)
+    case .guru:
+      return UIColor(red: 0.53, green: 0.17, blue: 0.62, alpha: 1.0)
+    case .master:
+      return UIColor(red: 0.16, green: 0.30, blue: 0.86, alpha: 1.0)
+    case .enlightened:
+      return UIColor(red: 0.00, green: 0.58, blue: 0.87, alpha: 1.0)
+    case .burned:
+      return UIColor(red: 0.26, green: 0.26, blue: 0.26, alpha: 1.0)
+    default:
+      return UIColor.black
+    }
+  }
+
   class func color2(forSubjectType subjectType: TKMSubject_Type) -> UIColor {
     switch subjectType {
     case .radical:

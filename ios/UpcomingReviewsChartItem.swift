@@ -36,40 +36,74 @@ class UpcomingReviewsXAxisValueFormatter: IAxisValueFormatter {
 }
 
 @objc
-class UpcomingReviewsChartController: NSObject {
-  private let view: CombinedChartView
+class UpcomingReviewsChartItem: NSObject, TKMModelItem {
+  let upcomingReviews: [Int]
+  let currentReviewCount: Int
+  let date: Date
 
-  @objc init(chartView: CombinedChartView) {
-    chartView.leftAxis.axisMinimum = 0
-    chartView.leftAxis.granularityEnabled = true
-    chartView.rightAxis.axisMinimum = 0
-    chartView.rightAxis.enabled = true
-    chartView.xAxis.avoidFirstLastClippingEnabled = true
-    chartView.xAxis.drawGridLinesEnabled = false
-    chartView.xAxis.granularityEnabled = true
-    chartView.xAxis.labelPosition = .bottom
-    chartView.rightAxis.drawGridLinesEnabled = false
-    chartView.rightAxis.drawLabelsEnabled = false
-    chartView.legend.enabled = false
-    chartView.chartDescription = nil
-    chartView.isUserInteractionEnabled = false
-
-    view = chartView
-    super.init()
+  @objc init(_ upcomingReviews: [Int], currentReviewCount: Int, at date: Date) {
+    self.upcomingReviews = upcomingReviews
+    self.currentReviewCount = currentReviewCount
+    self.date = date
   }
 
-  @objc public func update(_ upcomingReviews: [Int], currentReviewCount: Int, at date: Date) {
+  func cellClass() -> AnyClass! {
+    return UpcomingReviewsChartCell.self
+  }
+
+  func rowHeight() -> CGFloat {
+    return 120
+  }
+}
+
+class UpcomingReviewsChartCell: TKMModelCell {
+  private let view: CombinedChartView
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    view = CombinedChartView()
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    selectionStyle = .none
+
+    contentView.addSubview(view)
+
+    view.leftAxis.axisMinimum = 0
+    view.leftAxis.granularityEnabled = true
+    view.rightAxis.axisMinimum = 0
+    view.rightAxis.enabled = true
+    view.xAxis.avoidFirstLastClippingEnabled = true
+    view.xAxis.drawGridLinesEnabled = false
+    view.xAxis.granularityEnabled = true
+    view.xAxis.labelPosition = .bottom
+    view.rightAxis.drawGridLinesEnabled = false
+    view.rightAxis.drawLabelsEnabled = false
+    view.legend.enabled = false
+    view.chartDescription = nil
+    view.isUserInteractionEnabled = false
+  }
+
+  required init!(coder _: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    view.frame = contentView.bounds.inset(by: layoutMargins)
+  }
+
+  override func update(with baseItem: TKMModelItem!) {
+    let item = baseItem as! UpcomingReviewsChartItem
+
     var hourlyData = [BarChartDataEntry]()
     var cumulativeData = [ChartDataEntry]()
 
     // Add the reviews pending now.
-    var cumulativeReviews = currentReviewCount
+    var cumulativeReviews = item.currentReviewCount
     cumulativeData.append(ChartDataEntry(x: 0, y: Double(cumulativeReviews)))
 
     // Add upcoming hourly reviews.
-    for i in 0 ..< upcomingReviews.count {
+    for i in 0 ..< item.upcomingReviews.count {
       let x = i + 1
-      let y = upcomingReviews[i]
+      let y = item.upcomingReviews[i]
 
       cumulativeReviews += y
       cumulativeData.append(ChartDataEntry(x: Double(x), y: Double(cumulativeReviews)))
@@ -96,6 +130,6 @@ class UpcomingReviewsChartController: NSObject {
     data.barData = BarChartData(dataSet: barDataSet)
 
     view.data = data
-    view.xAxis.valueFormatter = UpcomingReviewsXAxisValueFormatter(date)
+    view.xAxis.valueFormatter = UpcomingReviewsXAxisValueFormatter(item.date)
   }
 }

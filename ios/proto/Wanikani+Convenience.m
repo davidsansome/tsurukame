@@ -52,26 +52,20 @@ TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage) {
   }
 }
 
-int TKMSRSStageCategoryIntForStage(int srsStage) {
-  switch (srsStage) {
-    case 1:
-      return 0;
-    case 2:
-    case 3:
-    case 4:
-      return 1;
-    case 5:
-    case 6:
-      return 2;
-    case 7:
-      return 3;
-    case 8:
-      return 4;
-    case 9:
-      return 5;
-    default:
-      return 0;
+extern int TKMFirstSRSStageInCategory(TKMSRSStageCategory category) {
+  switch (category) {
+    case TKMSRSStageNovice: return 1;
+    case TKMSRSStageApprentice: return 2;
+    case TKMSRSStageGuru: return 5;
+    case TKMSRSStageMaster: return 7;
+    case TKMSRSStageEnlightened: return 8;
+    case TKMSRSStageBurned: return 9;
   }
+  return 0;
+}
+
+extern NSString *TKMSRSStageCategoryName(TKMSRSStageCategory category) {
+  return TKMSRSStageName(TKMFirstSRSStageInCategory(category));
 }
 
 NSString *TKMSRSStageName(int srsStage) {
