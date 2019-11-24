@@ -81,10 +81,17 @@ private func attrString(_ string: String, attrs: [NSAttributedString.Key: Any]? 
 }
 
 private func defaultStringAttrs() -> [NSAttributedString.Key: Any] {
-  return [
-    .foregroundColor: UIColor.label,
-    .backgroundColor: UIColor.secondarySystemBackground,
-  ]
+  if #available(iOS 13.0, *) {
+    return [
+      .foregroundColor: UIColor.label,
+      .backgroundColor: UIColor.secondarySystemBackground,
+    ]
+  } else {
+    return [
+      .foregroundColor: UIColor.black,
+      .backgroundColor: UIColor.white,
+    ]
+  }
 }
 
 private func dateFormatter(dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> DateFormatter {
