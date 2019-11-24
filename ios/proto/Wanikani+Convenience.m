@@ -54,12 +54,18 @@ TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage) {
 
 extern int TKMFirstSRSStageInCategory(TKMSRSStageCategory category) {
   switch (category) {
-    case TKMSRSStageNovice: return 1;
-    case TKMSRSStageApprentice: return 2;
-    case TKMSRSStageGuru: return 5;
-    case TKMSRSStageMaster: return 7;
-    case TKMSRSStageEnlightened: return 8;
-    case TKMSRSStageBurned: return 9;
+    case TKMSRSStageNovice:
+      return 1;
+    case TKMSRSStageApprentice:
+      return 2;
+    case TKMSRSStageGuru:
+      return 5;
+    case TKMSRSStageMaster:
+      return 7;
+    case TKMSRSStageEnlightened:
+      return 8;
+    case TKMSRSStageBurned:
+      return 9;
   }
   return 0;
 }

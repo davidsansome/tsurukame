@@ -26,9 +26,9 @@
 #import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"
 #import "SubjectsRemainingViewController.h"
-#import "Tables/TKMTableModel.h"
 #import "TKMReviewContainerViewController.h"
 #import "TKMServices.h"
+#import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
@@ -169,7 +169,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   _userImageView.layer.masksToBounds = YES;
 
   [self updateHourlyTimer];
-  
+
   [self recreateTableModel];
 
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -222,53 +222,60 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
       [_services.localCachingClient getAssignmentsAtUsersCurrentLevel];
 
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
-  
+
   [model addSection:@"Currently Available"];
-  TKMBasicModelItem *lessonsItem = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
-                                                    title:@"Lessons"
-                                                 subtitle:@""
-                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
-                                                   target:self
-                                                   action:@selector(startLessons:)];
+  TKMBasicModelItem *lessonsItem =
+      [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                         title:@"Lessons"
+                                      subtitle:@""
+                                 accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                        target:self
+                                        action:@selector(startLessons:)];
   _hasLessons = SetTableViewCellCount(lessonsItem, lessons);
   [model addItem:lessonsItem];
-  
-  TKMBasicModelItem *reviewsItem = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
-                                                    title:@"Reviews"
-                                                 subtitle:@""
-                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
-                                                   target:self
-                                                   action:@selector(startReviews:)];
+
+  TKMBasicModelItem *reviewsItem =
+      [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                         title:@"Reviews"
+                                      subtitle:@""
+                                 accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                        target:self
+                                        action:@selector(startReviews:)];
   _hasReviews = SetTableViewCellCount(reviewsItem, reviews);
   [model addItem:reviewsItem];
-  
+
   [model addSection:@"Upcoming reviews"];
-  [model addItem:[[UpcomingReviewsChartItem alloc] init:upcomingReviews currentReviewCount:reviews at:[NSDate date]]];
-  
+  [model addItem:[[UpcomingReviewsChartItem alloc] init:upcomingReviews
+                                     currentReviewCount:reviews
+                                                     at:[NSDate date]]];
+
   [model addSection:@"This level"];
   [model addItem:[[CurrentLevelChartItem alloc] initWithDataLoader:_services.dataLoader
                                            currentLevelAssignments:currentLevelAssignments]];
   [model addItem:[[LevelTimeRemainingItem alloc] initWithServices:_services
                                           currentLevelAssignments:currentLevelAssignments]];
-  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                                    title:@"Show remaining"
-                                                 subtitle:nil
-                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
-                                                   target:self
-                                                   action:@selector(showRemaining:)]];
-  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                                    title:@"Show all"
-                                                 subtitle:nil
-                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
-                                                   target:self
-                                                   action:@selector(showAll:)]];
-  
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                 title:@"Show remaining"
+                                              subtitle:nil
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(showRemaining:)]];
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                 title:@"Show all"
+                                              subtitle:nil
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(showAll:)]];
+
   [model addSection:@"All levels"];
-  for (TKMSRSStageCategory stageCategory = TKMSRSStageApprentice; stageCategory <= TKMSRSStageBurned; ++stageCategory) {
+  for (TKMSRSStageCategory stageCategory = TKMSRSStageApprentice;
+       stageCategory <= TKMSRSStageBurned; ++stageCategory) {
     int count = [_services.localCachingClient getSrsLevelCount:stageCategory];
     [model addItem:[[SRSStageCategoryItem alloc] initWithStageCategory:stageCategory count:count]];
   }
-  
+
   _model = model;
 }
 

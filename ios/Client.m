@@ -869,10 +869,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                        ret.startedAt =
                            [[Client parseISO8601Date:data[@"started_at"]] timeIntervalSince1970];
                      }
-    
+
                      if (data[@"current_vacation_started_at"] != [NSNull null]) {
                        ret.vacationStartedAt =
-                           [[Client parseISO8601Date:data[@"current_vacation_started_at"]] timeIntervalSince1970];
+                           [[Client parseISO8601Date:data[@"current_vacation_started_at"]]
+                               timeIntervalSince1970];
                      }
 
                      handler(nil, ret);
