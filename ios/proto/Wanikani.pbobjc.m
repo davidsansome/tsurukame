@@ -1316,6 +1316,7 @@ typedef struct TKMStudyMaterials__storage_ {
 @dynamic hasStartedAt, startedAt;
 @dynamic hasSubscribed, subscribed;
 @dynamic hasSubscriptionEndsAt, subscriptionEndsAt;
+@dynamic hasVacationStartedAt, vacationStartedAt;
 
 typedef struct TKMUser__storage_ {
   uint32_t _has_storage_[1];
@@ -1323,6 +1324,7 @@ typedef struct TKMUser__storage_ {
   int32_t maxLevelGrantedBySubscription;
   int32_t startedAt;
   int32_t subscriptionEndsAt;
+  int32_t vacationStartedAt;
   NSString *username;
   NSString *profileURL;
 } TKMUser__storage_;
@@ -1393,6 +1395,15 @@ typedef struct TKMUser__storage_ {
         .number = TKMUser_FieldNumber_SubscriptionEndsAt,
         .hasIndex = 7,
         .offset = (uint32_t)offsetof(TKMUser__storage_, subscriptionEndsAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "vacationStartedAt",
+        .dataTypeSpecific.className = NULL,
+        .number = TKMUser_FieldNumber_VacationStartedAt,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(TKMUser__storage_, vacationStartedAt),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },

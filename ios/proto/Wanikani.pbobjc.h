@@ -571,6 +571,7 @@ typedef GPB_ENUM(TKMUser_FieldNumber) {
   TKMUser_FieldNumber_StartedAt = 5,
   TKMUser_FieldNumber_Subscribed = 6,
   TKMUser_FieldNumber_SubscriptionEndsAt = 7,
+  TKMUser_FieldNumber_VacationStartedAt = 8,
 };
 
 @interface TKMUser : GPBMessage
@@ -598,6 +599,9 @@ typedef GPB_ENUM(TKMUser_FieldNumber) {
 @property(nonatomic, readwrite) int32_t subscriptionEndsAt;
 
 @property(nonatomic, readwrite) BOOL hasSubscriptionEndsAt;
+@property(nonatomic, readwrite) int32_t vacationStartedAt;
+
+@property(nonatomic, readwrite) BOOL hasVacationStartedAt;
 @end
 
 #pragma mark - TKMSubjectOverrides
