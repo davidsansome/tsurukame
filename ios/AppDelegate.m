@@ -94,7 +94,7 @@
   // Do a sync before pushing the main view controller if this was a new login.
   if (clearUserData) {
     [_services.localCachingClient clearAllData];
-    [_services.localCachingClient sync:pushMainViewController];
+    [_services.localCachingClient sync:pushMainViewController quick:true];
   } else {
     [self userInfoChanged:nil];  // Set the user's max level.
     pushMainViewController();
@@ -120,7 +120,7 @@
 
   if ([_navigationController.topViewController isKindOfClass:MainViewController.class]) {
     MainViewController *vc = (MainViewController *)_navigationController.topViewController;
-    [vc refresh];
+    [vc refreshQuick:true];
   }
 }
 
@@ -140,7 +140,7 @@
   [_services.localCachingClient sync:^{
     [weakSelf updateAppBadgeCount];
     completionHandler(UIBackgroundFetchResultNewData);
-  }];
+  } quick:true];
 }
 
 - (void)updateAppBadgeCount {

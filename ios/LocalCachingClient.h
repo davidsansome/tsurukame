@@ -47,7 +47,7 @@ typedef void (^CompletionHandler)(void);
 
 // Sends pending review progress and study material updates, fetches updates.  The completion
 // handler is always executed on the main queue.
-- (void)sync:(CompletionHandler _Nullable)completionHandler;
+- (void)sync:(CompletionHandler _Nullable)completionHandler quick:(bool)quick;
 
 // Getters: query the database and return data immediately, without making network requests.
 - (NSArray<TKMAssignment *> *)getAllAssignments;

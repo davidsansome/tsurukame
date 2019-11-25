@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setupWithServices:(TKMServices *)services;
 
-- (void)refresh;
+- (void)refreshQuick:(bool)quick;
 
 @end
 

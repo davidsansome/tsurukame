@@ -850,7 +850,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 
 #pragma mark - Sync
 
-- (void)sync:(CompletionHandler _Nullable)completionHandler {
+- (void)sync:(CompletionHandler _Nullable)completionHandler quick:(bool)quick {
   if (!_reachability.isReachable) {
     [self invalidateCachedAvailableSubjectCounts];
     if (completionHandler) {
@@ -867,6 +867,14 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       return;
     }
     _busy = true;
+    
+    if (!quick) {
+      // Clear the sync table before doing anything else.  This forces us to re-download all
+      // assignments.
+      [_db inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+        CheckUpdate(db, @"UPDATE sync SET assignments_updated_after = \"\";");
+      }];
+    }
 
     dispatch_group_t sendGroup = dispatch_group_create();
 

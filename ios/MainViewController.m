@@ -273,7 +273,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-  [self refresh];
+  [self refreshQuick:true];
   [self updateHourlyTimer];
 
   [super viewWillAppear:animated];
@@ -378,7 +378,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 }
 
 - (void)hourlyTimerExpired {
-  [self refresh];
+  [self refreshQuick:true];
   [self updateHourlyTimer];
 }
 
@@ -392,11 +392,11 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 
 #pragma mark - Refreshing contents
 
-- (void)refresh {
+- (void)refreshQuick:(bool)quick {
   [self updateUserInfo];
   [self updatePendingItems];
   [self scheduleTableModelUpdate];
-  [_services.localCachingClient sync:nil];
+  [_services.localCachingClient sync:nil quick:quick];
 }
 
 - (void)pendingItemsChanged {
@@ -489,7 +489,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 
 - (void)didPullToRefresh {
   [self.refreshControl endRefreshing];
-  [self refresh];
+  [self refreshQuick:false];
 }
 
 #pragma mark - Search
