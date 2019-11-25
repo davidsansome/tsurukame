@@ -123,7 +123,7 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
                                    accessoryType:UITableViewCellAccessoryNone
                                           target:self
                                           action:@selector(didTapDeleteAllAudio:)];
-    deleteItem.textColor = [UIColor redColor];
+    deleteItem.textColor = [UIColor systemRedColor];
     [model addItem:deleteItem];
   }
 }

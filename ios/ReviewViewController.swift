@@ -32,7 +32,14 @@ private let kMeaningGradient = [
   UIColor(red: 0.882, green: 0.882, blue: 0.882, alpha: 1.0).cgColor,
 ]
 
-private let kReadingTextColor = UIColor.white
+private func kReadingTextColor() -> UIColor {
+  if #available(iOS 13.0, *) {
+    return UIColor.label
+  } else {
+    return UIColor.black
+  }
+}
+
 private let kMeaningTextColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0)
 private let kDefaultButtonTintColor = UIButton().tintColor
 
@@ -491,7 +498,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       kanaInput.enabled = true
       taskTypePrompt = "Reading"
       promptGradient = kReadingGradient
-      promptTextColor = kReadingTextColor
+      promptTextColor = kReadingTextColor()
       taskTypePlaceholder = "答え"
     case ._Max:
       fallthrough
@@ -665,7 +672,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     previousSubjectButton.alpha = shown ? 0.0 : 1.0
 
     // Change the background color of the answer field.
-    answerField.textColor = shown ? UIColor.red : UIColor.black
+    if #available(iOS 13.0, *) {
+      answerField.textColor = shown ? UIColor.systemRed : UIColor.label
+    } else {
+      answerField.textColor = shown ? UIColor.systemRed : UIColor.white
+    }
 
     // Scroll to the top.
     subjectDetailsView.setContentOffset(CGPoint(x: 0, y: -subjectDetailsView.contentInset.top), animated: false)
@@ -981,7 +992,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       revealAnswerButton.isHidden = false
       UIView.animate(withDuration: animationDuration,
                      animations: {
-                       self.answerField.textColor = UIColor.red
+                       self.answerField.textColor = UIColor.systemRed
                        self.answerField.isEnabled = false
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)

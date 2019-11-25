@@ -30,7 +30,7 @@ private func join(_ arr: [NSAttributedString], with joinString: String) -> NSAtt
   for i in 0 ..< count {
     ret.append(arr[i])
     if i != count - 1 {
-      ret.append(NSAttributedString(string: joinString))
+      ret.append(attrString(joinString))
     }
   }
   return ret
@@ -40,18 +40,18 @@ private func renderMeanings(subject: TKMSubject, studyMaterials: TKMStudyMateria
   var strings = [NSAttributedString]()
   for meaning in subject.meaningsArray as! [TKMMeaning] {
     if meaning.type == .primary {
-      strings.append(NSAttributedString(string: meaning.meaning))
+      strings.append(attrString(meaning.meaning))
     }
   }
   if let studyMaterials = studyMaterials {
     for meaning in studyMaterials.meaningSynonymsArray as! [String] {
-      strings.append(NSAttributedString(string: meaning, attributes: [.foregroundColor: kMeaningSynonymColor]))
+      strings.append(attrString(meaning, attrs: [.foregroundColor: kMeaningSynonymColor]))
     }
   }
   for meaning in subject.meaningsArray as! [TKMMeaning] {
     if meaning.type != .primary, meaning.type != .blacklist, meaning.type != .auxiliaryWhitelist || !subject.hasRadical || Settings.showOldMnemonic {
       let font = UIFont.systemFont(ofSize: kFontSize, weight: .light)
-      strings.append(NSAttributedString(string: meaning.meaning, attributes: [.font: font]))
+      strings.append(attrString(meaning.meaning, attrs: [.font: font]))
     }
   }
   return join(strings, with: ", ")
@@ -61,18 +61,37 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
   var strings = [NSAttributedString]()
   for reading in readings {
     if reading.isPrimary {
-      strings.append(NSAttributedString(string: reading.displayText))
+      strings.append(attrString(reading.displayText))
     }
   }
   if !primaryOnly {
     let font = TKMStyle.japaneseFontLight(size: kFontSize)
     for reading in readings {
       if !reading.isPrimary {
-        strings.append(NSAttributedString(string: reading.displayText, attributes: [.font: font]))
+        strings.append(attrString(reading.displayText, attrs: [.font: font]))
       }
     }
   }
   return join(strings, with: ", ")
+}
+
+private func attrString(_ string: String, attrs: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
+  let combinedAttrs = defaultStringAttrs().merging(attrs ?? [:]) { _, new in new }
+  return NSAttributedString(string: string, attributes: combinedAttrs)
+}
+
+private func defaultStringAttrs() -> [NSAttributedString.Key: Any] {
+  if #available(iOS 13.0, *) {
+    return [
+      .foregroundColor: UIColor.label,
+      .backgroundColor: UIColor.secondarySystemBackground,
+    ]
+  } else {
+    return [
+      .foregroundColor: UIColor.black,
+      .backgroundColor: UIColor.white,
+    ]
+  }
 }
 
 private func dateFormatter(dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> DateFormatter {
@@ -183,7 +202,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       return
     }
 
-    var attributes = [NSAttributedString.Key: Any]()
+    var attributes = defaultStringAttrs()
     if isHint {
       attributes[.foregroundColor] = kHintTextColor
     }
@@ -200,10 +219,10 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     model.addSection("Context Sentences")
     for sentence in subject.vocabulary.sentencesArray as! [TKMVocabulary_Sentence] {
       let text = NSMutableAttributedString()
-      text.append(highlightOccurrences(of: subject, in: sentence.japanese) ??
-        NSAttributedString(string: sentence.japanese))
-      text.append(NSAttributedString(string: "\n"))
-      text.append(NSAttributedString(string: sentence.english))
+      text.append(highlightOccurrences(of: subject, in: attrString(sentence.japanese)) ??
+        attrString(sentence.japanese))
+      text.append(attrString("\n"))
+      text.append(attrString(sentence.english))
       text.replaceFontSize(kFontSize)
 
       model.add(TKMAttributedModelItem(text: text))
