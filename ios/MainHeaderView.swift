@@ -16,6 +16,7 @@ import Foundation
 
 private let kUserGradientYOffset: CGFloat = 450
 private let kUserGradientStartPoint: CGFloat = 0.8
+private let kUserMargin: CGFloat = 8.0
 
 @objc protocol MainHeaderViewDelegate {
   func searchButtonTapped()
@@ -24,7 +25,6 @@ private let kUserGradientStartPoint: CGFloat = 0.8
 
 @IBDesignable
 class MainHeaderView: UIView {
-  var contentView: UIView!
   @IBOutlet var userContainer: UIView!
   @IBOutlet var usernameLabel: UILabel!
   @IBOutlet var levelLabel: UILabel!
@@ -37,32 +37,25 @@ class MainHeaderView: UIView {
   @IBOutlet var vacationLabel: UILabel!
   @IBOutlet var vacationDetail: UILabel!
 
-  @IBOutlet var vacationZeroHeightConstraint: NSLayoutConstraint!
-  @IBOutlet var showVacationConstraint: NSLayoutConstraint!
-  @IBOutlet var hideVacationConstraint: NSLayoutConstraint!
+  @IBOutlet var progressView: UIProgressView!
 
   @objc weak var delegate: MainHeaderViewDelegate?
 
   weak var userGradientLayer: CAGradientLayer!
   weak var vacationGradientLayer: CAGradientLayer!
 
+  private var isOnVacation = false
+  private var isShowingProgress = false
+
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
 
-    contentView = loadViewFromNib()
-    contentView.frame = bounds
-    contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    contentView.setContentHuggingPriority(.defaultHigh, for: .vertical)
-    addSubview(contentView)
-
-    autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    setContentHuggingPriority(.defaultHigh, for: .vertical)
-    backgroundColor = nil
-  }
-
-  func loadViewFromNib() -> UIView {
     let nib = UINib(nibName: "MainHeaderView", bundle: Bundle(for: type(of: self)))
-    return nib.instantiate(withOwner: self, options: nil).first as! UIView
+    nib.instantiate(withOwner: self, options: nil)
+
+    addSubview(userContainer)
+    addSubview(vacationContainer)
+    addSubview(progressView)
   }
 
   override func didMoveToSuperview() {
@@ -83,7 +76,7 @@ class MainHeaderView: UIView {
     self.vacationGradientLayer = vacationGradientLayer
 
     // Add shadows to things in the user info view.
-    TKMStyle.addShadowToView(imageView, offset: 2.0, opacity: 0.4, radius: 4.0)
+    TKMStyle.addShadowToView(imageContainer, offset: 2.0, opacity: 0.4, radius: 4.0)
     TKMStyle.addShadowToView(usernameLabel, offset: 1.0, opacity: 0.4, radius: 4.0)
     TKMStyle.addShadowToView(levelLabel, offset: 1.0, opacity: 0.2, radius: 2.0)
 
@@ -91,19 +84,6 @@ class MainHeaderView: UIView {
 
     // Add shadows to things in the vacation view.
     TKMStyle.addShadowToView(vacationLabel, offset: 1.0, opacity: 0.4, radius: 2.0)
-  }
-
-  override func layoutSubviews() {
-    vacationDetail.preferredMaxLayoutWidth = vacationDetail.bounds.width
-    layoutIfNeeded()
-    super.layoutSubviews()
-
-    var userGradientFrame = userContainer.bounds
-    userGradientFrame.origin.y -= kUserGradientYOffset
-    userGradientFrame.size.height += kUserGradientYOffset
-    userGradientLayer.frame = userGradientFrame
-
-    vacationGradientLayer.frame = vacationContainer.bounds
 
     // Set rounded corners on the user image.
     let cornerRadius = imageView.bounds.size.height / 2
@@ -111,11 +91,55 @@ class MainHeaderView: UIView {
     imageView.layer.cornerRadius = cornerRadius
   }
 
-  private func setVacationContainer(visible: Bool) {
-    hideVacationConstraint.isActive = !visible
-    showVacationConstraint.isActive = visible
-    vacationZeroHeightConstraint.isActive = !visible
-    setNeedsLayout()
+  override func sizeThatFits(_ size: CGSize) -> CGSize {
+    vacationDetail.preferredMaxLayoutWidth = size.width
+    vacationContainer.setNeedsLayout()
+    vacationDetail.setNeedsLayout()
+    vacationDetail.layoutIfNeeded()
+
+    var height = userContainer.sizeThatFits(size).height + kUserMargin
+
+    if isOnVacation {
+      height += vacationContainer.frame.height
+    }
+
+    if isShowingProgress {
+      height += progressView.frame.height
+    }
+
+    return CGSize(width: size.width, height: height)
+  }
+
+  override func layoutSubviews() {
+    let width = bounds.width
+
+    // Layout the user container.
+    var origin = CGPoint(x: 0, y: 0)
+    var userContainerSize = userContainer.sizeThatFits(CGSize(width: width, height: 0))
+    userContainerSize.width = width
+    userContainer.frame = CGRect(origin: origin,
+                                 size: userContainerSize)
+    origin.y += userContainerSize.height + kUserMargin
+
+    // Position the vacation container below it.
+    var vacationContainerSize = CGSize(width: 0, height: 0)
+    if isOnVacation {
+      vacationContainerSize = vacationContainer.sizeThatFits(CGSize(width: width, height: 0))
+    }
+    vacationContainer.frame = CGRect(origin: origin, size: vacationContainerSize)
+
+    origin.y += vacationContainerSize.height
+
+    // Position the progress bar below that.
+    progressView.frame = CGRect(origin: origin, size: progressView.sizeThatFits(CGSize(width: width, height: 0)))
+
+    // Position the gradients.
+    var userGradientFrame = userContainer.bounds
+    userGradientFrame.origin.y -= kUserGradientYOffset
+    userGradientFrame.size.height += kUserGradientYOffset + kUserMargin
+    userGradientLayer.frame = userGradientFrame
+
+    vacationGradientLayer.frame = vacationContainer.bounds
   }
 
   @objc func update(username: String, level: Int, guruKanji: Int, imageURL: URL?, vacationMode: Bool) {
@@ -125,7 +149,22 @@ class MainHeaderView: UIView {
 
     usernameLabel.text = username
     levelLabel.text = "Level \(level) \u{00B7} learned \(guruKanji) kanji"
-    setVacationContainer(visible: vacationMode)
+    isOnVacation = vacationMode
+    vacationContainer.alpha = isOnVacation ? 1.0 : 0.0
+    setNeedsLayout()
+  }
+
+  @objc func setProgress(_ progress: Float) {
+    UIView.animate(withDuration: 0.2) {
+      self.progressView.progress = progress
+
+      let shouldShow = progress != 1.0
+      if shouldShow != self.isShowingProgress {
+        self.progressView.alpha = shouldShow ? 1.0 : 0.0
+        self.isShowingProgress = shouldShow
+        self.layoutSubviews()
+      }
+    }
   }
 
   @IBAction func didTapSearchButton(_: Any) {

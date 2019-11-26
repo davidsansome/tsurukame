@@ -260,12 +260,6 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 
 #pragma mark - UIViewController
 
-- (void)viewDidLayoutSubviews {
-  [super viewDidLayoutSubviews];
-
-  [self updateUserInfo];
-}
-
 - (void)viewWillDisappear:(BOOL)animated {
   [super viewWillDisappear:animated];
 
@@ -289,6 +283,9 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 
   // Bring the refresh control above the gradient.
   [self.refreshControl.superview bringSubviewToFront:self.refreshControl];
+
+  CGSize headerSize = [_headerView sizeThatFits:CGSizeMake(self.view.bounds.size.width, 0)];
+  _headerView.frame = (CGRect){_headerView.frame.origin, headerSize};
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -396,7 +393,12 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   [self updateUserInfo];
   [self updatePendingItems];
   [self scheduleTableModelUpdate];
-  [_services.localCachingClient sync:nil quick:quick];
+  [_headerView setProgress:0.0];
+  [_services.localCachingClient
+      syncWithProgressHandler:^(float progress) {
+        [_headerView setProgress:progress];
+      }
+                        quick:quick];
 }
 
 - (void)pendingItemsChanged {
@@ -437,7 +439,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   [_headerView layoutIfNeeded];
 
   // Make the header view as short as possible.
-  CGFloat height = [_headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+  CGFloat height = [_headerView sizeThatFits:CGSizeMake(self.view.bounds.size.width, 0)].height;
   CGRect frame = _headerView.frame;
   frame.size.height = height;
   _headerView.frame = frame;

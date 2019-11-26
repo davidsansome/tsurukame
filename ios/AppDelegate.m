@@ -91,10 +91,16 @@
 
     [_navigationController setViewControllers:@[ vc ] animated:animated];
   };
+  void (^syncProgressHandler)(float) = ^(float progress) {
+    if (progress == 1.0) {
+      pushMainViewController();
+    }
+  };
+
   // Do a sync before pushing the main view controller if this was a new login.
   if (clearUserData) {
     [_services.localCachingClient clearAllData];
-    [_services.localCachingClient sync:pushMainViewController quick:true];
+    [_services.localCachingClient syncWithProgressHandler:syncProgressHandler quick:true];
   } else {
     [self userInfoChanged:nil];  // Set the user's max level.
     pushMainViewController();
@@ -137,10 +143,14 @@
   }
 
   __weak AppDelegate *weakSelf = self;
-  [_services.localCachingClient sync:^{
-    [weakSelf updateAppBadgeCount];
-    completionHandler(UIBackgroundFetchResultNewData);
-  } quick:true];
+  [_services.localCachingClient
+      syncWithProgressHandler:^(float progress) {
+        if (progress == 1.0) {
+          [weakSelf updateAppBadgeCount];
+          completionHandler(UIBackgroundFetchResultNewData);
+        }
+      }
+                        quick:true];
 }
 
 - (void)updateAppBadgeCount {
@@ -151,7 +161,7 @@
   int reviewCount = _services.localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
   TKMUser *user = _services.localCachingClient.getUserInfo;
-  
+
   if (user.hasVacationStartedAt) {
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     return;
