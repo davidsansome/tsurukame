@@ -73,7 +73,11 @@ static NSString *FriendlySize(int64_t bytes) {
     case TKMDownloadModelItemInstalling:
       [self updateProgress];
       [_image setImage:[UIImage imageNamed:@"baseline_cancel_black_24pt"]];
-      [_image setTintColor:[UIColor tertiaryLabelColor]];
+      if (@available(iOS 13.0, *)) {
+        [_image setTintColor:[UIColor tertiaryLabelColor]];
+      } else {
+        [_image setTintColor:[UIColor lightGrayColor]];
+      }
       break;
     case TKMDownloadModelItemInstalledSelected:
       _subtitle.text = nil;
@@ -83,7 +87,11 @@ static NSString *FriendlySize(int64_t bytes) {
     case TKMDownloadModelItemInstalledNotSelected:
       _subtitle.text = nil;
       [_image setImage:[UIImage imageNamed:@"tick"]];
-      [_image setTintColor:[UIColor tertiaryLabelColor]];
+      if (@available(iOS 13.0, *)) {
+        [_image setTintColor:[UIColor tertiaryLabelColor]];
+      } else {
+        [_image setTintColor:[UIColor lightGrayColor]];
+      }
       break;
   }
 

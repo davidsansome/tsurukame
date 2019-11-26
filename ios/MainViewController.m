@@ -91,6 +91,13 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   [super viewDidLoad];
 
   _headerView.delegate = self;
+  
+  UIColor *whiteColor;
+  if (@available(iOS 13.0, *)) {
+    whiteColor = [UIColor systemBackgroundColor];
+  } else {
+    whiteColor = [UIColor whiteColor];
+  }
 
   // Show a background image.
   UIImageView *backgroundView =
@@ -100,11 +107,11 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 
   // Add a refresh control for when the user pulls down.
   self.refreshControl = [[UIRefreshControl alloc] init];
-  self.refreshControl.tintColor = [UIColor labelColor];
+  self.refreshControl.tintColor = whiteColor;
   self.refreshControl.backgroundColor = nil;
   NSMutableAttributedString *title = [[NSMutableAttributedString alloc]
       initWithString:@"Pull to refresh..."
-          attributes:@{NSForegroundColorAttributeName : [UIColor labelColor]}];
+          attributes:@{NSForegroundColorAttributeName : whiteColor}];
   self.refreshControl.attributedTitle = title;
   [self.refreshControl addTarget:self
                           action:@selector(didPullToRefresh)
@@ -128,7 +135,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 
   UIColor *originalSearchBarTintColor = searchBar.tintColor;
-  searchBar.tintColor = [UIColor labelColor];  // Make the button white.
+  searchBar.tintColor = whiteColor;  // Make the button white.
 
   if (@available(iOS 13, *)) {
     UITextField *searchTextField = searchBar.searchTextField;
