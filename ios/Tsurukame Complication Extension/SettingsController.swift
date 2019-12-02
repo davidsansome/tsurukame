@@ -23,10 +23,14 @@ class SettingsController: WKInterfaceController, DataManagerDelegate {
   let dataSourceOptions: [(ComplicationDataSource, String)] = [
     (.ReviewCounts, "Review Counts"),
     (.Level, "Level"),
+    // Removed pending real data
+    // (.Character, "Kanji"),
   ]
 
   override func awake(withContext context: Any?) {
     super.awake(withContext: context)
+
+    os_log("MZS - Awake with context: %{public}@", String(describing: context))
 
     let pickerOptions = dataSourceOptions.map { (_, title) -> WKPickerItem in
       let pickerItem = WKPickerItem()
@@ -45,6 +49,9 @@ class SettingsController: WKInterfaceController, DataManagerDelegate {
   }
 
   override func willActivate() {
+    // TODO: How to get context from ExtensionDelegate#handleUserActivity ?
+    os_log("MZS - will activate")
+
     if let userInfo = DataManager.sharedInstance.latestData {
       onDataUpdated(data: userInfo, dataSource: DataManager.sharedInstance.dataSource)
     } else {

@@ -32,9 +32,16 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
     // Use this method to pause ongoing tasks, disable timers, etc.
   }
 
+  func handleUserActivity(_ userInfo: [AnyHashable: Any]?) {
+    os_log("MZS - Launched with activity: %{public}@", userInfo ?? "nil")
+    if let userInfo = userInfo, userInfo[CLKLaunchedTimelineEntryDateKey] != nil {
+      os_log("MZS - launched from complication")
+      // TODO: How do you change launch path?
+    }
+  }
+
   func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
     // Sent when the system needs to launch the application in the background to process tasks. Tasks arrive in a set, so loop through and process each one.
-    os_log("MZS - hand ext task")
     for task in backgroundTasks {
       // Use a switch statement to check the task type
       switch task {

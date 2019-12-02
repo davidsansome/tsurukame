@@ -16,6 +16,8 @@ import ClockKit
 import os
 
 class ComplicationController: NSObject, CLKComplicationDataSource {
+  let TsurukameHighlightColor = UIColor.red
+
   // MARK: - Timeline Configuration
 
   func getSupportedTimeTravelDirections(for _: CLKComplication, withHandler handler: @escaping (CLKComplicationTimeTravelDirections) -> Void) {
@@ -64,11 +66,15 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
 
   func getLocalizableSampleTemplate(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTemplate?) -> Void) {
     // This method will be called once per supported complication, and the results will be cached
-    // TODO: More complete example data
     let template = templateFor(complication,
                                userData: DataManager.sharedInstance.latestData ?? [
-                                 WatchHelper.KeyReviewCount: 22,
-                                 WatchHelper.KeyReviewNextHourCount: 5,
+                                 WatchHelper.KeyReviewCount: 8,
+                                 WatchHelper.KeyReviewNextHourCount: 3,
+                                 WatchHelper.KeyLevelCurrent: 6,
+                                 WatchHelper.KeyLevelTotal: 80,
+                                 WatchHelper.KeyLevelLearned: 12,
+                                 WatchHelper.KeyLevelHalf: false,
+                                 WatchHelper.KeyNextReviewAt: Date().addingTimeInterval(TimeInterval(300)).timeIntervalSince1970,
                                ],
                                dataSource: DataManager.sharedInstance.dataSource)
     handler(template)
@@ -83,6 +89,8 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
       return templateForReviewCount(complication, userData: userData)
     case .Level:
       return templateForLevel(complication, userData: userData)
+    case .Character:
+      return templateForCharacter(complication, userData: userData)
     }
   }
 
@@ -186,17 +194,23 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         template.line2TextProvider = relativeDateProvider(date: nextReview!)
         return template
       }
-
     case .graphicBezel:
       let template = CLKComplicationTemplateGraphicBezelCircularText()
-      let circularTemplate = CLKComplicationTemplateGraphicCircularStackText()
-      circularTemplate.line1TextProvider = CLKTextProvider(format: "%d NOW", reviewsPending)
-      if nextHour > 0 || nextReview == nil {
-        circularTemplate.line2TextProvider = CLKTextProvider(format: "%d next hour", nextHour)
+      if let img = UIImage(named: "miniCrab") {
+        let circularTemplate = CLKComplicationTemplateGraphicCircularImage()
+        circularTemplate.imageProvider = CLKFullColorImageProvider(fullColorImage: img)
+        template.circularTemplate = circularTemplate
       } else {
-        circularTemplate.line2TextProvider = relativeDateProvider(date: nextReview!)
+        let circularTemplate = CLKComplicationTemplateGraphicCircularStackText()
+        circularTemplate.line1TextProvider = CLKSimpleTextProvider(text: "")
+        circularTemplate.line2TextProvider = CLKSimpleTextProvider(text: "")
+        template.circularTemplate = circularTemplate
       }
-      template.circularTemplate = circularTemplate
+      if nextHour > 0 || nextReview == nil {
+        template.textProvider = CLKTextProvider(format: "%d NOW • %d next hour", reviewsPending, nextHour)
+      } else {
+        template.textProvider = relativeDateProvider(date: nextReview!)
+      }
       return template
     case .graphicRectangular:
       let template = CLKComplicationTemplateGraphicRectangularStandardBody()
@@ -219,7 +233,6 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
   }
 
   func templateForLevel(_ complication: CLKComplication, userData: UserData?) -> CLKComplicationTemplate? {
-    // TODO: implement level data complications
     let currentLevel = userData?[WatchHelper.KeyLevelCurrent] as? Int ?? 0
     let learned = userData?[WatchHelper.KeyLevelLearned] as? Int ?? 0
     let total = userData?[WatchHelper.KeyLevelTotal] as? Int ?? 0
@@ -227,13 +240,35 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     let fillFraction = Float(learned) / Float(total)
 
     let levelTextProvider: CLKTextProvider
+    let levelShortTextProvider: CLKTextProvider
     if halfLevel {
       levelTextProvider = CLKTextProvider(format: "Level %.1f", Float(currentLevel) + 0.5)
+      levelShortTextProvider = CLKTextProvider(format: "%.1f", Float(currentLevel) + 0.5)
     } else {
       levelTextProvider = CLKTextProvider(format: "Level %d", currentLevel)
+      levelShortTextProvider = CLKTextProvider(format: "%d", currentLevel)
     }
 
     switch complication.family {
+    case .circularSmall:
+      let template = CLKComplicationTemplateCircularSmallRingText()
+      template.textProvider = levelShortTextProvider
+      template.ringStyle = .closed
+      template.fillFraction = fillFraction
+      return template
+    case .extraLarge:
+      let template = CLKComplicationTemplateExtraLargeRingText()
+      template.textProvider = levelShortTextProvider
+      template.fillFraction = fillFraction
+      template.ringStyle = .closed
+      return template
+    case .modularSmall:
+      let template = CLKComplicationTemplateModularSmallStackImage()
+      template.line2TextProvider = levelShortTextProvider
+      if let img = UIImage(named: "miniCrab") {
+        template.line1ImageProvider = CLKImageProvider(onePieceImage: img)
+      }
+      return template
     case .modularLarge:
       let template = CLKComplicationTemplateModularLargeTable()
       if let img = UIImage(named: "miniCrab") {
@@ -245,12 +280,46 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
       template.row2Column1TextProvider = CLKTextProvider(format: "%d", total - learned)
       template.row2Column2TextProvider = CLKSimpleTextProvider(text: "remaining")
       return template
+    case .utilitarianSmall:
+      fallthrough
+    case .utilitarianSmallFlat:
+      let template = CLKComplicationTemplateUtilitarianSmallFlat()
+      template.textProvider = levelShortTextProvider
+      if let img = UIImage(named: "miniCrab") {
+        template.imageProvider = CLKImageProvider(onePieceImage: img)
+        template.imageProvider?.tintColor = TsurukameHighlightColor
+      }
+      return template
+    case .utilitarianLarge:
+      let template = CLKComplicationTemplateUtilitarianLargeFlat()
+      if fillFraction > 0.8 {
+        template.textProvider = CLKTextProvider(format: "%@ • %d left", levelTextProvider, total - learned)
+      } else {
+        template.textProvider = CLKTextProvider(format: "%@ • %d/%d", levelTextProvider, learned, total)
+      }
+      return template
+    case .graphicCorner:
+      let template = CLKComplicationTemplateGraphicCornerGaugeText()
+      template.outerTextProvider = levelShortTextProvider
+      template.gaugeProvider = CLKSimpleGaugeProvider(style: .fill, gaugeColor: TsurukameHighlightColor, fillFraction: fillFraction)
+      template.trailingTextProvider = CLKTextProvider(format: "→%d", total - learned)
+      return template
     case .graphicCircular:
       let template = CLKComplicationTemplateGraphicCircularOpenGaugeRangeText()
       template.centerTextProvider = CLKTextProvider(format: "%d", learned)
-      template.gaugeProvider = CLKSimpleGaugeProvider(style: .ring, gaugeColor: .red, fillFraction: fillFraction)
+      template.gaugeProvider = CLKSimpleGaugeProvider(style: .ring, gaugeColor: TsurukameHighlightColor, fillFraction: fillFraction)
       template.leadingTextProvider = CLKSimpleTextProvider(text: "0")
       template.trailingTextProvider = CLKTextProvider(format: "%d", total)
+      return template
+    case .graphicBezel:
+      let circleTemplate = CLKComplicationTemplateGraphicCircularOpenGaugeRangeText()
+      circleTemplate.centerTextProvider = CLKTextProvider(format: "%d", learned)
+      circleTemplate.gaugeProvider = CLKSimpleGaugeProvider(style: .ring, gaugeColor: TsurukameHighlightColor, fillFraction: fillFraction)
+      circleTemplate.leadingTextProvider = CLKSimpleTextProvider(text: "0")
+      circleTemplate.trailingTextProvider = CLKTextProvider(format: "%d", total)
+      let template = CLKComplicationTemplateGraphicBezelCircularText()
+      template.textProvider = CLKTextProvider(format: "%@ • %.0f%% complete", levelTextProvider, (Float(learned) / Float(total)) * 100.0)
+      template.circularTemplate = circleTemplate
       return template
     case .graphicRectangular:
       let template = CLKComplicationTemplateGraphicRectangularTextGauge()
@@ -259,8 +328,45 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
       if let img = UIImage(named: "miniCrab") {
         template.headerImageProvider = CLKFullColorImageProvider(fullColorImage: img)
       }
-      template.gaugeProvider = CLKSimpleGaugeProvider(style: .fill, gaugeColor: .red, fillFraction: fillFraction)
+      template.gaugeProvider = CLKSimpleGaugeProvider(style: .fill, gaugeColor: TsurukameHighlightColor, fillFraction: fillFraction)
       return template
+    default:
+      return nil
+    }
+  }
+
+  /**
+   Currently in testing: Is it useful to see a random character?
+   */
+  func templateForCharacter(_ complication: CLKComplication, userData _: UserData?) -> CLKComplicationTemplate? {
+    // TODO: Get the list of characters to pick from
+    let character: String = ["森", "後"].randomElement()!
+    let vocab: String = ["落とす"].randomElement()!
+    let px = 70
+    let size = CGSize(width: px, height: px)
+
+    switch complication.family {
+    case .graphicBezel:
+      let template = CLKComplicationTemplateGraphicBezelCircularText()
+      template.textProvider = CLKSimpleTextProvider(text: vocab)
+      let circ = CLKComplicationTemplateGraphicCircularClosedGaugeText()
+      circ.centerTextProvider = CLKSimpleTextProvider(text: "30")
+      circ.gaugeProvider = CLKSimpleGaugeProvider(style: .fill, gaugeColor: TsurukameHighlightColor, fillFraction: 3 / 10)
+      template.circularTemplate = circ
+      return template
+    case .graphicCircular:
+      // Attempt to use an image so we can have a larger text item
+      if let img = textToImage(drawText: character, size: size) {
+        let template = CLKComplicationTemplateGraphicCircularClosedGaugeImage()
+        template.imageProvider = CLKFullColorImageProvider(fullColorImage: img)
+        template.gaugeProvider = CLKSimpleGaugeProvider(style: .fill, gaugeColor: TsurukameHighlightColor, fillFraction: 3 / 10)
+        return template
+      } else {
+        let template = CLKComplicationTemplateGraphicCircularStackText()
+        template.line1TextProvider = CLKSimpleTextProvider(text: "")
+        template.line2TextProvider = CLKSimpleTextProvider(text: character)
+        return template
+      }
     default:
       return nil
     }
@@ -276,6 +382,40 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     } else {
       unit = .minute
     }
+
     return CLKRelativeDateTextProvider(date: date, style: .offsetShort, units: unit)
+  }
+
+  /**
+   Create a UIImage with a kanji character centered in it. Used to display larger
+   text.
+   */
+  func textToImage(drawText text: String, size: CGSize) -> UIImage? {
+    let textColor = UIColor.white
+    let textFont = UIFont.systemFont(ofSize: 26)
+
+    let scale: CGFloat = 2.0
+    UIGraphicsBeginImageContextWithOptions(size, false, scale)
+
+    let textStyle = NSMutableParagraphStyle()
+    textStyle.alignment = .center
+
+    let textFontAttributes = [
+      NSAttributedString.Key.font: textFont,
+      NSAttributedString.Key.foregroundColor: textColor,
+      NSAttributedString.Key.paragraphStyle: textStyle,
+    ] as [NSAttributedString.Key: Any]
+
+    let textHeight = textFont.lineHeight
+    let textY = (size.height - textHeight) / 2
+    let textRect = CGRect(x: 0, y: textY,
+                          width: size.width, height: textHeight)
+
+    text.draw(in: textRect, withAttributes: textFontAttributes)
+
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+
+    return newImage
   }
 }

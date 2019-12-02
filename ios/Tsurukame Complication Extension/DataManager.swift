@@ -22,7 +22,7 @@ protocol DataManagerDelegate {
 }
 
 enum ComplicationDataSource: Int {
-  case ReviewCounts, Level
+  case ReviewCounts, Level, Character
 }
 
 class DataManager {

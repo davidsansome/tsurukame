@@ -81,6 +81,8 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
   let serverDelegate = WatchConnectionServerDelegate()
   var clientDelegate: WatchConnectionClientDelegate?
   var lastPacketSignature: String?
+  var lastPacketSentAt: Date?
+  let DuplicatePacketWindow = TimeInterval(30)
 
   override init() {
     super.init()
@@ -157,13 +159,9 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
         WatchHelper.KeyNextReviewAt: nextReviewEpoch,
       ]
 
-      let packetSignature = self.packetSignature(packet: packet)
-      if let lastSignature = self.lastPacketSignature {
-        if packetSignature == lastSignature {
-          // Re-sending the same data, skip
-          NSLog("Skipping re-send of same watch data packet")
-          return
-        }
+      if !shouldSendPacket(packet: packet) {
+        NSLog("Skipping re-send of same watch data packet")
+        return
       }
 
       if let session = session {
@@ -175,7 +173,6 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + deadline) {
           let timestamp = [WatchHelper.KeySentAt: Int32(Date().timeIntervalSince1970)]
-          self.lastPacketSignature = packetSignature
           session.transferCurrentComplicationUserInfo(packet.merging(timestamp, uniquingKeysWith: { current, _ in current }))
         }
       }
@@ -196,5 +193,25 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
       signature += "\(key):\(packet[key] ?? "nil"),"
     }
     return signature
+  }
+
+  func shouldSendPacket(packet: [String: Any]) -> Bool {
+    guard let lastSignature = self.lastPacketSignature,
+      let lastSent = self.lastPacketSentAt else {
+      // The first one's always free.
+      return true
+    }
+
+    let signature = packetSignature(packet: packet)
+    let now = Date()
+    if signature == lastSignature, now < (lastSent + DuplicatePacketWindow) {
+      // Data unchanged and it has been sent within the window
+      return false
+    }
+
+    lastPacketSignature = signature
+    lastPacketSentAt = now
+
+    return true
   }
 }
