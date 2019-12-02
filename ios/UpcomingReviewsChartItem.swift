@@ -79,6 +79,10 @@ class UpcomingReviewsChartCell: TKMModelCell {
     view.legend.enabled = false
     view.chartDescription = nil
     view.isUserInteractionEnabled = false
+    if #available(iOS 13.0, *) {
+      view.xAxis.labelTextColor = UIColor.label
+      view.leftAxis.labelTextColor = UIColor.label
+    }
   }
 
   required init!(coder _: NSCoder) {
