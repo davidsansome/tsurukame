@@ -202,8 +202,8 @@ class CurrentLevelChartCell: TKMModelCell {
 
     let dataSet = PieChartDataSet(values)
     if #available(iOS 13.0, *) {
-      dataSet.valueTextColor = UIColor.secondaryLabel
-      dataSet.entryLabelColor = UIColor.label
+      dataSet.valueTextColor = UIColor.label
+      dataSet.entryLabelColor = UIColor.secondaryLabel
     } else {
       dataSet.valueTextColor = UIColor.darkGray
       dataSet.entryLabelColor = UIColor.black
