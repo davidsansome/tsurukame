@@ -82,10 +82,17 @@ private func attrString(_ string: String, attrs: [NSAttributedString.Key: Any]? 
 
 private func defaultStringAttrs() -> [NSAttributedString.Key: Any] {
   if #available(iOS 13.0, *) {
-    return [
-      .foregroundColor: UIColor.label,
-      .backgroundColor: UIColor.secondarySystemBackground,
-    ]
+    #if targetEnvironment(macCatalyst)
+      return [
+        .foregroundColor: UIColor.label,
+        .backgroundColor: UIColor.secondarySystemBackground,
+      ]
+    #else
+      return [
+        .foregroundColor: UIColor.label,
+        .backgroundColor: UIColor.systemBackground,
+      ]
+    #endif
   } else {
     return [
       .foregroundColor: UIColor.black,
