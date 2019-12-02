@@ -62,7 +62,11 @@ class TKMStyle: NSObject {
     case .burned:
       return UIColor(red: 0.26, green: 0.26, blue: 0.26, alpha: 1.0)
     default:
-      return UIColor.black
+      if #available(iOS 13.0, *) {
+        return UIColor.label
+      } else {
+        return UIColor.black
+      }
     }
   }
 
