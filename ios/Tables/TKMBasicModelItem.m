@@ -32,6 +32,7 @@
     _accessoryType = accessoryType;
     _target = target;
     _action = action;
+    _enabled = true;
 
     if (style == UITableViewCellStyleSubtitle) {
       _subtitleFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2];
@@ -93,6 +94,10 @@
   self.accessoryType = item.accessoryType;
   self.textLabel.textColor = item.textColor;
   self.imageView.image = item.image;
+  self.userInteractionEnabled = item.enabled;
+  self.textLabel.enabled = item.enabled;
+  self.detailTextLabel.enabled = item.enabled;
+  self.imageView.tintColor = item.imageTintColor;
 
   item.cell = self;
 }

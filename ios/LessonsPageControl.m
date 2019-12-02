@@ -14,8 +14,8 @@
 
 #import "LessonsPageControl.h"
 
-#import "Style.h"
 #import "TKMSubjectChip.h"
+#import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
 @interface LessonsPageControl () <TKMSubjectChipDelegate>
@@ -53,7 +53,7 @@
 
   // Create the quiz chip.
   NSAttributedString *quizText = [[NSAttributedString alloc] initWithString:@"Quiz"];
-  NSArray *chipGradient = @[ (id)TKMGreyColor().CGColor, (id)TKMGreyColor().CGColor ];
+  NSArray *chipGradient = @[ (id)TKMStyle.greyColor.CGColor, (id)TKMStyle.greyColor.CGColor ];
   TKMSubjectChip *quizChip = [[TKMSubjectChip alloc] initWithSubject:nil
                                                             chipText:quizText
                                                             sideText:nil

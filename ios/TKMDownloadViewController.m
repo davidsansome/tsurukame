@@ -133,8 +133,8 @@
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)downloadTask.response;
   if (httpResponse.statusCode != 200) {
     [self reportErrorOnMainThread:filename
-                            title:[NSString
-                                      stringWithFormat:@"HTTP error %d", httpResponse.statusCode]
+                            title:[NSString stringWithFormat:@"HTTP error %ld",
+                                                             (long)httpResponse.statusCode]
                           message:url.absoluteString];
     return;
   }

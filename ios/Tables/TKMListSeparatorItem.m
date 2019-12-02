@@ -13,7 +13,8 @@
 // limitations under the License.
 
 #import "TKMListSeparatorItem.h"
-#import "Style.h"
+
+#import "Tsurukame-Swift.h"
 
 @implementation TKMListSeparatorItem
 
@@ -43,7 +44,7 @@
 
 - (void)didMoveToSuperview {
   [super didMoveToSuperview];
-  TKMAddShadowToView(_label, 0.f, 1.f, 2.f);
+  [TKMStyle addShadowToView:_label offset:0.f opacity:1.f radius:2.f];
 }
 
 - (void)layoutSubviews {

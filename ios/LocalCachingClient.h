@@ -27,7 +27,7 @@ extern NSNotificationName kLocalCachingClientUserInfoChangedNotification;
 extern NSNotificationName kLocalCachingClientSrsLevelCountsChangedNotification;
 extern NSNotificationName kLocalCachingClientUnauthorizedNotification;
 
-typedef void (^CompletionHandler)(void);
+typedef void (^SyncProgressHandler)(float progress);
 
 @interface LocalCachingClient : NSObject
 
@@ -45,9 +45,9 @@ typedef void (^CompletionHandler)(void);
                   reachability:(Reachability *)reachability NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-// Sends pending review progress and study material updates, fetches updates.  The completion
+// Sends pending review progress and study material updates, fetches updates.  The progress
 // handler is always executed on the main queue.
-- (void)sync:(CompletionHandler _Nullable)completionHandler;
+- (void)syncWithProgressHandler:(SyncProgressHandler)syncProgressHandler quick:(bool)quick;
 
 // Getters: query the database and return data immediately, without making network requests.
 - (NSArray<TKMAssignment *> *)getAllAssignments;

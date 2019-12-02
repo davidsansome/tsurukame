@@ -21,7 +21,6 @@
 #import "ReviewItem.h"
 #import "ReviewSummaryViewController.h"
 #import "Settings.h"
-#import "Style.h"
 #import "SubjectDetailsViewController.h"
 #import "SuccessAnimation.h"
 #import "TKMAudio.h"
@@ -33,6 +32,7 @@
 #import "Tables/TKMAttributedModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMMarkupModelItem.h"
+#import "Tables/TKMModelItem.h"
 #import "Tables/TKMReadingModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
@@ -42,5 +42,6 @@
 #import "proto/Wanikani.pbobjc.h"
 
 #import <WatchConnectivity/WatchConnectivity.h>
+#import <Haneke/Haneke.h>
 
 #endif /* Tsurukame_Bridging_Header_h */

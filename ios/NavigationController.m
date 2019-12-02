@@ -14,8 +14,6 @@
 
 #import "NavigationController.h"
 
-#import "Style.h"
-
 #import <objc/runtime.h>
 
 // Speed (in points/sec) the user has to fling the view to finish the animation.

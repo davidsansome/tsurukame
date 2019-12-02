@@ -16,7 +16,6 @@
 
 #import "LocalCachingClient.h"
 #import "NavigationController.h"
-#import "Style.h"
 #import "TKMServices.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tsurukame-Swift.h"
@@ -63,16 +62,16 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  [_subjectDetailsView setupWithServices:_services showHints:_showHints delegate:self];
+  [_subjectDetailsView setupWithServices:_services delegate:self];
 
   TKMStudyMaterials *studyMaterials =
       [_services.localCachingClient getStudyMaterialForID:_subject.id_p];
   [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
 
-  _subjectTitle.font = TKMJapaneseFont(_subjectTitle.font.pointSize);
+  _subjectTitle.font = [TKMStyle japaneseFontWithSize:_subjectTitle.font.pointSize];
   _subjectTitle.attributedText = [_subject japaneseTextWithImageSize:40.f];
   _gradientLayer = [CAGradientLayer layer];
-  _gradientLayer.colors = TKMGradientForSubject(_subject);
+  _gradientLayer.colors = [TKMStyle gradientForSubject:_subject];
   [self.view.layer insertSublayer:_gradientLayer atIndex:0];
 
   if (_hideBackButton) {

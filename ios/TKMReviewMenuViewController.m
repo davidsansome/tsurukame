@@ -104,7 +104,11 @@
     willDisplayHeaderView:(UIView *)view
                forSection:(NSInteger)section {
   UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-  header.textLabel.textColor = [UIColor lightGrayColor];
+  if (@available(iOS 13.0, *)) {
+    header.textLabel.textColor = [UIColor tertiaryLabelColor];
+  } else {
+    header.textLabel.textColor = [UIColor lightGrayColor];
+  }
 }
 
 - (void)tableView:(UITableView *)tableView

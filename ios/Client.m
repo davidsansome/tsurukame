@@ -65,9 +65,9 @@ bool TKMIsClientError(NSError *error) { return [error.domain isEqual:kTKMClientE
                             response:(NSURLResponse *)response
                         responseData:(NSData *)responseData {
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-  NSString *msg = [NSString stringWithFormat:@"HTTP error %ld for %@",
-                                             (long)httpResponse.statusCode,
-                                             response.URL.absoluteString];
+  NSString *msg =
+      [NSString stringWithFormat:@"HTTP error %ld for %@", (long)httpResponse.statusCode,
+                                 response.URL.absoluteString];
   return [self httpErrorWithMessage:msg
                             request:request
                            response:response
@@ -108,7 +108,10 @@ static NSRegularExpression *sAPITokenRE;
 static NSRegularExpression *sAuthenticityTokenRE;
 static NSArray<NSDateFormatter *> *sDateFormatters;
 
-typedef void (^PartialResponseHandler)(id _Nullable data, NSError *_Nullable error);
+typedef void (^PartialResponseHandler)(id _Nullable data,
+                                       int page,
+                                       int totalPages,
+                                       NSError *_Nullable error);
 
 static void EnsureInitialised() {
   static dispatch_once_t onceToken;
@@ -277,17 +280,22 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 - (void)startPagedQueryFor:(NSURL *)url handler:(PartialResponseHandler)handler {
   if (self.pretendToBeOfflineForTesting) {
-    handler(nil, [TKMClientError errorWithMessage:@"Offline for testing" code:42]);
+    handler(nil, 0, 0, [TKMClientError errorWithMessage:@"Offline for testing" code:42]);
     return;
   }
 
   NSURLRequest *req = [self authorizeAPIRequest:url];
-  NSURLSessionDataTask *task = [_urlSession
-      dataTaskWithRequest:req
-        completionHandler:^(
-            NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-          [self parseJsonResponse:data request:req response:response error:error handler:handler];
-        }];
+  NSURLSessionDataTask *task =
+      [_urlSession dataTaskWithRequest:req
+                     completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response,
+                                         NSError *_Nullable error) {
+                       [self parseJsonResponse:data
+                                       request:req
+                                      response:response
+                                         error:error
+                                       handler:handler
+                                          page:1];
+                     }];
   [task resume];
 }
 
@@ -296,7 +304,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                    data:(NSData *)data
                 handler:(PartialResponseHandler)handler {
   if (self.pretendToBeOfflineForTesting) {
-    handler(nil, [TKMClientError errorWithMessage:@"Offline for testing" code:42]);
+    handler(nil, 0, 0, [TKMClientError errorWithMessage:@"Offline for testing" code:42]);
     return;
   }
 
@@ -311,12 +319,17 @@ static NSString *GetSessionCookie(NSURLSession *session) {
         method,
         [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
         req.URL);
-  NSURLSessionDataTask *task = [_urlSession
-      dataTaskWithRequest:req
-        completionHandler:^(
-            NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-          [self parseJsonResponse:data request:req response:response error:error handler:handler];
-        }];
+  NSURLSessionDataTask *task =
+      [_urlSession dataTaskWithRequest:req
+                     completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response,
+                                         NSError *_Nullable error) {
+                       [self parseJsonResponse:data
+                                       request:req
+                                      response:response
+                                         error:error
+                                       handler:handler
+                                          page:1];
+                     }];
   [task resume];
 }
 
@@ -324,18 +337,19 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                   request:(NSURLRequest *)request
                  response:(NSURLResponse *)response
                     error:(NSError *)error
-                  handler:(PartialResponseHandler)handler {
+                  handler:(PartialResponseHandler)handler
+                     page:(int)page {
   if (error != nil) {
-    handler(nil, error);
+    handler(nil, 0, 0, error);
     return;
   }
   NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
   if (error != nil) {
-    handler(nil, error);
+    handler(nil, 0, 0, error);
     return;
   }
   if (dict[@"error"] != nil) {
-    handler(nil,
+    handler(nil, 0, false,
             [TKMClientError httpErrorWithMessage:dict[@"error"]
                                          request:request
                                         response:response
@@ -343,26 +357,33 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     return;
   }
 
-  handler(dict[@"data"], nil);
+  bool hasMore = dict[@"pages"][@"next_url"] != nil && dict[@"pages"][@"next_url"] != [NSNull null];
+  int totalCount = [dict[@"total_count"] intValue];
+  int perPage = [dict[@"pages"][@"per_page"] intValue];
+  int totalPages = 1;
+  if (totalCount > 0) {
+    totalPages = ceil((double)totalCount / perPage);
+  }
+
+  handler(dict[@"data"], page, totalPages, nil);
 
   // Get the next page if we have one.
-  if (!dict[@"pages"][@"next_url"]) {
-    // This is a single-page query, so don't call the handler again.
-    return;
-  }
-  if (dict[@"pages"][@"next_url"] != [NSNull null]) {
+  if (hasMore) {
     NSString *nextURLString = dict[@"pages"][@"next_url"];
     NSLog(@"Request: %@", nextURLString);
     NSURLRequest *req = [self authorizeAPIRequest:[NSURL URLWithString:nextURLString]];
     NSURLSessionDataTask *task = [_urlSession
         dataTaskWithRequest:req
-          completionHandler:^(
-              NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-            [self parseJsonResponse:data request:req response:response error:error handler:handler];
+          completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response,
+                              NSError *_Nullable error) {
+            [self parseJsonResponse:data
+                            request:req
+                           response:response
+                              error:error
+                            handler:handler
+                               page:page + 1];
           }];
     [task resume];
-  } else {
-    handler(nil, nil);
   }
 }
 
@@ -383,8 +404,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
   __block NSString *csrfToken = nil;
   __block NSString *originalCookie = nil;
-  void (^secondHandler)(
-      NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) =
+  void (^secondHandler)(NSData *_Nullable data, NSURLResponse *_Nullable response,
+                        NSError *_Nullable error) =
       ^void(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
         if (error != nil) {
           handler(error, nil);
@@ -404,8 +425,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
         handler([TKMClientError errorWithMessage:@"Unknown error"], nil);
       };
 
-  void (^firstHandler)(
-      NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) =
+  void (^firstHandler)(NSData *_Nullable data, NSURLResponse *_Nullable response,
+                       NSError *_Nullable error) =
       ^void(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
         if (error != nil) {
           handler(error, nil);
@@ -458,18 +479,18 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   NSURLRequest *req = [Client authorizeUserRequest:[NSURL URLWithString:@(kAccessTokenURL)]
                                         withCookie:cookie];
   NSURLSession *session = [NSURLSession sharedSession];
-  NSURLSessionDataTask *task = [session
-      dataTaskWithRequest:req
-        completionHandler:^(
-            NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-          [self handleGetApiTokenData:data
-                              request:req
-                             response:response
-                                error:error
-                            forCookie:cookie
-                              handler:handler
-                     createIfNotFound:createIfNotFound];
-        }];
+  NSURLSessionDataTask *task =
+      [session dataTaskWithRequest:req
+                 completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response,
+                                     NSError *_Nullable error) {
+                   [self handleGetApiTokenData:data
+                                       request:req
+                                      response:response
+                                         error:error
+                                     forCookie:cookie
+                                       handler:handler
+                              createIfNotFound:createIfNotFound];
+                 }];
   [task resume];
 }
 
@@ -486,8 +507,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   }
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
   if (httpResponse.statusCode != 200) {
-    handler(
-        [TKMClientError httpErrorWithRequest:req response:response responseData:data], nil, nil);
+    handler([TKMClientError httpErrorWithRequest:req response:response responseData:data], nil,
+            nil);
     return;
   }
 
@@ -524,8 +545,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   NSURLSession *session = [NSURLSession sharedSession];
   NSURLSessionDataTask *task = [session
       dataTaskWithRequest:req
-        completionHandler:^(
-            NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
+        completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response,
+                            NSError *_Nullable error) {
           if (error != nil) {
             handler(error, nil, nil);
             return;
@@ -565,8 +586,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   NSURLSession *session = [NSURLSession sharedSession];
   NSURLSessionDataTask *task = [session
       dataTaskWithRequest:req
-        completionHandler:^(
-            NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
+        completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response,
+                            NSError *_Nullable error) {
           if (error != nil) {
             handler(error, nil, nil);
             return;
@@ -624,24 +645,26 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   [req addValue:[@(postDataBytes.length) stringValue] forHTTPHeaderField:@"Content-Length"];
 
   NSURLSession *session = [NSURLSession sharedSession];
-  NSURLSessionDataTask *task = [session
-      dataTaskWithRequest:req
-        completionHandler:^(
-            NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-          [self handleGetApiTokenData:data
-                              request:req
-                             response:response
-                                error:error
-                            forCookie:cookie
-                              handler:handler
-                     createIfNotFound:NO];
-        }];
+  NSURLSessionDataTask *task =
+      [session dataTaskWithRequest:req
+                 completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response,
+                                     NSError *_Nullable error) {
+                   [self handleGetApiTokenData:data
+                                       request:req
+                                      response:response
+                                         error:error
+                                     forCookie:cookie
+                                       handler:handler
+                              createIfNotFound:NO];
+                 }];
   [task resume];
 }
 
 #pragma mark - Assignments
 
-- (void)getAssignmentsModifiedAfter:(NSString *)date handler:(AssignmentHandler)handler {
+- (void)getAssignmentsModifiedAfter:(NSString *)date
+                    progressHandler:(PartialCompletionHandler)progressHandler
+                            handler:(AssignmentHandler)handler {
   NSMutableArray<TKMAssignment *> *ret = [NSMutableArray array];
 
   NSURLComponents *url = [NSURLComponents
@@ -655,12 +678,10 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   [url setQueryItems:queryItems];
 
   [self startPagedQueryFor:url.URL
-                   handler:^(NSArray *data, NSError *error) {
+                   handler:^(NSArray *data, int page, int totalPages, NSError *error) {
                      if (error) {
+                       progressHandler(1, 1);
                        handler(error, nil);
-                       return;
-                     } else if (!data) {
-                       handler(nil, ret);
                        return;
                      }
 
@@ -698,6 +719,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                        }
                        [ret addObject:assignment];
                      }
+
+                     progressHandler(page, totalPages);
+                     if (page == totalPages) {
+                       handler(nil, ret);
+                     }
                    }];
 }
 
@@ -715,7 +741,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     [self submitJSONToURL:[NSURL URLWithString:urlString]
                withMethod:@"PUT"
                      data:[NSJSONSerialization dataWithJSONObject:payload options:0 error:nil]
-                  handler:^(id _Nullable data, NSError *_Nullable error) {
+                  handler:^(id _Nullable data, int page, int totalPages, NSError *_Nullable error) {
                     handler(error);
                   }];
     return;
@@ -738,14 +764,16 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   [self submitJSONToURL:[NSURL URLWithString:urlString]
              withMethod:@"POST"
                    data:data
-                handler:^(id _Nullable data, NSError *_Nullable error) {
+                handler:^(id _Nullable data, int page, int totalPages, NSError *_Nullable error) {
                   handler(error);
                 }];
 }
 
 #pragma mark - Study Materials
 
-- (void)getStudyMaterialsModifiedAfter:(NSString *)date handler:(StudyMaterialsHandler)handler {
+- (void)getStudyMaterialsModifiedAfter:(NSString *)date
+                       progressHandler:(PartialCompletionHandler)progressHandler
+                               handler:(StudyMaterialsHandler)handler {
   NSMutableArray<TKMStudyMaterials *> *ret = [NSMutableArray array];
 
   NSURLComponents *url = [NSURLComponents
@@ -757,12 +785,10 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   }
 
   [self startPagedQueryFor:url.URL
-                   handler:^(NSArray *data, NSError *error) {
+                   handler:^(NSArray *data, int page, int totalPages, NSError *error) {
                      if (error) {
+                       progressHandler(1, 1);
                        handler(error, nil);
-                       return;
-                     } else if (!data) {
-                       handler(nil, ret);
                        return;
                      }
 
@@ -783,6 +809,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                        }
                        [ret addObject:studyMaterials];
                      }
+
+                     progressHandler(page, totalPages);
+                     if (page == totalPages) {
+                       handler(nil, ret);
+                     }
                    }];
 }
 
@@ -790,17 +821,14 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                     handler:(UpdateStudyMaterialHandler)handler {
   NSURL *queryURL =
       [NSURL URLWithString:[NSString stringWithFormat:@"%s/study_materials?subject_ids=%d",
-                                                      kURLBase,
-                                                      material.subjectId]];
+                                                      kURLBase, material.subjectId]];
 
   // We need to check if the study material exists already.
   [self startPagedQueryFor:queryURL
-                   handler:^(NSArray *_Nullable response, NSError *_Nullable error) {
+                   handler:^(NSArray *_Nullable response, int page, int totalPages,
+                             NSError *_Nullable error) {
                      if (error) {
                        handler(error);
-                       return;
-                     }
-                     if (!response) {
                        return;
                      }
 
@@ -831,7 +859,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                      [self submitJSONToURL:[NSURL URLWithString:urlString]
                                 withMethod:method
                                       data:data
-                                   handler:^(id _Nullable data, NSError *_Nullable error) {
+                                   handler:^(id _Nullable data, int page, int totalPages,
+                                             NSError *_Nullable error) {
                                      handler(error);
                                    }];
                    }];
@@ -844,7 +873,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
       [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/user", kURLBase]];
 
   [self startPagedQueryFor:url.URL
-                   handler:^(NSDictionary *data, NSError *error) {
+                   handler:^(NSDictionary *data, int page, int totalPages, NSError *error) {
                      if (error) {
                        handler(error, nil);
                        return;
@@ -870,6 +899,12 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                            [[Client parseISO8601Date:data[@"started_at"]] timeIntervalSince1970];
                      }
 
+                     if (data[@"current_vacation_started_at"] != [NSNull null]) {
+                       ret.vacationStartedAt =
+                           [[Client parseISO8601Date:data[@"current_vacation_started_at"]]
+                               timeIntervalSince1970];
+                     }
+
                      handler(nil, ret);
                    }];
 }
@@ -880,12 +915,9 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
   NSMutableArray<TKMLevel *> *levels = [NSMutableArray array];
   [self startPagedQueryFor:url.URL
-                   handler:^(NSDictionary *data, NSError *error) {
+                   handler:^(NSDictionary *data, int page, int totalPages, NSError *error) {
                      if (error) {
                        handler(error, nil);
-                       return;
-                     } else if (!data) {
-                       handler(nil, levels);
                        return;
                      }
 
@@ -925,6 +957,10 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                        }
 
                        [levels addObject:level];
+                     }
+
+                     if (page == totalPages) {
+                       handler(nil, levels);
                      }
                    }];
 }

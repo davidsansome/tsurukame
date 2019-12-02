@@ -13,7 +13,9 @@
 // limitations under the License.
 
 #include <array>
+#include <vector>
 
+#import "Client.h"
 #import "LocalCachingClient.h"
 #import "Settings.h"
 
@@ -27,6 +29,8 @@ extern "C" {
 }
 
 NS_ASSUME_NONNULL_BEGIN
+
+typedef void (^CompletionHandler)();
 
 NSNotificationName kLocalCachingClientAvailableItemsChangedNotification =
     @"kLocalCachingClientAvailableItemsChangedNotification";
@@ -165,6 +169,73 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   return componentsA.hour == componentsB.hour && componentsA.day == componentsB.day &&
          componentsA.month == componentsB.month && componentsA.year == componentsB.year;
 }
+
+// Tracks one task that has a progress associated with it. Tasks are things like
+// "fetch all assignments" or "upload all review progress". done/total here is how many network
+// requests make up each one of those tasks. Often the total is not known until we do the first one,
+// so these may be 0 to start with.
+struct ProgressTask {
+  int done = 0;
+  int total = 0;
+};
+
+// Tracks the progress of multiple tasks that are involved in a sync.
+@interface SyncProgressTracker : NSObject
+@end
+
+@implementation SyncProgressTracker {
+  SyncProgressHandler _handler;
+  std::vector<ProgressTask> _tasks;
+  int _allocatedTasks;
+}
+
+- (instancetype)initWithProgressHandler:(SyncProgressHandler)handler taskCount:(int)taskCount {
+  self = [super init];
+  if (self) {
+    _handler = handler;
+    _tasks.resize(taskCount);
+    _allocatedTasks = 0;
+  }
+  return self;
+}
+
+- (PartialCompletionHandler)newTaskInGroup:(dispatch_group_t)group {
+  NSAssert(_allocatedTasks < _tasks.size(), @"Too many tasks created");
+  __block NSUInteger idx = _allocatedTasks;
+  _allocatedTasks++;
+
+  dispatch_group_enter(group);
+
+  return ^void(int done, int total) {
+    _tasks[idx].done = done;
+    _tasks[idx].total = total;
+    [self update];
+
+    if (done == total) {
+      dispatch_group_leave(group);
+    }
+  };
+}
+
+- (void)update {
+  int done = 0;
+  int total = 0;
+  for (const auto &task : _tasks) {
+    done += task.done;
+    total += task.total;
+  }
+
+  float progress = 0;
+  if (total > 0) {
+    progress = float(done) / total;
+  }
+
+  dispatch_async(dispatch_get_main_queue(), ^{
+    _handler(progress);
+  });
+}
+
+@end
 
 @implementation LocalCachingClient {
   DataLoader *_dataLoader;
@@ -747,13 +818,22 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   [self sendPendingProgress:progress handler:nil];
 }
 
-- (void)sendAllPendingProgress:(CompletionHandler)handler {
+- (void)sendAllPendingProgress:(PartialCompletionHandler)handler {
   NSArray<TKMProgress *> *progress = [self getAllPendingProgress];
   [self sendPendingProgress:progress handler:handler];
 }
 
 - (void)sendPendingProgress:(NSArray<TKMProgress *> *)progress
-                    handler:(CompletionHandler _Nullable)handler {
+                    handler:(PartialCompletionHandler _Nullable)handler {
+  const int total = (int)progress.count;
+  if (!total) {
+    if (handler) {
+      handler(0, 0);
+    }
+    return;
+  }
+
+  __block int complete = 0;
   for (TKMProgress *p in progress) {
     [_client
         sendProgress:p
@@ -775,10 +855,11 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
                } else {
                  [self clearPendingProgress:p];
                }
+               complete++;
+               if (handler) {
+                 handler(complete, total);
+               }
              }];
-  }
-  if (handler) {
-    handler();
   }
 }
 
@@ -806,9 +887,11 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   [self sendPendingStudyMaterial:material handler:nil];
 }
 
-- (void)sendAllPendingStudyMaterials:(CompletionHandler)handler {
-  dispatch_group_t dispatchGroup = dispatch_group_create();
+- (void)sendAllPendingStudyMaterials:(PartialCompletionHandler)handler {
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
+    __block int total = 0;
+    __block int complete = 0;
+
     FMResultSet *results = [db
         executeQuery:
             @"SELECT s.pb FROM study_materials AS s, pending_study_materials AS p ON s.id = p.id"];
@@ -817,15 +900,18 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
                                                                error:nil];
       NSLog(@"Sending pending study material update %@", [material description]);
 
-      dispatch_group_enter(dispatchGroup);
+      total++;
       [self sendPendingStudyMaterial:material
                              handler:^{
-                               dispatch_group_leave(dispatchGroup);
+                               complete++;
+                               handler(complete, total);
                              }];
     }
-  }];
 
-  dispatch_group_notify(dispatchGroup, _queue, handler);
+    if (!total && handler) {
+      handler(0, 0);
+    }
+  }];
 }
 
 - (void)sendPendingStudyMaterial:(TKMStudyMaterials *)material
@@ -850,69 +936,52 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 
 #pragma mark - Sync
 
-- (void)sync:(CompletionHandler _Nullable)completionHandler {
+- (void)syncWithProgressHandler:(SyncProgressHandler)syncProgressHandler quick:(bool)quick {
   if (!_reachability.isReachable) {
     [self invalidateCachedAvailableSubjectCounts];
-    if (completionHandler) {
-      completionHandler();
-    }
+    syncProgressHandler(1.0);
     return;
   }
 
   dispatch_async(_queue, ^{
     if (_busy) {
-      if (completionHandler) {
-        completionHandler();
-      }
       return;
     }
     _busy = true;
 
-    dispatch_group_t sendGroup = dispatch_group_create();
+    if (!quick) {
+      // Clear the sync table before doing anything else.  This forces us to re-download all
+      // assignments.
+      [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
+        CheckUpdate(db, @"UPDATE sync SET assignments_updated_after = \"\";");
+      }];
+    }
 
-    dispatch_group_enter(sendGroup);
-    [self sendAllPendingProgress:^{
-      dispatch_group_leave(sendGroup);
-    }];
-    dispatch_group_enter(sendGroup);
-    [self sendAllPendingStudyMaterials:^{
-      dispatch_group_leave(sendGroup);
-    }];
+    SyncProgressTracker *tracker =
+        [[SyncProgressTracker alloc] initWithProgressHandler:syncProgressHandler taskCount:6];
+
+    dispatch_group_t sendGroup = dispatch_group_create();
+    [self sendAllPendingProgress:[tracker newTaskInGroup:sendGroup]];
+    [self sendAllPendingStudyMaterials:[tracker newTaskInGroup:sendGroup]];
 
     dispatch_group_notify(sendGroup, _queue, ^{
       dispatch_group_t updateGroup = dispatch_group_create();
-
-      dispatch_group_enter(updateGroup);
-      [self updateAssignments:^{
-        dispatch_group_leave(updateGroup);
-      }];
-      dispatch_group_enter(updateGroup);
-      [self updateStudyMaterials:^{
-        dispatch_group_leave(updateGroup);
-      }];
-      dispatch_group_enter(updateGroup);
-      [self updateUserInfo:^{
-        dispatch_group_leave(updateGroup);
-      }];
-      dispatch_group_enter(updateGroup);
-      [self updateLevelProgression:^{
-        dispatch_group_leave(updateGroup);
-      }];
+      [self updateAssignments:[tracker newTaskInGroup:updateGroup]];
+      [self updateStudyMaterials:[tracker newTaskInGroup:updateGroup]];
+      [self updateUserInfo:[tracker newTaskInGroup:updateGroup]];
+      [self updateLevelProgression:[tracker newTaskInGroup:updateGroup]];
 
       dispatch_group_notify(updateGroup, dispatch_get_main_queue(), ^{
         _busy = false;
         [self invalidateCachedAvailableSubjectCounts];
         [self invalidateCachedSrsLevelCounts];
         [self postNotificationOnMainThread:kLocalCachingClientUserInfoChangedNotification];
-        if (completionHandler) {
-          completionHandler();
-        }
       });
     });
   });
 }
 
-- (void)updateAssignments:(CompletionHandler)handler {
+- (void)updateAssignments:(PartialCompletionHandler)handler {
   // Get the last assignment update time.
   __block NSString *lastDate;
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
@@ -920,38 +989,38 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   }];
 
   NSLog(@"Getting all assignments modified after %@", lastDate);
-  [_client
-      getAssignmentsModifiedAfter:lastDate
-                          handler:^(NSError *error, NSArray<TKMAssignment *> *assignments) {
-                            if (error) {
-                              [self logError:error];
-                            } else {
-                              NSString *date = Client.currentISO8601Date;
-                              [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
-                                for (TKMAssignment *assignment in assignments) {
-                                  CheckUpdate(db,
-                                              @"REPLACE INTO assignments (id, pb, subject_id) "
-                                              @"VALUES (?, ?, ?)",
-                                              @(assignment.id_p), assignment.data,
-                                              @(assignment.subjectId));
-                                  CheckUpdate(db,
-                                              @"REPLACE INTO subject_progress (id, level, "
-                                              @"srs_stage, subject_type) VALUES (?, ?, ?, ?)",
-                                              @(assignment.subjectId), @(assignment.level),
-                                              @(assignment.srsStage), @(assignment.subjectType));
-                                }
-                                CheckUpdate(
-                                    db, @"UPDATE sync SET assignments_updated_after = ?", date);
-                              }];
-                              NSLog(@"Recorded %lu new assignments at %@",
-                                    (unsigned long)assignments.count,
-                                    date);
-                            }
-                            handler();
-                          }];
+  [_client getAssignmentsModifiedAfter:lastDate
+                       progressHandler:handler
+                               handler:^(NSError *error, NSArray<TKMAssignment *> *assignments) {
+                                 if (error) {
+                                   [self logError:error];
+                                   return;
+                                 }
+
+                                 NSString *date = Client.currentISO8601Date;
+                                 [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                                   for (TKMAssignment *assignment in assignments) {
+                                     CheckUpdate(db,
+                                                 @"REPLACE INTO assignments (id, pb, subject_id) "
+                                                 @"VALUES (?, ?, ?)",
+                                                 @(assignment.id_p), assignment.data,
+                                                 @(assignment.subjectId));
+                                     CheckUpdate(db,
+                                                 @"REPLACE INTO subject_progress (id, level, "
+                                                 @"srs_stage, subject_type) VALUES (?, ?, ?, ?)",
+                                                 @(assignment.subjectId), @(assignment.level),
+                                                 @(assignment.srsStage), @(assignment.subjectType));
+                                   }
+                                   CheckUpdate(
+                                       db, @"UPDATE sync SET assignments_updated_after = ?", date);
+                                 }];
+                                 NSLog(@"Recorded %lu new assignments at %@",
+                                       (unsigned long)assignments.count,
+                                       date);
+                               }];
 }
 
-- (void)updateStudyMaterials:(CompletionHandler)handler {
+- (void)updateStudyMaterials:(PartialCompletionHandler)handler {
   // Get the last study materials update time.
   __block NSString *lastDate;
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
@@ -961,6 +1030,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
   NSLog(@"Getting all study materials modified after %@", lastDate);
   [_client
       getStudyMaterialsModifiedAfter:lastDate
+                     progressHandler:handler
                              handler:^(NSError *error,
                                        NSArray<TKMStudyMaterials *> *studyMaterials) {
                                if (error) {
@@ -981,11 +1051,10 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
                                        (unsigned long)studyMaterials.count,
                                        date);
                                }
-                               handler();
                              }];
 }
 
-- (void)updateUserInfo:(CompletionHandler)handler {
+- (void)updateUserInfo:(PartialCompletionHandler)handler {
   [_client getUserInfo:^(NSError *_Nullable error, TKMUser *_Nullable user) {
     if (error) {
       if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 401) {
@@ -999,11 +1068,11 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       NSLog(@"Got user info: %@", user);
     }
 
-    handler();
+    handler(1, 1);
   }];
 }
 
-- (void)updateLevelProgression:(CompletionHandler)handler {
+- (void)updateLevelProgression:(PartialCompletionHandler)handler {
   [_client getLevelTimes:^(NSError *_Nullable error, NSArray<TKMLevel *> *levels) {
     if (error) {
       [self logError:error];
@@ -1017,7 +1086,7 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
       }];
     }
 
-    handler();
+    handler(1, 1);
   }];
 }
 

@@ -32,15 +32,17 @@ extern NSString *TKMDetailedSRSStageName(int srsStage);
  */
 NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage);
 
-typedef enum {
+typedef NS_ENUM(NSInteger, TKMSRSStageCategory) {
   TKMSRSStageNovice = 0,
   TKMSRSStageApprentice = 1,
   TKMSRSStageGuru = 2,
   TKMSRSStageMaster = 3,
   TKMSRSStageEnlightened = 4,
   TKMSRSStageBurned = 5,
-} TKMSRSStageCategory;
+};
 extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
+extern int TKMFirstSRSStageInCategory(TKMSRSStageCategory category);
+extern NSString *TKMSRSStageCategoryName(TKMSRSStageCategory category);
 
 #ifdef __cplusplus
 }

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "TKMSubjectModelItem.h"
-#import "Style.h"
 #import "TKMSubjectChip.h"
 #import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
@@ -97,9 +96,9 @@ static const CGFloat kFontSize = 14.f;
   if (item.showLevelNumber) {
     self.levelLabel.text = [NSString stringWithFormat:@"%d", item.subject.level];
   }
-  _gradient.colors = item.gradientColors ?: TKMGradientForSubject(item.subject);
+  _gradient.colors = item.gradientColors ?: [TKMStyle gradientForSubject:item.subject];
 
-  self.subjectLabel.font = TKMJapaneseFont(self.subjectLabel.font.pointSize);
+  self.subjectLabel.font = [TKMStyle japaneseFontWithSize:self.subjectLabel.font.pointSize];
   self.subjectLabel.attributedText =
       [item.subject japaneseTextWithImageSize:kJapaneseTextImageSize];
 
@@ -139,8 +138,8 @@ static const CGFloat kFontSize = 14.f;
       self.meaningLabel.text = item.subject.commaSeparatedMeanings;
     }
 
-    self.readingLabel.font =
-        item.readingWrong ? TKMJapaneseFontBold(kFontSize) : TKMJapaneseFont(kFontSize);
+    self.readingLabel.font = item.readingWrong ? [TKMStyle japaneseFontBoldWithSize:kFontSize]
+                                               : [TKMStyle japaneseFontWithSize:kFontSize];
     self.meaningLabel.font = item.meaningWrong
                                  ? [UIFont systemFontOfSize:kFontSize weight:UIFontWeightBold]
                                  : [UIFont systemFontOfSize:kFontSize];
