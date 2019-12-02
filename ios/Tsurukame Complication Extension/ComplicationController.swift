@@ -373,17 +373,9 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
   }
 
   func relativeDateProvider(date: Date) -> CLKRelativeDateTextProvider {
-    let unit: NSCalendar.Unit
-    let timeInterval = Date().distance(to: date)
-    if timeInterval >= 86400 {
-      unit = .day
-    } else if timeInterval >= 3600 {
-      unit = .hour
-    } else {
-      unit = .minute
-    }
-
-    return CLKRelativeDateTextProvider(date: date, style: .offsetShort, units: unit)
+    // Always use hour because the complication cache does not call often enough
+    // to vary this unit.
+    return CLKRelativeDateTextProvider(date: date, style: .offsetShort, units: .hour)
   }
 
   /**
