@@ -129,6 +129,11 @@ class UpcomingReviewsChartCell: TKMModelCell {
     barDataSet.colors = [TKMStyle.radicalColor2]
     barDataSet.valueFormatter = DefaultValueFormatter(decimals: 0)
 
+    if #available(iOS 13.0, *) {
+      lineDataSet.valueTextColor = UIColor.label
+      barDataSet.valueTextColor = UIColor.label
+    }
+
     let data = CombinedChartData()
     data.lineData = LineChartData(dataSet: lineDataSet)
     data.barData = BarChartData(dataSet: barDataSet)
