@@ -15,7 +15,6 @@
 #import "SubjectsByLevelViewController.h"
 
 #import "LocalCachingClient.h"
-#import "Style.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMServices.h"
 #import "Tables/TKMListSeparatorItem.h"
@@ -62,7 +61,7 @@
     item.showLevelNumber = false;
     item.showAnswers = _showAnswers;
     if (assignment.isLocked || assignment.isBurned) {
-      item.gradientColors = TKMLockedGradient();
+      item.gradientColors = TKMStyle.lockedGradient;
     }
     [model addItem:item toSection:section];
   }

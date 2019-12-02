@@ -32,7 +32,14 @@ private let kMeaningGradient = [
   UIColor(red: 0.882, green: 0.882, blue: 0.882, alpha: 1.0).cgColor,
 ]
 
-private let kReadingTextColor = UIColor.white
+private func kReadingTextColor() -> UIColor {
+  if #available(iOS 13.0, *) {
+    return UIColor.label
+  } else {
+    return UIColor.black
+  }
+}
+
 private let kMeaningTextColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0)
 private let kDefaultButtonTintColor = UIButton().tintColor
 
@@ -281,8 +288,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    TKMAddShadowToView(questionLabel, 1, 0.2, 4)
-    TKMAddShadowToView(previousSubjectButton, 0, 0.7, 4)
+    TKMStyle.addShadowToView(questionLabel, offset: 1, opacity: 0.2, radius: 4)
+    TKMStyle.addShadowToView(previousSubjectButton, offset: 0, opacity: 0.7, radius: 4)
 
     wrapUpIcon.image = UIImage(named: "baseline_access_time_black_24pt")?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
 
@@ -293,7 +300,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
                                            name: UIResponder.keyboardWillShowNotification, object: nil)
 
-    subjectDetailsView.setup(withServices: services, showHints: false, delegate: self)
+    subjectDetailsView.setup(withServices: services, delegate: self)
 
     answerField.delegate = kanaInput
     answerField.addTarget(self, action: #selector(answerFieldValueDidChange), for: UIControl.Event.editingChanged)
@@ -302,7 +309,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       menuButton.isHidden = true
     }
 
-    normalFontName = kTKMJapaneseFontName
+    normalFontName = TKMStyle.japaneseFontName
     currentFontName = normalFontName
     defaultFontSize = Double(questionLabel.font.pointSize)
 
@@ -491,7 +498,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       kanaInput.enabled = true
       taskTypePrompt = "Reading"
       promptGradient = kReadingGradient
-      promptTextColor = kReadingTextColor
+      promptTextColor = kReadingTextColor()
       taskTypePlaceholder = "答え"
     case ._Max:
       fallthrough
@@ -512,10 +519,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     promptLabel!.textColor = promptTextColor
 
     // Submit button.
-    submitButton.isEnabled = true
+    submitButton.isEnabled = false
 
     // Background gradients.
-    questionBackground.animateColors(to: TKMGradientForAssignment(activeTask.assignment), duration: animationDuration)
+    questionBackground.animateColors(to: TKMStyle.gradient(forAssignment: activeTask.assignment), duration: animationDuration)
     promptBackground.animateColors(to: promptGradient, duration: animationDuration)
 
     // Accessibility.
@@ -537,8 +544,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     if Settings.showSRSLevelIndicator {
       levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
-      // Make sure the level up pop animation does not leave this transparent
-      levelLabel.alpha = 1
     } else {
       levelLabel.attributedText = nil
     }
@@ -667,7 +672,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     previousSubjectButton.alpha = shown ? 0.0 : 1.0
 
     // Change the background color of the answer field.
-    answerField.textColor = shown ? UIColor.red : UIColor.black
+    if #available(iOS 13.0, *) {
+      answerField.textColor = shown ? UIColor.systemRed : UIColor.label
+    } else {
+      answerField.textColor = shown ? UIColor.systemRed : UIColor.white
+    }
 
     // Scroll to the top.
     subjectDetailsView.setContentOffset(CGPoint(x: 0, y: -subjectDetailsView.contentInset.top), animated: false)
@@ -708,7 +717,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     let newButtonHeight =
       kPreviousSubjectButtonPadding * 2 + labelBounds.size.height * kPreviousSubjectScale
 
-    let newGradient = TKMGradientForSubject(previousSubject)
+    let newGradient = TKMStyle.gradient(forSubject: previousSubject)
 
     view.layoutIfNeeded()
     UIView.animate(withDuration: kPreviousSubjectAnimationDuration,
@@ -776,13 +785,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     if UI_USER_INTERFACE_IDIOM() == .pad {
       return CGFloat(defaultFontSize * 2.5)
     } else {
-      return CGFloat(defaultFontSize)
+      return CGFloat(defaultFontSize * Double(Settings.fontSize))
     }
   }
 
   @objc func toggleFont() {
     let useCustomFont =
-      questionLabel.font == TKMJapaneseFontLight(questionLabel.font.pointSize)
+      questionLabel.font == TKMStyle.japaneseFontLight(size: questionLabel.font.pointSize)
     setCustomQuestionLabelFont(useCustomFont: useCustomFont)
   }
 
@@ -964,10 +973,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         previousSubjectLabel = copyLabel(questionLabel)
         previousSubject = activeSubject
       }
+      randomTask()
       if correct {
+        // We must start the success animations *after* all the UI elements have been moved to their
+        // new locations by randomTask(), so that, for example, the success sparkles animate from
+        // the final position of the answerField, not the original position.
         RunSuccessAnimation(answerField, doneLabel, levelLabel, isSubjectFinished, didLevelUp, newSrsStage)
       }
-      randomTask()
 
       if let previousSubjectLabel = previousSubjectLabel {
         animateLabelToPreviousSubjectButton(previousSubjectLabel)
@@ -980,7 +992,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       revealAnswerButton.isHidden = false
       UIView.animate(withDuration: animationDuration,
                      animations: {
-                       self.answerField.textColor = UIColor.red
+                       self.answerField.textColor = UIColor.systemRed
                        self.answerField.isEnabled = false
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)

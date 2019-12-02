@@ -25,6 +25,8 @@
 
 #define DECLARE_INT(name) @property(class, nonatomic) int name;
 
+#define DECLARE_FLOAT(name) @property(class, nonatomic) float name;
+
 typedef enum : NSUInteger {
   ReviewOrder_Random = 1,
   ReviewOrder_BySRSStage = 2,
@@ -61,6 +63,7 @@ DECLARE_BOOL(enableCheats);
 DECLARE_BOOL(showOldMnemonic);
 DECLARE_BOOL(useKatakanaForOnyomi);
 DECLARE_BOOL(showSRSLevelIndicator);
+DECLARE_FLOAT(fontSize);
 
 // Offline audio.
 DECLARE_BOOL(playAudioAutomatically);

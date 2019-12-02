@@ -30,17 +30,25 @@ static NSAttributedString *AttributedStringForFormattedText(
     TKMFormattedText_Format format = [formattedText.formatArray valueAtIndex:i];
     switch (format) {
       case TKMFormattedText_Format_Kanji:
+        [attributes setValue:[UIColor blackColor] forKey:NSForegroundColorAttributeName];
         [attributes setValue:kKanjiBackgroundColor forKey:NSBackgroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Radical:
+        [attributes setValue:[UIColor blackColor] forKey:NSForegroundColorAttributeName];
         [attributes setValue:kRadicalBackgroundColor forKey:NSBackgroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Vocabulary:
+        [attributes setValue:[UIColor blackColor] forKey:NSForegroundColorAttributeName];
         [attributes setValue:kVocabularyBackgroundColor forKey:NSBackgroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Reading:
-        [attributes setValue:[UIColor darkGrayColor] forKey:NSBackgroundColorAttributeName];
-        [attributes setValue:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
+        if (@available(iOS 13.0, *)) {
+          [attributes setValue:[UIColor secondaryLabelColor] forKey:NSBackgroundColorAttributeName];
+          [attributes setValue:[UIColor systemBackgroundColor] forKey:NSForegroundColorAttributeName];
+        } else {
+          [attributes setValue:[UIColor darkGrayColor] forKey:NSBackgroundColorAttributeName];
+          [attributes setValue:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
+        }
         break;
       case TKMFormattedText_Format_Japanese:
         break;

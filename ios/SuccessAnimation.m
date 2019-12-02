@@ -261,7 +261,7 @@ static void CreateDotExplosion(UILabel *view) {
 
   NSAttributedString *value = view.attributedText;
   int dotCount = (int)value.length;
-    CGFloat letterWidth = view.bounds.size.width / dotCount;
+  CGFloat letterWidth = view.bounds.size.width / dotCount;
 
   UIView *superview = view.superview;
   for (int i = 0; i < dotCount; ++i) {
@@ -271,13 +271,11 @@ static void CreateDotExplosion(UILabel *view) {
     CGFloat offset = RandFloat(-1.5, 0.0);
     CGFloat angle = -kAngleRange * offset;
     UIColor *color = [value attribute:NSForegroundColorAttributeName atIndex:i effectiveRange:nil];
-    CGPoint origin =
-        CGPointMake(view.frame.origin.x + (i * letterWidth), view.center.y);
+    CGPoint origin = CGPointMake(view.frame.origin.x + (i * letterWidth), view.center.y);
 
     CreateSpark(superview, origin, size, distance, angle, color, duration);
   }
 }
-
 
 void RunSuccessAnimation(UIView *answerField,
                          UIView *doneLabel,
@@ -297,9 +295,8 @@ void RunSuccessAnimation(UIView *answerField,
                       1.5);  // Duration.
   }
 
-  if (isSubjectFinished &&  Settings.showSRSLevelIndicator) {
+  if (isSubjectFinished && Settings.showSRSLevelIndicator) {
     CreateDotExplosion(srsLevelLabel);
-    srsLevelLabel.alpha = 0;
   }
 
   if (isSubjectFinished && didLevelUp && Settings.animateLevelUpPopup) {

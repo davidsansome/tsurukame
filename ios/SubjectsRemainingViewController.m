@@ -15,7 +15,6 @@
 #import "SubjectsRemainingViewController.h"
 
 #import "LocalCachingClient.h"
-#import "Style.h"
 #import "SubjectDetailsViewController.h"
 #import "TKMServices.h"
 #import "Tables/TKMListSeparatorItem.h"
@@ -64,7 +63,7 @@
     item.showAnswers = false;
     item.showRemaining = true;
     if (assignment.isLocked || assignment.isBurned) {
-      item.gradientColors = TKMLockedGradient();
+      item.gradientColors = TKMStyle.lockedGradient;
     }
     if (item.subject.subjectType == TKMSubject_Type_Radical) {
       [radicals addObject:item];

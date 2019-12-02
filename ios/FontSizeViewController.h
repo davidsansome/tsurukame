@@ -13,13 +13,7 @@
 // limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "AppDelegate.h"
 
-int main(int argc, char *argv[]) {
-  // Ensure regexec(3) uses UTF-8 encoding for strings.
-  setlocale(LC_CTYPE, "UTF-8");
-  
-  @autoreleasepool {
-    return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
-  }
-}
+@interface FontSizeViewController : UITableViewController
+
+@end

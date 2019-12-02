@@ -14,7 +14,7 @@
 
 #import "TKMDownloadModelItem.h"
 
-#import "Style.h"
+#import "Tsurukame-Swift.h"
 
 static NSString *FriendlySize(int64_t bytes) {
   if (bytes < 1000) {
@@ -67,23 +67,31 @@ static NSString *FriendlySize(int64_t bytes) {
       _subtitle.text =
           [NSString stringWithFormat:@"not installed - %@", FriendlySize(item.totalSizeBytes)];
       [_image setImage:[UIImage imageNamed:@"baseline_cloud_download_black_24pt"]];
-      [_image setTintColor:TKMDefaultTintColor()];
+      [_image setTintColor:TKMStyle.defaultTintColor];
       break;
     case TKMDownloadModelItemDownloading:
     case TKMDownloadModelItemInstalling:
       [self updateProgress];
       [_image setImage:[UIImage imageNamed:@"baseline_cancel_black_24pt"]];
-      [_image setTintColor:[UIColor lightGrayColor]];
+      if (@available(iOS 13.0, *)) {
+        [_image setTintColor:[UIColor tertiaryLabelColor]];
+      } else {
+        [_image setTintColor:[UIColor lightGrayColor]];
+      }
       break;
     case TKMDownloadModelItemInstalledSelected:
       _subtitle.text = nil;
       [_image setImage:[UIImage imageNamed:@"tick"]];
-      [_image setTintColor:TKMDefaultTintColor()];
+      [_image setTintColor:TKMStyle.defaultTintColor];
       break;
     case TKMDownloadModelItemInstalledNotSelected:
       _subtitle.text = nil;
       [_image setImage:[UIImage imageNamed:@"tick"]];
-      [_image setTintColor:[UIColor lightGrayColor]];
+      if (@available(iOS 13.0, *)) {
+        [_image setTintColor:[UIColor tertiaryLabelColor]];
+      } else {
+        [_image setTintColor:[UIColor lightGrayColor]];
+      }
       break;
   }
 

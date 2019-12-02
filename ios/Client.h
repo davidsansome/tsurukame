@@ -24,6 +24,8 @@ extern const char *kWanikaniSessionCookieName;
 extern NSErrorDomain const kTKMClientErrorDomain;
 extern const int kTKMLoginErrorCode;
 
+typedef void (^PartialCompletionHandler)(int done, int total);
+
 typedef void (^CookieHandler)(NSError *_Nullable error, NSString *_Nullable cookie);
 typedef void (^ApiTokenHandler)(NSError *_Nullable error,
                                 NSString *_Nullable apiToken,
@@ -73,9 +75,13 @@ extern bool TKMIsClientError(NSError *error);
 + (void)getApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler;
 
 - (void)updateApiToken:(NSString *)apiToken cookie:(NSString *)cookie;
-- (void)getAssignmentsModifiedAfter:(NSString *)date handler:(AssignmentHandler)handler;
+- (void)getAssignmentsModifiedAfter:(NSString *)date
+                    progressHandler:(PartialCompletionHandler)progressHandler
+                            handler:(AssignmentHandler)handler;
+- (void)getStudyMaterialsModifiedAfter:(NSString *)date
+                       progressHandler:(PartialCompletionHandler)progressHandler
+                               handler:(StudyMaterialsHandler)handler;
 - (void)sendProgress:(TKMProgress *)progress handler:(ProgressHandler)handler;
-- (void)getStudyMaterialsModifiedAfter:(NSString *)date handler:(StudyMaterialsHandler)handler;
 - (void)getUserInfo:(UserInfoHandler)handler;
 - (void)getLevelTimes:(LevelInfoHandler)handler;
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material

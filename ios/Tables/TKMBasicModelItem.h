@@ -61,6 +61,8 @@ NS_ASSUME_NONNULL_BEGIN;
 @property(nonatomic, nullable) SEL action;
 
 @property(nonatomic) UIColor *textColor;
+@property(nonatomic) UIColor *imageTintColor;
+@property(nonatomic) bool enabled;
 
 @property(nonatomic, nullable, weak) TKMBasicModelCell *cell;
 

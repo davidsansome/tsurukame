@@ -15,20 +15,41 @@
 import Foundation
 
 @objc
-class LevelTimeRemainingCell: UITableViewCell {
-  private var services: TKMServices?
+class LevelTimeRemainingItem: NSObject, TKMModelItem {
+  let services: TKMServices
+  let currentLevelAssignments: [TKMAssignment]
 
-  @objc
-  func setup(withServices services: TKMServices) {
+  @objc init(services: TKMServices, currentLevelAssignments: [TKMAssignment]) {
     self.services = services
+    self.currentLevelAssignments = currentLevelAssignments
   }
 
-  @objc
-  func update(_ assignments: [TKMAssignment]) {
+  func createCell() -> TKMModelCell! {
+    return LevelTimeRemainingCell(style: .value1,
+                                  reuseIdentifier: String(describing: LevelTimeRemainingCell.self))
+  }
+}
+
+class LevelTimeRemainingCell: TKMModelCell {
+  private var services: TKMServices?
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    selectionStyle = .none
+    detailTextLabel?.textColor = UIColor.black
+  }
+
+  required init?(coder _: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override func update(with baseItem: TKMModelItem!) {
+    let item = baseItem as! LevelTimeRemainingItem
+
     var guruDates = [Date]()
 
-    for assignment in assignments {
-      if assignment.subjectType != TKMSubject_Type.kanji {
+    for assignment in item.currentLevelAssignments {
+      if assignment.subjectType != .kanji {
         continue
       }
 
@@ -36,7 +57,7 @@ class LevelTimeRemainingCell: UITableViewCell {
         // This item is still locked so we don't know how long the user will take to
         // unlock it.  Use their average level time, minus the time they've spent at
         // this level so far, as an estimate.
-        var average = services!.localCachingClient!.getAverageRemainingLevelTime()
+        var average = item.services.localCachingClient!.getAverageRemainingLevelTime()
 
         // But ensure it can't be less than the time it would take to get a fresh item
         // to Guru, if they've spent longer at the current level than the average.
@@ -46,7 +67,7 @@ class LevelTimeRemainingCell: UITableViewCell {
         return
       }
 
-      guard let subject = services!.dataLoader.load(subjectID: Int(assignment.subjectId)) else {
+      guard let subject = item.services.dataLoader.load(subjectID: Int(assignment.subjectId)) else {
         continue
       }
 

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "TKMSubjectChip.h"
-#import "Style.h"
+#import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
 static const CGFloat kChipHeight = 28.f;
@@ -97,14 +97,14 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
                         chipText:japaneseText
                         sideText:sideText
                    chipTextColor:[UIColor whiteColor]
-                    chipGradient:TKMGradientForSubject(subject)
+                    chipGradient:[TKMStyle gradientForSubject:subject]
                         delegate:delegate];
   } else {
     return [self initWithSubject:subject
                         chipText:japaneseText
                         sideText:nil
                    chipTextColor:[UIColor whiteColor]
-                    chipGradient:TKMGradientForSubject(subject)
+                    chipGradient:[TKMStyle gradientForSubject:subject]
                         delegate:delegate];
   }
 }
@@ -115,7 +115,7 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
                   chipTextColor:(UIColor *)chipTextColor
                    chipGradient:(NSArray<id> *)chipGradient
                        delegate:(id<TKMSubjectChipDelegate>)delegate {
-  UIFont *chipFont = TKMJapaneseFont(kLabelHeight);
+  UIFont *chipFont = [TKMStyle japaneseFontWithSize:kLabelHeight];
   CGRect chipLabelFrame =
       CGRectMake(kLabelInset, kLabelInset, TextWidth(chipText, chipFont), kLabelHeight);
   CGRect chipGradientFrame = CGRectMake(0, 0, CGRectGetMaxX(chipLabelFrame) + kLabelInset,

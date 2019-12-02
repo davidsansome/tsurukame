@@ -182,6 +182,7 @@ message User {
   optional int32 started_at = 5;
   optional bool subscribed = 6;
   optional int32 subscription_ends_at = 7;
+  optional int32 vacation_started_at = 8;
 }
 
 message SubjectOverrides {
