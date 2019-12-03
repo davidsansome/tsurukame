@@ -162,6 +162,12 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                         on:Settings.showSRSLevelIndicator
                                                     target:self
                                                     action:@selector(showSRSLevelIndicator:)]];
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                     title:@"Auto Switch Review Keyboard"
+                                                  subtitle:@"Use Japanese input keyboard for readings"
+                                                        on:Settings.autoSwitchKeyboard
+                                                    target:self
+                                                    action:@selector(autoSwitchKeyboard:)]];
 
   [model addSection:@"Audio"];
   [model addItem:[[TKMSwitchModelItem alloc]
@@ -313,6 +319,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)showSRSLevelIndicator:(UISwitch *)switchView {
   Settings.showSRSLevelIndicator = switchView.on;
+}
+
+- (void)autoSwitchKeyboard:(UISwitch *)switchView {
+  Settings.autoSwitchKeyboard = switchView.on;
 }
 
 - (void)playAudioAutomaticallySwitchChanged:(UISwitch *)switchView {

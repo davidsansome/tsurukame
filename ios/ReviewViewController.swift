@@ -197,7 +197,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   @IBOutlet private var promptBackground: TKMGradientView!
   @IBOutlet private var questionLabel: UILabel!
   @IBOutlet private var promptLabel: UILabel!
-  @IBOutlet private var answerField: UITextField!
+  @IBOutlet private var answerField: AnswerTextField!
   @IBOutlet private var submitButton: UIButton!
   @IBOutlet private var addSynonymButton: UIButton!
   @IBOutlet private var revealAnswerButton: UIButton!
@@ -540,6 +540,23 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         .katakana : .hiragana
     } else {
       kanaInput.alphabet = .hiragana
+    }
+
+    if Settings.autoSwitchKeyboard {
+      let answerLanguage: String
+      if kanaInput.enabled {
+        answerLanguage = "ja"
+      } else {
+        answerLanguage = "en"
+      }
+      if answerField.answerLanguage != answerLanguage {
+        answerField.answerLanguage = answerLanguage
+        if answerField.isFirstResponder {
+          // re-read the language state
+          answerField.resignFirstResponder()
+          answerField.becomeFirstResponder()
+        }
+      }
     }
 
     if Settings.showSRSLevelIndicator {
