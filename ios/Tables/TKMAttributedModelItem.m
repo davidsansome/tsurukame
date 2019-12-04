@@ -49,6 +49,7 @@ static const CGFloat kMinimumHeight = 44.f;
     _textView.scrollEnabled = NO;
     _textView.textContainerInset = UIEdgeInsetsZero;
     _textView.textContainer.lineFragmentPadding = 0.f;
+    _textView.backgroundColor = UIColor.clearColor;
 
     [self.contentView addSubview:_textView];
   }

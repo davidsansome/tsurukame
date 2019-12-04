@@ -26,7 +26,12 @@ import Foundation
                target: nil,
                action: nil)
 
-    let color = TKMStyle.color(forSRSStageCategory: stageCategory)
+    var color = TKMStyle.color(forSRSStageCategory: stageCategory)
+
+    if #available(iOS 13.0, *), stageCategory == .burned,
+      UITraitCollection.current.userInterfaceStyle == .dark {
+      color = UIColor.label
+    }
     textColor = color
     imageTintColor = color
     image = UIImage(named: TKMSRSStageCategoryName(stageCategory))!

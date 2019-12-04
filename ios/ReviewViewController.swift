@@ -32,14 +32,7 @@ private let kMeaningGradient = [
   UIColor(red: 0.882, green: 0.882, blue: 0.882, alpha: 1.0).cgColor,
 ]
 
-private func kReadingTextColor() -> UIColor {
-  if #available(iOS 13.0, *) {
-    return UIColor.label
-  } else {
-    return UIColor.black
-  }
-}
-
+private let kReadingTextColor = UIColor.white
 private let kMeaningTextColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0)
 private let kDefaultButtonTintColor = UIButton().tintColor
 
@@ -498,7 +491,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       kanaInput.enabled = true
       taskTypePrompt = "Reading"
       promptGradient = kReadingGradient
-      promptTextColor = kReadingTextColor()
+      promptTextColor = kReadingTextColor
       taskTypePlaceholder = "答え"
     case ._Max:
       fallthrough
@@ -533,6 +526,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     levelLabel.accessibilityLabel = "srs level \(activeTask.assignment.srsStage)"
 
     answerField.text = nil
+    if #available(iOS 13.0, *) {
+      answerField.textColor = UIColor.label
+      answerField.backgroundColor = UIColor.systemBackground
+    }
     answerField.placeholder = taskTypePlaceholder
     if let firstReading = activeSubject.primaryReadings.first {
       kanaInput.alphabet = (
@@ -672,11 +669,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     previousSubjectButton.alpha = shown ? 0.0 : 1.0
 
     // Change the background color of the answer field.
+    var textColor = UIColor.white
     if #available(iOS 13.0, *) {
-      answerField.textColor = shown ? UIColor.systemRed : UIColor.label
-    } else {
-      answerField.textColor = shown ? UIColor.systemRed : UIColor.white
+      textColor = UIColor.label
     }
+    answerField.textColor = shown ? UIColor.systemRed : textColor
 
     // Scroll to the top.
     subjectDetailsView.setContentOffset(CGPoint(x: 0, y: -subjectDetailsView.contentInset.top), animated: false)
