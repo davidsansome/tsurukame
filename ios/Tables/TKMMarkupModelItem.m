@@ -13,10 +13,7 @@
 // limitations under the License.
 
 #import "TKMMarkupModelItem.h"
-
-static UIColor *kRadicalBackgroundColor;
-static UIColor *kKanjiBackgroundColor;
-static UIColor *kVocabularyBackgroundColor;
+#import "Tsurukame-Swift.h"
 
 static NSAttributedString *AttributedStringForFormattedText(
     TKMFormattedText *formattedText, NSDictionary<NSAttributedStringKey, id> *standardAttributes) {
@@ -31,15 +28,15 @@ static NSAttributedString *AttributedStringForFormattedText(
     switch (format) {
       case TKMFormattedText_Format_Kanji:
         [attributes setValue:[UIColor blackColor] forKey:NSForegroundColorAttributeName];
-        [attributes setValue:kKanjiBackgroundColor forKey:NSBackgroundColorAttributeName];
+        [attributes setValue:[TKMStyle kanjiBackgroundColor] forKey:NSBackgroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Radical:
         [attributes setValue:[UIColor blackColor] forKey:NSForegroundColorAttributeName];
-        [attributes setValue:kRadicalBackgroundColor forKey:NSBackgroundColorAttributeName];
+        [attributes setValue:[TKMStyle radicalBackgroundColor] forKey:NSBackgroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Vocabulary:
         [attributes setValue:[UIColor blackColor] forKey:NSForegroundColorAttributeName];
-        [attributes setValue:kVocabularyBackgroundColor forKey:NSBackgroundColorAttributeName];
+        [attributes setValue:[TKMStyle vocabularyBackgroundColor] forKey:NSBackgroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Reading:
         if (@available(iOS 13.0, *)) {
@@ -74,16 +71,6 @@ static NSAttributedString *AttributedStringForFormattedText(
 NSMutableAttributedString *TKMRenderFormattedText(
     NSArray<TKMFormattedText *> *formattedText,
     NSDictionary<NSAttributedStringKey, id> *standardAttributes) {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    kRadicalBackgroundColor = [UIColor colorWithRed:0.839 green:0.945 blue:1 alpha:1];  // #d6f1ff
-    kKanjiBackgroundColor = [UIColor colorWithRed:1 green:0.839 blue:0.945 alpha:1];    // #ffd6f1
-    kVocabularyBackgroundColor = [UIColor colorWithRed:0.945
-                                                 green:0.839
-                                                  blue:1
-                                                 alpha:1];  // #f1d6ff
-  });
-
   NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
   for (TKMFormattedText *part in formattedText) {
     [text appendAttributedString:AttributedStringForFormattedText(part, standardAttributes)];

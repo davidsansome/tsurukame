@@ -43,6 +43,10 @@ class TKMStyle: NSObject {
   static let lockedColor2 = UIColorFromHex(0x484848)
   static let greyColor = UIColorFromHex(0xC8C8C8)
 
+  static let radicalBackgroundColor = UIColor(red: 0.839, green: 0.945, blue: 1, alpha: 1)
+  static let kanjiBackgroundColor = UIColor(red: 1, green: 0.839, blue: 0.945, alpha: 1)
+  static let vocabularyBackgroundColor = UIColor(red: 0.945, green: 0.839, blue: 1, alpha: 1)
+
   // The [Any] types force these to be exposed to objective-C as an untyped NSArray*.
   static let radicalGradient: [Any] = [radicalColor1.cgColor, radicalColor2.cgColor]
   static let kanjiGradient: [Any] = [kanjiColor1.cgColor, kanjiColor2.cgColor]
