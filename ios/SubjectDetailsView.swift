@@ -21,8 +21,15 @@ private let kFontSize: CGFloat = 14.0
 private let kVisuallySimilarKanjiScoreThreshold = 400
 
 private let kMeaningSynonymColor = UIColor(red: 0.231, green: 0.6, blue: 0.988, alpha: 1)
-private let kHintTextColor = UIColor(white: 0.3, alpha: 1.0)
 private let kFont = TKMStyle.japaneseFont(size: kFontSize)
+
+private func kHintTextColor() -> UIColor {
+  if #available(iOS 13.0, *) {
+    return UIColor.secondaryLabel
+  } else {
+    return UIColor(white: 0.3, alpha: 1.0)
+  }
+}
 
 private func join(_ arr: [NSAttributedString], with joinString: String) -> NSAttributedString {
   let ret = NSMutableAttributedString()
@@ -82,10 +89,7 @@ private func attrString(_ string: String, attrs: [NSAttributedString.Key: Any]? 
 
 private func defaultStringAttrs() -> [NSAttributedString.Key: Any] {
   if #available(iOS 13.0, *) {
-    return [
-      .foregroundColor: UIColor.label,
-      .backgroundColor: UIColor.secondarySystemBackground,
-    ]
+    return [.foregroundColor: UIColor.label]
   } else {
     return [
       .foregroundColor: UIColor.black,
@@ -204,7 +208,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
 
     var attributes = defaultStringAttrs()
     if isHint {
-      attributes[.foregroundColor] = kHintTextColor
+      attributes[.foregroundColor] = kHintTextColor()
     }
 
     let formattedText = TKMRenderFormattedText(text, attributes).replaceFontSize(kFontSize)

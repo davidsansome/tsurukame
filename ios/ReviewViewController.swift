@@ -526,6 +526,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     levelLabel.accessibilityLabel = "srs level \(activeTask.assignment.srsStage)"
 
     answerField.text = nil
+    if #available(iOS 13.0, *) {
+      answerField.textColor = UIColor.label
+      answerField.backgroundColor = UIColor.systemBackground
+    }
     answerField.placeholder = taskTypePlaceholder
     if let firstReading = activeSubject.primaryReadings.first {
       kanaInput.alphabet = (
@@ -665,11 +669,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     previousSubjectButton.alpha = shown ? 0.0 : 1.0
 
     // Change the background color of the answer field.
+    var textColor = UIColor.white
     if #available(iOS 13.0, *) {
-      answerField.textColor = shown ? UIColor.systemRed : UIColor.label
-    } else {
-      answerField.textColor = shown ? UIColor.systemRed : UIColor.white
+      textColor = UIColor.label
     }
+    answerField.textColor = shown ? UIColor.systemRed : textColor
 
     // Scroll to the top.
     subjectDetailsView.setContentOffset(CGPoint(x: 0, y: -subjectDetailsView.contentInset.top), animated: false)

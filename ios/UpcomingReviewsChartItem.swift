@@ -79,6 +79,10 @@ class UpcomingReviewsChartCell: TKMModelCell {
     view.legend.enabled = false
     view.chartDescription = nil
     view.isUserInteractionEnabled = false
+    if #available(iOS 13.0, *) {
+      view.xAxis.labelTextColor = UIColor.label
+      view.leftAxis.labelTextColor = UIColor.label
+    }
   }
 
   required init!(coder _: NSCoder) {
@@ -124,6 +128,11 @@ class UpcomingReviewsChartCell: TKMModelCell {
     barDataSet.axisDependency = YAxis.AxisDependency.right
     barDataSet.colors = [TKMStyle.radicalColor2]
     barDataSet.valueFormatter = DefaultValueFormatter(decimals: 0)
+
+    if #available(iOS 13.0, *) {
+      lineDataSet.valueTextColor = UIColor.label
+      barDataSet.valueTextColor = UIColor.label
+    }
 
     let data = CombinedChartData()
     data.lineData = LineChartData(dataSet: lineDataSet)
