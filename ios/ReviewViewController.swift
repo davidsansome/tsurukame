@@ -32,14 +32,7 @@ private let kMeaningGradient = [
   UIColor(red: 0.882, green: 0.882, blue: 0.882, alpha: 1.0).cgColor,
 ]
 
-private func kReadingTextColor() -> UIColor {
-  if #available(iOS 13.0, *) {
-    return UIColor.label
-  } else {
-    return UIColor.black
-  }
-}
-
+private let kReadingTextColor = UIColor.white
 private let kMeaningTextColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0)
 private let kDefaultButtonTintColor = UIButton().tintColor
 
@@ -498,7 +491,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       kanaInput.enabled = true
       taskTypePrompt = "Reading"
       promptGradient = kReadingGradient
-      promptTextColor = kReadingTextColor()
+      promptTextColor = kReadingTextColor
       taskTypePlaceholder = "答え"
     case ._Max:
       fallthrough
