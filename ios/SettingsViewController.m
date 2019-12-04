@@ -162,12 +162,15 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                         on:Settings.showSRSLevelIndicator
                                                     target:self
                                                     action:@selector(showSRSLevelIndicator:)]];
-  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                                     title:@"Auto Switch Review Keyboard"
-                                                  subtitle:@"Use Japanese input keyboard for readings"
-                                                        on:Settings.autoSwitchKeyboard
-                                                    target:self
-                                                    action:@selector(autoSwitchKeyboard:)]];
+
+  TKMSwitchModelItem *keyboardSwitchItem = [[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                                             title:@"Remember Keyboard Language"
+                                                                          subtitle:@"Present review answer keyboard based on answer language. After enabling you must manually switch keyboards the first time."
+                                                                                on:Settings.autoSwitchKeyboard
+                                                                            target:self
+                                                                              action:@selector(autoSwitchKeyboard:)];
+  keyboardSwitchItem.numberOfSubtitleLines = 0;
+  [model addItem:keyboardSwitchItem];
 
   [model addSection:@"Audio"];
   [model addItem:[[TKMSwitchModelItem alloc]

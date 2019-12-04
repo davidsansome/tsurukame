@@ -543,20 +543,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     }
 
     if Settings.autoSwitchKeyboard {
-      let answerLanguage: String
-      if kanaInput.enabled {
-        answerLanguage = "ja"
-      } else {
-        answerLanguage = "en"
-      }
-      if answerField.answerLanguage != answerLanguage {
-        answerField.answerLanguage = answerLanguage
-        if answerField.isFirstResponder {
-          // re-read the language state
-          answerField.resignFirstResponder()
-          answerField.becomeFirstResponder()
-        }
-      }
+      answerField.answerLanguage = kanaInput.enabled ? "ja" : "en"
     }
 
     if Settings.showSRSLevelIndicator {

@@ -13,7 +13,19 @@
 // limitations under the License.
 
 class AnswerTextField: UITextField {
-  public var answerLanguage: String = "en"
+  public var answerLanguage: String = "en" {
+    didSet {
+      if oldValue != answerLanguage {
+        DispatchQueue.main.async {
+          if self.isFirstResponder {
+            // re-read the language state
+            self.resignFirstResponder()
+            self.becomeFirstResponder()
+          }
+        }
+      }
+    }
+  }
 
   override var textInputContextIdentifier: String? {
     return "com.tsurukame.answer"
