@@ -340,6 +340,8 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   }
   if (!switchView.on) {
     handler(NO);
+    // Clear any existing badge
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     return;
   }
 
