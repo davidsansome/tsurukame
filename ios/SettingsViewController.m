@@ -163,6 +163,15 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                     target:self
                                                     action:@selector(showSRSLevelIndicator:)]];
 
+  TKMSwitchModelItem *keyboardSwitchItem = [[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                                             title:@"Remember Keyboard Language"
+                                                                          subtitle:@"Present review answer keyboard based on answer language. After enabling you must manually switch keyboards the first time."
+                                                                                on:Settings.autoSwitchKeyboard
+                                                                            target:self
+                                                                              action:@selector(autoSwitchKeyboard:)];
+  keyboardSwitchItem.numberOfSubtitleLines = 0;
+  [model addItem:keyboardSwitchItem];
+
   [model addSection:@"Audio"];
   [model addItem:[[TKMSwitchModelItem alloc]
                      initWithStyle:UITableViewCellStyleSubtitle
@@ -313,6 +322,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)showSRSLevelIndicator:(UISwitch *)switchView {
   Settings.showSRSLevelIndicator = switchView.on;
+}
+
+- (void)autoSwitchKeyboard:(UISwitch *)switchView {
+  Settings.autoSwitchKeyboard = switchView.on;
 }
 
 - (void)playAudioAutomaticallySwitchChanged:(UISwitch *)switchView {

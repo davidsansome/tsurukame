@@ -190,7 +190,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   @IBOutlet private var promptBackground: TKMGradientView!
   @IBOutlet private var questionLabel: UILabel!
   @IBOutlet private var promptLabel: UILabel!
-  @IBOutlet private var answerField: UITextField!
+  @IBOutlet private var answerField: AnswerTextField!
   @IBOutlet private var submitButton: UIButton!
   @IBOutlet private var addSynonymButton: UIButton!
   @IBOutlet private var revealAnswerButton: UIButton!
@@ -537,6 +537,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         .katakana : .hiragana
     } else {
       kanaInput.alphabet = .hiragana
+    }
+
+    if Settings.autoSwitchKeyboard {
+      answerField.answerLanguage = kanaInput.enabled ? "ja" : "en"
     }
 
     if Settings.showSRSLevelIndicator {
