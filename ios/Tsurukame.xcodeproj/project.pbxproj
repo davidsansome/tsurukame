@@ -177,6 +177,9 @@
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
 		BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* TKMFontsViewController.m */; };
+		C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
+		C904455E2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
+		C904455F2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
 		F513FC1023119D2C001EEEDA /* FontSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F513FC0F23119D2C001EEEDA /* FontSizeViewController.m */; };
 		FCFB23015B2EB50B28EF6BCD /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */; };
 /* End PBXBuildFile section */
@@ -361,6 +364,7 @@
 		BBE4E330217276EC003A200E /* TKMFontsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMFontsViewController.h; sourceTree = "<group>"; };
 		BBE4E331217276EC003A200E /* TKMFontsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMFontsViewController.m; sourceTree = "<group>"; };
 		C7938DF5181DE860640CD5EE /* Pods-FontScreenshotter-FontScreenshotterUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter-FontScreenshotterUITests.debug.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		C904455C2395DBAE001BC48B /* AnswerTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerTextField.swift; sourceTree = "<group>"; };
 		D9929E537851D24D07F47938 /* Pods-Tsurukame (App Store screenshots).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).release.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).release.xcconfig"; sourceTree = "<group>"; };
 		E76D291A2528193C74A43C60 /* Pods-FontScreenshotter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.debug.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.debug.xcconfig"; sourceTree = "<group>"; };
 		F0FB8F6AE66ACCEFE37ADDB2 /* Pods_Tsurukame.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -453,6 +457,7 @@
 				636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
+				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
 				63EEFEB61FC45C440070C05F /* AppDelegate.m */,
 				63EEFED71FC46E720070C05F /* Client.h */,
@@ -1067,6 +1072,7 @@
 				BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */,
 				63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */,
 				633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */,
+				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
 				657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */,
 				63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */,
@@ -1157,6 +1163,7 @@
 				63AD5BF623056863006B3308 /* Client.m in Sources */,
 				63AD5BF723056863006B3308 /* UIView+SafeAreaInsets.m in Sources */,
 				633AFAE223516BE7004F732F /* SubjectDetailsView.swift in Sources */,
+				C904455F2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				63AD5BF923056863006B3308 /* TKMSwitchModelItem.m in Sources */,
 				63AD5BFB23056863006B3308 /* TKMReviewMenuViewController.m in Sources */,
 				63AD5C0223056863006B3308 /* LocalCachingClient.mm in Sources */,
@@ -1187,6 +1194,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				634EB1A221B6BBD600E1831C /* Settings.m in Sources */,
+				C904455E2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				63C42A2821B6A28D008CA938 /* ViewController.swift in Sources */,
 				634EB1A121B6BBA400E1831C /* TKMFontLoader.mm in Sources */,
 				634EB1A021B6B6D900E1831C /* TKMTableModel.m in Sources */,
