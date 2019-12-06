@@ -189,6 +189,9 @@
 		C92AB970237F2DB600F79904 /* WatchHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB96E237F280300F79904 /* WatchHelper.swift */; };
 		C92AB972237F2E8200F79904 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB971237F2E8200F79904 /* DataManager.swift */; };
 		C943D5B02380D59B004A7969 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943D5AF2380D59A004A7969 /* SettingsController.swift */; };
+		C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
+		C904455E2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
+		C904455F2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
 		F513FC1023119D2C001EEEDA /* FontSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F513FC0F23119D2C001EEEDA /* FontSizeViewController.m */; };
 		FCFB23015B2EB50B28EF6BCD /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */; };
 /* End PBXBuildFile section */
@@ -429,6 +432,7 @@
 		C92AB96E237F280300F79904 /* WatchHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHelper.swift; sourceTree = "<group>"; };
 		C92AB971237F2E8200F79904 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		C943D5AF2380D59A004A7969 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
+		C904455C2395DBAE001BC48B /* AnswerTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerTextField.swift; sourceTree = "<group>"; };
 		D9929E537851D24D07F47938 /* Pods-Tsurukame (App Store screenshots).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).release.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).release.xcconfig"; sourceTree = "<group>"; };
 		E76D291A2528193C74A43C60 /* Pods-FontScreenshotter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.debug.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.debug.xcconfig"; sourceTree = "<group>"; };
 		F0FB8F6AE66ACCEFE37ADDB2 /* Pods_Tsurukame.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -536,6 +540,7 @@
 				636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
+				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
 				63EEFEB61FC45C440070C05F /* AppDelegate.m */,
 				63EEFED71FC46E720070C05F /* Client.h */,
@@ -1257,6 +1262,7 @@
 				BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */,
 				63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */,
 				633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */,
+				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
 				657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */,
 				63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */,
@@ -1347,6 +1353,7 @@
 				63AD5BF623056863006B3308 /* Client.m in Sources */,
 				63AD5BF723056863006B3308 /* UIView+SafeAreaInsets.m in Sources */,
 				633AFAE223516BE7004F732F /* SubjectDetailsView.swift in Sources */,
+				C904455F2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				63AD5BF923056863006B3308 /* TKMSwitchModelItem.m in Sources */,
 				63AD5BFB23056863006B3308 /* TKMReviewMenuViewController.m in Sources */,
 				63AD5C0223056863006B3308 /* LocalCachingClient.mm in Sources */,
@@ -1377,6 +1384,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				634EB1A221B6BBD600E1831C /* Settings.m in Sources */,
+				C904455E2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				63C42A2821B6A28D008CA938 /* ViewController.swift in Sources */,
 				634EB1A121B6BBA400E1831C /* TKMFontLoader.mm in Sources */,
 				634EB1A021B6B6D900E1831C /* TKMTableModel.m in Sources */,
@@ -1605,12 +1613,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.15;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mzsanford.wanikani;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
@@ -1635,12 +1643,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.15;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mzsanford.wanikani;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
@@ -1660,7 +1668,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"APP_STORE_SCREENSHOTS=1",
 					"$(inherited)",
@@ -1689,7 +1697,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"APP_STORE_SCREENSHOTS=1",
 					"$(inherited)",
@@ -1715,7 +1723,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = FontScreenshotter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -1737,7 +1745,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = FontScreenshotter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_FAST_MATH = YES;
@@ -1757,7 +1765,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = FontScreenshotterUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -1779,7 +1787,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = FontScreenshotterUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_FAST_MATH = YES;
@@ -1802,7 +1810,7 @@
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.Tests;
@@ -1827,7 +1835,7 @@
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.Tests;
@@ -1848,12 +1856,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				IBSC_MODULE = Tsurukame_Complication_Extension;
 				INFOPLIST_FILE = "Tsurukame Complication/Info.plist";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mzsanford.wanikani.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -1873,11 +1881,11 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				IBSC_MODULE = Tsurukame_Complication_Extension;
 				INFOPLIST_FILE = "Tsurukame Complication/Info.plist";
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mzsanford.wanikani.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -1895,12 +1903,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = "Tsurukame Complication Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mzsanford.wanikani.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -1919,11 +1927,11 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S3YY9923CH;
+				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = "Tsurukame Complication Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mzsanford.wanikani.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;

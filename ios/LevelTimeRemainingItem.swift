@@ -36,7 +36,11 @@ class LevelTimeRemainingCell: TKMModelCell {
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     selectionStyle = .none
-    detailTextLabel?.textColor = UIColor.black
+    if #available(iOS 13.0, *) {
+      detailTextLabel?.textColor = UIColor.label
+    } else {
+      detailTextLabel?.textColor = UIColor.black
+    }
   }
 
   required init?(coder _: NSCoder) {

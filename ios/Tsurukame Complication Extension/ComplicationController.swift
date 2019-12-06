@@ -21,7 +21,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
   // MARK: - Timeline Configuration
 
   func getSupportedTimeTravelDirections(for _: CLKComplication, withHandler handler: @escaping (CLKComplicationTimeTravelDirections) -> Void) {
-    handler([])
+    handler([.forward])
   }
 
   func getTimelineStartDate(for _: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
@@ -29,7 +29,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
   }
 
   func getTimelineEndDate(for _: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
-    handler(nil)
+    handler(DataManager.sharedInstance.dataStaleAfter())
   }
 
   func getPrivacyBehavior(for _: CLKComplication, withHandler handler: @escaping (CLKComplicationPrivacyBehavior) -> Void) {
@@ -40,6 +40,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
 
   func getCurrentTimelineEntry(for complication: CLKComplication,
                                withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
+    if DataManager.sharedInstance.dataIsStale() {
+      handler(staleTimelineEntry(complication: complication))
+      return
+    }
+
     if let template = templateFor(complication,
                                   userData: DataManager.sharedInstance.latestData,
                                   dataSource: DataManager.sharedInstance.dataSource) {
@@ -56,10 +61,23 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     handler(nil)
   }
 
-  func getTimelineEntries(for _: CLKComplication, after _: Date, limit _: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
+  func getTimelineEntries(for complication: CLKComplication, after: Date, limit _: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
     // TODO: Transfer upcoming review info so we can handle offline complication refreshes.
     // Call the handler with the timeline entries after to the given date
-    handler(nil)
+    if let staleDate = DataManager.sharedInstance.dataStaleAfter(),
+      after.distance(to: staleDate) >= 0,
+      let staleEntry = staleTimelineEntry(complication: complication) {
+      handler([staleEntry])
+    } else {
+      handler(nil)
+    }
+  }
+
+  func staleTimelineEntry(complication: CLKComplication) -> CLKComplicationTimelineEntry? {
+    if let staleDate = DataManager.sharedInstance.dataStaleAfter(), let template = templateForStaleData(complication) {
+      return CLKComplicationTimelineEntry(date: staleDate, complicationTemplate: template)
+    }
+    return nil
   }
 
   // MARK: - Placeholder Templates
@@ -105,7 +123,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
       if let nextHourCount = data[WatchHelper.KeyReviewNextHourCount] as? Int {
         nextHour = nextHourCount
       }
-      if let nextReviewAt = data[WatchHelper.KeyNextReviewAt] as? Int {
+      if let nextReviewAt = data[WatchHelper.KeyNextReviewAt] as? EpochTimeInt {
         nextReview = Date(timeIntervalSince1970: TimeInterval(nextReviewAt))
       }
     }
@@ -333,6 +351,87 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     default:
       return nil
     }
+  }
+
+  func templateForStaleData(_ complication: CLKComplication) -> CLKComplicationTemplate? {
+    let dashTextProvider = CLKSimpleTextProvider(text: "-")
+
+    switch complication.family {
+    case .circularSmall:
+      let template = CLKComplicationTemplateCircularSmallSimpleText()
+      template.textProvider = dashTextProvider
+      return template
+    case .extraLarge:
+      let template = CLKComplicationTemplateExtraLargeStackText()
+      template.line1TextProvider = CLKTextProvider(format: "REVIEWS")
+      template.line2TextProvider = CLKSimpleTextProvider(text: "unknown")
+    case .modularSmall:
+      let template = CLKComplicationTemplateModularSmallStackText()
+      template.line1TextProvider = CLKSimpleTextProvider(text: "now")
+      template.line2TextProvider = dashTextProvider
+      return template
+    case .modularLarge:
+      let template = CLKComplicationTemplateModularLargeTable()
+      if let img = UIImage(named: "miniCrab") {
+        template.headerImageProvider = CLKImageProvider(onePieceImage: img)
+      }
+      template.headerTextProvider = CLKSimpleTextProvider(text: "Reviews")
+      template.row1Column1TextProvider = dashTextProvider
+      template.row1Column2TextProvider = CLKSimpleTextProvider(text: "now")
+      template.row2Column1TextProvider = dashTextProvider
+      template.row2Column2TextProvider = CLKSimpleTextProvider(text: "next hour")
+      return template
+    case .utilitarianSmall:
+      fallthrough
+    case .utilitarianSmallFlat:
+      let template = CLKComplicationTemplateUtilitarianSmallFlat()
+      if let img = UIImage(named: "miniCrab") {
+        template.imageProvider = CLKImageProvider(onePieceImage: img)
+      }
+      template.textProvider = dashTextProvider
+      return template
+    case .utilitarianLarge:
+      let template = CLKComplicationTemplateUtilitarianLargeFlat()
+      // TODO: Pluralize
+      template.textProvider = CLKSimpleTextProvider(text: "data stale")
+      return template
+    case .graphicCorner:
+      let template = CLKComplicationTemplateGraphicCornerStackText()
+      template.outerTextProvider = CLKSimpleTextProvider(text: "stale")
+      template.innerTextProvider = CLKSimpleTextProvider(text: "open phone app")
+      return template
+    case .graphicCircular:
+      let template = CLKComplicationTemplateGraphicCircularStackText()
+      template.line1TextProvider = CLKSimpleTextProvider(text: "next")
+      template.line2TextProvider = dashTextProvider
+    case .graphicBezel:
+      let template = CLKComplicationTemplateGraphicBezelCircularText()
+      if let img = UIImage(named: "miniCrab") {
+        let circularTemplate = CLKComplicationTemplateGraphicCircularImage()
+        circularTemplate.imageProvider = CLKFullColorImageProvider(fullColorImage: img)
+        template.circularTemplate = circularTemplate
+      } else {
+        let circularTemplate = CLKComplicationTemplateGraphicCircularStackText()
+        circularTemplate.line1TextProvider = CLKSimpleTextProvider(text: "")
+        circularTemplate.line2TextProvider = CLKSimpleTextProvider(text: "")
+        template.circularTemplate = circularTemplate
+      }
+      template.textProvider = dashTextProvider
+      return template
+    case .graphicRectangular:
+      let template = CLKComplicationTemplateGraphicRectangularStandardBody()
+      template.headerTextProvider = CLKTextProvider(format: "Reviews")
+      template.body1TextProvider = dashTextProvider
+      template.body2TextProvider = dashTextProvider
+
+      if let img = UIImage(named: "miniCrab") {
+        template.headerImageProvider = CLKFullColorImageProvider(fullColorImage: img)
+      }
+      return template
+    @unknown default:
+      return nil
+    }
+    return nil
   }
 
   /**

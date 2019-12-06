@@ -28,6 +28,8 @@ enum ComplicationDataSource: Int {
 class DataManager {
   private let UserDefaultsKeyData = "LastKnownData"
   private let UserDefaultsKeySource = "DataSource"
+  private let DataStaleAfter = TimeInterval(60 * 60 * 2)
+
   public static let sharedInstance = DataManager()
   var latestData: UserData?
   var delegates: [DataManagerDelegate] = []
@@ -51,6 +53,25 @@ class DataManager {
         delegate.onDataUpdated(data: userInfo, dataSource: self.dataSource)
       }
     }
+  }
+
+  func dataStaleAfter() -> Date? {
+    // TODO: Take next review time into account. If that's > DataStaleAfter use that instead?
+    if let data = self.latestData,
+      let dataSentAt = data[WatchHelper.KeySentAt] as? EpochTimeInt,
+      let nextReviewAt = data[WatchHelper.KeyNextReviewAt] as? EpochTimeInt {
+      let dataSent = Date(timeIntervalSince1970: TimeInterval(dataSentAt))
+      let nextReview = Date(timeIntervalSince1970: TimeInterval(nextReviewAt))
+      return dataSent.addingTimeInterval(DataStaleAfter)
+    }
+    return nil
+  }
+
+  func dataIsStale() -> Bool {
+    if let staleDate = dataStaleAfter() {
+      return Date().distance(to: staleDate) < 0
+    }
+    return false
   }
 
   func addDelegate(_ delegate: DataManagerDelegate) {

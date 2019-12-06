@@ -63,6 +63,7 @@ DECLARE_BOOL(enableCheats);
 DECLARE_BOOL(showOldMnemonic);
 DECLARE_BOOL(useKatakanaForOnyomi);
 DECLARE_BOOL(showSRSLevelIndicator);
+DECLARE_BOOL(autoSwitchKeyboard);
 DECLARE_FLOAT(fontSize);
 
 // Offline audio.

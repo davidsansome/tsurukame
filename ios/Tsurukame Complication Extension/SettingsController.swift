@@ -20,6 +20,8 @@ class SettingsController: WKInterfaceController, DataManagerDelegate {
   @IBOutlet var updateAgeTimer: WKInterfaceTimer!
   @IBOutlet var updateAgeHeader: WKInterfaceLabel!
   @IBOutlet var dataSourcePicker: WKInterfacePicker!
+  @IBOutlet var staleDataWarning: WKInterfaceLabel!
+
   let dataSourceOptions: [(ComplicationDataSource, String)] = [
     (.ReviewCounts, "Review Counts"),
     (.Level, "Level"),
@@ -80,15 +82,22 @@ class SettingsController: WKInterfaceController, DataManagerDelegate {
   // MARK: - DataManagerDelegate
 
   func onDataUpdated(data: UserData, dataSource _: ComplicationDataSource) {
-    if let sentAtSecs = data[WatchHelper.KeySentAt] as? Int {
+    if let sentAtSecs = data[WatchHelper.KeySentAt] as? EpochTimeInt {
       updateAgeHeader.setText("Last Updated")
       updateAgeTimer.setHidden(false)
       let date = Date(timeIntervalSince1970: TimeInterval(sentAtSecs))
       updateAgeTimer.setDate(date)
       updateAgeTimer.start()
+
+      if DataManager.sharedInstance.dataIsStale() {
+        staleDataWarning.setHidden(false)
+      } else {
+        staleDataWarning.setHidden(true)
+      }
     } else {
-      updateAgeHeader.setText("Open app to update")
+      updateAgeHeader.setText("No data, open app to update")
       updateAgeTimer.setHidden(true)
+      staleDataWarning.setHidden(true)
     }
   }
 
