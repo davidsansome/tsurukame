@@ -199,6 +199,10 @@
   [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
 }
 
+- (BOOL)reviewViewControllerAllowsCustomFonts {
+    return false;
+}
+
 #pragma mark - Keyboard navigation
 
 - (BOOL)canBecomeFirstResponder {
