@@ -191,6 +191,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   dispatch_async(dispatch_get_main_queue(), ^{
     _updatingTableModel = false;
     [self recreateTableModel];
+    [self.view setNeedsLayout];
     [[WatchHelper sharedInstance] updatedDataWithClient:_services.localCachingClient];
   });
 }

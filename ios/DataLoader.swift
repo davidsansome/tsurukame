@@ -110,7 +110,7 @@ class DataLoader: NSObject {
   }
 
   func subjects(byLevel level: Int) -> TKMSubjectsByLevel? {
-    if level <= 0, level > maxLevelGrantedBySubscription {
+    if level <= 0 || level > maxLevelGrantedBySubscription {
       return nil
     }
 

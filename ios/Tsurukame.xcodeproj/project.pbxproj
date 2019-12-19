@@ -178,6 +178,9 @@
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
 		BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* TKMFontsViewController.m */; };
+		C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
+		C904455E2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
+		C904455F2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
 		C90846B0237F1C770068A272 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C90846AE237F1C770068A272 /* Interface.storyboard */; };
 		C90846B2237F1C780068A272 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C90846B1237F1C780068A272 /* Assets.xcassets */; };
 		C90846B9237F1C790068A272 /* Tsurukame Complication Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C90846B8237F1C790068A272 /* Tsurukame Complication Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -189,9 +192,6 @@
 		C92AB970237F2DB600F79904 /* WatchHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB96E237F280300F79904 /* WatchHelper.swift */; };
 		C92AB972237F2E8200F79904 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB971237F2E8200F79904 /* DataManager.swift */; };
 		C943D5B02380D59B004A7969 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943D5AF2380D59A004A7969 /* SettingsController.swift */; };
-		C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
-		C904455E2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
-		C904455F2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
 		F513FC1023119D2C001EEEDA /* FontSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F513FC0F23119D2C001EEEDA /* FontSizeViewController.m */; };
 		FCFB23015B2EB50B28EF6BCD /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */; };
 /* End PBXBuildFile section */
@@ -407,8 +407,8 @@
 		6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).debug.xcconfig"; sourceTree = "<group>"; };
 		82721E7B5A9C5562CC8D3B9B /* Pods-FontScreenshotter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.release.xcconfig"; sourceTree = "<group>"; };
-		9CFD97ACE7ABC2C904715D83 /* Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame-Tsurukame Complication Extension/Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingReviewsChartItem.swift; sourceTree = "<group>"; };
+		9CFD97ACE7ABC2C904715D83 /* Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame-Tsurukame Complication Extension/Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		B9AC7A65B58200A25756A40A /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter_FontScreenshotterUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMKanaInput+Internals.h"; sourceTree = "<group>"; };
@@ -418,6 +418,7 @@
 		BBE4E330217276EC003A200E /* TKMFontsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMFontsViewController.h; sourceTree = "<group>"; };
 		BBE4E331217276EC003A200E /* TKMFontsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMFontsViewController.m; sourceTree = "<group>"; };
 		C7938DF5181DE860640CD5EE /* Pods-FontScreenshotter-FontScreenshotterUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter-FontScreenshotterUITests.debug.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		C904455C2395DBAE001BC48B /* AnswerTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerTextField.swift; sourceTree = "<group>"; };
 		C90846AC237F1C770068A272 /* Tsurukame Complication.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tsurukame Complication.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C90846AF237F1C770068A272 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		C90846B1237F1C780068A272 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -432,7 +433,6 @@
 		C92AB96E237F280300F79904 /* WatchHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHelper.swift; sourceTree = "<group>"; };
 		C92AB971237F2E8200F79904 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		C943D5AF2380D59A004A7969 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
-		C904455C2395DBAE001BC48B /* AnswerTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerTextField.swift; sourceTree = "<group>"; };
 		D9929E537851D24D07F47938 /* Pods-Tsurukame (App Store screenshots).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).release.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).release.xcconfig"; sourceTree = "<group>"; };
 		E76D291A2528193C74A43C60 /* Pods-FontScreenshotter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.debug.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.debug.xcconfig"; sourceTree = "<group>"; };
 		F0FB8F6AE66ACCEFE37ADDB2 /* Pods_Tsurukame.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -549,11 +549,6 @@
 				63CAAAF91FC6EADC00E09DA1 /* data.bin */,
 				631CAD5E234AC507008CEA73 /* DataLoader.swift */,
 				41897D93237228F100F6A0B7 /* Extensions */,
-				63C42A2421B6A28D008CA938 /* FontScreenshotter */,
-				63C42A2321B6A28D008CA938 /* FontScreenshotter.app */,
-				63C42A3921B6A290008CA938 /* FontScreenshotterUITests */,
-				63C42A3621B6A290008CA938 /* FontScreenshotterUITests.xctest */,
-				63CAAB0F1FD7FAC500E09DA1 /* Frameworks */,
 				63EEFEC21FC45CB10070C05F /* Info.plist */,
 				3DA8BAFA224C957F009E925B /* LessonOrderViewController.h */,
 				3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */,
@@ -571,8 +566,6 @@
 				63EEFED21FC45E810070C05F /* MainViewController.m */,
 				63BDA9A5200E04E500D75DA2 /* NavigationController.h */,
 				63BDA9A6200E04E500D75DA2 /* NavigationController.m */,
-				684AE501E6BF8ED5D65DA298 /* Pods */,
-				63CAAAD61FC6E0BF00E09DA1 /* proto */,
 				41897D922372287F00F6A0B7 /* Resources */,
 				63CAAAFB1FCD693500E09DA1 /* ReviewItem.h */,
 				63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */,
@@ -602,8 +595,6 @@
 				63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */,
 				63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */,
 				633DE93C20C2CA0600AC25F4 /* Tables */,
-				63E9A8DB21199C2600418CE1 /* Tests */,
-				63E9A8E221199C8500418CE1 /* Tests.xctest */,
 				635D007A218DA308006CD711 /* TKMAudio.h */,
 				635D007B218DA308006CD711 /* TKMAudio.m */,
 				63E9E50F21F424690022C16E /* TKMDownloadViewController.h */,
@@ -1610,7 +1601,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
@@ -1640,7 +1631,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
@@ -1728,7 +1719,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.FontScreenshotter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.FontScreenshotter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
@@ -1749,7 +1740,7 @@
 				INFOPLIST_FILE = FontScreenshotter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.FontScreenshotter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.FontScreenshotter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1770,7 +1761,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.FontScreenshotterUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.FontScreenshotterUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1791,7 +1782,7 @@
 				INFOPLIST_FILE = FontScreenshotterUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.FontScreenshotterUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.FontScreenshotterUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1813,7 +1804,7 @@
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.Tests;
 				PRODUCT_MODULE_NAME = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
@@ -1838,7 +1829,7 @@
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wk.Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.Tests;
 				PRODUCT_MODULE_NAME = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
