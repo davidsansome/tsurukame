@@ -33,12 +33,11 @@ extern NSString *TKMDetailedSRSStageName(int srsStage);
 NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage);
 
 typedef NS_ENUM(NSInteger, TKMSRSStageCategory) {
-  TKMSRSStageNovice = 0,
-  TKMSRSStageApprentice = 1,
-  TKMSRSStageGuru = 2,
-  TKMSRSStageMaster = 3,
-  TKMSRSStageEnlightened = 4,
-  TKMSRSStageBurned = 5,
+  TKMSRSStageApprentice = 0,
+  TKMSRSStageGuru = 1,
+  TKMSRSStageMaster = 2,
+  TKMSRSStageEnlightened = 3,
+  TKMSRSStageBurned = 4,
 };
 extern TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage);
 extern int TKMFirstSRSStageInCategory(TKMSRSStageCategory category);
