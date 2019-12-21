@@ -32,6 +32,8 @@ typedef enum : NSUInteger {
   ReviewOrder_BySRSStage = 2,
   ReviewOrder_CurrentLevelFirst = 3,
   ReviewOrder_LowestLevelFirst = 4,
+  ReviewOrder_NewestAvailableFirst = 5,
+  ReviewOrder_OldestAvailableFirst = 6,
 } ReviewOrder;
 
 @interface Settings : NSObject

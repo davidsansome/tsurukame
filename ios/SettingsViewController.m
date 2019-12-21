@@ -257,6 +257,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
       return @"Current level first";
     case ReviewOrder_LowestLevelFirst:
       return @"Lowest level first";
+    case ReviewOrder_NewestAvailableFirst:
+      return @"Newest available first";
+    case ReviewOrder_OldestAvailableFirst:
+      return @"Oldest available first";
   }
   return nil;
 }
