@@ -435,7 +435,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     // Update the progress labels.
     var successRateText: String
-    if tasksAnswered == 0 {
+    if activeQueue[activeTaskIndex].assignment!.isLessonStage {
+      successRateText = ""
+    } else if tasksAnswered == 0 {
       successRateText = "100%"
     } else {
       successRateText = String(Int(Double(tasksAnsweredCorrectly) / Double(tasksAnswered) * 100)) + "%"
@@ -531,7 +533,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     doneLabel.accessibilityLabel = doneText + " done"
     queueLabel.accessibilityLabel = queueText + " remaining"
     questionLabel.accessibilityLabel = "Japanese " + subjectTypePrompt + ". Question"
-    levelLabel.accessibilityLabel = "srs level \(activeTask.assignment.srsStage)"
+    levelLabel.accessibilityLabel = "SRS level \(activeTask.assignment.srsStage)"
 
     answerField.text = nil
     if #available(iOS 13.0, *) {
