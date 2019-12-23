@@ -140,6 +140,7 @@ private class AnimationContext {
 protocol ReviewViewControllerDelegate {
   func reviewViewControllerAllowsCheats(forReviewItem item: ReviewItem) -> Bool
   func reviewViewControllerFinishedAllReviewItems(_ reviewViewController: ReviewViewController)
+  func reviewViewControllerAllowsCustomFonts() -> Bool
   @objc optional func reviewViewController(_ reviewViewController: ReviewViewController,
                                            tappedMenuButton menuButton: UIButton)
 }
@@ -190,7 +191,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   @IBOutlet private var promptBackground: TKMGradientView!
   @IBOutlet private var questionLabel: UILabel!
   @IBOutlet private var promptLabel: UILabel!
-  @IBOutlet private var answerField: UITextField!
+  @IBOutlet private var answerField: AnswerTextField!
   @IBOutlet private var submitButton: UIButton!
   @IBOutlet private var addSynonymButton: UIButton!
   @IBOutlet private var revealAnswerButton: UIButton!
@@ -306,10 +307,17 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     currentFontName = normalFontName
     defaultFontSize = Double(questionLabel.font.pointSize)
 
+    questionLabel.isUserInteractionEnabled = false
+
+    let swipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeQuestionLabel))
+    swipeRecognizer.direction = .left
+    questionBackground.addGestureRecognizer(swipeRecognizer)
+
     let longPressRecognizer =
       UILongPressGestureRecognizer(target: self, action: #selector(didLongPressQuestionLabel))
     longPressRecognizer.minimumPressDuration = 0
     longPressRecognizer.allowableMovement = 500
+    longPressRecognizer.require(toFail: swipeRecognizer)
     questionBackground.addGestureRecognizer(longPressRecognizer)
 
     viewDidLayoutSubviews()
@@ -539,6 +547,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       kanaInput.alphabet = .hiragana
     }
 
+    if Settings.autoSwitchKeyboard {
+      answerField.answerLanguage = kanaInput.enabled ? "ja" : "en"
+    }
+
     if Settings.showSRSLevelIndicator {
       levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
     } else {
@@ -579,28 +591,30 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   // MARK: - Random fonts
 
-  func randomFont(thatCanRenderText text: String) -> String {
-    // Get the names of selected fonts.
-    var selectedFontNames = [String]()
+  func fontsThatCanRenderText(_ text: String, exclude: [String]?) -> [String] {
+    var availableFonts: [String] = []
+
     for filename in Settings.selectedFonts ?? [] {
       if let font = services.fontLoader.font(byName: filename) {
-        selectedFontNames.append(font.fontName)
+        if let ex = exclude, ex.contains(font.fontName) {
+          continue
+        }
+        if TKMFontCanRenderText(font.fontName, text) {
+          availableFonts.append(font.fontName)
+        }
       }
     }
 
-    // Pick a random one.
-    while !selectedFontNames.isEmpty {
-      let fontIndex = Int(arc4random_uniform(UInt32(selectedFontNames.count)))
-      let fontName = selectedFontNames[fontIndex]
+    return availableFonts
+  }
 
-      // If the font can't render the text, try another one.
-      if !TKMFontCanRenderText(fontName, text) {
-        selectedFontNames.remove(at: fontIndex)
-        continue
-      }
+  func randomFont(thatCanRenderText text: String) -> String {
+    if delegate.reviewViewControllerAllowsCustomFonts(),
+      let fontName = fontsThatCanRenderText(text, exclude: nil).randomElement() {
       return fontName
+    } else {
+      return normalFontName
     }
-    return normalFontName
   }
 
   // MARK: - Animation
@@ -776,6 +790,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     } else if gestureRecognizer.state == .ended {
       setCustomQuestionLabelFont(useCustomFont: !answered)
     }
+  }
+
+  @objc func didSwipeQuestionLabel(_: UIGestureRecognizer) {
+    currentFontName = fontsThatCanRenderText(activeSubject.japanese, exclude: [currentFontName]).randomElement() ?? normalFontName
+    setCustomQuestionLabelFont(useCustomFont: true)
   }
 
   func questionLabelFontSize() -> CGFloat {

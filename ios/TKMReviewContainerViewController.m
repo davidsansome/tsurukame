@@ -86,6 +86,10 @@
   [reviewViewController performSegueWithIdentifier:@"reviewSummary" sender:reviewViewController];
 }
 
+- (BOOL)reviewViewControllerAllowsCustomFonts {
+    return true;
+}
+
 #pragma mark - TKMReviewMenuDelegate
 
 - (void)didTapEndReviewSession:(UIView *)button {
