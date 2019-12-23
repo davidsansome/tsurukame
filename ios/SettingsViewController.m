@@ -162,6 +162,12 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                         on:Settings.showSRSLevelIndicator
                                                     target:self
                                                     action:@selector(showSRSLevelIndicator:)]];
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                     title:@"Show all kanji readings"
+                                                  subtitle:@"Primary reading(s) will be shown in bold"
+                                                        on:Settings.showAllReadings
+                                                    target:self
+                                                    action:@selector(showAllReadings:)]];
 
   [model addSection:@"Audio"];
   [model addItem:[[TKMSwitchModelItem alloc]
@@ -313,6 +319,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)showSRSLevelIndicator:(UISwitch *)switchView {
   Settings.showSRSLevelIndicator = switchView.on;
+}
+
+- (void)showAllReadings:(UISwitch *)switchView {
+  Settings.showAllReadings = switchView.on;
 }
 
 - (void)playAudioAutomaticallySwitchChanged:(UISwitch *)switchView {

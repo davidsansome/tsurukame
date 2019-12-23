@@ -68,7 +68,11 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
   var strings = [NSAttributedString]()
   for reading in readings {
     if reading.isPrimary {
-      strings.append(attrString(reading.displayText))
+      var font = TKMStyle.japaneseFontLight(size: kFontSize)
+      if !primaryOnly, readings.count > 1 {
+        font = TKMStyle.japaneseFontBold(size: kFontSize)
+      }
+      strings.append(attrString(reading.displayText, attrs: [.font: font]))
     }
   }
   if !primaryOnly {
@@ -139,7 +143,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   }
 
   private func addReadings(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
-    let primaryOnly = subject.hasKanji
+    let primaryOnly = !Settings.showAllReadings
 
     let text = renderReadings(readings: subject.readingsArray as! [TKMReading], primaryOnly: primaryOnly).withFontSize(kFontSize)
     let item = TKMReadingModelItem(text: text)
