@@ -17,6 +17,8 @@ package main
 import (
 	"flag"
 	"log"
+	"time"
+	"strings"
 
 	"github.com/davidsansome/tsurukame/api"
 	"github.com/davidsansome/tsurukame/converter"
@@ -84,11 +86,17 @@ SubjectLoop:
 			if s.directory.HasSubject(subject.ID) {
 				continue SubjectLoop
 			}
-
+			GetRadical:
 			r, err := s.jsonClient.GetRadical(subject.ID)
 			if err != nil {
 				log.Printf("Error getting radical %d: %v", subject.ID, err)
-				continue SubjectLoop
+				if !strings.Contains(err.Error(), "HTTP 429") {
+					continue SubjectLoop
+				} else {
+					log.Print("Will pause and try again")
+					time.Sleep(30 * time.Second)
+					goto GetRadical
+				}
 			}
 			converter.AddRadical(spb, r)
 		}
