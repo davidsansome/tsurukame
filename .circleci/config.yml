@@ -16,6 +16,11 @@ jobs:
     steps:
       - checkout
       - run:
+        name: Download data.bin
+        command: |
+          echo $SERVICE_ACCOUNT_KEY | gcloud auth activate-service-account --key-file=-
+          gsutil cp gs://tsurukame-data/1.13 data.bin
+      - run:
         name: Bundle install
         command: bundle install
         working_directory: ios
