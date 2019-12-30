@@ -16,20 +16,20 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Download data.bin
-        command: |
-          echo $SERVICE_ACCOUNT_KEY | gcloud auth activate-service-account --key-file=-
-          gsutil cp gs://tsurukame-data/1.13 data.bin
+          name: Download data.bin
+          command: |
+            echo $SERVICE_ACCOUNT_KEY | gcloud auth activate-service-account --key-file=-
+            gsutil cp gs://tsurukame-data/1.13 data.bin
       - run:
-        command: bundle install
-        working_directory: ios
+          command: bundle install
+          working_directory: ios
       - run:
-        command: bundle exec fastlane test
-        working_directory: ios
+          command: bundle exec fastlane test
+          working_directory: ios
       - store_artifacts:
-        path: output
+          path: output
       - store_test_results:
-        path: output/scan
+          path: output/scan
 
 workflows:
   version: 2
