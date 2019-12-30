@@ -1,6 +1,14 @@
 version: 2
 jobs:
-  build-and-test:
+  test-golang:
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run: go build ./...
+      - run: go test ./...
+
+  test-ios:
     macos:
       xcode: "11.3.0"
     environment:
@@ -22,6 +30,7 @@ jobs:
 
 workflows:
   version: 2
-  build-and-test:
+  all:
     jobs:
-      - build-and-test
+      - test-ios
+      - test-golang
