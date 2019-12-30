@@ -33,7 +33,6 @@ NSString *TKMSubjectTypeName(TKMSubject_Type subjectType) {
 TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage) {
   switch (srsStage) {
     case 1:
-      return TKMSRSStageNovice;
     case 2:
     case 3:
     case 4:
@@ -48,16 +47,14 @@ TKMSRSStageCategory TKMSRSStageCategoryForStage(int srsStage) {
     case 9:
       return TKMSRSStageBurned;
     default:
-      return TKMSRSStageNovice;
+      return TKMSRSStageApprentice;
   }
 }
 
 extern int TKMFirstSRSStageInCategory(TKMSRSStageCategory category) {
   switch (category) {
-    case TKMSRSStageNovice:
-      return 1;
     case TKMSRSStageApprentice:
-      return 2;
+      return 1;
     case TKMSRSStageGuru:
       return 5;
     case TKMSRSStageMaster:
@@ -77,7 +74,6 @@ extern NSString *TKMSRSStageCategoryName(TKMSRSStageCategory category) {
 NSString *TKMSRSStageName(int srsStage) {
   switch (srsStage) {
     case 1:
-      return @"Novice";
     case 2:
     case 3:
     case 4:
@@ -98,13 +94,13 @@ NSString *TKMSRSStageName(int srsStage) {
 NSString *TKMDetailedSRSStageName(int srsStage) {
   switch (srsStage) {
     case 1:
-      return @"Novice";
-    case 2:
       return @"Apprentice I";
-    case 3:
+    case 2:
       return @"Apprentice II";
-    case 4:
+    case 3:
       return @"Apprentice III";
+    case 4:
+      return @"Apprentice IV";
     case 5:
       return @"Guru I";
     case 6:

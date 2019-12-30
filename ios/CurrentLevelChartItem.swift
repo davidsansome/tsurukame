@@ -18,7 +18,6 @@ import Foundation
 enum PieSlice: Int {
   case Locked = 0
   case Lesson
-  case Novice
   case Apprentice
   case Guru
   static let count = 5
@@ -29,8 +28,6 @@ enum PieSlice: Int {
       return "Locked"
     case .Lesson:
       return "Lesson"
-    case .Novice:
-      return TKMSRSStageCategoryName(.novice)
     case .Apprentice:
       return TKMSRSStageCategoryName(.apprentice)
     case .Guru:
@@ -45,8 +42,6 @@ enum PieSlice: Int {
       return UIColor(white: 0.8, alpha: 1.0)
     case .Lesson:
       return UIColor(white: 0.6, alpha: 1.0)
-    case .Novice:
-      saturationMod = 0.4
     case .Apprentice:
       saturationMod = 0.6
     default:
@@ -178,8 +173,6 @@ class CurrentLevelChartCell: TKMModelCell {
         slice = .Lesson
       } else if !assignment.hasSrsStage {
         slice = .Locked
-      } else if assignment.srsStage <= 1 {
-        slice = .Novice
       } else if assignment.srsStage < 5 {
         slice = .Apprentice
       } else {
