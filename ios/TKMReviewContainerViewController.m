@@ -87,7 +87,11 @@
 }
 
 - (BOOL)reviewViewControllerAllowsCustomFonts {
-    return true;
+  return true;
+}
+
+- (BOOL)reviewViewControllerShowsSuccessRate {
+  return true;
 }
 
 #pragma mark - TKMReviewMenuDelegate

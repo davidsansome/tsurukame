@@ -139,8 +139,9 @@ private class AnimationContext {
 @objc
 protocol ReviewViewControllerDelegate {
   func reviewViewControllerAllowsCheats(forReviewItem item: ReviewItem) -> Bool
-  func reviewViewControllerFinishedAllReviewItems(_ reviewViewController: ReviewViewController)
   func reviewViewControllerAllowsCustomFonts() -> Bool
+  func reviewViewControllerShowsSuccessRate() -> Bool
+  func reviewViewControllerFinishedAllReviewItems(_ reviewViewController: ReviewViewController)
   @objc optional func reviewViewController(_ reviewViewController: ReviewViewController,
                                            tappedMenuButton menuButton: UIButton)
 }
@@ -298,6 +299,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     answerField.delegate = kanaInput
     answerField.addTarget(self, action: #selector(answerFieldValueDidChange), for: UIControl.Event.editingChanged)
+
+    let showSuccessRate = delegate.reviewViewControllerShowsSuccessRate()
+    successRateIcon.isHidden = !showSuccessRate
+    successRateLabel.isHidden = !showSuccessRate
 
     if !showMenuButton {
       menuButton.isHidden = true

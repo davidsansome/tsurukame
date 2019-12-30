@@ -200,7 +200,11 @@
 }
 
 - (BOOL)reviewViewControllerAllowsCustomFonts {
-    return false;
+  return false;
+}
+
+- (BOOL)reviewViewControllerShowsSuccessRate {
+  return false;
 }
 
 #pragma mark - Keyboard navigation
