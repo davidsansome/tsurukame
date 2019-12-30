@@ -7,11 +7,22 @@ jobs:
       FL_OUTPUT_DIR: output
     steps:
       - checkout
-      - run: bundle install
       - run:
-          name: Fastlane
-          command: bundle exec fastlane test
+        name: Bundle install
+        command: bundle install
+        working_directory: ios
+      - run:
+        name: Fastlane
+        command: bundle exec fastlane test
+        working_directory: ios
       - store_artifacts:
-          path: output
+        path: output
       - store_test_results:
-          path: output/scan
+        path: output/scan
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test
