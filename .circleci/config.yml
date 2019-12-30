@@ -1,4 +1,7 @@
 version: 2.1
+orbs:
+  gcp-cli: circleci/gcp-cli@1.8.3
+
 jobs:
   test-golang:
     docker:
@@ -15,6 +18,7 @@ jobs:
       FL_OUTPUT_DIR: output
     steps:
       - checkout
+      - gcp-cli/install
       - run:
           name: Download data.bin
           command: |
