@@ -121,6 +121,7 @@ DEFINE_BOOL(enableCheats, setEnableCheats, YES);
 DEFINE_BOOL(showOldMnemonic, setShowOldMnemonic, YES);
 DEFINE_BOOL(useKatakanaForOnyomi, setUseKatakanaForOnyomi, NO);
 DEFINE_BOOL(showSRSLevelIndicator, setShowSRSLevelIndicator, NO);
+DEFINE_BOOL(showAllReadings, setShowAllReadings, NO);
 DEFINE_BOOL(autoSwitchKeyboard, setAutoSwitchKeyboard, NO);
 DEFINE_FLOAT(fontSize, setFontSize, 1.0);
 

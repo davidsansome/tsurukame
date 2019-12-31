@@ -162,6 +162,12 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                         on:Settings.showSRSLevelIndicator
                                                     target:self
                                                     action:@selector(showSRSLevelIndicator:)]];
+  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                     title:@"Show all kanji readings"
+                                                  subtitle:@"Primary reading(s) will be shown in bold"
+                                                        on:Settings.showAllReadings
+                                                    target:self
+                                                    action:@selector(showAllReadings:)]];
 
   TKMSwitchModelItem *keyboardSwitchItem = [[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                                                              title:@"Remember Keyboard Language"
@@ -326,6 +332,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)autoSwitchKeyboard:(UISwitch *)switchView {
   Settings.autoSwitchKeyboard = switchView.on;
+}
+
+- (void)showAllReadings:(UISwitch *)switchView {
+  Settings.showAllReadings = switchView.on;
 }
 
 - (void)playAudioAutomaticallySwitchChanged:(UISwitch *)switchView {
