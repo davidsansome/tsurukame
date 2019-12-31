@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/davidsansome/tsurukame.svg?style=shield)](https://circleci.com/gh/davidsansome/tsurukame)
+
 Tsurukame is an unofficial WaniKani app for iOS.  It helps you learn Japanese
 Kanji.
 
