@@ -91,7 +91,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   [super viewDidLoad];
 
   _headerView.delegate = self;
-  
+
   UIColor *whiteColor;
   if (@available(iOS 13.0, *)) {
     whiteColor = [UIColor systemBackgroundColor];

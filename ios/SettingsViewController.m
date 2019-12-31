@@ -162,19 +162,23 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                         on:Settings.showSRSLevelIndicator
                                                     target:self
                                                     action:@selector(showSRSLevelIndicator:)]];
-  [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                                     title:@"Show all kanji readings"
-                                                  subtitle:@"Primary reading(s) will be shown in bold"
-                                                        on:Settings.showAllReadings
-                                                    target:self
-                                                    action:@selector(showAllReadings:)]];
+  [model
+      addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                  title:@"Show all kanji readings"
+                                               subtitle:@"Primary reading(s) will be shown in bold"
+                                                     on:Settings.showAllReadings
+                                                 target:self
+                                                 action:@selector(showAllReadings:)]];
 
-  TKMSwitchModelItem *keyboardSwitchItem = [[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                                                             title:@"Remember Keyboard Language"
-                                                                          subtitle:@"Present review answer keyboard based on answer language. After enabling you must manually switch keyboards the first time."
-                                                                                on:Settings.autoSwitchKeyboard
-                                                                            target:self
-                                                                              action:@selector(autoSwitchKeyboard:)];
+  TKMSwitchModelItem *keyboardSwitchItem = [[TKMSwitchModelItem alloc]
+      initWithStyle:UITableViewCellStyleSubtitle
+              title:@"Remember Keyboard Language"
+           subtitle:
+               @"Present review answer keyboard based on answer language. After enabling you must "
+               @"manually switch keyboards the first time."
+                 on:Settings.autoSwitchKeyboard
+             target:self
+             action:@selector(autoSwitchKeyboard:)];
   keyboardSwitchItem.numberOfSubtitleLines = 0;
   [model addItem:keyboardSwitchItem];
 
