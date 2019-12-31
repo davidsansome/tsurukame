@@ -453,8 +453,10 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 }
 
 - (void)srsLevelCountsChanged {
-  [self updateUserInfo];
-  [self scheduleTableModelUpdate];
+  if (self.view.window) {
+    [self updateUserInfo];
+    [self scheduleTableModelUpdate];
+  }
 }
 
 - (void)clientIsUnauthorized {

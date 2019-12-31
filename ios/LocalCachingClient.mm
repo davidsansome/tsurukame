@@ -1017,6 +1017,7 @@ struct ProgressTask {
                                  NSLog(@"Recorded %lu new assignments at %@",
                                        (unsigned long)assignments.count,
                                        date);
+                                 [self invalidateCachedAvailableSubjectCounts];
                                }];
 }
 
