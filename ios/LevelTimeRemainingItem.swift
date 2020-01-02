@@ -49,9 +49,19 @@ class LevelTimeRemainingCell: TKMModelCell {
 
   override func update(with baseItem: TKMModelItem!) {
     let item = baseItem as! LevelTimeRemainingItem
-
+    
+    var radicalDates = [Date]()
     var guruDates = [Date]()
-
+    
+    for assignment in item.currentLevelAssignments {
+      if assignment.subjectType != .radical {
+        continue
+      }
+      radicalDates.append(assignment.guruDate(for: subject))
+    }
+    var lastRadicalGuruTime = radicalDates.last.timeIntervalSinceNow
+    lastRadicalGuruTime = lastRadicalGuruTime > 0 ? lastRadicalGuruTime : 0
+    
     for assignment in item.currentLevelAssignments {
       if assignment.subjectType != .kanji {
         continue
@@ -65,7 +75,7 @@ class LevelTimeRemainingCell: TKMModelCell {
 
         // But ensure it can't be less than the time it would take to get a fresh item
         // to Guru, if they've spent longer at the current level than the average.
-        average = max(average, TKMMinimumTimeUntilGuruSeconds(assignment.level, 1))
+        average = max(average, TKMMinimumTimeUntilGuruSeconds(assignment.level, 1) + lastRadicalGuruTime)
 
         setRemaining(Date(timeIntervalSinceNow: average), isEstimate: true)
         return
