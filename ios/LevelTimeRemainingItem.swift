@@ -52,7 +52,7 @@ class LevelTimeRemainingCell: TKMModelCell {
     
     var radicalDates = [Date]()
     var guruDates = [Date]()
-    var levels = [Int]()
+    var levels = [Int32]()
     
     for assignment in item.currentLevelAssignments {
       if assignment.subjectType != .radical {
@@ -63,7 +63,7 @@ class LevelTimeRemainingCell: TKMModelCell {
       }
       radicalDates.append(assignment.guruDate(for: subject))
     }
-    var lastRadicalGuruTime = radicalDates.last.timeIntervalSinceNow
+    var lastRadicalGuruTime = radicalDates.last!.timeIntervalSinceNow
     lastRadicalGuruTime = lastRadicalGuruTime > 0 ? lastRadicalGuruTime : 0
     
     for assignment in item.currentLevelAssignments {
@@ -85,6 +85,8 @@ class LevelTimeRemainingCell: TKMModelCell {
     // Sort the list of dates and remove the most distant 10%.
     guruDates.sort()
     guruDates.removeLast(Int(Double(guruDates.count) * 0.1))
+    levels.sort().reversed()
+    levels.removeLast(Int(Double(levels.count) * 0.1))
     
     if let lastDate = guruDates.last {
       if lastDate == Date.distantFuture {
@@ -95,7 +97,7 @@ class LevelTimeRemainingCell: TKMModelCell {
 
         // But ensure it can't be less than the time it would take to get a fresh item
         // to Guru, if they've spent longer at the current level than the average.
-        average = max(average, TKMMinimumTimeUntilGuruSeconds(0, 1) + lastRadicalGuruTime)
+        average = max(average, TKMMinimumTimeUntilGuruSeconds(levels.last!, 1) + lastRadicalGuruTime)
 
         setRemaining(Date(timeIntervalSinceNow: average), isEstimate: true)
       }
