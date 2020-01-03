@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   }
 
   private func addReadings(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
-    let primaryOnly = !Settings.showAllReadings
+    let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
     let text = renderReadings(readings: subject.readingsArray as! [TKMReading], primaryOnly: primaryOnly).withFontSize(kFontSize)
     let item = TKMReadingModelItem(text: text)
