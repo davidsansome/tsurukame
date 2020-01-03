@@ -18,13 +18,14 @@ target 'Tsurukame' do
   use_frameworks!
 
   # Pods for Tsurukame
-  pod 'Charts', '~> 3.3.0'
+  pod 'Charts', '~> 3.3.0', :inhibit_warnings => true
   pod 'FMDB', '~> 2.7.5'
-  pod 'Haneke', '~> 1.0.2'
-  pod 'Light-Untar', '~> 0.3.0'
-  pod 'MMDrawerController', '~> 0.6.0'
+  pod 'Haneke', '~> 1.0.2', :inhibit_warnings => true
+  pod 'Light-Untar', '~> 0.3.0', :inhibit_warnings => true
+  pod 'MMDrawerController', '~> 0.6.0', :inhibit_warnings => true
   pod 'Protobuf', '~> 3.10.0'
   pod 'Reachability', '~> 3.2'
+  pod 'SwiftFormat/CLI'
 
   target 'Tests' do
     inherit! :search_paths
@@ -38,5 +39,3 @@ target 'Tsurukame (App Store screenshots)' do
   # Pods for Tsurukame (App Store screenshots)
 
 end
-
-pod 'SwiftFormat/CLI'
