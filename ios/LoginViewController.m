@@ -83,12 +83,7 @@ static NSString *const kPrivacyPolicyURL =
 - (void)textFieldDidChange:(UITextField *)textField {
   bool enabled = _usernameField.text.length != 0 && _passwordField.text.length != 0;
   _signInButton.enabled = enabled;
-  if (@available(iOS 13.0, *)) {
-    _signInButton.backgroundColor =
-        enabled ? TKMStyle.radicalColor2 : [UIColor secondaryLabelColor];
-  } else {
-    _signInButton.backgroundColor = enabled ? TKMStyle.radicalColor2 : [UIColor darkGrayColor];
-  }
+  _signInButton.backgroundColor = enabled ? TKMStyle.radicalColor2 : TKMStyleColor.grey33;
 }
 
 #pragma mark - Sign In flow

@@ -47,9 +47,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  if (@available(iOS 13.0, *)) {
-    _pageControl.backgroundColor = UIColor.systemBackgroundColor;
-  }
+  self.view.backgroundColor = TKMStyleColor.background;
 
   // Create the page controller.
   _pageController = [[UIPageViewController alloc]

@@ -41,14 +41,8 @@ static NSAttributedString *AttributedStringForFormattedText(
                       forKey:NSBackgroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Reading:
-        if (@available(iOS 13.0, *)) {
-          [attributes setValue:[UIColor secondaryLabelColor] forKey:NSBackgroundColorAttributeName];
-          [attributes setValue:[UIColor systemBackgroundColor]
-                        forKey:NSForegroundColorAttributeName];
-        } else {
-          [attributes setValue:[UIColor darkGrayColor] forKey:NSBackgroundColorAttributeName];
-          [attributes setValue:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
-        }
+        [attributes setValue:TKMStyleColor.grey33 forKey:NSBackgroundColorAttributeName];
+        [attributes setValue:TKMStyleColor.background forKey:NSForegroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Japanese:
         break;

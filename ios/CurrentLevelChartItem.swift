@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -194,13 +194,8 @@ class CurrentLevelChartCell: TKMModelCell {
     }
 
     let dataSet = PieChartDataSet(values)
-    if #available(iOS 13.0, *) {
-      dataSet.valueTextColor = UIColor.label
-      dataSet.entryLabelColor = UIColor.secondaryLabel
-    } else {
-      dataSet.valueTextColor = UIColor.darkGray
-      dataSet.entryLabelColor = UIColor.black
-    }
+    dataSet.valueTextColor = TKMStyle.Color.label
+    dataSet.entryLabelColor = TKMStyle.Color.grey33
     dataSet.valueFont = UIFont.systemFont(ofSize: 10.0)
     dataSet.colors = colors
     dataSet.sliceSpace = 1.0 // Space between slices
