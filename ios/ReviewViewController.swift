@@ -265,6 +265,22 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
+    case ReviewOrder_NewestAvailableFirst:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if a.assignment.availableAt < b.assignment.availableAt { return false }
+        if a.assignment.availableAt > b.assignment.availableAt { return true }
+        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
+        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        return false
+      }
+    case ReviewOrder_OldestAvailableFirst:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if a.assignment.availableAt < b.assignment.availableAt { return true }
+        if a.assignment.availableAt > b.assignment.availableAt { return false }
+        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
+        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        return false
+      }
     case ReviewOrder_Random:
       break
     default:
