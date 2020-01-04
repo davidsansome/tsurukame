@@ -82,8 +82,8 @@ class LevelTimeRemainingCell: TKMModelCell {
     }
 
     // Sort the list of dates and remove the most distant 10%.
-    guruDates = guruDates.sorted().removeLast(Int(Double(guruDates.count) * 0.1))
-    levels = Array(levels.sorted().reversed()).removeLast(Int(Double(levels.count) * 0.1))
+    guruDates = Array(guruDates.sorted().dropLast(Int(Double(guruDates.count) * 0.1)))
+    levels = Array(Array(levels.sorted().reversed()).dropLast(Int(Double(levels.count) * 0.1)))
 
     if let lastGuruDate = guruDates.last, let lastKanjiLevel = levels.last {
       if lastGuruDate == Date.distantFuture {
