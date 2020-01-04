@@ -55,16 +55,16 @@ class TKMStyle: NSObject {
   // MARK: - WaniKani colors and gradients
 
   static let defaultTintColor = UIColor(red: 0.0, green: 122.0 / 255.0, blue: 1.0, alpha: 1.0)
-  static let radicalColor1 = UIColorFromHex(0x00AAFF)
-  static let radicalColor2 = UIColorFromHex(0x0093DD)
-  static let kanjiColor1 = UIColorFromHex(0xFF00AA)
-  static let kanjiColor2 = UIColorFromHex(0xDD0093)
-  static let vocabularyColor1 = UIColorFromHex(0xAA00FF)
-  static let vocabularyColor2 = UIColorFromHex(0x9300DD)
+  static let radicalColor1 = AdaptiveColorHex(light: 0x00AAFF, dark: 0x006090)
+  static let radicalColor2 = AdaptiveColorHex(light: 0x0093DD, dark: 0x005080)
+  static let kanjiColor1 = AdaptiveColorHex(light: 0xFF00AA, dark: 0x940060)
+  static let kanjiColor2 = AdaptiveColorHex(light: 0xDD0093, dark: 0x800050)
+  static let vocabularyColor1 = AdaptiveColorHex(light: 0xAA00FF, dark: 0x6100AA)
+  static let vocabularyColor2 = AdaptiveColorHex(light: 0x9300DD, dark: 0x530080)
   static let lockedColor1 = UIColorFromHex(0x505050)
   static let lockedColor2 = UIColorFromHex(0x484848)
-  static let greyColor = UIColorFromHex(0xC8C8C8)
 
+  // Markup colors for mnemonics.
   static let radicalBackgroundColor = UIColor(red: 0.839, green: 0.945, blue: 1, alpha: 1)
   static let kanjiBackgroundColor = UIColor(red: 1, green: 0.839, blue: 0.945, alpha: 1)
   static let vocabularyBackgroundColor = UIColor(red: 0.945, green: 0.839, blue: 1, alpha: 1)
