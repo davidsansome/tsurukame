@@ -45,6 +45,7 @@ static NSString *FriendlySize(int64_t bytes) {
     _filename = filename;
     _title = title;
     _delegate = delegate;
+    _transparentBackground = false;
   }
   return self;
 }
@@ -59,6 +60,10 @@ static NSString *FriendlySize(int64_t bytes) {
 
 - (void)updateWithItem:(TKMDownloadModelItem *)item {
   [super updateWithItem:item];
+  
+  if (!item.transparentBackground) {
+    self.backgroundColor = TKMStyleColor.cellBackground;
+  }
 
   _title.text = item.title;
 

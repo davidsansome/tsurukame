@@ -34,6 +34,7 @@ class ViewController: UIViewController, TKMDownloadModelDelegate {
       assert(font.available)
 
       let item = TKMDownloadModelItem(filename: "", title: font.fontName, delegate: self)
+      item.transparentBackground = true
       item.totalSizeBytes = font.sizeBytes
       item.previewFontName = font.fontName
       item.previewAccessibilityLabel = font.fontName

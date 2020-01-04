@@ -43,6 +43,8 @@ typedef enum TKMDownloadModelItemState {
 @property(nonatomic, readonly) NSString *title;
 @property(nonatomic, readonly) id<TKMDownloadModelDelegate> delegate;
 
+@property(nonatomic) bool transparentBackground;
+
 @property(nonatomic) TKMDownloadModelItemState state;
 @property(nonatomic) int64_t totalSizeBytes;
 @property(nonatomic) int64_t downloadingProgressBytes;
