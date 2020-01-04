@@ -6,6 +6,9 @@ target 'FontScreenshotter' do
   use_frameworks!
 
   # Pods for FontScreenshotter
+  pod 'Haneke', '~> 1.0.2', :inhibit_warnings => true
+  pod 'Protobuf', '~> 3.10.0'
+  pod 'Reachability', '~> 3.2'
 
   target 'FontScreenshotterUITests' do
     # Pods for testing

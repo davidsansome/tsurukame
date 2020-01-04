@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ import UIKit
 
 class ViewController: UIViewController, TKMDownloadModelDelegate {
   var tableModel: TKMMutableTableModel?
-  var tableView: UITableView?
+  var tableView: UITableView!
 
   func didTapDownloadItem(_: TKMDownloadModelItem) {}
 
@@ -30,7 +30,7 @@ class ViewController: UIViewController, TKMDownloadModelDelegate {
     tableModel = TKMMutableTableModel(tableView: tableView)
 
     let fontLoader = TKMFontLoader()
-    for font in fontLoader!.allFonts {
+    for font in fontLoader.allFonts {
       assert(font.available)
 
       let item = TKMDownloadModelItem(filename: "", title: font.fontName, delegate: self)
