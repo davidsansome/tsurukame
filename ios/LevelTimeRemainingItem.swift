@@ -63,8 +63,7 @@ class LevelTimeRemainingCell: TKMModelCell {
       }
       radicalDates.append(assignment.guruDate(for: subject))
     }
-    var lastRadicalGuruTime = radicalDates.last!.timeIntervalSinceNow
-    lastRadicalGuruTime = lastRadicalGuruTime > 0 ? lastRadicalGuruTime : 0
+    var lastRadicalGuruTime = radicalDates.last?.timeIntervalSinceNow ?? 0
 
     for assignment in item.currentLevelAssignments {
       if assignment.subjectType != .kanji {
@@ -88,8 +87,8 @@ class LevelTimeRemainingCell: TKMModelCell {
     levels = Array(levels.sorted().reversed())
     levels.removeLast(Int(Double(levels.count) * 0.1))
 
-    if let lastDate = guruDates.last {
-      if lastDate == Date.distantFuture {
+    if let lastGuruDate = guruDates.last, lastKanjiLevel = levels.last {
+      if lastGuruDate == Date.distantFuture {
         // There is still a locked kanji needed for level-up, so we don't know how long
         // the user will take to level up.  Use their average level time, minus the time
         // they've spent at this level so far, as an estimate.
@@ -97,12 +96,11 @@ class LevelTimeRemainingCell: TKMModelCell {
 
         // But ensure it can't be less than the time it would take to get a fresh item
         // to Guru, if they've spent longer at the current level than the average.
-        average = max(average, TKMMinimumTimeUntilGuruSeconds(levels.last!, 1) + lastRadicalGuruTime)
+        average = max(average, TKMMinimumTimeUntilGuruSeconds(lastKanjiLevel, 1) + lastRadicalGuruTime)
 
         setRemaining(Date(timeIntervalSinceNow: average), isEstimate: true)
-      }
-      else {
-        setRemaining(lastDate, isEstimate: false)
+      } else {
+        setRemaining(lastGuruDate, isEstimate: false)
       }
     }
   }
