@@ -82,10 +82,8 @@ class LevelTimeRemainingCell: TKMModelCell {
     }
 
     // Sort the list of dates and remove the most distant 10%.
-    guruDates.sort()
-    guruDates.removeLast(Int(Double(guruDates.count) * 0.1))
-    levels = Array(levels.sorted().reversed())
-    levels.removeLast(Int(Double(levels.count) * 0.1))
+    guruDates = guruDates.sorted().removeLast(Int(Double(guruDates.count) * 0.1))
+    levels = Array(levels.sorted().reversed()).removeLast(Int(Double(levels.count) * 0.1))
 
     if let lastGuruDate = guruDates.last, lastKanjiLevel = levels.last {
       if lastGuruDate == Date.distantFuture {
@@ -97,7 +95,6 @@ class LevelTimeRemainingCell: TKMModelCell {
         // But ensure it can't be less than the time it would take to get a fresh item
         // to Guru, if they've spent longer at the current level than the average.
         average = max(average, TKMMinimumTimeUntilGuruSeconds(lastKanjiLevel, 1) + lastRadicalGuruTime)
-
         setRemaining(Date(timeIntervalSinceNow: average), isEstimate: true)
       } else {
         setRemaining(lastGuruDate, isEstimate: false)
