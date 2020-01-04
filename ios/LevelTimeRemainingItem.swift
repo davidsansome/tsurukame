@@ -49,11 +49,11 @@ class LevelTimeRemainingCell: TKMModelCell {
 
   override func update(with baseItem: TKMModelItem!) {
     let item = baseItem as! LevelTimeRemainingItem
-    
+
     var radicalDates = [Date]()
     var guruDates = [Date]()
     var levels = [Int32]()
-    
+ 
     for assignment in item.currentLevelAssignments {
       if assignment.subjectType != .radical {
         continue
@@ -65,7 +65,7 @@ class LevelTimeRemainingCell: TKMModelCell {
     }
     var lastRadicalGuruTime = radicalDates.last!.timeIntervalSinceNow
     lastRadicalGuruTime = lastRadicalGuruTime > 0 ? lastRadicalGuruTime : 0
-    
+
     for assignment in item.currentLevelAssignments {
       if assignment.subjectType != .kanji {
         continue
@@ -85,9 +85,9 @@ class LevelTimeRemainingCell: TKMModelCell {
     // Sort the list of dates and remove the most distant 10%.
     guruDates.sort()
     guruDates.removeLast(Int(Double(guruDates.count) * 0.1))
-    levels.sort().reversed()
+    levels = Array(levels.sorted().reversed())
     levels.removeLast(Int(Double(levels.count) * 0.1))
-    
+
     if let lastDate = guruDates.last {
       if lastDate == Date.distantFuture {
         // There is still a locked kanji needed for level-up, so we don't know how long
