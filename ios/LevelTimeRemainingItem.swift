@@ -85,13 +85,12 @@ class LevelTimeRemainingCell: TKMModelCell {
     guruDates = guruDates.sorted().removeLast(Int(Double(guruDates.count) * 0.1))
     levels = Array(levels.sorted().reversed()).removeLast(Int(Double(levels.count) * 0.1))
 
-    if let lastGuruDate = guruDates.last, lastKanjiLevel = levels.last {
+    if let lastGuruDate = guruDates.last, let lastKanjiLevel = levels.last {
       if lastGuruDate == Date.distantFuture {
         // There is still a locked kanji needed for level-up, so we don't know how long
-        // the user will take to level up.  Use their average level time, minus the time
+        // the user will take to level up. Use their average level time, minus the time
         // they've spent at this level so far, as an estimate.
         var average = item.services.localCachingClient!.getAverageRemainingLevelTime()
-
         // But ensure it can't be less than the time it would take to get a fresh item
         // to Guru, if they've spent longer at the current level than the average.
         average = max(average, TKMMinimumTimeUntilGuruSeconds(lastKanjiLevel, 1) + lastRadicalGuruTime)
