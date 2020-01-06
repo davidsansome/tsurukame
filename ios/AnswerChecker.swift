@@ -33,15 +33,15 @@ import Foundation
     CharacterSet(charactersIn: Unicode.Scalar(0xFF66) ..< Unicode.Scalar(0xFFA0)!))
 
   private class func containsAscii(_ s: String) -> Bool {
-    return s.rangeOfCharacter(from: kAsciiCharacterSet).location != nil
+    return s.rangeOfCharacter(from: kAsciiCharacterSet) != nil
   }
 
   private class func isKana(_ s: String) -> Bool {
-    return s.rangeOfCharacter(from: kAllKanaCharacterSet.inverted).location == nil
+    return s.rangeOfCharacter(from: kAllKanaCharacterSet.inverted) == nil
   }
 
   private class func isJapanese(_ s: String) -> Bool {
-    return s.rangeOfCharacter(from: kJapaneseCharacterSet.inverted).location == nil
+    return s.rangeOfCharacter(from: kJapaneseCharacterSet.inverted) == nil
   }
 
   private class func distanceTolerance(_ answer: String) -> Int {
