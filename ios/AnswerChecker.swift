@@ -35,12 +35,12 @@ import Foundation
   private class func containsAscii(_ s: String) -> Bool {
     return s.rangeOfCharacter(from: kAsciiCharacterSet).location != NSNotFound
   }
-  
+
   private class func isKana(_ s: String) -> Bool {
     return s.rangeOfCharacter(from: kAllKanaCharacterSet.inverted).location == NSNotFound
   }
-  
-  private class func isJapanese(_ s: string) -> Bool {
+
+  private class func isJapanese(_ s: String) -> Bool {
     return s.rangeOfCharacter(from: kJapaneseCharacterSet.inverted).location == NSNotFound
   }
 
@@ -155,7 +155,7 @@ import Foundation
       if isJapanese(answer) {
         return .ContainsInvalidCharacters
       }
-      
+
       // Check blacklisted meanings first.  If the answer matches one exactly, it's incorrect.
       for meaning in subject.meaningsArray! as! [TKMMeaning] {
         if meaning.type == .blacklist {
