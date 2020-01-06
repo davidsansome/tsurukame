@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ class LevelTimeRemainingCell: TKMModelCell {
     var radicalDates = [Date]()
     var guruDates = [Date]()
     var levels = [Int32]()
- 
+
     for assignment in item.currentLevelAssignments {
       if assignment.subjectType != .radical {
         continue
@@ -63,12 +63,13 @@ class LevelTimeRemainingCell: TKMModelCell {
       }
       radicalDates.append(assignment.guruDate(for: subject))
     }
-    var lastRadicalGuruTime = radicalDates.last?.timeIntervalSinceNow ?? 0
+    let lastRadicalGuruTime = radicalDates.last?.timeIntervalSinceNow ?? 0
 
     for assignment in item.currentLevelAssignments {
       if assignment.subjectType != .kanji {
         continue
       }
+      levels.append(assignment.level)
       if !assignment.hasAvailableAt {
         // This kanji is locked, but it might not be essential for level-up
         guruDates.append(Date.distantFuture)
@@ -78,14 +79,13 @@ class LevelTimeRemainingCell: TKMModelCell {
         continue
       }
       guruDates.append(assignment.guruDate(for: subject))
-      levels.append(assignment.level)
     }
 
     // Sort the list of dates and remove the most distant 10%.
     guruDates = Array(guruDates.sorted().dropLast(Int(Double(guruDates.count) * 0.1)))
     levels = Array(Array(levels.sorted().reversed()).dropLast(Int(Double(levels.count) * 0.1)))
 
-    if let lastGuruDate = guruDates.last, let lastKanjiLevel = levels.last {
+    if let lastGuruDate = guruDates.last, let WKLevel = levels.last {
       if lastGuruDate == Date.distantFuture {
         // There is still a locked kanji needed for level-up, so we don't know how long
         // the user will take to level up. Use their average level time, minus the time
@@ -93,7 +93,7 @@ class LevelTimeRemainingCell: TKMModelCell {
         var average = item.services.localCachingClient!.getAverageRemainingLevelTime()
         // But ensure it can't be less than the time it would take to get a fresh item
         // to Guru, if they've spent longer at the current level than the average.
-        average = max(average, TKMMinimumTimeUntilGuruSeconds(lastKanjiLevel, 1) + lastRadicalGuruTime)
+        average = max(average, TKMMinimumTimeUntilGuruSeconds(WKLevel, 1) + lastRadicalGuruTime)
         setRemaining(Date(timeIntervalSinceNow: average), isEstimate: true)
       } else {
         setRemaining(lastGuruDate, isEstimate: false)
