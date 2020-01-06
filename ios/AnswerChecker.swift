@@ -23,22 +23,25 @@ import Foundation
     case Incorrect
   }
 
-  @objc static let kAsciiCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0) ..< Unicode.Scalar(UInt32(256))!)
-
-  @objc static let kKanaCharacterSet = CharacterSet(charactersIn:
-    "あいうえお" +
-      "かきくけこがぎぐげご" +
-      "さしすせそざじずぜぞ" +
-      "たちつてとだぢづでど" +
-      "なにぬねの" +
-      "はひふへほばびぶべぼぱぴぷぺぽ" +
-      "まみむめも" +
-      "らりるれろ" +
-      "やゆよゃゅょぃっ" +
-      "わをん")
+  @objc static let kAsciiCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x00) ..< Unicode.Scalar(0x7F)!)
+  @objc static let kKanaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x3040) ..< Unicode.Scalar(0x309D)!)
+  @objc static let kAllKanaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x3040) ..< Unicode.Scalar(0x3100)!)
+  @objc static let kJapaneseCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x3040) ..< Unicode.Scalar(0x3100)!).intersection(
+    CharacterSet(charactersIn: Unicode.Scalar(0x3400) ..< Unicode.Scalar(0x4DC0)!)).intersection(
+    CharacterSet(charactersIn: Unicode.Scalar(0x4E00) ..< Unicode.Scalar(0xA000)!)).intersection(
+    CharacterSet(charactersIn: Unicode.Scalar(0xF900) ..< Unicode.Scalar(0xFB00)!)).intersection(
+    CharacterSet(charactersIn: Unicode.Scalar(0xFF66) ..< Unicode.Scalar(0xFFA0)!))
 
   private class func containsAscii(_ s: String) -> Bool {
-    return s.rangeOfCharacter(from: kAsciiCharacterSet) != nil
+    return s.rangeOfCharacter(from: kAsciiCharacterSet).location != NSNotFound
+  }
+  
+  private class func isKana(_ s: String) -> Bool {
+    return s.rangeOfCharacter(from: kAllKanaCharacterSet.inverted).location == NSNotFound
+  }
+  
+  private class func isJapanese(_ s: string) -> Bool {
+    return s.rangeOfCharacter(from: kJapaneseCharacterSet.inverted).location == NSNotFound
   }
 
   private class func distanceTolerance(_ answer: String) -> Int {
@@ -119,7 +122,7 @@ import Foundation
     case .reading:
       let hiraganaText = convertKatakanaToHiragana(answer)
 
-      if containsAscii(answer) {
+      if !isKana(answer) {
         return .ContainsInvalidCharacters
       }
 
@@ -149,6 +152,10 @@ import Foundation
       }
 
     case .meaning:
+      if isJapanese(answer) {
+        return .ContainsInvalidCharacters
+      }
+      
       // Check blacklisted meanings first.  If the answer matches one exactly, it's incorrect.
       for meaning in subject.meaningsArray! as! [TKMMeaning] {
         if meaning.type == .blacklist {
