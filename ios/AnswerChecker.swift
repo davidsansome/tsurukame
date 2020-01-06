@@ -24,13 +24,13 @@ import Foundation
   }
 
   @objc static let kAsciiCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x00) ..< Unicode.Scalar(0x7F)!)
-  @objc static let kKanaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x3040) ..< Unicode.Scalar(0x309D)!)
-  @objc static let kAllKanaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x3040) ..< Unicode.Scalar(0x3100)!)
-  @objc static let kJapaneseCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x3040) ..< Unicode.Scalar(0x3100)!).intersection(
-    CharacterSet(charactersIn: Unicode.Scalar(0x3400) ..< Unicode.Scalar(0x4DC0)!)).intersection(
-    CharacterSet(charactersIn: Unicode.Scalar(0x4E00) ..< Unicode.Scalar(0xA000)!)).intersection(
-    CharacterSet(charactersIn: Unicode.Scalar(0xF900) ..< Unicode.Scalar(0xFB00)!)).intersection(
-    CharacterSet(charactersIn: Unicode.Scalar(0xFF66) ..< Unicode.Scalar(0xFFA0)!))
+  @objc static let kKanaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3040)) ..< Unicode.Scalar(UInt32(0x309D))!)
+  @objc static let kAllKanaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3040)) ..< Unicode.Scalar(UInt32(0x3100))!)
+  @objc static let kJapaneseCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3040)) ..< Unicode.Scalar(UInt32(0x3100))!).intersection(
+    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3400)) ..< Unicode.Scalar(UInt32(0x4DC0))!)).intersection(
+    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x4E00)) ..< Unicode.Scalar(UInt32(0xA000))!)).intersection(
+    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xF900)) ..< Unicode.Scalar(UInt32(0xFB00))!)).intersection(
+    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xFF66)) ..< Unicode.Scalar(UInt32(0xFFA0))!))
 
   private class func containsAscii(_ s: String) -> Bool {
     return s.rangeOfCharacter(from: kAsciiCharacterSet) != nil
