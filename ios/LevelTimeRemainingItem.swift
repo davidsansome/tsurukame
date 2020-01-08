@@ -63,7 +63,8 @@ class LevelTimeRemainingCell: TKMModelCell {
       }
       radicalDates.append(assignment.guruDate(for: subject))
     }
-    let lastRadicalGuruTime = radicalDates.last?.timeIntervalSinceNow ?? 0
+    radicalDates.sort()
+    let lastRadicalGuruTime = max(radicalDates.last?.timeIntervalSinceNow ?? 0, 0)
 
     for assignment in item.currentLevelAssignments {
       if assignment.subjectType != .kanji {
@@ -83,9 +84,9 @@ class LevelTimeRemainingCell: TKMModelCell {
 
     // Sort the list of dates and remove the most distant 10%.
     guruDates = Array(guruDates.sorted().dropLast(Int(Double(guruDates.count) * 0.1)))
-    levels = Array(Array(levels.sorted().reversed()).dropLast(Int(Double(levels.count) * 0.1)))
+    levels = Array(levels.sorted(by: >).dropLast(Int(Double(levels.count) * 0.1)))
 
-    if let lastGuruDate = guruDates.last, let WKLevel = levels.last {
+    if let lastGuruDate = guruDates.last, let wkLevel = levels.last {
       if lastGuruDate == Date.distantFuture {
         // There is still a locked kanji needed for level-up, so we don't know how long
         // the user will take to level up. Use their average level time, minus the time
@@ -93,7 +94,7 @@ class LevelTimeRemainingCell: TKMModelCell {
         var average = item.services.localCachingClient!.getAverageRemainingLevelTime()
         // But ensure it can't be less than the time it would take to get a fresh item
         // to Guru, if they've spent longer at the current level than the average.
-        average = max(average, TKMMinimumTimeUntilGuruSeconds(WKLevel, 1) + lastRadicalGuruTime)
+        average = max(average, TKMMinimumTimeUntilGuruSeconds(wkLevel, 1) + lastRadicalGuruTime)
         setRemaining(Date(timeIntervalSinceNow: average), isEstimate: true)
       } else {
         setRemaining(lastGuruDate, isEstimate: false)
