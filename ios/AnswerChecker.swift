@@ -24,7 +24,7 @@ import Foundation
   }
 
   @objc static let kAsciiCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x00) ..< Unicode.Scalar(0x7F)!)
-  @objc static let kKanaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x309D))!)
+  @objc static let kHiraganaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x309D))!)
   @objc static let kAllKanaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x3100))!)
   @objc static let kJapaneseCharacterSet = kAllKanaCharacterSet.union(
     CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3400))! ..< Unicode.Scalar(UInt32(0x4DC0))!)).union(
@@ -64,7 +64,7 @@ import Foundation
 
     for (japaneseChar, answerChar) in zip(japanese.unicodeScalars,
                                           answer.unicodeScalars) {
-      if !kKanaCharacterSet.contains(japaneseChar) {
+      if !kHiraganaCharacterSet.contains(japaneseChar) {
         break
       }
       if japaneseChar != answerChar {
@@ -74,7 +74,7 @@ import Foundation
 
     for (japaneseChar, answerChar) in zip(japanese.unicodeScalars.reversed(),
                                           answer.unicodeScalars.reversed()) {
-      if !kKanaCharacterSet.contains(japaneseChar) {
+      if !kHiraganaCharacterSet.contains(japaneseChar) {
         break
       }
       if japaneseChar != answerChar {
