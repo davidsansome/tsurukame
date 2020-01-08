@@ -1,0 +1,43 @@
+version: 2.1
+orbs:
+  gcp-cli: circleci/gcp-cli@1.8.3
+
+jobs:
+  test-golang:
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run: go build ./...
+      - run: go test ./...
+
+  test-ios:
+    macos:
+      xcode: "11.3.0"
+    environment:
+      FL_OUTPUT_DIR: output
+    steps:
+      - checkout
+      - gcp-cli/install
+      - run:
+          name: Download data.bin
+          command: |
+            echo $SERVICE_ACCOUNT_KEY | gcloud auth activate-service-account --key-file=-
+            gsutil cp gs://tsurukame-data/1.13 data.bin
+      - run:
+          command: bundle install
+          working_directory: ios
+      - run:
+          command: bundle exec fastlane test
+          working_directory: ios
+      - store_artifacts:
+          path: output
+      - store_test_results:
+          path: output/scan
+
+workflows:
+  version: 2
+  all:
+    jobs:
+      - test-ios
+      - test-golang

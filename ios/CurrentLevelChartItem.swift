@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ import Foundation
 enum PieSlice: Int {
   case Locked = 0
   case Lesson
-  case Novice
   case Apprentice
   case Guru
   static let count = 5
@@ -29,8 +28,6 @@ enum PieSlice: Int {
       return "Locked"
     case .Lesson:
       return "Lesson"
-    case .Novice:
-      return TKMSRSStageCategoryName(.novice)
     case .Apprentice:
       return TKMSRSStageCategoryName(.apprentice)
     case .Guru:
@@ -45,8 +42,6 @@ enum PieSlice: Int {
       return UIColor(white: 0.8, alpha: 1.0)
     case .Lesson:
       return UIColor(white: 0.6, alpha: 1.0)
-    case .Novice:
-      saturationMod = 0.4
     case .Apprentice:
       saturationMod = 0.6
     default:
@@ -178,8 +173,6 @@ class CurrentLevelChartCell: TKMModelCell {
         slice = .Lesson
       } else if !assignment.hasSrsStage {
         slice = .Locked
-      } else if assignment.srsStage <= 1 {
-        slice = .Novice
       } else if assignment.srsStage < 5 {
         slice = .Apprentice
       } else {
@@ -201,13 +194,8 @@ class CurrentLevelChartCell: TKMModelCell {
     }
 
     let dataSet = PieChartDataSet(values)
-    if #available(iOS 13.0, *) {
-      dataSet.valueTextColor = UIColor.label
-      dataSet.entryLabelColor = UIColor.secondaryLabel
-    } else {
-      dataSet.valueTextColor = UIColor.darkGray
-      dataSet.entryLabelColor = UIColor.black
-    }
+    dataSet.valueTextColor = TKMStyle.Color.label
+    dataSet.entryLabelColor = TKMStyle.Color.grey33
     dataSet.valueFont = UIFont.systemFont(ofSize: 10.0)
     dataSet.colors = colors
     dataSet.sliceSpace = 1.0 // Space between slices

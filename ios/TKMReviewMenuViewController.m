@@ -17,6 +17,7 @@
 #import "Settings.h"
 #import "Tables/TKMCheckmarkModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "Tsurukame-Swift.h"
 
 @interface TKMReviewMenuViewController () <UITableViewDelegate>
 
@@ -104,11 +105,7 @@
     willDisplayHeaderView:(UIView *)view
                forSection:(NSInteger)section {
   UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-  if (@available(iOS 13.0, *)) {
-    header.textLabel.textColor = [UIColor tertiaryLabelColor];
-  } else {
-    header.textLabel.textColor = [UIColor lightGrayColor];
-  }
+  header.textLabel.textColor = UIColor.lightGrayColor;
 }
 
 - (void)tableView:(UITableView *)tableView

@@ -737,7 +737,7 @@ struct ProgressTask {
 
     FMResultSet *r = [db executeQuery:
                              @"SELECT srs_stage, COUNT(*) FROM subject_progress "
-                             @"WHERE srs_stage >= 2 GROUP BY srs_stage"];
+                             @"WHERE srs_stage >= 1 GROUP BY srs_stage"];
     while ([r next]) {
       int srs_stage = [r intForColumnIndex:0];
       int count = [r intForColumnIndex:1];
@@ -1017,6 +1017,7 @@ struct ProgressTask {
                                  NSLog(@"Recorded %lu new assignments at %@",
                                        (unsigned long)assignments.count,
                                        date);
+                                 [self invalidateCachedAvailableSubjectCounts];
                                }];
 }
 

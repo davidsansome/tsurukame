@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/davidsansome/tsurukame.svg?style=shield)](https://circleci.com/gh/davidsansome/tsurukame)
+
 Tsurukame is an unofficial WaniKani app for iOS.  It helps you learn Japanese
 Kanji.
 
@@ -35,9 +37,9 @@ Run the scraper:
     mkdir data
     go run cmd/scrape/main.go --api-token [Your API token] --cookie [Your HTTP cookie]
 
-This will take an hour or so to download everything.  It stores its output in the ```data``` directory (change this with ```--out```).  You can stop it and start it again and it will pick up from where it left off.
+This will take a few minutes to download everything.  It stores its output in the ```data``` directory (change this with ```--out```).  You can stop it and start it again and it will pick up from where it left off.
 
-You can inspect the files in ```data``` using the dump tool above - just change the argument from ```data.bin``` to ```data```.
+You can inspect the files in ```data``` using the dump tool below - just change the argument from ```data.bin``` to ```data```.
 
 Combine the individual files in ```data``` into a ```data.bin``` using the combine tool:
 

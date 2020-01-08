@@ -47,9 +47,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  if (@available(iOS 13.0, *)) {
-    _pageControl.backgroundColor = UIColor.systemBackgroundColor;
-  }
+  self.view.backgroundColor = TKMStyleColor.background;
 
   // Create the page controller.
   _pageController = [[UIPageViewController alloc]
@@ -197,6 +195,14 @@
 
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
   [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (BOOL)reviewViewControllerAllowsCustomFonts {
+  return false;
+}
+
+- (BOOL)reviewViewControllerShowsSuccessRate {
+  return false;
 }
 
 #pragma mark - Keyboard navigation
