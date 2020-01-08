@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,14 +22,6 @@ private let kVisuallySimilarKanjiScoreThreshold = 400
 
 private let kMeaningSynonymColor = UIColor(red: 0.231, green: 0.6, blue: 0.988, alpha: 1)
 private let kFont = TKMStyle.japaneseFont(size: kFontSize)
-
-private func kHintTextColor() -> UIColor {
-  if #available(iOS 13.0, *) {
-    return UIColor.secondaryLabel
-  } else {
-    return UIColor(white: 0.3, alpha: 1.0)
-  }
-}
 
 private func join(_ arr: [NSAttributedString], with joinString: String) -> NSAttributedString {
   let ret = NSMutableAttributedString()
@@ -68,7 +60,11 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
   var strings = [NSAttributedString]()
   for reading in readings {
     if reading.isPrimary {
-      strings.append(attrString(reading.displayText))
+      var font = TKMStyle.japaneseFontLight(size: kFontSize)
+      if !primaryOnly, readings.count > 1 {
+        font = TKMStyle.japaneseFontBold(size: kFontSize)
+      }
+      strings.append(attrString(reading.displayText, attrs: [.font: font]))
     }
   }
   if !primaryOnly {
@@ -88,14 +84,8 @@ private func attrString(_ string: String, attrs: [NSAttributedString.Key: Any]? 
 }
 
 private func defaultStringAttrs() -> [NSAttributedString.Key: Any] {
-  if #available(iOS 13.0, *) {
-    return [.foregroundColor: UIColor.label]
-  } else {
-    return [
-      .foregroundColor: UIColor.black,
-      .backgroundColor: UIColor.white,
-    ]
-  }
+  return [.foregroundColor: TKMStyle.Color.label,
+          .backgroundColor: TKMStyle.Color.cellBackground]
 }
 
 private func dateFormatter(dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> DateFormatter {
@@ -139,7 +129,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   }
 
   private func addReadings(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
-    let primaryOnly = subject.hasKanji
+    let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
     let text = renderReadings(readings: subject.readingsArray as! [TKMReading], primaryOnly: primaryOnly).withFontSize(kFontSize)
     let item = TKMReadingModelItem(text: text)
@@ -208,7 +198,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
 
     var attributes = defaultStringAttrs()
     if isHint {
-      attributes[.foregroundColor] = kHintTextColor()
+      attributes[.foregroundColor] = TKMStyle.Color.grey33
     }
 
     let formattedText = TKMRenderFormattedText(text, attributes).replaceFontSize(kFontSize)
@@ -312,7 +302,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   func didTap(_ chip: TKMSubjectChip) {
     lastSubjectChipTapped = chip
 
-    chip.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
+    chip.backgroundColor = TKMStyle.Color.grey80
     subjectDelegate.didTap(chip.subject)
   }
 }

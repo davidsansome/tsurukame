@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -79,10 +79,8 @@ class UpcomingReviewsChartCell: TKMModelCell {
     view.legend.enabled = false
     view.chartDescription = nil
     view.isUserInteractionEnabled = false
-    if #available(iOS 13.0, *) {
-      view.xAxis.labelTextColor = UIColor.label
-      view.leftAxis.labelTextColor = UIColor.label
-    }
+    view.xAxis.labelTextColor = TKMStyle.Color.label
+    view.leftAxis.labelTextColor = TKMStyle.Color.label
   }
 
   required init!(coder _: NSCoder) {
@@ -129,10 +127,8 @@ class UpcomingReviewsChartCell: TKMModelCell {
     barDataSet.colors = [TKMStyle.radicalColor2]
     barDataSet.valueFormatter = DefaultValueFormatter(decimals: 0)
 
-    if #available(iOS 13.0, *) {
-      lineDataSet.valueTextColor = UIColor.label
-      barDataSet.valueTextColor = UIColor.label
-    }
+    lineDataSet.valueTextColor = TKMStyle.Color.label
+    barDataSet.valueTextColor = TKMStyle.Color.label
 
     let data = CombinedChartData()
     data.lineData = LineChartData(dataSet: lineDataSet)

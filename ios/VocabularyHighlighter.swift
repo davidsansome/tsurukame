@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -295,10 +295,7 @@ public func highlightOccurrences(of subject: TKMSubject, in text: NSAttributedSt
   let ret = NSMutableAttributedString(attributedString: text)
   for match in matches {
     let range = NSRange(match.startIndex ..< match.endIndex, in: text.string)
-    ret.addAttributes([
-      .backgroundColor: UIColor(red: 0.945, green: 0.839, blue: 1, alpha: 1), // #f1d6ff
-      .foregroundColor: UIColor.black,
-    ], range: range)
+    ret.addAttribute(.foregroundColor, value: UIColor.systemRed, range: range)
   }
 
   return ret

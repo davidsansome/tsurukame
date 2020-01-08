@@ -53,7 +53,7 @@
 
   // Create the quiz chip.
   NSAttributedString *quizText = [[NSAttributedString alloc] initWithString:@"Quiz"];
-  NSArray *chipGradient = @[ (id)TKMStyle.greyColor.CGColor, (id)TKMStyle.greyColor.CGColor ];
+  NSArray *chipGradient = @[ (id)TKMStyleColor.grey80.CGColor, (id)TKMStyleColor.grey80.CGColor ];
   TKMSubjectChip *quizChip = [[TKMSubjectChip alloc] initWithSubject:nil
                                                             chipText:quizText
                                                             sideText:nil

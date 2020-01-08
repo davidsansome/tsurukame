@@ -37,6 +37,7 @@ func main() {
 	// Create API clients.
 	apiClient, err := api.New(*apiToken)
 	utils.Must(err)
+	defer apiClient.Close()
 
 	jsonClient, err := jsonapi.New(*cookie)
 	utils.Must(err)

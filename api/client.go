@@ -16,21 +16,36 @@ package api
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
+	"time"
+
+	"github.com/jpillora/backoff"
 
 	"github.com/davidsansome/tsurukame/utils"
 )
 
 const (
 	urlBase = "https://api.wanikani.com/v2"
+
+	backoffFactor = 2
+	backoffMin    = time.Second
+	backoffMax    = 10 * time.Second
+	maxTries      = 10
+)
+
+var (
+	requestInterval = flag.Duration("request-interval", time.Millisecond*1200, "Time to wait between requests to the Wanikani API")
 )
 
 type Client struct {
 	token  string
 	client *http.Client
+	ticker *time.Ticker
+	bo     *backoff.Backoff
 }
 
 func New(token string) (*Client, error) {
@@ -40,24 +55,45 @@ func New(token string) (*Client, error) {
 	return &Client{
 		token:  token,
 		client: &http.Client{},
+		ticker: time.NewTicker(*requestInterval),
+		bo: &backoff.Backoff{
+			Factor: backoffFactor,
+			Jitter: true,
+			Min:    backoffMin,
+			Max:    backoffMax,
+		},
 	}, nil
 }
 
 func (c *Client) get(u *url.URL) (*http.Response, error) {
+	<-c.ticker.C
+
 	log.Printf("Fetching %s", u)
-	resp, err := c.client.Do(&http.Request{
-		URL: u,
-		Header: map[string][]string{
-			"Authorization": []string{"Token token=" + c.token},
-		},
-	})
-	if err != nil {
-		return nil, err
+	for i := 0; i < maxTries; i++ {
+		resp, err := c.client.Do(&http.Request{
+			URL: u,
+			Header: map[string][]string{
+				"Authorization": []string{"Token token=" + c.token},
+			},
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		switch resp.StatusCode {
+		case http.StatusTooManyRequests:
+			d := c.bo.ForAttempt(float64(i))
+			log.Printf("Request failed: %s, retrying after %s", resp.Status, d)
+			time.Sleep(d)
+
+		case http.StatusOK:
+			return resp, nil
+
+		default:
+			return nil, fmt.Errorf("Request for %s failed: HTTP %s", u, resp.Status)
+		}
 	}
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Request for %s failed: HTTP %s", u, resp.Status)
-	}
-	return resp, nil
+	return nil, fmt.Errorf("Request for %s failed too many times", u)
 }
 
 type subjectsCursor struct {
@@ -77,6 +113,10 @@ func (c *Client) Subjects(typ string) *subjectsCursor {
 		c:    c,
 		next: u,
 	}
+}
+
+func (c *Client) Close() {
+	c.ticker.Stop()
 }
 
 func (c *subjectsCursor) Next() (*SubjectObject, error) {

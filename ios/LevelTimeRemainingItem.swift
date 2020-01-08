@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,11 +36,7 @@ class LevelTimeRemainingCell: TKMModelCell {
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     selectionStyle = .none
-    if #available(iOS 13.0, *) {
-      detailTextLabel?.textColor = UIColor.label
-    } else {
-      detailTextLabel?.textColor = UIColor.black
-    }
+    detailTextLabel?.textColor = TKMStyle.Color.label
   }
 
   required init?(coder _: NSCoder) {

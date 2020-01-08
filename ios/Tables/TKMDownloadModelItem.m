@@ -45,6 +45,7 @@ static NSString *FriendlySize(int64_t bytes) {
     _filename = filename;
     _title = title;
     _delegate = delegate;
+    _transparentBackground = false;
   }
   return self;
 }
@@ -59,6 +60,10 @@ static NSString *FriendlySize(int64_t bytes) {
 
 - (void)updateWithItem:(TKMDownloadModelItem *)item {
   [super updateWithItem:item];
+  
+  if (!item.transparentBackground) {
+    self.backgroundColor = TKMStyleColor.cellBackground;
+  }
 
   _title.text = item.title;
 
@@ -73,11 +78,7 @@ static NSString *FriendlySize(int64_t bytes) {
     case TKMDownloadModelItemInstalling:
       [self updateProgress];
       [_image setImage:[UIImage imageNamed:@"baseline_cancel_black_24pt"]];
-      if (@available(iOS 13.0, *)) {
-        [_image setTintColor:[UIColor tertiaryLabelColor]];
-      } else {
-        [_image setTintColor:[UIColor lightGrayColor]];
-      }
+      [_image setTintColor:TKMStyleColor.grey66];
       break;
     case TKMDownloadModelItemInstalledSelected:
       _subtitle.text = nil;
@@ -87,11 +88,7 @@ static NSString *FriendlySize(int64_t bytes) {
     case TKMDownloadModelItemInstalledNotSelected:
       _subtitle.text = nil;
       [_image setImage:[UIImage imageNamed:@"tick"]];
-      if (@available(iOS 13.0, *)) {
-        [_image setTintColor:[UIColor tertiaryLabelColor]];
-      } else {
-        [_image setTintColor:[UIColor lightGrayColor]];
-      }
+      [_image setTintColor:TKMStyleColor.grey66];
       break;
   }
 

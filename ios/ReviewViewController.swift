@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -139,6 +139,8 @@ private class AnimationContext {
 @objc
 protocol ReviewViewControllerDelegate {
   func reviewViewControllerAllowsCheats(forReviewItem item: ReviewItem) -> Bool
+  func reviewViewControllerAllowsCustomFonts() -> Bool
+  func reviewViewControllerShowsSuccessRate() -> Bool
   func reviewViewControllerFinishedAllReviewItems(_ reviewViewController: ReviewViewController)
   @objc optional func reviewViewController(_ reviewViewController: ReviewViewController,
                                            tappedMenuButton menuButton: UIButton)
@@ -263,6 +265,22 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
+    case ReviewOrder_NewestAvailableFirst:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if a.assignment.availableAt < b.assignment.availableAt { return false }
+        if a.assignment.availableAt > b.assignment.availableAt { return true }
+        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
+        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        return false
+      }
+    case ReviewOrder_OldestAvailableFirst:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if a.assignment.availableAt < b.assignment.availableAt { return true }
+        if a.assignment.availableAt > b.assignment.availableAt { return false }
+        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
+        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        return false
+      }
     case ReviewOrder_Random:
       break
     default:
@@ -298,6 +316,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     answerField.delegate = kanaInput
     answerField.addTarget(self, action: #selector(answerFieldValueDidChange), for: UIControl.Event.editingChanged)
 
+    let showSuccessRate = delegate.reviewViewControllerShowsSuccessRate()
+    successRateIcon.isHidden = !showSuccessRate
+    successRateLabel.isHidden = !showSuccessRate
+
     if !showMenuButton {
       menuButton.isHidden = true
     }
@@ -306,10 +328,17 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     currentFontName = normalFontName
     defaultFontSize = Double(questionLabel.font.pointSize)
 
+    questionLabel.isUserInteractionEnabled = false
+
+    let swipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeQuestionLabel))
+    swipeRecognizer.direction = .left
+    questionBackground.addGestureRecognizer(swipeRecognizer)
+
     let longPressRecognizer =
       UILongPressGestureRecognizer(target: self, action: #selector(didLongPressQuestionLabel))
     longPressRecognizer.minimumPressDuration = 0
     longPressRecognizer.allowableMovement = 500
+    longPressRecognizer.require(toFail: swipeRecognizer)
     questionBackground.addGestureRecognizer(longPressRecognizer)
 
     viewDidLayoutSubviews()
@@ -526,10 +555,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     levelLabel.accessibilityLabel = "srs level \(activeTask.assignment.srsStage)"
 
     answerField.text = nil
-    if #available(iOS 13.0, *) {
-      answerField.textColor = UIColor.label
-      answerField.backgroundColor = UIColor.systemBackground
-    }
+    answerField.textColor = TKMStyle.Color.label
+    answerField.backgroundColor = TKMStyle.Color.background
     answerField.placeholder = taskTypePlaceholder
     if let firstReading = activeSubject.primaryReadings.first {
       kanaInput.alphabet = (
@@ -583,28 +610,30 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   // MARK: - Random fonts
 
-  func randomFont(thatCanRenderText text: String) -> String {
-    // Get the names of selected fonts.
-    var selectedFontNames = [String]()
+  func fontsThatCanRenderText(_ text: String, exclude: [String]?) -> [String] {
+    var availableFonts: [String] = []
+
     for filename in Settings.selectedFonts ?? [] {
       if let font = services.fontLoader.font(byName: filename) {
-        selectedFontNames.append(font.fontName)
+        if let ex = exclude, ex.contains(font.fontName) {
+          continue
+        }
+        if TKMFontCanRenderText(font.fontName, text) {
+          availableFonts.append(font.fontName)
+        }
       }
     }
 
-    // Pick a random one.
-    while !selectedFontNames.isEmpty {
-      let fontIndex = Int(arc4random_uniform(UInt32(selectedFontNames.count)))
-      let fontName = selectedFontNames[fontIndex]
+    return availableFonts
+  }
 
-      // If the font can't render the text, try another one.
-      if !TKMFontCanRenderText(fontName, text) {
-        selectedFontNames.remove(at: fontIndex)
-        continue
-      }
+  func randomFont(thatCanRenderText text: String) -> String {
+    if delegate.reviewViewControllerAllowsCustomFonts(),
+      let fontName = fontsThatCanRenderText(text, exclude: nil).randomElement() {
       return fontName
+    } else {
+      return normalFontName
     }
-    return normalFontName
   }
 
   // MARK: - Animation
@@ -672,12 +701,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     previousSubjectLabel?.alpha = shown ? 0.0 : 1.0
     previousSubjectButton.alpha = shown ? 0.0 : 1.0
 
-    // Change the background color of the answer field.
-    var textColor = UIColor.white
-    if #available(iOS 13.0, *) {
-      textColor = UIColor.label
-    }
-    answerField.textColor = shown ? UIColor.systemRed : textColor
+    // Change the foreground color of the answer field.
+    answerField.textColor = shown ? UIColor.systemRed : TKMStyle.Color.label
 
     // Scroll to the top.
     subjectDetailsView.setContentOffset(CGPoint(x: 0, y: -subjectDetailsView.contentInset.top), animated: false)
@@ -780,6 +805,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     } else if gestureRecognizer.state == .ended {
       setCustomQuestionLabelFont(useCustomFont: !answered)
     }
+  }
+
+  @objc func didSwipeQuestionLabel(_: UIGestureRecognizer) {
+    currentFontName = fontsThatCanRenderText(activeSubject.japanese, exclude: [currentFontName]).randomElement() ?? normalFontName
+    setCustomQuestionLabelFont(useCustomFont: true)
   }
 
   func questionLabelFontSize() -> CGFloat {

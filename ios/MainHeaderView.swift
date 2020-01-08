@@ -1,4 +1,4 @@
-// Copyright 2019 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ import Foundation
 private let kUserGradientYOffset: CGFloat = 450
 private let kUserGradientStartPoint: CGFloat = 0.8
 private let kUserMargin: CGFloat = 8.0
+private let kProgressBarHeight: CGFloat = 6.0
 
 @objc protocol MainHeaderViewDelegate {
   func searchButtonTapped()
@@ -59,6 +60,8 @@ class MainHeaderView: UIView {
   }
 
   override func didMoveToSuperview() {
+    backgroundColor = UIColor.clear
+
     // Set a gradient background for the user container.
     let userGradientLayer = CAGradientLayer()
     userGradientLayer.colors = TKMStyle.radicalGradient
@@ -89,6 +92,10 @@ class MainHeaderView: UIView {
     let cornerRadius = imageView.bounds.size.height / 2
     imageContainer.layer.cornerRadius = cornerRadius
     imageView.layer.cornerRadius = cornerRadius
+
+    // Scale the progress view.
+    let progressBarScale = kProgressBarHeight / progressView.sizeThatFits(CGSize.zero).height
+    progressView.transform = CGAffineTransform(scaleX: 1.0, y: progressBarScale)
   }
 
   override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -103,9 +110,7 @@ class MainHeaderView: UIView {
       height += vacationContainer.frame.height
     }
 
-    if isShowingProgress {
-      height += progressView.frame.height
-    }
+    height += kProgressBarHeight
 
     return CGSize(width: size.width, height: height)
   }
@@ -131,7 +136,8 @@ class MainHeaderView: UIView {
     origin.y += vacationContainerSize.height
 
     // Position the progress bar below that.
-    progressView.frame = CGRect(origin: origin, size: progressView.sizeThatFits(CGSize(width: width, height: 0)))
+    progressView.center = CGPoint(x: origin.x + width / 2, y: origin.y + kProgressBarHeight / 2)
+    progressView.bounds = CGRect(x: 0, y: 0, width: width, height: kProgressBarHeight)
 
     // Position the gradients.
     var userGradientFrame = userContainer.bounds
