@@ -8,20 +8,7 @@ You can download Tsurukame on the App Store.
 
 # Building Tsurukame
 
-If you want to build the iOS app yourself, there are three main things you will need to do.
-1. Install the CocoaPods dependencies
-2. Change the signing identifiers
-3. Create the data.bin
-
-## Install the CocoaPods dependencies
-First, you will need to install [CocoaPods](https://cocoapods.org) if you don't already have it. The website suggests using `sudo gem install cocoapods`.
-
-Next, you will need to switch the current directory to the `ios` directory. You can do this using:
-
-	cd /path/to/tsurukame/ios
-
-Of course, replace `/path/to` with the actual path to the Tsurukame directory.
-Finally, simply install the dependencies using `pod install`.
+If you want to build the iOS app yourself, you will need to change the signing identifiers and create `data.bin`.
 
 ## Change the signing identifiers
 You'll have to change the app bundle identifiers in the main target and app extension to match your Apple Developer Account.
@@ -78,7 +65,7 @@ Combine the individual files in `data` into a `data.bin` using the combine tool:
 
 Now the data.bin is ready for use! You should be able to build Tsurukame now!
 
-## Inspect data.bin
+# Inspect data.bin
 If you want to inspect the data.bin, here are some things you can do.
 
 List all the subjects in a data.bin:
@@ -126,3 +113,13 @@ radical: <
 ```
 
 This is a text protobuf, described by [wanikani.proto](https://github.com/davidsansome/tsurukame/blob/master/proto/wanikani.proto).
+
+# Update the CocoaPods dependencies
+First, you will need to install [CocoaPods](https://cocoapods.org) if you don't already have it. The website suggests using `sudo gem install cocoapods`.
+
+Next, you will need to switch the current directory to the `ios` directory. You can do this using:
+
+	cd /path/to/tsurukame/ios
+
+Of course, replace `/path/to` with the actual path to the Tsurukame directory.
+Finally, simply install the dependencies using `pod install` or `pod update`.
