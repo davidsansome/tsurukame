@@ -46,40 +46,55 @@ class LevelTimeRemainingCell: TKMModelCell {
   override func update(with baseItem: TKMModelItem!) {
     let item = baseItem as! LevelTimeRemainingItem
 
+    var radicalDates = [Date]()
     var guruDates = [Date]()
+    var levels = [Int32]()
+
+    for assignment in item.currentLevelAssignments {
+      if assignment.subjectType != .radical {
+        continue
+      }
+      guard let subject = item.services.dataLoader.load(subjectID: Int(assignment.subjectId)) else {
+        continue
+      }
+      radicalDates.append(assignment.guruDate(for: subject))
+    }
+    radicalDates.sort()
+    let lastRadicalGuruTime = max(radicalDates.last?.timeIntervalSinceNow ?? 0, 0)
 
     for assignment in item.currentLevelAssignments {
       if assignment.subjectType != .kanji {
         continue
       }
-
+      levels.append(assignment.level)
       if !assignment.hasAvailableAt {
-        // This item is still locked so we don't know how long the user will take to
-        // unlock it.  Use their average level time, minus the time they've spent at
-        // this level so far, as an estimate.
-        var average = item.services.localCachingClient!.getAverageRemainingLevelTime()
-
-        // But ensure it can't be less than the time it would take to get a fresh item
-        // to Guru, if they've spent longer at the current level than the average.
-        average = max(average, TKMMinimumTimeUntilGuruSeconds(assignment.level, 1))
-
-        setRemaining(Date(timeIntervalSinceNow: average), isEstimate: true)
-        return
+        // This kanji is locked, but it might not be essential for level-up
+        guruDates.append(Date.distantFuture)
+        continue
       }
-
       guard let subject = item.services.dataLoader.load(subjectID: Int(assignment.subjectId)) else {
         continue
       }
-
       guruDates.append(assignment.guruDate(for: subject))
     }
 
     // Sort the list of dates and remove the most distant 10%.
-    guruDates.sort()
-    guruDates.removeLast(Int(Double(guruDates.count) * 0.1))
+    guruDates = Array(guruDates.sorted().dropLast(Int(Double(guruDates.count) * 0.1)))
+    levels = Array(levels.sorted(by: >).dropLast(Int(Double(levels.count) * 0.1)))
 
-    if let lastDate = guruDates.last {
-      setRemaining(lastDate, isEstimate: false)
+    if let lastGuruDate = guruDates.last, let wkLevel = levels.last {
+      if lastGuruDate == Date.distantFuture {
+        // There is still a locked kanji needed for level-up, so we don't know how long
+        // the user will take to level up. Use their average level time, minus the time
+        // they've spent at this level so far, as an estimate.
+        var average = item.services.localCachingClient!.getAverageRemainingLevelTime()
+        // But ensure it can't be less than the time it would take to get a fresh item
+        // to Guru, if they've spent longer at the current level than the average.
+        average = max(average, TKMMinimumTimeUntilGuruSeconds(wkLevel, 1) + lastRadicalGuruTime)
+        setRemaining(Date(timeIntervalSinceNow: average), isEstimate: true)
+      } else {
+        setRemaining(lastGuruDate, isEstimate: false)
+      }
     }
   }
 
