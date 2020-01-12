@@ -223,6 +223,8 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
     [model addItem:[[UpcomingReviewsChartItem alloc] init:upcomingReviews
                                        currentReviewCount:reviews
                                                        at:[NSDate date]]];
+    [model addItem:[[CurrentLevelReviewTimeItem alloc] initWithServices:_services
+                                            currentLevelAssignments:currentLevelAssignments]];
   }
 
   [model addSection:@"This level"];
