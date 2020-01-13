@@ -64,7 +64,6 @@ class MainHeaderView: UIView {
 
     // Set a gradient background for the user container.
     let userGradientLayer = CAGradientLayer()
-    userGradientLayer.colors = TKMStyle.radicalGradient
     userGradientLayer.startPoint = CGPoint(x: 0.5, y: kUserGradientStartPoint)
     userContainer.layer.insertSublayer(userGradientLayer, at: 0)
     userContainer.layer.masksToBounds = false
@@ -72,11 +71,12 @@ class MainHeaderView: UIView {
 
     // Set a gradient background for the vacation container.
     let vacationGradientLayer = CAGradientLayer()
-    vacationGradientLayer.colors = TKMStyle.kanjiGradient
     vacationGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
     vacationContainer.layer.insertSublayer(vacationGradientLayer, at: 0)
     vacationContainer.layer.masksToBounds = false
     self.vacationGradientLayer = vacationGradientLayer
+
+    updateGradientColors()
 
     // Add shadows to things in the user info view.
     TKMStyle.addShadowToView(imageContainer, offset: 2.0, opacity: 0.4, radius: 4.0)
@@ -96,6 +96,11 @@ class MainHeaderView: UIView {
     // Scale the progress view.
     let progressBarScale = kProgressBarHeight / progressView.sizeThatFits(CGSize.zero).height
     progressView.transform = CGAffineTransform(scaleX: 1.0, y: progressBarScale)
+  }
+
+  func updateGradientColors() {
+    userGradientLayer.colors = TKMStyle.radicalGradient
+    vacationGradientLayer.colors = TKMStyle.kanjiGradient
   }
 
   override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -179,5 +184,9 @@ class MainHeaderView: UIView {
 
   @IBAction func didTapSettingsButton(_: Any) {
     delegate?.settingsButtonTapped()
+  }
+
+  override func traitCollectionDidChange(_: UITraitCollection?) {
+    updateGradientColors()
   }
 }

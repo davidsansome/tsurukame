@@ -84,6 +84,7 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
   __weak id<TKMSubjectChipDelegate> _delegate;
 
   __weak UIView *_gradientView;
+  __weak CAGradientLayer *_gradientLayer;
 }
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
@@ -137,6 +138,7 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
   gradientLayer.colors = chipGradient;
   [gradientView.layer insertSublayer:gradientLayer atIndex:0];
   _gradientView = gradientView;
+  _gradientLayer = gradientLayer;
 
   CGRect totalFrame = chipGradientFrame;
 
@@ -183,6 +185,14 @@ NSArray<NSValue *> *TKMCalculateSubjectChipFrames(NSArray<TKMSubjectChip *> *chi
 
 - (bool)isDimmed {
   return _gradientView.alpha < 0.75f;
+}
+
+#pragma mark - UITraitEnvironment
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+  if (_subject) {
+    _gradientLayer.colors = [TKMStyle gradientForSubject:_subject];
+  }
 }
 
 @end
