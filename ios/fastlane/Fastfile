@@ -22,3 +22,25 @@ end
 lane :test do
   run_tests(scheme: "Tsurukame")
 end
+
+lane :release do
+  match(type: "appstore")
+  increment_version_number(
+    bump_type: "minor",
+    xcodeproj: "Tsurukame.xcodeproj"
+  )
+  build_app(
+    scheme: "Tsurukame",
+    include_bitcode: true,
+  )
+  upload_to_app_store(
+    app_icon: "Resources/Assets.xcassets/svg/appicon.png",
+    changelog: prompt(
+      text: "Changelog: ",
+      multi_line_end_keyword: "END"
+    ),
+  )
+  commit_version_bump(xcodeproj: "Tsurukame.xcodeproj")
+  add_git_tag(tag: lane_context[SharedValues::VERSION_NUMBER])
+  push_to_git_remote
+end
