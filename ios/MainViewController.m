@@ -128,7 +128,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 
   UIColor *originalSearchBarTintColor = searchBar.tintColor;
-  searchBar.tintColor = TKMStyleColor.background;  // Make the button white.
+  searchBar.tintColor = UIColor.whiteColor;  // Make the button white.
 
   if (@available(iOS 13, *)) {
     UITextField *searchTextField = searchBar.searchTextField;
