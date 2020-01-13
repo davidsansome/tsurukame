@@ -63,12 +63,22 @@ class TKMStyle: NSObject {
   static let vocabularyColor2 = AdaptiveColorHex(light: 0x9300DD, dark: 0x530080)
   static let lockedColor1 = UIColorFromHex(0x505050)
   static let lockedColor2 = UIColorFromHex(0x484848)
+  static let readingColor1 = AdaptiveColor(light: UIColor(white: 0.235, alpha: 1),
+                                           dark: UIColor(white: 0.235, alpha: 1))
+  static let readingColor2 = AdaptiveColor(light: UIColor(white: 0.102, alpha: 1),
+                                           dark: UIColor(white: 0.102, alpha: 1))
+  static let meaningColor1 = AdaptiveColor(light: UIColor(white: 0.933, alpha: 1),
+                                           dark: UIColor(white: 0.733, alpha: 1))
+  static let meaningColor2 = AdaptiveColor(light: UIColor(white: 0.882, alpha: 1),
+                                           dark: UIColor(white: 0.682, alpha: 1))
 
   // The [Any] types force these to be exposed to objective-C as an untyped NSArray*.
   static var radicalGradient: [Any] { [radicalColor1.cgColor, radicalColor2.cgColor] }
   static var kanjiGradient: [Any] { [kanjiColor1.cgColor, kanjiColor2.cgColor] }
   static var vocabularyGradient: [Any] { [vocabularyColor1.cgColor, vocabularyColor2.cgColor] }
   static var lockedGradient: [Any] { [lockedColor1.cgColor, lockedColor2.cgColor] }
+  static var readingGradient: [Any] { [readingColor1.cgColor, readingColor2.cgColor] }
+  static var meaningGradient: [Any] { [meaningColor1.cgColor, meaningColor2.cgColor] }
 
   class func color(forSRSStageCategory srsStageCategory: TKMSRSStageCategory) -> UIColor {
     switch srsStageCategory {
