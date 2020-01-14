@@ -224,7 +224,10 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     _apiToken = apiToken;
     _cookie = cookie;
     _dataLoader = dataLoader;
-    _urlSession = [NSURLSession sharedSession];
+    
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfiguration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+    _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
   }
   return self;
 }
