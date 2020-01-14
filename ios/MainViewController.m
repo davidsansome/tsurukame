@@ -258,6 +258,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   }
 
   _model = model;
+  [self.tableView reloadData];
 }
 
 #pragma mark - UIViewController
