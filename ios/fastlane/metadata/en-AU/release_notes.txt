@@ -1,0 +1,12 @@
+New features:
+* iOS Dark mode support
+* WaniKani vacation mode support
+* You can now force refresh by pulling down on the main screen
+* Add an option to automatically switch to a Japanese keyboard
+* Add an option to show all readings for Kanji
+* Add options for newest & oldest available sort
+* Show the time until the next review for the current level
+
+Bug fixes:
+* Don't randomize fonts during lessons
+* Hide success rate percentage in lessons

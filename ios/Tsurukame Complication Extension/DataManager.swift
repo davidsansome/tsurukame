@@ -17,7 +17,7 @@ import os
 
 typealias UserData = [String: Any]
 
-protocol DataManagerDelegate {
+protocol DataManagerDelegate: AnyObject {
   func onDataUpdated(data: UserData, dataSource: ComplicationDataSource)
 }
 
@@ -45,6 +45,10 @@ class DataManager {
     dataSource = ComplicationDataSource(rawValue: UserDefaults.standard.integer(forKey: UserDefaultsKeySource)) ?? .ReviewCounts
 
     WatchHelper.sharedInstance().awaitMessages { userInfo in
+      if self.isDataOutOfDate(userData: userInfo) {
+        return
+      }
+
       self.latestData = userInfo
 
       UserDefaults.standard.set(userInfo, forKey: self.UserDefaultsKeyData)
@@ -55,14 +59,17 @@ class DataManager {
     }
   }
 
-  func dataStaleAfter() -> Date? {
-    // TODO: Take next review time into account. If that's > DataStaleAfter use that instead?
-    if let data = self.latestData,
-      let dataSentAt = data[WatchHelper.KeySentAt] as? EpochTimeInt,
-      let nextReviewAt = data[WatchHelper.KeyNextReviewAt] as? EpochTimeInt {
+  func dataStaleAfter() -> Date? { if let data = self.latestData,
+    let dataSentAt = data[WatchHelper.KeySentAt] as? EpochTimeInt,
+    let nextReviewAt = data[WatchHelper.KeyNextReviewAt] as? EpochTimeInt {
       let dataSent = Date(timeIntervalSince1970: TimeInterval(dataSentAt))
       let nextReview = Date(timeIntervalSince1970: TimeInterval(nextReviewAt))
-      return dataSent.addingTimeInterval(DataStaleAfter)
+      let nextStale = dataSent.addingTimeInterval(DataStaleAfter)
+      if nextReview > nextStale {
+        return nextReview
+      } else {
+        return nextStale
+      }
     }
     return nil
   }
@@ -74,9 +81,26 @@ class DataManager {
     return false
   }
 
+  func isDataOutOfDate(userData: UserData?) -> Bool {
+    if let data = userData,
+      let dataSentAt = data[WatchHelper.KeySentAt] as? EpochTimeInt {
+      let dataSent = Date(timeIntervalSince1970: TimeInterval(dataSentAt))
+      let bestBeforeDate = Date().addingTimeInterval(0 - DataStaleAfter)
+      return bestBeforeDate.distance(to: dataSent) < 0
+    }
+    return true
+  }
+
   func addDelegate(_ delegate: DataManagerDelegate) {
     delegates.append(delegate)
   }
 
-  func removeDelegate(_: DataManagerDelegate) {}
+  func removeDelegate(_ delegate: DataManagerDelegate) {
+    delegates.removeAll { (d) -> Bool in
+      if d === delegate {
+        return true
+      }
+      return false
+    }
+  }
 }

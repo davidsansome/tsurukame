@@ -27,17 +27,17 @@ static NSAttributedString *AttributedStringForFormattedText(
     TKMFormattedText_Format format = [formattedText.formatArray valueAtIndex:i];
     switch (format) {
       case TKMFormattedText_Format_Kanji:
-        [attributes setValue:[UIColor blackColor] forKey:NSForegroundColorAttributeName];
-        [attributes setValue:[TKMStyle kanjiBackgroundColor] forKey:NSBackgroundColorAttributeName];
+        [attributes setValue:TKMStyleColor.markupKanjiForeground forKey:NSForegroundColorAttributeName];
+        [attributes setValue:TKMStyleColor.markupKanjiBackground forKey:NSBackgroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Radical:
-        [attributes setValue:[UIColor blackColor] forKey:NSForegroundColorAttributeName];
-        [attributes setValue:[TKMStyle radicalBackgroundColor]
+        [attributes setValue:TKMStyleColor.markupRadicalForeground forKey:NSForegroundColorAttributeName];
+        [attributes setValue:TKMStyleColor.markupRadicalBackground
                       forKey:NSBackgroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Vocabulary:
-        [attributes setValue:[UIColor blackColor] forKey:NSForegroundColorAttributeName];
-        [attributes setValue:[TKMStyle vocabularyBackgroundColor]
+        [attributes setValue:TKMStyleColor.markupVocabularyForeground forKey:NSForegroundColorAttributeName];
+        [attributes setValue:TKMStyleColor.markupVocabularyBackground
                       forKey:NSBackgroundColorAttributeName];
         break;
       case TKMFormattedText_Format_Reading:

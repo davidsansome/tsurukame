@@ -70,6 +70,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
 @objc class WatchHelper: NSObject {
   public static let KeyReviewCount = "reviewCount"
   public static let KeyReviewNextHourCount = "reviewHrCount"
+  public static let KeyReviewUpcomingHourlyCounts = "reviewHourly"
   public static let KeyLevelCurrent = "level"
   public static let KeyLevelLearned = "levelLearn"
   public static let KeyLevelTotal = "levelTotal"
@@ -133,6 +134,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
       let packet: [String: Any] = [
         WatchHelper.KeyReviewCount: client.availableReviewCount,
         WatchHelper.KeyReviewNextHourCount: client.upcomingReviews.first?.intValue ?? 0,
+        WatchHelper.KeyReviewUpcomingHourlyCounts: client.upcomingReviews.map { $0.intValue },
         WatchHelper.KeyLevelCurrent: assignmentsAtCurrentLevel?.first?.level ?? 0,
         WatchHelper.KeyLevelTotal: assignmentsAtCurrentLevel?.count ?? 0,
         WatchHelper.KeyLevelLearned: learnedCount,

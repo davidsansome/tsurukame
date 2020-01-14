@@ -17,6 +17,7 @@ import Foundation
 private let kUserGradientYOffset: CGFloat = 450
 private let kUserGradientStartPoint: CGFloat = 0.8
 private let kUserMargin: CGFloat = 8.0
+private let kVacationMargin: CGFloat = 8.0
 private let kProgressBarHeight: CGFloat = 6.0
 
 @objc protocol MainHeaderViewDelegate {
@@ -64,7 +65,6 @@ class MainHeaderView: UIView {
 
     // Set a gradient background for the user container.
     let userGradientLayer = CAGradientLayer()
-    userGradientLayer.colors = TKMStyle.radicalGradient
     userGradientLayer.startPoint = CGPoint(x: 0.5, y: kUserGradientStartPoint)
     userContainer.layer.insertSublayer(userGradientLayer, at: 0)
     userContainer.layer.masksToBounds = false
@@ -72,11 +72,12 @@ class MainHeaderView: UIView {
 
     // Set a gradient background for the vacation container.
     let vacationGradientLayer = CAGradientLayer()
-    vacationGradientLayer.colors = TKMStyle.kanjiGradient
     vacationGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
     vacationContainer.layer.insertSublayer(vacationGradientLayer, at: 0)
     vacationContainer.layer.masksToBounds = false
     self.vacationGradientLayer = vacationGradientLayer
+
+    updateGradientColors()
 
     // Add shadows to things in the user info view.
     TKMStyle.addShadowToView(imageContainer, offset: 2.0, opacity: 0.4, radius: 4.0)
@@ -98,16 +99,19 @@ class MainHeaderView: UIView {
     progressView.transform = CGAffineTransform(scaleX: 1.0, y: progressBarScale)
   }
 
-  override func sizeThatFits(_ size: CGSize) -> CGSize {
-    vacationDetail.preferredMaxLayoutWidth = size.width
-    vacationContainer.setNeedsLayout()
-    vacationDetail.setNeedsLayout()
-    vacationDetail.layoutIfNeeded()
+  func updateGradientColors() {
+    userGradientLayer.colors = TKMStyle.radicalGradient
+    vacationGradientLayer.colors = TKMStyle.kanjiGradient
+  }
 
-    var height = userContainer.sizeThatFits(size).height + kUserMargin
+  override func sizeThatFits(_ size: CGSize) -> CGSize {
+    let width = size.width
+    vacationDetail.preferredMaxLayoutWidth = width - kVacationMargin * 2
+
+    var height = userContainer.sizeThatFits(CGSize(width: width, height: 0)).height + kUserMargin
 
     if isOnVacation {
-      height += vacationContainer.frame.height
+      height += vacationContainer.sizeThatFits(CGSize(width: width, height: 0)).height
     }
 
     height += kProgressBarHeight
@@ -116,6 +120,8 @@ class MainHeaderView: UIView {
   }
 
   override func layoutSubviews() {
+    super.layoutSubviews()
+
     let width = bounds.width
 
     // Layout the user container.
@@ -129,7 +135,8 @@ class MainHeaderView: UIView {
     // Position the vacation container below it.
     var vacationContainerSize = CGSize(width: 0, height: 0)
     if isOnVacation {
-      vacationContainerSize = vacationContainer.sizeThatFits(CGSize(width: width, height: 0))
+      let vacationContainerHeight = vacationContainer.sizeThatFits(CGSize(width: width, height: 0)).height
+      vacationContainerSize = CGSize(width: width, height: vacationContainerHeight)
     }
     vacationContainer.frame = CGRect(origin: origin, size: vacationContainerSize)
 
@@ -179,5 +186,9 @@ class MainHeaderView: UIView {
 
   @IBAction func didTapSettingsButton(_: Any) {
     delegate?.settingsButtonTapped()
+  }
+
+  override func traitCollectionDidChange(_: UITraitCollection?) {
+    updateGradientColors()
   }
 }

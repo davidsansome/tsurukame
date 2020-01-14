@@ -5,3 +5,5 @@
 /sqlite3-extension/proto.so
 **/xcuserdata/
 **/xcshareddata/
+/ios/*.ipa
+/ios/*.dSYM.zip

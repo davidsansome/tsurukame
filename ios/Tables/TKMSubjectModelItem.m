@@ -96,7 +96,7 @@ static const CGFloat kFontSize = 14.f;
   if (item.showLevelNumber) {
     self.levelLabel.text = [NSString stringWithFormat:@"%d", item.subject.level];
   }
-  _gradient.colors = item.gradientColors ?: [TKMStyle gradientForSubject:item.subject];
+  [self updateGradient];
 
   self.subjectLabel.font = [TKMStyle japaneseFontWithSize:self.subjectLabel.font.pointSize];
   self.subjectLabel.attributedText =
@@ -203,6 +203,17 @@ static const CGFloat kFontSize = 14.f;
 - (void)didSelectCell {
   TKMSubjectModelItem *item = (TKMSubjectModelItem *)self.item;
   [item.delegate didTapSubject:item.subject];
+}
+
+#pragma mark - UITraitEnvironment
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+  [self updateGradient];
+}
+
+- (void)updateGradient {
+  TKMSubjectModelItem *item = self.item;
+  _gradient.colors = item.gradientColors ?: [TKMStyle gradientForSubject:item.subject];
 }
 
 @end

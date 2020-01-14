@@ -17,6 +17,9 @@ import os
 
 class ComplicationController: NSObject, CLKComplicationDataSource {
   let TsurukameHighlightColor = UIColor.red
+  // Ignore next review dates father away in time than this. We show them in
+  // hours and these large values look incorrect.
+  let FarFutureReviewDate = TimeInterval(60 * 60 * 24)
 
   // MARK: - Timeline Configuration
 
@@ -29,7 +32,15 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
   }
 
   func getTimelineEndDate(for _: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
-    handler(DataManager.sharedInstance.dataStaleAfter())
+    if let data = DataManager.sharedInstance.latestData,
+      let dataSentAt = data[WatchHelper.KeySentAt] as? EpochTimeInt,
+      let hourlyCounts = data[WatchHelper.KeyReviewUpcomingHourlyCounts] as? [Int] {
+      let endInterval = TimeInterval((60 * 60 * 24) * hourlyCounts.count)
+      let endDate = Date(timeIntervalSince1970: TimeInterval(dataSentAt)).addingTimeInterval(endInterval)
+      handler(endDate)
+    } else {
+      handler(DataManager.sharedInstance.dataStaleAfter())
+    }
   }
 
   func getPrivacyBehavior(for _: CLKComplication, withHandler handler: @escaping (CLKComplicationPrivacyBehavior) -> Void) {
@@ -62,9 +73,23 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
   }
 
   func getTimelineEntries(for complication: CLKComplication, after: Date, limit _: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
-    // TODO: Transfer upcoming review info so we can handle offline complication refreshes.
-    // Call the handler with the timeline entries after to the given date
-    if let staleDate = DataManager.sharedInstance.dataStaleAfter(),
+    if DataManager.sharedInstance.dataSource == .ReviewCounts,
+      let data = DataManager.sharedInstance.latestData,
+      let dataSentAt = data[WatchHelper.KeySentAt] as? EpochTimeInt,
+      let hourlyCounts = data[WatchHelper.KeyReviewUpcomingHourlyCounts] as? [Int] {
+      var entries: [CLKComplicationTimelineEntry] = []
+      for (idx, _) in hourlyCounts.enumerated() {
+        if idx > 23 {
+          break
+        }
+        let entryInterval = TimeInterval((60 * 60) * idx)
+        let entryDate = Date(timeIntervalSince1970: TimeInterval(dataSentAt)).addingTimeInterval(entryInterval)
+        if entryDate > after, let entryTemplate = templateForReviewCount(complication, userData: data, offset: idx) {
+          entries.append(CLKComplicationTimelineEntry(date: entryDate, complicationTemplate: entryTemplate))
+        }
+      }
+      handler(entries)
+    } else if let staleDate = DataManager.sharedInstance.dataStaleAfter(),
       after.distance(to: staleDate) >= 0,
       let staleEntry = staleTimelineEntry(complication: complication) {
       handler([staleEntry])
@@ -88,6 +113,9 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                                userData: DataManager.sharedInstance.latestData ?? [
                                  WatchHelper.KeyReviewCount: 8,
                                  WatchHelper.KeyReviewNextHourCount: 3,
+                                 WatchHelper.KeyReviewUpcomingHourlyCounts: [3, 0, 0, 0, 4, 0, 0, 4,
+                                                                             1, 0, 1, 1, 1, 0, 4, 4,
+                                                                             0, 0, 0, 0, 0, 0, 0, 0],
                                  WatchHelper.KeyLevelCurrent: 6,
                                  WatchHelper.KeyLevelTotal: 80,
                                  WatchHelper.KeyLevelLearned: 12,
@@ -112,7 +140,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     }
   }
 
-  func templateForReviewCount(_ complication: CLKComplication, userData: UserData?) -> CLKComplicationTemplate? {
+  func templateForReviewCount(_ complication: CLKComplication, userData: UserData?, offset: Int? = nil) -> CLKComplicationTemplate? {
     var reviewsPending: Int = 0
     var nextHour: Int = 0
     var nextReview: Date?
@@ -123,8 +151,20 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
       if let nextHourCount = data[WatchHelper.KeyReviewNextHourCount] as? Int {
         nextHour = nextHourCount
       }
-      if let nextReviewAt = data[WatchHelper.KeyNextReviewAt] as? EpochTimeInt {
+      if let nextReviewAt = data[WatchHelper.KeyNextReviewAt] as? EpochTimeInt, nextReviewAt > 0 {
         nextReview = Date(timeIntervalSince1970: TimeInterval(nextReviewAt))
+        if let nr = nextReview, nr > Date().addingTimeInterval(FarFutureReviewDate) {
+          nextReview = nil
+        }
+      }
+
+      if let offsetIdx = offset,
+        let hourlyCounts = data[WatchHelper.KeyReviewUpcomingHourlyCounts] as? [Int],
+        hourlyCounts.count >= offsetIdx + 2 {
+        reviewsPending = hourlyCounts[offsetIdx]
+        nextHour = hourlyCounts[offsetIdx + 1]
+        // TODO: Look for next non-0 in the list and calculate date as offset?
+        nextReview = nil
       }
     }
 

@@ -23,22 +23,25 @@ import Foundation
     case Incorrect
   }
 
-  @objc static let kAsciiCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0) ..< Unicode.Scalar(UInt32(256))!)
-
-  @objc static let kKanaCharacterSet = CharacterSet(charactersIn:
-    "あいうえお" +
-      "かきくけこがぎぐげご" +
-      "さしすせそざじずぜぞ" +
-      "たちつてとだぢづでど" +
-      "なにぬねの" +
-      "はひふへほばびぶべぼぱぴぷぺぽ" +
-      "まみむめも" +
-      "らりるれろ" +
-      "やゆよゃゅょぃっ" +
-      "わをん")
+  @objc static let kAsciiCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x00) ..< Unicode.Scalar(0x7F)!)
+  @objc static let kHiraganaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x309D))!)
+  @objc static let kAllKanaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x3100))!)
+  @objc static let kJapaneseCharacterSet = kAllKanaCharacterSet.union(
+    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3400))! ..< Unicode.Scalar(UInt32(0x4DC0))!)).union(
+    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x4E00))! ..< Unicode.Scalar(UInt32(0xA000))!)).union(
+    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xF900))! ..< Unicode.Scalar(UInt32(0xFB00))!)).union(
+    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xFF66))! ..< Unicode.Scalar(UInt32(0xFFA0))!))
 
   private class func containsAscii(_ s: String) -> Bool {
     return s.rangeOfCharacter(from: kAsciiCharacterSet) != nil
+  }
+
+  private class func isKana(_ s: String) -> Bool {
+    return s.rangeOfCharacter(from: kAllKanaCharacterSet.inverted) == nil
+  }
+
+  private class func isJapanese(_ s: String) -> Bool {
+    return s.rangeOfCharacter(from: kJapaneseCharacterSet.inverted) == nil
   }
 
   private class func distanceTolerance(_ answer: String) -> Int {
@@ -61,7 +64,7 @@ import Foundation
 
     for (japaneseChar, answerChar) in zip(japanese.unicodeScalars,
                                           answer.unicodeScalars) {
-      if !kKanaCharacterSet.contains(japaneseChar) {
+      if !kHiraganaCharacterSet.contains(japaneseChar) {
         break
       }
       if japaneseChar != answerChar {
@@ -71,7 +74,7 @@ import Foundation
 
     for (japaneseChar, answerChar) in zip(japanese.unicodeScalars.reversed(),
                                           answer.unicodeScalars.reversed()) {
-      if !kKanaCharacterSet.contains(japaneseChar) {
+      if !kHiraganaCharacterSet.contains(japaneseChar) {
         break
       }
       if japaneseChar != answerChar {
@@ -119,7 +122,7 @@ import Foundation
     case .reading:
       let hiraganaText = convertKatakanaToHiragana(answer)
 
-      if containsAscii(answer) {
+      if !isKana(answer) {
         return .ContainsInvalidCharacters
       }
 
@@ -149,6 +152,10 @@ import Foundation
       }
 
     case .meaning:
+      if isJapanese(answer) {
+        return .ContainsInvalidCharacters
+      }
+
       // Check blacklisted meanings first.  If the answer matches one exactly, it's incorrect.
       for meaning in subject.meaningsArray! as! [TKMMeaning] {
         if meaning.type == .blacklist {

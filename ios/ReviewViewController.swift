@@ -22,16 +22,6 @@ private let kPreviousSubjectScale: CGFloat = 0.25
 private let kPreviousSubjectButtonPadding: CGFloat = 6.0
 private let kPreviousSubjectAnimationDuration: Double = 0.3
 
-private let kReadingGradient = [
-  UIColor(red: 0.235, green: 0.235, blue: 0.235, alpha: 1.0).cgColor,
-  UIColor(red: 0.102, green: 0.102, blue: 0.102, alpha: 1.0).cgColor,
-]
-
-private let kMeaningGradient = [
-  UIColor(red: 0.933, green: 0.933, blue: 0.933, alpha: 1.0).cgColor,
-  UIColor(red: 0.882, green: 0.882, blue: 0.882, alpha: 1.0).cgColor,
-]
-
 private let kReadingTextColor = UIColor.white
 private let kMeaningTextColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0)
 private let kDefaultButtonTintColor = UIButton().tintColor
@@ -513,13 +503,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     case .meaning:
       kanaInput.enabled = false
       taskTypePrompt = activeTask.assignment.subjectType == .radical ? "Name" : "Meaning"
-      promptGradient = kMeaningGradient
+      promptGradient = TKMStyle.meaningGradient as! [CGColor]
       promptTextColor = kMeaningTextColor
       taskTypePlaceholder = "Your Response"
     case .reading:
       kanaInput.enabled = true
       taskTypePrompt = "Reading"
-      promptGradient = kReadingGradient
+      promptGradient = TKMStyle.readingGradient as! [CGColor]
       promptTextColor = kReadingTextColor
       taskTypePlaceholder = "答え"
     case ._Max:

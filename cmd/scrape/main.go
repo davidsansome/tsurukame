@@ -17,6 +17,7 @@ package main
 import (
 	"flag"
 	"log"
+	"time"
 
 	"github.com/davidsansome/tsurukame/api"
 	"github.com/davidsansome/tsurukame/converter"
@@ -26,20 +27,21 @@ import (
 )
 
 var (
-	out      = flag.String("out", "data", "Output directory")
-	cookie   = flag.String("cookie", "", "Wanikani HTTP cookie")
-	apiToken = flag.String("api-token", "", "Wanikani API v2 token")
+	out             = flag.String("out", "data", "Output directory")
+	cookie          = flag.String("cookie", "", "Wanikani HTTP cookie")
+	apiToken        = flag.String("api-token", "", "Wanikani API v2 token")
+	requestInterval = flag.Duration("request-interval", time.Millisecond*1200, "Time to wait between requests to the Wanikani API")
 )
 
 func main() {
 	flag.Parse()
 
 	// Create API clients.
-	apiClient, err := api.New(*apiToken)
+	apiClient, err := api.New(*apiToken, *requestInterval)
 	utils.Must(err)
 	defer apiClient.Close()
 
-	jsonClient, err := jsonapi.New(*cookie)
+	jsonClient, err := jsonapi.New(*cookie, *requestInterval)
 	utils.Must(err)
 
 	// Open directory.
