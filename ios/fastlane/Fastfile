@@ -17,18 +17,45 @@ default_platform(:ios)
 
 before_all do
   setup_circle_ci
+  ensure_git_status_clean
+
+  version_number = get_version_number(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target: "Tsurukame",
+  )
+  build_number = number_of_commits()
+  increment_build_number(build_number: build_number)
 end
 
 lane :test do
   run_tests(scheme: "Tsurukame")
 end
 
-lane :release do
-  match(type: "appstore")
+lane :new_version do
   increment_version_number(
     bump_type: "minor",
     xcodeproj: "Tsurukame.xcodeproj"
   )
+  commit_version_bump(xcodeproj: "Tsurukame.xcodeproj")
+end
+
+lane :beta do
+  match(type: "appstore")
+  build_app(
+    scheme: "Tsurukame",
+    include_bitcode: true,
+  )
+
+  # Generate the changelog from git commits since the last tag.
+  changelog = changelog_from_git_commits(pretty: "format:%s")
+  upload_to_testflight(
+    changelog: changelog,
+    distribute_external: true,
+  )
+end
+
+lane :release do
+  match(type: "appstore")
   build_app(
     scheme: "Tsurukame",
     include_bitcode: true,
@@ -36,7 +63,12 @@ lane :release do
   upload_to_app_store(
     app_icon: "Resources/appicon1024.png",
   )
-  commit_version_bump(xcodeproj: "Tsurukame.xcodeproj")
-  add_git_tag(tag: lane_context[SharedValues::VERSION_NUMBER])
-  push_to_git_remote
+  version_number = lane_context[SharedValues::VERSION_NUMBER]
+  build_number = lane_context[SharedValues::BUILD_NUMBER]
+  add_git_tag(tag: "#{version_number}-#{build_number}")
+end
+
+after_all do
+  clean_build_artifacts
+  reset_git_repo
 end
