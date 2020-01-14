@@ -17,6 +17,7 @@ import Foundation
 private let kUserGradientYOffset: CGFloat = 450
 private let kUserGradientStartPoint: CGFloat = 0.8
 private let kUserMargin: CGFloat = 8.0
+private let kVacationMargin: CGFloat = 8.0
 private let kProgressBarHeight: CGFloat = 6.0
 
 @objc protocol MainHeaderViewDelegate {
@@ -104,15 +105,13 @@ class MainHeaderView: UIView {
   }
 
   override func sizeThatFits(_ size: CGSize) -> CGSize {
-    vacationDetail.preferredMaxLayoutWidth = size.width
-    vacationContainer.setNeedsLayout()
-    vacationDetail.setNeedsLayout()
-    vacationDetail.layoutIfNeeded()
+    let width = size.width
+    vacationDetail.preferredMaxLayoutWidth = width - kVacationMargin * 2
 
-    var height = userContainer.sizeThatFits(size).height + kUserMargin
+    var height = userContainer.sizeThatFits(CGSize(width: width, height: 0)).height + kUserMargin
 
     if isOnVacation {
-      height += vacationContainer.frame.height
+      height += vacationContainer.sizeThatFits(CGSize(width: width, height: 0)).height
     }
 
     height += kProgressBarHeight
@@ -121,6 +120,8 @@ class MainHeaderView: UIView {
   }
 
   override func layoutSubviews() {
+    super.layoutSubviews()
+
     let width = bounds.width
 
     // Layout the user container.
@@ -134,7 +135,8 @@ class MainHeaderView: UIView {
     // Position the vacation container below it.
     var vacationContainerSize = CGSize(width: 0, height: 0)
     if isOnVacation {
-      vacationContainerSize = vacationContainer.sizeThatFits(CGSize(width: width, height: 0))
+      let vacationContainerHeight = vacationContainer.sizeThatFits(CGSize(width: width, height: 0)).height
+      vacationContainerSize = CGSize(width: width, height: vacationContainerHeight)
     }
     vacationContainer.frame = CGRect(origin: origin, size: vacationContainerSize)
 
