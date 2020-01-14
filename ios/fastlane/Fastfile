@@ -51,6 +51,7 @@ lane :beta do
   upload_to_testflight(
     changelog: changelog,
     distribute_external: true,
+    demo_account_required: true,
   )
 end
 
