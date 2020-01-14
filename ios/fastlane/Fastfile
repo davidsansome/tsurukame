@@ -34,11 +34,7 @@ lane :release do
     include_bitcode: true,
   )
   upload_to_app_store(
-    app_icon: "Resources/Assets.xcassets/svg/appicon.png",
-    changelog: prompt(
-      text: "Changelog: ",
-      multi_line_end_keyword: "END"
-    ),
+    app_icon: "Resources/appicon1024.png",
   )
   commit_version_bump(xcodeproj: "Tsurukame.xcodeproj")
   add_git_tag(tag: lane_context[SharedValues::VERSION_NUMBER])
