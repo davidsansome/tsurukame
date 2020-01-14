@@ -427,7 +427,7 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   return [NSDate dateWithTimeIntervalSince1970:self.passedAt];
 }
 
-- (NSDate *)reviewDate {
+- (nullable NSDate *)reviewDate {
   if (self.isBurned || self.isLocked) {
     return nil;
   }
@@ -451,7 +451,7 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
   return reviewDate;
 }
 
-- (NSDate *)guruDateForSubject:(TKMSubject *)subject {
+- (nullable NSDate *)guruDateForSubject:(TKMSubject *)subject {
   if (self.hasPassedAt) {
     return self.passedAtDate;
   }

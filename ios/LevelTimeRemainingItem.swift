@@ -54,10 +54,11 @@ class LevelTimeRemainingCell: TKMModelCell {
       if assignment.subjectType != .radical {
         continue
       }
-      guard let subject = item.services.dataLoader.load(subjectID: Int(assignment.subjectId)) else {
+      guard let subject = item.services.dataLoader.load(subjectID: Int(assignment.subjectId)),
+        let guruDate = assignment.guruDate(for: subject) else {
         continue
       }
-      radicalDates.append(assignment.guruDate(for: subject))
+      radicalDates.append(guruDate)
     }
     radicalDates.sort()
     let lastRadicalGuruTime = max(radicalDates.last?.timeIntervalSinceNow ?? 0, 0)
@@ -72,10 +73,11 @@ class LevelTimeRemainingCell: TKMModelCell {
         guruDates.append(Date.distantFuture)
         continue
       }
-      guard let subject = item.services.dataLoader.load(subjectID: Int(assignment.subjectId)) else {
+      guard let subject = item.services.dataLoader.load(subjectID: Int(assignment.subjectId)),
+        let guruDate = assignment.guruDate(for: subject) else {
         continue
       }
-      guruDates.append(assignment.guruDate(for: subject))
+      guruDates.append(guruDate)
     }
 
     // Sort the list of dates and remove the most distant 10%.
