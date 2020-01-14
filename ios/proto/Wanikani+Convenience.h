@@ -99,7 +99,7 @@ extern NSString *TKMSRSStageCategoryName(TKMSRSStageCategory category);
 @property(nonatomic, nullable, readonly) NSDate *reviewDate;
 
 /** The earliest date possible to get this item to Guru level. */
-- (NSDate *)guruDateForSubject:(TKMSubject *)subject;
+- (nullable NSDate *)guruDateForSubject:(TKMSubject *)subject;
 
 @end
 

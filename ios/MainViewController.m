@@ -128,7 +128,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 
   UIColor *originalSearchBarTintColor = searchBar.tintColor;
-  searchBar.tintColor = TKMStyleColor.background;  // Make the button white.
+  searchBar.tintColor = UIColor.whiteColor;  // Make the button white.
 
   if (@available(iOS 13, *)) {
     UITextField *searchTextField = searchBar.searchTextField;
@@ -223,6 +223,8 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
     [model addItem:[[UpcomingReviewsChartItem alloc] init:upcomingReviews
                                        currentReviewCount:reviews
                                                        at:[NSDate date]]];
+    [model addItem:[[CurrentLevelReviewTimeItem alloc] initWithServices:_services
+                                            currentLevelAssignments:currentLevelAssignments]];
   }
 
   [model addSection:@"This level"];
@@ -256,6 +258,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   }
 
   _model = model;
+  [self.tableView reloadData];
 }
 
 #pragma mark - UIViewController

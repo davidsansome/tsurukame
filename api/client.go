@@ -16,7 +16,6 @@ package api
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -37,10 +36,6 @@ const (
 	maxTries      = 10
 )
 
-var (
-	requestInterval = flag.Duration("request-interval", time.Millisecond*1200, "Time to wait between requests to the Wanikani API")
-)
-
 type Client struct {
 	token  string
 	client *http.Client
@@ -48,14 +43,14 @@ type Client struct {
 	bo     *backoff.Backoff
 }
 
-func New(token string) (*Client, error) {
+func New(token string, requestInterval time.Duration) (*Client, error) {
 	if len(token) != 36 {
 		return nil, fmt.Errorf("Bad length API token: %s", token)
 	}
 	return &Client{
 		token:  token,
 		client: &http.Client{},
-		ticker: time.NewTicker(*requestInterval),
+		ticker: time.NewTicker(requestInterval),
 		bo: &backoff.Backoff{
 			Factor: backoffFactor,
 			Jitter: true,

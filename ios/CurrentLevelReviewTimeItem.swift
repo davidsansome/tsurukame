@@ -15,7 +15,7 @@
 import Foundation
 
 @objc
-class LevelTimeRemainingItem: NSObject, TKMModelItem {
+class CurrentLevelReviewTimeItem: NSObject, TKMModelItem {
   let services: TKMServices
   let currentLevelAssignments: [TKMAssignment]
 
@@ -25,12 +25,12 @@ class LevelTimeRemainingItem: NSObject, TKMModelItem {
   }
 
   func createCell() -> TKMModelCell! {
-    return LevelTimeRemainingCell(style: .value1,
-                                  reuseIdentifier: String(describing: LevelTimeRemainingCell.self))
+    return CurrentLevelReviewTimeCell(style: .value1,
+                                      reuseIdentifier: String(describing: CurrentLevelReviewTimeCell.self))
   }
 }
 
-class LevelTimeRemainingCell: TKMModelCell {
+class CurrentLevelReviewTimeCell: TKMModelCell {
   private var services: TKMServices?
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -44,30 +44,14 @@ class LevelTimeRemainingCell: TKMModelCell {
   }
 
   override func update(with baseItem: TKMModelItem!) {
-    let item = baseItem as! LevelTimeRemainingItem
-
-    var radicalDates = [Date]()
+    let item = baseItem as! CurrentLevelReviewTimeItem
     var guruDates = [Date]()
-    var levels = [Int32]()
-
-    for assignment in item.currentLevelAssignments {
-      if assignment.subjectType != .radical {
-        continue
-      }
-      guard let subject = item.services.dataLoader.load(subjectID: Int(assignment.subjectId)),
-        let guruDate = assignment.guruDate(for: subject) else {
-        continue
-      }
-      radicalDates.append(guruDate)
-    }
-    radicalDates.sort()
-    let lastRadicalGuruTime = max(radicalDates.last?.timeIntervalSinceNow ?? 0, 0)
+    var reviewDates = [Date]()
 
     for assignment in item.currentLevelAssignments {
       if assignment.subjectType != .kanji {
         continue
       }
-      levels.append(assignment.level)
       if !assignment.hasAvailableAt {
         // This kanji is locked, but it might not be essential for level-up
         guruDates.append(Date.distantFuture)
@@ -82,33 +66,36 @@ class LevelTimeRemainingCell: TKMModelCell {
 
     // Sort the list of dates and remove the most distant 10%.
     guruDates = Array(guruDates.sorted().dropLast(Int(Double(guruDates.count) * 0.1)))
-    levels = Array(levels.sorted(by: >).dropLast(Int(Double(levels.count) * 0.1)))
+    let levelKanjiUnlocked = guruDates.last != nil ? (guruDates.last! != Date.distantFuture) : true
 
-    if let lastGuruDate = guruDates.last, let wkLevel = levels.last {
-      if lastGuruDate == Date.distantFuture {
-        // There is still a locked kanji needed for level-up, so we don't know how long
-        // the user will take to level up. Use their average level time, minus the time
-        // they've spent at this level so far, as an estimate.
-        var average = item.services.localCachingClient!.getAverageRemainingLevelTime()
-        // But ensure it can't be less than the time it would take to get a fresh item
-        // to Guru, if they've spent longer at the current level than the average.
-        average = max(average, TKMMinimumTimeUntilGuruSeconds(wkLevel, 1) + lastRadicalGuruTime)
-        setRemaining(Date(timeIntervalSinceNow: average), isEstimate: true)
-      } else {
-        setRemaining(lastGuruDate, isEstimate: false)
+    for assignment in item.currentLevelAssignments {
+      if assignment.subjectType == .vocabulary || (levelKanjiUnlocked && assignment.subjectType == .radical) {
+        continue
       }
+      if let reviewDate = assignment.reviewDate {
+        if !assignment.isLessonStage {
+          reviewDates.append(reviewDate)
+        }
+      }
+    }
+
+    // Sort the list of dates
+    reviewDates.sort()
+
+    if let firstReviewDate = reviewDates.first {
+      setRemaining(firstReviewDate)
+    } else {
+      setRemaining(Date.distantFuture)
     }
   }
 
-  private func setRemaining(_ finish: Date, isEstimate: Bool) {
-    if isEstimate {
-      textLabel!.text = "Time remaining (estimated)"
-    } else {
-      textLabel!.text = "Time remaining"
-    }
+  private func setRemaining(_ finish: Date) {
+    textLabel!.text = "Next level-up review"
 
     if finish < Date() {
       detailTextLabel!.text = "Now"
+    } else if finish == Date.distantFuture {
+      detailTextLabel!.text = "N/A"
     } else {
       detailTextLabel!.text = intervalString(finish)
     }

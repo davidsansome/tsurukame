@@ -20,26 +20,43 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"time"
+
+	"github.com/jpillora/backoff"
 
 	"github.com/davidsansome/tsurukame/utils"
 )
 
 const (
 	urlBase = "https://www.wanikani.com/json"
+
+	backoffFactor = 2
+	backoffMin    = time.Second
+	backoffMax    = 10 * time.Second
+	maxTries      = 10
 )
 
 type Client struct {
 	cookie string
 	client *http.Client
+	ticker *time.Ticker
+	bo     *backoff.Backoff
 }
 
-func New(cookie string) (*Client, error) {
+func New(cookie string, requestInterval time.Duration) (*Client, error) {
 	if len(cookie) != 32 {
 		return nil, fmt.Errorf("Bad length cookie: %s", cookie)
 	}
 	return &Client{
 		cookie: cookie,
 		client: &http.Client{},
+		ticker: time.NewTicker(requestInterval),
+		bo: &backoff.Backoff{
+			Factor: backoffFactor,
+			Jitter: true,
+			Min:    backoffMin,
+			Max:    backoffMax,
+		},
 	}, nil
 }
 

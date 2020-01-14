@@ -20,6 +20,21 @@ or alternatively using `brew cask install fastlane`
 fastlane test
 ```
 
+### new_version
+```
+fastlane new_version
+```
+
+### beta
+```
+fastlane beta
+```
+
+### release
+```
+fastlane release
+```
+
 
 ----
 
