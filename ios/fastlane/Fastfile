@@ -66,6 +66,10 @@ lane :release do
   upload_to_app_store(
     app_icon: "Resources/appicon1024.png",
   )
+  tag_release
+end
+
+lane :tag_release do
   version_number = lane_context[SharedValues::VERSION_NUMBER]
   build_number = lane_context[SharedValues::BUILD_NUMBER]
   add_git_tag(tag: "#{version_number}-#{build_number}")
