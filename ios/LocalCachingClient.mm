@@ -238,7 +238,6 @@ struct ProgressTask {
 @end
 
 @implementation LocalCachingClient {
-  DataLoader *_dataLoader;
   Reachability *_reachability;
   FMDatabaseQueue *_db;
   dispatch_queue_t _queue;
@@ -476,7 +475,7 @@ struct ProgressTask {
   return ret;
 }
 
-- (TKMAssignment *)getAssignmentForID:(int)subjectID {
+- (nullable TKMAssignment *)getAssignmentForID:(int)subjectID {
   __block TKMAssignment *ret = nil;
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     FMResultSet *r =
@@ -620,10 +619,6 @@ struct ProgressTask {
 }
 
 - (int)availableReviewCount {
-#ifdef APP_STORE_SCREENSHOTS
-  return 9;
-#endif  // APP_STORE_SCREENSHOTS
-
   @synchronized(self) {
     [self maybeUpdateAvailableSubjectCounts];
     return _cachedAvailableReviewCount;
@@ -631,10 +626,6 @@ struct ProgressTask {
 }
 
 - (int)availableLessonCount {
-#ifdef APP_STORE_SCREENSHOTS
-  return 10;
-#endif  // APP_STORE_SCREENSHOTS
-
   @synchronized(self) {
     [self maybeUpdateAvailableSubjectCounts];
     return _cachedAvailableLessonCount;
@@ -642,13 +633,6 @@ struct ProgressTask {
 }
 
 - (NSArray<NSNumber *> *)upcomingReviews {
-#ifdef APP_STORE_SCREENSHOTS
-  return @[
-    @(14), @(8), @(2), @(1), @(12), @(42), @(17), @(9), @(2),  @(0), @(2), @(17),
-    @(0),  @(0), @(6), @(0), @(0),  @(0),  @(0),  @(4), @(11), @(0), @(8), @(6)
-  ];
-#endif  // APP_STORE_SCREENSHOTS
-
   @synchronized(self) {
     [self maybeUpdateAvailableSubjectCounts];
     return _cachedUpcomingReviews;
