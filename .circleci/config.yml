@@ -11,6 +11,21 @@ jobs:
       - run: go build ./...
       - run: go test ./...
 
+  download-data-bin:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - run:
+          name: Download data.bin
+          command: |
+            echo $SERVICE_ACCOUNT_KEY | gcloud auth activate-service-account --key-file=-
+            mkdir workspace
+            gsutil cp gs://tsurukame-data/1.13 workspace/data.bin
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - data.bin
+
   test-ios:
     macos:
       xcode: "11.3.0"
@@ -18,12 +33,9 @@ jobs:
       FL_OUTPUT_DIR: output
     steps:
       - checkout
-      - gcp-cli/install
-      - run:
-          name: Download data.bin
-          command: |
-            echo $SERVICE_ACCOUNT_KEY | gcloud auth activate-service-account --key-file=-
-            gsutil cp gs://tsurukame-data/1.13 data.bin
+      - attach_workspace:
+          at: workspace
+      - run: cp workspace/data.bin data.bin
       - run:
           command: bundle install
           working_directory: ios
@@ -35,9 +47,35 @@ jobs:
       - store_test_results:
           path: output/scan
 
+  release-testflight:
+    macos:
+      xcode: "11.3.0"
+    steps:
+      - checkout
+      - attach_workspace:
+          at: workspace
+      - run: cp workspace/data.bin data.bin
+      - run:
+          command: bundle install
+          working_directory: ios
+      - run:
+          command: bundle exec fastlane beta
+          working_directory: ios
+
 workflows:
   version: 2
   all:
     jobs:
-      - test-ios
       - test-golang
+
+      - download-data-bin
+      - test-ios:
+          requires:
+            - download-data-bin
+      - release-testflight:
+          context: appstore_credentials
+          requires:
+            - test-ios
+          filters:
+            branches:
+              only: master
