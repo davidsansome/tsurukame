@@ -56,6 +56,9 @@ jobs:
           at: workspace
       - run: cp workspace/data.bin data.bin
       - run:
+          name: Install certificate service account
+          command: echo $CERTIFICATE_SERVICE_ACCOUNT > ios/fastlane/gc_keys.json
+      - run:
           command: bundle install
           working_directory: ios
       - run:
