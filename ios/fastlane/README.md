@@ -35,6 +35,11 @@ fastlane beta
 fastlane release
 ```
 
+### tag_release
+```
+fastlane tag_release
+```
+
 
 ----
 

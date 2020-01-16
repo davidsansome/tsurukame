@@ -36,7 +36,12 @@ lane :new_version do
     bump_type: "minor",
     xcodeproj: "Tsurukame.xcodeproj"
   )
-  commit_version_bump(xcodeproj: "Tsurukame.xcodeproj")
+  version_number = lane_context[SharedValues::VERSION_NUMBER]
+  build_number = lane_context[SharedValues::BUILD_NUMBER]
+  commit_version_bump(
+    xcodeproj: "Tsurukame.xcodeproj",
+    message: "Version bump to #{version_number}-#{build_number}",
+  )
 end
 
 lane :beta do
