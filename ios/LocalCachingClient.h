@@ -32,6 +32,7 @@ typedef void (^SyncProgressHandler)(float progress);
 @interface LocalCachingClient : NSObject
 
 @property(nonatomic, readonly) Client *client;
+@property(nonatomic, readonly) DataLoader *dataLoader;
 @property(nonatomic, readonly) int availableLessonCount;
 @property(nonatomic, readonly) int availableReviewCount;
 @property(nonatomic, readonly) NSArray<NSNumber *> *upcomingReviews;
@@ -54,7 +55,7 @@ typedef void (^SyncProgressHandler)(float progress);
 - (nullable TKMStudyMaterials *)getStudyMaterialForID:(int)subjectID;
 - (nullable TKMUser *)getUserInfo;
 - (NSArray<TKMProgress *> *)getAllPendingProgress;
-- (TKMAssignment *)getAssignmentForID:(int)subjectID;
+- (nullable TKMAssignment *)getAssignmentForID:(int)subjectID;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
 - (int)getSrsLevelCount:(TKMSRSStageCategory)level;

@@ -7,3 +7,4 @@
 **/xcshareddata/
 /ios/*.ipa
 /ios/*.dSYM.zip
+/workspace

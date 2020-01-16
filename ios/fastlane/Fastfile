@@ -36,7 +36,12 @@ lane :new_version do
     bump_type: "minor",
     xcodeproj: "Tsurukame.xcodeproj"
   )
-  commit_version_bump(xcodeproj: "Tsurukame.xcodeproj")
+  version_number = lane_context[SharedValues::VERSION_NUMBER]
+  build_number = lane_context[SharedValues::BUILD_NUMBER]
+  commit_version_bump(
+    xcodeproj: "Tsurukame.xcodeproj",
+    message: "Version bump to #{version_number}-#{build_number}",
+  )
 end
 
 lane :beta do
@@ -51,6 +56,9 @@ lane :beta do
   upload_to_testflight(
     changelog: changelog,
     distribute_external: true,
+    groups: "Testers",
+    demo_account_required: true,
+    reject_build_waiting_for_review: true,
   )
 end
 
@@ -63,6 +71,10 @@ lane :release do
   upload_to_app_store(
     app_icon: "Resources/appicon1024.png",
   )
+  tag_release
+end
+
+lane :tag_release do
   version_number = lane_context[SharedValues::VERSION_NUMBER]
   build_number = lane_context[SharedValues::BUILD_NUMBER]
   add_git_tag(tag: "#{version_number}-#{build_number}")

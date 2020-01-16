@@ -10,32 +10,28 @@
 		32A4A0FD85D9F44608460373 /* Pods_Tsurukame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0FB8F6AE66ACCEFE37ADDB2 /* Pods_Tsurukame.framework */; };
 		3DA8BAFC224C9580009E925B /* LessonOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */; };
 		481B2FED23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */; };
-		481B2FEE23C55ABF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */; };
 		5C82B2908507339A293B0E59 /* Pods_FontScreenshotter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33812F134DC80E5D981C40E /* Pods_FontScreenshotter.framework */; };
 		630ADB6F21F8256E00BC9801 /* TKMCheckmarkModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */; };
 		6319C99D20400E3500C31F87 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99C20400E3500C31F87 /* NSDate+TimeAgo.m */; };
 		6319C9A0204015B900C31F87 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99F204015B900C31F87 /* NSString+MD5.m */; };
 		631CAD5F234AC508008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
-		631CAD60234AC508008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
 		631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
-		631CAD64234AD5FC008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
 		631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */; };
 		631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
 		631CAD69234B0F0C008CEA73 /* ReviewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */; };
 		631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
 		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
-		631CAD70234B3B8E008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
-		631CAD73234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
 		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
+		6335B46523CF0C820071671E /* AppStoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B46423CF0C820071671E /* AppStoreScreenshots.swift */; };
+		6335B4C823CF0D390071671E /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B48C23CF0D390071671E /* SnapshotHelper.swift */; };
+		6335B4E723CF14280071671E /* Screenshotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B4E623CF14280071671E /* Screenshotter.swift */; };
 		633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */; };
 		633612162352D9EB00DD72A3 /* libRexy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 633612152352D9EB00DD72A3 /* libRexy.a */; };
 		633632EC201F3011006D582B /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EB201F3011006D582B /* LoginViewController.m */; };
 		633632EF201F3490006D582B /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* Settings.m */; };
 		633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE023516BE7004F732F /* SubjectDetailsView.swift */; };
-		633AFAE223516BE7004F732F /* SubjectDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE023516BE7004F732F /* SubjectDetailsView.swift */; };
 		633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */; };
-		633AFAE72352B6F2004F732F /* VocabularyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */; };
 		633AFAE92352B81E004F732F /* VocabularyHighlighterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */; };
 		633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */; };
 		633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */; };
@@ -55,13 +51,9 @@
 		635D0079218D94AA006CD711 /* TKMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D0078218D94AA006CD711 /* TKMGradientView.m */; };
 		635D007C218DA308006CD711 /* TKMAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D007B218DA308006CD711 /* TKMAudio.m */; };
 		636A63DE238A107A00902269 /* CurrentLevelChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */; };
-		636A63DF238A107A00902269 /* CurrentLevelChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */; };
 		636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */; };
-		636A63E2238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */; };
 		636A63E4238A5D6B00902269 /* MainHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 636A63E3238A5D6B00902269 /* MainHeaderView.xib */; };
-		636A63E5238A5D6B00902269 /* MainHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 636A63E3238A5D6B00902269 /* MainHeaderView.xib */; };
 		636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E6238A607A00902269 /* MainHeaderView.swift */; };
-		636A63E8238A607A00902269 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E6238A607A00902269 /* MainHeaderView.swift */; };
 		637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12D7203847BE009E92DB /* LessonsViewController.m */; };
 		637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12DD203D779D009E92DB /* LessonsPageControl.m */; };
 		6392DB9F20CCE29E003019EB /* TKMAttributedModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */; };
@@ -70,67 +62,6 @@
 		6392DBA720D14915003019EB /* TKMSubjectChip.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA620D14915003019EB /* TKMSubjectChip.m */; };
 		6392DBAB20DBB841003019EB /* NSMutableAttributedString+Replacements.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */; };
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
-		63AD5B6323056863006B3308 /* Wanikani.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		63AD5B6823056863006B3308 /* TKMListSeparatorItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */; };
-		63AD5B7E23056863006B3308 /* TKMServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA79721904D520058E885 /* TKMServices.m */; };
-		63AD5B7F23056863006B3308 /* SubjectDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */; };
-		63AD5B8723056863006B3308 /* TKMLessonBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */; };
-		63AD5B8B23056863006B3308 /* TKMDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9E51021F424690022C16E /* TKMDownloadViewController.m */; };
-		63AD5B8C23056863006B3308 /* TKMCheckmarkModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */; };
-		63AD5B8D23056863006B3308 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* Settings.m */; };
-		63AD5B9123056863006B3308 /* TKMAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D007B218DA308006CD711 /* TKMAudio.m */; };
-		63AD5B9423056863006B3308 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
-		63AD5B9623056863006B3308 /* SubjectCatalogueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */; };
-		63AD5B9C23056863006B3308 /* TKMFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* TKMFontsViewController.m */; };
-		63AD5BA023056863006B3308 /* TKMSubjectModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA120D130F0003019EB /* TKMSubjectModelItem.m */; };
-		63AD5BA623056863006B3308 /* TKMAttributedModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DB9E20CCE29E003019EB /* TKMAttributedModelItem.m */; };
-		63AD5BA923056863006B3308 /* ReviewOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */; };
-		63AD5BAB23056863006B3308 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */; };
-		63AD5BB023056863006B3308 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEB81FC45C440070C05F /* main.m */; };
-		63AD5BB423056863006B3308 /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
-		63AD5BBA23056863006B3308 /* SuccessAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */; };
-		63AD5BBD23056863006B3308 /* ReviewTaskOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */; };
-		63AD5BC023056863006B3308 /* TKMModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95420C5634A00AC25F4 /* TKMModelItem.m */; };
-		63AD5BC123056863006B3308 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
-		63AD5BC323056863006B3308 /* ReviewSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */; };
-		63AD5BC423056863006B3308 /* TKMMarkupModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE96020C5656B00AC25F4 /* TKMMarkupModelItem.m */; };
-		63AD5BC823056863006B3308 /* TKMReadingModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA788218DB6840058E885 /* TKMReadingModelItem.m */; };
-		63AD5BCD23056863006B3308 /* SubjectsByLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */; };
-		63AD5BD123056863006B3308 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
-		63AD5BDA23056863006B3308 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99C20400E3500C31F87 /* NSDate+TimeAgo.m */; };
-		63AD5BDE23056863006B3308 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFEB61FC45C440070C05F /* AppDelegate.m */; };
-		63AD5BE623056863006B3308 /* TKMOfflineAudioViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA78D218EB6890058E885 /* TKMOfflineAudioViewController.mm */; };
-		63AD5BEA23056863006B3308 /* LessonsPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12DD203D779D009E92DB /* LessonsPageControl.m */; };
-		63AD5BED23056863006B3308 /* SearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */; };
-		63AD5BEE23056863006B3308 /* LessonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12D7203847BE009E92DB /* LessonsViewController.m */; };
-		63AD5BEF23056863006B3308 /* TKMSubjectChip.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA620D14915003019EB /* TKMSubjectChip.m */; };
-		63AD5BF623056863006B3308 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
-		63AD5BF723056863006B3308 /* UIView+SafeAreaInsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */; };
-		63AD5BF923056863006B3308 /* TKMSwitchModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95020C5634A00AC25F4 /* TKMSwitchModelItem.m */; };
-		63AD5BFB23056863006B3308 /* TKMReviewMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766521F47669002A417B /* TKMReviewMenuViewController.m */; };
-		63AD5C0223056863006B3308 /* LocalCachingClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */; };
-		63AD5C0623056863006B3308 /* Wanikani+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB011FCD755300E09DA1 /* Wanikani+Convenience.m */; };
-		63AD5C0823056863006B3308 /* NSMutableAttributedString+Replacements.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */; };
-		63AD5C0A23056863006B3308 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
-		63AD5C1823056863006B3308 /* TKMDownloadModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */; };
-		63AD5C1B23056863006B3308 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
-		63AD5C1E23056863006B3308 /* TKMTableModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95120C5634A00AC25F4 /* TKMTableModel.m */; };
-		63AD5C2623056863006B3308 /* ReviewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */; };
-		63AD5C2823056863006B3308 /* TKMBasicModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95220C5634A00AC25F4 /* TKMBasicModelItem.m */; };
-		63AD5C2A23056863006B3308 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99F204015B900C31F87 /* NSString+MD5.m */; };
-		63AD5C2F23056863006B3308 /* TKMKanaInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95920C5635900AC25F4 /* TKMKanaInput.m */; };
-		63AD5C3423056863006B3308 /* TKMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D0078218D94AA006CD711 /* TKMGradientView.m */; };
-		63AD5C3A23056863006B3308 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EB201F3011006D582B /* LoginViewController.m */; };
-		63AD5C3B23056863006B3308 /* TKMReviewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766221F47100002A417B /* TKMReviewContainerViewController.m */; };
-		63AD5C3D23056863006B3308 /* LessonOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */; };
-		63AD5C4723056863006B3308 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */; };
-		63AD5C4923056863006B3308 /* data.bin in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAAF91FC6EADC00E09DA1 /* data.bin */; };
-		63AD5C4A23056863006B3308 /* TKMSubjectModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */; };
-		63AD5C4B23056863006B3308 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
-		63AD5C4C23056863006B3308 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
-		63AD5C4D23056863006B3308 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
-		63AD5C4E23056863006B3308 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63EEFEBC1FC45C440070C05F /* Assets.xcassets */; };
-		63AD5C4F23056863006B3308 /* TKMDownloadModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */; };
 		63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */; };
 		63B1DE411FE7D81600FAB9C2 /* SubjectDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */; };
 		63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */; };
@@ -174,10 +105,8 @@
 		63EEFED31FC45E810070C05F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED21FC45E810070C05F /* MainViewController.m */; };
 		63EEFED91FC46E720070C05F /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
 		63FCAE78237F75CC00DB1418 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCAE77237F75CC00DB1418 /* Style.swift */; };
-		63FCAE79237F75CC00DB1418 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCAE77237F75CC00DB1418 /* Style.swift */; };
 		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
 		93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */; };
-		A7655070EBDAE5F32A74088A /* Pods_Tsurukame__App_Store_screenshots_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* TKMFontLoader.mm */; };
 		BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* TKMFontsViewController.m */; };
@@ -192,6 +121,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6335B46723CF0C820071671E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 630FD60B1FC45BDF00D21C1F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 630FD6121FC45BDF00D21C1F;
+			remoteInfo = Tsurukame;
+		};
 		63C42A3721B6A290008CA938 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 630FD60B1FC45BDF00D21C1F /* Project object */;
@@ -234,6 +170,11 @@
 		631CAD71234B4A96008CEA73 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		6321E60F2068F3A9003460BC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		6321E6102068F3A9003460BC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppStoreScreenshots.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6335B46423CF0C820071671E /* AppStoreScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshots.swift; sourceTree = "<group>"; };
+		6335B46623CF0C820071671E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6335B48C23CF0D390071671E /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		6335B4E623CF14280071671E /* Screenshotter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screenshotter.swift; sourceTree = "<group>"; };
 		633611E02352D8CC00DD72A3 /* Rexy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Rexy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		633612152352D9EB00DD72A3 /* libRexy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRexy.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		633632EA201F3011006D582B /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
@@ -284,7 +225,6 @@
 		6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+Replacements.m"; sourceTree = "<group>"; };
 		63A2375F1FE9264300C48657 /* UIColor+HexString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
 		63A237601FE9264300C48657 /* UIColor+HexString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
-		63AD5C5323056863006B3308 /* Tsurukame (App Store screenshots).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tsurukame (App Store screenshots).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B1DE391FE7BCDA00FAB9C2 /* ReviewSummaryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewSummaryViewController.h; sourceTree = "<group>"; };
 		63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewSummaryViewController.m; sourceTree = "<group>"; };
 		63B1DE3F1FE7D81600FAB9C2 /* SubjectDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectDetailsViewController.h; sourceTree = "<group>"; };
@@ -397,12 +337,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		63AD5C4623056863006B3308 /* Frameworks */ = {
+		6335B45F23CF0C820071671E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63AD5C4723056863006B3308 /* SystemConfiguration.framework in Frameworks */,
-				A7655070EBDAE5F32A74088A /* Pods_Tsurukame__App_Store_screenshots_.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,6 +406,7 @@
 			isa = PBXGroup;
 			children = (
 				C9164D3823D0CFCF00B6D93A /* InterfaceStyleViewController.swift */,
+				6335B46E23CF0D390071671E /* fastlane */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
@@ -486,6 +425,7 @@
 				63C42A3621B6A290008CA938 /* FontScreenshotterUITests.xctest */,
 				F513FC0E23119D07001EEEDA /* FontSizeViewController.h */,
 				F513FC0F23119D2C001EEEDA /* FontSizeViewController.m */,
+				6335B46323CF0C820071671E /* AppStoreScreenshots */,
 				63CAAB0F1FD7FAC500E09DA1 /* Frameworks */,
 				63EEFEC21FC45CB10070C05F /* Info.plist */,
 				3DA8BAFA224C957F009E925B /* LessonOrderViewController.h */,
@@ -567,13 +507,31 @@
 				6392DBA520D14915003019EB /* TKMSubjectChip.h */,
 				6392DBA620D14915003019EB /* TKMSubjectChip.m */,
 				6392DBA820D14997003019EB /* TKMSubjectDelegate.h */,
-				63AD5C5323056863006B3308 /* Tsurukame (App Store screenshots).app */,
 				63C42A4421B6A703008CA938 /* Tsurukame-Bridging-Header.h */,
 				6319C9B520441DE200C31F87 /* Tsurukame.app */,
 				93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */,
 				633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */,
 				633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */,
+				6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */,
 			);
+			sourceTree = "<group>";
+		};
+		6335B46323CF0C820071671E /* AppStoreScreenshots */ = {
+			isa = PBXGroup;
+			children = (
+				6335B46423CF0C820071671E /* AppStoreScreenshots.swift */,
+				6335B46623CF0C820071671E /* Info.plist */,
+				6335B4E623CF14280071671E /* Screenshotter.swift */,
+			);
+			path = AppStoreScreenshots;
+			sourceTree = "<group>";
+		};
+		6335B46E23CF0D390071671E /* fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				6335B48C23CF0D390071671E /* SnapshotHelper.swift */,
+			);
+			path = fastlane;
 			sourceTree = "<group>";
 		};
 		633DE93C20C2CA0600AC25F4 /* Tables */ = {
@@ -709,23 +667,23 @@
 			productReference = 6319C9B520441DE200C31F87 /* Tsurukame.app */;
 			productType = "com.apple.product-type.application";
 		};
-		63AD5B5323056863006B3308 /* Tsurukame (App Store screenshots) */ = {
+		6335B46123CF0C820071671E /* AppStoreScreenshots */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 63AD5C5023056863006B3308 /* Build configuration list for PBXNativeTarget "Tsurukame (App Store screenshots)" */;
+			buildConfigurationList = 6335B46B23CF0C820071671E /* Build configuration list for PBXNativeTarget "AppStoreScreenshots" */;
 			buildPhases = (
-				FAA61042F4A82559D67579F2 /* [CP] Check Pods Manifest.lock */,
-				63AD5B5423056863006B3308 /* Sources */,
-				63AD5C4623056863006B3308 /* Frameworks */,
-				63AD5C4823056863006B3308 /* Resources */,
+				6335B45E23CF0C820071671E /* Sources */,
+				6335B45F23CF0C820071671E /* Frameworks */,
+				6335B46023CF0C820071671E /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6335B46823CF0C820071671E /* PBXTargetDependency */,
 			);
-			name = "Tsurukame (App Store screenshots)";
-			productName = wk;
-			productReference = 63AD5C5323056863006B3308 /* Tsurukame (App Store screenshots).app */;
-			productType = "com.apple.product-type.application";
+			name = AppStoreScreenshots;
+			productName = AppStoreScreenshots;
+			productReference = 6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		63C42A2221B6A28D008CA938 /* FontScreenshotter */ = {
 			isa = PBXNativeTarget;
@@ -791,7 +749,7 @@
 		630FD60B1FC45BDF00D21C1F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1010;
+				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "David Sansome";
 				TargetAttributes = {
@@ -805,8 +763,10 @@
 							};
 						};
 					};
-					63AD5B5323056863006B3308 = {
+					6335B46123CF0C820071671E = {
+						CreatedOnToolsVersion = 11.3.1;
 						ProvisioningStyle = Automatic;
+						TestTargetID = 630FD6121FC45BDF00D21C1F;
 					};
 					63C42A2221B6A28D008CA938 = {
 						CreatedOnToolsVersion = 10.1;
@@ -842,7 +802,7 @@
 				63E9A8E121199C8500418CE1 /* Tests */,
 				63C42A2221B6A28D008CA938 /* FontScreenshotter */,
 				63C42A3521B6A290008CA938 /* FontScreenshotterUITests */,
-				63AD5B5323056863006B3308 /* Tsurukame (App Store screenshots) */,
+				6335B46123CF0C820071671E /* AppStoreScreenshots */,
 			);
 		};
 /* End PBXProject section */
@@ -863,18 +823,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		63AD5C4823056863006B3308 /* Resources */ = {
+		6335B46023CF0C820071671E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63AD5C4923056863006B3308 /* data.bin in Resources */,
-				636A63E5238A5D6B00902269 /* MainHeaderView.xib in Resources */,
-				63AD5C4A23056863006B3308 /* TKMSubjectModelItem.xib in Resources */,
-				63AD5C4B23056863006B3308 /* LaunchScreen.storyboard in Resources */,
-				63AD5C4C23056863006B3308 /* TKMListSeparatorItem.xib in Resources */,
-				63AD5C4D23056863006B3308 /* Main.storyboard in Resources */,
-				63AD5C4E23056863006B3308 /* Assets.xcassets in Resources */,
-				63AD5C4F23056863006B3308 /* TKMDownloadModelItem.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1086,28 +1038,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FAA61042F4A82559D67579F2 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Tsurukame (App Store screenshots)-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1132,6 +1062,7 @@
 				633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */,
 				633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */,
 				631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
+				6335B4E723CF14280071671E /* Screenshotter.swift in Sources */,
 				63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */,
 				636A63DE238A107A00902269 /* CurrentLevelChartItem.swift in Sources */,
 				63EEFEBF1FC45C440070C05F /* main.m in Sources */,
@@ -1187,75 +1118,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		63AD5B5423056863006B3308 /* Sources */ = {
+		6335B45E23CF0C820071671E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63AD5B6323056863006B3308 /* Wanikani.pbobjc.m in Sources */,
-				63AD5B6823056863006B3308 /* TKMListSeparatorItem.m in Sources */,
-				63AD5B7E23056863006B3308 /* TKMServices.m in Sources */,
-				63AD5B7F23056863006B3308 /* SubjectDetailsViewController.m in Sources */,
-				63AD5B8723056863006B3308 /* TKMLessonBatchSizeViewController.m in Sources */,
-				63AD5B8B23056863006B3308 /* TKMDownloadViewController.m in Sources */,
-				63AD5B8C23056863006B3308 /* TKMCheckmarkModelItem.m in Sources */,
-				63AD5B8D23056863006B3308 /* Settings.m in Sources */,
-				636A63E2238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */,
-				63AD5B9123056863006B3308 /* TKMAudio.m in Sources */,
-				63AD5B9423056863006B3308 /* NavigationController.m in Sources */,
-				63AD5B9623056863006B3308 /* SubjectCatalogueViewController.m in Sources */,
-				63AD5B9C23056863006B3308 /* TKMFontsViewController.m in Sources */,
-				63AD5BA023056863006B3308 /* TKMSubjectModelItem.m in Sources */,
-				63AD5BA623056863006B3308 /* TKMAttributedModelItem.m in Sources */,
-				63AD5BA923056863006B3308 /* ReviewOrderViewController.m in Sources */,
-				481B2FEE23C55ABF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */,
-				633AFAE72352B6F2004F732F /* VocabularyHighlighter.swift in Sources */,
-				631CAD64234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
-				63AD5BAB23056863006B3308 /* NSString+LevenshteinDistance.m in Sources */,
-				63AD5BB023056863006B3308 /* main.m in Sources */,
-				63AD5BB423056863006B3308 /* TKMFontLoader.mm in Sources */,
-				63AD5BBA23056863006B3308 /* SuccessAnimation.m in Sources */,
-				63AD5BBD23056863006B3308 /* ReviewTaskOrderViewController.m in Sources */,
-				63AD5BC023056863006B3308 /* TKMModelItem.m in Sources */,
-				63AD5BC123056863006B3308 /* SubjectsRemainingViewController.m in Sources */,
-				63AD5BC323056863006B3308 /* ReviewSummaryViewController.m in Sources */,
-				63AD5BC423056863006B3308 /* TKMMarkupModelItem.m in Sources */,
-				63AD5BC823056863006B3308 /* TKMReadingModelItem.m in Sources */,
-				63AD5BCD23056863006B3308 /* SubjectsByLevelViewController.m in Sources */,
-				63AD5BD123056863006B3308 /* SettingsViewController.m in Sources */,
-				63AD5BDA23056863006B3308 /* NSDate+TimeAgo.m in Sources */,
-				636A63DF238A107A00902269 /* CurrentLevelChartItem.swift in Sources */,
-				63AD5BDE23056863006B3308 /* AppDelegate.m in Sources */,
-				63AD5BE623056863006B3308 /* TKMOfflineAudioViewController.mm in Sources */,
-				63AD5BEA23056863006B3308 /* LessonsPageControl.m in Sources */,
-				63AD5BED23056863006B3308 /* SearchResultViewController.m in Sources */,
-				63AD5BEE23056863006B3308 /* LessonsViewController.m in Sources */,
-				63AD5BEF23056863006B3308 /* TKMSubjectChip.m in Sources */,
-				63AD5BF623056863006B3308 /* Client.m in Sources */,
-				63AD5BF723056863006B3308 /* UIView+SafeAreaInsets.m in Sources */,
-				633AFAE223516BE7004F732F /* SubjectDetailsView.swift in Sources */,
-				C904455F2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
-				63AD5BF923056863006B3308 /* TKMSwitchModelItem.m in Sources */,
-				63AD5BFB23056863006B3308 /* TKMReviewMenuViewController.m in Sources */,
-				63AD5C0223056863006B3308 /* LocalCachingClient.mm in Sources */,
-				631CAD73234B4A96008CEA73 /* ReviewViewController.swift in Sources */,
-				63AD5C0623056863006B3308 /* Wanikani+Convenience.m in Sources */,
-				63AD5C0823056863006B3308 /* NSMutableAttributedString+Replacements.m in Sources */,
-				63AD5C0A23056863006B3308 /* UIColor+HexString.m in Sources */,
-				63AD5C1823056863006B3308 /* TKMDownloadModelItem.m in Sources */,
-				63AD5C1B23056863006B3308 /* MainViewController.m in Sources */,
-				631CAD60234AC508008CEA73 /* DataLoader.swift in Sources */,
-				63AD5C1E23056863006B3308 /* TKMTableModel.m in Sources */,
-				63FCAE79237F75CC00DB1418 /* Style.swift in Sources */,
-				63AD5C2623056863006B3308 /* ReviewItem.m in Sources */,
-				636A63E8238A607A00902269 /* MainHeaderView.swift in Sources */,
-				63AD5C2823056863006B3308 /* TKMBasicModelItem.m in Sources */,
-				631CAD70234B3B8E008CEA73 /* LevelTimeRemainingItem.swift in Sources */,
-				63AD5C2A23056863006B3308 /* NSString+MD5.m in Sources */,
-				63AD5C2F23056863006B3308 /* TKMKanaInput.m in Sources */,
-				63AD5C3423056863006B3308 /* TKMGradientView.m in Sources */,
-				63AD5C3A23056863006B3308 /* LoginViewController.m in Sources */,
-				63AD5C3B23056863006B3308 /* TKMReviewContainerViewController.m in Sources */,
-				63AD5C3D23056863006B3308 /* LessonOrderViewController.m in Sources */,
+				6335B46523CF0C820071671E /* AppStoreScreenshots.swift in Sources */,
+				6335B4C823CF0D390071671E /* SnapshotHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1302,6 +1170,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6335B46823CF0C820071671E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 630FD6121FC45BDF00D21C1F /* Tsurukame */;
+			targetProxy = 6335B46723CF0C820071671E /* PBXContainerItemProxy */;
+		};
 		63C42A3821B6A290008CA938 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 63C42A2221B6A28D008CA938 /* FontScreenshotter */;
@@ -1460,14 +1333,15 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/Tsurukame.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 614;
+				CURRENT_PROJECT_VERSION = 620;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
-				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.16;
+				MARKETING_VERSION = 1.17;
 				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.davidsansome.wanikani";
@@ -1489,13 +1363,13 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/Tsurukame.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 614;
+				CURRENT_PROJECT_VERSION = 620;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
-				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.16;
+				MARKETING_VERSION = 1.17;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1508,60 +1382,43 @@
 			};
 			name = Release;
 		};
-		63AD5C5123056863006B3308 /* Debug */ = {
+		6335B46923CF0C820071671E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 7B2GP77Y4A;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"APP_STORE_SCREENSHOTS=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.13;
-				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
-				PRODUCT_MODULE_NAME = Tsurukame;
+				INFOPLIST_FILE = AppStoreScreenshots/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.AppStoreScreenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Tsurukame;
 			};
 			name = Debug;
 		};
-		63AD5C5223056863006B3308 /* Release */ = {
+		6335B46A23CF0C820071671E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D9929E537851D24D07F47938 /* Pods-Tsurukame (App Store screenshots).release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 7B2GP77Y4A;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"APP_STORE_SCREENSHOTS=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.13;
-				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
-				PRODUCT_MODULE_NAME = Tsurukame;
+				INFOPLIST_FILE = AppStoreScreenshots/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.AppStoreScreenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Tsurukame;
 			};
 			name = Release;
 		};
@@ -1719,11 +1576,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		63AD5C5023056863006B3308 /* Build configuration list for PBXNativeTarget "Tsurukame (App Store screenshots)" */ = {
+		6335B46B23CF0C820071671E /* Build configuration list for PBXNativeTarget "AppStoreScreenshots" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				63AD5C5123056863006B3308 /* Debug */,
-				63AD5C5223056863006B3308 /* Release */,
+				6335B46923CF0C820071671E /* Debug */,
+				6335B46A23CF0C820071671E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
