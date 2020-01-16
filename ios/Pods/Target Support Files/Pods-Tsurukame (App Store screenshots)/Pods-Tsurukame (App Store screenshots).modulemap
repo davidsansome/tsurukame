@@ -1,6 +1,0 @@
-framework module Pods_Tsurukame__App_Store_screenshots_ {
-  umbrella header "Pods-Tsurukame (App Store screenshots)-umbrella.h"
-
-  export *
-  module * { export * }
-}

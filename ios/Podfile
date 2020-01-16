@@ -34,11 +34,3 @@ target 'Tsurukame' do
     inherit! :search_paths
   end
 end
-
-target 'Tsurukame (App Store screenshots)' do
-  # Comment the next line if you don't want to use dynamic frameworks
-  use_frameworks!
-
-  # Pods for Tsurukame (App Store screenshots)
-
-end

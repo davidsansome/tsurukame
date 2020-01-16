@@ -189,7 +189,7 @@
 
 #pragma mark - ReviewViewControllerDelegate
 
-- (bool)reviewViewControllerAllowsCheatsForReviewItem:(ReviewItem *)reviewItem {
+- (BOOL)reviewViewControllerAllowsCheatsForReviewItem:(ReviewItem *)reviewItem {
   return false;
 }
 

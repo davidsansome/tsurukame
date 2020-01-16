@@ -1,0 +1,14 @@
+devices([
+  "iPad Pro (12.9-inch) (3rd generation)",
+  "iPhone 11 Pro Max",
+  "iPhone 8 Plus",
+  "iPhone 8",
+  "iPhone X",
+])
+
+languages(["en-AU"])
+
+scheme("AppStoreScreenshots")
+
+erase_simulator(true)
+clear_previous_screenshots(true)
