@@ -31,6 +31,7 @@
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
+#import "UIViewController+InterfaceStyle.h"
 
 @class CombinedChartView;
 @class PieChartView;
@@ -270,6 +271,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+  [self refreshInterfaceStyle];
   [self refreshQuick:true];
   [self updateHourlyTimer];
 
@@ -292,6 +294,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+  [segue.destinationViewController refreshInterfaceStyle];
   if ([segue.identifier isEqualToString:@"startReviews"]) {
     NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments

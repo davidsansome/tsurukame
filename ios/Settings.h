@@ -36,6 +36,13 @@ typedef enum : NSUInteger {
   ReviewOrder_OldestAvailableFirst = 6,
 } ReviewOrder;
 
+typedef enum : NSUInteger {
+  InterfaceStyle_System = 1,
+  InterfaceStyle_Light = 2,
+  InterfaceStyle_Dark = 3
+} InterfaceStyle;
+
+
 @interface Settings : NSObject
 
 + (void)initializeDefaultsOnStartup;
@@ -67,6 +74,7 @@ DECLARE_BOOL(useKatakanaForOnyomi);
 DECLARE_BOOL(showSRSLevelIndicator);
 DECLARE_BOOL(showAllReadings);
 DECLARE_BOOL(autoSwitchKeyboard);
+DECLARE_ENUM(InterfaceStyle, interfaceStyle);
 DECLARE_FLOAT(fontSize);
 
 // Offline audio.

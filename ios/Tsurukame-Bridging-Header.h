@@ -37,6 +37,7 @@
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "UIView+SafeAreaInsets.h"
+#import "UIViewController+InterfaceStyle.h"
 
 #import "proto/Wanikani+Convenience.h"
 #import "proto/Wanikani.pbobjc.h"

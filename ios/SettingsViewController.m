@@ -21,6 +21,7 @@
 #import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "proto/Wanikani+Convenience.h"
+#import "UIViewController+InterfaceStyle.h"
 
 #import <UserNotifications/UserNotifications.h>
 
@@ -53,6 +54,14 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)rerender {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
+
+  [model addSection:@"App"];
+  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                   title:@"UI Appearance"
+                                                subtitle:self.interfaceStyleValueText
+                                           accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                  target:self
+                                                  action:@selector(didTapInterfaceStyle:)]];
 
   [model addSection:@"Notifications"];
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
@@ -275,6 +284,21 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   return nil;
 }
 
+- (NSString *)interfaceStyleValueText {
+    switch (Settings.interfaceStyle) {
+        case InterfaceStyle_System:
+            return @"System";
+            break;
+        case InterfaceStyle_Light:
+            return @"Light";
+            break;
+        case InterfaceStyle_Dark:
+            return @"Dark";
+            break;
+    }
+    return nil;
+}
+
 - (NSString *)taskOrderValueText {
   if (Settings.meaningFirst) {
     return @"Meaning first";
@@ -292,6 +316,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
+  [self refreshInterfaceStyle];
   self.navigationController.navigationBarHidden = NO;
 
   [self rerender];
@@ -451,6 +476,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)didTapReviewOrder:(TKMBasicModelItem *)item {
   [self performSegueWithIdentifier:@"reviewOrder" sender:self];
+}
+
+- (void)didTapInterfaceStyle:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"interfaceStyle" sender:self];
 }
 
 - (void)didTapFonts:(TKMBasicModelItem *)item {
