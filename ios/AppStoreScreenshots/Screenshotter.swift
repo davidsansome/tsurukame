@@ -46,7 +46,9 @@ import Foundation
       }
     }
 
-    static let localCachingClientClass = FakeLocalCachingClient.self
+    static let localCachingClientClass = {
+      isActive ? FakeLocalCachingClient.self : LocalCachingClient.self
+    }
   }
 
   @objc
