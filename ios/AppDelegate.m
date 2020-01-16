@@ -40,6 +40,8 @@
 
   [Settings initializeDefaultsOnStartup];
 
+  [TKMScreenshotter setUp];
+
   [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
 
   _storyboard = self.window.rootViewController.storyboard;
@@ -74,16 +76,19 @@
                                              cookie:Settings.userCookie
                                          dataLoader:_services.dataLoader];
 
-  _services.localCachingClient = [[LocalCachingClient alloc] initWithClient:client
+  Class localCachingClientClass = TKMScreenshotter.localCachingClientClass;
+  _services.localCachingClient = [[localCachingClientClass alloc] initWithClient:client
                                                                  dataLoader:_services.dataLoader
                                                                reachability:_services.reachability];
 
-  // Ask for notification permissions.
-  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-  UNAuthorizationOptions options = UNAuthorizationOptionBadge | UNAuthorizationOptionAlert;
-  [center requestAuthorizationWithOptions:options
-                        completionHandler:^(BOOL granted, NSError *_Nullable error){
-                        }];
+  if (!TKMScreenshotter.isActive) {
+    // Ask for notification permissions.
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    UNAuthorizationOptions options = UNAuthorizationOptionBadge | UNAuthorizationOptionAlert;
+    [center requestAuthorizationWithOptions:options
+                          completionHandler:^(BOOL granted, NSError *_Nullable error){
+                          }];
+  }
 
   void (^pushMainViewController)(void) = ^() {
     MainViewController *vc = [_storyboard instantiateViewControllerWithIdentifier:@"main"];

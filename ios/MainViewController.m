@@ -302,10 +302,6 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
       return;
     }
 
-#ifdef APP_STORE_SCREENSHOTS
-    items = [items subarrayWithRange:NSMakeRange(0, 32)];
-#endif  // APP_STORE_SCREENSHOTS
-
     TKMReviewContainerViewController *vc =
         (TKMReviewContainerViewController *)segue.destinationViewController;
     [vc setupWithServices:_services items:items];

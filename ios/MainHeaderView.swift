@@ -18,7 +18,7 @@ private let kUserGradientYOffset: CGFloat = 450
 private let kUserGradientStartPoint: CGFloat = 0.8
 private let kUserMargin: CGFloat = 8.0
 private let kVacationMargin: CGFloat = 8.0
-private let kProgressBarHeight: CGFloat = 6.0
+private let kProgressBarHeight: CGFloat = 3.0
 
 @objc protocol MainHeaderViewDelegate {
   func searchButtonTapped()
