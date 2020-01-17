@@ -49,15 +49,15 @@ import MobileCoreServices
     case SiriShortcutHelper.ShortcutTypeReviews:
       activity.title = "Start Wanikani Reviews"
       if #available(iOS 12.0, *) {
-        activity.suggestedInvocationPhrase = "Start Wanikani reviews"
+        activity.suggestedInvocationPhrase = "Start Wanikani Reviews"
       }
-      attributes.contentDescription = "Start Wanikani Reviews in Tsurukame"
+      attributes.contentDescription = "Keep it up and burn every one"
     case SiriShortcutHelper.ShortcutTypeLessons:
       activity.title = "Start Wanikani Lessons"
       if #available(iOS 12.0, *) {
-        activity.suggestedInvocationPhrase = "Start Wanikani lessons"
+        activity.suggestedInvocationPhrase = "Start Wanikani Lessons"
       }
-      attributes.contentDescription = "Start Wanikani Lessons in Tsurukame"
+      attributes.contentDescription = "Learn something new"
     default:
       NSLog("unknown type")
     }
