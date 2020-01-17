@@ -26,6 +26,8 @@ class AppStoreScreenshots: XCTestCase {
   }
 
   func testAppStoreScreenshots() {
+    Thread.sleep(forTimeInterval: 1.0) // Wait for the profile photo to be downloaded.
+
     // Snapshot the home screen
     snapshot("01_home_screen")
 
