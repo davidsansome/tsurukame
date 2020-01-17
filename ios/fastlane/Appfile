@@ -1,2 +1,2 @@
 app_identifier "com.davidsansome.wanikani"
-apple_id "circleci@davidsansome.com"
+apple_id ENV["APPLE_ID"] || "circleci@davidsansome.com"
