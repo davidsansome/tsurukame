@@ -431,6 +431,8 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   NSURL *imageURL;
   if (email.length) {
     imageURL = UserProfileImageURL(email);
+  } else {
+    imageURL = [NSURL URLWithString:@(kDefaultProfileImageURL)];
   }
 
   [_headerView updateWithUsername:user.username

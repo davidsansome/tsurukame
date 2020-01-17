@@ -10,3 +10,4 @@ New features:
 Bug fixes:
 * Don't randomize fonts during lessons
 * Hide success rate percentage in lessons
+* Fixed a crash on startup for some users
