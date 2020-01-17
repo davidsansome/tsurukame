@@ -64,6 +64,17 @@
   return YES;
 }
 
+- (BOOL)application:(UIApplication *)application willContinueUserActivityWithType:(NSString *)userActivityType {
+    if ([userActivityType isEqualToString:SiriShortcutHelper.ShortcutTypeReviews]) {
+        MainViewController *mainVC = _navigationController.viewControllers[0];
+        [mainVC performSegueWithIdentifier:@"startReviews" sender:nil];
+    } else if ([userActivityType isEqualToString:SiriShortcutHelper.ShortcutTypeLessons]) {
+        MainViewController *mainVC = _navigationController.viewControllers[0];
+        [mainVC performSegueWithIdentifier:@"startLessons" sender:nil];
+    }
+    return YES;
+}
+
 - (void)pushLoginViewController {
   LoginViewController *loginViewController =
       [_storyboard instantiateViewControllerWithIdentifier:@"login"];
