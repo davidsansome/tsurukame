@@ -13,7 +13,7 @@
 // limitations under the License.
 
 class AnswerTextField: UITextField {
-  public var answerLanguage: String = "en" {
+  public var answerLanguage: String? {
     didSet {
       if oldValue != answerLanguage {
         DispatchQueue.main.async {
@@ -35,7 +35,7 @@ class AnswerTextField: UITextField {
     if Settings.autoSwitchKeyboard {
       return answerLanguage
     }
-    return "en"
+    return nil
   }
 
   override var textInputMode: UITextInputMode? {

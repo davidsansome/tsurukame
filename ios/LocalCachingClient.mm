@@ -222,14 +222,13 @@ struct ProgressTask {
   int total = 0;
   for (const auto &task : _tasks) {
     done += task.done;
-    total += task.total;
+    total += MAX(1, task.total);
   }
 
   float progress = 0;
   if (total > 0) {
     progress = float(done) / total;
   }
-
   dispatch_async(dispatch_get_main_queue(), ^{
     _handler(progress);
   });
@@ -812,7 +811,7 @@ struct ProgressTask {
   const int total = (int)progress.count;
   if (!total) {
     if (handler) {
-      handler(0, 0);
+      handler(1, 1);
     }
     return;
   }
@@ -893,7 +892,7 @@ struct ProgressTask {
     }
 
     if (!total && handler) {
-      handler(0, 0);
+      handler(1, 1);
     }
   }];
 }
