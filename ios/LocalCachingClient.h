@@ -58,6 +58,7 @@ typedef void (^SyncProgressHandler)(float progress);
 - (nullable TKMAssignment *)getAssignmentForID:(int)subjectID;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level;
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel;
+- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersPastLevels;
 - (int)getSrsLevelCount:(TKMSRSStageCategory)level;
 - (int)getGuruKanjiCount;
 - (NSTimeInterval)getAverageRemainingLevelTime;

@@ -533,11 +533,52 @@ struct ProgressTask {
   // Add fake assignments for any other subjects at this level that don't have assignments yet (the
   // user hasn't unlocked the prerequisite radicals/kanji).
   TKMSubjectsByLevel *subjectsByLevel = [_dataLoader subjectsByLevel:level];
-  AddFakeAssignments(
-      subjectsByLevel.radicalsArray, TKMSubject_Type_Radical, level, subjectIDs, ret);
+  AddFakeAssignments(subjectsByLevel.radicalsArray, TKMSubject_Type_Radical,
+                     level, subjectIDs, ret);
   AddFakeAssignments(subjectsByLevel.kanjiArray, TKMSubject_Type_Kanji, level, subjectIDs, ret);
-  AddFakeAssignments(
-      subjectsByLevel.vocabularyArray, TKMSubject_Type_Vocabulary, level, subjectIDs, ret);
+  AddFakeAssignments(subjectsByLevel.vocabularyArray, TKMSubject_Type_Vocabulary,
+                     level, subjectIDs, ret);
+
+  return ret;
+}
+
+- (NSArray<TKMAssignment *> *)getAssignmentsBeforeLevel:(int)level inTransaction:(FMDatabase *)db {
+  NSMutableArray<TKMAssignment *> *ret = [NSMutableArray array];
+  FMResultSet *r = [db executeQuery:
+                           @"SELECT p.id, p.level, p.srs_stage, p.subject_type, a.pb "
+                            "FROM subject_progress AS p "
+                            "LEFT JOIN assignments AS a "
+                            "ON p.id = a.subject_id "
+                            "WHERE p.level < ?",
+                           @(level)];
+  NSMutableSet<NSNumber *> *subjectIDs = [NSMutableSet set];
+  while ([r next]) {
+    NSData *data = [r dataForColumnIndex:4];
+    TKMAssignment *assignment;
+    if (data) {
+      assignment = [TKMAssignment parseFromData:data error:nil];
+    } else {
+      assignment = [TKMAssignment message];
+      assignment.subjectId = [r intForColumnIndex:0];
+      assignment.level = [r intForColumnIndex:1];
+      assignment.subjectType = static_cast<TKMSubject_Type>([r intForColumnIndex:3]);
+    }
+    assignment.srsStage = [r intForColumnIndex:2];
+    [ret addObject:assignment];
+    [subjectIDs addObject:@(assignment.subjectId)];
+  }
+  
+  for (int levelCount = 1; levelCount < level; levelCount++) {
+    // Add fake assignments for any other subjects at this level that don't have assignments yet (the
+    // user hasn't unlocked the prerequisite radicals/kanji).
+    TKMSubjectsByLevel *subjectsByLevel = [_dataLoader subjectsByLevel:levelCount];
+    AddFakeAssignments(subjectsByLevel.radicalsArray, TKMSubject_Type_Radical,
+                       levelCount, subjectIDs, ret);
+    AddFakeAssignments(subjectsByLevel.kanjiArray, TKMSubject_Type_Kanji,
+                       levelCount, subjectIDs, ret);
+    AddFakeAssignments(subjectsByLevel.vocabularyArray, TKMSubject_Type_Vocabulary,
+                       levelCount, subjectIDs, ret);
+  }
 
   return ret;
 }
@@ -554,9 +595,26 @@ struct ProgressTask {
   return ret;
 }
 
+- (nullable NSArray<TKMAssignment *> *)getAssignmentsBeforeLevel:(int)level {
+  if (level > _dataLoader.maxLevelGrantedBySubscription) {
+    return nil;
+  }
+
+  __block NSArray<TKMAssignment *> *ret = nil;
+  [_db inDatabase:^(FMDatabase *_Nonnull db) {
+    ret = [self getAssignmentsBeforeLevel:level inTransaction:db];
+  }];
+  return ret;
+}
+
 - (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
   TKMUser *user = [self getUserInfo];
   return [self getAssignmentsAtLevel:[user currentLevel]];
+}
+
+- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersPastLevels {
+  TKMUser *user = [self getUserInfo];
+  return [self getAssignmentsBeforeLevel:[user currentLevel]];
 }
 
 - (NSArray<NSNumber *> *)getTimeSpentAtEachLevel {

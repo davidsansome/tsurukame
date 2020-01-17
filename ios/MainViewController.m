@@ -193,6 +193,8 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
   NSArray<TKMAssignment *> *currentLevelAssignments =
       [_services.localCachingClient getAssignmentsAtUsersCurrentLevel];
+  NSArray<TKMAssignment *> *pastLevelAssignments =
+      [_services.localCachingClient getAssignmentsAtUsersPastLevels];
   TKMUser *user = _services.localCachingClient.getUserInfo;
 
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
@@ -224,7 +226,9 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
                                        currentReviewCount:reviews
                                                        at:[NSDate date]]];
     [model addItem:[[CurrentLevelReviewTimeItem alloc] initWithServices:_services
-                                            currentLevelAssignments:currentLevelAssignments]];
+                                                currentLevelAssignments:currentLevelAssignments]];
+    [model addItem:[[PastLevelReviewTimeItem alloc] initWithServices:_services
+                                                pastLevelAssignments:pastLevelAssignments]];
   }
 
   [model addSection:@"This level"];
