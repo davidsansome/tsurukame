@@ -295,7 +295,8 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   if ([segue.identifier isEqualToString:@"startReviews"]) {
     NSArray<TKMAssignment *> *assignments = [_services.localCachingClient getAllAssignments];
     NSArray<ReviewItem *> *items = [ReviewItem assignmentsReadyForReview:assignments
-                                                              dataLoader:_services.dataLoader];
+                                                              dataLoader:_services.dataLoader
+                                                      localCachingClient:_services.localCachingClient];
     if (!items.count) {
       return;
     }

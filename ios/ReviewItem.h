@@ -17,6 +17,7 @@
 #import "proto/Wanikani.pbobjc.h"
 
 @class DataLoader;
+@class LocalCachingClient;
 
 typedef NS_ENUM(NSInteger, TKMTaskType) {
   kTKMTaskTypeReading,
@@ -28,7 +29,8 @@ typedef NS_ENUM(NSInteger, TKMTaskType) {
 @interface ReviewItem : NSObject
 
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments
-                                          dataLoader:(DataLoader *)dataLoader;
+                                          dataLoader:(DataLoader *)dataLoader
+                                  localCachingClient:(LocalCachingClient *)localCachingClient;
 + (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<TKMAssignment *> *)assignments
                                           dataLoader:(DataLoader *)dataLoader;
 

@@ -20,10 +20,15 @@
 @implementation ReviewItem
 
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments
-                                          dataLoader:(DataLoader *)dataLoader {
+                                          dataLoader:(DataLoader *)dataLoader
+                                  localCachingClient:(LocalCachingClient *)localCachingClient {
   NSMutableArray *ret = [NSMutableArray array];
   for (TKMAssignment *assignment in assignments) {
     if (![dataLoader isValidSubjectID:assignment.subjectId]) {
+      continue;
+    }
+
+    if (localCachingClient.getUserInfo.hasLevel && localCachingClient.getUserInfo.level < assignment.level) {
       continue;
     }
 
