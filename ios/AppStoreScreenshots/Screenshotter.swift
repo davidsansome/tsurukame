@@ -83,7 +83,6 @@ import Foundation
       user.level = 24
       user.username = "Fred"
       user.maxLevelGrantedBySubscription = 60
-      // TODO: add a profile photo.
       return user
     }
 
