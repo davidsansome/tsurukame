@@ -111,7 +111,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   private var services: TKMServices!
   private weak var subjectDelegate: TKMSubjectDelegate!
 
-  private var readingItem: TKMReadingModelItem?
+  private var readingItem: ReadingModelItem?
   private var tableModel: TKMTableModel?
   private var lastSubjectChipTapped: TKMSubjectChip?
 
@@ -122,7 +122,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
 
   private func addMeanings(_ subject: TKMSubject, studyMaterials: TKMStudyMaterials?, toModel model: TKMMutableTableModel) {
     let text = renderMeanings(subject: subject, studyMaterials: studyMaterials).withFontSize(kFontSize)
-    let item = TKMAttributedModelItem(text: text)
+    let item = AttributedModelItem(text: text)
 
     model.addSection("Meaning")
     model.add(item)
@@ -132,7 +132,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
     let text = renderReadings(readings: subject.readingsArray as! [TKMReading], primaryOnly: primaryOnly).withFontSize(kFontSize)
-    let item = TKMReadingModelItem(text: text)
+    let item = ReadingModelItem(text: text)
     if subject.hasVocabulary, subject.vocabulary.audioIdsArray_Count > 0 {
       item.setAudio(services.audio, subjectID: subject.id_p)
     }
@@ -202,7 +202,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     }
 
     let formattedText = TKMRenderFormattedText(text, attributes).replaceFontSize(kFontSize)
-    model.add(TKMAttributedModelItem(text: formattedText))
+    model.add(AttributedModelItem(text: formattedText))
   }
 
   private func addContextSentences(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
@@ -219,7 +219,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       text.append(attrString(sentence.english))
       text.replaceFontSize(kFontSize)
 
-      model.add(TKMAttributedModelItem(text: text))
+      model.add(AttributedModelItem(text: text))
     }
   }
 

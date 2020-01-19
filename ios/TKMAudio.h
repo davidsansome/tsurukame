@@ -19,11 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class Reachability;
 
-typedef enum TKMAudioPlaybackState {
+typedef NS_ENUM(NSUInteger, TKMAudioPlaybackState) {
   TKMAudioLoading,
   TKMAudioPlaying,
   TKMAudioFinished,
-} TKMAudioPlaybackState;
+};
 
 @protocol TKMAudioDelegate <NSObject>
 
