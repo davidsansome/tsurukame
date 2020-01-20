@@ -180,8 +180,9 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
       model.addSection("Upcoming reviews")
       model.add(UpcomingReviewsChartItem(upcomingReviews, currentReviewCount: reviews, at: Date()))
-      model.add(CurrentLevelReviewTimeItem(services: services,
-                                           currentLevelAssignments: currentLevelAssignments))
+      model
+        .add(createCurrentLevelReviewTimeItem(services: services,
+                                              currentLevelAssignments: currentLevelAssignments))
     }
 
     model.addSection("This level")
@@ -189,8 +190,9 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
                                     currentLevelAssignments: currentLevelAssignments))
 
     if !user.hasVacationStartedAt {
-      model.add(LevelTimeRemainingItem(services: services,
-                                       currentLevelAssignments: currentLevelAssignments))
+      model
+        .add(createLevelTimeRemainingItem(services: services,
+                                          currentLevelAssignments: currentLevelAssignments))
     }
     model.add(TKMBasicModelItem(style: .default,
                                 title: "Show remaining",
