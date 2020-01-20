@@ -467,9 +467,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     // Choose a random task from the active queue.
     activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
     activeTask = activeQueue[activeTaskIndex]
-    activeSubject = services.dataLoader.load(subjectID: Int(activeTask.assignment!.subjectId))!
+    activeSubject = services.dataLoader.load(subjectID: Int(activeTask.assignment.subjectId))!
     activeStudyMaterials =
-      services.localCachingClient?.getStudyMaterial(forID: activeTask.assignment!.subjectId)
+      services.localCachingClient.getStudyMaterial(forID: activeTask.assignment.subjectId)
 
     // Choose whether to ask the meaning or the reading.
     if activeTask.answeredMeaning {
@@ -970,7 +970,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       didLevelUp ? activeTask.assignment.srsStage + 1 : activeTask.assignment.srsStage - 1
     if isSubjectFinished {
       let date = Int32(Date().timeIntervalSince1970)
-      if date > activeTask.assignment!.availableAt {
+      if date > activeTask.assignment.availableAt {
         activeTask.answer.createdAt = date
       }
 
@@ -986,7 +986,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     if result != .Incorrect {
       if Settings.playAudioAutomatically, activeTaskType == .reading,
         activeSubject.hasVocabulary, activeSubject.vocabulary.audioIdsArray_Count > 0 {
-        services.audio.play(forSubjectID: activeSubject.id_p, delegate: nil)
+        services.audio.play(subjectID: Int(activeSubject!.id_p), delegate: nil)
       }
 
       var previousSubjectLabel: UILabel?

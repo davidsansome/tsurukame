@@ -16,10 +16,7 @@
 #import "Client.h"
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
-#import "MainViewController.h"
 #import "Settings.h"
-#import "TKMAudio.h"
-#import "TKMServices+Internals.h"
 #import "Tsurukame-Swift.h"
 
 #import <UserNotifications/UserNotifications.h>

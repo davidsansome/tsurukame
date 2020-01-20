@@ -17,16 +17,16 @@ import Foundation
 @objc(TKMReadingModelItem)
 @objcMembers
 class ReadingModelItem: AttributedModelItem {
-  var audio: TKMAudio?
+  var audio: Audio?
   var audioSubjectID: Int32 = 0
 
-  weak var audioDelegate: TKMAudioDelegate?
+  weak var audioDelegate: AudioDelegate?
 
   override init(text: NSAttributedString) {
     super.init(text: text)
   }
 
-  func setAudio(_ audio: TKMAudio, subjectID: Int32) {
+  func setAudio(_ audio: Audio, subjectID: Int32) {
     self.audio = audio
     audioSubjectID = subjectID
   }
@@ -37,16 +37,16 @@ class ReadingModelItem: AttributedModelItem {
 
   func playAudio() {
     if let audio = audio {
-      if audio.currentState == TKMAudioPlaybackState.playing {
+      if audio.currentState == .playing {
         audio.stopPlayback()
       } else {
-        audio.play(forSubjectID: audioSubjectID, delegate: audioDelegate)
+        audio.play(subjectID: Int(audioSubjectID), delegate: audioDelegate)
       }
     }
   }
 }
 
-class ReadingModelCell: AttributedModelCell, TKMAudioDelegate {
+class ReadingModelCell: AttributedModelCell, AudioDelegate {
   override func update(with baseItem: TKMModelItem!) {
     super.update(with: baseItem)
     let item = baseItem as! ReadingModelItem
@@ -66,7 +66,7 @@ class ReadingModelCell: AttributedModelCell, TKMAudioDelegate {
     }
   }
 
-  func audioPlaybackStateChanged(_ state: TKMAudioPlaybackState) {
+  func audioPlaybackStateChanged(state: Audio.PlaybackState) {
     switch state {
     case .loading:
       rightButton?.isEnabled = false
@@ -76,8 +76,6 @@ class ReadingModelCell: AttributedModelCell, TKMAudioDelegate {
     case .finished:
       rightButton?.isEnabled = true
       rightButton?.setImage(UIImage(named: "baseline_volume_up_black_24pt"), for: .normal)
-    @unknown default:
-      break
     }
   }
 }

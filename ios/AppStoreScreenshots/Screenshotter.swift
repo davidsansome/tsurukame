@@ -94,7 +94,7 @@ import Foundation
       return nil
     }
 
-    override func getAssignmentsAtLevel(_: Int32) -> [TKMAssignment]? {
+    override func getAssignmentsAtLevel(_: Int32) -> [TKMAssignment] {
       // Return just enough to populate the SubjectsByLevelViewController.
       let level = getUserInfo()!.level
       let subjects = dataLoader.loadAll().filter { (s) -> Bool in
@@ -119,7 +119,7 @@ import Foundation
       return ret
     }
 
-    override func getAssignmentsAtUsersCurrentLevel() -> [TKMAssignment]? {
+    override func getAssignmentsAtUsersCurrentLevel() -> [TKMAssignment] {
       return makePieSlices(.radical, locked: 0, lesson: 2, apprentice: 4, guru: 1) +
         makePieSlices(.kanji, locked: 8, lesson: 4, apprentice: 12, guru: 1) +
         makePieSlices(.vocabulary, locked: 50, lesson: 8, apprentice: 4, guru: 0)

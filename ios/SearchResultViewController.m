@@ -16,7 +16,6 @@
 
 #import "SubjectDetailsViewController.h"
 #import "TKMKanaInput.h"
-#import "TKMServices.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"

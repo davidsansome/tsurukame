@@ -15,7 +15,7 @@
 #import "TKMFontsViewController.h"
 #import "Settings.h"
 #import "TKMFontLoader.h"
-#import "TKMServices.h"
+#import "Tsurukame-Swift.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"

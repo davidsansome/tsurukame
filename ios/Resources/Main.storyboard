@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Whd-2S-WNr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Whd-2S-WNr">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -141,7 +141,7 @@
         <!--Main View Controller-->
         <scene sceneID="ydl-qq-SrR">
             <objects>
-                <tableViewController storyboardIdentifier="main" id="ByY-Kf-IzJ" customClass="MainViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="main" id="ByY-Kf-IzJ" customClass="MainViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" contentMode="scaleToFill" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="f6b-3A-D9O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -159,7 +159,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="49W-hQ-Zo2"/>
                     <connections>
-                        <outlet property="headerView" destination="nBY-fs-bqI" id="mfi-f1-txd"/>
+                        <outlet property="headerView" destination="nBY-fs-bqI" id="isP-S5-Ljw"/>
                         <segue destination="CLc-42-KXf" kind="show" identifier="startReviews" id="YrX-ku-fpv"/>
                         <segue destination="dLz-hZ-OJ5" kind="show" identifier="startLessons" id="Ljs-AO-WnW"/>
                         <segue destination="hY2-mK-T6s" kind="show" identifier="showRemaining" id="9oa-Qm-fW5"/>
@@ -198,7 +198,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tcr-27-sa4">
-                                <rect key="frame" x="0.0" y="0.0" width="94" height="80"/>
+                                <rect key="frame" x="0.0" y="0.0" width="70" height="56"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="contentEdgeInsets" minX="6" minY="16" maxX="6" maxY="16"/>
                                 <state key="normal" title="Back" image="back">
@@ -869,7 +869,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CbN-0R-8Ce">
-                                <rect key="frame" x="0.0" y="0.0" width="94" height="40"/>
+                                <rect key="frame" x="0.0" y="0.0" width="70" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="GPQ-1X-kOJ"/>
                                 </constraints>
