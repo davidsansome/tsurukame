@@ -61,7 +61,8 @@ import Foundation
     override var pendingProgress: Int32 { 0 }
     override var pendingStudyMaterials: Int32 { 0 }
 
-    override func sync(progressHandler syncProgressHandler: @escaping SyncProgressHandler, quick _: Bool) {
+    override func sync(progressHandler syncProgressHandler: @escaping SyncProgressHandler,
+                       quick _: Bool) {
       syncProgressHandler(1.0)
     }
 
@@ -75,7 +76,7 @@ import Foundation
     }
 
     override func getStudyMaterial(forID _: Int32) -> TKMStudyMaterials? {
-      return nil
+      nil
     }
 
     override func getUserInfo() -> TKMUser? {
@@ -87,11 +88,11 @@ import Foundation
     }
 
     override func getAllPendingProgress() -> [TKMProgress] {
-      return []
+      []
     }
 
     override func getAssignmentForID(_: Int32) -> TKMAssignment? {
-      return nil
+      nil
     }
 
     override func getAssignmentsAtLevel(_: Int32) -> [TKMAssignment] {
@@ -120,7 +121,7 @@ import Foundation
     }
 
     override func getAssignmentsAtUsersCurrentLevel() -> [TKMAssignment] {
-      return makePieSlices(.radical, locked: 0, lesson: 2, apprentice: 4, guru: 1) +
+      makePieSlices(.radical, locked: 0, lesson: 2, apprentice: 4, guru: 1) +
         makePieSlices(.kanji, locked: 8, lesson: 4, apprentice: 12, guru: 1) +
         makePieSlices(.vocabulary, locked: 50, lesson: 8, apprentice: 4, guru: 0)
     }
@@ -138,11 +139,11 @@ import Foundation
     }
 
     override func getGuruKanjiCount() -> Int32 {
-      return 864
+      864
     }
 
     override func getAverageRemainingLevelTime() -> TimeInterval {
-      return (4 * 24 + 9) * 60 * 60
+      (4 * 24 + 9) * 60 * 60
     }
 
     override func sendProgress(_: [TKMProgress]) {}
@@ -162,8 +163,12 @@ import Foundation
       return ret
     }
 
-    private func makePieSlices(_ type: TKMSubject_Type, locked: Int, lesson: Int, apprentice: Int, guru: Int) -> [TKMAssignment] {
-      return Array(repeating: makeAssignment(type, srsStage: -1), count: locked) +
+    private func makePieSlices(_ type: TKMSubject_Type,
+                               locked: Int,
+                               lesson: Int,
+                               apprentice: Int,
+                               guru: Int) -> [TKMAssignment] {
+      Array(repeating: makeAssignment(type, srsStage: -1), count: locked) +
         Array(repeating: makeAssignment(type, srsStage: 0), count: lesson) +
         Array(repeating: makeAssignment(type, srsStage: 1), count: apprentice) +
         Array(repeating: makeAssignment(type, srsStage: 6), count: guru)

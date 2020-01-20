@@ -58,7 +58,7 @@ private class ConjugationGroup {
                           volitional: String,
                           cha: String,
                           extraConjugations: [String] = []) -> ConjugationGroup {
-    return ConjugationGroup(suffix: suffix, conjugations: [
+    ConjugationGroup(suffix: suffix, conjugations: [
       suffix,
       continuous,
       continuous + "ます",
@@ -135,21 +135,26 @@ private class ConjugationGroup {
     ] + extraConjugations)
   }
 
-  class func godanVerb(_ a: String, _ i: String, _ u: String, _ e: String, _ o: String, _ te: String, _ ta: String, _ cha: String) -> ConjugationGroup {
-    verb(
-      suffix: u,
-      te: te,
-      perfective: ta,
-      negative: a,
-      continuous: i,
-      potential: e,
-      passive: a,
-      causative: a,
-      provisionalConditional: e,
-      imperative: e,
-      volitional: o,
-      cha: cha
-    )
+  class func godanVerb(_ a: String,
+                       _ i: String,
+                       _ u: String,
+                       _ e: String,
+                       _ o: String,
+                       _ te: String,
+                       _ ta: String,
+                       _ cha: String) -> ConjugationGroup {
+    verb(suffix: u,
+         te: te,
+         perfective: ta,
+         negative: a,
+         continuous: i,
+         potential: e,
+         passive: a,
+         causative: a,
+         provisionalConditional: e,
+         imperative: e,
+         volitional: o,
+         cha: cha)
   }
 
   static var godanVerbs: [Character: ConjugationGroup] = [
@@ -166,71 +171,65 @@ private class ConjugationGroup {
     "ぬ": godanVerb("な", "に", "ぬ", "ね", "の", "んで", "んだ", "んじ"),
   ]
 
-  static var ichidanVerb = verb(
-    suffix: "る",
-    te: "て",
-    perfective: "た",
-    negative: "",
-    continuous: "",
-    potential: "られ",
-    passive: "ら",
-    causative: "さ",
-    provisionalConditional: "れ",
-    imperative: "ろ",
-    volitional: "よ",
-    cha: "ち"
+  static var ichidanVerb = verb(suffix: "る",
+                                te: "て",
+                                perfective: "た",
+                                negative: "",
+                                continuous: "",
+                                potential: "られ",
+                                passive: "ら",
+                                causative: "さ",
+                                provisionalConditional: "れ",
+                                imperative: "ろ",
+                                volitional: "よ",
+                                cha: "ち")
+
+  static var suruVerb = verb(suffix: "する",
+                             te: "して",
+                             perfective: "した",
+                             negative: "し",
+                             continuous: "し",
+                             potential: "せられ",
+                             passive: "さ",
+                             causative: "さ",
+                             provisionalConditional: "すれ",
+                             imperative: "しろ",
+                             volitional: "しよ",
+                             cha: "っち",
+                             extraConjugations: [""] // Allow the suru verb stem by itself.
   )
 
-  static var suruVerb = verb(
-    suffix: "する",
-    te: "して",
-    perfective: "した",
-    negative: "し",
-    continuous: "し",
-    potential: "せられ",
-    passive: "さ",
-    causative: "さ",
-    provisionalConditional: "すれ",
-    imperative: "しろ",
-    volitional: "しよ",
-    cha: "っち",
-    extraConjugations: [""] // Allow the suru verb stem by itself.
-  )
+  static var iAdjective = ConjugationGroup(suffix: "い",
+                                           conjugations: [
+                                             "",
+                                             "い",
+                                             "いです",
+                                             "かった(です)?",
+                                             "くない(です)?",
+                                             "くなかった(です)?",
+                                             "く",
+                                             "くて",
+                                             "ければ",
+                                             "かろう",
+                                           ])
 
-  static var iAdjective = ConjugationGroup(
-    suffix: "い",
-    conjugations: [
-      "",
-      "い",
-      "いです",
-      "かった(です)?",
-      "くない(です)?",
-      "くなかった(です)?",
-      "く",
-      "くて",
-      "ければ",
-      "かろう",
-    ]
-  )
+  static var naAdjective = ConjugationGroup(suffix: "",
+                                            conjugations: [
+                                              "",
+                                              "だ",
+                                              "です",
+                                              "な",
+                                              "で",
+                                              "だった",
+                                              "でした",
+                                              "でわない",
+                                              "じゃない",
+                                              "であれば",
+                                              "だろう",
+                                            ])
 
-  static var naAdjective = ConjugationGroup(
-    suffix: "",
-    conjugations: [
-      "",
-      "だ",
-      "です",
-      "な",
-      "で",
-      "だった",
-      "でした",
-      "でわない",
-      "じゃない",
-      "であれば",
-      "だろう",
-    ]
-  )
-
-  public static func get(for subject: TKMSubject, partOfSpeech: TKMVocabulary_PartOfSpeech) -> ConjugationGroup? {
+  public static func get(for subject: TKMSubject,
+                         partOfSpeech: TKMVocabulary_PartOfSpeech) -> ConjugationGroup? {
     switch partOfSpeech {
     case .godanVerb:
       return godanVerbs[subject.japanese.last!]
@@ -257,7 +256,8 @@ public func patternToHighlight(for subject: TKMSubject) -> String {
   var patterns = [subject.japanese!]
 
   for i in 0 ..< subject.vocabulary.partsOfSpeechArray_Count {
-    let partOfSpeech = TKMVocabulary_PartOfSpeech(rawValue: subject.vocabulary.partsOfSpeechArray.value(at: i))!
+    let partOfSpeech = TKMVocabulary_PartOfSpeech(rawValue: subject.vocabulary.partsOfSpeechArray
+      .value(at: i))!
     if let conjugationGroup = ConjugationGroup.get(for: subject, partOfSpeech: partOfSpeech) {
       // Strip the prefix and suffix strings.
       var japanese = subject.japanese!
@@ -275,7 +275,8 @@ public func patternToHighlight(for subject: TKMSubject) -> String {
   return "(" + patterns.joined(separator: "|") + ")"
 }
 
-public func highlightOccurrences(of subject: TKMSubject, in text: NSAttributedString) -> NSAttributedString? {
+public func highlightOccurrences(of subject: TKMSubject,
+                                 in text: NSAttributedString) -> NSAttributedString? {
   if !subject.hasVocabulary {
     return nil
   }

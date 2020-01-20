@@ -32,7 +32,7 @@ class ReadingModelItem: AttributedModelItem {
   }
 
   override func cellClass() -> AnyClass! {
-    return ReadingModelCell.self
+    ReadingModelCell.self
   }
 
   func playAudio() {
@@ -54,7 +54,8 @@ class ReadingModelCell: AttributedModelCell, AudioDelegate {
     if item.audioSubjectID != 0 {
       if rightButton == nil {
         rightButton = UIButton()
-        rightButton!.addTarget(item, action: #selector(ReadingModelItem.playAudio), for: .touchUpInside)
+        rightButton!
+          .addTarget(item, action: #selector(ReadingModelItem.playAudio), for: .touchUpInside)
         addSubview(rightButton!)
       }
       rightButton!.setImage(UIImage(named: "baseline_volume_up_black_24pt"), for: .normal)

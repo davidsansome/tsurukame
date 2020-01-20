@@ -19,7 +19,8 @@ class VocabularyHighlighterTest: XCTestCase {
 
   override func setUp() {
     setlocale(LC_CTYPE, "UTF-8")
-    dataLoader = try! DataLoader(fromURL: Bundle.main.url(forResource: "data", withExtension: "bin")!)
+    dataLoader = try! DataLoader(fromURL: Bundle.main
+      .url(forResource: "data", withExtension: "bin")!)
   }
 
   func testHighlightsAllSubjects() {
@@ -31,7 +32,8 @@ class VocabularyHighlighterTest: XCTestCase {
       }
 
       for sentence in subject.vocabulary.sentencesArray as! [TKMVocabulary_Sentence] {
-        let text = highlightOccurrences(of: subject, in: NSAttributedString(string: sentence.japanese))
+        let text = highlightOccurrences(of: subject,
+                                        in: NSAttributedString(string: sentence.japanese))
         if text == nil {
           let pattern = patternToHighlight(for: subject)
           NSLog("No match of \(pattern) in \(sentence.japanese!): \(subject.vocabulary.commaSeparatedPartsOfSpeech)")

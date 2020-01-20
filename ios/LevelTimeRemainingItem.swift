@@ -25,8 +25,8 @@ class LevelTimeRemainingItem: NSObject, TKMModelItem {
   }
 
   func createCell() -> TKMModelCell! {
-    return LevelTimeRemainingCell(style: .value1,
-                                  reuseIdentifier: String(describing: LevelTimeRemainingCell.self))
+    LevelTimeRemainingCell(style: .value1,
+                           reuseIdentifier: String(describing: LevelTimeRemainingCell.self))
   }
 }
 
@@ -118,7 +118,8 @@ class LevelTimeRemainingCell: TKMModelCell {
     let formatter = DateComponentsFormatter()
     formatter.unitsStyle = DateComponentsFormatter.UnitsStyle.abbreviated
 
-    let componentsBitMask: Set = [Calendar.Component.day, Calendar.Component.hour, Calendar.Component.minute]
+    let componentsBitMask: Set = [Calendar.Component.day, Calendar.Component.hour,
+                                  Calendar.Component.minute]
     var components = Calendar.current.dateComponents(componentsBitMask, from: Date(), to: date)
 
     // Only show minutes after there are no hours left.

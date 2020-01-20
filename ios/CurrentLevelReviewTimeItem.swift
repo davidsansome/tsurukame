@@ -25,8 +25,9 @@ class CurrentLevelReviewTimeItem: NSObject, TKMModelItem {
   }
 
   func createCell() -> TKMModelCell! {
-    return CurrentLevelReviewTimeCell(style: .value1,
-                                      reuseIdentifier: String(describing: CurrentLevelReviewTimeCell.self))
+    CurrentLevelReviewTimeCell(style: .value1,
+                               reuseIdentifier: String(describing: CurrentLevelReviewTimeCell
+                                 .self))
   }
 }
 
@@ -69,7 +70,8 @@ class CurrentLevelReviewTimeCell: TKMModelCell {
     let levelKanjiUnlocked = guruDates.last != nil ? (guruDates.last! != Date.distantFuture) : true
 
     for assignment in item.currentLevelAssignments {
-      if assignment.subjectType == .vocabulary || (levelKanjiUnlocked && assignment.subjectType == .radical) {
+      if assignment
+        .subjectType == .vocabulary || (levelKanjiUnlocked && assignment.subjectType == .radical) {
         continue
       }
       if let reviewDate = assignment.reviewDate {
@@ -105,7 +107,8 @@ class CurrentLevelReviewTimeCell: TKMModelCell {
     let formatter = DateComponentsFormatter()
     formatter.unitsStyle = DateComponentsFormatter.UnitsStyle.abbreviated
 
-    let componentsBitMask: Set = [Calendar.Component.day, Calendar.Component.hour, Calendar.Component.minute]
+    let componentsBitMask: Set = [Calendar.Component.day, Calendar.Component.hour,
+                                  Calendar.Component.minute]
     var components = Calendar.current.dateComponents(componentsBitMask, from: Date(), to: date)
 
     // Only show minutes after there are no hours left.

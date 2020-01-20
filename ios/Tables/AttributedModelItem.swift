@@ -27,7 +27,7 @@ class AttributedModelItem: NSObject, TKMModelItem {
   }
 
   func cellClass() -> AnyClass! {
-    return AttributedModelCell.self
+    AttributedModelCell.self
   }
 }
 
@@ -60,9 +60,8 @@ class AttributedModelCell: TKMModelCell {
     var availableRect = CGRect(origin: .zero, size: size).inset(by: kEdgeInsets)
     let textViewSize = textView.sizeThatFits(availableRect.size)
 
-    availableRect.size.height = max(
-      kMinimumHeight, textViewSize.height + kEdgeInsets.top + kEdgeInsets.bottom
-    )
+    availableRect.size.height = max(kMinimumHeight,
+                                    textViewSize.height + kEdgeInsets.top + kEdgeInsets.bottom)
     return availableRect.size
   }
 
@@ -73,12 +72,11 @@ class AttributedModelCell: TKMModelCell {
 
     if let rightButton = rightButton {
       let buttonSize = rightButton.intrinsicContentSize
-      rightButton.frame = CGRect(
-        x: availableRect.maxX - buttonSize.width - kEdgeInsets.right,
-        y: availableRect.origin.y - kEdgeInsets.top,
-        width: buttonSize.width + kEdgeInsets.right * 2,
-        height: availableRect.size.height + kEdgeInsets.top + kEdgeInsets.bottom
-      )
+      rightButton.frame = CGRect(x: availableRect.maxX - buttonSize.width - kEdgeInsets.right,
+                                 y: availableRect.origin.y - kEdgeInsets.top,
+                                 width: buttonSize.width + kEdgeInsets.right * 2,
+                                 height: availableRect.size.height + kEdgeInsets.top + kEdgeInsets
+                                   .bottom)
 
       availableRect.size.width -= buttonSize.width + kEdgeInsets.right
     }

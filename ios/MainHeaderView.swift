@@ -135,7 +135,8 @@ class MainHeaderView: UIView {
     // Position the vacation container below it.
     var vacationContainerSize = CGSize(width: 0, height: 0)
     if isOnVacation {
-      let vacationContainerHeight = vacationContainer.sizeThatFits(CGSize(width: width, height: 0)).height
+      let vacationContainerHeight = vacationContainer.sizeThatFits(CGSize(width: width, height: 0))
+        .height
       vacationContainerSize = CGSize(width: width, height: vacationContainerHeight)
     }
     vacationContainer.frame = CGRect(origin: origin, size: vacationContainerSize)
@@ -155,7 +156,11 @@ class MainHeaderView: UIView {
     vacationGradientLayer.frame = vacationContainer.bounds
   }
 
-  @objc func update(username: String, level: Int, guruKanji: Int, imageURL: URL?, vacationMode: Bool) {
+  @objc func update(username: String,
+                    level: Int,
+                    guruKanji: Int,
+                    imageURL: URL?,
+                    vacationMode: Bool) {
     if let imageURL = imageURL {
       imageView.hnk_setImage(from: imageURL)
     }

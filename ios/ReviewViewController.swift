@@ -57,25 +57,38 @@ private func getDotsForLevel(_ level: Int32) -> NSAttributedString? {
   var string: NSMutableAttributedString?
   switch level {
   case 1:
-    string = NSMutableAttributedString(string: "•◦◦◦", attributes: [.foregroundColor: kDotColorApprentice])
+    string = NSMutableAttributedString(string: "•◦◦◦",
+                                       attributes: [.foregroundColor: kDotColorApprentice])
   case 2:
-    string = NSMutableAttributedString(string: "••◦◦", attributes: [.foregroundColor: kDotColorApprentice])
+    string = NSMutableAttributedString(string: "••◦◦",
+                                       attributes: [.foregroundColor: kDotColorApprentice])
   case 3:
-    string = NSMutableAttributedString(string: "•••◦", attributes: [.foregroundColor: kDotColorApprentice])
+    string = NSMutableAttributedString(string: "•••◦",
+                                       attributes: [.foregroundColor: kDotColorApprentice])
   case 4:
-    string = NSMutableAttributedString(string: "••••◦", attributes: [.foregroundColor: kDotColorApprentice])
-    string?.addAttribute(.foregroundColor, value: kDotColorGuru, range: NSRange(location: 4, length: 1))
+    string = NSMutableAttributedString(string: "••••◦",
+                                       attributes: [.foregroundColor: kDotColorApprentice])
+    string?
+      .addAttribute(.foregroundColor, value: kDotColorGuru, range: NSRange(location: 4, length: 1))
   case 5:
     string = NSMutableAttributedString(string: "•◦", attributes: [.foregroundColor: kDotColorGuru])
   case 6:
     string = NSMutableAttributedString(string: "••◦", attributes: [.foregroundColor: kDotColorGuru])
-    string?.addAttribute(.foregroundColor, value: kDotColorMaster, range: NSRange(location: 2, length: 1))
+    string?
+      .addAttribute(.foregroundColor, value: kDotColorMaster,
+                    range: NSRange(location: 2, length: 1))
   case 7:
-    string = NSMutableAttributedString(string: "•◦", attributes: [.foregroundColor: kDotColorMaster])
-    string?.addAttribute(.foregroundColor, value: kDotColorEnlightened, range: NSRange(location: 1, length: 1))
+    string = NSMutableAttributedString(string: "•◦",
+                                       attributes: [.foregroundColor: kDotColorMaster])
+    string?
+      .addAttribute(.foregroundColor, value: kDotColorEnlightened,
+                    range: NSRange(location: 1, length: 1))
   case 8:
-    string = NSMutableAttributedString(string: "•◦", attributes: [.foregroundColor: kDotColorEnlightened])
-    string?.addAttribute(.foregroundColor, value: kDotColorBurned, range: NSRange(location: 1, length: 1))
+    string = NSMutableAttributedString(string: "•◦",
+                                       attributes: [.foregroundColor: kDotColorEnlightened])
+    string?
+      .addAttribute(.foregroundColor, value: kDotColorBurned,
+                    range: NSRange(location: 1, length: 1))
   case 9:
     string = NSMutableAttributedString(string: "•", attributes: [.foregroundColor: kDotColorBurned])
   default:
@@ -138,7 +151,8 @@ protocol ReviewViewControllerDelegate {
 
 class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDelegate {
   private var kanaInput: TKMKanaInput!
-  private let hapticGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.light)
+  private let hapticGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator
+    .FeedbackStyle.light)
   private let tickImage = UIImage(named: "confirm")
   private let forwardArrowImage = UIImage(named: "ic_arrow_forward_white")
 
@@ -281,7 +295,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   @objc public var activeQueueLength: Int {
-    return activeQueue.count
+    activeQueue.count
   }
 
   // MARK: - UIViewController
@@ -292,19 +306,23 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     TKMStyle.addShadowToView(questionLabel, offset: 1, opacity: 0.2, radius: 4)
     TKMStyle.addShadowToView(previousSubjectButton, offset: 0, opacity: 0.7, radius: 4)
 
-    wrapUpIcon.image = UIImage(named: "baseline_access_time_black_24pt")?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+    wrapUpIcon.image = UIImage(named: "baseline_access_time_black_24pt")?
+      .withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
 
     previousSubjectGradient = CAGradientLayer()
     previousSubjectGradient.cornerRadius = 4.0
     previousSubjectButton.layer.addSublayer(previousSubjectGradient)
 
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
-                                           name: UIResponder.keyboardWillShowNotification, object: nil)
+                                           name: UIResponder.keyboardWillShowNotification,
+                                           object: nil)
 
     subjectDetailsView.setup(withServices: services, delegate: self)
 
     answerField.delegate = kanaInput
-    answerField.addTarget(self, action: #selector(answerFieldValueDidChange), for: UIControl.Event.editingChanged)
+    answerField
+      .addTarget(self, action: #selector(answerFieldValueDidChange),
+                 for: UIControl.Event.editingChanged)
 
     let showSuccessRate = delegate.reviewViewControllerShowsSuccessRate()
     successRateIcon.isHidden = !showSuccessRate
@@ -320,7 +338,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     questionLabel.isUserInteractionEnabled = false
 
-    let swipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeQuestionLabel))
+    let swipeRecognizer = UISwipeGestureRecognizer(target: self,
+                                                   action: #selector(didSwipeQuestionLabel))
     swipeRecognizer.direction = .left
     questionBackground.addGestureRecognizer(swipeRecognizer)
 
@@ -339,7 +358,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     super.viewDidLayoutSubviews()
 
     // Fix the extra inset at the top of the subject details view.
-    subjectDetailsView.contentInset = UIEdgeInsets(top: -view.tkm_safeAreaInsets.top, left: 0, bottom: 0, right: 0)
+    subjectDetailsView
+      .contentInset = UIEdgeInsets(top: -view.tkm_safeAreaInsets.top, left: 0, bottom: 0, right: 0)
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -370,9 +390,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   // MARK: - Event handlers
 
   @objc private func keyboardWillShow(notification: NSNotification) {
-    guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
-      let animationDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
-      let animationCurve = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int
+    guard let keyboardFrame = notification
+      .userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+      let animationDuration = notification
+      .userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
+      let animationCurve = notification
+      .userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int
     else {
       return
     }
@@ -449,7 +472,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     if tasksAnswered == 0 {
       successRateText = "100%"
     } else {
-      successRateText = String(Int(Double(tasksAnsweredCorrectly) / Double(tasksAnswered) * 100)) + "%"
+      successRateText = String(Int(Double(tasksAnsweredCorrectly) / Double(tasksAnswered) * 100)) +
+        "%"
     }
     let queueLength = Int(activeQueue.count + reviewQueue.count)
     let doneText = String(reviewsCompleted)
@@ -479,7 +503,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     } else if Settings.groupMeaningReading {
       activeTaskType = Settings.meaningFirst ? TKMTaskType.meaning : TKMTaskType.reading
     } else {
-      activeTaskType = TKMTaskType(rawValue: TKMTaskType.RawValue(arc4random_uniform(UInt32(TKMTaskType._Max.rawValue))))!
+      activeTaskType = TKMTaskType(rawValue: TKMTaskType
+        .RawValue(arc4random_uniform(UInt32(TKMTaskType._Max.rawValue))))!
     }
 
     // Fill the question labels.
@@ -534,7 +559,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     submitButton.isEnabled = false
 
     // Background gradients.
-    questionBackground.animateColors(to: TKMStyle.gradient(forAssignment: activeTask.assignment), duration: animationDuration)
+    questionBackground
+      .animateColors(to: TKMStyle.gradient(forAssignment: activeTask.assignment),
+                     duration: animationDuration)
     promptBackground.animateColors(to: promptGradient, duration: animationDuration)
 
     // Accessibility.
@@ -568,10 +595,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     let setupContextFunc = {
       (ctx: AnimationContext) in
-      if !(self.questionLabel.attributedText?.isEqual(to: self.activeSubject.japaneseText) ?? false) ||
+      if !(self.questionLabel.attributedText?
+        .isEqual(to: self.activeSubject.japaneseText) ?? false) ||
         self.questionLabel.font.familyName != self.currentFontName {
         ctx.addFadingLabel(original: self.questionLabel!)
-        self.questionLabel.font = UIFont(name: self.currentFontName, size: self.questionLabelFontSize())
+        self.questionLabel
+          .font = UIFont(name: self.currentFontName, size: self.questionLabelFontSize())
         self.questionLabel.attributedText = self.activeSubject.japaneseText
       }
       if self.wrapUpLabel.text != wrapUpText {
@@ -628,7 +657,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   // MARK: - Animation
 
-  private func animateSubjectDetailsView(shown: Bool, setupContextFunc: ((AnimationContext) -> Void)?) {
+  private func animateSubjectDetailsView(shown: Bool,
+                                         setupContextFunc: ((AnimationContext) -> Void)?) {
     let cheats = delegate.reviewViewControllerAllowsCheats(forReviewItem: activeTask)
 
     if shown {
@@ -695,12 +725,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     answerField.textColor = shown ? UIColor.systemRed : TKMStyle.Color.label
 
     // Scroll to the top.
-    subjectDetailsView.setContentOffset(CGPoint(x: 0, y: -subjectDetailsView.contentInset.top), animated: false)
+    subjectDetailsView
+      .setContentOffset(CGPoint(x: 0, y: -subjectDetailsView.contentInset.top), animated: false)
 
     UIView.commitAnimations()
   }
 
-  @objc func animationDidStop(animationID _: NSString, finished _: NSNumber, context: UnsafeMutableRawPointer) {
+  @objc func animationDidStop(animationID _: NSString,
+                              finished _: NSNumber,
+                              context: UnsafeMutableRawPointer) {
     let ctx = Unmanaged<AnimationContext>.fromOpaque(context).takeRetainedValue()
 
     revealAnswerButton.isHidden = true
@@ -740,7 +773,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
                    delay: 0.0,
                    options: .curveEaseOut,
                    animations: {
-                     label.transform = CGAffineTransform(scaleX: kPreviousSubjectScale, y: kPreviousSubjectScale)
+                     label
+                       .transform = CGAffineTransform(scaleX: kPreviousSubjectScale,
+                                                      y: kPreviousSubjectScale)
 
                      label.translatesAutoresizingMaskIntoConstraints = false
                      let centerYConstraint =
@@ -798,7 +833,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   @objc func didSwipeQuestionLabel(_: UIGestureRecognizer) {
-    currentFontName = fontsThatCanRenderText(activeSubject.japanese, exclude: [currentFontName]).randomElement() ?? normalFontName
+    currentFontName = fontsThatCanRenderText(activeSubject.japanese, exclude: [currentFontName])
+      .randomElement() ?? normalFontName
     setCustomQuestionLabelFont(useCustomFont: true)
   }
 
@@ -843,7 +879,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     submitButton.isEnabled = !(text?.isEmpty ?? true)
   }
 
-  func textField(_: UITextField, shouldChangeCharactersIn _: NSRange, replacementString _: String) -> Bool {
+  func textField(_: UITextField, shouldChangeCharactersIn _: NSRange,
+                 replacementString _: String) -> Bool {
     DispatchQueue.main.async {
       self.answerFieldValueDidChange()
     }
@@ -999,7 +1036,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         // We must start the success animations *after* all the UI elements have been moved to their
         // new locations by randomTask(), so that, for example, the success sparkles animate from
         // the final position of the answerField, not the original position.
-        RunSuccessAnimation(answerField, doneLabel, levelLabel, isSubjectFinished, didLevelUp, newSrsStage)
+        RunSuccessAnimation(answerField, doneLabel, levelLabel, isSubjectFinished, didLevelUp,
+                            newSrsStage)
       }
 
       if let previousSubjectLabel = previousSubjectLabel {
@@ -1029,7 +1067,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     let setupContextFunc = { (ctx: AnimationContext) in
       if self.questionLabel.font.familyName != self.normalFontName {
         ctx.addFadingLabel(original: self.questionLabel)
-        self.questionLabel.font = UIFont(name: self.normalFontName, size: self.questionLabelFontSize())
+        self.questionLabel
+          .font = UIFont(name: self.normalFontName, size: self.questionLabelFontSize())
       }
     }
     animateSubjectDetailsView(shown: true, setupContextFunc: setupContextFunc)
@@ -1086,7 +1125,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   // means that holding down the command key after (say) pressing ⌘C does not
   // repeat the action continuously on all subsequent reviews
   override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-    return super.canPerformAction(action, withSender: sender)
+    super.canPerformAction(action, withSender: sender)
   }
 
   // MARK: - TKMSubjectDelegate
@@ -1098,7 +1137,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   // MARK: - Keyboard navigation
 
   override var canBecomeFirstResponder: Bool {
-    return true
+    true
   }
 
   override var keyCommands: [UIKeyCommand]? {

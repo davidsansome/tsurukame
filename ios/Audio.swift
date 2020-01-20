@@ -49,11 +49,14 @@ class Audio: NSObject {
 
     // Set the audio session category.
     let session = AVAudioSession.sharedInstance()
-    try? session.setCategory(.playback, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
+    try? session
+      .setCategory(.playback, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
 
     // Listen for when playback of any item finished.
     let nc = NotificationCenter.default
-    nc.addObserver(self, selector: #selector(itemFinishedPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+    nc
+      .addObserver(self, selector: #selector(itemFinishedPlaying),
+                   name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
   }
 
   private(set) var currentState = PlaybackState.finished {
@@ -114,7 +117,10 @@ class Audio: NSObject {
     currentState = .finished
   }
 
-  override func observeValue(forKeyPath keyPath: String?, of _: Any?, change _: [NSKeyValueChangeKey: Any]?, context _: UnsafeMutableRawPointer?) {
+  override func observeValue(forKeyPath keyPath: String?,
+                             of _: Any?,
+                             change _: [NSKeyValueChangeKey: Any]?,
+                             context _: UnsafeMutableRawPointer?) {
     if keyPath == "currentItem.status" {
       guard let player = player,
         let currentItem = player.currentItem else {

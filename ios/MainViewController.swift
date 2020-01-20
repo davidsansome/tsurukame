@@ -37,7 +37,9 @@ private func setTableViewCellCount(_ item: TKMBasicModelItem, count: Int) -> Boo
 }
 
 @objc
-class MainViewController: UITableViewController, LoginViewControllerDelegate, MainHeaderViewDelegate, SearchResultViewControllerDelegate, UISearchControllerDelegate {
+class MainViewController: UITableViewController, LoginViewControllerDelegate,
+  MainHeaderViewDelegate,
+  SearchResultViewControllerDelegate, UISearchControllerDelegate {
   var services: TKMServices!
   var model: TKMTableModel!
   @IBOutlet var headerView: MainHeaderView!
@@ -68,14 +70,14 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate, Ma
     refreshControl = UIRefreshControl()
     refreshControl?.tintColor = .white
     refreshControl?.backgroundColor = nil
-    refreshControl?.attributedTitle = NSMutableAttributedString(
-      string: "Pull to refresh...",
-      attributes: [.foregroundColor: UIColor.white]
-    )
+    refreshControl?.attributedTitle = NSMutableAttributedString(string: "Pull to refresh...",
+                                                                attributes: [.foregroundColor: UIColor
+                                                                  .white])
     refreshControl?.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
 
     // Create the search results view controller.
-    let searchResultsVC = storyboard?.instantiateViewController(withIdentifier: "searchResults") as! SearchResultViewController
+    let searchResultsVC = storyboard?
+      .instantiateViewController(withIdentifier: "searchResults") as! SearchResultViewController
     searchResultsVC.setup(with: services, delegate: self)
     searchResultsViewController = searchResultsVC
 
@@ -293,7 +295,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate, Ma
 
   // MARK: - UITableViewController
 
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+  override func tableView(_ tableView: UITableView,
+                          heightForRowAt indexPath: IndexPath) -> CGFloat {
     if indexPath.section == kUpcomingReviewsSection {
       return UIDevice.current.userInterfaceIdiom == .pad ? 360 : 120
     }
@@ -317,16 +320,15 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate, Ma
     cancelHourlyTimer()
 
     let calendar = Calendar.current as NSCalendar
-    let date = calendar.nextDate(after: Date(), matching: .minute, value: 0, options: .matchNextTime)!
+    let date = calendar
+      .nextDate(after: Date(), matching: .minute, value: 0, options: .matchNextTime)!
 
-    hourlyRefreshTimer = Timer.scheduledTimer(
-      withTimeInterval: date.timeIntervalSinceNow,
-      repeats: false,
-      block: { [weak self] _ in
-        guard let self = self else { return }
-        self.hourlyTimerExpired()
-      }
-    )
+    hourlyRefreshTimer = Timer.scheduledTimer(withTimeInterval: date.timeIntervalSinceNow,
+                                              repeats: false,
+                                              block: { [weak self] _ in
+                                                guard let self = self else { return }
+                                                self.hourlyTimerExpired()
+      })
   }
 
   func cancelHourlyTimer() {
@@ -388,8 +390,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate, Ma
     headerView.layoutIfNeeded()
 
     // Make the header view as short as possible.
-    let height = headerView.sizeThatFits(
-      CGSize(width: view.bounds.size.width, height: 0)).height
+    let height = headerView.sizeThatFits(CGSize(width: view.bounds.size.width, height: 0)).height
     var frame = headerView.frame
     frame.size.height = height
     headerView.frame = frame
@@ -408,7 +409,9 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate, Ma
     }
     isShowingUnauthorizedAlert = true
 
-    let ac = UIAlertController(title: "Logged out", message: "Your API Token expired - please log in again. You won't lose your review progress", preferredStyle: .alert)
+    let ac = UIAlertController(title: "Logged out",
+                               message: "Your API Token expired - please log in again. You won't lose your review progress",
+                               preferredStyle: .alert)
 
     ac.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
       self.loginAgain()
@@ -428,7 +431,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate, Ma
   }
 
   func loginComplete() {
-    services.localCachingClient.client.updateApiToken(Settings.userApiToken, cookie: Settings.userCookie)
+    services.localCachingClient.client
+      .updateApiToken(Settings.userApiToken, cookie: Settings.userCookie)
     navigationController?.popViewController(animated: true)
     isShowingUnauthorizedAlert = false
   }
@@ -441,7 +445,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate, Ma
   // MARK: - Search
 
   func searchResultSelected(_ subject: TKMSubject) {
-    let vc = storyboard?.instantiateViewController(withIdentifier: "subjectDetailsViewController") as! SubjectDetailsViewController
+    let vc = storyboard?
+      .instantiateViewController(withIdentifier: "subjectDetailsViewController") as! SubjectDetailsViewController
     vc.setup(with: services, subject: subject, showHints: true, hideBackButton: false, index: 0)
     searchController.dismiss(animated: true) {
       self.navigationController?.pushViewController(vc, animated: true)
