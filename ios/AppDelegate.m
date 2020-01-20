@@ -77,9 +77,10 @@
                                          dataLoader:_services.dataLoader];
 
   Class localCachingClientClass = TKMScreenshotter.localCachingClientClass;
-  _services.localCachingClient = [[localCachingClientClass alloc] initWithClient:client
-                                                                 dataLoader:_services.dataLoader
-                                                               reachability:_services.reachability];
+  _services.localCachingClient =
+      [[localCachingClientClass alloc] initWithClient:client
+                                           dataLoader:_services.dataLoader
+                                         reachability:_services.reachability];
 
   if (!TKMScreenshotter.isActive) {
     // Ask for notification permissions.
@@ -192,7 +193,8 @@
 
       NSTimeInterval triggerTimeInterval = startInterval + (hour * 60 * 60);
       if (triggerTimeInterval <= 0) {
-        // UNTimeIntervalNotificationTrigger sometimes crashes with a negative triggerTimeInterval.
+        // UNTimeIntervalNotificationTrigger sometimes crashes with a negative
+        // triggerTimeInterval.
         continue;
       }
       NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];

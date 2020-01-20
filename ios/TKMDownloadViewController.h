@@ -28,7 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSURL *)urlForFilename:(NSString *)filename;
 
-// A download finished.  The subclass must move the file at the URL to the destination, and then
+// A download finished.  The subclass must move the file at the URL to the
+// destination, and then
 // call either reportErrorOnMainThread or markDownloadComplete.
 - (void)didFinishDownloadFor:(NSString *)filename atURL:(NSURL *)location;
 
@@ -47,13 +48,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateProgressOnMainThread:(NSString *)filename
                        updateBlock:(void (^)(TKMDownloadModelItem *))updateBlock;
 
-// Asynchronously shows an error dialog, and if filename is not nil, marks that download as
+// Asynchronously shows an error dialog, and if filename is not nil, marks that
+// download as
 // finished.  Can be called on any thread.
 - (void)reportErrorOnMainThread:(nullable NSString *)filename
                           title:(NSString *)title
                         message:(NSString *)message;
 
-// Marks this download as complete and re-renders the table.  Must be called on the main thread.
+// Marks this download as complete and re-renders the table.  Must be called on
+// the main thread.
 - (void)markDownloadComplete:(NSString *)filename;
 
 @end

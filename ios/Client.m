@@ -108,9 +108,7 @@ static NSRegularExpression *sAPITokenRE;
 static NSRegularExpression *sAuthenticityTokenRE;
 static NSArray<NSDateFormatter *> *sDateFormatters;
 
-typedef void (^PartialResponseHandler)(id _Nullable data,
-                                       int page,
-                                       int totalPages,
+typedef void (^PartialResponseHandler)(id _Nullable data, int page, int totalPages,
                                        NSError *_Nullable error);
 
 static void EnsureInitialised() {
@@ -152,10 +150,8 @@ static void EnsureInitialised() {
   });
 }
 
-static NSString *ParseCSRFTokenFromResponse(NSData *data,
-                                            NSURLRequest *request,
-                                            NSURLResponse *response,
-                                            NSError **error) {
+static NSString *ParseCSRFTokenFromResponse(NSData *data, NSURLRequest *request,
+                                            NSURLResponse *response, NSError **error) {
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
   if (httpResponse.statusCode != 200) {
     *error = [TKMClientError httpErrorWithRequest:request response:response responseData:data];
@@ -224,8 +220,9 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     _apiToken = apiToken;
     _cookie = cookie;
     _dataLoader = dataLoader;
-    
-    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+
+    NSURLSessionConfiguration *sessionConfiguration =
+        [NSURLSessionConfiguration defaultSessionConfiguration];
     sessionConfiguration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
     _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
   }
@@ -318,9 +315,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   req.HTTPBody = data;
 
   // Start the request.
-  NSLog(@"%@ %@ to %@",
-        method,
-        [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
+  NSLog(@"%@ %@ to %@", method, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
         req.URL);
   NSURLSessionDataTask *task =
       [_urlSession dataTaskWithRequest:req
@@ -529,8 +524,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                                            request:req
                                           response:response
                                       responseData:data],
-              nil,
-              nil);
+              nil, nil);
     }
     return;
   }
@@ -557,8 +551,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
           if (httpResponse.statusCode != 200) {
             handler([TKMClientError httpErrorWithRequest:req response:response responseData:data],
-                    nil,
-                    nil);
+                    nil, nil);
             return;
           }
 
@@ -571,8 +564,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                                                  request:req
                                                 response:response
                                             responseData:data],
-                    nil,
-                    nil);
+                    nil, nil);
             return;
           }
 
@@ -598,8 +590,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
           if (httpResponse.statusCode != 200) {
             handler([TKMClientError httpErrorWithRequest:req response:response responseData:data],
-                    nil,
-                    nil);
+                    nil, nil);
             return;
           }
 
@@ -614,8 +605,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                                                  request:req
                                                 response:response
                                             responseData:data],
-                    nil,
-                    nil);
+                    nil, nil);
             return;
           }
 

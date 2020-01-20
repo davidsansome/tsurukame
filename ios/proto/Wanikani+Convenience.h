@@ -27,7 +27,8 @@ extern NSString *TKMSRSStageName(int srsStage);
 extern NSString *TKMDetailedSRSStageName(int srsStage);
 
 /**
- * Returns the minimum time it would take to get an item at the given level and SRS stage up to the
+ * Returns the minimum time it would take to get an item at the given level and
+ * SRS stage up to the
  * Guru level.
  */
 NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage);
@@ -93,7 +94,8 @@ extern NSString *TKMSRSStageCategoryName(TKMSRSStageCategory category);
 @property(nonatomic, readonly) NSDate *passedAtDate;
 
 /**
- * The date the assignment can be reviewed (or now, if it's already available), rounded to the
+ * The date the assignment can be reviewed (or now, if it's already available),
+ * rounded to the
  * nearest hour. nil if the item is burned or locked.
  */
 @property(nonatomic, nullable, readonly) NSDate *reviewDate;

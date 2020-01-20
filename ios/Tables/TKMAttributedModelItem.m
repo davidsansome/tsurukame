@@ -82,15 +82,18 @@ static const CGFloat kMinimumHeight = 44.f;
     availableRect.size.width -= buttonSize.width + kEdgeInsets.right;
   }
 
-  // [UITextView sizeToFit] gives the wrong size for attributed strings that mix bold and normal
-  // weight Japanese text.  We use [NSAttributedString boundingRectWithSize] which gives the correct
+  // [UITextView sizeToFit] gives the wrong size for attributed strings that mix
+  // bold and normal
+  // weight Japanese text.  We use [NSAttributedString boundingRectWithSize]
+  // which gives the correct
   // size.
-  NSAttributedString* text = _textView.attributedText;
+  NSAttributedString *text = _textView.attributedText;
   NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
   CGSize textViewSize = [text boundingRectWithSize:availableRect.size
                                            options:NSStringDrawingUsesLineFragmentOrigin
-                                           context:ctx].size;
-  
+                                           context:ctx]
+                            .size;
+
   // Center the text view vertically.
   if (textViewSize.height < availableRect.size.height) {
     availableRect.origin.y += floor((availableRect.size.height - textViewSize.height) / 2.f);

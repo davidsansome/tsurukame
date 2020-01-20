@@ -29,7 +29,8 @@ NS_ASSUME_NONNULL_BEGIN;
 
 @interface TKMSubjectModelItem : NSObject <TKMModelItem>
 
-/** Used for review summary.  Shows the meaning or reading in bold if they were wrong. */
+/** Used for review summary.  Shows the meaning or reading in bold if they were
+ * wrong. */
 - (instancetype)initWithSubject:(TKMSubject *)subject
                        delegate:(nullable id<TKMSubjectDelegate>)delegate
                    readingWrong:(bool)readingWrong

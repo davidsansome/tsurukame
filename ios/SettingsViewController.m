@@ -20,8 +20,8 @@
 #import "TKMFontsViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
-#import "proto/Wanikani+Convenience.h"
 #import "UIViewController+InterfaceStyle.h"
+#import "proto/Wanikani+Convenience.h"
 
 #import <UserNotifications/UserNotifications.h>
 
@@ -55,13 +55,16 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 - (void)rerender {
   TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
 
-  [model addSection:@"App"];
-  [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+  if (@available(iOS 13.0, *)) {
+    [model addSection:@"App"];
+    [model
+        addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
                                                    title:@"UI Appearance"
                                                 subtitle:self.interfaceStyleValueText
                                            accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                   target:self
                                                   action:@selector(didTapInterfaceStyle:)]];
+  }
 
   [model addSection:@"Notifications"];
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleDefault
@@ -183,7 +186,8 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
       initWithStyle:UITableViewCellStyleSubtitle
               title:@"Remember Keyboard Language"
            subtitle:
-               @"Present review answer keyboard based on answer language. After enabling you must "
+               @"Present review answer keyboard based on answer language. "
+               @"After enabling you must "
                @"manually switch keyboards the first time."
                  on:Settings.autoSwitchKeyboard
              target:self
@@ -285,18 +289,18 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (NSString *)interfaceStyleValueText {
-    switch (Settings.interfaceStyle) {
-        case InterfaceStyle_System:
-            return @"System";
-            break;
-        case InterfaceStyle_Light:
-            return @"Light";
-            break;
-        case InterfaceStyle_Dark:
-            return @"Dark";
-            break;
-    }
-    return nil;
+  switch (Settings.interfaceStyle) {
+    case InterfaceStyle_System:
+      return @"System";
+      break;
+    case InterfaceStyle_Light:
+      return @"Light";
+      break;
+    case InterfaceStyle_Dark:
+      return @"Dark";
+      break;
+  }
+  return nil;
 }
 
 - (NSString *)taskOrderValueText {

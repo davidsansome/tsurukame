@@ -42,7 +42,6 @@ typedef enum : NSUInteger {
   InterfaceStyle_Dark = 3
 } InterfaceStyle;
 
-
 @interface Settings : NSObject
 
 + (void)initializeDefaultsOnStartup;

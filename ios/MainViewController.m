@@ -30,8 +30,8 @@
 #import "TKMServices.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
 #import "UIViewController+InterfaceStyle.h"
+#import "proto/Wanikani+Convenience.h"
 
 @class CombinedChartView;
 @class PieChartView;
@@ -138,7 +138,8 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
   } else {
     for (UIView *view in _searchController.searchBar.subviews.firstObject.subviews) {
       if ([view isKindOfClass:UITextField.class]) {
-        view.tintColor = originalSearchBarTintColor;  // Make the input field cursor dark blue.
+        view.tintColor = originalSearchBarTintColor;  // Make the input field
+                                                      // cursor dark blue.
       }
     }
   }
@@ -225,7 +226,7 @@ static BOOL SetTableViewCellCount(TKMBasicModelItem *item, int count) {
                                        currentReviewCount:reviews
                                                        at:[NSDate date]]];
     [model addItem:[[CurrentLevelReviewTimeItem alloc] initWithServices:_services
-                                            currentLevelAssignments:currentLevelAssignments]];
+                                                currentLevelAssignments:currentLevelAssignments]];
   }
 
   [model addSection:@"This level"];

@@ -46,11 +46,13 @@ typedef void (^SyncProgressHandler)(float progress);
                   reachability:(Reachability *)reachability NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-// Sends pending review progress and study material updates, fetches updates.  The progress
+// Sends pending review progress and study material updates, fetches updates.
+// The progress
 // handler is always executed on the main queue.
 - (void)syncWithProgressHandler:(SyncProgressHandler)syncProgressHandler quick:(bool)quick;
 
-// Getters: query the database and return data immediately, without making network requests.
+// Getters: query the database and return data immediately, without making
+// network requests.
 - (NSArray<TKMAssignment *> *)getAllAssignments;
 - (nullable TKMStudyMaterials *)getStudyMaterialForID:(int)subjectID;
 - (nullable TKMUser *)getUserInfo;
@@ -62,7 +64,8 @@ typedef void (^SyncProgressHandler)(float progress);
 - (int)getGuruKanjiCount;
 - (NSTimeInterval)getAverageRemainingLevelTime;
 
-// Setters: save the data to the database and return immediately, make network requests in the
+// Setters: save the data to the database and return immediately, make network
+// requests in the
 // background.
 - (void)sendProgress:(NSArray<TKMProgress *> *)progress;
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material;

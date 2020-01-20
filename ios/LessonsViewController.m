@@ -90,10 +90,9 @@
 
   CGRect safeArea = UIEdgeInsetsInsetRect(self.view.frame, self.view.tkm_safeAreaInsets);
   CGSize pageControlSize = [_pageControl sizeThatFits:CGSizeMake(self.view.frame.size.width, 0)];
-  CGRect pageControlFrame = CGRectMake(CGRectGetMinX(safeArea),
-                                       CGRectGetMaxY(safeArea) - pageControlSize.height,
-                                       safeArea.size.width,
-                                       pageControlSize.height);
+  CGRect pageControlFrame =
+      CGRectMake(CGRectGetMinX(safeArea), CGRectGetMaxY(safeArea) - pageControlSize.height,
+                 safeArea.size.width, pageControlSize.height);
   _pageControl.frame = pageControlFrame;
   [_pageControl setNeedsLayout];
 
