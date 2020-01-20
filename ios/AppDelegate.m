@@ -74,9 +74,10 @@
                                          dataLoader:_services.dataLoader];
 
   Class localCachingClientClass = TKMScreenshotter.localCachingClientClass;
-  _services.localCachingClient = [[localCachingClientClass alloc] initWithClient:client
-                                                                 dataLoader:_services.dataLoader
-                                                               reachability:_services.reachability];
+  _services.localCachingClient =
+      [[localCachingClientClass alloc] initWithClient:client
+                                           dataLoader:_services.dataLoader
+                                         reachability:_services.reachability];
 
   if (!TKMScreenshotter.isActive) {
     // Ask for notification permissions.

@@ -142,7 +142,7 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
       if (![query isEqual:newQuery]) {
         return;
       }
-      
+
       TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
       [model addSection];
       for (TKMSubject *subject in results) {
