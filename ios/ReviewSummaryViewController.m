@@ -16,7 +16,6 @@
 #import "LocalCachingClient.h"
 #import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"
-#import "TKMServices.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"

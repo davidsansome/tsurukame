@@ -16,7 +16,6 @@
 
 #import "SubjectDetailsViewController.h"
 #import "TKMKanaInput.h"
-#import "TKMServices.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
@@ -139,10 +138,11 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
 
     dispatch_async(dispatch_get_main_queue(), ^{
       // If the query text changed since we started, don't update the list.
-      if (query != [searchController.searchBar.text lowercaseString]) {
+      NSString *newQuery = [searchController.searchBar.text lowercaseString];
+      if (![query isEqual:newQuery]) {
         return;
       }
-      
+
       TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
       [model addSection];
       for (TKMSubject *subject in results) {

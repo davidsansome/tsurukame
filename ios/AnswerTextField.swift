@@ -28,7 +28,7 @@ class AnswerTextField: UITextField {
   }
 
   override var textInputContextIdentifier: String? {
-    return "com.tsurukame.answer"
+    "com.tsurukame.answer"
   }
 
   private func getKeyboardLanguage() -> String? {

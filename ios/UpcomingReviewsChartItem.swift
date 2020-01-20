@@ -48,11 +48,11 @@ class UpcomingReviewsChartItem: NSObject, TKMModelItem {
   }
 
   func cellClass() -> AnyClass! {
-    return UpcomingReviewsChartCell.self
+    UpcomingReviewsChartCell.self
   }
 
   func rowHeight() -> CGFloat {
-    return 120
+    120
   }
 }
 

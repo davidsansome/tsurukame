@@ -4,3 +4,6 @@
 
 --indent 2
 --semicolons never
+--maxwidth 100
+--wraparguments after-first
+--wrapparameters after-first

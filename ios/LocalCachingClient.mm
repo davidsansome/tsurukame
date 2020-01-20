@@ -541,19 +541,19 @@ struct ProgressTask {
   return ret;
 }
 
-- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
+- (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
   if (level > _dataLoader.maxLevelGrantedBySubscription) {
-    return nil;
+    return [NSArray array];
   }
 
-  __block NSArray<TKMAssignment *> *ret = nil;
+  __block NSArray<TKMAssignment *> *ret = [NSArray array];
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     ret = [self getAssignmentsAtLevel:level inTransaction:db];
   }];
   return ret;
 }
 
-- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
+- (NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
   TKMUser *user = [self getUserInfo];
   return [self getAssignmentsAtLevel:[user currentLevel]];
 }
@@ -665,7 +665,7 @@ struct ProgressTask {
       continue;
     }
 
-    // Skip assignments that are a higher level thn the user's current level. Wanikani items that have
+    // Skip assignments that are a higher level than the user's current level. Wanikani items that have
     // moved to later levels can end up in this state and reviews will not be saved by the WK API so
     // they end up perpetually reviewed.
     if (userInfo.hasLevel && userInfo.level < assignment.level) {

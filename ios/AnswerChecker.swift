@@ -23,25 +23,34 @@ import Foundation
     case Incorrect
   }
 
-  @objc static let kAsciiCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x00) ..< Unicode.Scalar(0x7F)!)
-  @objc static let kHiraganaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x309D))!)
-  @objc static let kAllKanaCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x3100))!)
+  @objc static let kAsciiCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x00) ..< Unicode
+    .Scalar(0x7F)!)
+  @objc static let kHiraganaCharacterSet = CharacterSet(charactersIn: Unicode
+    .Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x309D))!)
+  @objc static let kAllKanaCharacterSet = CharacterSet(charactersIn: Unicode
+    .Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x3100))!)
   @objc static let kJapaneseCharacterSet = kAllKanaCharacterSet.union(
-    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3400))! ..< Unicode.Scalar(UInt32(0x4DC0))!)).union(
-    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x4E00))! ..< Unicode.Scalar(UInt32(0xA000))!)).union(
-    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xF900))! ..< Unicode.Scalar(UInt32(0xFB00))!)).union(
-    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xFF66))! ..< Unicode.Scalar(UInt32(0xFFA0))!))
+    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3400))! ..< Unicode.Scalar(UInt32(0x4DC0))!))
+    .union(
+      CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x4E00))! ..< Unicode
+        .Scalar(UInt32(0xA000))!))
+    .union(
+      CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xF900))! ..< Unicode
+        .Scalar(UInt32(0xFB00))!))
+    .union(
+      CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xFF66))! ..< Unicode
+        .Scalar(UInt32(0xFFA0))!))
 
   private class func containsAscii(_ s: String) -> Bool {
-    return s.rangeOfCharacter(from: kAsciiCharacterSet) != nil
+    s.rangeOfCharacter(from: kAsciiCharacterSet) != nil
   }
 
   private class func isKana(_ s: String) -> Bool {
-    return s.rangeOfCharacter(from: kAllKanaCharacterSet.inverted) == nil
+    s.rangeOfCharacter(from: kAllKanaCharacterSet.inverted) == nil
   }
 
   private class func isJapanese(_ s: String) -> Bool {
-    return s.rangeOfCharacter(from: kJapaneseCharacterSet.inverted) == nil
+    s.rangeOfCharacter(from: kJapaneseCharacterSet.inverted) == nil
   }
 
   private class func distanceTolerance(_ answer: String) -> Int {
@@ -101,11 +110,11 @@ import Foundation
                                     alphabet: TKMAlphabet = TKMAlphabet.hiragana) -> String {
     var s =
       text.trimmingCharacters(in: CharacterSet.whitespaces)
-      .lowercased()
-      .replacingOccurrences(of: "-", with: " ")
-      .replacingOccurrences(of: ".", with: "")
-      .replacingOccurrences(of: "'", with: "")
-      .replacingOccurrences(of: "/", with: "")
+        .lowercased()
+        .replacingOccurrences(of: "-", with: " ")
+        .replacingOccurrences(of: ".", with: "")
+        .replacingOccurrences(of: "'", with: "")
+        .replacingOccurrences(of: "/", with: "")
     if taskType == TKMTaskType.reading {
       s = s.replacingOccurrences(of: "n", with: alphabet == TKMAlphabet.hiragana ? "ん" : "ン")
       s = s.replacingOccurrences(of: " ", with: "")
@@ -140,8 +149,10 @@ import Foundation
         subject.componentSubjectIdsArray_Count == 1 {
         // If the vocabulary is made up of only one Kanji, check whether the user wrote the Kanji
         // reading instead of the vocabulary reading.
-        if let kanji = dataLoader.load(subjectID: Int(subject.componentSubjectIdsArray!.value(at: 0))) {
-          let result = checkAnswer(answer, subject: kanji, studyMaterials: nil, taskType: taskType, dataLoader: dataLoader)
+        if let kanji = dataLoader
+          .load(subjectID: Int(subject.componentSubjectIdsArray!.value(at: 0))) {
+          let result = checkAnswer(answer, subject: kanji, studyMaterials: nil, taskType: taskType,
+                                   dataLoader: dataLoader)
           if result == .Precise {
             return .OtherKanjiReading
           }
