@@ -12,19 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import UIKit
+import CommonCrypto
+import Foundation
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-  var window: UIWindow?
+extension String {
+  public func MD5() -> String {
+    let str = data(using: .utf8)!
+    var digest = Data(count: Int(CC_MD5_DIGEST_LENGTH))
 
-  func application(_: UIApplication,
-                   didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil)
-    -> Bool {
-    let vc = ViewController()
-    window = UIWindow(frame: UIScreen.main.bounds)
-    window?.rootViewController = vc
-    window?.makeKeyAndVisible()
-    return true
+    str.withUnsafeBytes { dataPointer in
+      digest.withUnsafeMutableBytes { digestPointer in
+        if let dataAddr = dataPointer.baseAddress,
+          let digestAddr = digestPointer.bindMemory(to: UInt8.self).baseAddress {
+          CC_MD5(dataAddr, CC_LONG(str.count), digestAddr)
+        }
+      }
+    }
+
+    return digest.map { String(format: "%02hhx", $0) }.joined()
   }
 }

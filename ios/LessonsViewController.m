@@ -18,7 +18,6 @@
 #import "LocalCachingClient.h"
 #import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"
-#import "TKMServices.h"
 #import "Tsurukame-Swift.h"
 #import "UIView+SafeAreaInsets.h"
 #import "proto/Wanikani+Convenience.h"

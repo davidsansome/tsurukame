@@ -53,7 +53,8 @@ enum PieSlice: Int {
     var alpha: CGFloat = 0.0
 
     baseColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-    return UIColor(hue: hue, saturation: saturation * saturationMod, brightness: brightness, alpha: alpha)
+    return UIColor(hue: hue, saturation: saturation * saturationMod, brightness: brightness,
+                   alpha: alpha)
   }
 }
 
@@ -75,11 +76,11 @@ func unsetAllLabels(view: ChartViewBase) {
   }
 
   func cellClass() -> AnyClass! {
-    return CurrentLevelChartCell.self
+    CurrentLevelChartCell.self
   }
 
   func rowHeight() -> CGFloat {
-    return 120
+    120
   }
 }
 
@@ -107,7 +108,9 @@ class CurrentLevelChartCell: TKMModelCell {
   class Delegate: ChartViewDelegate {
     weak var cell: CurrentLevelChartCell?
 
-    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight _: Highlight) {
+    func chartValueSelected(_ chartView: ChartViewBase,
+                            entry: ChartDataEntry,
+                            highlight _: Highlight) {
       chartValueNothingSelected(chartView)
 
       // Set this label.
@@ -161,7 +164,9 @@ class CurrentLevelChartCell: TKMModelCell {
     update(chart: vocabularyChart, subjectType: .vocabulary, withAssignments: assignments)
   }
 
-  private func update(chart: PieChartView, subjectType: TKMSubject_Type, withAssignments assignments: [TKMAssignment]) {
+  private func update(chart: PieChartView,
+                      subjectType: TKMSubject_Type,
+                      withAssignments assignments: [TKMAssignment]) {
     var sliceSizes = [Int](repeating: 0, count: PieSlice.count)
     for assignment in assignments {
       if !assignment.hasSubjectType || assignment.subjectType != subjectType {

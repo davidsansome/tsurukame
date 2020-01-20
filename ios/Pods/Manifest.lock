@@ -21,7 +21,7 @@ PODS:
     - MMDrawerController/Core
   - Protobuf (3.10.0)
   - Reachability (3.2)
-  - SwiftFormat/CLI (0.40.12)
+  - SwiftFormat/CLI (0.44.0)
 
 DEPENDENCIES:
   - Charts (~> 3.3.0)
@@ -52,7 +52,7 @@ SPEC CHECKSUMS:
   MMDrawerController: e3a54a5570388463ad3b36975251575b50c4e1a0
   Protobuf: a4dc852ad69c027ca2166ed287b856697814375b
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  SwiftFormat: 73667bbb741386b0febf0bd1a1b8c502aa9d1c98
+  SwiftFormat: 180a4d17bcfa2c9f61b202dac7dddd2087ff920a
 
 PODFILE CHECKSUM: d2fc15cc873cca04ebb8c51763c2f417e2dffc7f
 

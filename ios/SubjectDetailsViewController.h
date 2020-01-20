@@ -16,8 +16,8 @@
 
 NS_ASSUME_NONNULL_BEGIN;
 
-@class TKMServices;
 @class TKMSubject;
+@class TKMServices;
 
 @interface SubjectDetailsViewController : UIViewController
 

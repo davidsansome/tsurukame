@@ -542,19 +542,19 @@ struct ProgressTask {
   return ret;
 }
 
-- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
+- (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
   if (level > _dataLoader.maxLevelGrantedBySubscription) {
-    return nil;
+    return [NSArray array];
   }
 
-  __block NSArray<TKMAssignment *> *ret = nil;
+  __block NSArray<TKMAssignment *> *ret = [NSArray array];
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     ret = [self getAssignmentsAtLevel:level inTransaction:db];
   }];
   return ret;
 }
 
-- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
+- (NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
   TKMUser *user = [self getUserInfo];
   return [self getAssignmentsAtLevel:[user currentLevel]];
 }

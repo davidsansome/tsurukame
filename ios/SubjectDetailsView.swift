@@ -35,7 +35,8 @@ private func join(_ arr: [NSAttributedString], with joinString: String) -> NSAtt
   return ret
 }
 
-private func renderMeanings(subject: TKMSubject, studyMaterials: TKMStudyMaterials?) -> NSAttributedString {
+private func renderMeanings(subject: TKMSubject,
+                            studyMaterials: TKMStudyMaterials?) -> NSAttributedString {
   var strings = [NSAttributedString]()
   for meaning in subject.meaningsArray as! [TKMMeaning] {
     if meaning.type == .primary {
@@ -48,7 +49,8 @@ private func renderMeanings(subject: TKMSubject, studyMaterials: TKMStudyMateria
     }
   }
   for meaning in subject.meaningsArray as! [TKMMeaning] {
-    if meaning.type != .primary, meaning.type != .blacklist, meaning.type != .auxiliaryWhitelist || !subject.hasRadical || Settings.showOldMnemonic {
+    if meaning.type != .primary, meaning.type != .blacklist,
+      meaning.type != .auxiliaryWhitelist || !subject.hasRadical || Settings.showOldMnemonic {
       let font = UIFont.systemFont(ofSize: kFontSize, weight: .light)
       strings.append(attrString(meaning.meaning, attrs: [.font: font]))
     }
@@ -78,17 +80,19 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
   return join(strings, with: ", ")
 }
 
-private func attrString(_ string: String, attrs: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
+private func attrString(_ string: String,
+                        attrs: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
   let combinedAttrs = defaultStringAttrs().merging(attrs ?? [:]) { _, new in new }
   return NSAttributedString(string: string, attributes: combinedAttrs)
 }
 
 private func defaultStringAttrs() -> [NSAttributedString.Key: Any] {
-  return [.foregroundColor: TKMStyle.Color.label,
-          .backgroundColor: TKMStyle.Color.cellBackground]
+  [.foregroundColor: TKMStyle.Color.label,
+   .backgroundColor: TKMStyle.Color.cellBackground]
 }
 
-private func dateFormatter(dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> DateFormatter {
+private func dateFormatter(dateStyle: DateFormatter.Style,
+                           timeStyle: DateFormatter.Style) -> DateFormatter {
   let ret = DateFormatter()
   ret.dateStyle = dateStyle
   ret.timeStyle = timeStyle
@@ -111,7 +115,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   private var services: TKMServices!
   private weak var subjectDelegate: TKMSubjectDelegate!
 
-  private var readingItem: TKMReadingModelItem?
+  private var readingItem: ReadingModelItem?
   private var tableModel: TKMTableModel?
   private var lastSubjectChipTapped: TKMSubjectChip?
 
@@ -120,9 +124,12 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     subjectDelegate = delegate
   }
 
-  private func addMeanings(_ subject: TKMSubject, studyMaterials: TKMStudyMaterials?, toModel model: TKMMutableTableModel) {
-    let text = renderMeanings(subject: subject, studyMaterials: studyMaterials).withFontSize(kFontSize)
-    let item = TKMAttributedModelItem(text: text)
+  private func addMeanings(_ subject: TKMSubject,
+                           studyMaterials: TKMStudyMaterials?,
+                           toModel model: TKMMutableTableModel) {
+    let text = renderMeanings(subject: subject, studyMaterials: studyMaterials)
+      .withFontSize(kFontSize)
+    let item = AttributedModelItem(text: text)
 
     model.addSection("Meaning")
     model.add(item)
@@ -131,8 +138,9 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   private func addReadings(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
     let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
-    let text = renderReadings(readings: subject.readingsArray as! [TKMReading], primaryOnly: primaryOnly).withFontSize(kFontSize)
-    let item = TKMReadingModelItem(text: text)
+    let text = renderReadings(readings: subject.readingsArray as! [TKMReading],
+                              primaryOnly: primaryOnly).withFontSize(kFontSize)
+    let item = ReadingModelItem(text: text)
     if subject.hasVocabulary, subject.vocabulary.audioIdsArray_Count > 0 {
       item.setAudio(services.audio, subjectID: subject.id_p)
     }
@@ -142,8 +150,11 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     model.add(item)
   }
 
-  private func addComponents(_ subject: TKMSubject, title: String, toModel model: TKMMutableTableModel) {
-    let item = TKMSubjectCollectionModelItem(subjects: subject.componentSubjectIdsArray, dataLoader: services.dataLoader, delegate: self)
+  private func addComponents(_ subject: TKMSubject,
+                             title: String,
+                             toModel model: TKMMutableTableModel) {
+    let item = TKMSubjectCollectionModelItem(subjects: subject.componentSubjectIdsArray,
+                                             dataLoader: services.dataLoader, delegate: self)
 
     model.addSection(title)
     model.add(item)
@@ -191,7 +202,9 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     }
   }
 
-  private func addFormattedText(_ text: [TKMFormattedText], isHint: Bool, toModel model: TKMMutableTableModel) {
+  private func addFormattedText(_ text: [TKMFormattedText],
+                                isHint: Bool,
+                                toModel model: TKMMutableTableModel) {
     if text.isEmpty {
       return
     }
@@ -202,7 +215,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     }
 
     let formattedText = TKMRenderFormattedText(text, attributes).replaceFontSize(kFontSize)
-    model.add(TKMAttributedModelItem(text: formattedText))
+    model.add(AttributedModelItem(text: formattedText))
   }
 
   private func addContextSentences(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
@@ -219,7 +232,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       text.append(attrString(sentence.english))
       text.replaceFontSize(kFontSize)
 
-      model.add(TKMAttributedModelItem(text: text))
+      model.add(AttributedModelItem(text: text))
     }
   }
 
@@ -243,11 +256,13 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
 
       model.addSection("Mnemonic")
-      addFormattedText(subject.radical.formattedMnemonicArray as! [TKMFormattedText], isHint: false, toModel: model)
+      addFormattedText(subject.radical.formattedMnemonicArray as! [TKMFormattedText], isHint: false,
+                       toModel: model)
 
       if Settings.showOldMnemonic, subject.radical!.formattedDeprecatedMnemonicArray_Count != 0 {
         model.addSection("Old Mnemonic")
-        addFormattedText(subject.radical.formattedDeprecatedMnemonicArray as! [TKMFormattedText], isHint: false, toModel: model)
+        addFormattedText(subject.radical.formattedDeprecatedMnemonicArray as! [TKMFormattedText],
+                         isHint: false, toModel: model)
       }
 
       addAmalgamationSubjects(subject, toModel: model)
@@ -258,12 +273,16 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       addComponents(subject, title: "Radicals", toModel: model)
 
       model.addSection("Meaning Explanation")
-      addFormattedText(subject.kanji.formattedMeaningMnemonicArray as! [TKMFormattedText], isHint: false, toModel: model)
-      addFormattedText(subject.kanji.formattedMeaningHintArray as! [TKMFormattedText], isHint: true, toModel: model)
+      addFormattedText(subject.kanji.formattedMeaningMnemonicArray as! [TKMFormattedText],
+                       isHint: false, toModel: model)
+      addFormattedText(subject.kanji.formattedMeaningHintArray as! [TKMFormattedText], isHint: true,
+                       toModel: model)
 
       model.addSection("Reading Explanation")
-      addFormattedText(subject.kanji.formattedReadingMnemonicArray as! [TKMFormattedText], isHint: false, toModel: model)
-      addFormattedText(subject.kanji.formattedReadingHintArray as! [TKMFormattedText], isHint: true, toModel: model)
+      addFormattedText(subject.kanji.formattedReadingMnemonicArray as! [TKMFormattedText],
+                       isHint: false, toModel: model)
+      addFormattedText(subject.kanji.formattedReadingHintArray as! [TKMFormattedText], isHint: true,
+                       toModel: model)
 
       addSimilarKanji(subject, toModel: model)
       addAmalgamationSubjects(subject, toModel: model)
@@ -274,10 +293,12 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       addComponents(subject, title: "Kanji", toModel: model)
 
       model.addSection("Meaning Explanation")
-      addFormattedText(subject.vocabulary.formattedMeaningExplanationArray as! [TKMFormattedText], isHint: false, toModel: model)
+      addFormattedText(subject.vocabulary.formattedMeaningExplanationArray as! [TKMFormattedText],
+                       isHint: false, toModel: model)
 
       model.addSection("Reading Explanation")
-      addFormattedText(subject.vocabulary.formattedReadingExplanationArray as! [TKMFormattedText], isHint: false, toModel: model)
+      addFormattedText(subject.vocabulary.formattedReadingExplanationArray as! [TKMFormattedText],
+                       isHint: false, toModel: model)
 
       addPartsOfSpeech(subject.vocabulary, toModel: model)
       addContextSentences(subject, toModel: model)

@@ -141,7 +141,7 @@
         <!--Main View Controller-->
         <scene sceneID="ydl-qq-SrR">
             <objects>
-                <tableViewController storyboardIdentifier="main" id="ByY-Kf-IzJ" customClass="MainViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="main" id="ByY-Kf-IzJ" customClass="MainViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" contentMode="scaleToFill" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="f6b-3A-D9O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -159,7 +159,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="49W-hQ-Zo2"/>
                     <connections>
-                        <outlet property="headerView" destination="nBY-fs-bqI" id="mfi-f1-txd"/>
+                        <outlet property="headerView" destination="nBY-fs-bqI" id="isP-S5-Ljw"/>
                         <segue destination="CLc-42-KXf" kind="show" identifier="startReviews" id="YrX-ku-fpv"/>
                         <segue destination="dLz-hZ-OJ5" kind="show" identifier="startLessons" id="Ljs-AO-WnW"/>
                         <segue destination="hY2-mK-T6s" kind="show" identifier="showRemaining" id="9oa-Qm-fW5"/>
