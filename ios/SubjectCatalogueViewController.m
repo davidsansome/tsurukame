@@ -15,7 +15,6 @@
 #import "SubjectCatalogueViewController.h"
 #import "Settings.h"
 #import "SubjectsByLevelViewController.h"
-#import "TKMServices.h"
 #import "Tsurukame-Swift.h"
 
 @interface SubjectCatalogueViewController () <UIPageViewControllerDataSource,

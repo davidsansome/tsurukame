@@ -36,7 +36,7 @@ private func AdaptiveColor(light: UIColor, dark: UIColor) -> UIColor {
 }
 
 private func AdaptiveColorHex(light: Int32, dark: Int32) -> UIColor {
-  return AdaptiveColor(light: UIColorFromHex(light), dark: UIColorFromHex(dark))
+  AdaptiveColor(light: UIColorFromHex(light), dark: UIColorFromHex(dark))
 }
 
 @objc
@@ -149,22 +149,22 @@ class TKMStyle: NSObject {
   }
 
   class func japaneseFont(size: CGFloat) -> UIFont {
-    return UIFont(name: japaneseFontName, size: size)!
+    UIFont(name: japaneseFontName, size: size)!
   }
 
   class func japaneseFontLight(size: CGFloat) -> UIFont {
-    return loadFont(["HiraginoSans-W3",
-                     "HiraginoSans-W2",
-                     "HiraginoSans-W1",
-                     "HiraginoSans-W4",
-                     "HiraginoSans-W5"], size: size)
+    loadFont(["HiraginoSans-W3",
+              "HiraginoSans-W2",
+              "HiraginoSans-W1",
+              "HiraginoSans-W4",
+              "HiraginoSans-W5"], size: size)
   }
 
   class func japaneseFontBold(size: CGFloat) -> UIFont {
-    return loadFont(["HiraginoSans-W8",
-                     "HiraginoSans-W7",
-                     "HiraginoSans-W6",
-                     "HiraginoSans-W5"], size: size)
+    loadFont(["HiraginoSans-W8",
+              "HiraginoSans-W7",
+              "HiraginoSans-W6",
+              "HiraginoSans-W5"], size: size)
   }
 
   // MARK: - Dark mode aware UI colors

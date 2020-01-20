@@ -12,19 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import UIKit
+import Foundation
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-  var window: UIWindow?
+@objc
+@objcMembers
+class TKMServices: NSObject {
+  let dataLoader: DataLoader
+  let reachability: Reachability
+  let fontLoader: TKMFontLoader
 
-  func application(_: UIApplication,
-                   didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil)
-    -> Bool {
-    let vc = ViewController()
-    window = UIWindow(frame: UIScreen.main.bounds)
-    window?.rootViewController = vc
-    window?.makeKeyAndVisible()
-    return true
+  private(set) var audio: Audio!
+  var localCachingClient: LocalCachingClient!
+
+  override init() {
+    dataLoader = try! DataLoader(fromURL: Bundle.main.url(forResource: "data",
+                                                          withExtension: "bin")!)
+    reachability = Reachability.forInternetConnection()
+    fontLoader = TKMFontLoader()
+
+    super.init()
+
+    audio = Audio(services: self)
   }
 }

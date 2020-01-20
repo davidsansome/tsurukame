@@ -16,10 +16,7 @@
 #import "Client.h"
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
-#import "MainViewController.h"
 #import "Settings.h"
-#import "TKMAudio.h"
-#import "TKMServices+Internals.h"
 #import "Tsurukame-Swift.h"
 
 #import <UserNotifications/UserNotifications.h>
@@ -88,9 +85,10 @@
                                          dataLoader:_services.dataLoader];
 
   Class localCachingClientClass = TKMScreenshotter.localCachingClientClass;
-  _services.localCachingClient = [[localCachingClientClass alloc] initWithClient:client
-                                                                 dataLoader:_services.dataLoader
-                                                               reachability:_services.reachability];
+  _services.localCachingClient =
+      [[localCachingClientClass alloc] initWithClient:client
+                                           dataLoader:_services.dataLoader
+                                         reachability:_services.reachability];
 
   if (!TKMScreenshotter.isActive) {
     // Ask for notification permissions.
