@@ -18,6 +18,8 @@
 
 @class DataLoader;
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, TKMTaskType) {
   kTKMTaskTypeReading,
   kTKMTaskTypeMeaning,
@@ -42,8 +44,10 @@ typedef NS_ENUM(NSInteger, TKMTaskType) {
 @property(nonatomic) bool answeredMeaning;
 @property(nonatomic) TKMProgress *answer;
 
-- (NSComparisonResult)compareForLessons:(ReviewItem *)other;
+- (BOOL)compareForLessons:(ReviewItem *)other;
 
 - (void)reset;
 
 @end
+
+NS_ASSUME_NONNULL_END

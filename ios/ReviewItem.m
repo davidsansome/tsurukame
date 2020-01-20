@@ -68,30 +68,24 @@
   return self;
 }
 
-- (NSComparisonResult)compareForLessons:(ReviewItem *)other {
+- (BOOL)compareForLessons:(ReviewItem *)other {
   if (self.assignment.level < other.assignment.level) {
-    return Settings.prioritizeCurrentLevel ? NSOrderedDescending : NSOrderedAscending;
+    return Settings.prioritizeCurrentLevel ? false : true;
   } else if (self.assignment.level > other.assignment.level) {
-    return Settings.prioritizeCurrentLevel ? NSOrderedAscending : NSOrderedDescending;
+    return Settings.prioritizeCurrentLevel ? true : false;
   }
 
   if ([Settings.lessonOrder count]) {
     NSUInteger selfIndex = [self getSubjectTypeIndex:self.assignment.subjectType];
     NSUInteger otherIndex = [self getSubjectTypeIndex:other.assignment.subjectType];
     if (selfIndex < otherIndex) {
-      return NSOrderedAscending;
+      return true;
     } else if (selfIndex > otherIndex) {
-      return NSOrderedDescending;
+      return false;
     }
   }
 
-  if (self.assignment.subjectId < other.assignment.subjectId) {
-    return NSOrderedAscending;
-  } else if (self.assignment.subjectId > other.assignment.subjectId) {
-    return NSOrderedDescending;
-  }
-
-  return NSOrderedSame;
+  return (self.assignment.subjectId <= other.assignment.subjectId);
 }
 
 - (void)reset {

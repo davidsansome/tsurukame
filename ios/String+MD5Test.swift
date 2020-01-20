@@ -1,4 +1,4 @@
-// Copyright 2018 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,22 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "TKMAttributedModelItem.h"
-#import "TKMAudio.h"
+import XCTest
 
-NS_ASSUME_NONNULL_BEGIN
+class StringMD5Test: XCTestCase {
+  func testEmptyString() {
+    XCTAssertEqual(String().MD5(), "d41d8cd98f00b204e9800998ecf8427e")
+  }
 
-@class TKMAudio;
-
-@interface TKMReadingModelItem : TKMAttributedModelItem
-
-- (void)setAudio:(TKMAudio *)audio subjectID:(int)subjectID;
-- (void)playAudio;
-
-@property(nonatomic, readonly) TKMAudio *audio;
-@property(nonatomic, readonly) int audioSubjectID;
-@property(nonatomic, weak) id<TKMAudioDelegate> audioDelegate;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  func testNonEmptyString() {
+    XCTAssertEqual("foo".MD5(), "acbd18db4cc2f85cedef654fccc4a4d8")
+  }
+}

@@ -16,7 +16,6 @@
 
 #import "LocalCachingClient.h"
 #import "SubjectDetailsViewController.h"
-#import "TKMServices.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"

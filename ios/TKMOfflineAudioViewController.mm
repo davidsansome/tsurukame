@@ -15,10 +15,10 @@
 #import "TKMOfflineAudioViewController.h"
 
 #import "Settings.h"
-#import "TKMAudio.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "Tsurukame-Swift.h"
 
 #import <Light-Untar-umbrella.h>
 #import <compression.h>
