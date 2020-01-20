@@ -61,15 +61,16 @@
   return YES;
 }
 
-- (BOOL)application:(UIApplication *)application willContinueUserActivityWithType:(NSString *)userActivityType {
-    if ([userActivityType isEqualToString:SiriShortcutHelper.ShortcutTypeReviews]) {
-        MainViewController *mainVC = _navigationController.viewControllers[0];
-        [mainVC performSegueWithIdentifier:@"startReviews" sender:nil];
-    } else if ([userActivityType isEqualToString:SiriShortcutHelper.ShortcutTypeLessons]) {
-        MainViewController *mainVC = _navigationController.viewControllers[0];
-        [mainVC performSegueWithIdentifier:@"startLessons" sender:nil];
-    }
-    return YES;
+- (BOOL)application:(UIApplication *)application
+    willContinueUserActivityWithType:(NSString *)userActivityType {
+  if ([userActivityType isEqual:SiriShortcutHelper.ShortcutTypeReviews]) {
+    MainViewController *mainVC = [self findMainViewController];
+    [mainVC performSegueWithIdentifier:@"startReviews" sender:nil];
+  } else if ([userActivityType isEqual:SiriShortcutHelper.ShortcutTypeLessons]) {
+    MainViewController *mainVC = [self findMainViewController];
+    [mainVC performSegueWithIdentifier:@"startLessons" sender:nil];
+  }
+  return YES;
 }
 
 - (void)pushLoginViewController {
@@ -234,6 +235,15 @@
 - (void)userInfoChanged:(NSNotification *)notification {
   _services.dataLoader.maxLevelGrantedBySubscription =
       [_services.localCachingClient getUserInfo].maxLevelGrantedBySubscription;
+}
+
+- (MainViewController *)findMainViewController {
+  for (UIViewController *viewController in _navigationController.viewControllers) {
+    if ([viewController isKindOfClass:[MainViewController class]]) {
+      return (MainViewController *)viewController;
+    }
+  }
+  return nil;
 }
 
 @end
