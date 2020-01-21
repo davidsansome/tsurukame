@@ -338,17 +338,16 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     questionLabel.isUserInteractionEnabled = false
 
+    let shortPressRecognizer =
+      UITapGestureRecognizer(target: self, action: #selector(didShortPressQuestionLabel))
+    questionBackground.addGestureRecognizer(shortPressRecognizer)
+
     let swipeRecognizer = UISwipeGestureRecognizer(target: self,
                                                    action: #selector(didSwipeQuestionLabel))
     swipeRecognizer.direction = .left
     questionBackground.addGestureRecognizer(swipeRecognizer)
 
-    let longPressRecognizer =
-      UILongPressGestureRecognizer(target: self, action: #selector(didLongPressQuestionLabel))
-    longPressRecognizer.minimumPressDuration = 0
-    longPressRecognizer.allowableMovement = 500
-    longPressRecognizer.require(toFail: swipeRecognizer)
-    questionBackground.addGestureRecognizer(longPressRecognizer)
+    swipeRecognizer.require(toFail: shortPressRecognizer)
 
     viewDidLayoutSubviews()
     randomTask()
@@ -823,13 +822,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     questionLabel.font = UIFont(name: fontName, size: questionLabelFontSize())
   }
 
-  @objc func didLongPressQuestionLabel(_ gestureRecognizer: UILongPressGestureRecognizer) {
-    let answered = !subjectDetailsView.isHidden
-    if gestureRecognizer.state == .began {
-      setCustomQuestionLabelFont(useCustomFont: answered)
-    } else if gestureRecognizer.state == .ended {
-      setCustomQuestionLabelFont(useCustomFont: !answered)
-    }
+  @objc func didShortPressQuestionLabel(_: UITapGestureRecognizer) {
+    toggleFont()
   }
 
   @objc func didSwipeQuestionLabel(_: UIGestureRecognizer) {
