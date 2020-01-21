@@ -647,6 +647,18 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     return availableFonts
   }
 
+  func nextCustomFont(thatCanRenderText text: String) -> String? {
+    let availableFonts = fontsThatCanRenderText(text, exclude: nil)
+    if let index = availableFonts.firstIndex(of: currentFontName) {
+      if index + 1 >= availableFonts.count {
+        return availableFonts.first
+      } else {
+        return availableFonts[index + 1]
+      }
+    }
+    return nil
+  }
+
   func randomFont(thatCanRenderText text: String) -> String {
     if delegate.reviewViewControllerAllowsCustomFonts(),
       let fontName = fontsThatCanRenderText(text, exclude: nil).randomElement() {
@@ -829,8 +841,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   @objc func didSwipeQuestionLabel(_: UIGestureRecognizer) {
-    currentFontName = fontsThatCanRenderText(activeSubject.japanese, exclude: [currentFontName])
-      .randomElement() ?? normalFontName
+    currentFontName = nextCustomFont(thatCanRenderText: activeSubject.japanese) ?? normalFontName
     setCustomQuestionLabelFont(useCustomFont: true)
   }
 
