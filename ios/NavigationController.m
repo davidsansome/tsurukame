@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "NavigationController.h"
+#import "UIViewController+InterfaceStyle.h"
 
 #import <objc/runtime.h>
 
@@ -27,7 +28,8 @@ static const CGFloat kVelocityThreshold = 60.f;
 @property(nonatomic, readonly) id target;
 @end
 
-// An object that looks enough like a UIPanGestureRecognizer to pass to UINavigationController's
+// An object that looks enough like a UIPanGestureRecognizer to pass to
+// UINavigationController's
 // builtin transition handler.
 @interface FakeGestureRecognizer : UIPanGestureRecognizer
 @end
@@ -81,7 +83,8 @@ static const CGFloat kVelocityThreshold = 60.f;
   self.delegate = self;
   self.interactivePopGestureRecognizer.delegate = self;
 
-  // Get the target method of the UINavigationController's pop gesture recognizer.
+  // Get the target method of the UINavigationController's pop gesture
+  // recognizer.
   Ivar targetsIVar = class_getInstanceVariable([UIGestureRecognizer class], "_targets");
   NSArray *targets = object_getIvar(self.interactivePopGestureRecognizer, targetsIVar);
   _builtinPanGestureRecognizerTarget = targets.firstObject;
@@ -91,6 +94,9 @@ static const CGFloat kVelocityThreshold = 60.f;
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
   _isPushingViewController = true;
+  if ([viewController respondsToSelector:@selector(refreshInterfaceStyle)]) {
+    [viewController refreshInterfaceStyle];
+  }
   [super pushViewController:viewController animated:animated];
 
   id<TKMViewController> newViewController = (id<TKMViewController>)viewController;
@@ -116,8 +122,8 @@ static const CGFloat kVelocityThreshold = 60.f;
   IMP imp = [_builtinPanGestureRecognizerTarget.target
       methodForSelector:_builtinPanGestureRecognizerTarget.action];
   void (*func)(id, SEL, UIPanGestureRecognizer *) = (void *)imp;
-  func(
-      _builtinPanGestureRecognizerTarget.target, _builtinPanGestureRecognizerTarget.action, object);
+  func(_builtinPanGestureRecognizerTarget.target, _builtinPanGestureRecognizerTarget.action,
+       object);
 }
 
 - (BOOL)_shouldCrossFadeBottomBars {

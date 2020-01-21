@@ -190,7 +190,8 @@
 
       NSTimeInterval triggerTimeInterval = startInterval + (hour * 60 * 60);
       if (triggerTimeInterval <= 0) {
-        // UNTimeIntervalNotificationTrigger sometimes crashes with a negative triggerTimeInterval.
+        // UNTimeIntervalNotificationTrigger sometimes crashes with a negative
+        // triggerTimeInterval.
         continue;
       }
       NSString *identifier = [NSString stringWithFormat:@"badge-%d", hour];

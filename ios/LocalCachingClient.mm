@@ -139,9 +139,7 @@ static void CheckExecuteStatements(FMDatabase *db, NSString *sql) {
   }
 }
 
-static void AddFakeAssignments(GPBInt32Array *subjectIDs,
-                               TKMSubject_Type subjectType,
-                               int level,
+static void AddFakeAssignments(GPBInt32Array *subjectIDs, TKMSubject_Type subjectType, int level,
                                NSSet<NSNumber *> *excludeSubjectIDs,
                                NSMutableArray<TKMAssignment *> *assignments) {
   for (int i = 0; i < subjectIDs.count; ++i) {
@@ -171,8 +169,10 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
 }
 
 // Tracks one task that has a progress associated with it. Tasks are things like
-// "fetch all assignments" or "upload all review progress". done/total here is how many network
-// requests make up each one of those tasks. Often the total is not known until we do the first one,
+// "fetch all assignments" or "upload all review progress". done/total here is
+// how many network
+// requests make up each one of those tasks. Often the total is not known until
+// we do the first one,
 // so these may be 0 to start with.
 struct ProgressTask {
   int done = 0;
@@ -529,14 +529,15 @@ struct ProgressTask {
     [subjectIDs addObject:@(assignment.subjectId)];
   }
 
-  // Add fake assignments for any other subjects at this level that don't have assignments yet (the
+  // Add fake assignments for any other subjects at this level that don't have
+  // assignments yet (the
   // user hasn't unlocked the prerequisite radicals/kanji).
   TKMSubjectsByLevel *subjectsByLevel = [_dataLoader subjectsByLevel:level];
-  AddFakeAssignments(
-      subjectsByLevel.radicalsArray, TKMSubject_Type_Radical, level, subjectIDs, ret);
+  AddFakeAssignments(subjectsByLevel.radicalsArray, TKMSubject_Type_Radical, level, subjectIDs,
+                     ret);
   AddFakeAssignments(subjectsByLevel.kanjiArray, TKMSubject_Type_Kanji, level, subjectIDs, ret);
-  AddFakeAssignments(
-      subjectsByLevel.vocabularyArray, TKMSubject_Type_Vocabulary, level, subjectIDs, ret);
+  AddFakeAssignments(subjectsByLevel.vocabularyArray, TKMSubject_Type_Vocabulary, level, subjectIDs,
+                     ret);
 
   return ret;
 }
@@ -658,7 +659,8 @@ struct ProgressTask {
   }
 
   for (TKMAssignment *assignment in assignments) {
-    // Don't count assignments with invalid subjects.  This includes assignments for levels higher
+    // Don't count assignments with invalid subjects.  This includes assignments
+    // for levels higher
     // than the user's max level.
     if (![_dataLoader isValidSubjectID:assignment.subjectId]) {
       continue;
@@ -828,9 +830,12 @@ struct ProgressTask {
                    [self postNotificationOnMainThread:kLocalCachingClientUnauthorizedNotification];
                  }
 
-                 // Drop the data if the server is clearly telling us our data is invalid and
-                 // cannot be accepted. This most commonly happens when doing reviews before
-                 // progress from elsewhere has synced, leaving the app trying to report
+                 // Drop the data if the server is clearly telling us our
+                 // data is invalid and
+                 // cannot be accepted. This most commonly happens when
+                 // doing reviews before
+                 // progress from elsewhere has synced, leaving the app
+                 // trying to report
                  // progress on reviews you already did elsewhere.
                  if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 422) {
                    [self clearPendingProgress:p];
@@ -859,9 +864,7 @@ struct ProgressTask {
 - (void)updateStudyMaterial:(TKMStudyMaterials *)material {
   [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
     // Store the study material locally.
-    CheckUpdate(db,
-                @"REPLACE INTO study_materials (id, pb) VALUES(?, ?)",
-                @(material.subjectId),
+    CheckUpdate(db, @"REPLACE INTO study_materials (id, pb) VALUES(?, ?)", @(material.subjectId),
                 material.data);
     CheckUpdate(db, @"REPLACE INTO pending_study_materials (id) VALUES(?)", @(material.subjectId));
   }];
@@ -875,9 +878,9 @@ struct ProgressTask {
     __block int total = 0;
     __block int complete = 0;
 
-    FMResultSet *results = [db
-        executeQuery:
-            @"SELECT s.pb FROM study_materials AS s, pending_study_materials AS p ON s.id = p.id"];
+    FMResultSet *results = [db executeQuery:
+                                   @"SELECT s.pb FROM study_materials AS s, "
+                                   @"pending_study_materials AS p ON s.id = p.id"];
     while ([results next]) {
       TKMStudyMaterials *material = [TKMStudyMaterials parseFromData:[results dataForColumnIndex:0]
                                                                error:nil];
@@ -933,7 +936,8 @@ struct ProgressTask {
     _busy = true;
 
     if (!quick) {
-      // Clear the sync table before doing anything else.  This forces us to re-download all
+      // Clear the sync table before doing anything else.  This forces us to
+      // re-download all
       // assignments.
       [_db inTransaction:^(FMDatabase *_Nonnull db, BOOL *_Nonnull rollback) {
         CheckUpdate(db, @"UPDATE sync SET assignments_updated_after = \"\";");
@@ -984,22 +988,26 @@ struct ProgressTask {
                                  [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
                                    for (TKMAssignment *assignment in assignments) {
                                      CheckUpdate(db,
-                                                 @"REPLACE INTO assignments (id, pb, subject_id) "
+                                                 @"REPLACE INTO assignments "
+                                                 @"(id, pb, subject_id) "
                                                  @"VALUES (?, ?, ?)",
                                                  @(assignment.id_p), assignment.data,
                                                  @(assignment.subjectId));
                                      CheckUpdate(db,
-                                                 @"REPLACE INTO subject_progress (id, level, "
-                                                 @"srs_stage, subject_type) VALUES (?, ?, ?, ?)",
+                                                 @"REPLACE INTO subject_progress (id, "
+                                                 @"level, "
+                                                 @"srs_stage, subject_type) VALUES (?, "
+                                                 @"?, ?, ?)",
                                                  @(assignment.subjectId), @(assignment.level),
                                                  @(assignment.srsStage), @(assignment.subjectType));
                                    }
-                                   CheckUpdate(
-                                       db, @"UPDATE sync SET assignments_updated_after = ?", date);
+                                   CheckUpdate(db,
+                                               @"UPDATE sync SET "
+                                               @"assignments_updated_after = ?",
+                                               date);
                                  }];
                                  NSLog(@"Recorded %lu new assignments at %@",
-                                       (unsigned long)assignments.count,
-                                       date);
+                                       (unsigned long)assignments.count, date);
                                  [self invalidateCachedAvailableSubjectCounts];
                                }];
 }
@@ -1023,17 +1031,20 @@ struct ProgressTask {
                                  NSString *date = Client.currentISO8601Date;
                                  [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
                                    for (TKMStudyMaterials *studyMaterial in studyMaterials) {
-                                     CheckUpdate(
-                                         db, @"REPLACE INTO study_materials (id, pb) VALUES (?, ?)",
-                                         @(studyMaterial.subjectId), studyMaterial.data);
+                                     CheckUpdate(db,
+                                                 @"REPLACE INTO "
+                                                 @"study_materials (id, "
+                                                 @"pb) VALUES (?, ?)",
+                                                 @(studyMaterial.subjectId), studyMaterial.data);
                                    }
                                    CheckUpdate(db,
-                                               @"UPDATE sync SET study_materials_updated_after = ?",
+                                               @"UPDATE sync SET "
+                                               @"study_materials_updated_"
+                                               @"after = ?",
                                                date);
                                  }];
                                  NSLog(@"Recorded %lu new study materials at %@",
-                                       (unsigned long)studyMaterials.count,
-                                       date);
+                                       (unsigned long)studyMaterials.count, date);
                                }
                              }];
 }
@@ -1063,7 +1074,9 @@ struct ProgressTask {
     } else {
       [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
         for (TKMLevel *level in levels) {
-          CheckUpdate(db, @"REPLACE INTO level_progressions (id, level, pb) VALUES (?, ?, ?)",
+          CheckUpdate(db,
+                      @"REPLACE INTO level_progressions (id, level, pb) "
+                      @"VALUES (?, ?, ?)",
                       @(level.id_p), @(level.level), level.data);
         }
         NSLog(@"Recorded %lu level progressions", (unsigned long)levels.count);

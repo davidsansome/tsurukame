@@ -1,4 +1,4 @@
-// Copyright 2018 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,13 +14,12 @@
 
 #import <UIKit/UIKit.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+NS_ASSUME_NONNULL_BEGIN
 
-void RunSuccessAnimation(UIView *answerField, UIView *doneLabel, UILabel *srsLevelLabel,
-                         bool isSubjectFinished, bool didLevelUp, int newSrsLevel);
+@interface UIViewController (InterfaceStyle)
 
-#ifdef __cplusplus
-}
-#endif
+- (void)refreshInterfaceStyle;
+
+@end
+
+NS_ASSUME_NONNULL_END

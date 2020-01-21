@@ -47,7 +47,8 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
   [model addSection:@""
              footer:
                  @"Choose the fonts you want to use while doing reviews. "
-                  "Tsurukame will pick a random font from the ones you've selected for every new "
+                  "Tsurukame will pick a random font from the ones you've "
+                  "selected for every new "
                   "word."];
 
   [model addSection];

@@ -21,13 +21,8 @@ static CGFloat RandFloat(CGFloat min, CGFloat max) {
   return ((CGFloat)arc4random()) / ((CGFloat)UINT32_MAX) * (max - min) + min;
 }
 
-static void CreateSpark(UIView *superview,
-                        CGPoint origin,
-                        CGFloat size,
-                        CGFloat distance,
-                        CGFloat radians,
-                        UIColor *color,
-                        NSTimeInterval duration) {
+static void CreateSpark(UIView *superview, CGPoint origin, CGFloat size, CGFloat distance,
+                        CGFloat radians, UIColor *color, NSTimeInterval duration) {
   CGRect frame = CGRectMake(origin.x - size / 2, origin.y - size / 2, size, size);
   UIView *view = [[UIView alloc] initWithFrame:frame];
   view.backgroundColor = color;
@@ -128,15 +123,9 @@ void CreatePlusOneText(UIView *toView, NSString *text, UIFont *font, UIColor *co
       }];
 }
 
-void CreateSpringyBillboard(UIView *originView,
-                            NSString *text,
-                            UIFont *font,
-                            UIColor *textColor,
-                            UIColor *backgroundColor,
-                            CGFloat cornerRadius,
-                            CGFloat padding,
-                            CGFloat distance,
-                            CGFloat duration) {
+void CreateSpringyBillboard(UIView *originView, NSString *text, UIFont *font, UIColor *textColor,
+                            UIColor *backgroundColor, CGFloat cornerRadius, CGFloat padding,
+                            CGFloat distance, CGFloat duration) {
   const CGFloat angleRadians = RandFloat(-M_PI * 0.1, M_PI * 0.1);
   UIView *superview = originView.superview;
 
@@ -277,21 +266,14 @@ static void CreateDotExplosion(UILabel *view) {
   }
 }
 
-void RunSuccessAnimation(UIView *answerField,
-                         UIView *doneLabel,
-                         UILabel *srsLevelLabel,
-                         bool isSubjectFinished,
-                         bool didLevelUp,
-                         int newSrsStage) {
+void RunSuccessAnimation(UIView *answerField, UIView *doneLabel, UILabel *srsLevelLabel,
+                         bool isSubjectFinished, bool didLevelUp, int newSrsStage) {
   if (Settings.animateParticleExplosion) {
     CreateExplosion(answerField);
   }
 
   if (isSubjectFinished && Settings.animatePlusOne) {
-    CreatePlusOneText(doneLabel,
-                      @"+1",
-                      [UIFont boldSystemFontOfSize:20.0],
-                      [UIColor whiteColor],
+    CreatePlusOneText(doneLabel, @"+1", [UIFont boldSystemFontOfSize:20.0], [UIColor whiteColor],
                       1.5);  // Duration.
   }
 

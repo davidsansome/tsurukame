@@ -443,7 +443,8 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
     return reviewDate;
   }
 
-  // If it's not available now, treat it like it will be reviewed within the hour it comes
+  // If it's not available now, treat it like it will be reviewed within the
+  // hour it comes
   // available.
   if ([reviewDate compare:self.availableAtDate] == NSOrderedAscending) {
     reviewDate = self.availableAtDate;

@@ -116,7 +116,8 @@ static NSString *const kPrivacyPolicyURL =
 
   __weak LoginViewController *weakSelf = self;
   [Client getApiTokenForCookie:cookie
-                       handler:^(NSError *_Nullable error, NSString *_Nullable apiToken,
+                       handler:^(NSError *_Nullable error,
+                                 NSString *_Nullable apiToken,
                                  NSString *_Nullable emailAddress) {
                          [weakSelf handleApiTokenResponse:error
                                                  apiToken:apiToken
