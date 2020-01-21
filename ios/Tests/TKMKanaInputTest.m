@@ -67,8 +67,7 @@ static NSArray<NSString *> *_tsuConsonantsArray;
 }
 
 - (void)setUp {
-  // Put setup code here. This method is called before the invocation of each
-  // test method in the
+  // Put setup code here. This method is called before the invocation of each test method in the
   // class.
   StubUITextFieldDelegate *delegate = [[StubUITextFieldDelegate alloc] init];
   _kanaInput = [[TKMKanaInput alloc] initWithDelegate:delegate];
@@ -89,8 +88,7 @@ static NSArray<NSString *> *_tsuConsonantsArray;
 }
 
 - (void)testShouldChangeCharactersInRangeDoesNothingWhenDisabled {
-  // when the _kanaInput is disabled shouldChangeCharactersInRange should return
-  // true and the text
+  // when the _kanaInput is disabled shouldChangeCharactersInRange should return true and the text
   // should be unchanged
 
   NSString *text = [_textField.text copy];
@@ -105,8 +103,7 @@ static NSArray<NSString *> *_tsuConsonantsArray;
 }
 
 - (void)testShouldChangeCharactersInRangeDoesNothingOnPaste {
-  // when the length of the Range is greater 0 shouldChangeCharactersInRange
-  // should return true and
+  // when the length of the Range is greater 0 shouldChangeCharactersInRange should return true and
   // the text should be unchanged
 
   NSString *text = [_textField.text copy];
@@ -120,8 +117,7 @@ static NSArray<NSString *> *_tsuConsonantsArray;
 }
 
 - (void)testShouldChangeCharactersInRangeReplacesSameConsonantWithSokuon {
-  // when there is a consonant and you type the same consonant it should be
-  // replaced by っ and the
+  // when there is a consonant and you type the same consonant it should be replaced by っ and the
   // returnValue should be true
 
   for (NSString *consonant in _tsuConsonantsArray) {
@@ -137,8 +133,7 @@ static NSArray<NSString *> *_tsuConsonantsArray;
 }
 
 - (void)testShouldChangeCharactersInRangeReplacesNFollwedByConsonant {
-  // when there is a n or m and you type a consonant it should be replaced by ん
-  // and the returnValue
+  // when there is a n or m and you type a consonant it should be replaced by ん and the returnValue
   // should be true
 
   NSArray<NSString *> *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
@@ -160,13 +155,11 @@ static NSArray<NSString *> *_tsuConsonantsArray;
 }
 
 - (void)testShouldChangeCharactersInRangeReplacesRomanizationPatternsCorrectly {
-  // when there is the start of a pattern and you type the last letter of the
-  // pattern it should be
+  // when there is the start of a pattern and you type the last letter of the pattern it should be
   // replaced by the given replacement and the returnValue should be false
 
   for (NSString *replacement in [kReplacements keyEnumerator]) {
-    // this pattern is checked by another case...for this function it doesn't
-    // matter if it is in the
+    // this pattern is checked by another case...for this function it doesn't matter if it is in the
     // kReplacements CharacterSet
     if ([replacement isEqualToString:@"n "]) {
       continue;
@@ -185,8 +178,7 @@ static NSArray<NSString *> *_tsuConsonantsArray;
 }
 
 - (void)testShouldChangeCharactersInRangeReplacesSameUppercaseConsonantWithKatakanaSokuon {
-  // when you type a uppercase consonant followed by the same consonant, it
-  // should be replaced by ッ
+  // when you type a uppercase consonant followed by the same consonant, it should be replaced by ッ
 
   for (NSString *consonant in _tsuConsonantsArray) {
     NSString *uppercaseConsonant = [consonant uppercaseString];
@@ -202,8 +194,7 @@ static NSArray<NSString *> *_tsuConsonantsArray;
 }
 
 - (void)testShouldChangeCharactersInRangeReplacesUppercaseNFollowedByConsonantWithKatakana {
-  // when there is a N or M and you type a consonant it should be replaced by ン
-  // and the returnValue
+  // when there is a N or M and you type a consonant it should be replaced by ン and the returnValue
   // should be true
 
   NSArray<NSString *> *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];

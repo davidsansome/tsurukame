@@ -145,8 +145,7 @@
 - (void)updateProgressOnMainThread:(NSString *)filename
                        updateBlock:(void (^)(TKMDownloadModelItem *))updateBlock {
   dispatch_async(dispatch_get_main_queue(), ^{
-    // Try to update the visible cell without reloading the whole table.  This
-    // is a bit of a hack.
+    // Try to update the visible cell without reloading the whole table.  This is a bit of a hack.
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_indexPaths[filename]];
     if (cell) {
       TKMDownloadModelView *view = (TKMDownloadModelView *)cell;

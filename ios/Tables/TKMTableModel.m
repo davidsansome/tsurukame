@@ -49,9 +49,7 @@
 
 - (void)dealloc {
   if (!_isInitialised) {
-    NSLog(
-        @"TKMTableModel deallocated without being used. Did you forget to "
-        @"retain it?");
+    NSLog(@"TKMTableModel deallocated without being used. Did you forget to retain it?");
   }
 }
 
@@ -150,8 +148,7 @@
                               reuseIdentifier:reuseIdentifier];
     } else {
       NSAssert(false,
-               @"Item class %@ should respond to either createCell, "
-               @"cellNibName or cellClass",
+               @"Item class %@ should respond to either createCell, cellNibName or cellClass",
                reuseIdentifier);
     }
   }

@@ -20,10 +20,7 @@
 #import "Settings.h"
 
 NSString *const kTKMFontPreviewText =
-    @"色"
-    @"は匂へど散りぬるを我が世誰ぞ常ならん有"
-    @"為の奥山今日越えて浅き夢見じ酔ひもせ"
-    @"ず";
+    @"色は匂へど散りぬるを我が世誰ぞ常ならん有為の奥山今日越えて浅き夢見じ酔ひもせず";
 
 struct FontDefinition {
   NSString *fontName;
@@ -66,8 +63,7 @@ BOOL TKMFontCanRenderText(NSString *fontName, NSString *text) {
 
   BOOL canRender = CTFontGetGlyphsForCharacters(fontRef, characters, glyphs, count);
   if (canRender) {
-    // CTFontGetGlyphsForCharacters can return a glyph that has no path, so will
-    // be invisible when
+    // CTFontGetGlyphsForCharacters can return a glyph that has no path, so will be invisible when
     // drawn.  Check every glyph has a path as well.
     for (int i = 0; i < count; ++i) {
       CGPathRef path = CTFontCreatePathForGlyph(fontRef, glyphs[i], NULL);

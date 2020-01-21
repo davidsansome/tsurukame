@@ -186,8 +186,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
       initWithStyle:UITableViewCellStyleSubtitle
               title:@"Remember Keyboard Language"
            subtitle:
-               @"Present review answer keyboard based on answer language. "
-               @"After enabling you must "
+               @"Present review answer keyboard based on answer language. After enabling you must "
                @"manually switch keyboards the first time."
                  on:Settings.autoSwitchKeyboard
              target:self

@@ -18,8 +18,12 @@
 extern "C" {
 #endif
 
-void RunSuccessAnimation(UIView *answerField, UIView *doneLabel, UILabel *srsLevelLabel,
-                         bool isSubjectFinished, bool didLevelUp, int newSrsLevel);
+void RunSuccessAnimation(UIView *answerField,
+                         UIView *doneLabel,
+                         UILabel *srsLevelLabel,
+                         bool isSubjectFinished,
+                         bool didLevelUp,
+                         int newSrsLevel);
 
 #ifdef __cplusplus
 }
