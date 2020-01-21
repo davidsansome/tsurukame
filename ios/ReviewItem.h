@@ -17,6 +17,9 @@
 #import "proto/Wanikani.pbobjc.h"
 
 @class DataLoader;
+@class LocalCachingClient;
+
+NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, TKMTaskType) {
   kTKMTaskTypeReading,
@@ -28,7 +31,8 @@ typedef NS_ENUM(NSInteger, TKMTaskType) {
 @interface ReviewItem : NSObject
 
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments
-                                          dataLoader:(DataLoader *)dataLoader;
+                                          dataLoader:(DataLoader *)dataLoader
+                                  localCachingClient:(LocalCachingClient *)localCachingClient;
 + (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<TKMAssignment *> *)assignments
                                           dataLoader:(DataLoader *)dataLoader;
 
@@ -42,8 +46,10 @@ typedef NS_ENUM(NSInteger, TKMTaskType) {
 @property(nonatomic) bool answeredMeaning;
 @property(nonatomic) TKMProgress *answer;
 
-- (NSComparisonResult)compareForLessons:(ReviewItem *)other;
+- (BOOL)compareForLessons:(ReviewItem *)other;
 
 - (void)reset;
 
 @end
+
+NS_ASSUME_NONNULL_END

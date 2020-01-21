@@ -28,7 +28,7 @@ before_all do
 end
 
 lane :test do
-  run_tests(scheme: "Tsurukame")
+  run_tests(derived_data_path: "~/Library/Developer/Xcode/DerivedData", scheme: "Tsurukame")
 end
 
 lane :new_version do
@@ -70,6 +70,8 @@ lane :release do
   )
   upload_to_app_store(
     app_icon: "Resources/appicon1024.png",
+    submit_for_review: true,
+    automatic_release: true,
   )
   tag_release
 end

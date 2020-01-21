@@ -18,7 +18,6 @@
 #import "LocalCachingClient.h"
 #import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"
-#import "TKMServices.h"
 #import "Tsurukame-Swift.h"
 #import "UIView+SafeAreaInsets.h"
 #import "proto/Wanikani+Convenience.h"
@@ -83,6 +82,13 @@
                             direction:UIPageViewControllerNavigationDirectionForward
                              animated:NO
                            completion:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+
+  [SiriShortcutHelper.shared attachShortcutActivity:self
+                                               type:SiriShortcutHelper.ShortcutTypeLessons];
 }
 
 - (void)viewDidLayoutSubviews {

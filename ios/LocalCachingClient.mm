@@ -222,14 +222,13 @@ struct ProgressTask {
   int total = 0;
   for (const auto &task : _tasks) {
     done += task.done;
-    total += task.total;
+    total += MAX(1, task.total);
   }
 
   float progress = 0;
   if (total > 0) {
     progress = float(done) / total;
   }
-
   dispatch_async(dispatch_get_main_queue(), ^{
     _handler(progress);
   });
@@ -542,19 +541,19 @@ struct ProgressTask {
   return ret;
 }
 
-- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
+- (NSArray<TKMAssignment *> *)getAssignmentsAtLevel:(int)level {
   if (level > _dataLoader.maxLevelGrantedBySubscription) {
-    return nil;
+    return [NSArray array];
   }
 
-  __block NSArray<TKMAssignment *> *ret = nil;
+  __block NSArray<TKMAssignment *> *ret = [NSArray array];
   [_db inDatabase:^(FMDatabase *_Nonnull db) {
     ret = [self getAssignmentsAtLevel:level inTransaction:db];
   }];
   return ret;
 }
 
-- (nullable NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
+- (NSArray<TKMAssignment *> *)getAssignmentsAtUsersCurrentLevel {
   TKMUser *user = [self getUserInfo];
   return [self getAssignmentsAtLevel:[user currentLevel]];
 }
@@ -658,10 +657,18 @@ struct ProgressTask {
     [upcomingReviews addObject:@(0)];
   }
 
+  TKMUser *userInfo = [self getUserInfo];
   for (TKMAssignment *assignment in assignments) {
     // Don't count assignments with invalid subjects.  This includes assignments for levels higher
-    // than the user's max level.
+    // than the user's max subscription level.
     if (![_dataLoader isValidSubjectID:assignment.subjectId]) {
+      continue;
+    }
+
+    // Skip assignments that are a higher level than the user's current level. Wanikani items that
+    // have moved to later levels can end up in this state and reviews will not be saved by the WK
+    // API so they end up perpetually reviewed.
+    if (userInfo.hasLevel && userInfo.level < assignment.level) {
       continue;
     }
 
@@ -812,7 +819,7 @@ struct ProgressTask {
   const int total = (int)progress.count;
   if (!total) {
     if (handler) {
-      handler(0, 0);
+      handler(1, 1);
     }
     return;
   }
@@ -893,7 +900,7 @@ struct ProgressTask {
     }
 
     if (!total && handler) {
-      handler(0, 0);
+      handler(1, 1);
     }
   }];
 }

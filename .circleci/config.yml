@@ -42,10 +42,14 @@ jobs:
       - run:
           command: bundle exec fastlane test
           working_directory: ios
+      # Upload iOS simulator crash reports.
       - store_artifacts:
-          path: output
+          path: ~/Library/Logs/DiagnosticReports
+      # Upload fastlane test logs.
+      - store_artifacts:
+          path: ios/output
       - store_test_results:
-          path: output/scan
+          path: ios/output/scan
 
   release-testflight:
     macos:

@@ -54,22 +54,20 @@ class FontScreenshotterUITests: XCTestCase {
       }
 
       // Create a new CGImage from the modified data.
-      let img = CGImage(
-        width: w,
-        height: h,
-        bitsPerComponent: 8,
-        bitsPerPixel: 32,
-        bytesPerRow: 4 * w,
-        space: CGColorSpace(name: CGColorSpace.sRGB)!,
-        bitmapInfo: [
-          .byteOrder32Little,
-          CGBitmapInfo(rawValue: CGImageAlphaInfo.first.rawValue),
-        ],
-        provider: CGDataProvider(data: data!)!,
-        decode: nil,
-        shouldInterpolate: false,
-        intent: .defaultIntent
-      )
+      let img = CGImage(width: w,
+                        height: h,
+                        bitsPerComponent: 8,
+                        bitsPerPixel: 32,
+                        bytesPerRow: 4 * w,
+                        space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                        bitmapInfo: [
+                          .byteOrder32Little,
+                          CGBitmapInfo(rawValue: CGImageAlphaInfo.first.rawValue),
+                        ],
+                        provider: CGDataProvider(data: data!)!,
+                        decode: nil,
+                        shouldInterpolate: false,
+                        intent: .defaultIntent)
 
       // Save the image as an attachment.
       let s = XCTAttachment(image: UIImage(cgImage: img!))

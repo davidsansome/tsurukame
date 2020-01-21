@@ -16,10 +16,7 @@
 #import "Client.h"
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
-#import "MainViewController.h"
 #import "Settings.h"
-#import "TKMAudio.h"
-#import "TKMServices+Internals.h"
 #import "Tsurukame-Swift.h"
 
 #import <UserNotifications/UserNotifications.h>
@@ -64,6 +61,18 @@
   return YES;
 }
 
+- (BOOL)application:(UIApplication *)application
+    willContinueUserActivityWithType:(NSString *)userActivityType {
+  if ([userActivityType isEqual:SiriShortcutHelper.ShortcutTypeReviews]) {
+    MainViewController *mainVC = [self findMainViewController];
+    [mainVC performSegueWithIdentifier:@"startReviews" sender:nil];
+  } else if ([userActivityType isEqual:SiriShortcutHelper.ShortcutTypeLessons]) {
+    MainViewController *mainVC = [self findMainViewController];
+    [mainVC performSegueWithIdentifier:@"startLessons" sender:nil];
+  }
+  return YES;
+}
+
 - (void)pushLoginViewController {
   LoginViewController *loginViewController =
       [_storyboard instantiateViewControllerWithIdentifier:@"login"];
@@ -77,9 +86,10 @@
                                          dataLoader:_services.dataLoader];
 
   Class localCachingClientClass = TKMScreenshotter.localCachingClientClass;
-  _services.localCachingClient = [[localCachingClientClass alloc] initWithClient:client
-                                                                 dataLoader:_services.dataLoader
-                                                               reachability:_services.reachability];
+  _services.localCachingClient =
+      [[localCachingClientClass alloc] initWithClient:client
+                                           dataLoader:_services.dataLoader
+                                         reachability:_services.reachability];
 
   if (!TKMScreenshotter.isActive) {
     // Ask for notification permissions.
@@ -227,6 +237,15 @@
 - (void)userInfoChanged:(NSNotification *)notification {
   _services.dataLoader.maxLevelGrantedBySubscription =
       [_services.localCachingClient getUserInfo].maxLevelGrantedBySubscription;
+}
+
+- (MainViewController *)findMainViewController {
+  for (UIViewController *viewController in _navigationController.viewControllers) {
+    if ([viewController isKindOfClass:[MainViewController class]]) {
+      return (MainViewController *)viewController;
+    }
+  }
+  return nil;
 }
 
 @end

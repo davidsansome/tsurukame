@@ -60,7 +60,7 @@ static NSString *FriendlySize(int64_t bytes) {
 
 - (void)updateWithItem:(TKMDownloadModelItem *)item {
   [super updateWithItem:item];
-  
+
   if (!item.transparentBackground) {
     self.backgroundColor = TKMStyleColor.cellBackground;
   }

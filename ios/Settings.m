@@ -123,6 +123,7 @@ DEFINE_BOOL(useKatakanaForOnyomi, setUseKatakanaForOnyomi, NO);
 DEFINE_BOOL(showSRSLevelIndicator, setShowSRSLevelIndicator, NO);
 DEFINE_BOOL(showAllReadings, setShowAllReadings, NO);
 DEFINE_BOOL(autoSwitchKeyboard, setAutoSwitchKeyboard, NO);
+DEFINE_ENUM(InterfaceStyle, interfaceStyle, setInterfaceStyle, InterfaceStyle_System);
 DEFINE_FLOAT(fontSize, setFontSize, 1.0);
 
 DEFINE_BOOL(playAudioAutomatically, setPlayAudioAutomatically, NO);
