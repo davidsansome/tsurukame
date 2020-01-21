@@ -657,10 +657,18 @@ struct ProgressTask {
     [upcomingReviews addObject:@(0)];
   }
 
+  TKMUser *userInfo = [self getUserInfo];
   for (TKMAssignment *assignment in assignments) {
     // Don't count assignments with invalid subjects.  This includes assignments for levels higher
-    // than the user's max level.
+    // than the user's max subscription level.
     if (![_dataLoader isValidSubjectID:assignment.subjectId]) {
+      continue;
+    }
+
+    // Skip assignments that are a higher level than the user's current level. Wanikani items that
+    // have moved to later levels can end up in this state and reviews will not be saved by the WK
+    // API so they end up perpetually reviewed.
+    if (userInfo.hasLevel && userInfo.level < assignment.level) {
       continue;
     }
 
