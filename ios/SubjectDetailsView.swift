@@ -225,14 +225,9 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
 
     model.addSection("Context Sentences")
     for sentence in subject.vocabulary.sentencesArray as! [TKMVocabulary_Sentence] {
-      let text = NSMutableAttributedString()
-      text.append(highlightOccurrences(of: subject, in: attrString(sentence.japanese)) ??
-        attrString(sentence.japanese))
-      text.append(attrString("\n"))
-      text.append(attrString(sentence.english))
-      text.replaceFontSize(kFontSize)
-
-      model.add(AttributedModelItem(text: text))
+      model.add(ContextSentenceModelItem(sentence, highlightSubject: subject,
+                                         defaultAttributes: defaultStringAttrs(),
+                                         fontSize: kFontSize))
     }
   }
 
