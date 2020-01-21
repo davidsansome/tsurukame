@@ -17,6 +17,7 @@
 #import "proto/Wanikani.pbobjc.h"
 
 @class DataLoader;
+@class LocalCachingClient;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,7 +31,8 @@ typedef NS_ENUM(NSInteger, TKMTaskType) {
 @interface ReviewItem : NSObject
 
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments
-                                          dataLoader:(DataLoader *)dataLoader;
+                                          dataLoader:(DataLoader *)dataLoader
+                                  localCachingClient:(LocalCachingClient *)localCachingClient;
 + (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<TKMAssignment *> *)assignments
                                           dataLoader:(DataLoader *)dataLoader;
 
