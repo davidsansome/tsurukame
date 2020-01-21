@@ -150,11 +150,12 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   private func recreateTableModel() {
+    guard let user = services.localCachingClient.getUserInfo() else { return }
+
     let lessons = Int(services.localCachingClient.availableLessonCount)
     let reviews = Int(services.localCachingClient.availableReviewCount)
     let upcomingReviews = services.localCachingClient.upcomingReviews as! [Int]
     let currentLevelAssignments = services.localCachingClient.getAssignmentsAtUsersCurrentLevel()
-    let user = services.localCachingClient.getUserInfo()!
 
     let model = TKMMutableTableModel(tableView: tableView)
 
