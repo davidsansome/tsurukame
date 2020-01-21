@@ -84,6 +84,12 @@
                            completion:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    [SiriShortcutHelper.shared attachShortcutActivity:self type:SiriShortcutHelper.ShortcutTypeLessons];
+}
+
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
 

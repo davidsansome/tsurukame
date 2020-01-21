@@ -61,6 +61,18 @@
   return YES;
 }
 
+- (BOOL)application:(UIApplication *)application
+    willContinueUserActivityWithType:(NSString *)userActivityType {
+  if ([userActivityType isEqual:SiriShortcutHelper.ShortcutTypeReviews]) {
+    MainViewController *mainVC = [self findMainViewController];
+    [mainVC performSegueWithIdentifier:@"startReviews" sender:nil];
+  } else if ([userActivityType isEqual:SiriShortcutHelper.ShortcutTypeLessons]) {
+    MainViewController *mainVC = [self findMainViewController];
+    [mainVC performSegueWithIdentifier:@"startLessons" sender:nil];
+  }
+  return YES;
+}
+
 - (void)pushLoginViewController {
   LoginViewController *loginViewController =
       [_storyboard instantiateViewControllerWithIdentifier:@"login"];
@@ -223,6 +235,15 @@
 - (void)userInfoChanged:(NSNotification *)notification {
   _services.dataLoader.maxLevelGrantedBySubscription =
       [_services.localCachingClient getUserInfo].maxLevelGrantedBySubscription;
+}
+
+- (MainViewController *)findMainViewController {
+  for (UIViewController *viewController in _navigationController.viewControllers) {
+    if ([viewController isKindOfClass:[MainViewController class]]) {
+      return (MainViewController *)viewController;
+    }
+  }
+  return nil;
 }
 
 @end

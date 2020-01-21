@@ -364,6 +364,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    SiriShortcutHelper.shared.attachShortcutActivity(self, type: SiriShortcutHelper.ShortcutTypeReviews)
     navigationController?.setNavigationBarHidden(true, animated: false)
     if subjectDetailsView.isHidden {
       answerField.becomeFirstResponder()
