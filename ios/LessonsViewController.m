@@ -85,9 +85,10 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+  [super viewWillAppear:animated];
 
-    [SiriShortcutHelper.shared attachShortcutActivity:self type:SiriShortcutHelper.ShortcutTypeLessons];
+  [SiriShortcutHelper.shared attachShortcutActivity:self
+                                               type:SiriShortcutHelper.ShortcutTypeLessons];
 }
 
 - (void)viewDidLayoutSubviews {

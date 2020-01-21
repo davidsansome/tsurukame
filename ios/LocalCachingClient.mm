@@ -665,9 +665,9 @@ struct ProgressTask {
       continue;
     }
 
-    // Skip assignments that are a higher level than the user's current level. Wanikani items that have
-    // moved to later levels can end up in this state and reviews will not be saved by the WK API so
-    // they end up perpetually reviewed.
+    // Skip assignments that are a higher level than the user's current level. Wanikani items that
+    // have moved to later levels can end up in this state and reviews will not be saved by the WK
+    // API so they end up perpetually reviewed.
     if (userInfo.hasLevel && userInfo.level < assignment.level) {
       continue;
     }
