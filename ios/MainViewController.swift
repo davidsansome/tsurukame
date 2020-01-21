@@ -226,6 +226,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   override func viewWillAppear(_ animated: Bool) {
+    refreshInterfaceStyle()
     refresh(quick: true)
     updateHourlyTimer()
 
@@ -252,7 +253,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     case "startReviews":
       let assignments = services.localCachingClient.getAllAssignments()
       let items = ReviewItem.assignmentsReady(forReview: assignments,
-                                              dataLoader: services.dataLoader)
+                                              dataLoader: services.dataLoader,
+                                              localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return
       }
