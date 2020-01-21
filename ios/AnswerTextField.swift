@@ -13,6 +13,20 @@
 // limitations under the License.
 
 class AnswerTextField: UITextField {
+  public var taskType: TKMTaskType? {
+    didSet {
+      if oldValue != taskType {
+        DispatchQueue.main.async {
+          if self.isFirstResponder {
+            // re-read the language state
+            self.resignFirstResponder()
+            self.becomeFirstResponder()
+          }
+        }
+      }
+    }
+  }
+
   public var answerLanguage: String? {
     didSet {
       if oldValue != answerLanguage {
@@ -28,7 +42,10 @@ class AnswerTextField: UITextField {
   }
 
   override var textInputContextIdentifier: String? {
-    "com.tsurukame.answer"
+    if let taskType = self.taskType {
+      return "com.tsurukame.answer.\(taskType.rawValue)"
+    }
+    return "com.tsurukame.answer"
   }
 
   private func getKeyboardLanguage() -> String? {
