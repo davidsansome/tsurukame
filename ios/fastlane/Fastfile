@@ -28,7 +28,7 @@ before_all do
 end
 
 lane :test do
-  run_tests(scheme: "Tsurukame")
+  run_tests(derived_data_path: "~/Library/Developer/Xcode/DerivedData", scheme: "Tsurukame")
 end
 
 lane :new_version do
