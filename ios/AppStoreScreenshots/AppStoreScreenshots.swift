@@ -25,6 +25,13 @@ class AppStoreScreenshots: XCTestCase {
     app.launch()
   }
 
+  override func tearDown() {
+    // Stop the app, then run it again and tell it to clear its settings.
+    app.terminate()
+    app.launchArguments.append("ResetUserDefaults")
+    app.launch()
+  }
+
   func testAppStoreScreenshots() {
     Thread.sleep(forTimeInterval: 1.0) // Wait for the profile photo to be downloaded.
 

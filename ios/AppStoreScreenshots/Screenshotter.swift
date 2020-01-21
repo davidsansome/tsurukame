@@ -39,10 +39,18 @@ import Foundation
 
     class func setUp() {
       if isActive {
-        // Pretend there's a logged in user.
-        Settings.userCookie = "dummy"
-        Settings.userApiToken = "dummy"
-        Settings.showSRSLevelIndicator = true
+        if ProcessInfo.processInfo.arguments.contains("ResetUserDefaults") {
+          // We're run again after testing finishes to remove the dummy user.
+          Settings.userCookie = nil
+          Settings.userApiToken = nil
+          Settings.userEmailAddress = nil
+        } else {
+          // Pretend there's a logged in user.
+          Settings.userCookie = "dummy"
+          Settings.userApiToken = "dummy"
+          Settings.userEmailAddress = "dummy"
+          Settings.showSRSLevelIndicator = true
+        }
       }
     }
 

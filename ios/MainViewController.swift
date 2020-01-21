@@ -150,11 +150,12 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   private func recreateTableModel() {
+    guard let user = services.localCachingClient.getUserInfo() else { return }
+
     let lessons = Int(services.localCachingClient.availableLessonCount)
     let reviews = Int(services.localCachingClient.availableReviewCount)
     let upcomingReviews = services.localCachingClient.upcomingReviews as! [Int]
     let currentLevelAssignments = services.localCachingClient.getAssignmentsAtUsersCurrentLevel()
-    let user = services.localCachingClient.getUserInfo()!
 
     let model = TKMMutableTableModel(tableView: tableView)
 
@@ -226,6 +227,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   override func viewWillAppear(_ animated: Bool) {
+    refreshInterfaceStyle()
     refresh(quick: true)
     updateHourlyTimer()
 
@@ -252,7 +254,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     case "startReviews":
       let assignments = services.localCachingClient.getAllAssignments()
       let items = ReviewItem.assignmentsReady(forReview: assignments,
-                                              dataLoader: services.dataLoader)
+                                              dataLoader: services.dataLoader,
+                                              localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return
       }
