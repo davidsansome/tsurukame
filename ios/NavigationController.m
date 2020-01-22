@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "NavigationController.h"
-#import "UIViewController+InterfaceStyle.h"
 
 #import <objc/runtime.h>
 
@@ -92,9 +91,6 @@ static const CGFloat kVelocityThreshold = 60.f;
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
   _isPushingViewController = true;
-  if ([viewController respondsToSelector:@selector(refreshInterfaceStyle)]) {
-    [viewController refreshInterfaceStyle];
-  }
   [super pushViewController:viewController animated:animated];
 
   id<TKMViewController> newViewController = (id<TKMViewController>)viewController;

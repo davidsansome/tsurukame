@@ -27,20 +27,17 @@
 
 #define DECLARE_FLOAT(name) @property(class, nonatomic) float name;
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, ReviewOrder) {
   ReviewOrder_Random = 1,
   ReviewOrder_BySRSStage = 2,
   ReviewOrder_CurrentLevelFirst = 3,
   ReviewOrder_LowestLevelFirst = 4,
   ReviewOrder_NewestAvailableFirst = 5,
   ReviewOrder_OldestAvailableFirst = 6,
-} ReviewOrder;
+};
 
-typedef enum : NSUInteger {
-  InterfaceStyle_System = 1,
-  InterfaceStyle_Light = 2,
-  InterfaceStyle_Dark = 3
-} InterfaceStyle;
+typedef NS_CLOSED_ENUM(NSUInteger, InterfaceStyle){
+    InterfaceStyle_System = 1, InterfaceStyle_Light = 2, InterfaceStyle_Dark = 3};
 
 @interface Settings : NSObject
 

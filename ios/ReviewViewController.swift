@@ -245,7 +245,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     reviewQueue.shuffle()
     switch Settings.reviewOrder {
-    case ReviewOrder_BySRSStage:
+    case .bySRSStage:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.srsStage < b.assignment.srsStage { return true }
         if a.assignment.srsStage > b.assignment.srsStage { return false }
@@ -253,7 +253,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
-    case ReviewOrder_CurrentLevelFirst:
+    case .currentLevelFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.level < b.assignment.level { return false }
         if a.assignment.level > b.assignment.level { return true }
@@ -261,7 +261,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
-    case ReviewOrder_LowestLevelFirst:
+    case .lowestLevelFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.level < b.assignment.level { return true }
         if a.assignment.level > b.assignment.level { return false }
@@ -269,7 +269,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
-    case ReviewOrder_NewestAvailableFirst:
+    case .newestAvailableFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.availableAt < b.assignment.availableAt { return false }
         if a.assignment.availableAt > b.assignment.availableAt { return true }
@@ -277,7 +277,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
-    case ReviewOrder_OldestAvailableFirst:
+    case .oldestAvailableFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.availableAt < b.assignment.availableAt { return true }
         if a.assignment.availableAt > b.assignment.availableAt { return false }
@@ -285,10 +285,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
-    case ReviewOrder_Random:
+    case .random:
       break
-    default:
-      break
+
+    @unknown default:
+      fatalError()
     }
 
     refillActiveQueue()

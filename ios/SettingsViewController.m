@@ -20,7 +20,6 @@
 #import "TKMFontsViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
-#import "UIViewController+InterfaceStyle.h"
 #import "proto/Wanikani+Convenience.h"
 
 #import <UserNotifications/UserNotifications.h>
@@ -319,7 +318,6 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-  [self refreshInterfaceStyle];
   self.navigationController.navigationBarHidden = NO;
 
   [self rerender];

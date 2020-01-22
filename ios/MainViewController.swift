@@ -227,7 +227,6 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   override func viewWillAppear(_ animated: Bool) {
-    refreshInterfaceStyle()
     refresh(quick: true)
     updateHourlyTimer()
 
