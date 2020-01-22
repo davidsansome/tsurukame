@@ -585,6 +585,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       kanaInput.alphabet = .hiragana
     }
 
+    answerField.taskType = activeTaskType
     if Settings.autoSwitchKeyboard {
       answerField.answerLanguage = kanaInput.enabled ? "ja" : nil
     }
