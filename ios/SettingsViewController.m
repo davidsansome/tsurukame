@@ -20,6 +20,7 @@
 #import "TKMFontsViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
+#import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
 #import <UserNotifications/UserNotifications.h>
@@ -183,10 +184,8 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
   TKMSwitchModelItem *keyboardSwitchItem = [[TKMSwitchModelItem alloc]
       initWithStyle:UITableViewCellStyleSubtitle
-              title:@"Remember Keyboard Language"
-           subtitle:
-               @"Present review answer keyboard based on answer language. After enabling you must "
-               @"manually switch keyboards the first time."
+              title:@"Switch to Japanese keyboard"
+           subtitle:@"Automatically switch to a Japanese keyboard to type reading answers"
                  on:Settings.autoSwitchKeyboard
              target:self
              action:@selector(autoSwitchKeyboard:)];
@@ -365,6 +364,25 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (void)autoSwitchKeyboard:(UISwitch *)switchView {
+  if (switchView.on && TKMAnswerTextField.japaneseTextInputMode == nil) {
+    // The user wants a Japanese keyboard but they don't have one installed.
+    NSString *device = UIDevice.currentDevice.model;
+    NSString *message =
+        [NSString stringWithFormat:
+                      @"You must add a Japanese keyboard to your %@.\nOpen Settings then "
+                       "General ⮕ Keyboard ⮕ Keyboards ⮕ Add New Keyboard.",
+                      device];
+    UIAlertController *ac =
+        [UIAlertController alertControllerWithTitle:@"No Japanese keyboard"
+                                            message:message
+                                     preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Close"
+                                           style:UIAlertActionStyleCancel
+                                         handler:nil]];
+    [self presentViewController:ac animated:YES completion:nil];
+    switchView.on = NO;
+    return;
+  }
   Settings.autoSwitchKeyboard = switchView.on;
 }
 
