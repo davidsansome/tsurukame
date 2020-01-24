@@ -189,6 +189,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   private var currentFontName: String!
   private var normalFontName: String!
+  private var availableFonts: [String]?
   private var defaultFontSize: Double!
 
   @IBOutlet private var menuButton: UIButton!
@@ -652,9 +653,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     return availableFonts
   }
 
-  func nextCustomFont(thatCanRenderText text: String) -> String? {
-    let availableFonts = fontsThatCanRenderText(text, exclude: nil)
-    if let index = availableFonts.firstIndex(of: currentFontName) {
+  func nextCustomFont(thatCanRenderText _: String) -> String? {
+    if let availableFonts = self.availableFonts,
+      let index = availableFonts.firstIndex(of: currentFontName) {
       if index + 1 >= availableFonts.count {
         return availableFonts.first
       } else {
@@ -664,9 +665,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     return nil
   }
 
-  func previousCustomFont(thatCanRenderText text: String) -> String? {
-    let availableFonts = fontsThatCanRenderText(text, exclude: nil)
-    if let index = availableFonts.firstIndex(of: currentFontName) {
+  func previousCustomFont(thatCanRenderText _: String) -> String? {
+    if let availableFonts = self.availableFonts,
+      let index = availableFonts.firstIndex(of: currentFontName) {
       if index == 0 {
         return availableFonts.last
       } else {
@@ -677,9 +678,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   func randomFont(thatCanRenderText text: String) -> String {
-    if delegate.reviewViewControllerAllowsCustomFonts(),
-      let fontName = fontsThatCanRenderText(text, exclude: nil).randomElement() {
-      return fontName
+    if delegate.reviewViewControllerAllowsCustomFonts() {
+      // Re-set the supported fonts when we pick a random one as that is the first
+      // step.
+      availableFonts = fontsThatCanRenderText(text, exclude: nil).sorted()
+      return availableFonts?.randomElement() ?? normalFontName
     } else {
       return normalFontName
     }
