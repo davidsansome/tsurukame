@@ -13,53 +13,32 @@
 // limitations under the License.
 
 class AnswerTextField: UITextField {
-  public var taskType: TKMTaskType? {
+  public var useJapaneseKeyboard: Bool = false {
     didSet {
-      if oldValue != taskType {
-        DispatchQueue.main.async {
-          if self.isFirstResponder {
-            // re-read the language state
-            self.resignFirstResponder()
-            self.becomeFirstResponder()
-          }
+      if oldValue != useJapaneseKeyboard {
+        if self.isFirstResponder {
+          // Reload the keyboard if we just changed its language.
+          self.resignFirstResponder()
+          self.becomeFirstResponder()
         }
       }
     }
   }
 
-  public var answerLanguage: String? {
-    didSet {
-      if oldValue != answerLanguage {
-        DispatchQueue.main.async {
-          if self.isFirstResponder {
-            // re-read the language state
-            self.resignFirstResponder()
-            self.becomeFirstResponder()
-          }
-        }
-      }
-    }
-  }
+  // MARK: - UIResponder
 
   override var textInputContextIdentifier: String? {
-    if let taskType = self.taskType {
-      return "com.tsurukame.answer.\(taskType.rawValue)"
+    if useJapaneseKeyboard {
+      return "com.tsurukame.answer.ja"
     }
     return "com.tsurukame.answer"
   }
 
-  private func getKeyboardLanguage() -> String? {
-    if Settings.autoSwitchKeyboard {
-      return answerLanguage
-    }
-    return nil
-  }
-
   override var textInputMode: UITextInputMode? {
-    if let language = getKeyboardLanguage() {
+    if useJapaneseKeyboard {
       for textInputMode in UITextInputMode.activeInputModes {
         if let primaryLanguage = textInputMode.primaryLanguage,
-          primaryLanguage.starts(with: language) {
+          primaryLanguage.starts(with: "ja") {
           return textInputMode
         }
       }

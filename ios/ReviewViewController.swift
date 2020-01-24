@@ -593,10 +593,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         kanaInput.alphabet = .hiragana
       }
 
-      answerField.taskType = activeTaskType
-      if Settings.autoSwitchKeyboard {
-        answerField.answerLanguage = kanaInput.enabled ? "ja" : nil
-      }
+      answerField.useJapaneseKeyboard = Settings
+        .autoSwitchKeyboard && activeTaskType == .reading
 
       if Settings.showSRSLevelIndicator {
         levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
