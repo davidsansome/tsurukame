@@ -26,6 +26,7 @@
 		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
 		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
+		632E19C123DCD0D800E5F256 /* FontSizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632E19C023DCD0D800E5F256 /* FontSizeViewController.swift */; };
 		6335B46523CF0C820071671E /* AppStoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B46423CF0C820071671E /* AppStoreScreenshots.swift */; };
 		6335B4C823CF0D390071671E /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B48C23CF0D390071671E /* SnapshotHelper.swift */; };
 		6335B4E723CF14280071671E /* Screenshotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B4E623CF14280071671E /* Screenshotter.swift */; };
@@ -134,7 +135,6 @@
 		C943D5B02380D59B004A7969 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943D5AF2380D59A004A7969 /* SettingsController.swift */; };
 		C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C970BC0223D262CE001F3735 /* SiriShortcutHelper.swift */; };
 		EC6A5487F6875EC64C63B6B2 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404461BC39B4A19B128F9E69 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */; };
-		F513FC1023119D2C001EEEDA /* FontSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F513FC0F23119D2C001EEEDA /* FontSizeViewController.m */; };
 		FCFB23015B2EB50B28EF6BCD /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -232,6 +232,7 @@
 		631CAD71234B4A96008CEA73 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		6321E60F2068F3A9003460BC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		6321E6102068F3A9003460BC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		632E19C023DCD0D800E5F256 /* FontSizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSizeViewController.swift; sourceTree = "<group>"; };
 		6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppStoreScreenshots.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6335B46423CF0C820071671E /* AppStoreScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshots.swift; sourceTree = "<group>"; };
 		6335B46623CF0C820071671E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -391,8 +392,6 @@
 		E76D291A2528193C74A43C60 /* Pods-FontScreenshotter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.debug.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.debug.xcconfig"; sourceTree = "<group>"; };
 		F0FB8F6AE66ACCEFE37ADDB2 /* Pods_Tsurukame.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F33812F134DC80E5D981C40E /* Pods_FontScreenshotter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F513FC0E23119D07001EEEDA /* FontSizeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontSizeViewController.h; sourceTree = "<group>"; };
-		F513FC0F23119D2C001EEEDA /* FontSizeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = FontSizeViewController.m; sourceTree = "<group>"; tabWidth = 2; usesTabs = 1; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -516,9 +515,7 @@
 				63C42A2421B6A28D008CA938 /* FontScreenshotter */,
 				63C42A2321B6A28D008CA938 /* FontScreenshotter.app */,
 				63C42A3621B6A290008CA938 /* FontScreenshotterUITests.xctest */,
-				63C42A3921B6A290008CA938 /* FontScreenshotterUITests */,
-				F513FC0E23119D07001EEEDA /* FontSizeViewController.h */,
-				F513FC0F23119D2C001EEEDA /* FontSizeViewController.m */,
+				632E19C023DCD0D800E5F256 /* FontSizeViewController.swift */,
 				63CAAB0F1FD7FAC500E09DA1 /* Frameworks */,
 				63EEFEC21FC45CB10070C05F /* Info.plist */,
 				C9164D3823D0CFCF00B6D93A /* InterfaceStyleViewController.swift */,
@@ -1254,6 +1251,7 @@
 				C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */,
 				633DE95520C5634A00AC25F4 /* TKMSwitchModelItem.m in Sources */,
 				63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */,
+				632E19C123DCD0D800E5F256 /* FontSizeViewController.swift in Sources */,
 				63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.mm in Sources */,
 				631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */,
 				63CAAB031FCD755300E09DA1 /* ProtobufExtensions.m in Sources */,
@@ -1277,7 +1275,6 @@
 				63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */,
 				63FCAE78237F75CC00DB1418 /* Style.swift in Sources */,
 				3DA8BAFC224C9580009E925B /* LessonOrderViewController.m in Sources */,
-				F513FC1023119D2C001EEEDA /* FontSizeViewController.m in Sources */,
 				63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
