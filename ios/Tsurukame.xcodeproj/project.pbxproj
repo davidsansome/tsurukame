@@ -110,7 +110,6 @@
 		63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52423D429A4006A31FB /* String+MD5.swift */; };
 		63F7F52823D42BDD006A31FB /* String+MD5Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52623D42BC1006A31FB /* String+MD5Test.swift */; };
 		63F7F52923D42C6E006A31FB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52223D423E9006A31FB /* MainViewController.swift */; };
-		63F7F52A23D42CAE006A31FB /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52423D429A4006A31FB /* String+MD5.swift */; };
 		63F7F52C23D43DF6006A31FB /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52B23D43DF6006A31FB /* Services.swift */; };
 		63F7F52E23D4C2CA006A31FB /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52D23D4C2CA006A31FB /* Audio.swift */; };
 		63FCAE78237F75CC00DB1418 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCAE77237F75CC00DB1418 /* Style.swift */; };
@@ -473,6 +472,7 @@
 			children = (
 				4811E39424D9CB16003B5089 /* NSDate+TimeAgo.h */,
 				4811E39124D9CAE2003B5089 /* NSDate+TimeAgo.m */,
+				6398480F23D6CA9B0077EB6B /* CGContext+Blur.swift */,
 				6392DBA920DBB841003019EB /* NSMutableAttributedString+Replacements.h */,
 				6392DBAA20DBB841003019EB /* NSMutableAttributedString+Replacements.m */,
 				63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */,
@@ -481,6 +481,7 @@
 				6319C99F204015B900C31F87 /* NSString+MD5.m */,
 				487445A724D9BA10009CE30A /* ProtobufExtensions.h */,
 				63CAAB011FCD755300E09DA1 /* ProtobufExtensions.m */,
+				63F7F52423D429A4006A31FB /* String+MD5.swift */,
 				63A2375F1FE9264300C48657 /* UIColor+HexString.h */,
 				63A237601FE9264300C48657 /* UIColor+HexString.m */,
 				63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */,
@@ -559,7 +560,6 @@
 				6321E6102068F3A9003460BC /* SettingsViewController.m */,
 				C970BC0223D262CE001F3735 /* SiriShortcutHelper.swift */,
 				636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */,
-				63F7F52423D429A4006A31FB /* String+MD5.swift */,
 				63FCAE77237F75CC00DB1418 /* Style.swift */,
 				63E9A8D52111BFCD00418CE1 /* SubjectCatalogueViewController.h */,
 				63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */,
@@ -1327,7 +1327,6 @@
 				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
 				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
 				633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */,
-				63F7F52A23D42CAE006A31FB /* String+MD5.swift in Sources */,
 				633AFAE92352B81E004F732F /* VocabularyHighlighterTest.swift in Sources */,
 				4820306724D849E100B40FDD /* Settings.swift in Sources */,
 				631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */,
