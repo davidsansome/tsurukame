@@ -584,11 +584,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tCW-sh-YGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="19G-qM-1qD">
-                    <connections>
-                        <action selector="questionLabelTapped:" destination="Mzz-hx-Bdo" id="7cs-c8-DrG"/>
-                    </connections>
-                </tapGestureRecognizer>
+                <tapGestureRecognizer id="19G-qM-1qD"/>
             </objects>
             <point key="canvasLocation" x="1182" y="944"/>
         </scene>
