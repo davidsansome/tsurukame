@@ -363,7 +363,7 @@
                                     <constraint firstAttribute="height" constant="16" id="pqx-CS-kAg"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg" customClass="AnswerTextField" customModule="Tsurukame" customModuleProvider="target">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg" customClass="TKMAnswerTextField">
                                 <rect key="frame" x="0.0" y="603" width="375" height="64"/>
                                 <accessibility key="accessibilityConfiguration" label="Answer field"/>
                                 <constraints>
