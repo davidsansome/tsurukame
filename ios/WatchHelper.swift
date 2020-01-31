@@ -28,7 +28,8 @@ class WatchConnectionServerDelegate: NSObject, WCSessionDelegate {
     super.init()
   }
 
-  func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState, error _: Error?) {}
+  func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState,
+               error _: Error?) {}
 
   #if os(iOS)
     func sessionDidBecomeInactive(_: WCSession) {}
@@ -94,7 +95,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
   }
 
   @objc static func sharedInstance() -> WatchHelper {
-    return _sharedInstance
+    _sharedInstance
   }
 
   #if os(iOS)
@@ -108,21 +109,20 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
     @objc func updatedData(client: LocalCachingClient) {
       var halfLevel = false
       var assignmentsAtCurrentLevel = client.getAssignmentsAtUsersCurrentLevel()
-      var learnedCount = assignmentsAtCurrentLevel?.filter { (assignment) -> Bool in
+      var learnedCount = assignmentsAtCurrentLevel.filter { (assignment) -> Bool in
         assignment.srsStage >= 5
-      }.count ?? 0
+      }.count
 
       // If the user is in the vocab and technically levels up but has 0
       // learned treat it as the prior level and set halfLevel=true
       if learnedCount == 0,
-        let currentAssignments = assignmentsAtCurrentLevel,
-        let assignment = currentAssignments.first,
+        let assignment = assignmentsAtCurrentLevel.first,
         assignment.level > 0 {
         halfLevel = true
         assignmentsAtCurrentLevel = client.getAssignmentsAtLevel(assignment.level - 1)
-        learnedCount = assignmentsAtCurrentLevel?.filter { (assignment) -> Bool in
+        learnedCount = assignmentsAtCurrentLevel.filter { (assignment) -> Bool in
           assignment.srsStage >= 5
-        }.count ?? 0
+        }.count
       }
 
       let now = Int(Date().timeIntervalSince1970)
@@ -135,8 +135,8 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
         WatchHelper.KeyReviewCount: client.availableReviewCount,
         WatchHelper.KeyReviewNextHourCount: client.upcomingReviews.first?.intValue ?? 0,
         WatchHelper.KeyReviewUpcomingHourlyCounts: client.upcomingReviews.map { $0.intValue },
-        WatchHelper.KeyLevelCurrent: assignmentsAtCurrentLevel?.first?.level ?? 0,
-        WatchHelper.KeyLevelTotal: assignmentsAtCurrentLevel?.count ?? 0,
+        WatchHelper.KeyLevelCurrent: assignmentsAtCurrentLevel.first?.level ?? 0,
+        WatchHelper.KeyLevelTotal: assignmentsAtCurrentLevel.count,
         WatchHelper.KeyLevelLearned: learnedCount,
         WatchHelper.KeyLevelHalf: halfLevel,
         WatchHelper.KeyNextReviewAt: nextReviewEpoch,
@@ -156,7 +156,9 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + deadline) {
           let timestamp = [WatchHelper.KeySentAt: EpochTimeInt(Date().timeIntervalSince1970)]
-          session.transferCurrentComplicationUserInfo(packet.merging(timestamp, uniquingKeysWith: { current, _ in current }))
+          session
+            .transferCurrentComplicationUserInfo(packet
+              .merging(timestamp, uniquingKeysWith: { current, _ in current }))
         }
       }
     }
@@ -179,8 +181,8 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
   }
 
   func shouldSendPacket(packet: [String: Any]) -> Bool {
-    guard let lastSignature = self.lastPacketSignature,
-      let lastSent = self.lastPacketSentAt else {
+    guard let lastSignature = lastPacketSignature,
+      let lastSent = lastPacketSentAt else {
       // The first one's always free.
       return true
     }

@@ -42,7 +42,8 @@ class DataManager {
   private init() {
     // Load the last known data from last time
     latestData = UserDefaults.standard.dictionary(forKey: UserDefaultsKeyData)
-    dataSource = ComplicationDataSource(rawValue: UserDefaults.standard.integer(forKey: UserDefaultsKeySource)) ?? .ReviewCounts
+    dataSource = ComplicationDataSource(rawValue: UserDefaults.standard
+      .integer(forKey: UserDefaultsKeySource)) ?? .ReviewCounts
 
     WatchHelper.sharedInstance().awaitMessages { userInfo in
       if self.isDataOutOfDate(userData: userInfo) {
@@ -59,7 +60,7 @@ class DataManager {
     }
   }
 
-  func dataStaleAfter() -> Date? { if let data = self.latestData,
+  func dataStaleAfter() -> Date? { if let data = latestData,
     let dataSentAt = data[WatchHelper.KeySentAt] as? EpochTimeInt,
     let nextReviewAt = data[WatchHelper.KeyNextReviewAt] as? EpochTimeInt {
       let dataSent = Date(timeIntervalSince1970: TimeInterval(dataSentAt))

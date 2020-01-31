@@ -179,11 +179,11 @@
     return;
   }
 
-    [[WatchHelper sharedInstance] updatedDataWithClient:_services.localCachingClient];
+  [[WatchHelper sharedInstance] updatedDataWithClient:_services.localCachingClient];
 
-    if (!Settings.notificationsAllReviews && !Settings.notificationsBadging) {
-      return;
-    }
+  if (!Settings.notificationsAllReviews && !Settings.notificationsBadging) {
+    return;
+  }
 
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   void (^updateBlock)(void) = ^() {
