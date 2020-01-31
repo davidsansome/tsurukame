@@ -88,6 +88,7 @@
 		63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */; };
 		63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766221F47100002A417B /* TKMReviewContainerViewController.m */; };
 		63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766521F47669002A417B /* TKMReviewMenuViewController.m */; };
+		63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
 		63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */; };
 		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
@@ -131,7 +132,6 @@
 		C92AB972237F2E8200F79904 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB971237F2E8200F79904 /* DataManager.swift */; };
 		C943D5B02380D59B004A7969 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943D5AF2380D59A004A7969 /* SettingsController.swift */; };
 		C9164D3923D0CFCF00B6D93A /* InterfaceStyleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9164D3823D0CFCF00B6D93A /* InterfaceStyleViewController.swift */; };
-		C9164D3C23D0D60100B6D93A /* UIViewController+InterfaceStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = C9164D3B23D0D60100B6D93A /* UIViewController+InterfaceStyle.m */; };
 		C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C970BC0223D262CE001F3735 /* SiriShortcutHelper.swift */; };
 		EC6A5487F6875EC64C63B6B2 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404461BC39B4A19B128F9E69 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */; };
 		F513FC1023119D2C001EEEDA /* FontSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F513FC0F23119D2C001EEEDA /* FontSizeViewController.m */; };
@@ -321,6 +321,7 @@
 		63CE766221F47100002A417B /* TKMReviewContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMReviewContainerViewController.m; sourceTree = "<group>"; };
 		63CE766421F47669002A417B /* TKMReviewMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewMenuViewController.h; sourceTree = "<group>"; };
 		63CE766521F47669002A417B /* TKMReviewMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMReviewMenuViewController.m; sourceTree = "<group>"; };
+		63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+InterfaceStyle.swift"; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63E9A8CA210D6CC000418CE1 /* SubjectsByLevelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsByLevelViewController.h; sourceTree = "<group>"; };
 		63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsByLevelViewController.m; sourceTree = "<group>"; };
@@ -385,8 +386,6 @@
 		C92AB971237F2E8200F79904 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		C943D5AF2380D59A004A7969 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		C9164D3823D0CFCF00B6D93A /* InterfaceStyleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceStyleViewController.swift; sourceTree = "<group>"; };
-		C9164D3A23D0D60100B6D93A /* UIViewController+InterfaceStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+InterfaceStyle.h"; sourceTree = "<group>"; };
-		C9164D3B23D0D60100B6D93A /* UIViewController+InterfaceStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+InterfaceStyle.m"; sourceTree = "<group>"; };
 		C970BC0223D262CE001F3735 /* SiriShortcutHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutHelper.swift; sourceTree = "<group>"; };
 		D9929E537851D24D07F47938 /* Pods-Tsurukame (App Store screenshots).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).release.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).release.xcconfig"; sourceTree = "<group>"; };
 		E0AAF9AA4EFECB4B5DB94C29 /* Pods-FontScreenshotterUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotterUITests.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotterUITests/Pods-FontScreenshotterUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -481,8 +480,7 @@
 				63A237601FE9264300C48657 /* UIColor+HexString.m */,
 				63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */,
 				63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */,
-				C9164D3A23D0D60100B6D93A /* UIViewController+InterfaceStyle.h */,
-				C9164D3B23D0D60100B6D93A /* UIViewController+InterfaceStyle.m */,
+				63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1258,7 +1256,6 @@
 				63EEFEBF1FC45C440070C05F /* main.m in Sources */,
 				BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */,
 				63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */,
-				C9164D3C23D0D60100B6D93A /* UIViewController+InterfaceStyle.m in Sources */,
 				C9164D3923D0CFCF00B6D93A /* InterfaceStyleViewController.swift in Sources */,
 				633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */,
 				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
@@ -1310,6 +1307,7 @@
 				63FCAE78237F75CC00DB1418 /* Style.swift in Sources */,
 				3DA8BAFC224C9580009E925B /* LessonOrderViewController.m in Sources */,
 				F513FC1023119D2C001EEEDA /* FontSizeViewController.m in Sources */,
+				63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1622,7 +1620,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AppStoreScreenshots/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1647,7 +1645,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AppStoreScreenshots/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -363,7 +363,7 @@
                                     <constraint firstAttribute="height" constant="16" id="pqx-CS-kAg"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg" customClass="AnswerTextField" customModule="Tsurukame" customModuleProvider="target">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg" customClass="TKMAnswerTextField">
                                 <rect key="frame" x="0.0" y="603" width="375" height="64"/>
                                 <accessibility key="accessibilityConfiguration" label="Answer field"/>
                                 <constraints>
@@ -584,11 +584,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tCW-sh-YGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="19G-qM-1qD">
-                    <connections>
-                        <action selector="questionLabelTapped:" destination="Mzz-hx-Bdo" id="7cs-c8-DrG"/>
-                    </connections>
-                </tapGestureRecognizer>
+                <tapGestureRecognizer id="19G-qM-1qD"/>
             </objects>
             <point key="canvasLocation" x="1182" y="944"/>
         </scene>
@@ -745,7 +741,7 @@
                             <outlet property="delegate" destination="uj2-VH-hcW" id="Rq6-WD-mCg"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="fEv-hT-NuQ"/>
+                    <navigationItem key="navigationItem" title="Review Order" id="fEv-hT-NuQ"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tKc-pM-8ii" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -823,7 +819,7 @@
                             <outlet property="delegate" destination="AG2-Tf-RDu" id="NLr-zf-GB9"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="nun-U5-lfk"/>
+                    <navigationItem key="navigationItem" title="Offline Audio" id="nun-U5-lfk"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xDV-IB-csT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -923,7 +919,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     </tableView>
-                    <navigationItem key="navigationItem" id="CJp-DN-5Zn"/>
+                    <navigationItem key="navigationItem" title="Select Fonts" id="CJp-DN-5Zn"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BnI-lh-nSF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1067,7 +1063,7 @@
                             <outlet property="delegate" destination="QeO-rY-q01" id="gjZ-Pu-IxC"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="I3b-jx-0wZ"/>
+                    <navigationItem key="navigationItem" title="Font Size" id="I3b-jx-0wZ"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OPI-lh-n01" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1143,7 +1139,7 @@
                             <outlet property="delegate" destination="B5Q-PH-hTQ" id="PWC-ic-zJh"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="Rpb-QQ-rfX"/>
+                    <navigationItem key="navigationItem" title="Lesson Order" id="Rpb-QQ-rfX"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Ej-cY-XFU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1304,7 +1300,7 @@
                             <outlet property="delegate" destination="EY9-1W-ElO" id="e5h-3L-tVE"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="RkM-5S-mTC"/>
+                    <navigationItem key="navigationItem" title="Lesson Batch Size" id="RkM-5S-mTC"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cji-U8-BYd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1380,7 +1376,7 @@
                             <outlet property="delegate" destination="uR7-9a-Wx4" id="rXh-UI-9J2"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="oBb-BN-WKP"/>
+                    <navigationItem key="navigationItem" title="UI Appearance" id="oBb-BN-WKP"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NvG-gT-cL1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

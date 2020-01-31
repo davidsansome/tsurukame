@@ -12,40 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+@objc(TKMAnswerTextField)
 class AnswerTextField: UITextField {
-  public var answerLanguage: String? {
-    didSet {
-      if oldValue != answerLanguage {
-        DispatchQueue.main.async {
-          if self.isFirstResponder {
-            // re-read the language state
-            self.resignFirstResponder()
-            self.becomeFirstResponder()
-          }
-        }
+  // Returns a Japanese-language UITextInputMode, if available.
+  // If this returns nil the user doesn't have a Japanese keyboard installed.
+  @objc class var japaneseTextInputMode: UITextInputMode? {
+    for textInputMode in UITextInputMode.activeInputModes {
+      if let primaryLanguage = textInputMode.primaryLanguage,
+        primaryLanguage.starts(with: "ja") {
+        return textInputMode
       }
-    }
-  }
-
-  override var textInputContextIdentifier: String? {
-    "com.tsurukame.answer"
-  }
-
-  private func getKeyboardLanguage() -> String? {
-    if Settings.autoSwitchKeyboard {
-      return answerLanguage
     }
     return nil
   }
 
-  override var textInputMode: UITextInputMode? {
-    if let language = getKeyboardLanguage() {
-      for textInputMode in UITextInputMode.activeInputModes {
-        if let primaryLanguage = textInputMode.primaryLanguage,
-          primaryLanguage.starts(with: language) {
-          return textInputMode
+  // Whether to show a Japanese-language keyboard for this text input.
+  public var useJapaneseKeyboard: Bool = false {
+    didSet {
+      if oldValue != useJapaneseKeyboard {
+        if self.isFirstResponder {
+          // Reload the keyboard if we just changed its language.
+          self.resignFirstResponder()
+          self.becomeFirstResponder()
         }
       }
+    }
+  }
+
+  // MARK: - UIResponder
+
+  override var textInputContextIdentifier: String? {
+    if useJapaneseKeyboard {
+      return "com.tsurukame.answer.ja"
+    }
+    return "com.tsurukame.answer"
+  }
+
+  override var textInputMode: UITextInputMode? {
+    if useJapaneseKeyboard, let mode = AnswerTextField.japaneseTextInputMode {
+      return mode
     }
     return super.textInputMode
   }

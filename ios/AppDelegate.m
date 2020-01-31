@@ -39,6 +39,7 @@
 
   [TKMScreenshotter setUp];
 
+  [self.window setInterfaceStyle:Settings.interfaceStyle];
   [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
 
   _storyboard = self.window.rootViewController.storyboard;

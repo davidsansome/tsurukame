@@ -1,4 +1,4 @@
-all: proto.so
+all: proto.so proto.dylib
 
 wanikani.pb.h: ../proto/wanikani.proto
 	protoc ../proto/wanikani.proto --cpp_out=. --proto_path=../proto
@@ -13,6 +13,9 @@ proto.so: proto.cc wanikani.pb.h wanikani.pb.cc
 			wanikani.pb.cc \
 			-lsqlite3 \
 			-lprotobuf
+
+proto.dylib: proto.so
+	ln -s proto.so proto.dylib
 
 clean:
 	rm -f proto.so wanikani.pb.h wanikani.pb.cc
