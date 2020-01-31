@@ -2,7 +2,9 @@
 /data.bin
 .DS_Store
 /ios/build/
+/sqlite3-extension/proto.dylib
 /sqlite3-extension/proto.so
+/sqlite3-extension/wanikani.pb.*
 **/xcuserdata/
 **/xcshareddata/
 /ios/*.ipa

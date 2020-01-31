@@ -12,14 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <UIKit/UIKit.h>
+import Foundation
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface UIViewController (InterfaceStyle)
-
-- (void)refreshInterfaceStyle;
-
-@end
-
-NS_ASSUME_NONNULL_END
+extension UIWindow {
+  @objc func setInterfaceStyle(_ style: InterfaceStyle) {
+    if #available(iOS 13.0, *) {
+      switch style {
+      case .system:
+        self.overrideUserInterfaceStyle = .unspecified
+      case .dark:
+        self.overrideUserInterfaceStyle = .dark
+      case .light:
+        self.overrideUserInterfaceStyle = .light
+      }
+    }
+  }
+}

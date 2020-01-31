@@ -32,8 +32,7 @@ class AttributedModelItem: NSObject, TKMModelItem {
 }
 
 class AttributedModelCell: TKMModelCell {
-  let textView: UITextView = UITextView()
-
+  var textView: UITextView!
   var rightButton: UIButton?
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -42,7 +41,7 @@ class AttributedModelCell: TKMModelCell {
     selectionStyle = .none
     isUserInteractionEnabled = true
 
-    textView.frame = bounds
+    textView = UITextView(frame: bounds)
     textView.isEditable = false
     textView.isScrollEnabled = false
     textView.textContainerInset = .zero
@@ -85,10 +84,9 @@ class AttributedModelCell: TKMModelCell {
     // weight Japanese text.  We use [NSAttributedString boundingRectWithSize] which gives the correct
     // size.
     let text = textView.attributedText!
-    let ctx = NSStringDrawingContext()
     let textViewSize = text.boundingRect(with: availableRect.size,
                                          options: .usesLineFragmentOrigin,
-                                         context: ctx).size
+                                         context: nil).size
 
     // Center the text vertically.
     if textViewSize.height < availableRect.size.height {

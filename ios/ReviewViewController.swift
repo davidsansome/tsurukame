@@ -189,6 +189,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   private var currentFontName: String!
   private var normalFontName: String!
+  private var availableFonts: [String]?
   private var defaultFontSize: Double!
 
   @IBOutlet private var menuButton: UIButton!
@@ -245,7 +246,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     reviewQueue.shuffle()
     switch Settings.reviewOrder {
-    case ReviewOrder_BySRSStage:
+    case .bySRSStage:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.srsStage < b.assignment.srsStage { return true }
         if a.assignment.srsStage > b.assignment.srsStage { return false }
@@ -253,7 +254,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
-    case ReviewOrder_CurrentLevelFirst:
+    case .currentLevelFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.level < b.assignment.level { return false }
         if a.assignment.level > b.assignment.level { return true }
@@ -261,7 +262,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
-    case ReviewOrder_LowestLevelFirst:
+    case .lowestLevelFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.level < b.assignment.level { return true }
         if a.assignment.level > b.assignment.level { return false }
@@ -269,7 +270,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
-    case ReviewOrder_NewestAvailableFirst:
+    case .newestAvailableFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.availableAt < b.assignment.availableAt { return false }
         if a.assignment.availableAt > b.assignment.availableAt { return true }
@@ -277,7 +278,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
-    case ReviewOrder_OldestAvailableFirst:
+    case .oldestAvailableFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.availableAt < b.assignment.availableAt { return true }
         if a.assignment.availableAt > b.assignment.availableAt { return false }
@@ -285,10 +286,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
-    case ReviewOrder_Random:
+    case .random:
       break
-    default:
-      break
+
+    @unknown default:
+      fatalError()
     }
 
     refillActiveQueue()
@@ -338,20 +340,23 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     questionLabel.isUserInteractionEnabled = false
 
-    let swipeRecognizer = UISwipeGestureRecognizer(target: self,
-                                                   action: #selector(didSwipeQuestionLabel))
-    swipeRecognizer.direction = .left
-    questionBackground.addGestureRecognizer(swipeRecognizer)
+    let shortPressRecognizer =
+      UITapGestureRecognizer(target: self, action: #selector(didShortPressQuestionLabel))
+    questionBackground.addGestureRecognizer(shortPressRecognizer)
 
-    let longPressRecognizer =
-      UILongPressGestureRecognizer(target: self, action: #selector(didLongPressQuestionLabel))
-    longPressRecognizer.minimumPressDuration = 0
-    longPressRecognizer.allowableMovement = 500
-    longPressRecognizer.require(toFail: swipeRecognizer)
-    questionBackground.addGestureRecognizer(longPressRecognizer)
+    let leftSwipeRecognizer = UISwipeGestureRecognizer(target: self,
+                                                       action: #selector(didSwipeQuestionLabel))
+    leftSwipeRecognizer.direction = .left
+    questionBackground.addGestureRecognizer(leftSwipeRecognizer)
+    let rightSwipeRecognizer = UISwipeGestureRecognizer(target: self,
+                                                        action: #selector(didSwipeQuestionLabel))
+    rightSwipeRecognizer.direction = .right
+    questionBackground.addGestureRecognizer(rightSwipeRecognizer)
+
+    leftSwipeRecognizer.require(toFail: shortPressRecognizer)
+    rightSwipeRecognizer.require(toFail: shortPressRecognizer)
 
     viewDidLayoutSubviews()
-    randomTask()
   }
 
   override func viewDidLayoutSubviews() {
@@ -363,6 +368,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   override func viewWillAppear(_ animated: Bool) {
+    if activeTask == nil {
+      // This must be done for the first time after the view has been added
+      // to the window, since the window may override the userInterfaceStyle.
+      randomTask()
+    }
+
     super.viewWillAppear(animated)
     SiriShortcutHelper.shared
       .attachShortcutActivity(self, type: SiriShortcutHelper.ShortcutTypeReviews)
@@ -464,169 +475,171 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   private func randomTask() {
-    if activeQueue.count == 0 {
-      delegate.reviewViewControllerFinishedAllReviewItems(self)
-      return
-    }
+    TKMStyle.withTraitCollection(traitCollection) {
+      if activeQueue.count == 0 {
+        delegate.reviewViewControllerFinishedAllReviewItems(self)
+        return
+      }
 
-    // Update the progress labels.
-    var successRateText: String
-    if tasksAnswered == 0 {
-      successRateText = "100%"
-    } else {
-      successRateText = String(Int(Double(tasksAnsweredCorrectly) / Double(tasksAnswered) * 100)) +
-        "%"
-    }
-    let queueLength = Int(activeQueue.count + reviewQueue.count)
-    let doneText = String(reviewsCompleted)
-    let queueText = String(queueLength)
-    let wrapUpText = String(activeQueue.count)
+      // Update the progress labels.
+      var successRateText: String
+      if tasksAnswered == 0 {
+        successRateText = "100%"
+      } else {
+        successRateText =
+          String(Int(Double(tasksAnsweredCorrectly) / Double(tasksAnswered) * 100)) +
+          "%"
+      }
+      let queueLength = Int(activeQueue.count + reviewQueue.count)
+      let doneText = String(reviewsCompleted)
+      let queueText = String(queueLength)
+      let wrapUpText = String(activeQueue.count)
 
-    // Update the progress bar.
-    let totalLength = queueLength + reviewsCompleted
-    if totalLength == 0 {
-      progressBar.setProgress(0.0, animated: true)
-    } else {
-      progressBar.setProgress(Float(reviewsCompleted) / Float(totalLength), animated: true)
-    }
+      // Update the progress bar.
+      let totalLength = queueLength + reviewsCompleted
+      if totalLength == 0 {
+        progressBar.setProgress(0.0, animated: true)
+      } else {
+        progressBar.setProgress(Float(reviewsCompleted) / Float(totalLength), animated: true)
+      }
 
-    // Choose a random task from the active queue.
-    activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
-    activeTask = activeQueue[activeTaskIndex]
-    activeSubject = services.dataLoader.load(subjectID: Int(activeTask.assignment.subjectId))!
-    activeStudyMaterials =
-      services.localCachingClient.getStudyMaterial(forID: activeTask.assignment.subjectId)
+      // Choose a random task from the active queue.
+      activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
+      activeTask = activeQueue[activeTaskIndex]
+      activeSubject = services.dataLoader.load(subjectID: Int(activeTask.assignment.subjectId))!
+      activeStudyMaterials =
+        services.localCachingClient.getStudyMaterial(forID: activeTask.assignment.subjectId)
 
-    // Choose whether to ask the meaning or the reading.
-    if activeTask.answeredMeaning {
-      activeTaskType = TKMTaskType.reading
-    } else if activeTask.answeredReading || activeSubject.hasRadical {
-      activeTaskType = TKMTaskType.meaning
-    } else if Settings.groupMeaningReading {
-      activeTaskType = Settings.meaningFirst ? TKMTaskType.meaning : TKMTaskType.reading
-    } else {
-      activeTaskType = TKMTaskType(rawValue: TKMTaskType
-        .RawValue(arc4random_uniform(UInt32(TKMTaskType._Max.rawValue))))!
-    }
+      // Choose whether to ask the meaning or the reading.
+      if activeTask.answeredMeaning {
+        activeTaskType = TKMTaskType.reading
+      } else if activeTask.answeredReading || activeSubject.hasRadical {
+        activeTaskType = TKMTaskType.meaning
+      } else if Settings.groupMeaningReading {
+        activeTaskType = Settings.meaningFirst ? TKMTaskType.meaning : TKMTaskType.reading
+      } else {
+        activeTaskType = TKMTaskType(rawValue: TKMTaskType
+          .RawValue(arc4random_uniform(UInt32(TKMTaskType._Max.rawValue))))!
+      }
 
-    // Fill the question labels.
-    var subjectTypePrompt: String
-    var taskTypePrompt: String
-    var promptGradient: [CGColor]
-    var promptTextColor: UIColor
-    var taskTypePlaceholder: String
+      // Fill the question labels.
+      var subjectTypePrompt: String
+      var taskTypePrompt: String
+      var promptGradient: [CGColor]
+      var promptTextColor: UIColor
+      var taskTypePlaceholder: String
 
-    switch activeTask.assignment.subjectType {
-    case .kanji:
-      subjectTypePrompt = "Kanji"
-    case .radical:
-      subjectTypePrompt = "Radical"
-    case .vocabulary:
-      subjectTypePrompt = "Vocabulary"
+      switch activeTask.assignment.subjectType {
+      case .kanji:
+        subjectTypePrompt = "Kanji"
+      case .radical:
+        subjectTypePrompt = "Radical"
+      case .vocabulary:
+        subjectTypePrompt = "Vocabulary"
     @unknown default:
-      fatalError()
-    }
-    switch activeTaskType! {
-    case .meaning:
-      kanaInput.enabled = false
-      taskTypePrompt = activeTask.assignment.subjectType == .radical ? "Name" : "Meaning"
-      promptGradient = TKMStyle.meaningGradient as! [CGColor]
-      promptTextColor = kMeaningTextColor
-      taskTypePlaceholder = "Your Response"
-    case .reading:
-      kanaInput.enabled = true
-      taskTypePrompt = "Reading"
-      promptGradient = TKMStyle.readingGradient as! [CGColor]
-      promptTextColor = kReadingTextColor
-      taskTypePlaceholder = "答え"
-    case ._Max:
-      fallthrough
+        fatalError()
+      }
+      switch activeTaskType! {
+      case .meaning:
+        kanaInput.enabled = false
+        taskTypePrompt = activeTask.assignment.subjectType == .radical ? "Name" : "Meaning"
+        promptGradient = TKMStyle.meaningGradient as! [CGColor]
+        promptTextColor = kMeaningTextColor
+        taskTypePlaceholder = "Your Response"
+      case .reading:
+        kanaInput.enabled = true
+        taskTypePrompt = "Reading"
+        promptGradient = TKMStyle.readingGradient as! [CGColor]
+        promptTextColor = kReadingTextColor
+        taskTypePlaceholder = "答え"
+      case ._Max:
+        fallthrough
     @unknown default:
-      fatalError()
+        fatalError()
+      }
+
+      // Choose a random font.
+      currentFontName = randomFont(thatCanRenderText: activeSubject.japanese)
+
+      let boldFont = UIFont.boldSystemFont(ofSize: promptLabel!.font.pointSize)
+      let prompt = NSMutableAttributedString(string: subjectTypePrompt + " " + taskTypePrompt)
+      prompt.setAttributes([NSAttributedString.Key.font: boldFont],
+                           range: NSRange(location: prompt.length - taskTypePrompt.count,
+                                          length: taskTypePrompt.count))
+
+      // Text color.
+      promptLabel!.textColor = promptTextColor
+
+      // Submit button.
+      submitButton.isEnabled = false
+
+      // Background gradients.
+      questionBackground
+        .animateColors(to: TKMStyle.gradient(forAssignment: activeTask.assignment),
+                       duration: animationDuration)
+      promptBackground.animateColors(to: promptGradient, duration: animationDuration)
+
+      // Accessibility.
+      successRateLabel.accessibilityLabel = successRateText + " correct so far"
+      doneLabel.accessibilityLabel = doneText + " done"
+      queueLabel.accessibilityLabel = queueText + " remaining"
+      questionLabel.accessibilityLabel = "Japanese " + subjectTypePrompt + ". Question"
+      levelLabel.accessibilityLabel = "srs level \(activeTask.assignment.srsStage)"
+
+      answerField.text = nil
+      answerField.textColor = TKMStyle.Color.label
+      answerField.backgroundColor = TKMStyle.Color.background
+      answerField.placeholder = taskTypePlaceholder
+      if let firstReading = activeSubject.primaryReadings.first {
+        kanaInput.alphabet = (
+          firstReading.hasType && firstReading.type == .onyomi && Settings.useKatakanaForOnyomi) ?
+          .katakana : .hiragana
+      } else {
+        kanaInput.alphabet = .hiragana
+      }
+
+      answerField.useJapaneseKeyboard = Settings
+        .autoSwitchKeyboard && activeTaskType == .reading
+
+      if Settings.showSRSLevelIndicator {
+        levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
+      } else {
+        levelLabel.attributedText = nil
+      }
+
+      let setupContextFunc = {
+        (ctx: AnimationContext) in
+        if !(self.questionLabel.attributedText?
+          .isEqual(to: self.activeSubject.japaneseText) ?? false) ||
+          self.questionLabel.font.familyName != self.currentFontName {
+          ctx.addFadingLabel(original: self.questionLabel!)
+          self.questionLabel
+            .font = UIFont(name: self.currentFontName, size: self.questionLabelFontSize())
+          self.questionLabel.attributedText = self.activeSubject.japaneseText
+        }
+        if self.wrapUpLabel.text != wrapUpText {
+          ctx.addFadingLabel(original: self.wrapUpLabel!)
+          self.wrapUpLabel.text = wrapUpText
+        }
+        if self.successRateLabel.text != successRateText {
+          ctx.addFadingLabel(original: self.successRateLabel!)
+          self.successRateLabel.text = successRateText
+        }
+        if self.doneLabel.text != doneText {
+          ctx.addFadingLabel(original: self.doneLabel!)
+          self.doneLabel.text = doneText
+        }
+        if self.queueLabel.text != queueText {
+          ctx.addFadingLabel(original: self.queueLabel!)
+          self.queueLabel.text = queueText
+        }
+        if self.promptLabel.attributedText?.string != prompt.string {
+          ctx.addFadingLabel(original: self.promptLabel!)
+          self.promptLabel.attributedText = prompt
+        }
+      }
+      animateSubjectDetailsView(shown: false, setupContextFunc: setupContextFunc)
     }
-
-    // Choose a random font.
-    currentFontName = randomFont(thatCanRenderText: activeSubject.japanese)
-
-    let boldFont = UIFont.boldSystemFont(ofSize: promptLabel!.font.pointSize)
-    let prompt = NSMutableAttributedString(string: subjectTypePrompt + " " + taskTypePrompt)
-    prompt.setAttributes([NSAttributedString.Key.font: boldFont],
-                         range: NSRange(location: prompt.length - taskTypePrompt.count,
-                                        length: taskTypePrompt.count))
-
-    // Text color.
-    promptLabel!.textColor = promptTextColor
-
-    // Submit button.
-    submitButton.isEnabled = false
-
-    // Background gradients.
-    questionBackground
-      .animateColors(to: TKMStyle.gradient(forAssignment: activeTask.assignment),
-                     duration: animationDuration)
-    promptBackground.animateColors(to: promptGradient, duration: animationDuration)
-
-    // Accessibility.
-    successRateLabel.accessibilityLabel = successRateText + " correct so far"
-    doneLabel.accessibilityLabel = doneText + " done"
-    queueLabel.accessibilityLabel = queueText + " remaining"
-    questionLabel.accessibilityLabel = "Japanese " + subjectTypePrompt + ". Question"
-    levelLabel.accessibilityLabel = "srs level \(activeTask.assignment.srsStage)"
-
-    answerField.text = nil
-    answerField.textColor = TKMStyle.Color.label
-    answerField.backgroundColor = TKMStyle.Color.background
-    answerField.placeholder = taskTypePlaceholder
-    if let firstReading = activeSubject.primaryReadings.first {
-      kanaInput.alphabet = (
-        firstReading.hasType && firstReading.type == .onyomi && Settings.useKatakanaForOnyomi) ?
-        .katakana : .hiragana
-    } else {
-      kanaInput.alphabet = .hiragana
-    }
-
-    if Settings.autoSwitchKeyboard {
-      answerField.answerLanguage = kanaInput.enabled ? "ja" : nil
-    }
-
-    if Settings.showSRSLevelIndicator {
-      levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
-    } else {
-      levelLabel.attributedText = nil
-    }
-
-    let setupContextFunc = {
-      (ctx: AnimationContext) in
-      if !(self.questionLabel.attributedText?
-        .isEqual(to: self.activeSubject.japaneseText) ?? false) ||
-        self.questionLabel.font.familyName != self.currentFontName {
-        ctx.addFadingLabel(original: self.questionLabel!)
-        self.questionLabel
-          .font = UIFont(name: self.currentFontName, size: self.questionLabelFontSize())
-        self.questionLabel.attributedText = self.activeSubject.japaneseText
-      }
-      if self.wrapUpLabel.text != wrapUpText {
-        ctx.addFadingLabel(original: self.wrapUpLabel!)
-        self.wrapUpLabel.text = wrapUpText
-      }
-      if self.successRateLabel.text != successRateText {
-        ctx.addFadingLabel(original: self.successRateLabel!)
-        self.successRateLabel.text = successRateText
-      }
-      if self.doneLabel.text != doneText {
-        ctx.addFadingLabel(original: self.doneLabel!)
-        self.doneLabel.text = doneText
-      }
-      if self.queueLabel.text != queueText {
-        ctx.addFadingLabel(original: self.queueLabel!)
-        self.queueLabel.text = queueText
-      }
-      if self.promptLabel.attributedText?.string != prompt.string {
-        ctx.addFadingLabel(original: self.promptLabel!)
-        self.promptLabel.attributedText = prompt
-      }
-    }
-    animateSubjectDetailsView(shown: false, setupContextFunc: setupContextFunc)
   }
 
   // MARK: - Random fonts
@@ -648,10 +661,36 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     return availableFonts
   }
 
+  func nextCustomFont(thatCanRenderText _: String) -> String? {
+    if let availableFonts = self.availableFonts,
+      let index = availableFonts.firstIndex(of: currentFontName) {
+      if index + 1 >= availableFonts.count {
+        return availableFonts.first
+      } else {
+        return availableFonts[index + 1]
+      }
+    }
+    return nil
+  }
+
+  func previousCustomFont(thatCanRenderText _: String) -> String? {
+    if let availableFonts = self.availableFonts,
+      let index = availableFonts.firstIndex(of: currentFontName) {
+      if index == 0 {
+        return availableFonts.last
+      } else {
+        return availableFonts[index - 1]
+      }
+    }
+    return nil
+  }
+
   func randomFont(thatCanRenderText text: String) -> String {
-    if delegate.reviewViewControllerAllowsCustomFonts(),
-      let fontName = fontsThatCanRenderText(text, exclude: nil).randomElement() {
-      return fontName
+    if delegate.reviewViewControllerAllowsCustomFonts() {
+      // Re-set the supported fonts when we pick a random one as that is the first
+      // step.
+      availableFonts = fontsThatCanRenderText(text, exclude: nil).sorted()
+      return availableFonts?.randomElement() ?? normalFontName
     } else {
       return normalFontName
     }
@@ -768,7 +807,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     let newButtonHeight =
       kPreviousSubjectButtonPadding * 2 + labelBounds.size.height * kPreviousSubjectScale
 
-    let newGradient = TKMStyle.gradient(forSubject: previousSubject)
+    var newGradient: [CGColor]!
+    TKMStyle.withTraitCollection(traitCollection) {
+      newGradient = (TKMStyle.gradient(forSubject: previousSubject) as! [CGColor])
+    }
 
     view.layoutIfNeeded()
     UIView.animate(withDuration: kPreviousSubjectAnimationDuration,
@@ -825,18 +867,17 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     questionLabel.font = UIFont(name: fontName, size: questionLabelFontSize())
   }
 
-  @objc func didLongPressQuestionLabel(_ gestureRecognizer: UILongPressGestureRecognizer) {
-    let answered = !subjectDetailsView.isHidden
-    if gestureRecognizer.state == .began {
-      setCustomQuestionLabelFont(useCustomFont: answered)
-    } else if gestureRecognizer.state == .ended {
-      setCustomQuestionLabelFont(useCustomFont: !answered)
-    }
+  @objc func didShortPressQuestionLabel(_: UITapGestureRecognizer) {
+    toggleFont()
   }
 
-  @objc func didSwipeQuestionLabel(_: UIGestureRecognizer) {
-    currentFontName = fontsThatCanRenderText(activeSubject.japanese, exclude: [currentFontName])
-      .randomElement() ?? normalFontName
+  @objc func didSwipeQuestionLabel(_ sender: UISwipeGestureRecognizer) {
+    if sender.direction == .left {
+      currentFontName = nextCustomFont(thatCanRenderText: activeSubject.japanese) ?? normalFontName
+    } else if sender.direction == .right {
+      currentFontName = previousCustomFont(thatCanRenderText: activeSubject.japanese) ??
+        normalFontName
+    }
     setCustomQuestionLabelFont(useCustomFont: true)
   }
 

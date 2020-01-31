@@ -188,4 +188,16 @@ class TKMStyle: NSObject {
     static let markupVocabularyForeground = AdaptiveColorHex(light: 0x000000, dark: 0xC34AFF)
     static let markupVocabularyBackground = AdaptiveColorHex(light: 0xF1D6FF, dark: 0x1C1C1E)
   }
+
+  // Wrapper around UITraitCollection.performAsCurrent that just does nothing
+  // on iOS < 13.
+  class func withTraitCollection(_ tc: UITraitCollection, f: () -> Void) {
+    if #available(iOS 13.0, *) {
+      tc.performAsCurrent {
+        f()
+      }
+    } else {
+      f()
+    }
+  }
 }

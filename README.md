@@ -2,9 +2,12 @@
 
 Tsurukame is an unofficial WaniKani app for iOS.  It helps you learn Japanese Kanji.
 
-You can download Tsurukame on the App Store.
+You can download the latest stable release of Tsurukame on the App Store.
 
 [![Download on the App Store](https://devimages-cdn.apple.com/app-store/marketing/guidelines/images/badge-example-preferred.png)](https://itunes.apple.com/us/app/tsurukame-for-wanikani/id1367114761)
+
+Or join the [TestFlight beta](https://testflight.apple.com/join/Fijye2AA)
+which is updated automatically any time there's a commit to this Git repository.
 
 # Building Tsurukame
 
@@ -18,7 +21,7 @@ You'll have to change the app bundle identifiers in the main target and app exte
 	1. Otherwise, you will need to open Xcode, and open `ios/Tsurukame.xcworkspace`, which is what you will use to build the app.
 	2. You will need to go click on the Tsurukame project in the left sidebar.
 	3. In the General and Signing & Capabilities tabs, change the bundle identifier & development team as shown in the screenshots below.
-    
+
     <img width="300" alt="General" src="https://user-images.githubusercontent.com/46784000/72098368-ed64e980-32e3-11ea-8cee-e1837d993269.PNG"><img width="300" alt="Signing & Capabilities" src="https://user-images.githubusercontent.com/46784000/72098370-ed64e980-32e3-11ea-83a9-1783a94213d5.PNG">
 3. Open `project.pbxproj` which can be found in the contents of `ios/Tsurukame.xcodeproj` in an external editor (not Xcode), and find and replace:
 	1. `7B2GP77Y4A;` with your development team followed by a semicolon

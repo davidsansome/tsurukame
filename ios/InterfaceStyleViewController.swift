@@ -17,7 +17,6 @@ import UIKit
 class InterfaceStyleViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
-    refreshInterfaceStyle()
 
     var selectedRow = Int(Settings.interfaceStyle.rawValue - 1)
     if selectedRow < 0 || selectedRow >= tableView.numberOfRows(inSection: 0) {
@@ -30,8 +29,8 @@ class InterfaceStyleViewController: UITableViewController {
   }
 
   override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-    Settings.interfaceStyle = InterfaceStyle(UInt(indexPath.row + 1))
-    refreshInterfaceStyle()
+    Settings.interfaceStyle = InterfaceStyle(rawValue: UInt(indexPath.row + 1))!
+    view.window!.setInterfaceStyle(Settings.interfaceStyle)
     navigationController?.popViewController(animated: true)
   }
 }
