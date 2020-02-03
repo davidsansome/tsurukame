@@ -29,11 +29,12 @@
 
 typedef NS_ENUM(NSUInteger, ReviewOrder) {
   ReviewOrder_Random = 1,
-  ReviewOrder_BySRSStage = 2,
+  ReviewOrder_AscendingSRSStage = 2,
   ReviewOrder_CurrentLevelFirst = 3,
   ReviewOrder_LowestLevelFirst = 4,
   ReviewOrder_NewestAvailableFirst = 5,
   ReviewOrder_OldestAvailableFirst = 6,
+  ReviewOrder_DescendingSRSStage = 7,
 };
 
 typedef NS_CLOSED_ENUM(NSUInteger, InterfaceStyle){
