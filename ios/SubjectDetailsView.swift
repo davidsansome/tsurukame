@@ -80,6 +80,19 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
   return join(strings, with: ", ")
 }
 
+private func renderNotes(studyMaterials: TKMStudyMaterials?,
+                         isMeaning: Bool) -> NSAttributedString? {
+  let font = UIFont.systemFont(ofSize: kFontSize, weight: .regular)
+  if let studyMaterials = studyMaterials {
+    if isMeaning, studyMaterials.hasMeaningNote {
+      return attrString(studyMaterials.meaningNote, attrs: [.font: font])
+    } else if !isMeaning, studyMaterials.hasReadingNote {
+      return attrString(studyMaterials.readingNote, attrs: [.font: font])
+    }
+  }
+  return nil
+}
+
 private func attrString(_ string: String,
                         attrs: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
   let combinedAttrs = defaultStringAttrs().merging(attrs ?? [:]) { _, new in new }
@@ -133,9 +146,17 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
 
     model.addSection("Meaning")
     model.add(item)
+
+    if let notesText = renderNotes(studyMaterials: studyMaterials, isMeaning: true) {
+      let notesItem = AttributedModelItem(text: notesText.withFontSize(kFontSize))
+      model.addSection("Meaning Note")
+      model.add(notesItem)
+    }
   }
 
-  private func addReadings(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
+  private func addReadings(_ subject: TKMSubject,
+                           studyMaterials: TKMStudyMaterials?,
+                           toModel model: TKMMutableTableModel) {
     let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
     let text = renderReadings(readings: subject.readingsArray as! [TKMReading],
@@ -148,6 +169,12 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     readingItem = item
     model.addSection("Reading")
     model.add(item)
+
+    if let notesText = renderNotes(studyMaterials: studyMaterials, isMeaning: false) {
+      let notesItem = AttributedModelItem(text: notesText.withFontSize(kFontSize))
+      model.addSection("Reading Note")
+      model.add(notesItem)
+    }
   }
 
   private func addComponents(_ subject: TKMSubject,
@@ -264,7 +291,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     }
     if subject.hasKanji {
       addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
-      addReadings(subject, toModel: model)
+      addReadings(subject, studyMaterials: studyMaterials, toModel: model)
       addComponents(subject, title: "Radicals", toModel: model)
 
       model.addSection("Meaning Explanation")
@@ -284,7 +311,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     }
     if subject.hasVocabulary {
       addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
-      addReadings(subject, toModel: model)
+      addReadings(subject, studyMaterials: studyMaterials, toModel: model)
       addComponents(subject, title: "Kanji", toModel: model)
 
       model.addSection("Meaning Explanation")
