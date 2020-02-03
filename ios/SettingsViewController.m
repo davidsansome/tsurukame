@@ -271,8 +271,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   switch (Settings.reviewOrder) {
     case ReviewOrder_Random:
       return @"Random";
-    case ReviewOrder_BySRSStage:
-      return @"SRS stage";
+    case ReviewOrder_AscendingSRSStage:
+      return @"Ascending SRS stage";
+    case ReviewOrder_DescendingSRSStage:
+      return @"Descending SRS stage";
     case ReviewOrder_CurrentLevelFirst:
       return @"Current level first";
     case ReviewOrder_LowestLevelFirst:
