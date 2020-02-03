@@ -452,10 +452,9 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
 }
 
 - (nullable NSDate *)guruDateForSubject:(TKMSubject *)subject {
-  if (self.hasPassedAt) {
+  if (self.hasPassedAt && self.srsStage >= kGuruStage) {
     return self.passedAtDate;
-  }
-  if (self.srsStage >= kGuruStage) {
+  } else if (self.srsStage >= kGuruStage) {
     return [NSDate distantPast];
   }
 
