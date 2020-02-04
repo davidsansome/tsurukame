@@ -361,6 +361,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   func refresh(quick: Bool) {
     updateUserInfo()
     scheduleTableModelUpdate()
+    guard let headerView = headerView else { return }
     headerView.setProgress(0)
     services.localCachingClient.sync(progressHandler: { progress in
       self.headerView.setProgress(progress)
@@ -386,6 +387,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)
       : userProfileImageURL(emailAddress: email)
 
+    guard let headerView = headerView else { return }
     headerView.update(username: user.username,
                       level: Int(user.level),
                       guruKanji: Int(guruKanji),
