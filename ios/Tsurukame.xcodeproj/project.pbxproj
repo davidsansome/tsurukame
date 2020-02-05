@@ -585,8 +585,8 @@
 				63C42A2321B6A28D008CA938 /* FontScreenshotter.app */,
 				63C42A3621B6A290008CA938 /* FontScreenshotterUITests.xctest */,
 				63E9A8E221199C8500418CE1 /* Tests.xctest */,
-				C90846AD237F1C770068A272 /* Tsurukame Complication */,
-				C90846BC237F1C790068A272 /* Tsurukame Complication Extension */,
+				C90846AD237F1C770068A272 /* Complication */,
+				C90846BC237F1C790068A272 /* ComplicationExtension */,
 				63CAAB0F1FD7FAC500E09DA1 /* Frameworks */,
 				684AE501E6BF8ED5D65DA298 /* Pods */,
 				63CAAAD61FC6E0BF00E09DA1 /* proto */,
@@ -728,17 +728,17 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		C90846AD237F1C770068A272 /* Tsurukame Complication */ = {
+		C90846AD237F1C770068A272 /* Complication */ = {
 			isa = PBXGroup;
 			children = (
 				C90846AE237F1C770068A272 /* Interface.storyboard */,
 				C90846B1237F1C780068A272 /* Assets.xcassets */,
 				C90846B3237F1C780068A272 /* Info.plist */,
 			);
-			path = "Tsurukame Complication";
+			path = Complication;
 			sourceTree = "<group>";
 		};
-		C90846BC237F1C790068A272 /* Tsurukame Complication Extension */ = {
+		C90846BC237F1C790068A272 /* ComplicationExtension */ = {
 			isa = PBXGroup;
 			children = (
 				C92AB971237F2E8200F79904 /* DataManager.swift */,
@@ -748,7 +748,7 @@
 				C90846C3237F1C790068A272 /* Assets.xcassets */,
 				C90846C5237F1C790068A272 /* Info.plist */,
 			);
-			path = "Tsurukame Complication Extension";
+			path = ComplicationExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1818,7 +1818,7 @@
 				CURRENT_PROJECT_VERSION = 632;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				IBSC_MODULE = Tsurukame_Complication_Extension;
-				INFOPLIST_FILE = "Tsurukame Complication/Info.plist";
+				INFOPLIST_FILE = "Complication/Info.plist";
 				MARKETING_VERSION = 1.18;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1845,7 +1845,7 @@
 				CURRENT_PROJECT_VERSION = 632;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				IBSC_MODULE = Tsurukame_Complication_Extension;
-				INFOPLIST_FILE = "Tsurukame Complication/Info.plist";
+				INFOPLIST_FILE = "Complication/Info.plist";
 				MARKETING_VERSION = 1.18;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.watchkitapp;
@@ -1868,7 +1868,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 632;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
-				INFOPLIST_FILE = "Tsurukame Complication Extension/Info.plist";
+				INFOPLIST_FILE = "ComplicationExtension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1898,7 +1898,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 632;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
-				INFOPLIST_FILE = "Tsurukame Complication Extension/Info.plist";
+				INFOPLIST_FILE = "ComplicationExtension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
