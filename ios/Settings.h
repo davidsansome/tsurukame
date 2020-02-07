@@ -61,6 +61,7 @@ DECLARE_INT(lessonBatchSize);
 
 // Review settings.
 DECLARE_ENUM(ReviewOrder, reviewOrder);
+DECLARE_INT(reviewBatchSize);
 DECLARE_OBJECT(NSSet<NSString *>, selectedFonts);
 DECLARE_BOOL(groupMeaningReading);
 DECLARE_BOOL(meaningFirst);
