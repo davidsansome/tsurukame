@@ -31,9 +31,11 @@ typedef void (^ApiTokenHandler)(NSError *_Nullable error,
                                 NSString *_Nullable apiToken,
                                 NSString *_Nullable emailAddress);
 typedef void (^AssignmentHandler)(NSError *_Nullable error,
+                                  NSString *_Nullable dataUpdatedAtIOS8601,
                                   NSArray<TKMAssignment *> *_Nullable assignments);
 typedef void (^ProgressHandler)(NSError *_Nullable error);
 typedef void (^StudyMaterialsHandler)(NSError *_Nullable error,
+                                      NSString *_Nullable dataUpdatedAt,
                                       NSArray<TKMStudyMaterials *> *_Nullable studyMaterials);
 typedef void (^UserInfoHandler)(NSError *_Nullable error, TKMUser *_Nullable user);
 typedef void (^LevelInfoHandler)(NSError *_Nullable error, NSArray<TKMLevel *> *_Nullable levels);
