@@ -102,6 +102,7 @@ static NSString *FriendlySize(int64_t bytes) {
   } else if (item.previewImage) {
     _previewImage.hidden = NO;
     _previewImage.image = item.previewImage;
+    _previewImage.contentMode = UIViewContentModeScaleAspectFit;
   }
   _previewContainer.hidden = _preview.hidden && _previewImage.hidden;
 }
