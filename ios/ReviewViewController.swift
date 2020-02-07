@@ -246,10 +246,18 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     reviewQueue.shuffle()
     switch Settings.reviewOrder {
-    case .bySRSStage:
+    case .ascendingSRSStage:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.srsStage < b.assignment.srsStage { return true }
         if a.assignment.srsStage > b.assignment.srsStage { return false }
+        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
+        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        return false
+      }
+    case .descendingSRSStage:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if a.assignment.srsStage < b.assignment.srsStage { return false }
+        if a.assignment.srsStage > b.assignment.srsStage { return true }
         if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
