@@ -1202,28 +1202,31 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   override var keyCommands: [UIKeyCommand]? {
-    var keyCommands = [
-      UIKeyCommand(input: "\r",
-                   modifierFlags: [],
-                   action: #selector(enterKeyPressed),
-                   discoverabilityTitle: "Continue"),
-      UIKeyCommand(input: " ",
-                   modifierFlags: [],
-                   action: #selector(playAudio),
-                   discoverabilityTitle: "Play reading"),
-      UIKeyCommand(input: "a",
-                   modifierFlags: [.command],
-                   action: #selector(askAgain),
-                   discoverabilityTitle: "Ask again later"),
-      UIKeyCommand(input: "c",
-                   modifierFlags: [.command],
-                   action: #selector(markCorrect),
-                   discoverabilityTitle: "Mark correct"),
-      UIKeyCommand(input: "s",
-                   modifierFlags: [.command],
-                   action: #selector(addSynonym),
-                   discoverabilityTitle: "Add as synonym"),
-    ]
+    var keyCommands: [UIKeyCommand] = []
+    if !subjectDetailsView.isHidden {
+      // Key commands when showing the detail view
+      keyCommands.append(contentsOf: [UIKeyCommand(input: "\r",
+                                                   modifierFlags: [],
+                                                   action: #selector(enterKeyPressed),
+                                                   discoverabilityTitle: "Continue"),
+                                      UIKeyCommand(input: " ",
+                                                   modifierFlags: [],
+                                                   action: #selector(playAudio),
+                                                   discoverabilityTitle: "Play reading"),
+                                      UIKeyCommand(input: "a",
+                                                   modifierFlags: [.command],
+                                                   action: #selector(askAgain),
+                                                   discoverabilityTitle: "Ask again later"),
+                                      UIKeyCommand(input: "c",
+                                                   modifierFlags: [.command],
+                                                   action: #selector(markCorrect),
+                                                   discoverabilityTitle: "Mark correct"),
+                                      UIKeyCommand(input: "s",
+                                                   modifierFlags: [.command],
+                                                   action: #selector(addSynonym),
+                                                   discoverabilityTitle: "Add as synonym")])
+    }
+
     if let customFonts = Settings.selectedFonts, customFonts.count > 0 {
       keyCommands.append(UIKeyCommand(input: "\t",
                                       modifierFlags: [],
