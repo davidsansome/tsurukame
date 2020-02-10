@@ -31,7 +31,7 @@ typedef void (^ApiTokenHandler)(NSError *_Nullable error,
                                 NSString *_Nullable apiToken,
                                 NSString *_Nullable emailAddress);
 typedef void (^AssignmentHandler)(NSError *_Nullable error,
-                                  NSString *_Nullable dataUpdatedAtIOS8601,
+                                  NSString *_Nullable dataUpdatedAtISO8601,
                                   NSArray<TKMAssignment *> *_Nullable assignments);
 typedef void (^ProgressHandler)(NSError *_Nullable error);
 typedef void (^StudyMaterialsHandler)(NSError *_Nullable error,
