@@ -24,10 +24,6 @@ typealias ClientDelegateCallback = (([String: Any]) -> Void)
 typealias EpochTimeInt = Int64
 
 class WatchConnectionServerDelegate: NSObject, WCSessionDelegate {
-  override init() {
-    super.init()
-  }
-
   func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState,
                error _: Error?) {}
 
@@ -46,7 +42,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
   }
 
   func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState, error: Error?) {
-    os_log("MZS - activationDidCompleteWith err=%{public}@", error?.localizedDescription ?? "none")
+    os_log("watch activationDidCompleteWith err=%{public}@", error?.localizedDescription ?? "none")
   }
 
   func session(_: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
@@ -69,17 +65,17 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
 }
 
 @objc class WatchHelper: NSObject {
-  public static let KeyReviewCount = "reviewCount"
-  public static let KeyReviewNextHourCount = "reviewHrCount"
-  public static let KeyReviewUpcomingHourlyCounts = "reviewHourly"
-  public static let KeyLevelCurrent = "level"
-  public static let KeyLevelLearned = "levelLearn"
-  public static let KeyLevelTotal = "levelTotal"
-  public static let KeyLevelHalf = "levelHalf"
-  public static let KeyNextReviewAt = "nextReview"
-  public static let KeySentAt = "sent"
+  public static let keyReviewCount = "reviewCount"
+  public static let keyReviewNextHourCount = "reviewHrCount"
+  public static let keyReviewUpcomingHourlyCounts = "reviewHourly"
+  public static let keyLevelCurrent = "level"
+  public static let keyLevelLearned = "levelLearn"
+  public static let keyLevelTotal = "levelTotal"
+  public static let keyLevelHalf = "levelHalf"
+  public static let keyNextReviewAt = "nextReview"
+  public static let keySentAt = "sent"
 
-  private static let _sharedInstance = WatchHelper()
+  @objc public static let sharedInstance = WatchHelper()
   private let session: WCSession? = WCSession.isSupported() ? WCSession.default : nil
   let serverDelegate = WatchConnectionServerDelegate()
   var clientDelegate: WatchConnectionClientDelegate?
@@ -92,10 +88,6 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
     #if os(iOS)
       startServerSession()
     #endif
-  }
-
-  @objc static func sharedInstance() -> WatchHelper {
-    _sharedInstance
   }
 
   #if os(iOS)
@@ -132,14 +124,14 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
         .min() ?? 0
 
       let packet: [String: Any] = [
-        WatchHelper.KeyReviewCount: client.availableReviewCount,
-        WatchHelper.KeyReviewNextHourCount: client.upcomingReviews.first?.intValue ?? 0,
-        WatchHelper.KeyReviewUpcomingHourlyCounts: client.upcomingReviews.map { $0.intValue },
-        WatchHelper.KeyLevelCurrent: assignmentsAtCurrentLevel.first?.level ?? 0,
-        WatchHelper.KeyLevelTotal: assignmentsAtCurrentLevel.count,
-        WatchHelper.KeyLevelLearned: learnedCount,
-        WatchHelper.KeyLevelHalf: halfLevel,
-        WatchHelper.KeyNextReviewAt: nextReviewEpoch,
+        WatchHelper.keyReviewCount: client.availableReviewCount,
+        WatchHelper.keyReviewNextHourCount: client.upcomingReviews.first?.intValue ?? 0,
+        WatchHelper.keyReviewUpcomingHourlyCounts: client.upcomingReviews.map { $0.intValue },
+        WatchHelper.keyLevelCurrent: assignmentsAtCurrentLevel.first?.level ?? 0,
+        WatchHelper.keyLevelTotal: assignmentsAtCurrentLevel.count,
+        WatchHelper.keyLevelLearned: learnedCount,
+        WatchHelper.keyLevelHalf: halfLevel,
+        WatchHelper.keyNextReviewAt: nextReviewEpoch,
       ]
 
       if !shouldSendPacket(packet: packet) {
@@ -155,7 +147,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + deadline) {
-          let timestamp = [WatchHelper.KeySentAt: EpochTimeInt(Date().timeIntervalSince1970)]
+          let timestamp = [WatchHelper.keySentAt: EpochTimeInt(Date().timeIntervalSince1970)]
           session
             .transferCurrentComplicationUserInfo(packet
               .merging(timestamp, uniquingKeysWith: { current, _ in current }))

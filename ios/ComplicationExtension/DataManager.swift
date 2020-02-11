@@ -26,33 +26,33 @@ enum ComplicationDataSource: Int {
 }
 
 class DataManager {
-  private let UserDefaultsKeyData = "LastKnownData"
-  private let UserDefaultsKeySource = "DataSource"
-  private let DataStaleAfter = TimeInterval(60 * 60 * 2)
+  private let userDefaultsKeyData = "LastKnownData"
+  private let userDefaultsKeySource = "DataSource"
+  private let dataStaleLimit = TimeInterval(60 * 60 * 2)
 
   public static let sharedInstance = DataManager()
   var latestData: UserData?
   var delegates: [DataManagerDelegate] = []
   public var dataSource: ComplicationDataSource = .ReviewCounts {
     didSet {
-      UserDefaults.standard.set(dataSource.rawValue, forKey: UserDefaultsKeySource)
+      UserDefaults.standard.set(dataSource.rawValue, forKey: userDefaultsKeySource)
     }
   }
 
   private init() {
     // Load the last known data from last time
-    latestData = UserDefaults.standard.dictionary(forKey: UserDefaultsKeyData)
+    latestData = UserDefaults.standard.dictionary(forKey: userDefaultsKeyData)
     dataSource = ComplicationDataSource(rawValue: UserDefaults.standard
-      .integer(forKey: UserDefaultsKeySource)) ?? .ReviewCounts
+      .integer(forKey: userDefaultsKeySource)) ?? .ReviewCounts
 
-    WatchHelper.sharedInstance().awaitMessages { userInfo in
+    WatchHelper.sharedInstance.awaitMessages { userInfo in
       if self.isDataOutOfDate(userData: userInfo) {
         return
       }
 
       self.latestData = userInfo
 
-      UserDefaults.standard.set(userInfo, forKey: self.UserDefaultsKeyData)
+      UserDefaults.standard.set(userInfo, forKey: self.userDefaultsKeyData)
 
       for delegate in self.delegates {
         delegate.onDataUpdated(data: userInfo, dataSource: self.dataSource)
@@ -61,11 +61,11 @@ class DataManager {
   }
 
   func dataStaleAfter() -> Date? { if let data = latestData,
-    let dataSentAt = data[WatchHelper.KeySentAt] as? EpochTimeInt,
-    let nextReviewAt = data[WatchHelper.KeyNextReviewAt] as? EpochTimeInt {
+    let dataSentAt = data[WatchHelper.keySentAt] as? EpochTimeInt,
+    let nextReviewAt = data[WatchHelper.keyNextReviewAt] as? EpochTimeInt {
       let dataSent = Date(timeIntervalSince1970: TimeInterval(dataSentAt))
       let nextReview = Date(timeIntervalSince1970: TimeInterval(nextReviewAt))
-      let nextStale = dataSent.addingTimeInterval(DataStaleAfter)
+      let nextStale = dataSent.addingTimeInterval(dataStaleLimit)
       if nextReview > nextStale {
         return nextReview
       } else {
@@ -84,9 +84,9 @@ class DataManager {
 
   func isDataOutOfDate(userData: UserData?) -> Bool {
     if let data = userData,
-      let dataSentAt = data[WatchHelper.KeySentAt] as? EpochTimeInt {
+      let dataSentAt = data[WatchHelper.keySentAt] as? EpochTimeInt {
       let dataSent = Date(timeIntervalSince1970: TimeInterval(dataSentAt))
-      let bestBeforeDate = Date().addingTimeInterval(0 - DataStaleAfter)
+      let bestBeforeDate = Date().addingTimeInterval(0 - dataStaleLimit)
       return bestBeforeDate.distance(to: dataSent) < 0
     }
     return true
@@ -97,11 +97,6 @@ class DataManager {
   }
 
   func removeDelegate(_ delegate: DataManagerDelegate) {
-    delegates.removeAll { (d) -> Bool in
-      if d === delegate {
-        return true
-      }
-      return false
-    }
+    delegates.removeAll { $0 === delegate }
   }
 }

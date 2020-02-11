@@ -32,8 +32,6 @@ class SettingsController: WKInterfaceController, DataManagerDelegate {
   override func awake(withContext context: Any?) {
     super.awake(withContext: context)
 
-    os_log("MZS - Awake with context: %{public}@", String(describing: context))
-
     let pickerOptions = dataSourceOptions.map { (_, title) -> WKPickerItem in
       let pickerItem = WKPickerItem()
       pickerItem.caption = title
@@ -51,9 +49,6 @@ class SettingsController: WKInterfaceController, DataManagerDelegate {
   }
 
   override func willActivate() {
-    // TODO: How to get context from ExtensionDelegate#handleUserActivity ?
-    os_log("MZS - will activate")
-
     if let userInfo = DataManager.sharedInstance.latestData {
       onDataUpdated(data: userInfo, dataSource: DataManager.sharedInstance.dataSource)
     } else {
@@ -82,7 +77,7 @@ class SettingsController: WKInterfaceController, DataManagerDelegate {
   // MARK: - DataManagerDelegate
 
   func onDataUpdated(data: UserData, dataSource _: ComplicationDataSource) {
-    if let sentAtSecs = data[WatchHelper.KeySentAt] as? EpochTimeInt {
+    if let sentAtSecs = data[WatchHelper.keySentAt] as? EpochTimeInt {
       updateAgeHeader.setText("Last Updated")
       updateAgeTimer.setHidden(false)
       let date = Date(timeIntervalSince1970: TimeInterval(sentAtSecs))
