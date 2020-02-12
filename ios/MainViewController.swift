@@ -144,6 +144,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     updatingTableModel = true
 
     DispatchQueue.main.async {
+      WatchHelper.sharedInstance.updatedData(client: self.services.localCachingClient)
       self.updatingTableModel = false
       self.recreateTableModel()
     }
