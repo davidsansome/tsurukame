@@ -240,8 +240,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     if Settings.groupMeaningReading {
       activeQueueSize = 1
     } else {
-      // TODO: Make this configurable.
-      activeQueueSize = 5
+      activeQueueSize = Int(Settings.reviewBatchSize)
     }
 
     reviewQueue.shuffle()

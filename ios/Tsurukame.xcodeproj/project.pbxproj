@@ -11,6 +11,7 @@
 		3DA8BAFC224C9580009E925B /* LessonOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */; };
 		480B243123D6830300FC2A82 /* Rexy in Frameworks */ = {isa = PBXBuildFile; productRef = 480B243023D6830300FC2A82 /* Rexy */; };
 		481B2FED23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */; };
+		48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */; };
 		5C82B2908507339A293B0E59 /* Pods_FontScreenshotter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33812F134DC80E5D981C40E /* Pods_FontScreenshotter.framework */; };
 		630ADB6F21F8256E00BC9801 /* TKMCheckmarkModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */; };
 		6319C99D20400E3500C31F87 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6319C99C20400E3500C31F87 /* NSDate+TimeAgo.m */; };
@@ -210,7 +211,9 @@
 		3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LessonOrderViewController.m; sourceTree = "<group>"; };
 		404461BC39B4A19B128F9E69 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter_FontScreenshotterUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLevelReviewTimeItem.swift; sourceTree = "<group>"; };
+		4826740B23ECE46900F704E4 /* TKMReviewBatchSizeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMReviewBatchSizeViewController.h; sourceTree = "<group>"; };
 		489894D423670CB000A20AF8 /* Tsurukame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tsurukame.entitlements; sourceTree = "<group>"; };
+		48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMReviewBatchSizeViewController.m; sourceTree = "<group>"; };
 		4B8236EC341CF1BA18D16857 /* Pods-Tsurukame-Tsurukame Complication Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame-Tsurukame Complication Extension.release.xcconfig"; path = "Target Support Files/Pods-Tsurukame-Tsurukame Complication Extension/Pods-Tsurukame-Tsurukame Complication Extension.release.xcconfig"; sourceTree = "<group>"; };
 		568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		630ADB6D21F8256E00BC9801 /* TKMCheckmarkModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMCheckmarkModelItem.h; sourceTree = "<group>"; };
@@ -484,8 +487,6 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
-				6398480F23D6CA9B0077EB6B /* CGContext+Blur.swift */,
-				6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				63EEFEB91FC45C440070C05F /* AppDelegate.h */,
@@ -493,8 +494,10 @@
 				6335B46323CF0C820071671E /* AppStoreScreenshots */,
 				6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */,
 				63F7F52D23D4C2CA006A31FB /* Audio.swift */,
+				6398480F23D6CA9B0077EB6B /* CGContext+Blur.swift */,
 				63EEFED71FC46E720070C05F /* Client.h */,
 				63EEFED81FC46E720070C05F /* Client.m */,
+				6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */,
 				636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */,
 				481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */,
 				63CAAAF91FC6EADC00E09DA1 /* data.bin */,
@@ -570,6 +573,8 @@
 				63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */,
 				63BFA78C218EB6890058E885 /* TKMOfflineAudioViewController.h */,
 				63BFA78D218EB6890058E885 /* TKMOfflineAudioViewController.mm */,
+				4826740B23ECE46900F704E4 /* TKMReviewBatchSizeViewController.h */,
+				48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */,
 				63CE766121F47100002A417B /* TKMReviewContainerViewController.h */,
 				63CE766221F47100002A417B /* TKMReviewContainerViewController.m */,
 				63CE766421F47669002A417B /* TKMReviewMenuViewController.h */,
@@ -1261,6 +1266,7 @@
 				63F7F52E23D4C2CA006A31FB /* Audio.swift in Sources */,
 				93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */,
 				63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */,
+				48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */,
 				637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */,
 				63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */,
 				637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */,
