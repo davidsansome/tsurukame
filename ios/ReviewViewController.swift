@@ -891,7 +891,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   func questionLabelFontSize() -> CGFloat {
     if UI_USER_INTERFACE_IDIOM() == .pad {
-      return CGFloat(defaultFontSize * 2.5)
+      return CGFloat(defaultFontSize * 2.5 * Double(Settings.fontSize))
     } else {
       return CGFloat(defaultFontSize * Double(Settings.fontSize))
     }
