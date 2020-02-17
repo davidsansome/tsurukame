@@ -92,9 +92,10 @@ static NSData *DecompressLZFSE(NSData *compressedData) {
 
 - (void)populateModel:(TKMMutableTableModel *)model {
   [model addSection:@""
-             footer:
-                 [NSString stringWithFormat: @"Download audio to your %@ so it plays without delay online and "
-                  "it's available when you're not connected to the Internet.", UIDevice.currentDevice.model]];
+             footer:[NSString stringWithFormat:
+                                  @"Download audio to your %@ so it plays without delay online and "
+                                   "it's available when you're not connected to the Internet.",
+                                  UIDevice.currentDevice.model]];
 
   for (const AvailablePackage &package : kAvailablePackages) {
     TKMDownloadModelItem *item = [[TKMDownloadModelItem alloc] initWithFilename:package.filename
