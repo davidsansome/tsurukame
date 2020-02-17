@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15505" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cOX-I5-3Vp">
+    <device id="watch44"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
+    </dependencies>
+    <scenes>
+        <!--Settings-->
+        <scene sceneID="f34-nY-bBB">
+            <objects>
+                <controller identifier="SettingController" title="Settings" id="cOX-I5-3Vp" customClass="SettingsController" customModule="Tsurukame_Complication_Extension">
+                    <items>
+                        <group width="1" alignment="left" layout="vertical" id="bZp-TC-EVH">
+                            <items>
+                                <label alignment="left" text="Data Source" id="7rG-S1-c2R">
+                                    <color key="textColor" red="0.92239397759999997" green="0.37168154120000002" blue="0.21561616659999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                                </label>
+                                <picker height="50" alignment="left" id="Kxu-r6-40N">
+                                    <connections>
+                                        <action selector="onPickerSelectWithValue:" destination="cOX-I5-3Vp" id="Jfw-iv-LbL"/>
+                                    </connections>
+                                </picker>
+                            </items>
+                            <edgeInsets key="margins" left="0.0" right="0.0" top="8" bottom="0.0"/>
+                        </group>
+                        <separator alignment="left" id="QhT-Ib-SuJ">
+                            <color key="color" cocoaTouchSystemColor="lightTextColor"/>
+                        </separator>
+                        <group width="1" alignment="left" layout="vertical" id="U3F-TT-TdL">
+                            <items>
+                                <label alignment="left" text="Last Update" textAlignment="left" numberOfLines="0" id="5Bb-m8-TVi">
+                                    <color key="textColor" red="0.92239397759999997" green="0.37168154120000002" blue="0.21561616659999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                                </label>
+                                <timer alignment="left" textAlignment="left" format="abbreviated" id="2Rm-O7-Jn7"/>
+                                <label alignment="left" text="⚠️ The data on this watch is stale. Open the app on your phone to update" numberOfLines="0" id="MMU-mu-aG1">
+                                    <color key="textColor" red="0.92239397759999997" green="0.37168154120000002" blue="0.21561616659999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                                </label>
+                            </items>
+                        </group>
+                    </items>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <connections>
+                        <outlet property="dataSourcePicker" destination="Kxu-r6-40N" id="mcv-d2-n10"/>
+                        <outlet property="staleDataWarning" destination="MMU-mu-aG1" id="dnO-zB-wf9"/>
+                        <outlet property="updateAgeHeader" destination="5Bb-m8-TVi" id="trc-Ol-ZID"/>
+                        <outlet property="updateAgeTimer" destination="2Rm-O7-Jn7" id="7cc-js-Ca1"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="253" y="29"/>
+        </scene>
+    </scenes>
+</document>

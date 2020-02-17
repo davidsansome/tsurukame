@@ -982,13 +982,14 @@ struct ProgressTask {
   NSLog(@"Getting all assignments modified after %@", lastDate);
   [_client getAssignmentsModifiedAfter:lastDate
                        progressHandler:handler
-                               handler:^(NSError *error, NSArray<TKMAssignment *> *assignments) {
+                               handler:^(NSError *error,
+                                         NSString *dataUpdatedAt,
+                                         NSArray<TKMAssignment *> *assignments) {
                                  if (error) {
                                    [self logError:error];
                                    return;
                                  }
 
-                                 NSString *date = Client.currentISO8601Date;
                                  [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
                                    for (TKMAssignment *assignment in assignments) {
                                      CheckUpdate(db,
@@ -1002,12 +1003,13 @@ struct ProgressTask {
                                                  @(assignment.subjectId), @(assignment.level),
                                                  @(assignment.srsStage), @(assignment.subjectType));
                                    }
-                                   CheckUpdate(
-                                       db, @"UPDATE sync SET assignments_updated_after = ?", date);
+                                   CheckUpdate(db,
+                                               @"UPDATE sync SET assignments_updated_after = ?",
+                                               dataUpdatedAt);
                                  }];
                                  NSLog(@"Recorded %lu new assignments at %@",
                                        (unsigned long)assignments.count,
-                                       date);
+                                       dataUpdatedAt);
                                  [self invalidateCachedAvailableSubjectCounts];
                                }];
 }
@@ -1024,11 +1026,11 @@ struct ProgressTask {
       getStudyMaterialsModifiedAfter:lastDate
                      progressHandler:handler
                              handler:^(NSError *error,
+                                       NSString *dataUpdatedAt,
                                        NSArray<TKMStudyMaterials *> *studyMaterials) {
                                if (error) {
                                  [self logError:error];
                                } else {
-                                 NSString *date = Client.currentISO8601Date;
                                  [_db inTransaction:^(FMDatabase *db, BOOL *rollback) {
                                    for (TKMStudyMaterials *studyMaterial in studyMaterials) {
                                      CheckUpdate(
@@ -1037,11 +1039,11 @@ struct ProgressTask {
                                    }
                                    CheckUpdate(db,
                                                @"UPDATE sync SET study_materials_updated_after = ?",
-                                               date);
+                                               dataUpdatedAt);
                                  }];
                                  NSLog(@"Recorded %lu new study materials at %@",
                                        (unsigned long)studyMaterials.count,
-                                       date);
+                                       dataUpdatedAt);
                                }
                              }];
 }

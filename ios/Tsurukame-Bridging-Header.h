@@ -46,5 +46,6 @@
 #import "proto/Wanikani.pbobjc.h"
 
 #import <Haneke/Haneke.h>
+#import <WatchConnectivity/WatchConnectivity.h>
 
 #endif /* Tsurukame_Bridging_Header_h */

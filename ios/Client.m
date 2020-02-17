@@ -108,7 +108,8 @@ static NSRegularExpression *sAPITokenRE;
 static NSRegularExpression *sAuthenticityTokenRE;
 static NSArray<NSDateFormatter *> *sDateFormatters;
 
-typedef void (^PartialResponseHandler)(id _Nullable data,
+typedef void (^PartialResponseHandler)(NSString *_Nullable dataUpdatedAt,
+                                       id _Nullable data,
                                        int page,
                                        int totalPages,
                                        NSError *_Nullable error);
@@ -284,7 +285,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 - (void)startPagedQueryFor:(NSURL *)url handler:(PartialResponseHandler)handler {
   if (self.pretendToBeOfflineForTesting) {
-    handler(nil, 0, 0, [TKMClientError errorWithMessage:@"Offline for testing" code:42]);
+    handler(nil, nil, 0, 0, [TKMClientError errorWithMessage:@"Offline for testing" code:42]);
     return;
   }
 
@@ -308,7 +309,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                    data:(NSData *)data
                 handler:(PartialResponseHandler)handler {
   if (self.pretendToBeOfflineForTesting) {
-    handler(nil, 0, 0, [TKMClientError errorWithMessage:@"Offline for testing" code:42]);
+    handler(nil, nil, 0, 0, [TKMClientError errorWithMessage:@"Offline for testing" code:42]);
     return;
   }
 
@@ -344,16 +345,16 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                   handler:(PartialResponseHandler)handler
                      page:(int)page {
   if (error != nil) {
-    handler(nil, 0, 0, error);
+    handler(nil, nil, 0, 0, error);
     return;
   }
   NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
   if (error != nil) {
-    handler(nil, 0, 0, error);
+    handler(nil, nil, 0, 0, error);
     return;
   }
   if (dict[@"error"] != nil) {
-    handler(nil, 0, false,
+    handler(nil, nil, 0, false,
             [TKMClientError httpErrorWithMessage:dict[@"error"]
                                          request:request
                                         response:response
@@ -369,7 +370,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     totalPages = ceil((double)totalCount / perPage);
   }
 
-  handler(dict[@"data"], page, totalPages, nil);
+  handler(dict[@"data_updated_at"], dict[@"data"], page, totalPages, nil);
 
   // Get the next page if we have one.
   if (hasMore) {
@@ -682,10 +683,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   [url setQueryItems:queryItems];
 
   [self startPagedQueryFor:url.URL
-                   handler:^(NSArray *data, int page, int totalPages, NSError *error) {
+                   handler:^(NSString *dataUpdatedAt, NSArray *data, int page, int totalPages,
+                             NSError *error) {
                      if (error) {
                        progressHandler(1, 1);
-                       handler(error, nil);
+                       handler(error, nil, nil);
                        return;
                      }
 
@@ -726,7 +728,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
                      progressHandler(page, totalPages);
                      if (page == totalPages) {
-                       handler(nil, ret);
+                       handler(nil, dataUpdatedAt, ret);
                      }
                    }];
 }
@@ -745,7 +747,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
     [self submitJSONToURL:[NSURL URLWithString:urlString]
                withMethod:@"PUT"
                      data:[NSJSONSerialization dataWithJSONObject:payload options:0 error:nil]
-                  handler:^(id _Nullable data, int page, int totalPages, NSError *_Nullable error) {
+                  handler:^(NSString *dataUpdatedAt, id _Nullable data, int page, int totalPages,
+                            NSError *_Nullable error) {
                     handler(error);
                   }];
     return;
@@ -757,7 +760,12 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   [review setObject:@(progress.meaningWrong ? 1 : 0) forKey:@"incorrect_meaning_answers"];
   [review setObject:@(progress.readingWrong ? 1 : 0) forKey:@"incorrect_reading_answers"];
   if (progress.hasCreatedAt) {
-    [review setObject:[Client formatISO8601Date:progress.createdAtDate] forKey:@"created_at"];
+    NSTimeInterval interval = [progress.createdAtDate timeIntervalSinceNow];
+    // Don't set created_at if it's very recent to try and allow for some
+    // clock drift.
+    if (interval < -900) {
+      [review setObject:[Client formatISO8601Date:progress.createdAtDate] forKey:@"created_at"];
+    }
   }
 
   NSMutableDictionary *payload = [NSMutableDictionary dictionary];
@@ -768,7 +776,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   [self submitJSONToURL:[NSURL URLWithString:urlString]
              withMethod:@"POST"
                    data:data
-                handler:^(id _Nullable data, int page, int totalPages, NSError *_Nullable error) {
+                handler:^(NSString *dataUpdatedAt, id _Nullable data, int page, int totalPages,
+                          NSError *_Nullable error) {
                   handler(error);
                 }];
 }
@@ -789,10 +798,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   }
 
   [self startPagedQueryFor:url.URL
-                   handler:^(NSArray *data, int page, int totalPages, NSError *error) {
+                   handler:^(NSString *dataUpdatedAt, NSArray *data, int page, int totalPages,
+                             NSError *error) {
                      if (error) {
                        progressHandler(1, 1);
-                       handler(error, nil);
+                       handler(error, nil, nil);
                        return;
                      }
 
@@ -816,7 +826,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
                      progressHandler(page, totalPages);
                      if (page == totalPages) {
-                       handler(nil, ret);
+                       handler(nil, dataUpdatedAt, ret);
                      }
                    }];
 }
@@ -829,8 +839,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
   // We need to check if the study material exists already.
   [self startPagedQueryFor:queryURL
-                   handler:^(NSArray *_Nullable response, int page, int totalPages,
-                             NSError *_Nullable error) {
+                   handler:^(NSString *dataUpdatedAt, NSArray *_Nullable response, int page,
+                             int totalPages, NSError *_Nullable error) {
                      if (error) {
                        handler(error);
                        return;
@@ -863,8 +873,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                      [self submitJSONToURL:[NSURL URLWithString:urlString]
                                 withMethod:method
                                       data:data
-                                   handler:^(id _Nullable data, int page, int totalPages,
-                                             NSError *_Nullable error) {
+                                   handler:^(NSString *dataUpdatedAt, id _Nullable data, int page,
+                                             int totalPages, NSError *_Nullable error) {
                                      handler(error);
                                    }];
                    }];
@@ -877,7 +887,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
       [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%s/user", kURLBase]];
 
   [self startPagedQueryFor:url.URL
-                   handler:^(NSDictionary *data, int page, int totalPages, NSError *error) {
+                   handler:^(NSString *dataUpdatedAt, NSDictionary *data, int page, int totalPages,
+                             NSError *error) {
                      if (error) {
                        handler(error, nil);
                        return;
@@ -919,7 +930,8 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
   NSMutableArray<TKMLevel *> *levels = [NSMutableArray array];
   [self startPagedQueryFor:url.URL
-                   handler:^(NSDictionary *data, int page, int totalPages, NSError *error) {
+                   handler:^(NSString *dataUpdatedAt, NSDictionary *data, int page, int totalPages,
+                             NSError *error) {
                      if (error) {
                        handler(error, nil);
                        return;
