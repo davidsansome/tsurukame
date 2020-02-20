@@ -729,8 +729,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     let submitButtonImage = shown ? forwardArrowImage : tickImage
     submitButton.setImage(submitButtonImage, for: .normal)
 
-    skipButton.setImage(forwardArrowImage, for: .normal)
-
     // We have to do the UIView animation this way (rather than using the block syntax) so we can set
     // UIViewAnimationCurve.  Create a context to pass to the stop selector.
     let context = AnimationContext(cheats: cheats, subjectDetailsViewShown: shown)

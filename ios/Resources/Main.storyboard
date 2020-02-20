@@ -394,7 +394,7 @@
                                 <rect key="frame" x="306.5" y="601.5" width="68.5" height="67"/>
                                 <accessibility key="accessibilityConfiguration" label="Skip"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
-                                <state key="normal" image="baseline_cancel_black_24pt"/>
+                                <state key="normal" image="baseline_access_time_black_24pt"/>
                                 <connections>
                                     <action selector="skipButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="Mdv-bN-wdh"/>
                                 </connections>
@@ -1577,7 +1577,7 @@
     <resources>
         <image name="add" width="22" height="22"/>
         <image name="back" width="24" height="24"/>
-        <image name="baseline_cancel_black_24pt" width="24" height="24"/>
+        <image name="baseline_access_time_black_24pt" width="24" height="24"/>
         <image name="baseline_menu_black_24pt" width="24" height="24"/>
         <image name="confirm" width="28.5" height="27"/>
         <image name="inbox" width="24" height="24"/>
