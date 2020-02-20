@@ -204,6 +204,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   @IBOutlet private var progressBar: UIProgressView!
   @IBOutlet private var subjectDetailsView: SubjectDetailsView!
   @IBOutlet private var previousSubjectButton: UIButton!
+  @IBOutlet private var skipButton: UIButton!
 
   @IBOutlet private var wrapUpLabel: UILabel!
   @IBOutlet private var successRateLabel: UILabel!
@@ -580,6 +581,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       // Submit button.
       submitButton.isEnabled = false
 
+      // Skip Button.
+      skipButton.isEnabled = true
+
       // Background gradients.
       questionBackground
         .animateColors(to: TKMStyle.gradient(forAssignment: activeTask.assignment),
@@ -724,6 +728,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     // Change the submit button icon.
     let submitButtonImage = shown ? forwardArrowImage : tickImage
     submitButton.setImage(submitButtonImage, for: .normal)
+
+    skipButton.setImage(forwardArrowImage, for: .normal)
 
     // We have to do the UIView animation this way (rather than using the block syntax) so we can set
     // UIViewAnimationCurve.  Create a context to pass to the stop selector.
@@ -937,6 +943,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   @objc func answerFieldValueDidChange() {
     let text = answerField.text?.trimmingCharacters(in: .whitespaces)
     submitButton.isEnabled = !(text?.isEmpty ?? true)
+    skipButton.isEnabled = (text?.isEmpty ?? true)
   }
 
   func textField(_: UITextField, shouldChangeCharactersIn _: NSRange,
@@ -1132,6 +1139,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       }
     }
     animateSubjectDetailsView(shown: true, setupContextFunc: setupContextFunc)
+  }
+
+  @IBAction func skipButtonPressed(_: Any) {
+    markAnswer(.AskAgainLater)
   }
 
   // MARK: - Ignoring incorrect answers
