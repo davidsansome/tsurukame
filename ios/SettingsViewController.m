@@ -111,6 +111,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                          accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                 target:self
                                                 action:@selector(didTapReviewOrder:)]];
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                 title:@"Review batch size"
+                                              subtitle:self.reviewBatchSizeText
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(didTapReviewBatchSize:)]];
   [model addItem:[[TKMSwitchModelItem alloc]
                      initWithStyle:UITableViewCellStyleSubtitle
                              title:@"Back-to-back"
@@ -285,6 +292,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
       return @"Oldest available first";
   }
   return nil;
+}
+
+- (NSString *)reviewBatchSizeText {
+  return [NSString stringWithFormat:@"%d", Settings.reviewBatchSize];
 }
 
 - (NSString *)interfaceStyleValueText {

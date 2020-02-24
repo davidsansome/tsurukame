@@ -240,8 +240,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     if Settings.groupMeaningReading {
       activeQueueSize = 1
     } else {
-      // TODO: Make this configurable.
-      activeQueueSize = 5
+      activeQueueSize = Int(Settings.reviewBatchSize)
     }
 
     reviewQueue.shuffle()
@@ -881,17 +880,26 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   @objc func didSwipeQuestionLabel(_ sender: UISwipeGestureRecognizer) {
     if sender.direction == .left {
-      currentFontName = nextCustomFont(thatCanRenderText: activeSubject.japanese) ?? normalFontName
+      showNextCustomFont()
     } else if sender.direction == .right {
-      currentFontName = previousCustomFont(thatCanRenderText: activeSubject.japanese) ??
-        normalFontName
+      showPreviousCustomFont()
     }
+  }
+
+  @objc func showNextCustomFont() {
+    currentFontName = nextCustomFont(thatCanRenderText: activeSubject.japanese) ?? normalFontName
+    setCustomQuestionLabelFont(useCustomFont: true)
+  }
+
+  @objc func showPreviousCustomFont() {
+    currentFontName = previousCustomFont(thatCanRenderText: activeSubject.japanese) ??
+      normalFontName
     setCustomQuestionLabelFont(useCustomFont: true)
   }
 
   func questionLabelFontSize() -> CGFloat {
     if UI_USER_INTERFACE_IDIOM() == .pad {
-      return CGFloat(defaultFontSize * 2.5)
+      return CGFloat(defaultFontSize * 2.5 * Double(Settings.fontSize))
     } else {
       return CGFloat(defaultFontSize * Double(Settings.fontSize))
     }
@@ -899,7 +907,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   @objc func toggleFont() {
     let useCustomFont =
-      questionLabel.font == TKMStyle.japaneseFontLight(size: questionLabel.font.pointSize)
+      questionLabel.font.familyName == TKMStyle
+        .japaneseFontLight(size: questionLabel.font.pointSize).familyName
     setCustomQuestionLabelFont(useCustomFont: useCustomFont)
   }
 
@@ -1192,35 +1201,48 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   override var keyCommands: [UIKeyCommand]? {
-    if subjectDetailsView.isHidden {
-      return [UIKeyCommand(input: "\t",
-                           modifierFlags: [],
-                           action: #selector(toggleFont),
-                           discoverabilityTitle: "Toggle font")]
+    var keyCommands: [UIKeyCommand] = []
+    if !subjectDetailsView.isHidden {
+      // Key commands when showing the detail view
+      keyCommands.append(contentsOf: [UIKeyCommand(input: "\r",
+                                                   modifierFlags: [],
+                                                   action: #selector(enterKeyPressed),
+                                                   discoverabilityTitle: "Continue"),
+                                      UIKeyCommand(input: " ",
+                                                   modifierFlags: [],
+                                                   action: #selector(playAudio),
+                                                   discoverabilityTitle: "Play reading"),
+                                      UIKeyCommand(input: "a",
+                                                   modifierFlags: [.command],
+                                                   action: #selector(askAgain),
+                                                   discoverabilityTitle: "Ask again later"),
+                                      UIKeyCommand(input: "c",
+                                                   modifierFlags: [.command],
+                                                   action: #selector(markCorrect),
+                                                   discoverabilityTitle: "Mark correct"),
+                                      UIKeyCommand(input: "s",
+                                                   modifierFlags: [.command],
+                                                   action: #selector(addSynonym),
+                                                   discoverabilityTitle: "Add as synonym")])
     }
 
-    return [
-      UIKeyCommand(input: "\r",
-                   modifierFlags: [],
-                   action: #selector(enterKeyPressed),
-                   discoverabilityTitle: "Continue"),
-      UIKeyCommand(input: " ",
-                   modifierFlags: [],
-                   action: #selector(playAudio),
-                   discoverabilityTitle: "Play reading"),
-      UIKeyCommand(input: "a",
-                   modifierFlags: [.command],
-                   action: #selector(askAgain),
-                   discoverabilityTitle: "Ask again later"),
-      UIKeyCommand(input: "c",
-                   modifierFlags: [.command],
-                   action: #selector(markCorrect),
-                   discoverabilityTitle: "Mark correct"),
-      UIKeyCommand(input: "s",
-                   modifierFlags: [.command],
-                   action: #selector(addSynonym),
-                   discoverabilityTitle: "Add as synonym"),
-    ]
+    if let customFonts = Settings.selectedFonts, customFonts.count > 0 {
+      keyCommands.append(UIKeyCommand(input: "\t",
+                                      modifierFlags: [],
+                                      action: #selector(toggleFont),
+                                      discoverabilityTitle: "Toggle font"))
+      if #available(macOS 10.14, *) {
+        keyCommands.append(UIKeyCommand(input: UIKeyCommand.inputRightArrow,
+                                        modifierFlags: [],
+                                        action: #selector(showNextCustomFont),
+                                        discoverabilityTitle: "Next font"))
+        keyCommands.append(UIKeyCommand(input: UIKeyCommand.inputLeftArrow,
+                                        modifierFlags: [],
+                                        action: #selector(showPreviousCustomFont),
+                                        discoverabilityTitle: "Previous font"))
+      }
+    }
+    return keyCommands
   }
 
   @objc func playAudio() {

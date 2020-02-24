@@ -170,16 +170,18 @@
 }
 
 - (void)updateAppBadgeCount {
-  if (!Settings.notificationsAllReviews && !Settings.notificationsBadging) {
-    return;
-  }
-
   int reviewCount = _services.localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
   TKMUser *user = _services.localCachingClient.getUserInfo;
 
   if (user.hasVacationStartedAt) {
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    return;
+  }
+
+  [[WatchHelper sharedInstance] updatedDataWithClient:_services.localCachingClient];
+
+  if (!Settings.notificationsAllReviews && !Settings.notificationsBadging) {
     return;
   }
 

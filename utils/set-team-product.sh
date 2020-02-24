@@ -38,8 +38,8 @@ sed 's|PRODUCT_BUNDLE_IDENTIFIER = com.[^.]*\.[^.;]*|PRODUCT_BUNDLE_IDENTIFIER =
 # Copy back into place
 cp "${TEMP_PROJ}.2" "${MAIN_PROJ}"
 
-WATCH_PLIST="./ios/Tsurukame Complication/Info.plist"
-WATCH_EXT_PLIST="./ios/Tsurukame Complication Extension/Info.plist"
+WATCH_PLIST="./ios/Complication/Info.plist"
+WATCH_EXT_PLIST="./ios/ComplicationExtension/Info.plist"
 WATCH_TEMP="/tmp/watch.plist"
 
 # Step 3: Watch complication Info.plist

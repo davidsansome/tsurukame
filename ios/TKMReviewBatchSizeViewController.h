@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TKMLessonBatchSizeViewController : UITableViewController
+@interface TKMReviewBatchSizeViewController : UITableViewController
 
 @end
 

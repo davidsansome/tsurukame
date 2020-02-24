@@ -144,6 +144,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     updatingTableModel = true
 
     DispatchQueue.main.async {
+      WatchHelper.sharedInstance.updatedData(client: self.services.localCachingClient)
       self.updatingTableModel = false
       self.recreateTableModel()
     }
@@ -361,6 +362,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   func refresh(quick: Bool) {
     updateUserInfo()
     scheduleTableModelUpdate()
+    guard let headerView = headerView else { return }
     headerView.setProgress(0)
     services.localCachingClient.sync(progressHandler: { progress in
       self.headerView.setProgress(progress)
@@ -379,7 +381,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
   func updateUserInfo() {
     guard let user = services.localCachingClient.getUserInfo(),
-      let email = Settings.userEmailAddress else {
+      let email = Settings.userEmailAddress,
+      let headerView = headerView else {
       return
     }
     let guruKanji = services.localCachingClient.getGuruKanjiCount()
