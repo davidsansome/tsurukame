@@ -580,9 +580,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
       // Submit button.
       submitButton.isEnabled = false
+      submitButton.alpha = 0.0
 
       // Skip Button.
       skipButton.isEnabled = true
+      skipButton.alpha = 1.0
 
       // Background gradients.
       questionBackground
@@ -941,7 +943,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   @objc func answerFieldValueDidChange() {
     let text = answerField.text?.trimmingCharacters(in: .whitespaces)
     submitButton.isEnabled = !(text?.isEmpty ?? true)
-    skipButton.isEnabled = (text?.isEmpty ?? true)
+    skipButton.isEnabled = !submitButton.isEnabled
+
+    submitButton.alpha = submitButton.isEnabled ? 1.0 : 0.0
+    skipButton.alpha = skipButton.isEnabled ? 1.0 : 0.0
   }
 
   func textField(_: UITextField, shouldChangeCharactersIn _: NSRange,

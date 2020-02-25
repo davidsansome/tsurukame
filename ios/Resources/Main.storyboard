@@ -391,7 +391,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hxO-pJ-eAC">
-                                <rect key="frame" x="306.5" y="601.5" width="68.5" height="67"/>
+                                <rect key="frame" x="309" y="604" width="64" height="64"/>
                                 <accessibility key="accessibilityConfiguration" label="Skip"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                 <state key="normal" image="baseline_access_time_black_24pt"/>
