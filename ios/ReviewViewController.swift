@@ -155,6 +155,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     .FeedbackStyle.light)
   private let tickImage = UIImage(named: "confirm")
   private let forwardArrowImage = UIImage(named: "ic_arrow_forward_white")
+  private let skipImage = UIImage(systemName: "goforward.plus")
 
   private var services: TKMServices!
   private var showMenuButton: Bool!
@@ -585,6 +586,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       // Skip Button.
       skipButton.isEnabled = true
       skipButton.alpha = 1.0
+
+      // Change the skip button icon.
+      skipButton.setImage(skipImage, for: .normal)
 
       // Background gradients.
       questionBackground
