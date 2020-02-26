@@ -155,7 +155,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     .FeedbackStyle.light)
   private let tickImage = UIImage(named: "confirm")
   private let forwardArrowImage = UIImage(named: "ic_arrow_forward_white")
-  private let skipImage = UIImage(systemName: "goforward.plus")
+  private let skipImage = UIImage(named: "goforward.plus")
 
   private var services: TKMServices!
   private var showMenuButton: Bool!
