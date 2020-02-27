@@ -293,6 +293,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
+    case .byType:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
+        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if a.assignment.level < b.assignment.level { return true }
+        if a.assignment.level > b.assignment.level { return false }
+        return false
+      }
     case .random:
       break
 

@@ -290,6 +290,8 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
       return @"Newest available first";
     case ReviewOrder_OldestAvailableFirst:
       return @"Oldest available first";
+    case ReviewOrder_ByType:
+      return @"Type";
   }
   return nil;
 }

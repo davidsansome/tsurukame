@@ -35,6 +35,7 @@ typedef NS_ENUM(NSUInteger, ReviewOrder) {
   ReviewOrder_NewestAvailableFirst = 5,
   ReviewOrder_OldestAvailableFirst = 6,
   ReviewOrder_DescendingSRSStage = 7,
+  ReviewOrder_ByType = 8,
 };
 
 typedef NS_CLOSED_ENUM(NSUInteger, InterfaceStyle){
