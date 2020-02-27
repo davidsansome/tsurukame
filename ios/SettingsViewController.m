@@ -199,6 +199,14 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   keyboardSwitchItem.numberOfSubtitleLines = 0;
   [model addItem:keyboardSwitchItem];
 
+  [model addItem:[[TKMSwitchModelItem alloc]
+                     initWithStyle:UITableViewCellStyleDefault
+                             title:@"Allow skipping reviews"
+                          subtitle:nil
+                                on:Settings.allowSkippingReviews
+                            target:self
+                            action:@selector(allowSkippingReviewsSwitchChanged:)]];
+
   [model addSection:@"Audio"];
   [model addItem:[[TKMSwitchModelItem alloc]
                      initWithStyle:UITableViewCellStyleSubtitle
@@ -358,6 +366,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)showAnswerImmediatelySwitchChanged:(UISwitch *)switchView {
   Settings.showAnswerImmediately = switchView.on;
+}
+
+- (void)allowSkippingReviewsSwitchChanged:(UISwitch *)switchView {
+  Settings.allowSkippingReviews = switchView.on;
 }
 
 - (void)enableCheatsSwitchChanged:(UISwitch *)switchView {
