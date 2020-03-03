@@ -132,6 +132,8 @@
 		C92AB972237F2E8200F79904 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB971237F2E8200F79904 /* DataManager.swift */; };
 		C943D5B02380D59B004A7969 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943D5AF2380D59A004A7969 /* SettingsController.swift */; };
 		C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C970BC0223D262CE001F3735 /* SiriShortcutHelper.swift */; };
+		C99E08BA240DA511007EBBDB /* LessonsSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E08B9240DA511007EBBDB /* LessonsSummaryViewController.swift */; };
+		C99E08BC240DAC5E007EBBDB /* ActionModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99E08BB240DAC5E007EBBDB /* ActionModelItem.swift */; };
 		EC6A5487F6875EC64C63B6B2 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404461BC39B4A19B128F9E69 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */; };
 		F513FC1023119D2C001EEEDA /* FontSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F513FC0F23119D2C001EEEDA /* FontSizeViewController.m */; };
 		FCFB23015B2EB50B28EF6BCD /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 568C3CC1B10EB467FE18C0D8 /* Pods_Tests.framework */; };
@@ -386,6 +388,8 @@
 		C92AB971237F2E8200F79904 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		C943D5AF2380D59A004A7969 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		C970BC0223D262CE001F3735 /* SiriShortcutHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutHelper.swift; sourceTree = "<group>"; };
+		C99E08B9240DA511007EBBDB /* LessonsSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsSummaryViewController.swift; sourceTree = "<group>"; };
+		C99E08BB240DAC5E007EBBDB /* ActionModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModelItem.swift; sourceTree = "<group>"; };
 		D9929E537851D24D07F47938 /* Pods-Tsurukame (App Store screenshots).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).release.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).release.xcconfig"; sourceTree = "<group>"; };
 		E0AAF9AA4EFECB4B5DB94C29 /* Pods-FontScreenshotterUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotterUITests.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotterUITests/Pods-FontScreenshotterUITests.release.xcconfig"; sourceTree = "<group>"; };
 		E76D291A2528193C74A43C60 /* Pods-FontScreenshotter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.debug.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.debug.xcconfig"; sourceTree = "<group>"; };
@@ -512,6 +516,7 @@
 				3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */,
 				637C12DC203D779D009E92DB /* LessonsPageControl.h */,
 				637C12DD203D779D009E92DB /* LessonsPageControl.m */,
+				C99E08B9240DA511007EBBDB /* LessonsSummaryViewController.swift */,
 				637C12D6203847BE009E92DB /* LessonsViewController.h */,
 				637C12D7203847BE009E92DB /* LessonsViewController.m */,
 				631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */,
@@ -625,6 +630,7 @@
 			isa = PBXGroup;
 			children = (
 				63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */,
+				C99E08BB240DAC5E007EBBDB /* ActionModelItem.swift */,
 				63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */,
 				633DE94D20C5634900AC25F4 /* TKMBasicModelItem.h */,
 				633DE95220C5634A00AC25F4 /* TKMBasicModelItem.m */,
@@ -1231,6 +1237,7 @@
 				63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */,
 				63B1DE411FE7D81600FAB9C2 /* SubjectDetailsViewController.m in Sources */,
 				63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */,
+				C99E08BC240DAC5E007EBBDB /* ActionModelItem.swift in Sources */,
 				63E9E51121F424690022C16E /* TKMDownloadViewController.m in Sources */,
 				630ADB6F21F8256E00BC9801 /* TKMCheckmarkModelItem.m in Sources */,
 				633632EF201F3490006D582B /* Settings.m in Sources */,
@@ -1255,6 +1262,7 @@
 				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
 				657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */,
+				C99E08BA240DA511007EBBDB /* LessonsSummaryViewController.swift in Sources */,
 				63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */,
 				633DE96120C5656B00AC25F4 /* TKMMarkupModelItem.m in Sources */,
 				63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */,

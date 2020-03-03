@@ -200,7 +200,10 @@
 }
 
 - (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
-  [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
+  LessonsSummaryViewController *vc =
+      [self.storyboard instantiateViewControllerWithIdentifier:@"lessonsSummaryViewController"];
+  [vc setupWithServices:_services items:_items];
+  [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (BOOL)reviewViewControllerAllowsCustomFonts {
