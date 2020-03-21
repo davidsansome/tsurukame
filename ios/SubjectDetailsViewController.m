@@ -14,7 +14,6 @@
 
 #import "SubjectDetailsViewController.h"
 
-#import "LocalCachingClient.h"
 #import "NavigationController.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tsurukame-Swift.h"
@@ -64,8 +63,9 @@
   [_subjectDetailsView setupWithServices:_services delegate:self];
 
   TKMStudyMaterials *studyMaterials =
-      [_services.localCachingClient getStudyMaterialForID:_subject.id_p];
-  TKMAssignment *assignment = [_services.localCachingClient getAssignmentForID:_subject.id_p];
+      [_services.localCachingClient getStudyMaterialForSubjectId:_subject.id_p];
+  TKMAssignment *assignment =
+      [_services.localCachingClient getAssignmentForSubjectId:_subject.id_p];
   [_subjectDetailsView updateWithSubject:_subject
                           studyMaterials:studyMaterials
                               assignment:assignment

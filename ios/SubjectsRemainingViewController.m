@@ -15,7 +15,6 @@
 #import "SubjectsRemainingViewController.h"
 
 #import "Extensions/ProtobufExtensions.h"
-#import "LocalCachingClient.h"
 #import "SubjectDetailsViewController.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"

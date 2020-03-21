@@ -522,9 +522,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       activeTask = activeQueue[activeTaskIndex]
       activeSubject = services.dataLoader.load(subjectID: Int(activeTask.assignment.subjectId))!
       activeStudyMaterials =
-        services.localCachingClient.getStudyMaterial(forID: activeTask.assignment.subjectId)
+        services.localCachingClient
+          .getStudyMaterial(subjectId: Int(activeTask.assignment.subjectId))
       activeAssignment =
-        services.localCachingClient.getAssignmentForID(activeTask.assignment.subjectId)
+        services.localCachingClient.getAssignment(subjectId: Int(activeTask.assignment.subjectId))
 
       // Choose whether to ask the meaning or the reading.
       if activeTask.answeredMeaning {

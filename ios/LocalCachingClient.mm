@@ -169,72 +169,6 @@ static BOOL DatesAreSameHour(NSDate *a, NSDate *b) {
          componentsA.month == componentsB.month && componentsA.year == componentsB.year;
 }
 
-// Tracks one task that has a progress associated with it. Tasks are things like
-// "fetch all assignments" or "upload all review progress". done/total here is how many network
-// requests make up each one of those tasks. Often the total is not known until we do the first one,
-// so these may be 0 to start with.
-struct ProgressTask {
-  int done = 0;
-  int total = 0;
-};
-
-// Tracks the progress of multiple tasks that are involved in a sync.
-@interface SyncProgressTracker : NSObject
-@end
-
-@implementation SyncProgressTracker {
-  SyncProgressHandler _handler;
-  std::vector<ProgressTask> _tasks;
-  int _allocatedTasks;
-}
-
-- (instancetype)initWithProgressHandler:(SyncProgressHandler)handler taskCount:(int)taskCount {
-  self = [super init];
-  if (self) {
-    _handler = handler;
-    _tasks.resize(taskCount);
-    _allocatedTasks = 0;
-  }
-  return self;
-}
-
-- (PartialCompletionHandler)newTaskInGroup:(dispatch_group_t)group {
-  NSAssert(_allocatedTasks < _tasks.size(), @"Too many tasks created");
-  __block NSUInteger idx = _allocatedTasks;
-  _allocatedTasks++;
-
-  dispatch_group_enter(group);
-
-  return ^void(int done, int total) {
-    _tasks[idx].done = done;
-    _tasks[idx].total = total;
-    [self update];
-
-    if (done == total) {
-      dispatch_group_leave(group);
-    }
-  };
-}
-
-- (void)update {
-  int done = 0;
-  int total = 0;
-  for (const auto &task : _tasks) {
-    done += task.done;
-    total += MAX(1, task.total);
-  }
-
-  float progress = 0;
-  if (total > 0) {
-    progress = float(done) / total;
-  }
-  dispatch_async(dispatch_get_main_queue(), ^{
-    _handler(progress);
-  });
-}
-
-@end
-
 @implementation LocalCachingClient {
   Reachability *_reachability;
   FMDatabaseQueue *_db;
@@ -573,27 +507,6 @@ struct ProgressTask {
   return ret;
 }
 
-- (NSTimeInterval)getAverageRemainingLevelTime {
-  NSArray<NSNumber *> *timeSpentAtEachLevel = [self getTimeSpentAtEachLevel];
-  if ([timeSpentAtEachLevel count] == 0) {
-    return 0;
-  }
-
-  NSNumber *currentLevelTime = [timeSpentAtEachLevel lastObject];
-  NSUInteger lastPassIndex = [timeSpentAtEachLevel count] - 1;
-
-  // Use the median 50% to calculate the average time
-  NSUInteger lowerIndex = lastPassIndex / 4 + (lastPassIndex % 4 == 3 ? 1 : 0);
-  NSUInteger upperIndex = lastPassIndex * 3 / 4 + (lastPassIndex == 1 ? 1 : 0);
-
-  NSRange medianPassRange = NSMakeRange(lowerIndex, upperIndex - lowerIndex);
-  NSArray *medianPassTimes = [timeSpentAtEachLevel subarrayWithRange:medianPassRange];
-  NSNumber *averageTime = [medianPassTimes valueForKeyPath:@"@avg.self"];
-  NSTimeInterval remainingTime = [averageTime doubleValue] - [currentLevelTime doubleValue];
-
-  return remainingTime;
-}
-
 #pragma mark - Getting cached data
 
 - (int)pendingProgress {
@@ -835,10 +748,6 @@ struct ProgressTask {
                    [self postNotificationOnMainThread:kLocalCachingClientUnauthorizedNotification];
                  }
 
-                 // Drop the data if the server is clearly telling us our data is invalid and
-                 // cannot be accepted. This most commonly happens when doing reviews before
-                 // progress from elsewhere has synced, leaving the app trying to report
-                 // progress on reviews you already did elsewhere.
                  if ([error.domain isEqual:kTKMClientErrorDomain] && error.code == 422) {
                    [self clearPendingProgress:p];
                  }

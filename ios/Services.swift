@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import Reachability
 
 @objc
 @objcMembers
@@ -22,6 +23,7 @@ class TKMServices: NSObject {
   let fontLoader: TKMFontLoader
 
   private(set) var audio: Audio!
+  var client: WaniKaniAPIClient!
   var localCachingClient: LocalCachingClient!
 
   override init() {

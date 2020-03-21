@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import PromiseKit
 
 private let kDefaultProfileImageURL =
   "https://cdn.wanikani.com/default-avatar-300x300-20121121.png"
@@ -113,19 +114,19 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     let nc = NotificationCenter.default
     nc.addObserver(self,
                    selector: #selector(availableItemsChanged),
-                   name: NSNotification.Name.localCachingClientAvailableItemsChanged,
+                   name: NSNotification.Name.lccAvailableItemsChanged,
                    object: services.localCachingClient)
     nc.addObserver(self,
                    selector: #selector(userInfoChanged),
-                   name: NSNotification.Name.localCachingClientUserInfoChanged,
+                   name: NSNotification.Name.lccUserInfoChanged,
                    object: services.localCachingClient)
     nc.addObserver(self,
                    selector: #selector(srsLevelCountsChanged),
-                   name: NSNotification.Name.localCachingClientSrsLevelCountsChanged,
+                   name: NSNotification.Name.lccSRSCategoryCountsChanged,
                    object: services.localCachingClient)
     nc.addObserver(self,
                    selector: #selector(clientIsUnauthorized),
-                   name: NSNotification.Name.localCachingClientUnauthorized,
+                   name: NSNotification.Name.lccUnauthorized,
                    object: services.localCachingClient)
     nc.addObserver(self,
                    selector: #selector(applicationDidEnterBackground),
@@ -153,9 +154,10 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   private func recreateTableModel() {
     guard let user = services.localCachingClient.getUserInfo() else { return }
 
-    let lessons = Int(services.localCachingClient.availableLessonCount)
-    let reviews = Int(services.localCachingClient.availableReviewCount)
-    let upcomingReviews = services.localCachingClient.upcomingReviews as! [Int]
+    let availableSubjects = services.localCachingClient.availableSubjects
+    let lessons = Int(availableSubjects.lessonCount)
+    let reviews = Int(availableSubjects.reviewCount)
+    let upcomingReviews = availableSubjects.upcomingReviews
     let currentLevelAssignments = services.localCachingClient.getAssignmentsAtUsersCurrentLevel()
 
     let model = TKMMutableTableModel(tableView: tableView)
@@ -212,7 +214,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     model.addSection("All levels")
     for i in TKMSRSStageCategory.apprentice.rawValue ... TKMSRSStageCategory.burned.rawValue {
       let category = TKMSRSStageCategory(rawValue: i)!
-      let count = services.localCachingClient.getSrsLevelCount(category)
+      let count = services.localCachingClient.srsCategoryCounts[i]
       model.add(SRSStageCategoryItem(stageCategory: category, count: Int(count)))
     }
 
@@ -364,9 +366,9 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     scheduleTableModelUpdate()
     guard let headerView = headerView else { return }
     headerView.setProgress(0)
-    services.localCachingClient.sync(progressHandler: { progress in
-      self.headerView.setProgress(progress)
-    }, quick: quick)
+
+    // TODO: Use Progress and update header view.
+    services.localCachingClient.sync(quick: quick)
   }
 
   @objc func availableItemsChanged() {
@@ -384,7 +386,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
       let headerView = headerView,
       Settings.userEmailAddress != "" else { return }
     let email = Settings.userEmailAddress
-    let guruKanji = services.localCachingClient.getGuruKanjiCount()
+    let guruKanji = services.localCachingClient.guruKanjiCount
     let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)
       : userProfileImageURL(emailAddress: email)
 
@@ -437,8 +439,9 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   func loginComplete() {
-    services.localCachingClient.client
-      .updateApiToken(Settings.userApiToken, cookie: Settings.userCookie)
+    // TODO: uncomment
+    // services.localCachingClient.client
+    //  .updateApiToken(Settings.userApiToken, cookie: Settings.userCookie)
     navigationController?.popViewController(animated: true)
     isShowingUnauthorizedAlert = false
   }

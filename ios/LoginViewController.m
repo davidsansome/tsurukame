@@ -14,8 +14,9 @@
 
 #import "LoginViewController.h"
 
-#import "Client.h"
 #import "Tsurukame-Swift.h"
+
+#import <PromiseKit/PromiseKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -93,50 +94,26 @@ static NSString *const kPrivacyPolicyURL =
   }
   [self showActivityIndicatorOverlay:true];
 
-  __weak LoginViewController *weakSelf = self;
-  [Client getCookieForUsername:_usernameField.text
-                      password:_passwordField.text
-                       handler:^(NSError *_Nullable error, NSString *_Nullable cookie) {
-                         [weakSelf handleCookieResponse:error cookie:cookie];
-                       }];
-}
+  WaniKaniWebClient *client = [[WaniKaniWebClient alloc] init];
+  AnyPromise *promise = [client loginWithUsername:_usernameField.text password:_passwordField.text];
+  promise
+      .then(^(LoginResult *result) {
+        NSLog(@"Login success!");
+        Settings.userCookie = result.cookie;
+        Settings.userApiToken = result.apiToken;
+        Settings.userEmailAddress = result.emailAddress;
 
-- (void)handleCookieResponse:(NSError *)error cookie:(NSString *)cookie {
-  if (error != nil) {
-    if (error.domain == kTKMClientErrorDomain && error.code == kTKMLoginErrorCode) {
-      [self showLoginError:@"Your username or password were incorrect"];
-    } else {
-      [self showLoginError:@"An unknown error occurred"];
-    }
-    return;
-  }
-
-  Settings.userCookie = cookie;
-
-  __weak LoginViewController *weakSelf = self;
-  [Client getApiTokenForCookie:cookie
-                       handler:^(NSError *_Nullable error, NSString *_Nullable apiToken,
-                                 NSString *_Nullable emailAddress) {
-                         [weakSelf handleApiTokenResponse:error
-                                                 apiToken:apiToken
-                                             emailAddress:emailAddress];
-                       }];
-}
-
-- (void)handleApiTokenResponse:(NSError *)error
-                      apiToken:(NSString *)apiToken
-                  emailAddress:(NSString *)emailAddress {
-  if (error != nil) {
-    [self showLoginError:@"An error occurred fetching your API key"];
-    return;
-  }
-
-  Settings.userEmailAddress = emailAddress;
-  Settings.userApiToken = apiToken;
-
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [_delegate loginComplete];
-  });
+        [_delegate loginComplete];
+      })
+      .catch(^(NSError *error) {
+        NSString *message;
+        if ([error.domain isEqual:WaniKaniWebClientErrorDomain]) {
+          message = [WaniKaniWebClient errorDescription:error.code];
+        } else {
+          message = error.localizedDescription;
+        }
+        [self showLoginError:message];
+      });
 }
 
 #pragma mark - Errors and competion

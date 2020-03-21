@@ -15,7 +15,6 @@
 #import "SettingsViewController.h"
 
 #import "Extensions/ProtobufExtensions.h"
-#import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "TKMFontsViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
@@ -205,7 +204,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                 on:Settings.allowSkippingReviews
                             target:self
                             action:@selector(allowSkippingReviewsSwitchChanged:)]];
-  
+
   TKMSwitchModelItem *minimizeReviewPenaltyItem =
       [[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                           title:@"Minimize review penalty"
@@ -583,7 +582,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (void)didTapSendBugReport:(id)sender {
-  NSURL *url = [LocalCachingClient databaseFileUrl];
+  NSURL *url = [LocalCachingClient databaseUrl];
   UIActivityViewController *c = [[UIActivityViewController alloc] initWithActivityItems:@[ url ]
                                                                   applicationActivities:nil];
   [self presentViewController:c animated:YES completion:nil];

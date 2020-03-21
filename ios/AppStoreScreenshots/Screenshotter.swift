@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import PromiseKit
 
 #if !DEBUG
 
@@ -58,20 +59,22 @@ import Foundation
       isActive ? FakeLocalCachingClient.self : LocalCachingClient.self
   }
 
-  @objc
   class FakeLocalCachingClient: LocalCachingClient {
-    override var availableReviewCount: Int32 { 4 }
-    override var availableLessonCount: Int32 { 10 }
-    override var upcomingReviews: [NSNumber] {
-      [14, 8, 2, 1, 12, 42, 17, 9, 2, 0, 2, 17, 0, 0, 6, 0, 0, 0, 0, 4, 11, 0, 8, 6]
+    override func countRows(inTable _: String) -> Int {
+      0
     }
 
-    override var pendingProgress: Int32 { 0 }
-    override var pendingStudyMaterials: Int32 { 0 }
+    override func updateAvailableSubjects() -> (Int, Int, [Int]) {
+      return (10, 4, [14, 8, 2, 1, 12, 42, 17, 9, 2, 0, 2, 17, 0, 0, 6, 0, 0, 0, 0, 4, 11, 0, 8,
+                      6])
+    }
 
-    override func sync(progressHandler syncProgressHandler: @escaping SyncProgressHandler,
-                       quick _: Bool) {
-      syncProgressHandler(1.0)
+    override func updateGuruKanjiCount() -> Int {
+      864
+    }
+
+    override func updateSrsCategoryCounts() -> [Int] {
+      [86, 120, 485, 786, 2056]
     }
 
     override func getAllAssignments() -> [TKMAssignment] {
@@ -81,10 +84,10 @@ import Foundation
       a.subjectType = .kanji
       a.availableAt = 42
       a.srsStage = 2
-      return Array(repeating: a, count: Int(availableReviewCount))
+      return Array(repeating: a, count: Int(availableSubjects.reviewCount))
     }
 
-    override func getStudyMaterial(forID _: Int32) -> TKMStudyMaterials? {
+    override func getStudyMaterial(subjectId _: Int) -> TKMStudyMaterials? {
       nil
     }
 
@@ -100,11 +103,11 @@ import Foundation
       []
     }
 
-    override func getAssignmentForID(_: Int32) -> TKMAssignment? {
+    override func getAssignment(subjectId _: Int) -> TKMAssignment? {
       nil
     }
 
-    override func getAssignmentsAtLevel(_: Int32) -> [TKMAssignment] {
+    override func getAssignments(level: Int) -> [TKMAssignment] {
       // Return just enough to populate the SubjectsByLevelViewController.
       let level = getUserInfo()!.level
       let subjects = dataLoader.loadAll().filter { (s) -> Bool in
@@ -135,29 +138,13 @@ import Foundation
         makePieSlices(.vocabulary, locked: 50, lesson: 8, apprentice: 4, guru: 0)
     }
 
-    override func getSrsLevelCount(_ category: TKMSRSStageCategory) -> Int32 {
-      switch category {
-      case .apprentice: return 86
-      case .guru: return 120
-      case .master: return 485
-      case .enlightened: return 786
-      case .burned: return 2056
-      @unknown default:
-        fatalError()
-      }
+    override func sendProgress(_: [TKMProgress]) -> Promise<Void> {
+      Promise.value(())
     }
 
-    override func getGuruKanjiCount() -> Int32 {
-      864
+    override func updateStudyMaterial(_: TKMStudyMaterials) -> Promise<Void> {
+      Promise.value(())
     }
-
-    override func getAverageRemainingLevelTime() -> TimeInterval {
-      (4 * 24 + 9) * 60 * 60
-    }
-
-    override func sendProgress(_: [TKMProgress]) {}
-
-    override func updateStudyMaterial(_: TKMStudyMaterials) {}
 
     override func clearAllData() {}
 

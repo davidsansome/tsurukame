@@ -19,6 +19,9 @@
 #import "Reachability.h"
 #import "proto/Wanikani.pbobjc.h"
 
+@class DataLoader;
+@class Client;
+
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSNotificationName kLocalCachingClientAvailableItemsChangedNotification;

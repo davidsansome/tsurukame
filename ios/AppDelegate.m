@@ -13,11 +13,10 @@
 // limitations under the License.
 
 #import "AppDelegate.h"
-#import "Client.h"
-#import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "Tsurukame-Swift.h"
 
+#import <Reachability/Reachability.h>
 #import <UserNotifications/UserNotifications.h>
 
 @interface AppDelegate () <LoginViewControllerDelegate>
@@ -45,10 +44,7 @@
 
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self selector:@selector(logout:) name:kLogoutNotification object:nil];
-  [nc addObserver:self
-         selector:@selector(userInfoChanged:)
-             name:kLocalCachingClientUserInfoChangedNotification
-           object:nil];
+  [nc addObserver:self selector:@selector(userInfoChanged:) name:@"lccUserInfoChanged" object:nil];
 
   if (Settings.userApiToken.length && Settings.userCookie.length) {
     [self setMainViewControllerAnimated:NO clearUserData:NO];
@@ -87,13 +83,12 @@
 }
 
 - (void)setMainViewControllerAnimated:(BOOL)animated clearUserData:(BOOL)clearUserData {
-  Client *client = [[Client alloc] initWithApiToken:Settings.userApiToken
-                                             cookie:Settings.userCookie
-                                         dataLoader:_services.dataLoader];
+  _services.client = [[Client alloc] initWithApiToken:Settings.userApiToken
+                                           dataLoader:_services.dataLoader];
 
   Class localCachingClientClass = TKMScreenshotter.localCachingClientClass;
   _services.localCachingClient =
-      [[localCachingClientClass alloc] initWithClient:client
+      [[localCachingClientClass alloc] initWithClient:_services.client
                                            dataLoader:_services.dataLoader
                                          reachability:_services.reachability];
 
@@ -112,16 +107,11 @@
 
     [_navigationController setViewControllers:@[ vc ] animated:animated];
   };
-  void (^syncProgressHandler)(float) = ^(float progress) {
-    if (progress == 1.0) {
-      pushMainViewController();
-    }
-  };
 
   // Do a sync before pushing the main view controller if this was a new login.
   if (clearUserData) {
     [_services.localCachingClient clearAllData];
-    [_services.localCachingClient syncWithProgressHandler:syncProgressHandler quick:true];
+    [_services.localCachingClient syncQuick:true completionHandler:pushMainViewController];
   } else {
     [self userInfoChanged:nil];  // Set the user's max level.
     pushMainViewController();
@@ -164,17 +154,18 @@
   }
 
   __weak AppDelegate *weakSelf = self;
-  [_services.localCachingClient
-      syncWithProgressHandler:^(float progress) {
-        if (progress == 1.0) {
-          [weakSelf updateAppBadgeCount];
-          completionHandler(UIBackgroundFetchResultNewData);
-        }
-      }
-                        quick:true];
+  [_services.localCachingClient syncQuick:true
+                        completionHandler:^{
+                          [weakSelf updateAppBadgeCount];
+                          completionHandler(UIBackgroundFetchResultNewData);
+                        }];
 }
 
 - (void)updateAppBadgeCount {
+  if (!Settings.notificationsAllReviews && !Settings.notificationsBadging) {
+    return;
+  }
+
   int reviewCount = _services.localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
   TKMUser *user = _services.localCachingClient.getUserInfo;
