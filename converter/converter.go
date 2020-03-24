@@ -16,13 +16,12 @@ package converter
 
 import (
 	"fmt"
-	"strings"
 	"strconv"
+	"strings"
 
 	"github.com/golang/protobuf/proto"
 
 	"github.com/davidsansome/tsurukame/api"
-	"github.com/davidsansome/tsurukame/jsonapi"
 	pb "github.com/davidsansome/tsurukame/proto"
 )
 
@@ -51,7 +50,9 @@ func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
 
 	switch o.Object {
 	case "radical":
-		ret.Radical = &pb.Radical{}
+		ret.Radical = &pb.Radical{
+			Mnemonic: proto.String(o.Data.MeaningMnemonic),
+		}
 		if len(o.Data.CharacterImages) >= 1 {
 			ret.Radical.CharacterImage =
 				proto.String(bestCharacterImageURL(o.ID, o.Data.CharacterImages))
@@ -218,11 +219,4 @@ func convertPartOfSpeech(p string) (pb.Vocabulary_PartOfSpeech, bool) {
 		return pb.Vocabulary_CONJUNCTION, true
 	}
 	return pb.Vocabulary_NOUN, false
-}
-
-func AddRadical(s *pb.Subject, r *jsonapi.Radical) {
-	s.Radical.Mnemonic = proto.String(r.Mnemonic)
-	if r.DeprecatedMnemonic != "" {
-		s.Radical.DeprecatedMnemonic = proto.String(r.DeprecatedMnemonic)
-	}
 }

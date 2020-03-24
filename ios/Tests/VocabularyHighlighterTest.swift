@@ -42,6 +42,6 @@ class VocabularyHighlighterTest: XCTestCase {
       }
     }
 
-    XCTAssertEqual(noMatchCount, 21)
+    XCTAssertEqual(noMatchCount, 20)
   }
 }
