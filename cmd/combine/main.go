@@ -32,14 +32,42 @@ import (
 )
 
 var (
-	inputDir      = flag.String("in", "data", "Input directory")
-	outputFile    = flag.String("out", "data.bin", "Output file")
-	overridesFile = flag.String("overrides", "overrides.txt", "Overrides text proto")
+	inputDir   = flag.String("in", "data", "Input directory")
+	outputFile = flag.String("out", "data.bin", "Output file")
+)
+
+const (
+	overridesFile                  = "overrides.txt"
+	deprecatedRadicalMnemonicsFile = "deprecated_radical_mnemonics.txt"
 )
 
 func main() {
 	flag.Parse()
 	utils.Must(Combine())
+}
+
+func loadOverrides() map[int]*pb.Subject {
+	ret := map[int]*pb.Subject{}
+	if data, err := ioutil.ReadFile(overridesFile); err == nil {
+		var overridesProto pb.SubjectOverrides
+		utils.Must(proto.UnmarshalText(string(data), &overridesProto))
+		for _, overrideProto := range overridesProto.Subject {
+			ret[int(overrideProto.GetId())] = overrideProto
+		}
+	}
+	return ret
+}
+
+func loadDeprecatedRadicalMnemonics() map[int][]*pb.FormattedText {
+	ret := map[int][]*pb.FormattedText{}
+	data, err := ioutil.ReadFile(deprecatedRadicalMnemonicsFile)
+	utils.Must(err)
+	var mnemonicsProto pb.DeprecatedMnemonicFile
+	utils.Must(proto.UnmarshalText(string(data), &mnemonicsProto))
+	for _, subjectProto := range mnemonicsProto.Subjects {
+		ret[int(subjectProto.GetId())] = subjectProto.FormattedDeprecatedMnemonic
+	}
+	return ret
 }
 
 func Combine() error {
@@ -49,19 +77,8 @@ func Combine() error {
 	writer, err := encoding.OpenFileWriter(*outputFile)
 	utils.Must(err)
 
-	overrides := map[int]*pb.Subject{}
-	if len(*overridesFile) != 0 {
-		data, err := ioutil.ReadFile(*overridesFile)
-		if err != nil {
-			fmt.Printf("Error opening %s: %s\n", *overridesFile, err)
-		} else {
-			var overridesProto pb.SubjectOverrides
-			utils.Must(proto.UnmarshalText(string(data), &overridesProto))
-			for _, overrideProto := range overridesProto.Subject {
-				overrides[int(overrideProto.GetId())] = overrideProto
-			}
-		}
-	}
+	overrides := loadOverrides()
+	deprecatedRadicalMnemonics := loadDeprecatedRadicalMnemonics()
 
 	sk, err := similar_kanji.Create(reader)
 	utils.Must(err)
@@ -114,14 +131,15 @@ func Combine() error {
 			proto.Merge(spb, override)
 		}
 
+		// Add deprecated radical mnemonics.
+		if formattedDeprecatedMnemonic, ok := deprecatedRadicalMnemonics[id]; ok {
+			spb.Radical.FormattedDeprecatedMnemonic = formattedDeprecatedMnemonic
+		}
+
 		// Format the markup.
 		if spb.Radical != nil {
 			spb.Radical.FormattedMnemonic = markup.FormatText(spb.Radical.GetMnemonic())
 			spb.Radical.Mnemonic = nil
-			if spb.Radical.DeprecatedMnemonic != nil {
-				spb.Radical.FormattedDeprecatedMnemonic = markup.FormatText(spb.Radical.GetDeprecatedMnemonic())
-				spb.Radical.DeprecatedMnemonic = nil
-			}
 		}
 		if spb.Kanji != nil {
 			spb.Kanji.FormattedMeaningMnemonic = markup.FormatText(spb.Kanji.GetMeaningMnemonic())
