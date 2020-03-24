@@ -65,11 +65,19 @@
 - (BOOL)application:(UIApplication *)application
     willContinueUserActivityWithType:(NSString *)userActivityType {
   if ([userActivityType isEqual:SiriShortcutHelper.ShortcutTypeReviews]) {
-    MainViewController *mainVC = [self findMainViewController];
-    [mainVC performSegueWithIdentifier:@"startReviews" sender:nil];
+    if (_services.localCachingClient.availableReviewCount > 0) {
+      // If the user has 0 reviews proceed to the main view controller. If they have
+      // 1+ reviews then launch directly into reviews.
+      MainViewController *mainVC = [self findMainViewController];
+      [mainVC performSegueWithIdentifier:@"startReviews" sender:nil];
+    }
   } else if ([userActivityType isEqual:SiriShortcutHelper.ShortcutTypeLessons]) {
-    MainViewController *mainVC = [self findMainViewController];
-    [mainVC performSegueWithIdentifier:@"startLessons" sender:nil];
+    if (_services.localCachingClient.availableLessonCount > 0) {
+      // If the user has 0 lessons proceed to the main view controller. If they have
+      // 1+ lessons pending then launch directly into lessons.
+      MainViewController *mainVC = [self findMainViewController];
+      [mainVC performSegueWithIdentifier:@"startLessons" sender:nil];
+    }
   }
   return YES;
 }
