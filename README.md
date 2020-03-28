@@ -17,16 +17,14 @@ If you want to build the iOS app yourself, you will need to change the signing i
 You'll have to change the app bundle identifiers in the main target and app extension to match your Apple Developer Account.
 
 1. You will need a registered Apple Developer Account. If you don't have one, you can get one for free at [Apple Developer](https://developer.apple.com/account/).
-2. If you already know your `DEVELOPMENT_TEAM` and bundle identifiers, skip this step.
-	1. Otherwise, you will need to open Xcode, and open `ios/Tsurukame.xcworkspace`, which is what you will use to build the app.
-	2. You will need to go click on the Tsurukame project in the left sidebar.
-	3. In the General and Signing & Capabilities tabs, change the bundle identifier & development team as shown in the screenshots below.
+2. Next, you will need to open Xcode, and open `ios/Tsurukame.xcworkspace`, which is what you will use to build the app.
+	1. You will need to click on the Tsurukame project in the left sidebar.
+	2. For each target, in the Signing & Capabilities tab, turn on automatically manage signing, and change the bundle identifier & development team as shown in the screenshot below:
 
-    <img width="300" alt="General" src="https://user-images.githubusercontent.com/46784000/72098368-ed64e980-32e3-11ea-8cee-e1837d993269.PNG"><img width="300" alt="Signing & Capabilities" src="https://user-images.githubusercontent.com/46784000/72098370-ed64e980-32e3-11ea-83a9-1783a94213d5.PNG">
-3. Open `project.pbxproj` which can be found in the contents of `ios/Tsurukame.xcodeproj` in an external editor (not Xcode), and find and replace:
-	1. `7B2GP77Y4A;` with your development team followed by a semicolon
+    <img width="300" alt="Signing & Capabilities" src="https://user-images.githubusercontent.com/46784000/72098370-ed64e980-32e3-11ea-83a9-1783a94213d5.PNG">
+3. Finally, find and replace all instances of:
+	1. `7B2GP77Y4A` with your development team
 	2. `com.davidsansome.` with the beginning of your bundle identifier.
-Alternately, you can attempt to do step 3 manually within Xcode by searching for these things.
 
 ## Create data.bin
 
@@ -40,23 +38,13 @@ Before doing anything else, follow the [Go Getting Started](https://golang.org/d
 
 ### Create a new data.bin
 
-You'll need:
+You'll need a WaniKani APIv2 key.  Get it from https://www.wanikani.com/settings/account.
 
-1. Your WaniKani APIv2 key.  Get it from https://www.wanikani.com/settings/account.
-2. Your HTTP cookie from your web browser.  WaniKani doesn't expose everything we need in its API - specifically the mnemonics, explanations and example sentences - so we need to scrape the JSON API as well.
-
-    1. Open the Developer Tools in Chrome (F12).
-    2. Navigate to https://www.wanikani.com.
-    3. Click the Network tab in developer tools and click the top request.
-    4. Scroll down to the "Request Headers" section in the Headers tab.
-    5. In the Cookie line, look for `_wanikani_session=` and copy the 32-character hex string.
-
-Make sure the current directory is the `tsurukame` directory. If not, use `cd` to change it.
-
-Run the scraper:
+Open Terminal and make sure the current directory is the `tsurukame` directory. If not, use `cd` to change it.
+Run the scraper, replacing `[Your API token]` with your APIv2 key:
 
     mkdir data
-    go run cmd/scrape/main.go --api-token [Your API token] --cookie [Your HTTP cookie]
+    go run cmd/scrape/main.go --api-token [Your API token]
 
 This will take a few minutes to download everything.  It stores its output in the `data` directory (change this with `--out`).  You can stop it and start it again and it will pick up from where it left off.
 
@@ -73,9 +61,9 @@ If you want to inspect the data.bin, here are some things you can do.
 
 List all the subjects in a data.bin:
 
-```
-$ go run cmd/dump/main.go data.bin
+    go run cmd/dump/main.go data.bin
 
+```
 1. ground
 2. fins
 3. drop
@@ -87,9 +75,9 @@ $ go run cmd/dump/main.go data.bin
 
 Dump one subject by ID:
 
-```
-$ go run cmd/dump/main.go data.bin 6
+    go run cmd/dump/main.go data.bin 6
 
+```
 id: 6
 level: 1
 slug: "barb"
@@ -120,9 +108,5 @@ This is a text protobuf, described by [wanikani.proto](https://github.com/davids
 # Update the CocoaPods dependencies
 First, you will need to install [CocoaPods](https://cocoapods.org) if you don't already have it. The website suggests using `sudo gem install cocoapods`.
 
-Next, you will need to switch the current directory to the `ios` directory. You can do this using:
-
-	cd /path/to/tsurukame/ios
-
-Of course, replace `/path/to` with the actual path to the Tsurukame directory.
+Next, you will need to switch the current directory to the `ios` directory using `cd`. 
 Finally, simply install the dependencies using `pod install` or `pod update`.
