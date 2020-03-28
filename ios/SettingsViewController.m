@@ -502,6 +502,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   [self performSegueWithIdentifier:@"lessonBatchSize" sender:self];
 }
 
+- (void)didTapReviewBatchSize:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"reviewBatchSize" sender:self];
+}
+
 - (void)fontSizeChanged:(TKMBasicModelItem *)item {
   [self performSegueWithIdentifier:@"fontSize" sender:self];
 }
