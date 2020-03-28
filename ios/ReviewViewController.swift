@@ -330,6 +330,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     subjectDetailsView.setup(withServices: services, delegate: self)
 
+    answerField.autocapitalizationType = .none
     answerField.delegate = kanaInput
     answerField
       .addTarget(self, action: #selector(answerFieldValueDidChange),
