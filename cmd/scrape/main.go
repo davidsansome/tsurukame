@@ -16,19 +16,16 @@ package main
 
 import (
 	"flag"
-	"log"
 	"time"
 
 	"github.com/davidsansome/tsurukame/api"
 	"github.com/davidsansome/tsurukame/converter"
 	"github.com/davidsansome/tsurukame/encoding"
-	"github.com/davidsansome/tsurukame/jsonapi"
 	"github.com/davidsansome/tsurukame/utils"
 )
 
 var (
 	out             = flag.String("out", "data", "Output directory")
-	cookie          = flag.String("cookie", "", "Wanikani HTTP cookie")
 	apiToken        = flag.String("api-token", "", "Wanikani API v2 token")
 	requestInterval = flag.Duration("request-interval", time.Millisecond*1200, "Time to wait between requests to the Wanikani API")
 )
@@ -41,23 +38,19 @@ func main() {
 	utils.Must(err)
 	defer apiClient.Close()
 
-	jsonClient, err := jsonapi.New(*cookie, *requestInterval)
-	utils.Must(err)
-
 	// Open directory.
 	directory, err := encoding.OpenDirectory(*out)
 	utils.Must(err)
 
-	s := Scraper{apiClient, jsonClient, directory}
+	s := Scraper{apiClient, directory}
 	if err := s.GetAll(); err != nil {
 		panic(err)
 	}
 }
 
 type Scraper struct {
-	apiClient  *api.Client
-	jsonClient *jsonapi.Client
-	directory  encoding.ReadWriter
+	apiClient *api.Client
+	directory encoding.ReadWriter
 }
 
 func (s *Scraper) GetAll() error {
@@ -79,21 +72,6 @@ SubjectLoop:
 		spb, err := converter.SubjectToProto(subject)
 		if err != nil {
 			return err
-		}
-
-		// Fetch the other bits.  We only need to do this for Radicals now that
-		// more data is included in the real WaniKani API.
-		if spb.Radical != nil {
-			if s.directory.HasSubject(subject.ID) {
-				continue SubjectLoop
-			}
-
-			r, err := s.jsonClient.GetRadical(subject.ID)
-			if err != nil {
-				log.Printf("Error getting radical %d: %v", subject.ID, err)
-				continue SubjectLoop
-			}
-			converter.AddRadical(spb, r)
 		}
 
 		// Write it to a file.
