@@ -56,6 +56,7 @@
 		636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E6238A607A00902269 /* MainHeaderView.swift */; };
 		637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12D7203847BE009E92DB /* LessonsViewController.m */; };
 		637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 637C12DD203D779D009E92DB /* LessonsPageControl.m */; };
+		637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6364A10A242DFB6F000ABF32 /* Intents.framework */; };
 		6392DBA220D130F0003019EB /* TKMSubjectModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA120D130F0003019EB /* TKMSubjectModelItem.m */; };
 		6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */; };
 		6392DBA720D14915003019EB /* TKMSubjectChip.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA620D14915003019EB /* TKMSubjectChip.m */; };
@@ -261,6 +262,7 @@
 		6356E7821FDFF0E3009CE7C1 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		635D0077218D94AA006CD711 /* TKMGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMGradientView.h; sourceTree = "<group>"; };
 		635D0078218D94AA006CD711 /* TKMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMGradientView.m; sourceTree = "<group>"; };
+		6364A10A242DFB6F000ABF32 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Intents.framework; sourceTree = DEVELOPER_DIR; };
 		636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLevelChartItem.swift; sourceTree = "<group>"; };
 		636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSStageCategoryItem.swift; sourceTree = "<group>"; };
 		636A63E3238A5D6B00902269 /* MainHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainHeaderView.xib; sourceTree = "<group>"; };
@@ -400,6 +402,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */,
 				63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */,
 				480B243123D6830300FC2A82 /* Rexy in Frameworks */,
 				32A4A0FD85D9F44608460373 /* Pods_Tsurukame.framework in Frameworks */,
@@ -687,6 +690,7 @@
 		63CAAB0F1FD7FAC500E09DA1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6364A10A242DFB6F000ABF32 /* Intents.framework */,
 				6356E7821FDFF0E3009CE7C1 /* WebKit.framework */,
 				63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */,
 				F33812F134DC80E5D981C40E /* Pods_FontScreenshotter.framework */,
@@ -1547,7 +1551,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 632;
+				CURRENT_PROJECT_VERSION = 688;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
@@ -1581,7 +1585,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 632;
+				CURRENT_PROJECT_VERSION = 688;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
@@ -1817,7 +1821,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 632;
+				CURRENT_PROJECT_VERSION = 688;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				IBSC_MODULE = Tsurukame_Complication_Extension;
 				INFOPLIST_FILE = Complication/Info.plist;
@@ -1846,7 +1850,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 632;
+				CURRENT_PROJECT_VERSION = 688;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				IBSC_MODULE = Tsurukame_Complication_Extension;
 				INFOPLIST_FILE = Complication/Info.plist;
@@ -1872,7 +1876,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 632;
+				CURRENT_PROJECT_VERSION = 688;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = ComplicationExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1904,7 +1908,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 632;
+				CURRENT_PROJECT_VERSION = 688;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = ComplicationExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
