@@ -153,7 +153,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   private var kanaInput: TKMKanaInput!
   private let hapticGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator
     .FeedbackStyle.light)
-  private let tickImage = UIImage(named: "confirm")
+  private let tickImage = UIImage(named: "checkmark.circle")
   private let forwardArrowImage = UIImage(named: "ic_arrow_forward_white")
   private let skipImage = UIImage(named: "goforward.plus")
 
@@ -205,7 +205,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   @IBOutlet private var progressBar: UIProgressView!
   @IBOutlet private var subjectDetailsView: SubjectDetailsView!
   @IBOutlet private var previousSubjectButton: UIButton!
-  @IBOutlet private var skipButton: UIButton!
 
   @IBOutlet private var wrapUpLabel: UILabel!
   @IBOutlet private var successRateLabel: UILabel!
@@ -581,17 +580,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       promptLabel!.textColor = promptTextColor
 
       // Submit button.
-      submitButton.isEnabled = false
 
       if Settings.allowSkippingReviews {
-        submitButton.alpha = 0.0
-
-        // Skip Button.
-        skipButton.isEnabled = true
-        skipButton.alpha = 1.0
-
         // Change the skip button icon.
-        skipButton.setImage(skipImage, for: .normal)
+        submitButton.setImage(skipImage, for: .normal)
+      } else {
+        submitButton.isEnabled = false
       }
 
       // Background gradients.
@@ -736,7 +730,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     }
 
     // Change the submit button icon.
-    let submitButtonImage = shown ? forwardArrowImage : tickImage
+    let submitButtonImage = shown ? forwardArrowImage :
+      (Settings.allowSkippingReviews ? skipImage : tickImage)
     submitButton.setImage(submitButtonImage, for: .normal)
 
     // We have to do the UIView animation this way (rather than using the block syntax) so we can set
@@ -949,14 +944,17 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   // MARK: - Submitting answers
 
   @objc func answerFieldValueDidChange() {
-    let text = answerField.text?.trimmingCharacters(in: .whitespaces)
-    submitButton.isEnabled = !(text?.isEmpty ?? true)
+    let text = answerField.text!.trimmingCharacters(in: .whitespaces)
 
     if Settings.allowSkippingReviews {
-      skipButton.isEnabled = !submitButton.isEnabled
-
-      submitButton.alpha = submitButton.isEnabled ? 1.0 : 0.0
-      skipButton.alpha = skipButton.isEnabled ? 1.0 : 0.0
+      let newImage = text.isEmpty ? skipImage : tickImage
+      UIView
+        .transition(with: submitButton, duration: 0.1,
+                    options: .transitionCrossDissolve, animations: {
+                      self.submitButton.setImage(newImage, for: .normal)
+      }, completion: nil)
+    } else {
+      submitButton.isEnabled = !text.isEmpty
     }
   }
 
@@ -979,6 +977,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   @objc func enterKeyPressed() {
     if !submitButton.isEnabled {
+      return
+    }
+    if Settings.allowSkippingReviews,
+      answerField.text!.trimmingCharacters(in: .whitespaces).isEmpty {
+      markAnswer(.AskAgainLater)
       return
     }
     if !answerField.isEnabled {
@@ -1153,10 +1156,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       }
     }
     animateSubjectDetailsView(shown: true, setupContextFunc: setupContextFunc)
-  }
-
-  @IBAction func skipButtonPressed(_: Any) {
-    markAnswer(.AskAgainLater)
   }
 
   // MARK: - Ignoring incorrect answers
