@@ -118,6 +118,7 @@ DEFINE_OBJECT(NSSet<NSString *>, selectedFonts, setSelectedFonts);
 DEFINE_BOOL(groupMeaningReading, setGroupMeaningReading, NO);
 DEFINE_BOOL(meaningFirst, setMeaningFirst, YES);
 DEFINE_BOOL(showAnswerImmediately, setShowAnswerImmediately, YES);
+DEFINE_BOOL(allowSkippingReviews, setAllowSkippingReviews, NO);
 DEFINE_BOOL(enableCheats, setEnableCheats, YES);
 DEFINE_BOOL(showOldMnemonic, setShowOldMnemonic, YES);
 DEFINE_BOOL(useKatakanaForOnyomi, setUseKatakanaForOnyomi, NO);

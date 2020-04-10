@@ -66,6 +66,7 @@ DECLARE_OBJECT(NSSet<NSString *>, selectedFonts);
 DECLARE_BOOL(groupMeaningReading);
 DECLARE_BOOL(meaningFirst);
 DECLARE_BOOL(showAnswerImmediately);
+DECLARE_BOOL(allowSkippingReviews);
 DECLARE_BOOL(enableCheats);
 DECLARE_BOOL(showOldMnemonic);
 DECLARE_BOOL(useKatakanaForOnyomi);

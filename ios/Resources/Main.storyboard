@@ -390,6 +390,14 @@
                                     <action selector="submitButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="bEv-8d-Gra"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hxO-pJ-eAC">
+                                <rect key="frame" x="309" y="604" width="64" height="64"/>
+                                <accessibility key="accessibilityConfiguration" label="Skip"/>
+                                <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
+                                <connections>
+                                    <action selector="skipButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="Mdv-bN-wdh"/>
+                                </connections>
+                            </button>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="Jee-0P-imk">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="5"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
@@ -541,8 +549,10 @@
                             <constraint firstItem="Fq3-oe-fWe" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="oyI-I7-NWJ"/>
                             <constraint firstItem="Hl2-BP-AQQ" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" id="rEb-27-zRA"/>
                             <constraint firstItem="ctF-hm-AxT" firstAttribute="centerY" secondItem="M27-Di-5Wg" secondAttribute="centerY" id="rNU-ae-KIP"/>
+                            <constraint firstItem="hxO-pJ-eAC" firstAttribute="centerY" secondItem="M27-Di-5Wg" secondAttribute="centerY" id="rOP-ae-KIP"/>
                             <constraint firstItem="TgI-GY-kYL" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="rUl-Oy-n19"/>
                             <constraint firstAttribute="trailing" secondItem="ctF-hm-AxT" secondAttribute="trailing" id="s4d-2D-nAL"/>
+                            <constraint firstAttribute="trailing" secondItem="hxO-pJ-eAC" secondAttribute="trailing" id="s4d-3D-nAL"/>
                             <constraint firstAttribute="bottom" secondItem="EBu-6v-Hcw" secondAttribute="bottom" id="vCF-K7-jHy"/>
                             <constraint firstItem="S3x-ei-BlA" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="vXr-eI-eku"/>
                             <constraint firstItem="Jee-0P-imk" firstAttribute="top" secondItem="EBu-6v-Hcw" secondAttribute="top" id="w6F-Tb-Vrq"/>
@@ -573,6 +583,7 @@
                         <outlet property="queueIcon" destination="TgI-GY-kYL" id="bQh-Zu-fUi"/>
                         <outlet property="queueLabel" destination="WG4-t0-dUV" id="UZV-i3-In8"/>
                         <outlet property="revealAnswerButton" destination="Zyq-WW-fbd" id="5WQ-60-SBe"/>
+                        <outlet property="skipButton" destination="hxO-pJ-eAC" id="Hme-XB-hpo"/>
                         <outlet property="subjectDetailsView" destination="wFr-RK-iSqq" id="o6J-AO-Aii"/>
                         <outlet property="submitButton" destination="ctF-hm-AxT" id="x0c-jE-ztx"/>
                         <outlet property="successRateIcon" destination="9gS-sh-cYw" id="GEi-xa-MAB"/>
