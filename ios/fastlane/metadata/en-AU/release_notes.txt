@@ -1,14 +1,2 @@
-New features:
-* Add a dark mode toggle.
-* Add limited Siri shortcut support.
-* Blur the English text in context sentences until you tap them.
-* Show user-created notes for items.
-* Add a Descending SRS Stage review sort option
-* Add a review batch size option.
-
-Bug fixes:
-* Fix a bug where reviews for the same items would keep re-appearing.
-* Add some missing titles for settings pages.
-* Fix a bug where reviews might be rejected if the device's clock was wrong.
-* iPad: Fix font size setting issues.
-* Fix a crash when starting lessons or reviews on iOS 13.4
+* Fixed a bug where the "Hills" radical would keep appearing in reviews.
+* Updated to the latest version of the WaniKani data.
