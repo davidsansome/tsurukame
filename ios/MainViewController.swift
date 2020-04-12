@@ -266,8 +266,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     case "startLessons":
       let assignments = services.localCachingClient.getAllAssignments()
       var items = ReviewItem.assignmentsReady(forLesson: assignments,
-                                              dataLoader: services.dataLoader)
-
+                                              dataLoader: services.dataLoader,
+                                              localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return
       }

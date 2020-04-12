@@ -34,7 +34,8 @@ typedef NS_ENUM(NSInteger, TKMTaskType) {
                                           dataLoader:(DataLoader *)dataLoader
                                   localCachingClient:(LocalCachingClient *)localCachingClient;
 + (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<TKMAssignment *> *)assignments
-                                          dataLoader:(DataLoader *)dataLoader;
+                                          dataLoader:(DataLoader *)dataLoader
+                                  localCachingClient:(LocalCachingClient *)localCachingClient;
 
 - (NSUInteger)getSubjectTypeIndex:(TKMSubject_Type)type;
 
