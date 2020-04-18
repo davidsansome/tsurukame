@@ -37,7 +37,7 @@
   [model addSection:@"Quick settings"];
   [model
       addItem:[[TKMCheckmarkModelItem alloc] initWithStyle:UITableViewCellStyleDefault
-                                                     title:@"Allow cheating"
+                                                     title:@"Ignore Typos & Add Synonym"
                                                   subtitle:nil
                                                         on:Settings.enableCheats
                                                     target:self

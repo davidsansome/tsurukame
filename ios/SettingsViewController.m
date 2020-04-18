@@ -156,8 +156,8 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                 action:@selector(fontSizeChanged:)]];
 
   [model addItem:[[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                                     title:@"Allow cheating"
-                                                  subtitle:@"Ignore Typos and Add Synonym"
+                                                     title:@"Ignore Typos & Add Synonym"
+                                                  subtitle:nil
                                                         on:Settings.enableCheats
                                                     target:self
                                                     action:@selector(enableCheatsSwitchChanged:)]];
