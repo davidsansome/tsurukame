@@ -65,7 +65,10 @@
 
   TKMStudyMaterials *studyMaterials =
       [_services.localCachingClient getStudyMaterialForID:_subject.id_p];
-  [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
+  TKMAssignment *assignment = [_services.localCachingClient getAssignmentForID:_subject.id_p];
+  [_subjectDetailsView updateWithSubject:_subject
+                          studyMaterials:studyMaterials
+                              assignment:assignment];
 
   _subjectTitle.font = [TKMStyle japaneseFontWithSize:_subjectTitle.font.pointSize];
   _subjectTitle.attributedText = [_subject japaneseTextWithImageSize:40.f];

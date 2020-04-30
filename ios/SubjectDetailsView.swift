@@ -114,8 +114,7 @@ private func dateFormatter(dateStyle: DateFormatter.Style,
 
 @objc(TKMSubjectDetailsView)
 class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
-  private let availableDateFormatter = dateFormatter(dateStyle: .medium, timeStyle: .medium)
-  private let startedDateFormatter = dateFormatter(dateStyle: .medium, timeStyle: .none)
+  private let statsDateFormatter = dateFormatter(dateStyle: .medium, timeStyle: .medium)
 
   required init?(coder: NSCoder) {
     super.init(coder: coder)
@@ -270,7 +269,8 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     model.add(item)
   }
 
-  @objc public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?) {
+  @objc public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
+                           assignment: TKMAssignment?) {
     let model = TKMMutableTableModel(tableView: self)
     readingItem = nil
 
@@ -326,7 +326,32 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       addContextSentences(subject, toModel: model)
     }
 
-    // TODO: Your progress, SRS level, next review, first started, reached guru
+    // Your progress, SRS level, next review, first started, reached guru
+    if let subjectAssignment = assignment {
+      if subjectAssignment.hasStartedAt {
+        model.addSection("Stats")
+        var statString = "First started at: " + statsDateFormatter
+          .string(from: subjectAssignment.startedAtDate)
+        if subjectAssignment.hasSrsStage {
+          statString += "\nSRS stage: " + TKMDetailedSRSStageName(subjectAssignment.srsStage)
+        }
+        if subjectAssignment.hasAvailableAt {
+          statString += "\nNext review at: " + statsDateFormatter
+            .string(from: subjectAssignment.availableAtDate)
+        }
+        if subjectAssignment.hasPassedAt {
+          statString += "\nGurued at: " + statsDateFormatter
+            .string(from: subjectAssignment.passedAtDate)
+        }
+        let font = UIFont.systemFont(ofSize: kFontSize, weight: .regular)
+        model.add(AttributedModelItem(text: attrString(statString, attrs: [.font: font])))
+
+        if subjectAssignment.hasSrsStage,
+          TKMDetailedSRSStageName(subjectAssignment.srsStage) == "Burned" {
+          // TODO: Add resurrect button
+        }
+      }
+    }
 
     tableModel = model
     model.reloadTable()

@@ -172,6 +172,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   private var activeTask: ReviewItem!
   private var activeSubject: TKMSubject!
   private var activeStudyMaterials: TKMStudyMaterials?
+  private var activeAssignment: TKMAssignment?
 
   @objc public private(set) var tasksAnsweredCorrectly = 0
   private var tasksAnswered = 0
@@ -518,6 +519,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       activeSubject = services.dataLoader.load(subjectID: Int(activeTask.assignment.subjectId))!
       activeStudyMaterials =
         services.localCachingClient.getStudyMaterial(forID: activeTask.assignment.subjectId)
+      activeAssignment =
+        services.localCachingClient.getAssignmentForID(activeTask.assignment.subjectId)
 
       // Choose whether to ask the meaning or the reading.
       if activeTask.answeredMeaning {
@@ -1146,7 +1149,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   @IBAction func revealAnswerButtonPressed(_: Any) {
-    subjectDetailsView.update(withSubject: activeSubject, studyMaterials: activeStudyMaterials)
+    subjectDetailsView
+      .update(withSubject: activeSubject, studyMaterials: activeStudyMaterials,
+              assignment: activeAssignment)
 
     let setupContextFunc = { (ctx: AnimationContext) in
       if self.questionLabel.font.familyName != self.normalFontName {
