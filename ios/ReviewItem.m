@@ -67,7 +67,7 @@
       return i;
     }
   }
-  return 0;
+  return Settings.lessonOrder.count + 1;  // Order anything not present after everything else
 }
 
 - (instancetype)initFromAssignment:(TKMAssignment *)assignment {
@@ -94,9 +94,12 @@
       return true;
     } else if (selfIndex > otherIndex) {
       return false;
+    } else if (selfIndex == otherIndex && selfIndex == Settings.lessonOrder.count + 1) {
+      return drand48() <= 0.5;  // Shuffle
     }
   }
 
+  // Order by subject ID if equal sort and not shuffling
   return (self.assignment.subjectId <= other.assignment.subjectId);
 }
 

@@ -41,8 +41,13 @@
   self.tableView.editing = YES;
 }
 
+int inOrderSectionCount = 3;
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return Settings.lessonOrder.count;
+  if (section == 0) {
+    return inOrderSectionCount;
+  }
+  return 3 - inOrderSectionCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -70,10 +75,19 @@
     moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath
            toIndexPath:(NSIndexPath *)destinationIndexPath {
   TKMLessonOrderCell *cell = [tableView cellForRowAtIndexPath:sourceIndexPath];
+  if (sourceIndexPath.section == 0 && destinationIndexPath.section != 0) {
+    inOrderSectionCount -= 1;
+  } else if (sourceIndexPath.section != 0 && destinationIndexPath.section == 0) {
+    inOrderSectionCount += 1;
+  }
 
   NSMutableArray<NSNumber *> *lessonOrder = [Settings.lessonOrder mutableCopy];
-  [lessonOrder removeObjectAtIndex:sourceIndexPath.row];
-  [lessonOrder insertObject:@(cell.subjectType) atIndex:destinationIndexPath.row];
+  if (sourceIndexPath.section == 0) {
+    [lessonOrder removeObjectAtIndex:sourceIndexPath.row];
+  }
+  if (destinationIndexPath.section == 0) {
+    [lessonOrder insertObject:@(cell.subjectType) atIndex:destinationIndexPath.row];
+  }
   Settings.lessonOrder = lessonOrder;
 }
 

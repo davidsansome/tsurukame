@@ -82,14 +82,6 @@
 @implementation Settings
 
 + (void)initializeDefaultsOnStartup {
-  // lessonOrder was briefly an array of strings.  Detect this and reset it to
-  // an empty array.
-  // TODO: delete this after 1.11.
-  if (Settings.lessonOrder.count &&
-      [Settings.lessonOrder.firstObject isKindOfClass:NSString.class]) {
-    Settings.lessonOrder = [NSArray array];
-  }
-
   // Set the default lesson order.
   if (![Settings.lessonOrder count]) {
     NSMutableArray<NSNumber *> *lessonOrder = [NSMutableArray array];
