@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "LessonOrderViewController.h"
+#import "ReviewItemOrderViewController.h"
 #import "Settings.h"
 #import "proto/Wanikani+Convenience.h"
 
-@interface TKMLessonOrderCell : UITableViewCell
+@interface TKMReviewItemOrderCell : UITableViewCell
 
 @property(nonatomic) TKMSubject_Type subjectType;
 
 @end
 
-@implementation TKMLessonOrderCell
+@implementation TKMReviewItemOrderCell
 
 - (void)setSubjectType:(TKMSubject_Type)subjectType {
   _subjectType = subjectType;
@@ -31,33 +31,33 @@
 
 @end
 
-@interface LessonOrderViewController ()
+@interface ReviewItemOrderViewController ()
 @end
 
-@implementation LessonOrderViewController
+@implementation ReviewItemOrderViewController
 
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.tableView.editing = YES;
 }
 
-int inOrderLessonSectionCount = 3;
+int inOrderReviewSectionCount = 3;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   if (section == 0) {
-    return inOrderLessonSectionCount;
+    return inOrderReviewSectionCount;
   }
-  return 3 - inOrderLessonSectionCount;
+  return 3 - inOrderReviewSectionCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-  TKMLessonOrderCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"];
+  TKMReviewItemOrderCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"];
   if (cell == nil) {
-    cell = [[TKMLessonOrderCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                     reuseIdentifier:@"cell"];
+    cell = [[TKMReviewItemOrderCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                         reuseIdentifier:@"cell"];
   }
-  cell.subjectType = [Settings.lessonOrder objectAtIndex:indexPath.row].intValue;
+  cell.subjectType = [Settings.reviewItemOrder objectAtIndex:indexPath.row].intValue;
   return cell;
 }
 
@@ -74,21 +74,21 @@ int inOrderLessonSectionCount = 3;
 - (void)tableView:(UITableView *)tableView
     moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath
            toIndexPath:(NSIndexPath *)destinationIndexPath {
-  TKMLessonOrderCell *cell = [tableView cellForRowAtIndexPath:sourceIndexPath];
+  TKMReviewItemOrderCell *cell = [tableView cellForRowAtIndexPath:sourceIndexPath];
   if (sourceIndexPath.section == 0 && destinationIndexPath.section != 0) {
-    inOrderLessonSectionCount -= 1;
+    inOrderReviewSectionCount -= 1;
   } else if (sourceIndexPath.section != 0 && destinationIndexPath.section == 0) {
-    inOrderLessonSectionCount += 1;
+    inOrderReviewSectionCount += 1;
   }
 
-  NSMutableArray<NSNumber *> *lessonOrder = [Settings.lessonOrder mutableCopy];
+  NSMutableArray<NSNumber *> *reviewItemOrder = [Settings.reviewItemOrder mutableCopy];
   if (sourceIndexPath.section == 0) {
-    [lessonOrder removeObjectAtIndex:sourceIndexPath.row];
+    [reviewItemOrder removeObjectAtIndex:sourceIndexPath.row];
   }
   if (destinationIndexPath.section == 0) {
-    [lessonOrder insertObject:@(cell.subjectType) atIndex:destinationIndexPath.row];
+    [reviewItemOrder insertObject:@(cell.subjectType) atIndex:destinationIndexPath.row];
   }
-  Settings.lessonOrder = lessonOrder;
+  Settings.reviewItemOrder = reviewItemOrder;
 }
 
 @end

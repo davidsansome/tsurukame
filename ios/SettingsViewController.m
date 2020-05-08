@@ -90,8 +90,8 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                                  action:@selector(prioritizeCurrentLevelChanged:)]];
   [model
       addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
-                                                 title:@"Lesson order"
-                                              subtitle:self.lessonOrderValueText
+                                                 title:@"Lesson item type order"
+                                              subtitle:self.lessonItemOrderValueText
                                          accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                 target:self
                                                 action:@selector(didTapLessonOrder:)]];
@@ -111,6 +111,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                          accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                 target:self
                                                 action:@selector(didTapReviewOrder:)]];
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
+                                                 title:@"Review item type order"
+                                              subtitle:self.reviewItemOrderValueText
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(didTapReviewItemOrder:)]];
   [model
       addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
                                                  title:@"Review batch size"
@@ -269,13 +276,16 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   [model reloadTable];
 }
 
-- (NSString *)lessonOrderValueText {
-  NSMutableArray<NSString *> *lessonOrderText = [NSMutableArray array];
+- (NSString *)lessonItemOrderValueText {
+  NSMutableArray<NSString *> *lessonItemOrderText = [NSMutableArray array];
   for (int i = 0; i < Settings.lessonOrder.count; i++) {
     TKMSubject_Type type = [Settings.lessonOrder objectAtIndex:i].intValue;
-    [lessonOrderText addObject:TKMSubjectTypeName(type)];
+    [lessonItemOrderText addObject:TKMSubjectTypeName(type)];
   }
-  return [lessonOrderText componentsJoinedByString:@", "];
+  if (Settings.lessonOrder.count < 3) {
+    [lessonItemOrderText addObject:@"Random"];
+  }
+  return [lessonItemOrderText componentsJoinedByString:@", "];
 }
 
 - (NSString *)lessonBatchSizeText {
@@ -300,6 +310,18 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
       return @"Oldest available first";
   }
   return nil;
+}
+
+- (NSString *)reviewItemOrderValueText {
+  NSMutableArray<NSString *> *reviewItemOrderText = [NSMutableArray array];
+  for (int i = 0; i < Settings.reviewItemOrder.count; i++) {
+    TKMSubject_Type type = [Settings.reviewItemOrder objectAtIndex:i].intValue;
+    [reviewItemOrderText addObject:TKMSubjectTypeName(type)];
+  }
+  if (Settings.reviewItemOrder.count < 3) {
+    [reviewItemOrderText addObject:@"Random"];
+  }
+  return [reviewItemOrderText componentsJoinedByString:@", "];
 }
 
 - (NSString *)reviewBatchSizeText {
@@ -524,6 +546,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)didTapReviewOrder:(TKMBasicModelItem *)item {
   [self performSegueWithIdentifier:@"reviewOrder" sender:self];
+}
+
+- (void)didTapReviewItemOrder:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"reviewItemOrder" sender:self];
 }
 
 - (void)didTapInterfaceStyle:(TKMBasicModelItem *)item {
