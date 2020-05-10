@@ -949,7 +949,7 @@
         <!--Font Size-->
         <scene sceneID="Edv-Yt-Zoo">
             <objects>
-                <tableViewController title="Font Size" id="QeO-rY-q01" userLabel="Font size" customClass="FontSizeViewController" sceneMemberID="viewController">
+                <tableViewController title="Font Size" id="QeO-rY-q01" customClass="FontSizeViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="yRd-1P-hlj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1093,7 +1093,7 @@
         <!--Lesson Item Order-->
         <scene sceneID="BjM-im-n92">
             <objects>
-                <tableViewController title="Lesson Item Order" id="B5Q-PH-hTQ" userLabel="Lesson order" customClass="LessonOrderViewController" sceneMemberID="viewController">
+                <tableViewController title="Lesson Item Order" id="B5Q-PH-hTQ" customClass="LessonOrderViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ajq-lt-z5I">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1570,16 +1570,19 @@
         <!--Review Item Order-->
         <scene sceneID="thl-KH-CGB">
             <objects>
-                <tableViewController title="Review Item Order" id="sEs-Ux-THj" userLabel="Lesson order" customClass="LessonOrderViewController" sceneMemberID="viewController">
+                <tableViewController title="Review Item Order" id="sEs-Ux-THj" customClass="LessonOrderViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="i4f-vl-Doo">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <sections>
                             <tableViewSection headerTitle="In Order:" id="RB8-Pc-XXG">
+                                <cells/>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Then Shuffle:" id="bfz-ke-Frc">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" indentationWidth="10" textLabel="gHv-l5-Gqf" style="IBUITableViewCellStyleDefault" id="MHd-bN-hab">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="84" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MHd-bN-hab" id="Lax-zQ-7cg">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -1596,7 +1599,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" indentationWidth="10" textLabel="W80-NW-Rux" style="IBUITableViewCellStyleDefault" id="HIr-CM-IW7">
-                                        <rect key="frame" x="0.0" y="72" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="128" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HIr-CM-IW7" id="6uO-Nf-LX2">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -1613,7 +1616,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" indentationWidth="10" textLabel="jsc-qb-xAS" style="IBUITableViewCellStyleDefault" id="REp-Iz-4ib">
-                                        <rect key="frame" x="0.0" y="116" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="172" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="REp-Iz-4ib" id="RjL-GN-jVh">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -1630,9 +1633,6 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
-                            </tableViewSection>
-                            <tableViewSection headerTitle="Then Shuffle:" id="bfz-ke-Frc">
-                                <cells/>
                             </tableViewSection>
                         </sections>
                         <connections>

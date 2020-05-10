@@ -41,7 +41,7 @@
   self.tableView.editing = YES;
 }
 
-int inOrderReviewSectionCount = 3;
+int inOrderReviewSectionCount = 0;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   if (section == 0) {
@@ -57,7 +57,18 @@ int inOrderReviewSectionCount = 3;
     cell = [[TKMReviewItemOrderCell alloc] initWithStyle:UITableViewCellStyleDefault
                                          reuseIdentifier:@"cell"];
   }
-  cell.subjectType = [Settings.reviewItemOrder objectAtIndex:indexPath.row].intValue;
+  if (indexPath.section == 0 && indexPath.row <= Settings.reviewItemOrder.count) {
+    cell.subjectType = [Settings.reviewItemOrder objectAtIndex:indexPath.row].intValue;
+  } else if (indexPath.section > 0 && indexPath.row <= 3 - Settings.reviewItemOrder.count) {
+    NSMutableArray<NSNumber *> *completeOrder = [Settings.reviewItemOrder mutableCopy];
+    for (int i = 1; i <= 3; i++) {
+      if (![completeOrder containsObject:[NSNumber numberWithInt:i]]) {
+        [completeOrder addObject:[NSNumber numberWithInt:i]];
+      }
+    }
+    cell.subjectType =
+        [completeOrder objectAtIndex:(Settings.reviewItemOrder.count - 1 + indexPath.row)].intValue;
+  }
   return cell;
 }
 

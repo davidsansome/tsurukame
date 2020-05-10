@@ -118,6 +118,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                          accessoryType:UITableViewCellAccessoryDisclosureIndicator
                                                 target:self
                                                 action:@selector(didTapReviewItemOrder:)]];
+  [model addItem:[[TKMSwitchModelItem alloc]
+                     initWithStyle:UITableViewCellStyleSubtitle
+                             title:@"Item order precedence"
+                          subtitle:@"If on, for example, all radicals first, then all kanji, etc."
+                                on:Settings.itemOrderPrecedence
+                            target:self
+                            action:@selector(itemOrderPrecedenceChanged:)]];
   [model
       addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
                                                  title:@"Review batch size"

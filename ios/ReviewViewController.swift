@@ -226,25 +226,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     kanaInput = TKMKanaInput(delegate: self)
   }
 
-  @objc public func setup(withServices services: TKMServices,
-                          items: [ReviewItem],
-                          showMenuButton: Bool,
-                          showSubjectHistory: Bool,
-                          delegate: ReviewViewControllerDelegate) {
-    self.services = services
-    self.showMenuButton = showMenuButton
-    self.showSubjectHistory = showSubjectHistory
-    self.delegate = delegate
-
-    reviewQueue = items
-
-    if Settings.groupMeaningReading {
-      activeQueueSize = 1
-    } else {
-      activeQueueSize = Int(Settings.reviewBatchSize)
-    }
-
-    reviewQueue.shuffle()
+  @objc public func sortReviewOrder() {
     switch Settings.reviewOrder {
     case .ascendingSRSStage:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
@@ -300,6 +282,61 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     @unknown default:
       fatalError()
     }
+  }
+
+  @objc public func sortReviewItemOrder() {
+    func getSubjectTypeIndex(type: TKMSubject_Type) -> Int {
+      for i in Settings.reviewItemOrder {
+        if i.intValue == type.rawValue {
+          return i.intValue
+        }
+      }
+      return Settings.lessonOrder.count + 1 // Order anything not present after everything else
+    }
+
+    if Settings.reviewItemOrder != nil {
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        let selfIndex = getSubjectTypeIndex(type: a.assignment.subjectType)
+        let otherIndex = getSubjectTypeIndex(type: b.assignment.subjectType)
+        if selfIndex < otherIndex {
+          return true
+        } else if selfIndex > otherIndex {
+          return false
+        }
+        return false
+      }
+    }
+  }
+
+  @objc public func sortReviewQueue() {
+    if Settings.itemOrderPrecedence {
+      sortReviewOrder()
+      sortReviewItemOrder()
+    } else {
+      sortReviewItemOrder()
+      sortReviewOrder()
+    }
+  }
+
+  @objc public func setup(withServices services: TKMServices,
+                          items: [ReviewItem],
+                          showMenuButton: Bool,
+                          showSubjectHistory: Bool,
+                          delegate: ReviewViewControllerDelegate) {
+    self.services = services
+    self.showMenuButton = showMenuButton
+    self.showSubjectHistory = showSubjectHistory
+    self.delegate = delegate
+
+    reviewQueue = items
+
+    if Settings.groupMeaningReading {
+      activeQueueSize = 1
+    } else {
+      activeQueueSize = Int(Settings.reviewBatchSize)
+    }
+
+    reviewQueue.shuffle()
 
     refillActiveQueue()
   }

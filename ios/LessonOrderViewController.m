@@ -57,7 +57,18 @@ int inOrderLessonSectionCount = 3;
     cell = [[TKMLessonOrderCell alloc] initWithStyle:UITableViewCellStyleDefault
                                      reuseIdentifier:@"cell"];
   }
-  cell.subjectType = [Settings.lessonOrder objectAtIndex:indexPath.row].intValue;
+  if (indexPath.section == 0 && indexPath.row <= Settings.lessonOrder.count) {
+    cell.subjectType = [Settings.lessonOrder objectAtIndex:indexPath.row].intValue;
+  } else if (indexPath.section > 0 && indexPath.row <= 3 - Settings.lessonOrder.count) {
+    NSMutableArray<NSNumber *> *completeOrder = [Settings.lessonOrder mutableCopy];
+    for (int i = 1; i <= 3; i++) {
+      if (![completeOrder containsObject:[NSNumber numberWithInt:i]]) {
+        [completeOrder addObject:[NSNumber numberWithInt:i]];
+      }
+    }
+    cell.subjectType =
+        [completeOrder objectAtIndex:(Settings.lessonOrder.count - 1 + indexPath.row)].intValue;
+  }
   return cell;
 }
 

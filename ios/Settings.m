@@ -106,6 +106,7 @@ DEFINE_INT(lessonBatchSize, setLessonBatchSize, 5);
 
 DEFINE_ENUM(ReviewOrder, reviewOrder, setReviewOrder, ReviewOrder_Random);
 DEFINE_OBJECT(NSArray<NSNumber *>, reviewItemOrder, setReviewItemOrder);
+DEFINE_BOOL(itemOrderPrecedence, setItemOrderPredence, NO);
 DEFINE_INT(reviewBatchSize, setReviewBatchSize, 5);
 DEFINE_OBJECT(NSSet<NSString *>, selectedFonts, setSelectedFonts);
 DEFINE_BOOL(groupMeaningReading, setGroupMeaningReading, NO);
