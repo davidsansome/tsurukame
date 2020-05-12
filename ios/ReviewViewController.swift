@@ -226,6 +226,39 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     kanaInput = TKMKanaInput(delegate: self)
   }
 
+  @objc public func srsDuration(_ assignment: TKMAssignment) -> TimeInterval {
+    switch assignment.srsStage {
+    case 1:
+      return assignment.level <= 2 ? 7200 : 14400 // 2 hours or 4 hours
+    case 2:
+      return assignment.level <= 2 ? 14400 : 28800 // 4 hours or 8 hours
+    case 3:
+      return assignment.level <= 2 ? 28800 : 82800 // 8 hours or 23 hours
+    case 4:
+      return assignment.level <= 2 ? 82800 : 169_200 // 23 hours or 47 hours
+    case 5:
+      return 601_200 // 7 days - 1 hour
+    case 6:
+      return 1_206_000 // 14 days - 1 hour
+    case 7:
+      return 2_588_400 // 30 days - 1 hour
+    case 8:
+      return 10_364_400 // 120 days - 1 hour
+    case 0:
+      fallthrough
+    case 9:
+      return 0
+    default:
+      fatalError()
+    }
+  }
+
+  @objc public func availableRatio(_ assignment: TKMAssignment) -> Double {
+    let date =
+      Date(timeIntervalSince1970: Double((Int(Date().timeIntervalSince1970) / 3600) * 3600))
+    return date.timeIntervalSince(assignment.availableAtDate) / srsDuration(assignment)
+  }
+
   @objc public func setup(withServices services: TKMServices,
                           items: [ReviewItem],
                           showMenuButton: Bool,
@@ -290,6 +323,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.availableAt < b.assignment.availableAt { return true }
         if a.assignment.availableAt > b.assignment.availableAt { return false }
+        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
+        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        return false
+      }
+    case .longestRelativeWait:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if availableRatio(a.assignment) < availableRatio(b.assignment) { return false }
+        if availableRatio(a.assignment) > availableRatio(b.assignment) { return true }
         if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
