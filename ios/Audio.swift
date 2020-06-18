@@ -165,7 +165,7 @@ class Audio: NSObject {
     ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 
     let vc = UIApplication.shared.keyWindow!.rootViewController!
-    vc.present(vc, animated: true, completion: nil)
+    vc.present(ac, animated: true, completion: nil)
   }
 
   @objc private func itemFinishedPlaying() {
