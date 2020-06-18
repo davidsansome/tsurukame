@@ -20,7 +20,7 @@ jobs:
           command: |
             echo $SERVICE_ACCOUNT_KEY | gcloud auth activate-service-account --key-file=-
             mkdir workspace
-            gsutil cp gs://tsurukame-data/1.20 workspace/data.bin
+            gsutil cp gs://tsurukame-data/1.21 workspace/data.bin
       - persist_to_workspace:
           root: workspace
           paths:
