@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "TKMReviewBatchSizeViewController.h"
-#import "Settings.h"
+#import "Tsurukame-Swift.h"
 
 @interface TKMReviewBatchSizeViewController ()
 

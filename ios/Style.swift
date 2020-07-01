@@ -80,7 +80,7 @@ class TKMStyle: NSObject {
   static var readingGradient: [Any] { [readingColor1.cgColor, readingColor2.cgColor] }
   static var meaningGradient: [Any] { [meaningColor1.cgColor, meaningColor2.cgColor] }
 
-  class func color(forSRSStageCategory srsStageCategory: TKMSRSStageCategory) -> UIColor {
+  class func color(forSRSStageCategory srsStageCategory: TKMSRSStage_Category) -> UIColor {
     switch srsStageCategory {
     case .apprentice:
       return UIColor(red: 0.87, green: 0.00, blue: 0.58, alpha: 1.0)
@@ -105,6 +105,8 @@ class TKMStyle: NSObject {
       return kanjiColor2
     case .vocabulary:
       return vocabularyColor2
+    case .empty: fallthrough
+    case .gpbUnrecognizedEnumeratorValue: fallthrough
     @unknown default:
       fatalError()
     }
@@ -118,6 +120,8 @@ class TKMStyle: NSObject {
       return kanjiGradient
     case .vocabulary:
       return vocabularyGradient
+    case .empty: fallthrough
+    case .gpbUnrecognizedEnumeratorValue: fallthrough
     @unknown default:
       fatalError()
     }

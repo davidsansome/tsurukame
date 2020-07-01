@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import Haneke
 
 private let kUserGradientYOffset: CGFloat = 450
 private let kUserGradientStartPoint: CGFloat = 0.8

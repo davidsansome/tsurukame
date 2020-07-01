@@ -14,12 +14,9 @@
 
 #import "SubjectDetailsViewController.h"
 
-#import "LocalCachingClient.h"
 #import "NavigationController.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tsurukame-Swift.h"
-
-#import "proto/Wanikani+Convenience.h"
 
 #import <WebKit/WebKit.h>
 
@@ -64,7 +61,7 @@
   [_subjectDetailsView setupWithServices:_services delegate:self];
 
   TKMStudyMaterials *studyMaterials =
-      [_services.localCachingClient getStudyMaterialForID:_subject.id_p];
+      [_services.localCachingClient getStudyMaterialWithId:_subject.id_p];
   [_subjectDetailsView updateWithSubject:_subject studyMaterials:studyMaterials];
 
   _subjectTitle.font = [TKMStyle japaneseFontWithSize:_subjectTitle.font.pointSize];

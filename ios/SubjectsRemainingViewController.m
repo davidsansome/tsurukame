@@ -14,14 +14,12 @@
 
 #import "SubjectsRemainingViewController.h"
 
-#import "LocalCachingClient.h"
 #import "SubjectDetailsViewController.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
 
 @interface SubjectsRemainingViewController () <TKMSubjectDelegate>
 @end
@@ -44,8 +42,7 @@
   NSMutableArray<TKMSubjectModelItem *> *radicals = [NSMutableArray array];
   NSMutableArray<TKMSubjectModelItem *> *kanji = [NSMutableArray array];
 
-  for (TKMAssignment *assignment in
-       [_services.localCachingClient getAssignmentsAtUsersCurrentLevel]) {
+  for (TKMAssignment *assignment in [_services.localCachingClient currentLevelAssignments]) {
     if (assignment.srsStage > 4) {
       continue;
     }
@@ -114,7 +111,7 @@
         } else if (assignment.isLessonStage) {
           label = @"Available in Lessons";
         } else {
-          label = TKMDetailedSRSStageName(assignment.srsStage);
+          label = [Convenience srsStageNameFor:assignment.srsStage];
         }
         [model insertItem:[[TKMListSeparatorItem alloc] initWithLabel:label]
                   atIndex:index

@@ -41,9 +41,9 @@ import Foundation
       if isActive {
         if ProcessInfo.processInfo.arguments.contains("ResetUserDefaults") {
           // We're run again after testing finishes to remove the dummy user.
-          Settings.userCookie = nil
-          Settings.userApiToken = nil
-          Settings.userEmailAddress = nil
+          Settings.userCookie = ""
+          Settings.userApiToken = ""
+          Settings.userEmailAddress = ""
         } else {
           // Pretend there's a logged in user.
           Settings.userCookie = "dummy"
@@ -62,15 +62,15 @@ import Foundation
   class FakeLocalCachingClient: LocalCachingClient {
     override var availableReviewCount: Int32 { 4 }
     override var availableLessonCount: Int32 { 10 }
-    override var upcomingReviews: [NSNumber] {
+    override var upcomingReviews: [Int32] {
       [14, 8, 2, 1, 12, 42, 17, 9, 2, 0, 2, 17, 0, 0, 6, 0, 0, 0, 0, 4, 11, 0, 8, 6]
     }
 
     override var pendingProgress: Int32 { 0 }
     override var pendingStudyMaterials: Int32 { 0 }
 
-    override func sync(progressHandler syncProgressHandler: @escaping SyncProgressHandler,
-                       quick _: Bool) {
+    override func sync(quickly _: Bool,
+                       progressHandler syncProgressHandler: @escaping SyncProgressHandler) {
       syncProgressHandler(1.0)
     }
 
@@ -83,9 +83,7 @@ import Foundation
       return Array(repeating: a, count: Int(availableReviewCount))
     }
 
-    override func getStudyMaterial(forID _: Int32) -> TKMStudyMaterials? {
-      nil
-    }
+    override func getStudyMaterial(id _: Int32) -> TKMStudyMaterials? { nil }
 
     override func getUserInfo() -> TKMUser? {
       let user = TKMUser()
@@ -95,20 +93,15 @@ import Foundation
       return user
     }
 
-    override func getAllPendingProgress() -> [TKMProgress] {
-      []
-    }
+    override func getAllPendingProgress() -> [TKMProgress] { [] }
 
-    override func getAssignmentForID(_: Int32) -> TKMAssignment? {
-      nil
-    }
+    override func getAssignment(id _: Int32) -> TKMAssignment? { nil }
 
-    override func getAssignmentsAtLevel(_: Int32) -> [TKMAssignment] {
+    override func getAssignments(level _: Int32) -> [TKMAssignment] {
       // Return just enough to populate the SubjectsByLevelViewController.
       let level = getUserInfo()!.level
-      let subjects = dataLoader.loadAll().filter { (s) -> Bool in
-        s.level == level && s.subjectType != .vocabulary
-      }
+      let subjects = dataLoader.loadAll()
+        .filter { $0.level == level && $0.subjectType != .vocabulary }
 
       srand48(42)
 
@@ -128,29 +121,28 @@ import Foundation
       return ret
     }
 
-    override func getAssignmentsAtUsersCurrentLevel() -> [TKMAssignment] {
+    override func currentLevelAssignments() -> [TKMAssignment] {
       makePieSlices(.radical, locked: 0, lesson: 2, apprentice: 4, guru: 1) +
         makePieSlices(.kanji, locked: 8, lesson: 4, apprentice: 12, guru: 1) +
         makePieSlices(.vocabulary, locked: 50, lesson: 8, apprentice: 4, guru: 0)
     }
 
-    override func getSrsLevelCount(_ category: TKMSRSStageCategory) -> Int32 {
+    override func getSRSLevelCount(at category: TKMSRSStage_Category) -> Int32 {
       switch category {
       case .apprentice: return 86
       case .guru: return 120
       case .master: return 485
       case .enlightened: return 786
       case .burned: return 2056
+      case .gpbUnrecognizedEnumeratorValue: fallthrough
       @unknown default:
         fatalError()
       }
     }
 
-    override func getGuruKanjiCount() -> Int32 {
-      864
-    }
+    override func getGuruKanjiCount() -> Int32 { 864 }
 
-    override func getAverageRemainingLevelTime() -> TimeInterval {
+    override func getAverageRemainingTime() -> TimeInterval {
       (4 * 24 + 9) * 60 * 60
     }
 

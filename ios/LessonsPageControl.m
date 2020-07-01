@@ -16,7 +16,6 @@
 
 #import "TKMSubjectChip.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
 
 @interface LessonsPageControl () <TKMSubjectChipDelegate>
 @end

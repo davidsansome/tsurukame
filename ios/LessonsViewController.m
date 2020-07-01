@@ -15,12 +15,10 @@
 #import "LessonsViewController.h"
 
 #import "LessonsPageControl.h"
-#import "LocalCachingClient.h"
 #import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"
 #import "Tsurukame-Swift.h"
 #import "UIView+SafeAreaInsets.h"
-#import "proto/Wanikani+Convenience.h"
 
 @interface LessonsViewController () <ReviewViewControllerDelegate>
 @property(weak, nonatomic) IBOutlet LessonsPageControl *pageControl;
@@ -195,19 +193,19 @@
 
 #pragma mark - ReviewViewControllerDelegate
 
-- (BOOL)reviewViewControllerAllowsCheatsForReviewItem:(ReviewItem *)reviewItem {
+- (BOOL)reviewVCAllowsCheatsForReviewItem:(ReviewItem *)reviewItem {
   return false;
 }
 
-- (void)reviewViewControllerFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
+- (void)reviewVCFinishedAllReviewItems:(ReviewViewController *)reviewViewController {
   [reviewViewController.navigationController popToRootViewControllerAnimated:YES];
 }
 
-- (BOOL)reviewViewControllerAllowsCustomFonts {
+- (BOOL)reviewVCAllowsCustomFonts {
   return false;
 }
 
-- (BOOL)reviewViewControllerShowsSuccessRate {
+- (BOOL)reviewVCShowsSuccessRate {
   return false;
 }
 

@@ -14,8 +14,7 @@
 
 #import "SuccessAnimation.h"
 
-#import "Settings.h"
-#import "proto/Wanikani+Convenience.h"
+#import "Tsurukame-Swift.h"
 
 static CGFloat RandFloat(CGFloat min, CGFloat max) {
   return ((CGFloat)arc4random()) / ((CGFloat)UINT32_MAX) * (max - min) + min;
@@ -317,7 +316,7 @@ void RunSuccessAnimation(UIView *answerField,
       default:
         return;
     }
-    NSString *srsLevelString = TKMSRSStageName(newSrsStage);
+    NSString *srsLevelString = [Convenience srsStageCategoryNameForStage:newSrsStage];
 
     CreateSpringyBillboard(answerField, srsLevelString, [UIFont systemFontOfSize:16.0],
                            [UIColor whiteColor], srsLevelColor,

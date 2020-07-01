@@ -15,12 +15,9 @@
 #import "LoginViewController.h"
 
 #import "Client.h"
-#import "Settings.h"
 #import "Tsurukame-Swift.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-NSNotificationName kLogoutNotification = @"kLogoutNotification";
 
 static NSString *const kPrivacyPolicyURL =
     @"https://github.com/davidsansome/tsurukame/wiki/Privacy-Policy";

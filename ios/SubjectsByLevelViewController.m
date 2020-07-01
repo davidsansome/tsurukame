@@ -14,14 +14,12 @@
 
 #import "SubjectsByLevelViewController.h"
 
-#import "LocalCachingClient.h"
 #import "SubjectDetailsViewController.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
 
 @interface SubjectsByLevelViewController () <TKMSubjectDelegate>
 @end
@@ -47,7 +45,7 @@
   [model addSection:@"Kanji"];
   [model addSection:@"Vocabulary"];
 
-  for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtLevel:_level]) {
+  for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsWithLevel:_level]) {
     TKMSubject *subject = [_services.dataLoader loadSubject:assignment.subjectId];
     if (!subject) {
       continue;
@@ -94,7 +92,7 @@
         } else if (assignment.isLessonStage) {
           label = @"Available in Lessons";
         } else {
-          label = TKMDetailedSRSStageName(assignment.srsStage);
+          label = [Convenience srsStageNameFor:assignment.srsStage];
         }
         [model insertItem:[[TKMListSeparatorItem alloc] initWithLabel:label]
                   atIndex:index

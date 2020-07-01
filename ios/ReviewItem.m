@@ -13,9 +13,7 @@
 // limitations under the License.
 
 #import "ReviewItem.h"
-#import "Settings.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
 
 @implementation ReviewItem
 

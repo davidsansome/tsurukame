@@ -15,12 +15,12 @@
 import Foundation
 
 @objc class SRSStageCategoryItem: TKMBasicModelItem {
-  let stageCategory: TKMSRSStageCategory
+  let stageCategory: TKMSRSStage_Category
 
-  @objc init(stageCategory: TKMSRSStageCategory, count: Int) {
+  @objc init(stageCategory: TKMSRSStage_Category, count: Int) {
     self.stageCategory = stageCategory
     super.init(style: .value1,
-               title: TKMSRSStageCategoryName(stageCategory),
+               title: Convenience.srsStageCategoryName(for: stageCategory),
                subtitle: String(count),
                accessoryType: .none,
                target: nil,
@@ -34,6 +34,6 @@ import Foundation
     }
     textColor = color
     imageTintColor = color
-    image = UIImage(named: TKMSRSStageCategoryName(stageCategory))!
+    image = UIImage(named: Convenience.srsStageCategoryName(for: stageCategory))!
   }
 }

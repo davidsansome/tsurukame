@@ -15,37 +15,32 @@
 #ifndef Tsurukame_Bridging_Header_h
 #define Tsurukame_Bridging_Header_h
 
+#import <WatchConnectivity/WatchConnectivity.h>
+#import "Client.h"
+#import "Extensions/NSMutableAttributedString+Replacements.h"
+#import "Extensions/NSString+LevenshteinDistance.h"
+#import "Extensions/UIView+SafeAreaInsets.h"
 #import "LessonsViewController.h"
-#import "LocalCachingClient.h"
 #import "LoginViewController.h"
-#import "NSMutableAttributedString+Replacements.h"
-#import "NSString+LevenshteinDistance.h"
 #import "ReviewItem.h"
 #import "ReviewSummaryViewController.h"
 #import "SearchResultViewController.h"
-#import "Settings.h"
-#import "SettingsViewController.h"
 #import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"
 #import "SubjectsRemainingViewController.h"
 #import "SuccessAnimation.h"
-#import "TKMFontLoader.h"
+#import "TKMDownloadViewController.h"
+#import "TKMFontsViewController.h"
 #import "TKMGradientView.h"
-#import "TKMKanaInput.h"
-#import "TKMReviewContainerViewController.h"
 #import "TKMSubjectModelItem.h"
 #import "Tables/TKMBasicModelItem.h"
+#import "Tables/TKMCheckmarkModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMMarkupModelItem.h"
 #import "Tables/TKMModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
+#import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
-#import "UIView+SafeAreaInsets.h"
-
-#import "proto/Wanikani+Convenience.h"
 #import "proto/Wanikani.pbobjc.h"
-
-#import <Haneke/Haneke.h>
-#import <WatchConnectivity/WatchConnectivity.h>
 
 #endif /* Tsurukame_Bridging_Header_h */

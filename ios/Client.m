@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "Client.h"
-#import "proto/Wanikani+Convenience.h"
 
 #import "Tsurukame-Swift.h"
 
@@ -667,7 +666,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 #pragma mark - Assignments
 
-- (void)getAssignmentsModifiedAfter:(NSString *)date
+- (void)getAssignmentsModifiedAfter:(NSString *_Nullable)date
                     progressHandler:(PartialCompletionHandler)progressHandler
                             handler:(AssignmentHandler)handler {
   NSMutableArray<TKMAssignment *> *ret = [NSMutableArray array];
@@ -784,7 +783,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
 
 #pragma mark - Study Materials
 
-- (void)getStudyMaterialsModifiedAfter:(NSString *)date
+- (void)getStudyMaterialsModifiedAfter:(NSString *_Nullable)date
                        progressHandler:(PartialCompletionHandler)progressHandler
                                handler:(StudyMaterialsHandler)handler {
   NSMutableArray<TKMStudyMaterials *> *ret = [NSMutableArray array];

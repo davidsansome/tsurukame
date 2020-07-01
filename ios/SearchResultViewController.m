@@ -15,7 +15,6 @@
 #import "SearchResultViewController.h"
 
 #import "SubjectDetailsViewController.h"
-#import "TKMKanaInput.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
@@ -104,7 +103,7 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
   NSString *query = [searchController.searchBar.text lowercaseString];
   dispatch_async(_queue, ^{
-    NSString *kanaQuery = TKMConvertKanaText(query);
+    NSString *kanaQuery = [KanaInput convertKanaTextWithInput:query];
 
     NSMutableArray<TKMSubject *> *results = [NSMutableArray array];
     @synchronized(self) {

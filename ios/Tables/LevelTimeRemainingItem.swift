@@ -70,10 +70,10 @@ private func calculateLevelTimeRemaining(services: TKMServices,
       // There is still a locked kanji needed for level-up, so we don't know how long
       // the user will take to level up. Use their average level time, minus the time
       // they've spent at this level so far, as an estimate.
-      var average = services.localCachingClient!.getAverageRemainingLevelTime()
+      var average = services.localCachingClient!.getAverageRemainingTime()
       // But ensure it can't be less than the time it would take to get a fresh item
       // to Guru, if they've spent longer at the current level than the average.
-      average = max(average, TKMMinimumTimeUntilGuruSeconds(wkLevel, 1) + lastRadicalGuruTime)
+      average = max(average, Convenience.minGuruTime(wkLevel, srsStage: 1) + lastRadicalGuruTime)
       return (Date(timeIntervalSinceNow: average), isEstimate: true)
     } else {
       return (lastGuruDate, isEstimate: false)
