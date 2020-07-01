@@ -1,12 +1,11 @@
 PODS:
-  - Charts (3.3.0):
-    - Charts/Core (= 3.3.0)
-  - Charts/Core (3.3.0)
+  - Charts (3.5.0):
+    - Charts/Core (= 3.5.0)
+  - Charts/Core (3.5.0)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
   - Haneke (1.0.2)
-  - Light-Untar (0.3.0)
   - MMDrawerController (0.6.0):
     - MMDrawerController/Core (= 0.6.0)
     - MMDrawerController/MMDrawerBarButtonItem (= 0.6.0)
@@ -19,17 +18,16 @@ PODS:
     - MMDrawerController/Core
   - MMDrawerController/Subclass (0.6.0):
     - MMDrawerController/Core
-  - Protobuf (3.10.0)
+  - Protobuf (3.12.0)
   - Reachability (3.2)
-  - SwiftFormat/CLI (0.44.0)
+  - SwiftFormat/CLI (0.44.14)
 
 DEPENDENCIES:
-  - Charts (~> 3.3.0)
+  - Charts (~> 3.5.0)
   - FMDB (~> 2.7.5)
   - Haneke (~> 1.0.2)
-  - Light-Untar (~> 0.3.0)
   - MMDrawerController (~> 0.6.0)
-  - Protobuf (~> 3.10.0)
+  - Protobuf (~> 3.12.0)
   - Reachability (~> 3.2)
   - SwiftFormat/CLI
 
@@ -38,22 +36,20 @@ SPEC REPOS:
     - Charts
     - FMDB
     - Haneke
-    - Light-Untar
     - MMDrawerController
     - Protobuf
     - Reachability
     - SwiftFormat
 
 SPEC CHECKSUMS:
-  Charts: e0dd4cd8f257bccf98407b58183ddca8e8d5b578
+  Charts: 40a08591df1f8ad5c223ddedfb1a06da92f24f7c
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   Haneke: 01454a67322faa0dd9d81fc0f447885044e71521
-  Light-Untar: e901c312974d36f3910aec73436296a5a3faf799
   MMDrawerController: e3a54a5570388463ad3b36975251575b50c4e1a0
-  Protobuf: a4dc852ad69c027ca2166ed287b856697814375b
+  Protobuf: 2793fcd0622a00b546c60e7cbbcc493e043e9bb9
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  SwiftFormat: 180a4d17bcfa2c9f61b202dac7dddd2087ff920a
+  SwiftFormat: a5ab293a7f6a812bec6f4ffc5507b7ed08f7f6e1
 
-PODFILE CHECKSUM: d2fc15cc873cca04ebb8c51763c2f417e2dffc7f
+PODFILE CHECKSUM: ef0e5e15408249beb4478670a38a7ed9ccbd854a
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3

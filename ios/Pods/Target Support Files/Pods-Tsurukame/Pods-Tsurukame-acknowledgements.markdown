@@ -447,7 +447,7 @@ Apache License
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright 2016 Daniel Cohen Gindi & Philipp Jahoda
+   Copyright 2016-2019 Daniel Cohen Gindi & Philipp Jahoda
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -493,23 +493,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
-## Light-Untar
-
-Copyright (c) 2015 Octo.
-All rights reserved.
-
-Redistribution and use in source and binary forms are permitted
-provided that the above copyright notice and this paragraph are
-duplicated in all such forms and that any documentation,
-advertising materials, and other materials related to such
-distribution and use acknowledge that the software was developed
-by Octo. The name of Octo may not be used to endorse or promote products derived
-from this software without specific prior written permission.
-THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
-IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-
 
 ## MMDrawerController
 
