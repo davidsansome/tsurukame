@@ -10,6 +10,11 @@
 		32A4A0FD85D9F44608460373 /* Pods_Tsurukame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0FB8F6AE66ACCEFE37ADDB2 /* Pods_Tsurukame.framework */; };
 		480B243123D6830300FC2A82 /* Rexy in Frameworks */ = {isa = PBXBuildFile; productRef = 480B243023D6830300FC2A82 /* Rexy */; };
 		481B2FED23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */; };
+		483E516E24AD636F000EE11B /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 483E516D24AD636F000EE11B /* Charts */; };
+		483E517124AD638D000EE11B /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = 483E517024AD638D000EE11B /* FMDB */; };
+		483E517424AD63E8000EE11B /* Haneke in Frameworks */ = {isa = PBXBuildFile; productRef = 483E517324AD63E8000EE11B /* Haneke */; };
+		483E517724AD641B000EE11B /* MMDrawerController in Frameworks */ = {isa = PBXBuildFile; productRef = 483E517624AD641B000EE11B /* MMDrawerController */; };
+		483E517A24AD6445000EE11B /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 483E517924AD6445000EE11B /* Reachability */; };
 		486ABC6924AA2BC0002A1E9E /* LocalCachingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486ABC6824AA2BC0002A1E9E /* LocalCachingClient.swift */; };
 		4883CCA724ACD31800838778 /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52423D429A4006A31FB /* String+MD5.swift */; };
 		4883CCA824ACD35D00838778 /* KanaInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A3D28724AA37EA00A8E7F0 /* KanaInput.swift */; };
@@ -391,10 +396,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */,
+				483E516E24AD636F000EE11B /* Charts in Frameworks */,
+				483E517424AD63E8000EE11B /* Haneke in Frameworks */,
 				63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */,
 				480B243123D6830300FC2A82 /* Rexy in Frameworks */,
+				483E517124AD638D000EE11B /* FMDB in Frameworks */,
 				48E3A80124AB79B2007D07C9 /* Light-Swift-Untar in Frameworks */,
+				483E517A24AD6445000EE11B /* Reachability in Frameworks */,
 				32A4A0FD85D9F44608460373 /* Pods_Tsurukame.framework in Frameworks */,
+				483E517724AD641B000EE11B /* MMDrawerController in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -742,7 +752,7 @@
 			buildConfigurationList = 630FD6291FC45BDF00D21C1F /* Build configuration list for PBXNativeTarget "Tsurukame" */;
 			buildPhases = (
 				C82AD48FFC87D1809C22F3AD /* [CP] Check Pods Manifest.lock */,
-				631CAD61234ACF69008CEA73 /* ShellScript */,
+				631CAD61234ACF69008CEA73 /* Format Code */,
 				630FD60F1FC45BDF00D21C1F /* Sources */,
 				630FD6101FC45BDF00D21C1F /* Frameworks */,
 				630FD6111FC45BDF00D21C1F /* Resources */,
@@ -758,6 +768,11 @@
 			packageProductDependencies = (
 				480B243023D6830300FC2A82 /* Rexy */,
 				48E3A80024AB79B2007D07C9 /* Light-Swift-Untar */,
+				483E516D24AD636F000EE11B /* Charts */,
+				483E517024AD638D000EE11B /* FMDB */,
+				483E517324AD63E8000EE11B /* Haneke */,
+				483E517624AD641B000EE11B /* MMDrawerController */,
+				483E517924AD6445000EE11B /* Reachability */,
 			);
 			productName = wk;
 			productReference = 6319C9B520441DE200C31F87 /* Tsurukame.app */;
@@ -934,6 +949,11 @@
 			packageReferences = (
 				480B242F23D6830300FC2A82 /* XCRemoteSwiftPackageReference "Rexy" */,
 				48E3A7FF24AB79B2007D07C9 /* XCRemoteSwiftPackageReference "Light-Swift-Untar" */,
+				483E516C24AD636F000EE11B /* XCRemoteSwiftPackageReference "Charts" */,
+				483E516F24AD638D000EE11B /* XCRemoteSwiftPackageReference "fmdb" */,
+				483E517224AD63E8000EE11B /* XCRemoteSwiftPackageReference "HanekeSwift" */,
+				483E517524AD641B000EE11B /* XCRemoteSwiftPackageReference "MMDrawerController" */,
+				483E517824AD6445000EE11B /* XCRemoteSwiftPackageReference "Reachability" */,
 			);
 			productRefGroup = 630FD60A1FC45BDF00D21C1F;
 			projectDirPath = "";
@@ -1041,7 +1061,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		631CAD61234ACF69008CEA73 /* ShellScript */ = {
+		631CAD61234ACF69008CEA73 /* Format Code */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1050,13 +1070,14 @@
 			);
 			inputPaths = (
 			);
+			name = "Format Code";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/SwiftFormat/CommandLineTool/swiftformat\" .\n\"${SRCROOT}/clang-format-all.sh\"\n";
+			shellScript = "cd SwiftFormatTools\nSDKROOT=macosx #Swift Format itself always runs on Mac\nswift run -c release swiftformat \"$SRCROOT\"\n\nset -e\ncd ../ # Back to previous directory\n\n# Run clang-format on all .h, .m or .mm files.\nfind . -not '(' \\\n       -path '*/Pods/*' -or \\\n       -name 'Reachability.*' -or \\\n       -name '*.pbobjc.*' \\\n     ')' -and '(' \\\n       -name '*.h' -or \\\n       -name '*.m' -or \\\n       -name '*.mm' \\\n     ')' \\\n     -exec ../utils/clang-format -style=file -i {} '+'\n";
 		};
 		7404D0441EE7B558D48508DB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1971,6 +1992,46 @@
 				minimumVersion = 1.0.1;
 			};
 		};
+		483E516C24AD636F000EE11B /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.5.0;
+			};
+		};
+		483E516F24AD638D000EE11B /* XCRemoteSwiftPackageReference "fmdb" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ccgus/fmdb";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 2.7.7;
+			};
+		};
+		483E517224AD63E8000EE11B /* XCRemoteSwiftPackageReference "HanekeSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Haneke/HanekeSwift";
+			requirement = {
+				kind = revision;
+				revision = c23bb97a48bb7d5a5becbe321c36347fb7598f90;
+			};
+		};
+		483E517524AD641B000EE11B /* XCRemoteSwiftPackageReference "MMDrawerController" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mutualmobile/MMDrawerController";
+			requirement = {
+				kind = revision;
+				revision = 3a2e739a414825eae75fe789703080ee16b977dd;
+			};
+		};
+		483E517824AD6445000EE11B /* XCRemoteSwiftPackageReference "Reachability" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ashleymills/Reachability.swift";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		48E3A7FF24AB79B2007D07C9 /* XCRemoteSwiftPackageReference "Light-Swift-Untar" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Light-Untar/Light-Swift-Untar";
@@ -1986,6 +2047,31 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 480B242F23D6830300FC2A82 /* XCRemoteSwiftPackageReference "Rexy" */;
 			productName = Rexy;
+		};
+		483E516D24AD636F000EE11B /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 483E516C24AD636F000EE11B /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
+		};
+		483E517024AD638D000EE11B /* FMDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 483E516F24AD638D000EE11B /* XCRemoteSwiftPackageReference "fmdb" */;
+			productName = FMDB;
+		};
+		483E517324AD63E8000EE11B /* Haneke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 483E517224AD63E8000EE11B /* XCRemoteSwiftPackageReference "HanekeSwift" */;
+			productName = Haneke;
+		};
+		483E517624AD641B000EE11B /* MMDrawerController */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 483E517524AD641B000EE11B /* XCRemoteSwiftPackageReference "MMDrawerController" */;
+			productName = MMDrawerController;
+		};
+		483E517924AD6445000EE11B /* Reachability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 483E517824AD6445000EE11B /* XCRemoteSwiftPackageReference "Reachability" */;
+			productName = Reachability;
 		};
 		48E3A80024AB79B2007D07C9 /* Light-Swift-Untar */ = {
 			isa = XCSwiftPackageProductDependency;
