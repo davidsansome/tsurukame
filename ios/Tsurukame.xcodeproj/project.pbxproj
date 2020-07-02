@@ -15,6 +15,7 @@
 		483E517424AD63E8000EE11B /* Haneke in Frameworks */ = {isa = PBXBuildFile; productRef = 483E517324AD63E8000EE11B /* Haneke */; };
 		483E517724AD641B000EE11B /* MMDrawerController in Frameworks */ = {isa = PBXBuildFile; productRef = 483E517624AD641B000EE11B /* MMDrawerController */; };
 		483E517A24AD6445000EE11B /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 483E517924AD6445000EE11B /* Reachability */; };
+		483E517C24AD6A64000EE11B /* KanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 483E517B24AD6A64000EE11B /* KanaInputTest.m */; };
 		486ABC6924AA2BC0002A1E9E /* LocalCachingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486ABC6824AA2BC0002A1E9E /* LocalCachingClient.swift */; };
 		4883CCA724ACD31800838778 /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52423D429A4006A31FB /* String+MD5.swift */; };
 		4883CCA824ACD35D00838778 /* KanaInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A3D28724AA37EA00A8E7F0 /* KanaInput.swift */; };
@@ -124,7 +125,6 @@
 		63FCAE78237F75CC00DB1418 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCAE77237F75CC00DB1418 /* Style.swift */; };
 		657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */; };
 		93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */; };
-		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E331217276EC003A200E /* TKMFontsViewController.m */; };
 		C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
 		C904455E2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
@@ -219,6 +219,7 @@
 		404461BC39B4A19B128F9E69 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter_FontScreenshotterUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLevelReviewTimeItem.swift; sourceTree = "<group>"; };
 		4826740B23ECE46900F704E4 /* TKMReviewBatchSizeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMReviewBatchSizeViewController.h; sourceTree = "<group>"; };
+		483E517B24AD6A64000EE11B /* KanaInputTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KanaInputTest.m; sourceTree = "<group>"; };
 		486ABC6824AA2BC0002A1E9E /* LocalCachingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCachingClient.swift; sourceTree = "<group>"; };
 		489894D423670CB000A20AF8 /* Tsurukame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tsurukame.entitlements; sourceTree = "<group>"; };
 		48A3D28024AA364D00A8E7F0 /* LessonItemOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonItemOrderViewController.swift; sourceTree = "<group>"; };
@@ -361,7 +362,6 @@
 		82721E7B5A9C5562CC8D3B9B /* Pods-FontScreenshotter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.release.xcconfig"; sourceTree = "<group>"; };
 		93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingReviewsChartItem.swift; sourceTree = "<group>"; };
 		9CFD97ACE7ABC2C904715D83 /* Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame-Tsurukame Complication Extension/Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig"; sourceTree = "<group>"; };
-		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB2909A5217FAF8B00B1816F /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		BBE4E330217276EC003A200E /* TKMFontsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMFontsViewController.h; sourceTree = "<group>"; };
 		BBE4E331217276EC003A200E /* TKMFontsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMFontsViewController.m; sourceTree = "<group>"; };
@@ -693,8 +693,8 @@
 				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
 				63E9A8DC21199C2600418CE1 /* ClientTest.m */,
 				63E9A8E621199C8500418CE1 /* Info.plist */,
+				483E517B24AD6A64000EE11B /* KanaInputTest.m */,
 				63F7F52623D42BC1006A31FB /* String+MD5Test.swift */,
-				BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */,
 				633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */,
 			);
 			path = Tests;
@@ -1321,6 +1321,7 @@
 			files = (
 				631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */,
 				4883CCAA24ACD3E500838778 /* Client.m in Sources */,
+				483E517C24AD6A64000EE11B /* KanaInputTest.m in Sources */,
 				631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */,
 				4883CCA924ACD39F00838778 /* ProtobufExtensions.swift in Sources */,
 				4883CCA724ACD31800838778 /* String+MD5.swift in Sources */,
@@ -1329,7 +1330,6 @@
 				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
 				63E9A8EC21199C9700418CE1 /* ClientTest.m in Sources */,
 				63F7F52823D42BDD006A31FB /* String+MD5Test.swift in Sources */,
-				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
 				633AFAE92352B81E004F732F /* VocabularyHighlighterTest.swift in Sources */,
 				633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */,
 			);

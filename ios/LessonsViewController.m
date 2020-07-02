@@ -14,11 +14,11 @@
 
 #import "LessonsViewController.h"
 
+#import "Extensions/UIView+SafeAreaInsets.h"
 #import "LessonsPageControl.h"
 #import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"
 #import "Tsurukame-Swift.h"
-#import "UIView+SafeAreaInsets.h"
 
 @interface LessonsViewController () <ReviewViewControllerDelegate>
 @property(weak, nonatomic) IBOutlet LessonsPageControl *pageControl;

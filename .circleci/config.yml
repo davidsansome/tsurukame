@@ -28,7 +28,7 @@ jobs:
 
   test-ios:
     macos:
-      xcode: "11.3.0"
+      xcode: 11.5.0
     environment:
       FL_OUTPUT_DIR: output
     steps:
@@ -53,7 +53,7 @@ jobs:
 
   release-testflight:
     macos:
-      xcode: "11.3.0"
+      xcode: 11.5.0
     steps:
       - checkout
       - attach_workspace:

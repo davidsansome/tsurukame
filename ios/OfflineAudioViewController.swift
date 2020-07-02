@@ -127,9 +127,9 @@ struct AudioPackage {
                                  progress: { (progress: Double) in
                                    self.updateProgress(onMainThread: filename) {
                                      $0.state = TKMDownloadModelItemInstalling
-                                     $0.installingProgress = Float(progress)
+                                     $0.installingProgress = progress
                                    }
-                                 }) else {
+      }) else {
       fatalError("Error extracting data: \(url(forFilename: filename).absoluteString)")
     }
 

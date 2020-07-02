@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import CommonCrypto
+import CryptoKit
 import Foundation
 
 extension String {
@@ -20,15 +21,20 @@ extension String {
     let str = data(using: .utf8)!
     var digest = Data(count: Int(CC_MD5_DIGEST_LENGTH))
 
-    str.withUnsafeBytes { dataPointer in
-      digest.withUnsafeMutableBytes { digestPointer in
-        if let dataAddr = dataPointer.baseAddress,
-          let digestAddr = digestPointer.bindMemory(to: UInt8.self).baseAddress {
-          CC_MD5(dataAddr, CC_LONG(str.count), digestAddr)
+    if #available(iOS 13.0, macOS 10.15, *) {
+      let hash: Insecure.MD5Digest = Insecure.MD5.hash(data: str)
+      return hash.map { String(format: "%02hhx", $0) }.joined()
+    } else {
+      str.withUnsafeBytes { dataPointer in
+        digest.withUnsafeMutableBytes { digestPointer in
+          if let dataAddr = dataPointer.baseAddress,
+            let digestAddr = digestPointer.bindMemory(to: UInt8.self).baseAddress {
+            CC_MD5(dataAddr, CC_LONG(str.count), digestAddr)
+          }
         }
       }
-    }
 
-    return digest.map { String(format: "%02hhx", $0) }.joined()
+      return digest.map { String(format: "%02hhx", $0) }.joined()
+    }
   }
 }
