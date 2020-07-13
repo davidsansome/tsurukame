@@ -31,12 +31,14 @@ class VocabularyHighlighterTest: XCTestCase {
         continue
       }
 
-      for sentence in subject.vocabulary.sentencesArray as! [TKMVocabulary_Sentence] {
+      let vocabSentencesArray = subject.vocabulary
+        .sentencesArray as [AnyObject] as? [TKMVocabulary_Sentence]
+      for sentence in vocabSentencesArray! {
         let text = highlightOccurrences(of: subject,
                                         in: NSAttributedString(string: sentence.japanese))
         if text == nil {
           let pattern = patternToHighlight(for: subject)
-          NSLog("No match of \(pattern) in \(sentence.japanese!): \(subject.vocabulary.commaSeparatedPartsOfSpeech)")
+          NSLog("No match of \(pattern) in \(sentence.japanese!): \(subject.vocabulary.commaSeparatedPartsOfSpeech())")
           noMatchCount += 1
         }
       }

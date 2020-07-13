@@ -20,7 +20,7 @@ import Foundation
   @objc init(stageCategory: TKMSRSStage_Category, count: Int) {
     self.stageCategory = stageCategory
     super.init(style: .value1,
-               title: Convenience.srsStageCategoryName(for: stageCategory),
+               title: stageCategory.name(),
                subtitle: String(count),
                accessoryType: .none,
                target: nil,
@@ -34,6 +34,6 @@ import Foundation
     }
     textColor = color
     imageTintColor = color
-    image = UIImage(named: Convenience.srsStageCategoryName(for: stageCategory))!
+    image = UIImage(named: stageCategory.name())!
   }
 }

@@ -86,6 +86,14 @@ typealias NotificationPermissionHandler = (Bool) -> Void
                                 subtitle: reviewOrderValueText(),
                                 accessoryType: disclosureIndicator, target: self,
                                 action: #selector(didTapReviewOrder(item:))))
+    model.add(TKMBasicModelItem(style: .value1, title: "Review item order",
+                                subtitle: reviewItemOrderValueText(),
+                                accessoryType: disclosureIndicator, target: self,
+                                action: #selector(didTapReviewItemOrder(item:))))
+    model.add(TKMSwitchModelItem(style: .subtitle, title: "Item order precedence",
+                                 subtitle: "Review item order sorts first, then review order",
+                                 on: Settings.itemOrderPrecedence, target: self,
+                                 action: #selector(itemOrderPrecedenceChanged(switchView:))))
     model.add(TKMBasicModelItem(style: .value1, title: "Review batch size",
                                 subtitle: reviewBatchSizeText(), accessoryType: disclosureIndicator,
                                 target: self, action: #selector(didTapReviewBatchSize(item:))))
@@ -162,6 +170,9 @@ typealias NotificationPermissionHandler = (Bool) -> Void
     model.add(TKMSwitchModelItem(style: .default, title: "SRS level up pop-up",
                                  subtitle: nil, on: Settings.animateLevelUpPopup, target: self,
                                  action: #selector(animateLevelUpPopupChanged(switchView:))))
+    model.add(TKMSwitchModelItem(style: .default, title: "WK level up pop-up",
+                                 subtitle: nil, on: Settings.animateWKLevelUpPopup, target: self,
+                                 action: #selector(animateWKLevelUpPopupChanged(switchView:))))
     model.add(TKMSwitchModelItem(style: .default, title: "+1", subtitle: nil,
                                  on: Settings.animatePlusOne, target: self,
                                  action: #selector(animatePlusOneChanged(switchView:))))
@@ -227,7 +238,21 @@ typealias NotificationPermissionHandler = (Bool) -> Void
       return "Newest available first"
     case ReviewOrder.oldestAvailableFirst:
       return "Oldest available first"
+    case ReviewOrder.longestRelativeWait:
+      return "Longest relative wait"
+    case ReviewOrder.shortestRelativeWait:
+      return "Shortest relative wait"
     }
+  }
+
+  func reviewItemOrderValueText() -> String {
+    var reviewItemOrderText: [String] = []
+    for i in Settings.reviewItemOrder {
+      if i == TKMSubject_Type.empty.rawValue { continue }
+      reviewItemOrderText.append(TKMSubject_Type(rawValue: i)!.name())
+    }
+    if reviewItemOrderText.count < 3 { reviewItemOrderText.append("Random") }
+    return reviewItemOrderText.joined(separator: ", ")
   }
 
   func reviewBatchSizeText() -> String { String(Settings.reviewBatchSize) }
@@ -357,6 +382,10 @@ typealias NotificationPermissionHandler = (Bool) -> Void
     performSegue(withIdentifier: "reviewItemOrder", sender: self)
   }
 
+  func itemOrderPrecedenceChanged(switchView: UISwitch) {
+    Settings.itemOrderPrecedence = switchView.isOn
+  }
+
   func didTapReviewBatchSize(item _: TKMBasicModelItem) {
     performSegue(withIdentifier: "reviewBatchSize", sender: self)
   }
@@ -448,6 +477,10 @@ typealias NotificationPermissionHandler = (Bool) -> Void
     Settings.animateLevelUpPopup = switchView.isOn
   }
 
+  func animateWKLevelUpPopupChanged(switchView: UISwitch) {
+    Settings.animateWKLevelUpPopup = switchView.isOn
+  }
+
   func animatePlusOneChanged(switchView: UISwitch) {
     Settings.animatePlusOne = switchView.isOn
   }
@@ -469,7 +502,7 @@ typealias NotificationPermissionHandler = (Bool) -> Void
                                   .post(name: NSNotification
                                     .Name(rawValue: "kLogoutNotification"),
                                         object: self)
-        }))
+                              }))
     c.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
     present(c, animated: true, completion: nil)
   }

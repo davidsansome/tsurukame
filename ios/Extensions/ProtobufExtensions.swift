@@ -14,40 +14,55 @@
 
 import UIKit
 
-@objcMembers class Convenience: NSObject {
-  static func srsStageCategory(for srsStage: Int32) -> TKMSRSStage_Category {
-    if srsStage >= 9 { return .burned }
-    if srsStage >= 8 { return .enlightened }
-    if srsStage >= 7 { return .master }
-    if srsStage >= 5 { return .apprentice }
-    return .apprentice
+@objc extension TKMSRSStage {
+  func intervalInSeconds() -> TimeInterval {
+    if !hasIntervalUnit || !hasInterval { return Double.infinity }
+    switch intervalUnit {
+    case "milliseconds": return Double(interval) / 1000
+    case "seconds": return Double(interval)
+    case "minutes": return Double(interval) * 60
+    case "hours": return Double(interval) * 60 * 60
+    case "days": return Double(interval) * 60 * 60 * 24
+    case "weeks": return Double(interval) * 60 * 60 * 24 * 7
+    default: fatalError("Unknown interval unit")
+    }
+  }
+}
+
+@objc extension TKMSRSSystem {
+  func srsStageCategory(for srsStage: Int32) -> TKMSRSStage_Category {
+    if srsStage >= burningPosition { return .burned }
+    if srsStage >= passingPosition { return .passed }
+    if srsStage >= startingPosition { return .started }
+    if srsStage >= unlockingPosition { return .unlocked }
+    return .locked
   }
 
-  static func srsStageCategoryName(forStage srsStage: Int32) -> String {
-    if srsStage >= 9 { return "Burned" }
-    if srsStage >= 8 { return "Enlightened" }
-    if srsStage >= 7 { return "Master" }
-    if srsStage >= 5 { return "Guru" }
-    return "Apprentice"
+  func srsStageCategoryName(forStage srsStage: Int32) -> String {
+    if srsStage >= burningPosition { return "Burned" }
+    if srsStage >= passingPosition { return "Passed" }
+    if srsStage >= startingPosition { return "Started" }
+    if srsStage >= unlockingPosition { return "Unlocked" }
+    return "Locked"
   }
 
-  static func srsStageCategoryName(for category: TKMSRSStage_Category) -> String {
+  func srsStageCategoryName(for category: TKMSRSStage_Category) -> String {
     srsStageCategoryName(forStage: firstSRSStage(in: category))
   }
 
-  static func firstSRSStage(in category: TKMSRSStage_Category) -> Int32 {
+  func firstSRSStage(in category: TKMSRSStage_Category) -> Int32 {
     switch category {
-    case .burned: return 9
-    case .enlightened: return 8
-    case .master: return 7
-    case .guru: return 5
-    case .apprentice: return 1
+    case .burned: return burningPosition
+    case .passed: return passingPosition
+    case .started: return startingPosition
+    case .unlocked: return unlockingPosition
+    case .locked: fallthrough
     case .gpbUnrecognizedEnumeratorValue: fallthrough
     @unknown default: fatalError("Invalid category: \(category)")
     }
   }
 
-  static func srsStageName(for srsStage: Int32) -> String {
+  func srsStageName(for srsStage: Int32) -> String {
     let category = srsStageCategory(for: srsStage)
     let name = srsStageCategoryName(for: category)
 
@@ -55,22 +70,19 @@ import UIKit
     return "\(name) \(diff + 1)"
   }
 
-  static func minGuruTime(_ itemLevel: Int32, srsStage: Int32) -> TimeInterval {
-    let isAccelerated = itemLevel <= 2
+  func getSRSStage(for position: Int32) -> TKMSRSStage? {
+    for stage in stagesArray {
+      let srsStage = stage as! TKMSRSStage
+      if srsStage.position == position { return srsStage }
+    }
+    return nil
+  }
+
+  func minPassingTime(srsStage: Int32) -> TimeInterval {
     var seconds: Double = 0
-    switch srsStage {
-    case 1:
-      seconds += 3600 * (isAccelerated ? 2 : 4)
-      fallthrough
-    case 2:
-      seconds += 3600 * (isAccelerated ? 4 : 8)
-      fallthrough
-    case 3:
-      seconds += 3600 * (isAccelerated ? 8 : 23)
-      fallthrough
-    case 4:
-      seconds += 3600 * (isAccelerated ? 23 : 47)
-    default: break
+    if srsStage >= passingPosition { return 0 }
+    for stage in srsStage ..< passingPosition {
+      seconds += getSRSStage(for: stage)!.intervalInSeconds()
     }
     return seconds
   }
@@ -80,10 +92,10 @@ extension TKMSRSStage_Category {
   func name() -> String {
     switch self {
     case .burned: return "Burned"
-    case .enlightened: return "Enlightened"
-    case .master: return "Master"
-    case .guru: return "Guru"
-    case .apprentice: return "Apprentice"
+    case .passed: return "Passed"
+    case .started: return "Started"
+    case .unlocked: return "Lesson"
+    case .locked: return "Locked"
     case .gpbUnrecognizedEnumeratorValue: fallthrough
     @unknown default: fatalError("Unrecognized category")
     }
@@ -300,22 +312,26 @@ extension TKMSubject_Type {
     let calendar = Calendar.current
     let components = calendar.dateComponents([Calendar.Component.year, .month, .day, .hour],
                                              from: Date())
-    var reviewDate = calendar.date(from: components)
+    var reviewDate = calendar.date(from: components)!
     if !hasAvailableAt { return reviewDate }
 
     // If it's not available now, treat it like it will be reviewed within the hour it comes
     // available.
-    if reviewDate! < availableAtDate { reviewDate = availableAtDate }
+    if reviewDate < availableAtDate { reviewDate = availableAtDate }
     return reviewDate
   }
 
-  func guruDate(for subject: TKMSubject) -> Date? {
-    if hasPassedAt, srsStage >= 5 { return passedAtDate }
-    else if srsStage >= 5 { return Date.distantPast }
+  func passDate(with srsSystem: TKMSRSSystem?) -> Date? {
+    guard let srsSystem = srsSystem else { return nil }
+    if hasPassedAt, srsStage >= srsSystem.firstSRSStage(in: .passed) {
+      return passedAtDate
+    } else if srsStage >= srsSystem.firstSRSStage(in: .passed) {
+      return Date.distantPast
+    }
 
     let reviewDate = self.reviewDate ?? Date()
-    let guruSeconds = Convenience.minGuruTime(subject.level, srsStage: srsStage + 1)
-    return reviewDate + guruSeconds
+    let passSeconds = srsSystem.minPassingTime(srsStage: srsStage + 1)
+    return reviewDate + passSeconds
   }
 }
 

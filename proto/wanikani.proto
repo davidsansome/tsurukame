@@ -15,7 +15,6 @@
 syntax = "proto3";
 option objc_class_prefix = "TKM";
 option swift_prefix = "TKM"; // Preparation for Swift conversion
-
 package proto;
 
 message Meaning {
@@ -122,6 +121,7 @@ message Vocabulary {
 
 message Subject {
   optional int32 id = 1;
+  optional int32 srs_system_id = 13;
   optional int32 level = 2;
   optional string slug = 3;
   optional string document_url = 4;
@@ -145,13 +145,26 @@ message Subject {
 }
 
 message SRSStage {
+  optional int32 interval = 1;
+  optional int32 position = 2;
+  optional string interval_unit = 3;
+  
   enum Category {
-    APPRENTICE = 0;
-    GURU = 1;
-    MASTER = 2;
-    ENLIGHTENED = 3;
+    LOCKED = 0;
+    UNLOCKED = 1;
+    STARTED = 2;
+    PASSED = 3;
     BURNED = 4;
   }
+}
+
+message SRSSystem {
+  optional int32 id = 1;
+  optional int32 unlocking_position = 2;
+  optional int32 starting_position = 3;
+  optional int32 passing_position = 4;
+  optional int32 burning_position = 5;
+  repeated SRSStage stages = 6;
 }
 
 message Assignment {
@@ -164,6 +177,7 @@ message Assignment {
   optional int32 started_at = 6;
   optional int32 srs_stage = 7;
   optional int32 passed_at = 8;
+  optional int32 burned_at = 9;
 }
 
 message Progress {

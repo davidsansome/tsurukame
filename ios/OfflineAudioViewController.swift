@@ -129,7 +129,7 @@ struct AudioPackage {
                                      $0.state = TKMDownloadModelItemInstalling
                                      $0.installingProgress = progress
                                    }
-      }) else {
+                                 }) else {
       fatalError("Error extracting data: \(url(forFilename: filename).absoluteString)")
     }
 

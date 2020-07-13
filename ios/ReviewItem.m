@@ -60,12 +60,12 @@
 }
 
 - (NSUInteger)getSubjectTypeIndex:(TKMSubject_Type)type {
-  for (int i = 0; i < Settings.lessonOrder.count; i++) {
-    if ([Settings.lessonOrder objectAtIndex:i].intValue == type) {
-      return i;
-    }
+  for (int _i = 0; _i < Settings.lessonOrder.count; _i++) {
+    TKMSubject_Type i = (TKMSubject_Type)Settings.lessonOrder[_i];
+    if (i == TKMSubject_Type_GPBUnrecognizedEnumeratorValue) continue;
+    if (i == type) return _i;
   }
-  return 0;
+  return Settings.lessonOrder.count + 1;  // Order anything not present after everything else
 }
 
 - (instancetype)initFromAssignment:(TKMAssignment *)assignment {
@@ -92,9 +92,12 @@
       return true;
     } else if (selfIndex > otherIndex) {
       return false;
+    } else if (selfIndex == otherIndex && selfIndex == Settings.lessonOrder.count + 1) {
+      return drand48() <= 0.5;  // Shuffle
     }
   }
 
+  // Order by subject ID if equal sort and not shuffling
   return (self.assignment.subjectId <= other.assignment.subjectId);
 }
 

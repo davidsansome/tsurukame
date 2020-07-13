@@ -712,6 +712,11 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                              timeIntervalSince1970];
                        }
 
+                       if (d[@"data"][@"burned_at"] != [NSNull null]) {
+                         assignment.burnedAt = [[Client parseISO8601Date:d[@"data"][@"burned_at"]]
+                             timeIntervalSince1970];
+                       }
+
                        NSString *subjectType = d[@"data"][@"subject_type"];
                        if ([subjectType isEqualToString:@"radical"]) {
                          assignment.subjectType = TKMSubject_Type_Radical;
@@ -725,6 +730,63 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                        [ret addObject:assignment];
                      }
 
+                     progressHandler(page, totalPages);
+                     if (page == totalPages) {
+                       handler(nil, dataUpdatedAt, ret);
+                     }
+                   }];
+}
+
+#pragma mark - SRS Stages
+- (void)getSRSSystemsModifiedAfter:(NSString *_Nullable)date
+                   progressHandler:(PartialCompletionHandler)progressHandler
+                           handler:(SRSSystemHandler)handler {
+  NSMutableArray<TKMSRSSystem *> *ret = [NSMutableArray array];
+
+  NSURLComponents *url = [NSURLComponents
+      componentsWithString:[NSString stringWithFormat:@"%s/spaced_repetition_systems", kURLBase]];
+  if (date && date.length) {
+    [url setQueryItems:@[
+      [NSURLQueryItem queryItemWithName:@"updated_after" value:date],
+    ]];
+  }
+
+  [self startPagedQueryFor:url.URL
+                   handler:^(NSString *dataUpdatedAt, NSArray *data, int page, int totalPages,
+                             NSError *error) {
+                     if (error) {
+                       progressHandler(1, 1);
+                       handler(error, nil, nil);
+                       return;
+                     }
+
+                     for (NSDictionary *d in data) {
+                       TKMSRSSystem *srsSystem = [[TKMSRSSystem alloc] init];
+                       srsSystem.id_p = [d[@"id"] intValue];
+                       srsSystem.unlockingPosition =
+                           [d[@"data"][@"unlocking_stage_position"] intValue];
+                       srsSystem.startingPosition =
+                           [d[@"data"][@"starting_stage_position"] intValue];
+                       srsSystem.passingPosition = [d[@"data"][@"passing_stage_position"] intValue];
+                       srsSystem.burningPosition = [d[@"data"][@"burning_stage_position"] intValue];
+
+                       NSMutableArray<TKMSRSStage *> *stages = [NSMutableArray array];
+                       for (NSDictionary *stageData in d[@"data"][@"stages"]) {
+                         TKMSRSStage *stage = [[TKMSRSStage alloc] init];
+                         if (stageData[@"interval"] != [NSNull null]) {
+                           stage.interval = [stageData[@"interval"] intValue];
+                         }
+                         if (stageData[@"position"] != [NSNull null]) {
+                           stage.position = [stageData[@"position"] intValue];
+                         }
+                         if (stageData[@"interval_unit"] != [NSNull null]) {
+                           stage.intervalUnit = stageData[@"interval_unit"];
+                         }
+                         [stages addObject:stage];
+                       }
+                       srsSystem.stagesArray = stages;
+                       [ret addObject:srsSystem];
+                     }
                      progressHandler(page, totalPages);
                      if (page == totalPages) {
                        handler(nil, dataUpdatedAt, ret);

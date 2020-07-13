@@ -1,0 +1,16 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "cherryblossom.jpg"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "cherryblossom.jpg"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}

@@ -192,7 +192,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     }
 
     model.addSection("This level")
-    model.add(CurrentLevelChartItem(dataLoader: services.dataLoader,
+    model.add(CurrentLevelChartItem(services: services,
                                     currentLevelAssignments: currentLevelAssignments))
 
     if !user.hasVacationStartedAt {
@@ -214,7 +214,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
                                 action: #selector(showAll)))
 
     model.addSection("All levels")
-    for i in TKMSRSStage_Category.apprentice.rawValue ... TKMSRSStage_Category.burned.rawValue {
+    for i in TKMSRSStage_Category.started.rawValue ... TKMSRSStage_Category.burned.rawValue {
       let category = TKMSRSStage_Category(rawValue: i)!
       let count = services.localCachingClient.getSRSLevelCount(at: category)
       model.add(SRSStageCategoryItem(stageCategory: category, count: Int(count)))
@@ -337,7 +337,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
                                               block: { [weak self] _ in
                                                 guard let self = self else { return }
                                                 self.hourlyTimerExpired()
-      })
+                                              })
   }
 
   func cancelHourlyTimer() {
@@ -388,13 +388,13 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
       let headerView = headerView,
       Settings.userEmailAddress != "" else { return }
     let email = Settings.userEmailAddress
-    let guruKanji = services.localCachingClient.getGuruKanjiCount()
+    let passedKanji = services.localCachingClient.getPassedKanjiCount()
     let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)
       : userProfileImageURL(emailAddress: email)
 
     headerView.update(username: user.username,
                       level: Int(user.level),
-                      guruKanji: Int(guruKanji),
+                      passedKanji: Int(passedKanji),
                       imageURL: imageURL,
                       vacationMode: user.hasVacationStartedAt)
     headerView.layoutIfNeeded()
@@ -441,8 +441,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   func loginComplete() {
-    services.localCachingClient.client
-      .updateApiToken(Settings.userApiToken, cookie: Settings.userCookie)
+    services.localCachingClient.client.updateApiToken(Settings.userApiToken,
+                                                      cookie: Settings.userCookie)
     navigationController?.popViewController(animated: true)
     isShowingUnauthorizedAlert = false
   }

@@ -145,7 +145,9 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
       TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
       [model addSection];
       for (TKMSubject *subject in results) {
-        [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject delegate:self]];
+        [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject
+                                                           services:_services
+                                                           delegate:self]];
       }
       _model = model;
       [self.tableView reloadData];

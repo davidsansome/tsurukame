@@ -17,13 +17,15 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+@class TKMSRSSystem;
 void RunSuccessAnimation(UIView *answerField,
                          UIView *doneLabel,
                          UILabel *srsLevelLabel,
                          bool isSubjectFinished,
-                         bool didLevelUp,
-                         int newSrsLevel);
+                         bool didWKLevelUp,
+                         bool didSRSLevelUp,
+                         int newSrsLevel,
+                         TKMSRSSystem *srsSystem);
 
 #ifdef __cplusplus
 }

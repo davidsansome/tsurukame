@@ -34,6 +34,9 @@ typedef void (^AssignmentHandler)(NSError *_Nullable error,
                                   NSString *_Nullable dataUpdatedAtISO8601,
                                   NSArray<TKMAssignment *> *_Nullable assignments);
 typedef void (^ProgressHandler)(NSError *_Nullable error);
+typedef void (^SRSSystemHandler)(NSError *_Nullable error,
+                                 NSString *_Nullable dataUpdatedAt,
+                                 NSArray<TKMSRSSystem *> *_Nullable srsSystems);
 typedef void (^StudyMaterialsHandler)(NSError *_Nullable error,
                                       NSString *_Nullable dataUpdatedAt,
                                       NSArray<TKMStudyMaterials *> *_Nullable studyMaterials);
@@ -80,6 +83,9 @@ extern bool TKMIsClientError(NSError *error);
 - (void)getAssignmentsModifiedAfter:(NSString *_Nullable)date
                     progressHandler:(PartialCompletionHandler)progressHandler
                             handler:(AssignmentHandler)handler;
+- (void)getSRSSystemsModifiedAfter:(NSString *_Nullable)date
+                   progressHandler:(PartialCompletionHandler)progressHandler
+                           handler:(SRSSystemHandler)handler;
 - (void)getStudyMaterialsModifiedAfter:(NSString *_Nullable)date
                        progressHandler:(PartialCompletionHandler)progressHandler
                                handler:(StudyMaterialsHandler)handler;

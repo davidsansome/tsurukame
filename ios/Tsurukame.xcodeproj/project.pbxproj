@@ -22,7 +22,7 @@
 		4883CCA924ACD39F00838778 /* ProtobufExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB011FCD755300E09DA1 /* ProtobufExtensions.swift */; };
 		4883CCAA24ACD3E500838778 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEFED81FC46E720070C05F /* Client.m */; };
 		4883CCAB24ACD97900838778 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A3D28224AA36C700A8E7F0 /* Settings.swift */; };
-		48A3D28124AA364D00A8E7F0 /* LessonItemOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A3D28024AA364D00A8E7F0 /* LessonItemOrderViewController.swift */; };
+		48A3D28124AA364D00A8E7F0 /* ItemOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A3D28024AA364D00A8E7F0 /* ItemOrderViewController.swift */; };
 		48A3D28324AA36C700A8E7F0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A3D28224AA36C700A8E7F0 /* Settings.swift */; };
 		48A3D28424AA36CE00A8E7F0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A3D28224AA36C700A8E7F0 /* Settings.swift */; };
 		48A3D28624AA378E00A8E7F0 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A3D28524AA378E00A8E7F0 /* SettingsViewController.swift */; };
@@ -222,7 +222,7 @@
 		483E517B24AD6A64000EE11B /* KanaInputTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KanaInputTest.m; sourceTree = "<group>"; };
 		486ABC6824AA2BC0002A1E9E /* LocalCachingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCachingClient.swift; sourceTree = "<group>"; };
 		489894D423670CB000A20AF8 /* Tsurukame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tsurukame.entitlements; sourceTree = "<group>"; };
-		48A3D28024AA364D00A8E7F0 /* LessonItemOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonItemOrderViewController.swift; sourceTree = "<group>"; };
+		48A3D28024AA364D00A8E7F0 /* ItemOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemOrderViewController.swift; sourceTree = "<group>"; };
 		48A3D28224AA36C700A8E7F0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		48A3D28524AA378E00A8E7F0 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		48A3D28724AA37EA00A8E7F0 /* KanaInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanaInput.swift; sourceTree = "<group>"; };
@@ -515,8 +515,8 @@
 				63CAAB0F1FD7FAC500E09DA1 /* Frameworks */,
 				63EEFEC21FC45CB10070C05F /* Info.plist */,
 				C9164D3823D0CFCF00B6D93A /* InterfaceStyleViewController.swift */,
+				48A3D28024AA364D00A8E7F0 /* ItemOrderViewController.swift */,
 				48A3D28724AA37EA00A8E7F0 /* KanaInput.swift */,
-				48A3D28024AA364D00A8E7F0 /* LessonItemOrderViewController.swift */,
 				637C12DC203D779D009E92DB /* LessonsPageControl.h */,
 				637C12DD203D779D009E92DB /* LessonsPageControl.m */,
 				637C12D6203847BE009E92DB /* LessonsViewController.h */,
@@ -1226,7 +1226,7 @@
 				C9164D3923D0CFCF00B6D93A /* InterfaceStyleViewController.swift in Sources */,
 				633632EC201F3011006D582B /* LoginViewController.m in Sources */,
 				48A3D28824AA37EA00A8E7F0 /* KanaInput.swift in Sources */,
-				48A3D28124AA364D00A8E7F0 /* LessonItemOrderViewController.swift in Sources */,
+				48A3D28124AA364D00A8E7F0 /* ItemOrderViewController.swift in Sources */,
 				637C12DE203D779D009E92DB /* LessonsPageControl.m in Sources */,
 				637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */,
 				636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */,

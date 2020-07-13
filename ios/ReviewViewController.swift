@@ -171,10 +171,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   private var activeTask: ReviewItem!
   private var activeSubject: TKMSubject!
   private var activeStudyMaterials: TKMStudyMaterials?
+  private var activeAssignment: TKMAssignment?
 
   @objc public private(set) var tasksAnsweredCorrectly = 0
   private var tasksAnswered = 0
   private var reviewsCompleted = 0
+  private var currentLevel: Int32!
+  private var kanjiLeftForLevelUp: Int!
+  private var kanjiReachedLevelUpMark = 0
+  private var didReachLevelUpMark = false
 
   private var lastMarkAnswerWasFirstTime = false
 
@@ -213,7 +218,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   @IBOutlet private var successRateIcon: UIImageView!
   @IBOutlet private var doneIcon: UIImageView!
   @IBOutlet private var queueIcon: UIImageView!
-  @IBOutlet private var levelLabel: UILabel!
+  @IBOutlet private var srsLevelLabel: UILabel!
 
   @IBOutlet private var answerFieldToBottomConstraint: NSLayoutConstraint!
   @IBOutlet private var answerFieldToSubjectDetailsViewConstraint: NSLayoutConstraint!
@@ -225,12 +230,114 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     kanaInput = KanaInput(delegate: self)
   }
 
+  private func availableRatio(_ assignment: TKMAssignment) -> Double {
+    let date =
+      Date(timeIntervalSince1970: Double((Int(Date().timeIntervalSince1970) / 3600) * 3600))
+    let subject = services.dataLoader.load(subjectID: Int(assignment.subjectId))!
+    let srsStage = services.localCachingClient.getSRSSystem(id: subject.srsSystemId)!
+      .getSRSStage(for: assignment.srsStage)!
+    return date.timeIntervalSince(assignment.availableAtDate) / srsStage.intervalInSeconds()
+  }
+
+  private func sortItemOrder(_ a: ReviewItem, _ b: ReviewItem) -> Bool? {
+    func getSubjectTypeIndex(type: TKMSubject_Type) -> Int {
+      for i in Settings.reviewItemOrder {
+        if i == TKMSubject_Type.empty.rawValue { continue }
+        if i == type.rawValue { return Int(i) }
+      }
+      return Settings.reviewItemOrder.count + 1 // Order anything not present after everything else
+    }
+
+    let selfIndex = getSubjectTypeIndex(type: a.assignment.subjectType)
+    let otherIndex = getSubjectTypeIndex(type: b.assignment.subjectType)
+    if selfIndex < otherIndex { return true }
+    else if selfIndex > otherIndex { return false }
+    else { return nil }
+  }
+
+  @objc public func sortReviewQueue() {
+    switch Settings.reviewOrder {
+    case .ascendingSRSStage:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        if a.assignment.srsStage < b.assignment.srsStage { return true }
+        if a.assignment.srsStage > b.assignment.srsStage { return false }
+        if !Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        return false
+      }
+    case .descendingSRSStage:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        if a.assignment.srsStage < b.assignment.srsStage { return false }
+        if a.assignment.srsStage > b.assignment.srsStage { return true }
+        if !Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        return false
+      }
+    case .currentLevelFirst:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        if a.assignment.level < b.assignment.level { return false }
+        if a.assignment.level > b.assignment.level { return true }
+        if !Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        return false
+      }
+    case .lowestLevelFirst:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        if a.assignment.level < b.assignment.level { return true }
+        if a.assignment.level > b.assignment.level { return false }
+        if !Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        return false
+      }
+    case .newestAvailableFirst:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        if a.assignment.availableAt < b.assignment.availableAt { return false }
+        if a.assignment.availableAt > b.assignment.availableAt { return true }
+        if !Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        return false
+      }
+    case .oldestAvailableFirst:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        if a.assignment.availableAt < b.assignment.availableAt { return true }
+        if a.assignment.availableAt > b.assignment.availableAt { return false }
+        if !Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        return false
+      }
+    case .longestRelativeWait:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        if availableRatio(a.assignment) < availableRatio(b.assignment) { return false }
+        if availableRatio(a.assignment) > availableRatio(b.assignment) { return true }
+        if !Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        return false
+      }
+    case .shortestRelativeWait:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        if availableRatio(a.assignment) < availableRatio(b.assignment) { return true }
+        if availableRatio(a.assignment) > availableRatio(b.assignment) { return false }
+        if !Settings.itemOrderPrecedence, let sort = sortItemOrder(a, b) { return sort }
+        return false
+      }
+    case .random:
+      break
+
+    @unknown default:
+      fatalError()
+    }
+  }
+
   @objc public func setup(withServices services: TKMServices,
                           items: [ReviewItem],
                           showMenuButton: Bool,
                           showSubjectHistory: Bool,
                           delegate: ReviewViewControllerDelegate) {
     self.services = services
+    currentLevel = services.localCachingClient.getUserInfo()!.currentLevel()
+    let ninetyPercent = Int((0.9 * Double(services.localCachingClient.currentKanji())).rounded(.up))
+    kanjiLeftForLevelUp = ninetyPercent - Int(services.localCachingClient.currentPassedKanji())
     self.showMenuButton = showMenuButton
     self.showSubjectHistory = showSubjectHistory
     self.delegate = delegate
@@ -244,62 +351,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     }
 
     reviewQueue.shuffle()
-    switch Settings.reviewOrder {
-    case .ascendingSRSStage:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.srsStage < b.assignment.srsStage { return true }
-        if a.assignment.srsStage > b.assignment.srsStage { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .descendingSRSStage:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.srsStage < b.assignment.srsStage { return false }
-        if a.assignment.srsStage > b.assignment.srsStage { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .currentLevelFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.level < b.assignment.level { return false }
-        if a.assignment.level > b.assignment.level { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .lowestLevelFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.level < b.assignment.level { return true }
-        if a.assignment.level > b.assignment.level { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .newestAvailableFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.availableAt < b.assignment.availableAt { return false }
-        if a.assignment.availableAt > b.assignment.availableAt { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .oldestAvailableFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.availableAt < b.assignment.availableAt { return true }
-        if a.assignment.availableAt > b.assignment.availableAt { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .random:
-      break
-
-    @unknown default:
-      fatalError()
-    }
-
+    sortReviewQueue()
     refillActiveQueue()
   }
 
@@ -455,7 +507,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     switch segue.identifier {
     case "reviewSummary":
       let vc = segue.destination as! ReviewSummaryViewController
-      vc.setup(with: services, items: completedReviews)
+      vc.setup(with: services, items: completedReviews, leveledUp: didReachLevelUpMark,
+               fromLevel: currentLevel)
     case "subjectDetails":
       let vc = segue.destination as! SubjectDetailsViewController
       vc.setup(with: services, subject: sender as! TKMSubject)
@@ -517,6 +570,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       activeSubject = services.dataLoader.load(subjectID: Int(activeTask.assignment.subjectId))!
       activeStudyMaterials =
         services.localCachingClient.getStudyMaterial(id: activeTask.assignment.subjectId)
+      activeAssignment =
+        services.localCachingClient.getAssignment(id: activeTask.assignment.subjectId)
 
       // Choose whether to ask the meaning or the reading.
       if activeTask.answeredMeaning {
@@ -564,7 +619,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         taskTypePlaceholder = "答え"
       case ._Max:
         fallthrough
-    @unknown default:
+      @unknown default:
         fatalError()
       }
 
@@ -600,7 +655,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       doneLabel.accessibilityLabel = doneText + " done"
       queueLabel.accessibilityLabel = queueText + " remaining"
       questionLabel.accessibilityLabel = "Japanese " + subjectTypePrompt + ". Question"
-      levelLabel.accessibilityLabel = "srs level \(activeTask.assignment.srsStage)"
+      srsLevelLabel.accessibilityLabel = "srs level \(activeTask.assignment.srsStage)"
 
       answerField.text = nil
       answerField.textColor = TKMStyle.Color.label
@@ -619,9 +674,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         .autoSwitchKeyboard && activeTaskType == .reading
 
       if Settings.showSRSLevelIndicator {
-        levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
+        srsLevelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
       } else {
-        levelLabel.attributedText = nil
+        srsLevelLabel.attributedText = nil
       }
 
       let setupContextFunc = {
@@ -868,7 +923,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
                      self.previousSubjectLabel?.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
                      self.previousSubjectLabel?.alpha = 0.01
-    }) { (_: Bool) in
+                   }) { (_: Bool) in
       self.previousSubjectLabel?.removeFromSuperview()
       self.previousSubjectLabel = label
     }
@@ -954,7 +1009,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         .transition(with: submitButton, duration: 0.1,
                     options: .transitionCrossDissolve, animations: {
                       self.submitButton.setImage(newImage, for: .normal)
-      }, completion: nil)
+                    }, completion: nil)
     } else {
       submitButton.isEnabled = !text.isEmpty
     }
@@ -1007,7 +1062,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     case .Precise:
       markAnswer(.Correct)
     case .Imprecise:
-      markAnswer(.Correct)
+      if Settings.exactMatch { shakeView(answerField) }
+      else { markAnswer(.Correct) }
     case .Incorrect:
       markAnswer(.Incorrect)
     case .OtherKanjiReading:
@@ -1088,9 +1144,19 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     // Remove it from the active queue if that was the last part.
     let isSubjectFinished =
       activeTask.answeredMeaning && (activeSubject.hasRadical || activeTask.answeredReading)
-    let didLevelUp = (!activeTask.answer.readingWrong && !activeTask.answer.meaningWrong)
+    let didSRSLevelUp = (!activeTask.answer.readingWrong && !activeTask.answer.meaningWrong)
     let newSrsStage =
-      didLevelUp ? activeTask.assignment.srsStage + 1 : activeTask.assignment.srsStage - 1
+      didSRSLevelUp ? activeTask.assignment.srsStage + 1 : activeTask.assignment.srsStage - 1
+    var didWKLevelUp = false
+    let activeSRS = services.localCachingClient.getSRSSystem(id: activeSubject.srsSystemId)!
+    if didSRSLevelUp, newSrsStage == activeSRS.firstSRSStage(in: .passed),
+      activeSubject.hasKanji, !didReachLevelUpMark {
+      kanjiReachedLevelUpMark += 1
+      if kanjiReachedLevelUpMark == kanjiLeftForLevelUp {
+        didWKLevelUp = true
+        didReachLevelUpMark = true
+      }
+    }
     if isSubjectFinished {
       let date = Int32(Date().timeIntervalSince1970)
       if date > activeTask.assignment.availableAt {
@@ -1105,14 +1171,21 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       refillActiveQueue()
     }
 
+    // Show last answer to allow tapping on it for information.
+    var previousSubjectLabel: UILabel?
+    if let previousSubjectLabel = previousSubjectLabel {
+      animateLabelToPreviousSubjectButton(previousSubjectLabel)
+    }
+
     // Show a new task if it was correct.
     if result != .Incorrect {
+      let srsSystem = services.localCachingClient.getSRSSystem(id: previousSubject!.srsSystemId)!
+
       if Settings.playAudioAutomatically, activeTaskType == .reading,
         activeSubject.hasVocabulary, activeSubject.vocabulary.audioIdsArray_Count > 0 {
         services.audio.play(subjectID: Int(activeSubject!.id_p), delegate: nil)
       }
 
-      var previousSubjectLabel: UILabel?
       if isSubjectFinished, showSubjectHistory {
         previousSubjectLabel = copyLabel(questionLabel)
         previousSubject = activeSubject
@@ -1122,18 +1195,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         // We must start the success animations *after* all the UI elements have been moved to their
         // new locations by randomTask(), so that, for example, the success sparkles animate from
         // the final position of the answerField, not the original position.
-        RunSuccessAnimation(answerField, doneLabel, levelLabel, isSubjectFinished, didLevelUp,
-                            newSrsStage)
-      }
-
-      if let previousSubjectLabel = previousSubjectLabel {
-        animateLabelToPreviousSubjectButton(previousSubjectLabel)
+        RunSuccessAnimation(answerField, doneLabel, srsLevelLabel, isSubjectFinished, didWKLevelUp,
+                            didSRSLevelUp, newSrsStage, srsSystem)
       }
       return
     }
 
-    // Otherwise show the correct answer.
-    if !Settings.showAnswerImmediately, firstTimeAnswered {
+    // Show the correct answer if it's not the first time.
+    if Settings.showAnswerImmediately, !lastMarkAnswerWasFirstTime {
       revealAnswerButton.isHidden = false
       UIView.animate(withDuration: animationDuration,
                      animations: {
@@ -1141,14 +1210,16 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
                        self.answerField.isEnabled = false
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)
-      })
+                     })
     } else {
       revealAnswerButtonPressed(revealAnswerButton!)
     }
   }
 
   @IBAction func revealAnswerButtonPressed(_: Any) {
-    subjectDetailsView.update(withSubject: activeSubject, studyMaterials: activeStudyMaterials)
+    subjectDetailsView
+      .update(withSubject: activeSubject, studyMaterials: activeStudyMaterials,
+              assignment: activeAssignment, task: activeTask)
 
     let setupContextFunc = { (ctx: AnimationContext) in
       if self.questionLabel.font.familyName != self.normalFontName {

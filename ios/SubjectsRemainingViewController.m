@@ -43,7 +43,7 @@
   NSMutableArray<TKMSubjectModelItem *> *kanji = [NSMutableArray array];
 
   for (TKMAssignment *assignment in [_services.localCachingClient currentLevelAssignments]) {
-    if (assignment.srsStage > 4) {
+    if (assignment.hasPassedAt) {
       continue;
     }
 
@@ -53,6 +53,7 @@
     }
 
     TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject
+                                                                    services:_services
                                                                   assignment:assignment
                                                                     delegate:self];
     item.showLevelNumber = false;
@@ -111,7 +112,13 @@
         } else if (assignment.isLessonStage) {
           label = @"Available in Lessons";
         } else {
-          label = [Convenience srsStageNameFor:assignment.srsStage];
+          TKMSubject *subject = [_services.dataLoader loadSubject:assignment.subjectId];
+          TKMSRSSystem *system =
+              [_services.localCachingClient getSRSSystemWithId:subject.srsSystemId];
+          label = [system srsStageNameFor:assignment.srsStage];
+          if (!assignment.isReviewStage && !assignment.isLessonStage) {
+            label = [NSString stringWithFormat:@"%@ (Pending Sync)", label];
+          }
         }
         [model insertItem:[[TKMListSeparatorItem alloc] initWithLabel:label]
                   atIndex:index

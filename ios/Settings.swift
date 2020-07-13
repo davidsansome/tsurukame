@@ -22,6 +22,8 @@ import Foundation
   case newestAvailableFirst = 5
   case oldestAvailableFirst = 6
   case descendingSRSStage = 7
+  case longestRelativeWait = 8
+  case shortestRelativeWait = 9
 }
 
 @objc enum InterfaceStyle: UInt, Codable {
@@ -79,6 +81,12 @@ import Foundation
   @Setting(5, #keyPath(lessonBatchSize)) static var lessonBatchSize: Int
 
   @Setting(.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
+  @Setting([
+    TKMSubject_Type.empty.rawValue,
+    TKMSubject_Type.empty.rawValue,
+    TKMSubject_Type.empty.rawValue,
+  ], #keyPath(reviewItemOrder)) static var reviewItemOrder: [Int32]
+  @Setting(false, #keyPath(itemOrderPrecedence)) static var itemOrderPrecedence: Bool
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
   @Setting(false, #keyPath(groupMeaningReading)) static var groupMeaningReading: Bool
   @Setting(true, #keyPath(meaningFirst)) static var meaningFirst: Bool
@@ -99,8 +107,11 @@ import Foundation
 
   @Setting(true, #keyPath(animateParticleExplosion)) static var animateParticleExplosion: Bool
   @Setting(true, #keyPath(animateLevelUpPopup)) static var animateLevelUpPopup: Bool
+  @Setting(true, #keyPath(animateWKLevelUpPopup)) static var animateWKLevelUpPopup: Bool
   @Setting(true, #keyPath(animatePlusOne)) static var animatePlusOne: Bool
 
+  @Setting(true,
+           #keyPath(reviewSummaryViewShowAnswers)) static var reviewSummaryViewShowAnswers: Bool
   @Setting(true,
            #keyPath(subjectCatalogueViewShowAnswers)) static var subjectCatalogueViewShowAnswers: Bool
 }

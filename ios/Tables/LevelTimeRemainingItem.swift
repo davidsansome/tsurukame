@@ -28,18 +28,19 @@ private func calculateLevelTimeRemaining(services: TKMServices,
                                          currentLevelAssignments: [TKMAssignment])
   -> (finish: Date, isEstimate: Bool) {
   var radicalDates = [Date]()
-  var guruDates = [Date]()
-  var levels = [Int32]()
+  var passDates = [Date]()
+  var passSystems = [TKMSRSSystem]()
 
   for assignment in currentLevelAssignments {
     if assignment.subjectType != .radical {
       continue
     }
     guard let subject = services.dataLoader.load(subjectID: Int(assignment.subjectId)),
-      let guruDate = assignment.guruDate(for: subject) else {
+      let passDate = assignment.passDate(with: services.localCachingClient
+        .getSRSSystem(id: subject.srsSystemId)) else {
       continue
     }
-    radicalDates.append(guruDate)
+    radicalDates.append(passDate)
   }
   radicalDates.sort()
   let lastRadicalGuruTime = max(radicalDates.last?.timeIntervalSinceNow ?? 0, 0)
@@ -48,35 +49,43 @@ private func calculateLevelTimeRemaining(services: TKMServices,
     if assignment.subjectType != .kanji {
       continue
     }
-    levels.append(assignment.level)
     if !assignment.hasAvailableAt {
       // This kanji is locked, but it might not be essential for level-up
-      guruDates.append(Date.distantFuture)
+      passDates.append(Date.distantFuture)
+      if let srsSystem = services.localCachingClient
+        .getSRSSystem(id: services.dataLoader.load(subjectID: Int(assignment.subjectId))?
+          .srsSystemId ?? -1) {
+        passSystems.append(srsSystem)
+      }
       continue
     }
     guard let subject = services.dataLoader.load(subjectID: Int(assignment.subjectId)),
-      let guruDate = assignment.guruDate(for: subject) else {
+      let srsSystem = services.localCachingClient.getSRSSystem(id: subject.srsSystemId),
+      let passDate = assignment.passDate(with: srsSystem) else {
       continue
     }
-    guruDates.append(guruDate)
+    passDates.append(passDate)
+    passSystems.append(srsSystem)
   }
 
   // Sort the list of dates and remove the most distant 10%.
-  guruDates = Array(guruDates.sorted().dropLast(Int(Double(guruDates.count) * 0.1)))
-  levels = Array(levels.sorted(by: >).dropLast(Int(Double(levels.count) * 0.1)))
+  passDates = Array(passDates.sorted().dropLast(Int(Double(passDates.count) * 0.1)))
+  passSystems = passSystems
+    .sorted { $0.minPassingTime(srsStage: 1) < $1.minPassingTime(srsStage: 1) }
 
-  if let lastGuruDate = guruDates.last, let wkLevel = levels.last {
-    if lastGuruDate == Date.distantFuture {
+  if let lastPassDate = passDates.last,
+    let lastFreshPassTime = passSystems.first?.minPassingTime(srsStage: 1) {
+    if lastPassDate == Date.distantFuture {
       // There is still a locked kanji needed for level-up, so we don't know how long
       // the user will take to level up. Use their average level time, minus the time
       // they've spent at this level so far, as an estimate.
       var average = services.localCachingClient!.getAverageRemainingTime()
       // But ensure it can't be less than the time it would take to get a fresh item
       // to Guru, if they've spent longer at the current level than the average.
-      average = max(average, Convenience.minGuruTime(wkLevel, srsStage: 1) + lastRadicalGuruTime)
+      average = max(average, lastFreshPassTime + lastRadicalGuruTime)
       return (Date(timeIntervalSinceNow: average), isEstimate: true)
     } else {
-      return (lastGuruDate, isEstimate: false)
+      return (lastPassDate, isEstimate: false)
     }
   }
 

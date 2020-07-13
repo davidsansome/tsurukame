@@ -280,8 +280,10 @@ void RunSuccessAnimation(UIView *answerField,
                          UIView *doneLabel,
                          UILabel *srsLevelLabel,
                          bool isSubjectFinished,
-                         bool didLevelUp,
-                         int newSrsStage) {
+                         bool didWKLevelUp,
+                         bool didSRSLevelUp,
+                         int newSrsStage,
+                         TKMSRSSystem *srsSystem) {
   if (Settings.animateParticleExplosion) {
     CreateExplosion(answerField);
   }
@@ -298,25 +300,20 @@ void RunSuccessAnimation(UIView *answerField,
     CreateDotExplosion(srsLevelLabel);
   }
 
-  if (isSubjectFinished && didLevelUp && Settings.animateLevelUpPopup) {
+  if (isSubjectFinished && didSRSLevelUp && Settings.animateLevelUpPopup) {
     UIColor *srsLevelColor;
-    switch (newSrsStage) {
-      case 5:
-        srsLevelColor = [UIColor colorWithRed:0.533 green:0.176 blue:0.62 alpha:1];  // #882d9e
-        break;
-      case 7:
+    TKMSRSStage_Category srsCategory = [srsSystem srsStageCategoryFor:newSrsStage];
+    switch (srsCategory) {
+      case TKMSRSStage_Category_Passed:
         srsLevelColor = [UIColor colorWithRed:0.161 green:0.302 blue:0.859 alpha:1];  // #294ddb
         break;
-      case 8:
-        srsLevelColor = [UIColor colorWithRed:0 green:0.576 blue:0.867 alpha:1];  // #0093dd
-        break;
-      case 9:
+      case TKMSRSStage_Category_Burned:
         srsLevelColor = [UIColor colorWithRed:0.263 green:0.263 blue:0.263 alpha:1];  // #434343
         break;
       default:
         return;
     }
-    NSString *srsLevelString = [Convenience srsStageCategoryNameForStage:newSrsStage];
+    NSString *srsLevelString = [srsSystem srsStageCategoryNameForStage:newSrsStage];
 
     CreateSpringyBillboard(answerField, srsLevelString, [UIFont systemFontOfSize:16.0],
                            [UIColor whiteColor], srsLevelColor,
@@ -324,5 +321,13 @@ void RunSuccessAnimation(UIView *answerField,
                            6.0,    // Padding.
                            100.0,  // Distance.
                            3.0);   // Duration.
+  }
+
+  if (isSubjectFinished && didWKLevelUp && Settings.animateWKLevelUpPopup) {
+    CreatePlusOneText(doneLabel,
+                      @"Leveled up!",
+                      [UIFont boldSystemFontOfSize:20.0],
+                      [UIColor grayColor],
+                      5.0);  // Duration.
   }
 }

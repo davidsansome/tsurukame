@@ -27,6 +27,7 @@ import (
 
 func SubjectToProto(o *api.SubjectObject) (*pb.Subject, error) {
 	ret := pb.Subject{
+    SrsSystemId: proto.Int32(int32(o.Data.SRSSystemID)),
 		Id:          proto.Int32(int32(o.ID)),
 		Level:       proto.Int32(int32(o.Data.Level)),
 		Slug:        proto.String(o.Data.Slug),

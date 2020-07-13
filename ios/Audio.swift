@@ -89,7 +89,7 @@ class Audio: NSObject {
       return
     }
 
-    if !services.reachability.isReachable() {
+    if services.reachability.connection == .unavailable {
       showOfflineDialog()
       return
     }

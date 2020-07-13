@@ -122,7 +122,7 @@ import UserNotifications
   }
 
   func applicationDidBecomeActive(_: UIApplication) {
-    services.reachability.startNotifier()
+    try! services.reachability.startNotifier()
     if let mainVC = navigationController.topViewController as? MainViewController {
       mainVC.refresh(quick: true)
     }

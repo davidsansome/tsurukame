@@ -18,6 +18,7 @@
 #import "proto/Wanikani.pbobjc.h"
 
 @class DataLoader;
+@class TKMServices;
 
 NS_ASSUME_NONNULL_BEGIN;
 
@@ -31,20 +32,24 @@ NS_ASSUME_NONNULL_BEGIN;
 
 /** Used for review summary.  Shows the meaning or reading in bold if they were wrong. */
 - (instancetype)initWithSubject:(TKMSubject *)subject
+                       services:(TKMServices *)services
                        delegate:(nullable id<TKMSubjectDelegate>)delegate
                    readingWrong:(bool)readingWrong
                    meaningWrong:(bool)meaningWrong NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
+                       services:(TKMServices *)services
                      assignment:(TKMAssignment *)assignment
                        delegate:(nullable id<TKMSubjectDelegate>)delegate;
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
+                       services:(TKMServices *)services
                        delegate:(nullable id<TKMSubjectDelegate>)delegate;
 
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic, copy) TKMSubject *subject;
+@property(nonatomic) TKMServices *services;
 @property(nonatomic) TKMAssignment *assignment;
 @property(nonatomic, nullable, weak) id<TKMSubjectDelegate> delegate;
 @property(nonatomic) bool readingWrong;

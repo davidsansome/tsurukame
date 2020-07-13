@@ -34,6 +34,7 @@ GPBObjCClassDeclaration(TKMKanji);
 GPBObjCClassDeclaration(TKMMeaning);
 GPBObjCClassDeclaration(TKMRadical);
 GPBObjCClassDeclaration(TKMReading);
+GPBObjCClassDeclaration(TKMSRSStage);
 GPBObjCClassDeclaration(TKMSubject);
 GPBObjCClassDeclaration(TKMSubjectsByLevel);
 GPBObjCClassDeclaration(TKMVisuallySimilarKanji);
@@ -824,6 +825,7 @@ typedef struct TKMVocabulary_Sentence__storage_ {
 @implementation TKMSubject
 
 @dynamic hasId_p, id_p;
+@dynamic hasSrsSystemId, srsSystemId;
 @dynamic hasLevel, level;
 @dynamic hasSlug, slug;
 @dynamic hasDocumentURL, documentURL;
@@ -840,6 +842,7 @@ typedef struct TKMSubject__storage_ {
   uint32_t _has_storage_[1];
   int32_t id_p;
   int32_t level;
+  int32_t srsSystemId;
   NSString *slug;
   NSString *documentURL;
   NSString *japanese;
@@ -871,7 +874,7 @@ typedef struct TKMSubject__storage_ {
         .name = "level",
         .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_Level,
-        .hasIndex = 1,
+        .hasIndex = 2,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, level),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
@@ -880,7 +883,7 @@ typedef struct TKMSubject__storage_ {
         .name = "slug",
         .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_Slug,
-        .hasIndex = 2,
+        .hasIndex = 3,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, slug),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -889,7 +892,7 @@ typedef struct TKMSubject__storage_ {
         .name = "documentURL",
         .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_DocumentURL,
-        .hasIndex = 3,
+        .hasIndex = 4,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, documentURL),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
@@ -898,7 +901,7 @@ typedef struct TKMSubject__storage_ {
         .name = "japanese",
         .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_Japanese,
-        .hasIndex = 4,
+        .hasIndex = 5,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, japanese),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -934,7 +937,7 @@ typedef struct TKMSubject__storage_ {
         .name = "radical",
         .dataTypeSpecific.clazz = GPBObjCClass(TKMRadical),
         .number = TKMSubject_FieldNumber_Radical,
-        .hasIndex = 5,
+        .hasIndex = 6,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, radical),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
@@ -943,7 +946,7 @@ typedef struct TKMSubject__storage_ {
         .name = "kanji",
         .dataTypeSpecific.clazz = GPBObjCClass(TKMKanji),
         .number = TKMSubject_FieldNumber_Kanji,
-        .hasIndex = 6,
+        .hasIndex = 7,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, kanji),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
@@ -952,7 +955,7 @@ typedef struct TKMSubject__storage_ {
         .name = "vocabulary",
         .dataTypeSpecific.clazz = GPBObjCClass(TKMVocabulary),
         .number = TKMSubject_FieldNumber_Vocabulary,
-        .hasIndex = 7,
+        .hasIndex = 8,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, vocabulary),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
@@ -964,6 +967,15 @@ typedef struct TKMSubject__storage_ {
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, amalgamationSubjectIdsArray),
         .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "srsSystemId",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMSubject_FieldNumber_SrsSystemId,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TKMSubject__storage_, srsSystemId),
+        .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
     };
@@ -1033,9 +1045,15 @@ BOOL TKMSubject_Type_IsValidValue(int32_t value__) {
 
 @implementation TKMSRSStage
 
+@dynamic hasInterval, interval;
+@dynamic hasPosition, position;
+@dynamic hasIntervalUnit, intervalUnit;
 
 typedef struct TKMSRSStage__storage_ {
   uint32_t _has_storage_[1];
+  int32_t interval;
+  int32_t position;
+  NSString *intervalUnit;
 } TKMSRSStage__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1043,12 +1061,41 @@ typedef struct TKMSRSStage__storage_ {
 + (GPBDescriptor *)descriptor {
   static GPBDescriptor *descriptor = nil;
   if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "interval",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMSRSStage_FieldNumber_Interval,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMSRSStage__storage_, interval),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "position",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMSRSStage_FieldNumber_Position,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TKMSRSStage__storage_, position),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "intervalUnit",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMSRSStage_FieldNumber_IntervalUnit,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(TKMSRSStage__storage_, intervalUnit),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[TKMSRSStage class]
                                      rootClass:[TKMWanikaniRoot class]
                                           file:TKMWanikaniRoot_FileDescriptor()
-                                        fields:NULL
-                                    fieldCount:0
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMSRSStage__storage_)
                                          flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
@@ -1067,13 +1114,12 @@ GPBEnumDescriptor *TKMSRSStage_Category_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "Apprentice\000Guru\000Master\000Enlightened\000Burne"
-        "d\000";
+        "Locked\000Unlocked\000Started\000Passed\000Burned\000";
     static const int32_t values[] = {
-        TKMSRSStage_Category_Apprentice,
-        TKMSRSStage_Category_Guru,
-        TKMSRSStage_Category_Master,
-        TKMSRSStage_Category_Enlightened,
+        TKMSRSStage_Category_Locked,
+        TKMSRSStage_Category_Unlocked,
+        TKMSRSStage_Category_Started,
+        TKMSRSStage_Category_Passed,
         TKMSRSStage_Category_Burned,
     };
     GPBEnumDescriptor *worker =
@@ -1092,16 +1138,116 @@ GPBEnumDescriptor *TKMSRSStage_Category_EnumDescriptor(void) {
 
 BOOL TKMSRSStage_Category_IsValidValue(int32_t value__) {
   switch (value__) {
-    case TKMSRSStage_Category_Apprentice:
-    case TKMSRSStage_Category_Guru:
-    case TKMSRSStage_Category_Master:
-    case TKMSRSStage_Category_Enlightened:
+    case TKMSRSStage_Category_Locked:
+    case TKMSRSStage_Category_Unlocked:
+    case TKMSRSStage_Category_Started:
+    case TKMSRSStage_Category_Passed:
     case TKMSRSStage_Category_Burned:
       return YES;
     default:
       return NO;
   }
 }
+
+#pragma mark - TKMSRSSystem
+
+@implementation TKMSRSSystem
+
+@dynamic hasId_p, id_p;
+@dynamic hasUnlockingPosition, unlockingPosition;
+@dynamic hasStartingPosition, startingPosition;
+@dynamic hasPassingPosition, passingPosition;
+@dynamic hasBurningPosition, burningPosition;
+@dynamic stagesArray, stagesArray_Count;
+
+typedef struct TKMSRSSystem__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t id_p;
+  int32_t unlockingPosition;
+  int32_t startingPosition;
+  int32_t passingPosition;
+  int32_t burningPosition;
+  NSMutableArray *stagesArray;
+} TKMSRSSystem__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "id_p",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMSRSSystem_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMSRSSystem__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "unlockingPosition",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMSRSSystem_FieldNumber_UnlockingPosition,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TKMSRSSystem__storage_, unlockingPosition),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "startingPosition",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMSRSSystem_FieldNumber_StartingPosition,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(TKMSRSSystem__storage_, startingPosition),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "passingPosition",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMSRSSystem_FieldNumber_PassingPosition,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(TKMSRSSystem__storage_, passingPosition),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "burningPosition",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMSRSSystem_FieldNumber_BurningPosition,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(TKMSRSSystem__storage_, burningPosition),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "stagesArray",
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMSRSStage),
+        .number = TKMSRSSystem_FieldNumber_StagesArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMSRSSystem__storage_, stagesArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMSRSSystem class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMSRSSystem__storage_)
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
 
 #pragma mark - TKMAssignment
 
@@ -1115,6 +1261,7 @@ BOOL TKMSRSStage_Category_IsValidValue(int32_t value__) {
 @dynamic hasStartedAt, startedAt;
 @dynamic hasSrsStage, srsStage;
 @dynamic hasPassedAt, passedAt;
+@dynamic hasBurnedAt, burnedAt;
 
 typedef struct TKMAssignment__storage_ {
   uint32_t _has_storage_[1];
@@ -1126,6 +1273,7 @@ typedef struct TKMAssignment__storage_ {
   int32_t startedAt;
   int32_t srsStage;
   int32_t passedAt;
+  int32_t burnedAt;
 } TKMAssignment__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1203,6 +1351,15 @@ typedef struct TKMAssignment__storage_ {
         .number = TKMAssignment_FieldNumber_PassedAt,
         .hasIndex = 7,
         .offset = (uint32_t)offsetof(TKMAssignment__storage_, passedAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "burnedAt",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMAssignment_FieldNumber_BurnedAt,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(TKMAssignment__storage_, burnedAt),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },

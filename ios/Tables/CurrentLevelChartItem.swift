@@ -18,20 +18,18 @@ import Foundation
 enum PieSlice: Int {
   case Locked = 0
   case Lesson
-  case Apprentice
-  case Guru
+  case Started
+  case Passed
+  case Burned
   static let count = 5
 
   func label() -> String {
     switch self {
-    case .Locked:
-      return "Locked"
-    case .Lesson:
-      return "Lesson"
-    case .Apprentice:
-      return Convenience.srsStageCategoryName(for: .apprentice)
-    case .Guru:
-      return Convenience.srsStageCategoryName(for: .guru)
+    case .Locked: return "Locked"
+    case .Lesson: return "Lesson"
+    case .Started: return "Started"
+    case .Passed: return "Passed"
+    case .Burned: return "Burned"
     }
   }
 
@@ -42,8 +40,10 @@ enum PieSlice: Int {
       return UIColor(white: 0.8, alpha: 1.0)
     case .Lesson:
       return UIColor(white: 0.6, alpha: 1.0)
-    case .Apprentice:
+    case .Started:
       saturationMod = 0.6
+    case .Passed:
+      saturationMod = 0.8
     default:
       break
     }
@@ -66,11 +66,11 @@ func unsetAllLabels(view: ChartViewBase) {
 }
 
 @objc class CurrentLevelChartItem: NSObject, TKMModelItem {
-  let dataLoader: DataLoader
+  let services: TKMServices
   let currentLevelAssignments: [TKMAssignment]
 
-  @objc init(dataLoader: DataLoader, currentLevelAssignments: [TKMAssignment]) {
-    self.dataLoader = dataLoader
+  @objc init(services: TKMServices, currentLevelAssignments: [TKMAssignment]) {
+    self.services = services
     self.currentLevelAssignments = currentLevelAssignments
     super.init()
   }
@@ -158,18 +158,24 @@ class CurrentLevelChartCell: TKMModelCell {
   override func update(with baseItem: TKMModelItem!) {
     let item = baseItem as! CurrentLevelChartItem
     let assignments = item.currentLevelAssignments
+    let services = item.services
 
-    update(chart: radicalChart, subjectType: .radical, withAssignments: assignments)
-    update(chart: kanjiChart, subjectType: .kanji, withAssignments: assignments)
-    update(chart: vocabularyChart, subjectType: .vocabulary, withAssignments: assignments)
+    update(chart: radicalChart, subjectType: .radical, services: services,
+           withAssignments: assignments)
+    update(chart: kanjiChart, subjectType: .kanji, services: services, withAssignments: assignments)
+    update(chart: vocabularyChart, subjectType: .vocabulary, services: services,
+           withAssignments: assignments)
   }
 
   private func update(chart: PieChartView,
                       subjectType: TKMSubject_Type,
+                      services: TKMServices,
                       withAssignments assignments: [TKMAssignment]) {
     var sliceSizes = [Int](repeating: 0, count: PieSlice.count)
     for assignment in assignments {
-      if !assignment.hasSubjectType || assignment.subjectType != subjectType {
+      guard assignment.hasSubjectType, assignment.subjectType == subjectType,
+        let subject = services.dataLoader.load(subjectID: Int(assignment.subjectId)),
+        let srsSystem = services.localCachingClient.getSRSSystem(id: subject.srsSystemId) else {
         continue
       }
 
@@ -178,10 +184,12 @@ class CurrentLevelChartCell: TKMModelCell {
         slice = .Lesson
       } else if !assignment.hasSrsStage {
         slice = .Locked
-      } else if assignment.srsStage < 5 {
-        slice = .Apprentice
+      } else if assignment.srsStage < srsSystem.passingPosition {
+        slice = .Started
+      } else if assignment.srsStage < srsSystem.burningPosition {
+        slice = .Passed
       } else {
-        slice = .Guru
+        slice = .Burned
       }
       sliceSizes[slice.rawValue] += 1
     }

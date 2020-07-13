@@ -28,6 +28,7 @@ type SubjectObject struct {
 	ID     int    `'json:"id"`
 	Object string `json:"object"`
 	Data   struct {
+    SRSSystemID            int                      `json:"spaced_repetition_system_id"`
 		Level                  int                      `json:"level"`
 		Slug                   string                   `json:"slug"`
 		HiddenAt               string                   `json:"hidden_at"`

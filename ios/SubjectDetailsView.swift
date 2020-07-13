@@ -114,8 +114,7 @@ private func dateFormatter(dateStyle: DateFormatter.Style,
 
 @objc(TKMSubjectDetailsView)
 class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
-  private let availableDateFormatter = dateFormatter(dateStyle: .medium, timeStyle: .medium)
-  private let startedDateFormatter = dateFormatter(dateStyle: .medium, timeStyle: .none)
+  private let statsDateFormatter = dateFormatter(dateStyle: .medium, timeStyle: .medium)
 
   required init?(coder: NSCoder) {
     super.init(coder: coder)
@@ -205,7 +204,8 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
         addedSection = true
       }
 
-      let item = TKMSubjectModelItem(subject: subject, delegate: subjectDelegate)
+      let item = TKMSubjectModelItem(subject: subject, services: services,
+                                     delegate: subjectDelegate)
       model.add(item)
     }
   }
@@ -225,7 +225,8 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
 
     model.addSection("Used in")
     for subject in subjects {
-      model.add(TKMSubjectModelItem(subject: subject, delegate: subjectDelegate))
+      model
+        .add(TKMSubjectModelItem(subject: subject, services: services, delegate: subjectDelegate))
     }
   }
 
@@ -270,23 +271,29 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     model.add(item)
   }
 
-  @objc public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?) {
-    let model = TKMMutableTableModel(tableView: self)
+  @objc public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
+                           assignment: TKMAssignment?, task: ReviewItem?) {
+    let model = TKMMutableTableModel(tableView: self), isReview = task != nil
     readingItem = nil
+    let meaningAttempted = task?.answeredMeaning == true || task?.answer.meaningWrong == true
+    let readingAttempted = subject.hasRadical == true || task?.answeredReading == true ||
+      task?.answer.readingWrong == true
 
     if subject.hasRadical {
       addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
 
-      model.addSection("Mnemonic")
-      addFormattedText(subject.radical.formattedMnemonicArray as! [TKMFormattedText], isHint: false,
-                       toModel: model)
+      if !isReview || meaningAttempted {
+        model.addSection("Mnemonic")
+        addFormattedText(subject.radical.formattedMnemonicArray as! [TKMFormattedText],
+                         isHint: false,
+                         toModel: model)
 
-      if Settings.showOldMnemonic, subject.radical!.formattedDeprecatedMnemonicArray_Count != 0 {
-        model.addSection("Old Mnemonic")
-        addFormattedText(subject.radical.formattedDeprecatedMnemonicArray as! [TKMFormattedText],
-                         isHint: false, toModel: model)
+        if Settings.showOldMnemonic, subject.radical!.formattedDeprecatedMnemonicArray_Count != 0 {
+          model.addSection("Old Mnemonic")
+          addFormattedText(subject.radical.formattedDeprecatedMnemonicArray as! [TKMFormattedText],
+                           isHint: false, toModel: model)
+        }
       }
-
       addAmalgamationSubjects(subject, toModel: model)
     }
     if subject.hasKanji {
@@ -294,18 +301,22 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       addReadings(subject, studyMaterials: studyMaterials, toModel: model)
       addComponents(subject, title: "Radicals", toModel: model)
 
-      model.addSection("Meaning Explanation")
-      addFormattedText(subject.kanji.formattedMeaningMnemonicArray as! [TKMFormattedText],
-                       isHint: false, toModel: model)
-      addFormattedText(subject.kanji.formattedMeaningHintArray as! [TKMFormattedText], isHint: true,
-                       toModel: model)
-
-      model.addSection("Reading Explanation")
-      addFormattedText(subject.kanji.formattedReadingMnemonicArray as! [TKMFormattedText],
-                       isHint: false, toModel: model)
-      addFormattedText(subject.kanji.formattedReadingHintArray as! [TKMFormattedText], isHint: true,
-                       toModel: model)
-
+      if !isReview || meaningAttempted {
+        model.addSection("Meaning Explanation")
+        addFormattedText(subject.kanji.formattedMeaningMnemonicArray as! [TKMFormattedText],
+                         isHint: false, toModel: model)
+        addFormattedText(subject.kanji.formattedMeaningHintArray as! [TKMFormattedText],
+                         isHint: true,
+                         toModel: model)
+      }
+      if !isReview || readingAttempted {
+        model.addSection("Reading Explanation")
+        addFormattedText(subject.kanji.formattedReadingMnemonicArray as! [TKMFormattedText],
+                         isHint: false, toModel: model)
+        addFormattedText(subject.kanji.formattedReadingHintArray as! [TKMFormattedText],
+                         isHint: true,
+                         toModel: model)
+      }
       addSimilarKanji(subject, toModel: model)
       addAmalgamationSubjects(subject, toModel: model)
     }
@@ -314,19 +325,49 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       addReadings(subject, studyMaterials: studyMaterials, toModel: model)
       addComponents(subject, title: "Kanji", toModel: model)
 
-      model.addSection("Meaning Explanation")
-      addFormattedText(subject.vocabulary.formattedMeaningExplanationArray as! [TKMFormattedText],
-                       isHint: false, toModel: model)
-
-      model.addSection("Reading Explanation")
-      addFormattedText(subject.vocabulary.formattedReadingExplanationArray as! [TKMFormattedText],
-                       isHint: false, toModel: model)
-
+      if !isReview || meaningAttempted {
+        model.addSection("Meaning Explanation")
+        addFormattedText(subject.vocabulary.formattedMeaningExplanationArray as! [TKMFormattedText],
+                         isHint: false, toModel: model)
+      }
+      if !isReview || readingAttempted {
+        model.addSection("Reading Explanation")
+        addFormattedText(subject.vocabulary.formattedReadingExplanationArray as! [TKMFormattedText],
+                         isHint: false, toModel: model)
+      }
       addPartsOfSpeech(subject.vocabulary, toModel: model)
-      addContextSentences(subject, toModel: model)
+      if !isReview || meaningAttempted {
+        addContextSentences(subject, toModel: model)
+      }
     }
 
-    // TODO: Your progress, SRS level, next review, first started, reached guru
+    // Your progress, SRS level, next review, first started, reached guru
+    if let subjectAssignment = assignment {
+      model.addSection("Stats")
+      var statString = "WK Level: \(subjectAssignment.level)"
+      if subjectAssignment.hasStartedAt {
+        statString += "First started at: " + statsDateFormatter
+          .string(from: subjectAssignment.startedAtDate)
+        if subjectAssignment.hasSrsStage {
+          let srsSystem = services.localCachingClient.getSRSSystem(id: subject.srsSystemId)!
+          statString += "\nSRS stage: " + srsSystem.srsStageName(for: subjectAssignment.srsStage)
+        }
+        if subjectAssignment.hasAvailableAt {
+          statString += "\nNext review at: " + statsDateFormatter
+            .string(from: subjectAssignment.availableAtDate)
+        }
+        if subjectAssignment.hasPassedAt {
+          statString += "\nPassed at: " + statsDateFormatter
+            .string(from: subjectAssignment.passedAtDate)
+        }
+      }
+      let font = UIFont.systemFont(ofSize: kFontSize, weight: .regular)
+      model.add(AttributedModelItem(text: attrString(statString, attrs: [.font: font])))
+
+      if subjectAssignment.hasBurnedAt {
+        // TODO: Add resurrect button
+      }
+    }
 
     tableModel = model
     model.reloadTable()

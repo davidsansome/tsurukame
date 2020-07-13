@@ -34,6 +34,7 @@ CF_EXTERN_C_BEGIN
 @class TKMMeaning;
 @class TKMRadical;
 @class TKMReading;
+@class TKMSRSStage;
 @class TKMSubject;
 @class TKMSubjectsByLevel;
 @class TKMVisuallySimilarKanji;
@@ -163,10 +164,10 @@ typedef GPB_ENUM(TKMSRSStage_Category) {
    * of the field.
    **/
   TKMSRSStage_Category_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
-  TKMSRSStage_Category_Apprentice = 0,
-  TKMSRSStage_Category_Guru = 1,
-  TKMSRSStage_Category_Master = 2,
-  TKMSRSStage_Category_Enlightened = 3,
+  TKMSRSStage_Category_Locked = 0,
+  TKMSRSStage_Category_Unlocked = 1,
+  TKMSRSStage_Category_Started = 2,
+  TKMSRSStage_Category_Passed = 3,
   TKMSRSStage_Category_Burned = 4,
 };
 
@@ -478,6 +479,7 @@ typedef GPB_ENUM(TKMSubject_FieldNumber) {
   TKMSubject_FieldNumber_Kanji = 10,
   TKMSubject_FieldNumber_Vocabulary = 11,
   TKMSubject_FieldNumber_AmalgamationSubjectIdsArray = 12,
+  TKMSubject_FieldNumber_SrsSystemId = 13,
 };
 
 GPB_FINAL @interface TKMSubject : GPBMessage
@@ -485,6 +487,9 @@ GPB_FINAL @interface TKMSubject : GPBMessage
 @property(nonatomic, readwrite) int32_t id_p;
 
 @property(nonatomic, readwrite) BOOL hasId_p;
+@property(nonatomic, readwrite) int32_t srsSystemId;
+
+@property(nonatomic, readwrite) BOOL hasSrsSystemId;
 @property(nonatomic, readwrite) int32_t level;
 
 @property(nonatomic, readwrite) BOOL hasLevel;
@@ -535,7 +540,57 @@ GPB_FINAL @interface TKMSubject : GPBMessage
 
 #pragma mark - TKMSRSStage
 
+typedef GPB_ENUM(TKMSRSStage_FieldNumber) {
+  TKMSRSStage_FieldNumber_Interval = 1,
+  TKMSRSStage_FieldNumber_Position = 2,
+  TKMSRSStage_FieldNumber_IntervalUnit = 3,
+};
+
 GPB_FINAL @interface TKMSRSStage : GPBMessage
+
+@property(nonatomic, readwrite) int32_t interval;
+
+@property(nonatomic, readwrite) BOOL hasInterval;
+@property(nonatomic, readwrite) int32_t position;
+
+@property(nonatomic, readwrite) BOOL hasPosition;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *intervalUnit;
+/** Test to see if @c intervalUnit has been set. */
+@property(nonatomic, readwrite) BOOL hasIntervalUnit;
+
+@end
+
+#pragma mark - TKMSRSSystem
+
+typedef GPB_ENUM(TKMSRSSystem_FieldNumber) {
+  TKMSRSSystem_FieldNumber_Id_p = 1,
+  TKMSRSSystem_FieldNumber_UnlockingPosition = 2,
+  TKMSRSSystem_FieldNumber_StartingPosition = 3,
+  TKMSRSSystem_FieldNumber_PassingPosition = 4,
+  TKMSRSSystem_FieldNumber_BurningPosition = 5,
+  TKMSRSSystem_FieldNumber_StagesArray = 6,
+};
+
+GPB_FINAL @interface TKMSRSSystem : GPBMessage
+
+@property(nonatomic, readwrite) int32_t id_p;
+
+@property(nonatomic, readwrite) BOOL hasId_p;
+@property(nonatomic, readwrite) int32_t unlockingPosition;
+
+@property(nonatomic, readwrite) BOOL hasUnlockingPosition;
+@property(nonatomic, readwrite) int32_t startingPosition;
+
+@property(nonatomic, readwrite) BOOL hasStartingPosition;
+@property(nonatomic, readwrite) int32_t passingPosition;
+
+@property(nonatomic, readwrite) BOOL hasPassingPosition;
+@property(nonatomic, readwrite) int32_t burningPosition;
+
+@property(nonatomic, readwrite) BOOL hasBurningPosition;
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMSRSStage*> *stagesArray;
+/** The number of items in @c stagesArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger stagesArray_Count;
 
 @end
 
@@ -550,6 +605,7 @@ typedef GPB_ENUM(TKMAssignment_FieldNumber) {
   TKMAssignment_FieldNumber_StartedAt = 6,
   TKMAssignment_FieldNumber_SrsStage = 7,
   TKMAssignment_FieldNumber_PassedAt = 8,
+  TKMAssignment_FieldNumber_BurnedAt = 9,
 };
 
 GPB_FINAL @interface TKMAssignment : GPBMessage
@@ -578,6 +634,9 @@ GPB_FINAL @interface TKMAssignment : GPBMessage
 @property(nonatomic, readwrite) int32_t passedAt;
 
 @property(nonatomic, readwrite) BOOL hasPassedAt;
+@property(nonatomic, readwrite) int32_t burnedAt;
+
+@property(nonatomic, readwrite) BOOL hasBurnedAt;
 @end
 
 /**

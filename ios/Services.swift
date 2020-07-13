@@ -15,9 +15,7 @@
 import Foundation
 import Reachability
 
-@objc
-@objcMembers
-class TKMServices: NSObject {
+@objcMembers class TKMServices: NSObject {
   let dataLoader: DataLoader
   let reachability: Reachability
   let fontLoader: TKMFontLoader
@@ -28,7 +26,7 @@ class TKMServices: NSObject {
   override init() {
     dataLoader = try! DataLoader(fromURL: Bundle.main.url(forResource: "data",
                                                           withExtension: "bin")!)
-    reachability = Reachability.forInternetConnection()
+    reachability = try! Reachability()
     fontLoader = TKMFontLoader()
 
     super.init()

@@ -30,12 +30,14 @@ static const CGFloat kFontSize = 14.f;
 @implementation TKMSubjectModelItem
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
+                       services:(TKMServices *)services
                        delegate:(nullable id<TKMSubjectDelegate>)delegate
                    readingWrong:(bool)readingWrong
                    meaningWrong:(bool)meaningWrong {
   self = [super init];
   if (self) {
     _subject = subject;
+    _services = services;
     _delegate = delegate;
     _meaningWrong = meaningWrong;
     _readingWrong = readingWrong;
@@ -47,9 +49,14 @@ static const CGFloat kFontSize = 14.f;
 }
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
+                       services:(TKMServices *)services
                      assignment:(TKMAssignment *)assignment
                        delegate:(nullable id<TKMSubjectDelegate>)delegate {
-  self = [self initWithSubject:subject delegate:delegate readingWrong:false meaningWrong:false];
+  self = [self initWithSubject:subject
+                      services:services
+                      delegate:delegate
+                  readingWrong:false
+                  meaningWrong:false];
   if (self) {
     self.assignment = assignment;
   }
@@ -57,8 +64,13 @@ static const CGFloat kFontSize = 14.f;
 }
 
 - (instancetype)initWithSubject:(TKMSubject *)subject
+                       services:(TKMServices *)services
                        delegate:(nullable id<TKMSubjectDelegate>)delegate {
-  return [self initWithSubject:subject delegate:delegate readingWrong:false meaningWrong:false];
+  return [self initWithSubject:subject
+                      services:services
+                      delegate:delegate
+                  readingWrong:false
+                  meaningWrong:false];
 }
 
 - (NSString *)cellNibName {
@@ -102,17 +114,19 @@ static const CGFloat kFontSize = 14.f;
       [item.subject japaneseTextWithImageSize:kJapaneseTextImageSize];
 
   if (item.showRemaining) {
+    TKMSRSSystem *srsSystem =
+        [item.services.localCachingClient getSRSSystemWithId:item.subject.srsSystemId];
     if (item.assignment.isReviewStage) {
       [self.readingLabel setHidden:NO];
       self.readingLabel.text = [self formattedIntervalUntil:item.assignment.reviewDate
                                                       label:@"Review"];
       [self.meaningLabel setHidden:NO];
-      self.meaningLabel.text =
-          [self formattedIntervalUntil:[item.assignment guruDateFor:item.subject] label:@"Guru"];
+      self.meaningLabel.text = [self formattedIntervalUntil:[item.assignment passDateWith:srsSystem]
+                                                      label:@"Pass"];
     } else if (item.assignment.isLessonStage) {
       [self.readingLabel setHidden:NO];
-      self.readingLabel.text =
-          [self formattedIntervalUntil:[item.assignment guruDateFor:item.subject] label:@"Guru"];
+      self.readingLabel.text = [self formattedIntervalUntil:[item.assignment passDateWith:srsSystem]
+                                                      label:@"Pass"];
       [self.meaningLabel setHidden:YES];
     } else {
       [self.readingLabel setHidden:YES];

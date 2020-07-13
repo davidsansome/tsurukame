@@ -21,7 +21,10 @@ NS_ASSUME_NONNULL_BEGIN;
 
 @interface ReviewSummaryViewController : UITableViewController
 
-- (void)setupWithServices:(TKMServices *)services items:(NSArray<ReviewItem *> *)items;
+- (void)setupWithServices:(TKMServices *)services
+                    items:(NSArray<ReviewItem *> *)items
+                leveledUp:(BOOL)leveledUp
+                fromLevel:(int)level;
 
 @end
 

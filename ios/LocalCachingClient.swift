@@ -160,6 +160,13 @@ private class SyncProgressTracker {
     pb BLOB
   );
   """
+  static let schemaV6 = """
+  ALTER TABLE sync ADD COLUMN srs_systems_updated_after;
+  CREATE TABLE srs_systems (
+    id INTEGER PRIMARY KEY,
+    pb BLOB
+  );
+  """
   static let clearAllData = """
   UPDATE sync SET
     assignments_updated_after = "",
@@ -217,7 +224,7 @@ private class SyncProgressTracker {
   var cachedUpcomingReviews: [Int32]!
   var cachedPendingProgress: Int32!
   var cachedPendingStudyMaterials: Int32!
-  var cachedGuruKanjiCount: Int32!
+  var cachedPassedKanjiCount: Int32!
   var cachedSRSLevelCounts: [Int32]!
 
   var isCachedAvailableSubjectCountsStale = true
@@ -244,6 +251,7 @@ private class SyncProgressTracker {
       LocalCachingClient.schemaV3,
       LocalCachingClient.schemaV4,
       LocalCachingClient.schemaV5,
+      LocalCachingClient.schemaV6,
     ]
     var shouldPopulateSubjectProgress = false
 
@@ -317,17 +325,20 @@ private class SyncProgressTracker {
         return
       }
       db.checkUpdate("""
-      INSERT INTO error_log (stack, code, description, request_url, response_url,
-       request_data, request_headers, response_headers, response_data)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      """, stack, err.code, err.localizedDescription,
+                     INSERT INTO error_log (stack, code, description, request_url, response_url,
+                      request_data, request_headers, response_headers, response_data)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     """, stack, err.code, err.localizedDescription,
                      err.request?.url?.description ?? "",
                      err.response?.url?.description ?? "",
                      (err.request?.httpBody != nil ? String(data: err.request!.httpBody!,
                                                             encoding: .utf8) : "") ?? "",
                      err.request?.allHTTPHeaderFields?.description ?? "",
                      err.response?.allHeaderFields.description ?? "",
-                     (err.responseData != nil ? String(data: err.responseData!, encoding: .utf8) : "") ?? "")
+                     (err
+                       .responseData != nil ? String(data: err.responseData!, encoding: .utf8) :
+                       "") ??
+                       "")
     }
   }
 
@@ -359,6 +370,15 @@ private class SyncProgressTracker {
   func getAllPendingProgress(in db: FMDatabase) -> [TKMProgress] {
     var ret: [TKMProgress] = [], r = db.checkQuery("SELECT pb FROM pending_progress")
     while r.next() { ret.append(try! TKMProgress(data: r.data(forColumnIndex: 0)!)) }
+    return ret
+  }
+
+  func getSRSSystem(id: Int32) -> TKMSRSSystem? {
+    var ret: TKMSRSSystem?
+    db.inDatabase {
+      let r = $0.checkQuery("SELECT pb FROM srs_systems WHERE id = ?", id)
+      while r.next() { ret = try? TKMSRSSystem(data: r.data(forColumnIndex: 0)!) }
+    }
     return ret
   }
 
@@ -592,33 +612,40 @@ private class SyncProgressTracker {
     }
   }
 
-  func getGuruKanjiCount() -> Int32 {
+  func getPassedKanjiCount() -> Int32 {
     synchronized(self) {
       updateAvailableSRSCountsIfStale()
-      return cachedGuruKanjiCount
+      return cachedPassedKanjiCount
     }
   }
 
   func updateAvailableSRSCountsIfStale() {
     if !isCachedSRSLevelCountsStale { return }
+    var allAssignments: [TKMAssignment] = []
     cachedSRSLevelCounts = Array(repeating: 0, count: 5)
-    db.inDatabase {
-      let guruResults = $0.checkQuery("""
-      SELECT COUNT(*) FROM subject_progress WHERE srs_stage >= 5 AND subject_type = ?
-      """, TKMSubject_Type.kanji)
-      while guruResults.next() {
-        cachedGuruKanjiCount = guruResults.int(forColumnIndex: 0)
+    cachedPassedKanjiCount = 0
+    for level in 0 ... dataLoader.maxLevelGrantedBySubscription {
+      allAssignments += getAssignments(level: Int32(level))
+    }
+
+    for assignment in allAssignments {
+      let systemID = dataLoader.load(subjectID: Int(assignment.subjectId))?.srsSystemId
+      guard let srsSystemID = systemID else {
+        NSLog("No SRS system found")
+        return
+      }
+      guard let category = getSRSSystem(id: srsSystemID)?
+        .srsStageCategory(for: assignment.srsStage) else {
+        NSLog("No SRS category found for ID \(srsSystemID)")
+        return
       }
 
-      let r = $0.checkQuery("""
-      SELECT srs_stage, COUNT(*) FROM subject_progress WHERE srs_stage >= 1 GROUP BY srs_stage
-      """)
-      while r.next() {
-        let srsStage = r.int(forColumnIndex: 0),
-          count = r.int(forColumnIndex: 1),
-          stageCategory = Convenience.srsStageCategory(for: srsStage)
-        cachedSRSLevelCounts[Int(stageCategory.rawValue)] += count
+      if dataLoader.load(subjectID: Int(assignment.subjectId))?.hasKanji == true,
+        assignment.hasPassedAt {
+        cachedPassedKanjiCount += 1
       }
+
+      cachedSRSLevelCounts[Int(category.rawValue)] += 1
     }
     isCachedSRSLevelCountsStale = false
   }
@@ -668,8 +695,8 @@ private class SyncProgressTracker {
         else if progress.meaningWrong || progress
           .readingWrong { newSRSStage = max(0, newSRSStage - 1) }
         db.checkUpdate("""
-        REPLACE INTO subject_progress (id, level, srs_stage, subject_type) VALUES (?, ?, ?, ?)
-        """, progress.assignment.subjectId, progress.assignment.level, newSRSStage,
+                       REPLACE INTO subject_progress (id, level, srs_stage, subject_type) VALUES (?, ?, ?, ?)
+                       """, progress.assignment.subjectId, progress.assignment.level, newSRSStage,
                        progress.assignment.subjectType)
       }
     }
@@ -684,7 +711,8 @@ private class SyncProgressTracker {
   }
 
   func sendPendingProgress(_ progressArray: [TKMProgress],
-                           handler: PartialCompletionHandler?) {
+                           handler: PartialCompletionHandler?,
+                           _ retryIfUnprocessable: Bool = true) {
     let total = Int32(progressArray.count)
     guard total > 0 else {
       if let completionHandler = handler { completionHandler(1, 1) }
@@ -700,8 +728,16 @@ private class SyncProgressTracker {
             if clientErr.code == 401 {
               self.postNotificationOnMainThread(name: "LocalCachingClientUnauthorizedNotification")
             }
-            // Drop the data if the server is telling us our data is invalid
-            if clientErr.code == 422 {
+            if clientErr.code == 422 { // Unprocessable
+              if retryIfUnprocessable {
+                // Retry once without the createdAt field
+                self.sendPendingProgress(progressArray.map {
+                  $0.createdAt = 0
+                  $0.hasCreatedAt = false
+                  return $0
+                }, handler: handler, false)
+              }
+              // Drop the data if the server is telling us our data is invalid
               self.clearPendingProgress(progress)
             }
           }
@@ -771,7 +807,7 @@ private class SyncProgressTracker {
 
   @objc(syncQuickly:handler:) func sync(quickly: Bool,
                                         progressHandler: @escaping SyncProgressHandler) {
-    if !reachability.isReachable() {
+    if reachability.connection == .unavailable {
       invalidateCachedAvailableSubjectCounts()
       progressHandler(1.0)
       return
@@ -794,6 +830,7 @@ private class SyncProgressTracker {
       sendGroup.notify(queue: self.queue) {
         let updateGroup = DispatchGroup()
         self.updateAssignments(handler: tracker.newTask(group: updateGroup))
+        self.updateSRSSystems(handler: tracker.newTask(group: updateGroup))
         self.updateStudyMaterials(handler: tracker.newTask(group: updateGroup))
         self.updateUserInfo(handler: tracker.newTask(group: updateGroup))
         self.updateLevelProgression(handler: tracker.newTask(group: updateGroup))
@@ -829,15 +866,40 @@ private class SyncProgressTracker {
           REPLACE INTO assignments (id, pb, subject_id) VALUES (?, ?, ?)
           """, assignment.id_p, assignment.data()!, assignment.subjectId)
           db.checkUpdate("""
-          REPLACE INTO subject_progress (id, level, srs_stage, subject_type)
-           VALUES (?, ?, ?, ?)
-          """, assignment.subjectId, assignment.level, assignment.srsStage,
+                         REPLACE INTO subject_progress (id, level, srs_stage, subject_type)
+                          VALUES (?, ?, ?, ?)
+                         """, assignment.subjectId, assignment.level, assignment.srsStage,
                          assignment.subjectType)
         }
         db.checkUpdate("UPDATE sync SET assignments_updated_after = ?", dataUpdatedAt)
       }
       NSLog("Recorded \(assignments.count) new assignments at \(dataUpdatedAt)")
       self.invalidateCachedAvailableSubjectCounts()
+    }
+  }
+
+  func updateSRSSystems(handler: @escaping PartialCompletionHandler) {
+    var lastDate: String?
+    db.inDatabase {
+      lastDate = $0.stringForQuery("SELECT study_materials_updated_after FROM sync")
+    }
+
+    NSLog("Getting all SRS systems \(lastDate != nil ? "modified after \(lastDate!)" : "")")
+    client.getSRSSystemsModified(after: lastDate, progressHandler: handler) {
+      if let error = $0 {
+        self.logError(error)
+        return
+      }
+      guard let dataUpdatedAt = $1 else { return }
+      guard let srsSystems = $2 else { return }
+      self.db.inTransaction { (db: FMDatabase, _: UnsafeMutablePointer<ObjCBool>) in
+        for system in srsSystems {
+          db.checkUpdate("REPLACE INTO srs_systems (id, pb) VALUES (?, ?)", system.id_p,
+                         system.data()!)
+        }
+        db.checkUpdate("UPDATE sync SET srs_systems_updated_after = ?", dataUpdatedAt)
+      }
+      NSLog("Recorded \(srsSystems.count) new SRS systems at \(dataUpdatedAt)")
     }
   }
 

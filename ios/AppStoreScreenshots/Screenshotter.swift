@@ -129,18 +129,18 @@ import Foundation
 
     override func getSRSLevelCount(at category: TKMSRSStage_Category) -> Int32 {
       switch category {
-      case .apprentice: return 86
-      case .guru: return 120
-      case .master: return 485
-      case .enlightened: return 786
+      case .unlocked: return availableLessonCount
+      case .started: return 86
+      case .passed: return 120 + 485 + 786
       case .burned: return 2056
+      case .locked: fallthrough
       case .gpbUnrecognizedEnumeratorValue: fallthrough
       @unknown default:
         fatalError()
       }
     }
 
-    override func getGuruKanjiCount() -> Int32 { 864 }
+    override func getPassedKanjiCount() -> Int32 { 864 }
 
     override func getAverageRemainingTime() -> TimeInterval {
       (4 * 24 + 9) * 60 * 60

@@ -29,9 +29,12 @@
   TKMTableModel *_model;
 }
 
-- (void)setupWithServices:(TKMServices *)services items:(NSArray<ReviewItem *> *)items {
+- (void)setupWithServices:(TKMServices *)services
+                    items:(NSArray<ReviewItem *> *)items
+                leveledUp:(BOOL)leveledUp
+                fromLevel:(int)level {
   _services = services;
-  [self setItems:items];
+  [self setItems:items leveledUp:leveledUp fromLevel:level];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -43,9 +46,13 @@
   [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-- (void)setItems:(NSArray<ReviewItem *> *)items {
-  int currentLevel = [_services.localCachingClient getUserInfo].level;
+- (IBAction)showAnswerClicked:(id)sender {
+  UISwitch *switchObject = (UISwitch *)sender;
+  Settings.reviewSummaryViewShowAnswers = switchObject.on;
+  [self setShowAnswers:Settings.reviewSummaryViewShowAnswers animated:true];
+}
 
+- (void)setItems:(NSArray<ReviewItem *> *)items leveledUp:(BOOL)leveledUp fromLevel:(int)fromLevel {
   NSMutableDictionary<NSNumber *, NSMutableArray<ReviewItem *> *> *incorrectItemsByLevel =
       [NSMutableDictionary dictionary];
   int correct = 0;
@@ -75,6 +82,29 @@
   [model addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleValue1
                                                     title:@"Correct answers"
                                                  subtitle:summaryText]];
+  // Level-up summary
+  int currentLevel = fromLevel;
+  if (Settings.animateWKLevelUpPopup && leveledUp) {
+    [model addSection:@"Level-Up Summary"];
+    TKMBasicModelItem *modelItem;
+    if (fromLevel != 60) {
+      currentLevel++;
+      modelItem = [[TKMBasicModelItem alloc]
+          initWithStyle:UITableViewCellStyleSubtitle
+                  title:[NSString stringWithFormat:@"Level-up to %d", currentLevel]
+               subtitle:@"The Crabigator has new lessons for you!"];
+      if (currentLevel == 42)
+        modelItem.subtitle = @"Koichi is proud of you! You have a few lessons!";
+    } else {
+      modelItem = [[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                     title:@"Level-up to 61!"
+                                                  subtitle:
+                                                      @"There's no level 61 yet. The Crabiagtor "
+                                                      @"congratulates you! No new lessons yet!"];
+    }
+    modelItem.image = [UIImage imageNamed:@"cherryblossom"];
+    [model addItem:modelItem];
+  }
 
   // Add a section for each level.
   NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:nil
@@ -91,13 +121,35 @@
 
     for (ReviewItem *item in incorrectItemsByLevel[level]) {
       TKMSubject *subject = [_services.dataLoader loadSubject:item.assignment.subjectId];
-      [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject
-                                                         delegate:self
-                                                     readingWrong:item.answer.readingWrong
-                                                     meaningWrong:item.answer.meaningWrong]];
+      TKMSubjectModelItem *modelItem =
+          [[TKMSubjectModelItem alloc] initWithSubject:subject
+                                              services:_services
+                                              delegate:self
+                                          readingWrong:item.answer.readingWrong
+                                          meaningWrong:item.answer.meaningWrong];
+      modelItem.showAnswers = Settings.reviewSummaryViewShowAnswers;
+      [model addItem:modelItem];
     }
   }
   _model = model;
+}
+
+- (void)setShowAnswers:(bool)showAnswers animated:(bool)animated {
+  for (int section = 0; section < _model.sectionCount; ++section) {
+    for (id<TKMModelItem> item in [_model itemsInSection:section]) {
+      if ([item isKindOfClass:TKMSubjectModelItem.class]) {
+        TKMSubjectModelItem *subjectItem = item;
+        subjectItem.showAnswers = showAnswers;
+      }
+    }
+  }
+
+  for (UITableViewCell *cell in self.tableView.visibleCells) {
+    if ([cell isKindOfClass:TKMSubjectModelView.class]) {
+      TKMSubjectModelView *subjectCell = (TKMSubjectModelView *)cell;
+      [subjectCell setShowAnswers:showAnswers animated:animated];
+    }
+  }
 }
 
 #pragma mark - TKMSubjectDelegate
