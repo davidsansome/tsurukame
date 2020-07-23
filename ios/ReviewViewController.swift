@@ -1203,6 +1203,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
     // Show the correct answer if it's not the first time.
     if Settings.showAnswerImmediately, !lastMarkAnswerWasFirstTime {
+      revealAnswerButtonPressed(revealAnswerButton!)
+    } else {
       revealAnswerButton.isHidden = false
       UIView.animate(withDuration: animationDuration,
                      animations: {
@@ -1211,8 +1213,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)
                      })
-    } else {
-      revealAnswerButtonPressed(revealAnswerButton!)
     }
   }
 
