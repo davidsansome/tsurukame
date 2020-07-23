@@ -28,9 +28,7 @@ import Reachability
                                                           withExtension: "bin")!)
     reachability = try! Reachability()
     fontLoader = TKMFontLoader()
-
     super.init()
-
     audio = Audio(services: self)
   }
 }

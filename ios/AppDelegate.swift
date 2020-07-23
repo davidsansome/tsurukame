@@ -77,11 +77,10 @@ import UserNotifications
   func setMainViewController(animated: Bool, clearUserData: Bool) {
     let client = Client(apiToken: Settings.userApiToken, cookie: Settings.userCookie,
                         dataLoader: services.dataLoader)
-    services.localCachingClient = Screenshotter.localCachingClientClass.init(client: client,
-                                                                             dataLoader: services
-                                                                               .dataLoader,
-                                                                             reachability: services
-                                                                               .reachability)
+    services.localCachingClient =
+      Screenshotter.localCachingClientClass.init(client: client,
+                                                 dataLoader: services.dataLoader,
+                                                 reachability: services.reachability)
 
     if !Screenshotter.isActive {
       // Ask for notification permissions.
@@ -203,9 +202,8 @@ import UserNotifications
   }
 
   func userInfoChanged() {
-    services.dataLoader
-      .maxLevelGrantedBySubscription = Int(services.localCachingClient.getUserInfo()!
-        .maxLevelGrantedBySubscription)
+    services.dataLoader.maxLevelGrantedBySubscription =
+      Int(services.localCachingClient.getUserInfo()!.maxLevelGrantedBySubscription)
   }
 
   func findMainViewController() -> MainViewController? {
