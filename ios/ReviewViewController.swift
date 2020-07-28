@@ -390,14 +390,18 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     if subjectDetailsView.isHidden {
       answerField.becomeFirstResponder()
       answerField.reloadInputViews()
+    } else {
+      subjectDetailsView.becomeFirstResponder()
     }
   }
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     subjectDetailsView.deselectLastSubjectChipTapped()
-    DispatchQueue.main.async {
-      self.focusAnswerField()
+    if subjectDetailsView.isHidden {
+      DispatchQueue.main.async {
+        self.focusAnswerField()
+      }
     }
   }
 
