@@ -1135,7 +1135,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     }
 
     // Otherwise show the correct answer.
-    if !Settings.showAnswerImmediately, firstTimeAnswered {
+    if !Settings.showAnswerImmediately {
       revealAnswerButton.isHidden = false
       UIView.animate(withDuration: animationDuration,
                      animations: {
