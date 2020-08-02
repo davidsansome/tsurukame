@@ -1,3 +1,6 @@
+![](EditorExtension/Application/Assets.xcassets/AppIcon.appiconset/AppIcon256.png)
+
+[![PayPal](https://img.shields.io/badge/paypal-donate-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9ZGWNK5FEZFF6&source=url)
 [![Travis](https://api.travis-ci.org/nicklockwood/SwiftFormat.svg?branch=master)](https://travis-ci.org/nicklockwood/SwiftFormat)
 [![Coveralls](https://coveralls.io/repos/github/nicklockwood/SwiftFormat/badge.svg)](https://coveralls.io/github/nicklockwood/SwiftFormat)
 [![Swift 4.2](https://img.shields.io/badge/swift-4.2-red.svg?style=flat)](https://developer.apple.com/swift)
@@ -15,6 +18,7 @@ Table of Contents
     - [Xcode build phase](#xcode-build-phase)
     - [Via Applescript](#via-applescript)
     - [VSCode plugin](#vscode-plugin)
+    - [Sublime Text plugin](#sublime-text-plugin)
     - [Git pre-commit hook](#git-pre-commit-hook)
     - [On CI using Danger](#on-ci-using-danger)
 - [Configuration](#configuration)
@@ -28,13 +32,14 @@ Table of Contents
     - [File headers](#file-headers)
 - [FAQ](#faq)
 - [Known issues](#known-issues)
+- [Tip Jar](#tip-jar)
 - [Credits](#credits)
 
 
 What is this?
 ----------------
 
-SwiftFormat is a code library and command-line tool for reformatting swift code on macOS or Linux.
+SwiftFormat is a code library and command-line tool for reformatting Swift code on macOS or Linux.
 
 SwiftFormat goes above and beyond what you might expect from a code formatter. In addition to adjusting white space it can insert or remove implicit `self`, remove redundant parentheses, and correct many other deviations from the standard Swift idioms.
 
@@ -83,7 +88,7 @@ Alternatively, you can install the tool on macOS or Linux by using [Mint](https:
 ```bash
 $ mint install nicklockwood/SwiftFormat
 ```
-    
+
 And then run it using:
 
 ```bash
@@ -119,7 +124,7 @@ If you followed the installation instructions above, you can now just type
 ```bash
 $ swiftformat .
 ```
-    
+
 (that's a space and then a period after the command) in the terminal to format any Swift files in the current directory. In place of the `.`, you can instead type an absolute or relative path to the file or directory that you want to format.
 
 **WARNING:** `swiftformat .` will overwrite any Swift files it finds in the current directory, and any subfolders therein. If you run it in your home directory, it will probably reformat every Swift file on your hard drive.
@@ -137,7 +142,7 @@ To use it safely, do the following:
 4. In Terminal, type `swiftformat "/path/to/your/code/"`. The same rules apply as above with respect to paths, and multiple space-delimited paths are allowed.
 
     If you used `--inferoptions` to generate a suggested set of options in step 3, you should copy and paste them into the command, either before or after the path(s) to your source files.
-    
+
     If you have created a [config file](#config-file), you can specify its path using `--config "/path/to/your/config-file/"`. Alternatively, if you name the file `.swiftformat` and place it inside the project you are formatting, it will be picked up automatically.
 
 5. Press enter to begin formatting. Once the formatting is complete, use your source control system to check the changes, and verify that no undesirable changes have been introduced. If they have, revert the changes, tweak the options and try again.
@@ -153,8 +158,14 @@ If you prefer, you can use unix pipes to include SwiftFormat as part of a comman
 ```bash
 $ cat /path/to/file.swift | swiftformat --output /path/to/file.swift
 ```
-    
-Omitting the `--output /path/to/file.swift` will print the formatted file to Standard Output (stdout). You can also use `>` to specify the output path as follows:
+
+Omitting the `--output /path/to/file.swift` will print the formatted file to Standard Output (stdout). You can also pass "stdout" explicitly as the output path:
+
+```bash
+$ cat /path/to/file.swift | swiftformat --output stdout
+```
+
+Or you can use `>` to specify the output path as follows:
 
 ```bash
 $ cat /path/to/file.swift | swiftformat > /path/to/file.swift
@@ -194,7 +205,7 @@ Alternatively, if you prefer not to use Homebrew, you'll find the latest version
 
 Once you have launched the app and restarted Xcode, you'll find a SwiftFormat option under Xcode's Editor menu.
 
-You can configure the formatting [rules](#rules) and [options](#options) using the SwiftFormat for Xcode host application. There is currently no way to override these per-project, however you can import and export different configurations using the File menu. You will need to do this again each time you switch projects.
+You can configure the formatting [rules](#rules) and [options](#options) using the SwiftFormat for Xcode host application. There is currently no way to override these per-project, however, you can import and export different configurations using the File menu. You will need to do this again each time you switch projects.
 
 The format of the configuration file is described in the [Config section](#config-file) below.
 
@@ -222,30 +233,35 @@ import PackageDescription
 
 let package = Package(
     name: "BuildTools",
-	platforms: [.macOS(.v10_11)],
+    platforms: [.macOS(.v10_11)],
     dependencies: [
         .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.41.2"),
-    ]
+    ],
+    targets: [.target(name: "BuildTools", path: "")]
 )
 ```
+3. If you are running Xcode 11.4 or later, in the `BuildTools` folder create a file called `Empty.swift` with nothing in it. This is to satisfy a change in Swift Package Manager.
 
 #### 2) Add a Build phases to your app target
 
 1. Click on your project in the file list, choose your target under `TARGETS`, click the `Build Phases` tab
 2. Add a `New Run Script Phase` by clicking the little plus icon in the top left
-3. Drag the new `Run Script` phase **above** the `Compile Sources` phase, expand it and paste the following script:  
-   ```bash
-   cd BuildTools
-   #swift package update #Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file
-   swift run -c release swiftformat "$SRCROOT"
-   ```
+3. Drag the new `Run Script` phase **above** the `Compile Sources` phase, expand it and paste the following script:
+
+    ```bash
+    cd BuildTools
+    SDKROOT=macosx
+    #swift package update #Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file
+    swift run -c release swiftformat "$SRCROOT"
+    ```
+
+You can also use `swift run -c release --package-path BuildTools swiftformat "$SRCROOT"` if you need a more complex script and `cd BuildTools` breaks stuff.
 
 **NOTE:** You may wish to check BuildTools/Package.swift into your source control so that the version used by your run-script phase is kept in version control. It is recommended to add the following to your .gitignore file: `BuildTools/.build` and `BuildTools/.swiftpm`.
 
-
 ### Using Cocoapods
 
-#### 1) Add the SwitfFormat CLI to your Podfile
+#### 1) Add the SwiftFormat CLI to your Podfile
 
 1. Add the `swiftformat` binary to your project directory via [CocoaPods](https://cocoapods.org/), by adding the following line to your Podfile then running `pod install`:
 
@@ -259,12 +275,13 @@ let package = Package(
 
 1. Click on your project in the file list, choose your target under `TARGETS`, click the `Build Phases` tab
 2. Add a `New Run Script Phase` by clicking the little plus icon in the top left
-3. Drag the new `Run Script` phase **above** the `Compile Sources` phase, expand it and paste the following script:  
+3. Drag the new `Run Script` phase **above** the `Compile Sources` phase, expand it and paste the following script:
+
     ```bash
     "${PODS_ROOT}/SwiftFormat/CommandLineTool/swiftformat" "$SRCROOT"
     ```
 
-### Alternative: Locally installed swiftformat
+### Alternative: Locally installed SwiftFormat
 
 Alternatively, you could use a locally installed swiftformat command-line tool instead by putting the following in your Run Script build phase:
 
@@ -301,24 +318,31 @@ VSCode plugin
 If you prefer to use Microsoft's [VSCode](https://code.visualstudio.com) editor for writing Swift, [Valentin Knabel](https://github.com/vknabel) has created a [VSCode plugin](https://marketplace.visualstudio.com/items?itemName=vknabel.vscode-swiftformat) for SwiftFormat.
 
 
+Sublime Text plugin
+--------------------
+
+If you prefer to use the [Sublime Text](https://www.sublimetext.com) editor, try the [Sublime-Swift-Format plugin](https://github.com/aerobounce/Sublime-Swift-Format) by [Aerobounce](https://github.com/aerobounce).
+
+
 Git pre-commit hook
 ---------------------
 
 1. Follow the instructions for installing the SwiftFormat command-line tool.
 
-2. Edit or create a `.git/hooks/pre-commit` file in your project folder. The .git folder is hidden but should already exist if you are using Git with your project, so open in with the terminal, or the Finder's `Go > Go to Folder...` menu.
+2. Install [git-format-staged](https://github.com/hallettj/git-format-staged).
 
-3. Add the following line in the pre-commit file (unlike the Xcode build phase approach, this uses your locally installed version of SwiftFormat, not a separate copy in your project repository)
+3. Edit or create a `.git/hooks/pre-commit` file in your project folder. The .git folder is hidden but should already exist if you are using Git with your project, so open it with the terminal, or the Finder's `Go > Go to Folder...` menu.
+
+4. Add the following line in the pre-commit file. The `{}` will be replaced automatically by the path to the Swift file being formatted:
 
     ```bash
     #!/bin/bash
-    git diff --diff-filter=d --staged --name-only | grep -e '\(.*\).swift$' | while read line; do
-      swiftformat "${line}";
-      git add "$line";
-    done
+    git-format-staged --formatter "swiftformat stdin --stdinpath {}" "*.swift"
     ```
-
-4. enable the hook by typing `chmod +x .git/hooks/pre-commit` in the terminal
+    
+    (Note that this example uses your locally installed version of SwiftFormat, not a separate copy in your project repository. You can replace `swiftformat` with the path to a copy inside your project if you prefer.)
+    
+5. enable the hook by typing `chmod +x .git/hooks/pre-commit` in the terminal.
  
 The pre-commit hook will now run whenever you run `git commit`. Running `git commit --no-verify` will skip the pre-commit hook.
 
@@ -340,7 +364,7 @@ To setup SwiftFormat to be used by your continuous integration system using [Dan
     swiftformat.additional_args = "--indent tab --self insert" # optional
     swiftformat.check_format(fail_on_error: true)
     ```
-    
+
     **NOTE:** It is recommended to add the `swiftformat` binary to your project directory to ensure the same version is used each time (see the [Xcode build phase](#xcode-build-phase) instructions above).
 
 Configuration
@@ -357,6 +381,19 @@ The options available in SwiftFormat can be displayed using the `--options` comm
 Rules are configured by adding `--[option_name] [value]` to your command-line arguments, or by creating a `.swiftformat` [config file](#config-file) and placing it in your project directory.
 
 A given option may affect multiple rules. Use `--ruleinfo [rule_name]` command for details about which options affect a given rule, or see the [Rules.md](https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md) file.
+
+You can configure options for specific files or code ranges by using `swiftformat:options` directive in comments inside your Swift file. To temporarily set one or more options inside a source file, use:
+
+```swift
+// swiftformat:options --indent 2 --allman true
+```
+
+To apply an options override only to a particular line, use the `:next` modifier:
+
+```swift
+// swiftformat:options:next --semicolons inline
+doTheThing(); print("Did the thing")
+```
 
 
 Rules
@@ -391,7 +428,7 @@ To avoid automatically opting-in to new rules when SwiftFormat is updated, you c
 
 To see exactly which rules were applied to a given file, you can use the `--verbose` command-line option to force SwiftFormat to print a more detailed log as it applies the formatting. **NOTE:** running in verbose mode is slower than the default mode.
 
-You can disable rules for specific files or code ranges by using `swiftformat:` directives in comments inside your Swift files. To temporarily disable one or more rules inside a source file, use:
+You can disable rules for specific files or code ranges by using `swiftformat:` directives in comments inside your Swift file. To temporarily disable one or more rules inside a source file, use:
 
 ```swift
 // swiftformat:disable <rule1> [<rule2> [rule<3> ...]]
@@ -451,7 +488,7 @@ A SwiftFormat configuration file consists of one or more command-line options, s
 
 ```
 --allman true
---indent tabs
+--indent tab
 --disable elseOnSameLine,semicolons
 ```
 
@@ -465,14 +502,14 @@ This allows you to override certain rules or formatting options just for a parti
 
 The `--exclude` option takes a comma-delimited list of file or directory paths to exclude from formatting. Excluded paths are relative to the config file containing the `--exclude` command. The excluded paths can include wildcards, specified using Unix "Glob" syntax, as [documented below](#globs).
 
-Config files named ".swiftformat" will be processed automatically, however you can select an additional configuration file to use for formatting using the `--config "path/to/config/file"` command-line argument. A configuration file selected using `--config` does not need to be named ".swiftformat", and can be located outside of the project directory.
+Config files named ".swiftformat" will be processed automatically, however, you can select an additional configuration file to use for formatting using the `--config "path/to/config/file"` command-line argument. A configuration file selected using `--config` does not need to be named ".swiftformat", and can be located outside of the project directory.
 
 The config file format is designed to be edited by hand. You may include blank lines for readability, and can also add comments using a hash prefix (#), e.g.
 
 ```
 # format options
 --allman true
---indent tabs # tabs FTW!
+--indent tab # tabs FTW!
 
 # file options
 --exclude Pods
@@ -506,18 +543,18 @@ SwiftFormat's glob syntax is based on Ruby's implementation, which varies slight
 * `[a-z]` - Matches a single character in the specified range in the brackets.
 
 * `{foo,bar}` - Matches any one of the comma-delimited strings inside the braces.
-    
+
 Examples:
 
 * `foo.swift` - Matches the file "foo.swift" in the same directory as the config file.
 
-* `*.swift` - Matches any swift file in the same directory as the config file.
+* `*.swift` - Matches any Swift file in the same directory as the config file.
 
 * `foo/bar.swift` - Matches the file "bar.swift" in the directory "foo".
 
 * `**/foo.swift` - Matches any file named "foo.swift" in the project.
 
-* `**/*.swift` - Matches any swift file in the project.
+* `**/*.swift` - Matches any Swift file in the project.
 
 * `**/Generated` - Matches any folder called `Generated` in the project.
 
@@ -537,7 +574,7 @@ In order to run SwiftFormat as a linter, you can use the `--lint` command-line o
 $ swiftformat --lint path/to/project
 ```
 
-This runs the same rules as format mode, and all the same configuration options apply, however no files will be modified. Instead, SwiftFormat will format each file in memory and then compare the result against the input and report the lines that required changes.
+This runs the same rules as format mode, and all the same configuration options apply, however, no files will be modified. Instead, SwiftFormat will format each file in memory and then compare the result against the input and report the lines that required changes.
 
 The `--lint` option is similar to `--dryrun`, but `--lint` returns warnings for every line that required changes, and will return a nonzero error code if any changes are detected, which is useful if you want it to fail a build step on your CI server.
 
@@ -627,17 +664,22 @@ FAQ
 
 *Q. What platforms does SwiftFormat support?*
 
-> A. SwiftFormat works on macOS 10.12 (Sierra) and above, and also runs on Ubuntu Linux.
+> A. SwiftFormat works on macOS 10.13 (High Sierra) and above, and also runs on Ubuntu Linux.
 
 
 *Q. What versions of Swift are supported?*
 
-> A. The SwiftFormat framework and command-line tool can be compiled using Swift 4.0 and above, and can format programs written in Swift 3.x, 4.x or 5. Swift 2.x is no longer actively supported. If you are still using Swift 2.x, and find that SwiftFormat breaks your code, the best solution is probably to revert to an earlier SwiftFormat release, or enable only a small subset of rules.
+> A. The SwiftFormat framework and command-line tool can be compiled using Swift 4.2 and above, and can format programs written in Swift 4.x or 5. Swift 3.x is no longer actively supported. If you are still using Swift 3.x or earlier and find that SwiftFormat breaks your code, the best solution is probably to revert to an earlier SwiftFormat release, or enable only a small subset of rules. Use the `--swiftversion` argument to enable additional rules specific to later Swift versions.
 
 
 *Q. SwiftFormat made changes I didn't want it to. How can I find out which rules to disable?*
 
 > A. If you run SwiftFormat using the `--verbose` option, it will tell you which rules were applied to each file. You can then selectively disable certain rules using the `--disable` argument (see below).
+
+
+*Q. People on my team have different SwiftFormat versions installed. How can we ensure consistent formatting?
+
+> A. You can specify a `--minversion` argument in your project's .swiftformat` file to fail the build if developers attempt to use an older SwiftFormat version.
 
 
 *Q. How can I modify the formatting rules?*
@@ -658,7 +700,7 @@ Q. I don't want to be surprised by new rules added when I upgrade SwiftFormat. H
 
 *Q. Why can't I set the indent width or choose between tabs/spaces in the [SwiftFormat for Xcode](#xcode-source-editor-extension) options?*
 
-> Indent width and tabs/spaces can be configured in Xcode on a per project-basis. You'll find the option under "Text Settings" in the right-hand sidebar.
+> Indent width and tabs/spaces can be configured in Xcode on a per project-basis. You'll find the option under "Text Settings" in the Files inspector of the right-hand sidebar.
 
 
 *Q. After applying SwiftFormat, my code won't compile. Is that a bug?*
@@ -683,7 +725,7 @@ Known issues
 
 * When using the `--self remove` option, the `redundantSelf` rule will remove references to `self` in autoclosure arguments, which may change the meaning of the code, or cause it not to compile. To work around this issue, use the `--selfrequired` option to provide a comma-delimited list of methods to be excluded from the rule. The `expect()` function from the popular [Nimble](https://github.com/Quick/Nimble) unit testing framework is already excluded by default. If you are using the `--self insert` option then this is not an issue.
 
-* If you assign `SomeClass.self` to a variable and then instantiate an instance of the class using that variable, Swift requires that you use an explicit `.init()`, however the   `redundantInit` rule is not currently capable of detecting this situation and will remove the `.init`. To work around this issue, use the `// swiftformat:disable:next redundantInit` comment directive to disable the rule for any affected lines of code (or just disable the `redundantInit` rule completely).
+* If you assign `SomeClass.self` to a variable and then instantiate an instance of the class using that variable, Swift requires that you use an explicit `.init()`, however, the `redundantInit` rule is not currently capable of detecting this situation and will remove the `.init`. To work around this issue, use the `// swiftformat:disable:next redundantInit` comment directive to disable the rule for any affected lines of code (or just disable the `redundantInit` rule completely).
 
 * The `--self insert` option can only recognize locally declared member variables, not ones inherited from superclasses or extensions in other files, so it cannot insert missing `self` references for those. Note that the reverse is not true: `--self remove` should remove *all* redundant `self` references.
 
@@ -692,27 +734,40 @@ Known issues
 * The `isEmpty` rule will convert `count == 0` to `isEmpty` even for types that do not have an `isEmpty` method, such as `NSArray`/`NSDictionary`/etc. Use of Foundation collections in Swift code is pretty rare, but just in case, the rule is disabled by default.
 
 * If a file begins with a comment, the `stripHeaders` rule will remove it if it is followed by a blank line. To avoid this, make sure that the first comment is directly followed by a line of code.
-         
+
 * The formatted file cache is based on a hash of the file contents, so it's possible (though unlikely) that an edited file will have the exact same hash as the previously formatted version, causing SwiftFormat to incorrectly identify it as not having changed, and fail to update it.
 
     To fix this, you can use the command-line option `--cache ignore` to force SwiftFormat to ignore the cache for this run, or just type an extra space in the file (which SwiftFormat will then remove again when it applies the correct formatting).
-    
+
 * When running on Linux, the `--symlinks` option has no effect, and some of the `fileHeader` placeholders are not supported.
+
+
+Tip Jar
+-----------
+
+SwiftFormat is not a commercially-funded product, it's a labour of love given freely to the community. If you find it useful, please consider making a donation.
+
+[![Donate via PayPal](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9ZGWNK5FEZFF6&source=url)
 
 
 Credits
 ------------
 
-* [Tony Arnold](https://github.com/tonyarnold) - Xcode source editor extension
-* [Vincent Bernier](https://github.com/vinceburn) - Xcode extension settings UI
+* [Tony Arnold](https://github.com/tonyarnold) - SwiftFormat for Xcode
+* [Vincent Bernier](https://github.com/vinceburn) - SwiftFormat for Xcode settings UI
+* [Vikram Kriplaney](https://github.com/markiv) - SwiftFormat for Xcode icon
+* [Hyperphonic](https://github.com/hyperphonic0) - Xcode 12 compatibility for SwiftFormat
 * [Maxime Marinel](https://github.com/bourvill) - Git pre-commit hook script
 * [Romain Pouclet](https://github.com/palleas) - Homebrew formula
-* [Aerobounce](https://github.com/aerobounce) - Homebrew cask for source editor extension
+* [Aerobounce](https://github.com/aerobounce) - Homebrew cask and Sublime Text plugin
+* [Cal Stephens](https://github.com/calda) - Several formatting rules and options
 * [Ali Akhtarzada](https://github.com/aliak00) - Several path-related CLI enhancements
 * [Yonas Kolb](https://github.com/yonaskolb) - Swift Package Manager integration
 * [Wolfgang Lutz](https://github.com/Lutzifer) - AppleScript integration instructions
-* [Balázs Kilvády](https://github.com/balitm) - Xcode lint warning integration
+* [Balázs Kilvády](https://github.com/balitm) - Xcode lint warning integration
 * [Anthony Miller](https://github.com/AnthonyMDev) - Improvements to wrap/indent logic
+* [Shingo Takagi](https://github.com/zizi4n5) - Several brace-related bug fixes
+* [Juri Pakaste](https://github.com/juri) - Filelist feature
 * [Nick Lockwood](https://github.com/nicklockwood) - Everything else
 
 ([Full list of contributors](https://github.com/nicklockwood/SwiftFormat/graphs/contributors))

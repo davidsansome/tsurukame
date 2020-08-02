@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
-  gcp-cli: circleci/gcp-cli@1.8.3
+  gcp-cli: circleci/gcp-cli@1.8.4
 
 jobs:
   test-golang:
     docker:
-      - image: circleci/golang:1.12
+      - image: circleci/golang:1.14
     steps:
       - checkout
       - run: go build ./...
@@ -28,7 +28,7 @@ jobs:
 
   test-ios:
     macos:
-      xcode: "11.3.0"
+      xcode: 11.6.0
     environment:
       FL_OUTPUT_DIR: output
     steps:
@@ -53,7 +53,7 @@ jobs:
 
   release-testflight:
     macos:
-      xcode: "11.3.0"
+      xcode: 11.6.0
     steps:
       - checkout
       - attach_workspace:
