@@ -976,6 +976,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   func textFieldShouldReturn(_: UITextField) -> Bool {
     enterKeyPressed()
+
+    // Keep the cursor in the text field on OtherKanjiReading or ContainsInvalidCharacters
+    // AnswerCheckerResult cases except when subject details are displayed.
+    if subjectDetailsView.isHidden,
+      activeTask.answer.hasMeaningWrong || activeTask.answer.hasReadingWrong {
+      return false
+    }
+
     return true
   }
 
@@ -993,6 +1001,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     } else {
       submit()
     }
+  }
+
+  /// Used during wrong answers to reset the text field.
+  @objc func backspaceKeyPressed() {
+    answerField.text = nil
+    answerField.textColor = TKMStyle.Color.label
+    answerField.isEnabled = true
+    answerField.becomeFirstResponder()
   }
 
   func submit() {
@@ -1229,14 +1245,29 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   override var keyCommands: [UIKeyCommand]? {
+    let keyboardEnter = UIKeyCommand(input: "\r",
+                                     modifierFlags: [],
+                                     action: #selector(enterKeyPressed),
+                                     discoverabilityTitle: "Continue")
+    let numericKeyPadEnter = UIKeyCommand(input: "\u{3}",
+                                          modifierFlags: [],
+                                          action: #selector(enterKeyPressed),
+                                          discoverabilityTitle: "Continue")
     var keyCommands: [UIKeyCommand] = []
+
+    if !answerField.isEnabled, subjectDetailsView.isHidden {
+      // Continue when a wrong answer has been entered but the subject details view is hidden.
+      keyCommands.append(contentsOf: [UIKeyCommand(input: "\u{8}",
+                                                   modifierFlags: [],
+                                                   action: #selector(backspaceKeyPressed),
+                                                   discoverabilityTitle: "Clear wrong answer"),
+                                      keyboardEnter,
+                                      numericKeyPadEnter])
+    }
+
     if !subjectDetailsView.isHidden {
       // Key commands when showing the detail view
-      keyCommands.append(contentsOf: [UIKeyCommand(input: "\r",
-                                                   modifierFlags: [],
-                                                   action: #selector(enterKeyPressed),
-                                                   discoverabilityTitle: "Continue"),
-                                      UIKeyCommand(input: " ",
+      keyCommands.append(contentsOf: [UIKeyCommand(input: " ",
                                                    modifierFlags: [],
                                                    action: #selector(playAudio),
                                                    discoverabilityTitle: "Play reading"),
@@ -1251,7 +1282,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
                                       UIKeyCommand(input: "s",
                                                    modifierFlags: [.command],
                                                    action: #selector(addSynonym),
-                                                   discoverabilityTitle: "Add as synonym")])
+                                                   discoverabilityTitle: "Add as synonym"),
+                                      keyboardEnter,
+                                      numericKeyPadEnter])
     }
 
     if let customFonts = Settings.selectedFonts, customFonts.count > 0 {
