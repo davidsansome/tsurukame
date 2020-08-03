@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import "TKMKanaInput.h"
-#import "Settings.h"
 #import "TKMKanaInput+Internals.h"
+#import "Tsurukame-Swift.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

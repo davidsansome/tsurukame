@@ -17,7 +17,6 @@
 
 #import "Client.h"
 #import "LocalCachingClient.h"
-#import "Settings.h"
 
 #import "proto/Wanikani+Convenience.h"
 

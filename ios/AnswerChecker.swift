@@ -29,17 +29,15 @@ import Foundation
     .Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x309D))!)
   @objc static let kAllKanaCharacterSet = CharacterSet(charactersIn: Unicode
     .Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x3100))!)
-  @objc static let kJapaneseCharacterSet = kAllKanaCharacterSet.union(
-    CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3400))! ..< Unicode.Scalar(UInt32(0x4DC0))!))
-    .union(
-      CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x4E00))! ..< Unicode
-        .Scalar(UInt32(0xA000))!))
-    .union(
-      CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xF900))! ..< Unicode
-        .Scalar(UInt32(0xFB00))!))
-    .union(
-      CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xFF66))! ..< Unicode
-        .Scalar(UInt32(0xFFA0))!))
+  @objc static let kJapaneseCharacterSet = kAllKanaCharacterSet
+    .union(CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3400))! ..<
+        Unicode.Scalar(UInt32(0x4DC0))!))
+    .union(CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x4E00))! ..<
+        Unicode.Scalar(UInt32(0xA000))!))
+    .union(CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xF900))! ..<
+        Unicode.Scalar(UInt32(0xFB00))!))
+    .union(CharacterSet(charactersIn: Unicode.Scalar(UInt32(0xFF66))! ..<
+        Unicode.Scalar(UInt32(0xFFA0))!))
 
   private class func containsAscii(_ s: String) -> Bool {
     s.rangeOfCharacter(from: kAsciiCharacterSet) != nil

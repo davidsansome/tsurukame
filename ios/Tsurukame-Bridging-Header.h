@@ -23,7 +23,6 @@
 #import "ReviewItem.h"
 #import "ReviewSummaryViewController.h"
 #import "SearchResultViewController.h"
-#import "Settings.h"
 #import "SettingsViewController.h"
 #import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"
