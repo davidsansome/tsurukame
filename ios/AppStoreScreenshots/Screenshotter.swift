@@ -41,9 +41,9 @@ import Foundation
       if isActive {
         if ProcessInfo.processInfo.arguments.contains("ResetUserDefaults") {
           // We're run again after testing finishes to remove the dummy user.
-          Settings.userCookie = nil
-          Settings.userApiToken = nil
-          Settings.userEmailAddress = nil
+          Settings.userCookie = ""
+          Settings.userApiToken = ""
+          Settings.userEmailAddress = ""
         } else {
           // Pretend there's a logged in user.
           Settings.userCookie = "dummy"

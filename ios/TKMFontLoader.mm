@@ -17,7 +17,7 @@
 #import <CoreText/CoreText.h>
 #import <Foundation/Foundation.h>
 
-#import "Settings.h"
+#import "Tsurukame-Swift.h"
 
 NSString *const kTKMFontPreviewText =
     @"色は匂へど散りぬるを我が世誰ぞ常ならん有為の奥山今日越えて浅き夢見じ酔ひもせず";

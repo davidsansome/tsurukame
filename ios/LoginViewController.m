@@ -15,7 +15,6 @@
 #import "LoginViewController.h"
 
 #import "Client.h"
-#import "Settings.h"
 #import "Tsurukame-Swift.h"
 
 NS_ASSUME_NONNULL_BEGIN

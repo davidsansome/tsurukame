@@ -14,7 +14,7 @@
 
 #import "SuccessAnimation.h"
 
-#import "Settings.h"
+#import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
 static CGFloat RandFloat(CGFloat min, CGFloat max) {

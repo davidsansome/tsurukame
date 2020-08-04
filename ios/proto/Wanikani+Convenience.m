@@ -14,7 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "Settings.h"
+#import "Tsurukame-Swift.h"
 #import "Wanikani+Convenience.h"
 
 static const int kGuruStage = 5;

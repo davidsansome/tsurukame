@@ -14,7 +14,6 @@
 
 #import "TKMOfflineAudioViewController.h"
 
-#import "Settings.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"

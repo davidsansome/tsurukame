@@ -333,7 +333,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
                                               block: { [weak self] _ in
                                                 guard let self = self else { return }
                                                 self.hourlyTimerExpired()
-      })
+                                              })
   }
 
   func cancelHourlyTimer() {
@@ -381,10 +381,9 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
   func updateUserInfo() {
     guard let user = services.localCachingClient.getUserInfo(),
-      let email = Settings.userEmailAddress,
-      let headerView = headerView else {
-      return
-    }
+      let headerView = headerView,
+      Settings.userEmailAddress != "" else { return }
+    let email = Settings.userEmailAddress
     let guruKanji = services.localCachingClient.getGuruKanjiCount()
     let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)
       : userProfileImageURL(emailAddress: email)

@@ -16,7 +16,6 @@
 
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
-#import "Settings.h"
 #import "TKMFontsViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
@@ -284,19 +283,19 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (NSString *)reviewOrderValueText {
   switch (Settings.reviewOrder) {
-    case ReviewOrder_Random:
+    case ReviewOrderRandom:
       return @"Random";
-    case ReviewOrder_AscendingSRSStage:
+    case ReviewOrderAscendingSRSStage:
       return @"Ascending SRS stage";
-    case ReviewOrder_DescendingSRSStage:
+    case ReviewOrderDescendingSRSStage:
       return @"Descending SRS stage";
-    case ReviewOrder_CurrentLevelFirst:
+    case ReviewOrderCurrentLevelFirst:
       return @"Current level first";
-    case ReviewOrder_LowestLevelFirst:
+    case ReviewOrderLowestLevelFirst:
       return @"Lowest level first";
-    case ReviewOrder_NewestAvailableFirst:
+    case ReviewOrderNewestAvailableFirst:
       return @"Newest available first";
-    case ReviewOrder_OldestAvailableFirst:
+    case ReviewOrderOldestAvailableFirst:
       return @"Oldest available first";
   }
   return nil;
@@ -308,13 +307,13 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (NSString *)interfaceStyleValueText {
   switch (Settings.interfaceStyle) {
-    case InterfaceStyle_System:
+    case InterfaceStyleSystem:
       return @"System";
       break;
-    case InterfaceStyle_Light:
+    case InterfaceStyleLight:
       return @"Light";
       break;
-    case InterfaceStyle_Dark:
+    case InterfaceStyleDark:
       return @"Dark";
       break;
   }

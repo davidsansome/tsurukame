@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "LessonOrderViewController.h"
-#import "Settings.h"
+#import "Tsurukame-Swift.h"
 #import "proto/Wanikani+Convenience.h"
 
 @interface TKMLessonOrderCell : UITableViewCell
