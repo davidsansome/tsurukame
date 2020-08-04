@@ -15,7 +15,7 @@
 #import "SuccessAnimation.h"
 
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
+#import "Extensions/ProtobufExtensions.h"
 
 static CGFloat RandFloat(CGFloat min, CGFloat max) {
   return ((CGFloat)arc4random()) / ((CGFloat)UINT32_MAX) * (max - min) + min;

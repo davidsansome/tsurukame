@@ -31,7 +31,6 @@ target 'Tsurukame' do
   pod 'MMDrawerController', '~> 0.6.0', :inhibit_warnings => true
   pod 'Protobuf', '~> 3.10.0'
   pod 'Reachability', '~> 3.2'
-  pod 'SwiftFormat/CLI'
 
   target 'Tests' do
     inherit! :search_paths

@@ -19,7 +19,7 @@
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tsurukame-Swift.h"
 
-#import "proto/Wanikani+Convenience.h"
+#import "Extensions/ProtobufExtensions.h"
 
 #import <WebKit/WebKit.h>
 

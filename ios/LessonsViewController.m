@@ -20,7 +20,7 @@
 #import "SubjectDetailsViewController.h"
 #import "Tsurukame-Swift.h"
 #import "UIView+SafeAreaInsets.h"
-#import "proto/Wanikani+Convenience.h"
+#import "Extensions/ProtobufExtensions.h"
 
 @interface LessonsViewController () <ReviewViewControllerDelegate>
 @property(weak, nonatomic) IBOutlet LessonsPageControl *pageControl;

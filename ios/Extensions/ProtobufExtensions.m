@@ -15,7 +15,7 @@
 #import <UIKit/UIKit.h>
 
 #import "Tsurukame-Swift.h"
-#import "Wanikani+Convenience.h"
+#import "ProtobufExtensions.h"
 
 static const int kGuruStage = 5;
 

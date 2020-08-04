@@ -668,7 +668,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   func fontsThatCanRenderText(_ text: String, exclude: [String]?) -> [String] {
     var availableFonts: [String] = []
 
-    for filename in Settings.selectedFonts ?? [] {
+    for filename in Settings.selectedFonts {
       if let font = services.fontLoader.font(byName: filename) {
         if let ex = exclude, ex.contains(font.fontName) {
           continue

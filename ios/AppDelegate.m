@@ -133,9 +133,9 @@
 }
 
 - (void)logout:(NSNotification *)notification {
-  Settings.userCookie = nil;
-  Settings.userApiToken = nil;
-  Settings.userEmailAddress = nil;
+  Settings.userCookie = @"";
+  Settings.userApiToken = @"";
+  Settings.userEmailAddress = @"";
   [_services.localCachingClient clearAllDataAndClose];
   _services.localCachingClient = nil;
 

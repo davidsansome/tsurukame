@@ -18,7 +18,7 @@
 #import "Client.h"
 #import "LocalCachingClient.h"
 
-#import "proto/Wanikani+Convenience.h"
+#import "Extensions/ProtobufExtensions.h"
 
 #import <sys/errno.h>
 

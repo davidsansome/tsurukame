@@ -14,7 +14,7 @@
 
 #import "TKMSubjectChip.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
+#import "Extensions/ProtobufExtensions.h"
 
 static const CGFloat kChipHeight = 28.f;
 static const CGFloat kLabelInset = 6.f;

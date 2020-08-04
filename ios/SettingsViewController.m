@@ -20,7 +20,7 @@
 #import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
+#import "Extensions/ProtobufExtensions.h"
 
 #import <UserNotifications/UserNotifications.h>
 
@@ -278,7 +278,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (NSString *)lessonBatchSizeText {
-  return [NSString stringWithFormat:@"%d", Settings.lessonBatchSize];
+  return [NSString stringWithFormat:@"%ld", (long)Settings.lessonBatchSize];
 }
 
 - (NSString *)reviewOrderValueText {
@@ -302,7 +302,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (NSString *)reviewBatchSizeText {
-  return [NSString stringWithFormat:@"%d", Settings.reviewBatchSize];
+  return [NSString stringWithFormat:@"%ld", (long)Settings.reviewBatchSize];
 }
 
 - (NSString *)interfaceStyleValueText {
