@@ -105,7 +105,7 @@ import Foundation
   }
 
   @objc class func normalizedString(_ text: String, taskType: TKMTaskType,
-                                    alphabet: TKMAlphabet = TKMAlphabet.hiragana) -> String {
+                                    alphabet: TKMAlphabet = .hiragana) -> String {
     var s =
       text.trimmingCharacters(in: CharacterSet.whitespaces)
         .lowercased()
@@ -166,7 +166,8 @@ import Foundation
       }
 
       // Check blacklisted meanings first.  If the answer matches one exactly, it's incorrect.
-      for meaning in subject.meaningsArray! as! [TKMMeaning] {
+      let meaningsArray = subject.meaningsArray as [AnyObject] as? [TKMMeaning]
+      for meaning in meaningsArray! {
         if meaning.type == .blacklist {
           if normalizedString(meaning.meaning, taskType: taskType) == answer {
             return .Incorrect
@@ -180,7 +181,7 @@ import Foundation
         meaningTexts.append(contentsOf: studyMaterials.meaningSynonymsArray as! [String])
       }
 
-      for meaning in subject.meaningsArray! as! [TKMMeaning] {
+      for meaning in meaningsArray! {
         if meaning.type != .blacklist {
           meaningTexts.append(meaning.meaning)
         }

@@ -17,8 +17,7 @@ import Foundation
 private func readUInt32(_ fh: FileHandle, _ offset: UInt64) -> UInt32 {
   fh.seek(toFileOffset: offset)
   let data = fh.readData(ofLength: 4)
-  return data.withUnsafeBytes {
-    (p: UnsafeRawBufferPointer) in
+  return data.withUnsafeBytes { (p: UnsafeRawBufferPointer) in
     p.bindMemory(to: UInt32.self).first!
   }
 }

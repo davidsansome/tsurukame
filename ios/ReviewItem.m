@@ -14,7 +14,6 @@
 
 #import "ReviewItem.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
 
 @implementation ReviewItem
 

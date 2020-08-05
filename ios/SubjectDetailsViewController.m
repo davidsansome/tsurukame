@@ -14,12 +14,9 @@
 
 #import "SubjectDetailsViewController.h"
 
-#import "LocalCachingClient.h"
 #import "NavigationController.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tsurukame-Swift.h"
-
-#import "proto/Wanikani+Convenience.h"
 
 #import <WebKit/WebKit.h>
 

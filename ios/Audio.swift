@@ -23,9 +23,8 @@ protocol AudioDelegate: NSObject {
 @objcMembers
 class Audio: NSObject {
   // Returns the local directory that contains cached audio files.
-  class func cacheDirectoryPath() -> String {
-    let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-    return "\(paths[0])/audio"
+  static var cacheDirectoryPath: String {
+    "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/audio"
   }
 
   private let kURLPattern = "https://cdn.wanikani.com/audios/%d-subject-%d.mp3"
@@ -84,7 +83,7 @@ class Audio: NSObject {
     let audioID = subject.randomAudioID()
 
     // Is the audio available offline?
-    let filename = String(format: kOfflineFilePattern, Audio.cacheDirectoryPath(), audioID)
+    let filename = String(format: kOfflineFilePattern, Audio.cacheDirectoryPath, audioID)
     if FileManager.default.fileExists(atPath: filename) {
       play(url: URL(fileURLWithPath: filename), delegate: delegate)
       return

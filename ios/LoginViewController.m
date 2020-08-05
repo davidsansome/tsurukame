@@ -19,8 +19,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NSNotificationName kLogoutNotification = @"kLogoutNotification";
-
 static NSString *const kPrivacyPolicyURL =
     @"https://github.com/davidsansome/tsurukame/wiki/Privacy-Policy";
 

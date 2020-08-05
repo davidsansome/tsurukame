@@ -139,18 +139,17 @@ private class AnimationContext {
   }
 }
 
-@objc
-protocol ReviewViewControllerDelegate {
-  func reviewViewControllerAllowsCheats(forReviewItem item: ReviewItem) -> Bool
-  func reviewViewControllerAllowsCustomFonts() -> Bool
-  func reviewViewControllerShowsSuccessRate() -> Bool
-  func reviewViewControllerFinishedAllReviewItems(_ reviewViewController: ReviewViewController)
-  @objc optional func reviewViewController(_ reviewViewController: ReviewViewController,
-                                           tappedMenuButton menuButton: UIButton)
+@objc protocol ReviewViewControllerDelegate {
+  func reviewVCAllowsCheats(forReviewItem item: ReviewItem) -> Bool
+  func reviewVCAllowsCustomFonts() -> Bool
+  func reviewVCShowsSuccessRate() -> Bool
+  func reviewVCFinishedAllReviewItems(_ reviewViewController: ReviewViewController)
+  @objc optional func reviewVC(_ reviewViewController: ReviewViewController,
+                               tappedMenuButton menuButton: UIButton)
 }
 
 class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDelegate {
-  private var kanaInput: TKMKanaInput!
+  private var kanaInput: KanaInput!
   private let hapticGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator
     .FeedbackStyle.light)
   private let tickImage = UIImage(named: "checkmark.circle")
@@ -224,7 +223,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   required init?(coder: NSCoder) {
     super.init(coder: coder)
-    kanaInput = TKMKanaInput(delegate: self)
+    kanaInput = KanaInput(delegate: self)
   }
 
   @objc public func setup(withServices services: TKMServices,
@@ -336,7 +335,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       .addTarget(self, action: #selector(answerFieldValueDidChange),
                  for: UIControl.Event.editingChanged)
 
-    let showSuccessRate = delegate.reviewViewControllerShowsSuccessRate()
+    let showSuccessRate = delegate.reviewVCShowsSuccessRate()
     successRateIcon.isHidden = !showSuccessRate
     successRateLabel.isHidden = !showSuccessRate
 
@@ -491,7 +490,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   private func randomTask() {
     TKMStyle.withTraitCollection(traitCollection) {
       if activeQueue.count == 0 {
-        delegate.reviewViewControllerFinishedAllReviewItems(self)
+        delegate.reviewVCFinishedAllReviewItems(self)
         return
       }
 
@@ -522,9 +521,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       activeTask = activeQueue[activeTaskIndex]
       activeSubject = services.dataLoader.load(subjectID: Int(activeTask.assignment.subjectId))!
       activeStudyMaterials =
-        services.localCachingClient.getStudyMaterial(forID: activeTask.assignment.subjectId)
+        services.localCachingClient.getStudyMaterial(id: activeTask.assignment.subjectId)
       activeAssignment =
-        services.localCachingClient.getAssignmentForID(activeTask.assignment.subjectId)
+        services.localCachingClient.getAssignment(id: activeTask.assignment.subjectId)
 
       // Choose whether to ask the meaning or the reading.
       if activeTask.answeredMeaning {
@@ -552,7 +551,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         subjectTypePrompt = "Radical"
       case .vocabulary:
         subjectTypePrompt = "Vocabulary"
-    @unknown default:
+      case .empty: fallthrough
+      case .gpbUnrecognizedEnumeratorValue: fallthrough
+      @unknown default:
         fatalError()
       }
       switch activeTaskType! {
@@ -668,12 +669,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   func fontsThatCanRenderText(_ text: String, exclude: [String]?) -> [String] {
     var availableFonts: [String] = []
 
-    for filename in Settings.selectedFonts ?? [] {
-      if let font = services.fontLoader.font(byName: filename) {
+    for filename in Settings.selectedFonts {
+      if let font = services.fontLoader.font(name: filename) {
         if let ex = exclude, ex.contains(font.fontName) {
           continue
         }
-        if TKMFontCanRenderText(font.fontName, text) {
+        if font.canRenderText(fontName: font.fontName, text: text) {
           availableFonts.append(font.fontName)
         }
       }
@@ -707,7 +708,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   }
 
   func randomFont(thatCanRenderText text: String) -> String {
-    if delegate.reviewViewControllerAllowsCustomFonts() {
+    if delegate.reviewVCAllowsCustomFonts() {
       // Re-set the supported fonts when we pick a random one as that is the first
       // step.
       availableFonts = fontsThatCanRenderText(text, exclude: nil).sorted()
@@ -721,7 +722,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
   private func animateSubjectDetailsView(shown: Bool,
                                          setupContextFunc: ((AnimationContext) -> Void)?) {
-    let cheats = delegate.reviewViewControllerAllowsCheats(forReviewItem: activeTask)
+    let cheats = delegate.reviewVCAllowsCheats(forReviewItem: activeTask)
 
     if shown {
       subjectDetailsView.isHidden = false
@@ -930,7 +931,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   // MARK: - Menu button
 
   @IBAction func menuButtonPressed(_: Any) {
-    delegate.reviewViewController?(self, tappedMenuButton: menuButton)
+    delegate.reviewVC?(self, tappedMenuButton: menuButton)
   }
 
   // MARK: - Wrapping up

@@ -14,8 +14,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "../TKMKanaInput+Internals.h"
-#import "../TKMKanaInput.h"
+#import "Tsurukame-Swift.h"
 
 @interface StubUITextFieldDelegate : NSObject <UITextFieldDelegate>
 @end
@@ -24,12 +23,12 @@
 
 @end
 
-@interface TKMKanaInputTest : XCTestCase
+@interface KanaInputTest : XCTestCase
 
 @end
 
-@implementation TKMKanaInputTest {
-  TKMKanaInput *_kanaInput;
+@implementation KanaInputTest {
+  KanaInput *_kanaInput;
   UITextField *_textField;
 }
 
@@ -56,21 +55,19 @@ static NSArray<NSString *> *_tsuConsonantsArray;
 }
 
 + (void)setUp {
-  EnsureInitialised();
-
   // tsuConsonants = kConsonants - kN
-  NSMutableCharacterSet *tsuConsonants = [[kN invertedSet] mutableCopy];
-  [tsuConsonants formIntersectionWithCharacterSet:kConsonants];
+  NSMutableCharacterSet *tsuConsonants = [[KanaInput.n invertedSet] mutableCopy];
+  [tsuConsonants formIntersectionWithCharacterSet:KanaInput.consonants];
 
   _tsuConsonants = tsuConsonants;
-  _tsuConsonantsArray = [TKMKanaInputTest getCharactersFromCharacterSet:_tsuConsonants];
+  _tsuConsonantsArray = [KanaInputTest getCharactersFromCharacterSet:_tsuConsonants];
 }
 
 - (void)setUp {
   // Put setup code here. This method is called before the invocation of each test method in the
   // class.
   StubUITextFieldDelegate *delegate = [[StubUITextFieldDelegate alloc] init];
-  _kanaInput = [[TKMKanaInput alloc] initWithDelegate:delegate];
+  _kanaInput = [[KanaInput alloc] initWithDelegate:delegate];
   _kanaInput.enabled = true;
 
   _textField = [[UITextField alloc] init];
@@ -79,7 +76,7 @@ static NSArray<NSString *> *_tsuConsonantsArray;
 - (void)testkReplacementsContainsOnlyValidCombinations {
   NSString *lastKey;
   for (NSString *key in
-       [[kReplacements allKeys] sortedArrayUsingSelector:@selector(localizedCompare:)]) {
+       [[KanaInput.replacements allKeys] sortedArrayUsingSelector:@selector(localizedCompare:)]) {
     if (lastKey) {
       XCTAssertFalse([key hasPrefix:lastKey]);
     }
@@ -136,10 +133,10 @@ static NSArray<NSString *> *_tsuConsonantsArray;
   // when there is a n or m and you type a consonant it should be replaced by ん and the returnValue
   // should be true
 
-  NSArray<NSString *> *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
+  NSArray<NSString *> *kNArray = [KanaInputTest getCharactersFromCharacterSet:KanaInput.n];
 
   for (NSString *consonant in _tsuConsonantsArray) {
-    if (![kCanFollowN characterIsMember:[consonant characterAtIndex:0]]) {
+    if (![KanaInput.canFollowN characterIsMember:[consonant characterAtIndex:0]]) {
       for (NSString *nm in kNArray) {
         _textField.text = nm;
 
@@ -158,9 +155,9 @@ static NSArray<NSString *> *_tsuConsonantsArray;
   // when there is the start of a pattern and you type the last letter of the pattern it should be
   // replaced by the given replacement and the returnValue should be false
 
-  for (NSString *replacement in [kReplacements keyEnumerator]) {
+  for (NSString *replacement in [KanaInput.replacements keyEnumerator]) {
     // this pattern is checked by another case...for this function it doesn't matter if it is in the
-    // kReplacements CharacterSet
+    // replacements CharacterSet
     if ([replacement isEqualToString:@"n "]) {
       continue;
     }
@@ -173,7 +170,7 @@ static NSArray<NSString *> *_tsuConsonantsArray;
                shouldChangeCharactersInRange:NSMakeRange(_textField.text.length, 0)
                            replacementString:lastReplacementCharacter];
     XCTAssertFalse(returnValue);
-    XCTAssertEqualObjects(kReplacements[replacement], _textField.text);
+    XCTAssertEqualObjects(KanaInput.replacements[replacement], _textField.text);
   }
 }
 
@@ -197,10 +194,10 @@ static NSArray<NSString *> *_tsuConsonantsArray;
   // when there is a N or M and you type a consonant it should be replaced by ン and the returnValue
   // should be true
 
-  NSArray<NSString *> *kNArray = [TKMKanaInputTest getCharactersFromCharacterSet:kN];
+  NSArray<NSString *> *kNArray = [KanaInputTest getCharactersFromCharacterSet:KanaInput.n];
 
   for (NSString *consonant in _tsuConsonantsArray) {
-    if (![kCanFollowN characterIsMember:[consonant characterAtIndex:0]]) {
+    if (![KanaInput.canFollowN characterIsMember:[consonant characterAtIndex:0]]) {
       for (NSString *nm in kNArray) {
         _textField.text = [nm uppercaseString];
 

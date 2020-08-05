@@ -275,7 +275,7 @@
         <!--Review Menu View Controller-->
         <scene sceneID="vXK-vc-8c7">
             <objects>
-                <viewController storyboardIdentifier="reviewMenuViewController" id="grn-VZ-wuf" customClass="TKMReviewMenuViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="reviewMenuViewController" id="grn-VZ-wuf" customClass="ReviewMenuViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zGT-Ht-qXT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -307,7 +307,7 @@
         <!--Review Container View Controller-->
         <scene sceneID="8Kn-zD-Fkz">
             <objects>
-                <viewController id="CLc-42-KXf" customClass="TKMReviewContainerViewController" sceneMemberID="viewController">
+                <viewController id="CLc-42-KXf" customClass="ReviewContainerViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Gug-AB-yRH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -593,7 +593,7 @@
         <!--Settings-->
         <scene sceneID="3hY-tc-sfR">
             <objects>
-                <tableViewController title="Settings" id="thM-jC-nT8" customClass="SettingsViewController" sceneMemberID="viewController">
+                <tableViewController title="Settings" id="thM-jC-nT8" customClass="SettingsViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="CVb-cb-bd0">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -608,25 +608,25 @@
                     <navigationItem key="navigationItem" title="Settings" id="Xvt-Ye-m4V"/>
                     <connections>
                         <outlet property="tableView" destination="CVb-cb-bd0" id="iDC-La-2N5"/>
-                        <segue destination="7Tc-3C-9Vx" kind="show" identifier="taskOrder" id="U7N-3Q-4cQ"/>
-                        <segue destination="uj2-VH-hcW" kind="show" identifier="reviewOrder" id="7Yf-CB-TUU"/>
-                        <segue destination="AG2-Tf-RDu" kind="show" identifier="offlineAudio" id="EkU-M7-aeu"/>
-                        <segue destination="QeO-rY-q75" kind="show" identifier="fonts" id="l0d-dJ-or1"/>
+                        <segue destination="uR7-9a-Wx4" kind="show" identifier="interfaceStyle" id="GNf-yk-azk"/>
                         <segue destination="B5Q-PH-hTQ" kind="show" identifier="lessonOrder" id="gQL-Z8-EnR"/>
                         <segue destination="EY9-1W-ElO" kind="show" identifier="lessonBatchSize" id="Cy0-Qk-xdX"/>
+                        <segue destination="uj2-VH-hcW" kind="show" identifier="reviewOrder" id="7Yf-CB-TUU"/>
                         <segue destination="tqb-JV-rpw" kind="show" identifier="reviewBatchSize" id="R3v-Bc-S1z"/>
+                        <segue destination="7Tc-3C-9Vx" kind="show" identifier="taskOrder" id="U7N-3Q-4cQ"/>
+                        <segue destination="QeO-rY-q75" kind="show" identifier="fonts" id="l0d-dJ-or1"/>
                         <segue destination="QeO-rY-q01" kind="show" identifier="fontSize" id="OPI-OP-002"/>
-                        <segue destination="uR7-9a-Wx4" kind="show" identifier="interfaceStyle" id="GNf-yk-azk"/>
+                        <segue destination="AG2-Tf-RDu" kind="show" identifier="offlineAudio" id="EkU-M7-aeu"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFO-Ke-JcM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-92" y="-494"/>
         </scene>
-        <!--Review order-->
+        <!--Review Order-->
         <scene sceneID="xmU-v5-GWs">
             <objects>
-                <tableViewController title="Review order" id="uj2-VH-hcW" customClass="ReviewOrderViewController" sceneMemberID="viewController">
+                <tableViewController title="Review Order" id="uj2-VH-hcW" customClass="ReviewOrderViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="3zz-A3-952">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -767,10 +767,10 @@
             </objects>
             <point key="canvasLocation" x="545" y="-493"/>
         </scene>
-        <!--Back-to-back order-->
+        <!--Back-to-Back Order-->
         <scene sceneID="8f6-in-D3b">
             <objects>
-                <tableViewController title="Back-to-back order" id="7Tc-3C-9Vx" customClass="ReviewTaskOrderViewController" sceneMemberID="viewController">
+                <tableViewController title="Back-to-Back Order" id="7Tc-3C-9Vx" customClass="ReviewTaskOrderViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="cfb-OS-8kE">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -826,10 +826,10 @@
             </objects>
             <point key="canvasLocation" x="1182" y="-493"/>
         </scene>
-        <!--Offline audio-->
+        <!--Offline Audio-->
         <scene sceneID="0DM-pt-FJt">
             <objects>
-                <tableViewController title="Offline audio" id="AG2-Tf-RDu" customClass="TKMOfflineAudioViewController" sceneMemberID="viewController">
+                <tableViewController title="Offline Audio" id="AG2-Tf-RDu" customClass="TKMOfflineAudioViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="OTo-Re-Ito">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -945,10 +945,10 @@
             </objects>
             <point key="canvasLocation" x="1822" y="-493"/>
         </scene>
-        <!--Font size-->
+        <!--Font Size-->
         <scene sceneID="Edv-Yt-Zoo">
             <objects>
-                <tableViewController title="Font Size" id="QeO-rY-q01" userLabel="Font size" customClass="FontSizeViewController" sceneMemberID="viewController">
+                <tableViewController title="Font Size" id="QeO-rY-q01" customClass="FontSizeViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="yRd-1P-hlj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1089,10 +1089,10 @@
             </objects>
             <point key="canvasLocation" x="2482" y="-493"/>
         </scene>
-        <!--Lesson order-->
+        <!--Lesson Item Order-->
         <scene sceneID="BjM-im-n92">
             <objects>
-                <tableViewController title="Lesson order" id="B5Q-PH-hTQ" userLabel="Lesson order" customClass="LessonOrderViewController" sceneMemberID="viewController">
+                <tableViewController title="Lesson Item Order" id="B5Q-PH-hTQ" customClass="LessonItemOrderViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ajq-lt-z5I">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

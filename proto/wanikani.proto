@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-syntax = "proto2";
-
+syntax = "proto3";
 option objc_class_prefix = "TKM";
+option swift_prefix = "TKM"; // Preparation for Swift conversion
 
 package proto;
 
 message Meaning {
   enum Type {
-    PRIMARY = 1;
-    SECONDARY = 2;
+    PRIMARY = 0;
+    SECONDARY = 1;
 
     // Old meaning for a radical that was changed.
-    AUXILIARY_WHITELIST = 3;
+    AUXILIARY_WHITELIST = 2;
 
     // Similar (within edit distance) to an accepted reading but incorrect.
-    BLACKLIST = 4;
+    BLACKLIST = 3;
   }
   optional string meaning = 1;
   optional Type type = 3;
@@ -44,9 +44,9 @@ message Reading {
 
   // Type is only set for Kanji readings - not for Vocabulary.
   enum Type {
-    ONYOMI = 1;
-    KUNYOMI = 2;
-    NANORI = 3;
+    ONYOMI = 0;
+    KUNYOMI = 1;
+    NANORI = 2;
   }
   optional Type type = 3;
 }
@@ -94,26 +94,26 @@ message Vocabulary {
   repeated Sentence sentences = 3;
 
   enum PartOfSpeech {
-    NOUN = 1;
-    NUMERAL = 2;
-    INTRANSITIVE_VERB = 3;
-    ICHIDAN_VERB = 4;
-    TRANSITIVE_VERB = 5;
-    NO_ADJECTIVE = 6;
-    GODAN_VERB = 7;
-    NA_ADJECTIVE = 8;
-    I_ADJECTIVE = 9;
-    SUFFIX = 10;
-    ADVERB = 11;
-    SURU_VERB = 12;
-    PREFIX = 13;
-    PROPER_NOUN = 14;
-    EXPRESSION = 15;
-    ADJECTIVE = 16;
-    INTERJECTION = 17;
-    COUNTER = 18;
-    PRONOUN = 19;
-    CONJUNCTION = 20;
+    NOUN = 0;
+    NUMERAL = 1;
+    INTRANSITIVE_VERB = 2;
+    ICHIDAN_VERB = 3;
+    TRANSITIVE_VERB = 4;
+    NO_ADJECTIVE = 5;
+    GODAN_VERB = 6;
+    NA_ADJECTIVE = 7;
+    I_ADJECTIVE = 8;
+    SUFFIX = 9;
+    ADVERB = 10;
+    SURU_VERB = 11;
+    PREFIX = 12;
+    PROPER_NOUN = 13;
+    EXPRESSION = 14;
+    ADJECTIVE = 15;
+    INTERJECTION = 16;
+    COUNTER = 17;
+    PRONOUN = 18;
+    CONJUNCTION = 19;
   }
   repeated PartOfSpeech parts_of_speech = 4;
 
@@ -137,9 +137,20 @@ message Subject {
   optional Vocabulary vocabulary = 11;
 
   enum Type {
+    EMPTY = 0;
     RADICAL = 1;
     KANJI = 2;
     VOCABULARY = 3;
+  }
+}
+
+message SRSStage {
+  enum Category {
+    APPRENTICE = 0;
+    GURU = 1;
+    MASTER = 2;
+    ENLIGHTENED = 3;
+    BURNED = 4;
   }
 }
 
@@ -191,14 +202,14 @@ message SubjectOverrides {
 
 message FormattedText {
   enum Format {
-    RADICAL = 1;
-    KANJI = 2;
-    JAPANESE = 3;
-    READING = 4;
-    VOCABULARY = 5;
-    ITALIC = 6;
-    BOLD = 7;
-    LINK = 8;
+    RADICAL = 0;
+    KANJI = 1;
+    JAPANESE = 2;
+    READING = 3;
+    VOCABULARY = 4;
+    ITALIC = 5;
+    BOLD = 6;
+    LINK = 7;
   }
   repeated Format format = 1;
   optional string text = 2;

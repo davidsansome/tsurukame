@@ -29,9 +29,9 @@ enum PieSlice: Int {
     case .Lesson:
       return "Lesson"
     case .Apprentice:
-      return TKMSRSStageCategoryName(.apprentice)
+      return Convenience.srsStageCategoryName(for: .apprentice)
     case .Guru:
-      return TKMSRSStageCategoryName(.guru)
+      return Convenience.srsStageCategoryName(for: .guru)
     }
   }
 

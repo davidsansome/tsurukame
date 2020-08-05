@@ -63,6 +63,8 @@ static NSAttributedString *AttributedStringForFormattedText(
       case TKMFormattedText_Format_Link:
         [attributes setValue:formattedText.linkURL forKey:NSLinkAttributeName];
         break;
+      default:
+        break;
     }
   }
 

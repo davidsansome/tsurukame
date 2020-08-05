@@ -100,7 +100,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
 
     @objc func updatedData(client: LocalCachingClient) {
       var halfLevel = false
-      var assignmentsAtCurrentLevel = client.getAssignmentsAtUsersCurrentLevel()
+      var assignmentsAtCurrentLevel = client.currentLevelAssignments()
       var learnedCount = assignmentsAtCurrentLevel.filter { (assignment) -> Bool in
         assignment.srsStage >= 5
       }.count
@@ -111,7 +111,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
         let assignment = assignmentsAtCurrentLevel.first,
         assignment.level > 0 {
         halfLevel = true
-        assignmentsAtCurrentLevel = client.getAssignmentsAtLevel(assignment.level - 1)
+        assignmentsAtCurrentLevel = client.getAssignments(level: assignment.level - 1)
         learnedCount = assignmentsAtCurrentLevel.filter { (assignment) -> Bool in
           assignment.srsStage >= 5
         }.count
@@ -125,8 +125,8 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
 
       let packet: [String: Any] = [
         WatchHelper.keyReviewCount: client.availableReviewCount,
-        WatchHelper.keyReviewNextHourCount: client.upcomingReviews.first?.intValue ?? 0,
-        WatchHelper.keyReviewUpcomingHourlyCounts: client.upcomingReviews.map { $0.intValue },
+        WatchHelper.keyReviewNextHourCount: client.upcomingReviews.first ?? 0,
+        WatchHelper.keyReviewUpcomingHourlyCounts: client.upcomingReviews,
         WatchHelper.keyLevelCurrent: assignmentsAtCurrentLevel.first?.level ?? 0,
         WatchHelper.keyLevelTotal: assignmentsAtCurrentLevel.count,
         WatchHelper.keyLevelLearned: learnedCount,

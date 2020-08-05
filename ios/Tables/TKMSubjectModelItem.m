@@ -15,7 +15,6 @@
 #import "TKMSubjectModelItem.h"
 #import "TKMSubjectChip.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
 
 static const CGFloat kJapaneseTextImageSize = 26.f;
 static const CGFloat kFontSize = 14.f;
@@ -108,14 +107,12 @@ static const CGFloat kFontSize = 14.f;
       self.readingLabel.text = [self formattedIntervalUntil:item.assignment.reviewDate
                                                       label:@"Review"];
       [self.meaningLabel setHidden:NO];
-      self.meaningLabel.text =
-          [self formattedIntervalUntil:[item.assignment guruDateForSubject:item.subject]
-                                 label:@"Guru"];
+      self.meaningLabel.text = [self formattedIntervalUntil:[item.assignment guruDate]
+                                                      label:@"Guru"];
     } else if (item.assignment.isLessonStage) {
       [self.readingLabel setHidden:NO];
-      self.readingLabel.text =
-          [self formattedIntervalUntil:[item.assignment guruDateForSubject:item.subject]
-                                 label:@"Guru"];
+      self.readingLabel.text = [self formattedIntervalUntil:[item.assignment guruDate]
+                                                      label:@"Guru"];
       [self.meaningLabel setHidden:YES];
     } else {
       [self.readingLabel setHidden:YES];
