@@ -52,6 +52,9 @@ import Foundation
 
   var wrappedValue: T {
     get {
+      if let notEncodedObject = UserDefaults.standard.object(forKey: key) as? T {
+        return notEncodedObject
+      }
       guard let data = UserDefaults.standard.object(forKey: key) as? Data
       else { return defaultValue }
       return (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? T) ?? defaultValue
