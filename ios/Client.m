@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "Client.h"
-#import "proto/Wanikani+Convenience.h"
+#import "Extensions/ProtobufExtensions.h"
 
 #import "Tsurukame-Swift.h"
 

@@ -1,9 +1,10 @@
 module github.com/davidsansome/tsurukame
 
-go 1.12
+go 1.14
 
 require (
-	github.com/golang/protobuf v1.3.5
+	github.com/golang/protobuf v1.4.2
 	github.com/jpillora/backoff v1.0.0
 	github.com/pmezard/go-difflib v1.0.0
+	google.golang.org/protobuf v1.25.0
 )

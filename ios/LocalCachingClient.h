@@ -16,7 +16,7 @@
 
 #import "Client.h"
 #import "Reachability.h"
-#import "proto/Wanikani+Convenience.h"
+#import "Extensions/ProtobufExtensions.h"
 #import "proto/Wanikani.pbobjc.h"
 
 NS_ASSUME_NONNULL_BEGIN

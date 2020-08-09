@@ -21,7 +21,7 @@
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
+#import "Extensions/ProtobufExtensions.h"
 
 @interface SubjectsRemainingViewController () <TKMSubjectDelegate>
 @end

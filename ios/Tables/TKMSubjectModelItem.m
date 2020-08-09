@@ -15,7 +15,7 @@
 #import "TKMSubjectModelItem.h"
 #import "TKMSubjectChip.h"
 #import "Tsurukame-Swift.h"
-#import "proto/Wanikani+Convenience.h"
+#import "Extensions/ProtobufExtensions.h"
 
 static const CGFloat kJapaneseTextImageSize = 26.f;
 static const CGFloat kFontSize = 14.f;
