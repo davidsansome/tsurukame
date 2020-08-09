@@ -13,9 +13,9 @@
 // limitations under the License.
 
 #import "TKMSubjectModelItem.h"
+#import "Extensions/ProtobufExtensions.h"
 #import "TKMSubjectChip.h"
 #import "Tsurukame-Swift.h"
-#import "Extensions/ProtobufExtensions.h"
 
 static const CGFloat kJapaneseTextImageSize = 26.f;
 static const CGFloat kFontSize = 14.f;

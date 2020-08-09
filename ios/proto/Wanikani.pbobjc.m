@@ -8,7 +8,7 @@
 #endif
 
 #if GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS
- #import <protobuf/GPBProtocolBuffers_RuntimeSupport.h>
+ #import <Protobuf/GPBProtocolBuffers_RuntimeSupport.h>
 #else
  #import "GPBProtocolBuffers_RuntimeSupport.h"
 #endif
@@ -20,6 +20,25 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
+
+#pragma mark - Objective C Class declarations
+// Forward declarations of Objective C classes that we can use as
+// static values in struct initializers.
+// We don't use [Foo class] because it is not a static value.
+GPBObjCClassDeclaration(TKMAssignment);
+GPBObjCClassDeclaration(TKMDeprecatedMnemonicFile);
+GPBObjCClassDeclaration(TKMDeprecatedMnemonicFile_Subject);
+GPBObjCClassDeclaration(TKMFormattedText);
+GPBObjCClassDeclaration(TKMKanji);
+GPBObjCClassDeclaration(TKMMeaning);
+GPBObjCClassDeclaration(TKMRadical);
+GPBObjCClassDeclaration(TKMReading);
+GPBObjCClassDeclaration(TKMSubject);
+GPBObjCClassDeclaration(TKMSubjectsByLevel);
+GPBObjCClassDeclaration(TKMVisuallySimilarKanji);
+GPBObjCClassDeclaration(TKMVocabulary);
+GPBObjCClassDeclaration(TKMVocabulary_Sentence);
 
 #pragma mark - TKMWanikaniRoot
 
@@ -40,7 +59,7 @@ static GPBFileDescriptor *TKMWanikaniRoot_FileDescriptor(void) {
     GPB_DEBUG_CHECK_RUNTIME_VERSIONS();
     descriptor = [[GPBFileDescriptor alloc] initWithPackage:@"proto"
                                                  objcPrefix:@"TKM"
-                                                     syntax:GPBFileSyntaxProto2];
+                                                     syntax:GPBFileSyntaxProto3];
   }
   return descriptor;
 }
@@ -63,26 +82,24 @@ typedef struct TKMMeaning__storage_ {
 + (GPBDescriptor *)descriptor {
   static GPBDescriptor *descriptor = nil;
   if (!descriptor) {
-    static GPBMessageFieldDescriptionWithDefault fields[] = {
+    static GPBMessageFieldDescription fields[] = {
       {
-        .defaultValue.valueString = nil,
-        .core.name = "meaning",
-        .core.dataTypeSpecific.className = NULL,
-        .core.number = TKMMeaning_FieldNumber_Meaning,
-        .core.hasIndex = 0,
-        .core.offset = (uint32_t)offsetof(TKMMeaning__storage_, meaning),
-        .core.flags = GPBFieldOptional,
-        .core.dataType = GPBDataTypeString,
+        .name = "meaning",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMMeaning_FieldNumber_Meaning,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMMeaning__storage_, meaning),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
       },
       {
-        .defaultValue.valueEnum = TKMMeaning_Type_Primary,
-        .core.name = "type",
-        .core.dataTypeSpecific.enumDescFunc = TKMMeaning_Type_EnumDescriptor,
-        .core.number = TKMMeaning_FieldNumber_Type,
-        .core.hasIndex = 1,
-        .core.offset = (uint32_t)offsetof(TKMMeaning__storage_, type),
-        .core.flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
-        .core.dataType = GPBDataTypeEnum,
+        .name = "type",
+        .dataTypeSpecific.enumDescFunc = TKMMeaning_Type_EnumDescriptor,
+        .number = TKMMeaning_FieldNumber_Type,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TKMMeaning__storage_, type),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
+        .dataType = GPBDataTypeEnum,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -90,9 +107,9 @@ typedef struct TKMMeaning__storage_ {
                                      rootClass:[TKMWanikaniRoot class]
                                           file:TKMWanikaniRoot_FileDescriptor()
                                         fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescriptionWithDefault))
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMMeaning__storage_)
-                                         flags:GPBDescriptorInitializationFlag_FieldsWithDefault];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -103,15 +120,28 @@ typedef struct TKMMeaning__storage_ {
 
 @end
 
+int32_t TKMMeaning_Type_RawValue(TKMMeaning *message) {
+  GPBDescriptor *descriptor = [TKMMeaning descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TKMMeaning_FieldNumber_Type];
+  return GPBGetMessageRawEnumField(message, field);
+}
+
+void SetTKMMeaning_Type_RawValue(TKMMeaning *message, int32_t value) {
+  GPBDescriptor *descriptor = [TKMMeaning descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TKMMeaning_FieldNumber_Type];
+  GPBSetMessageRawEnumField(message, field, value);
+}
+
 #pragma mark - Enum TKMMeaning_Type
 
 GPBEnumDescriptor *TKMMeaning_Type_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "Primary\000Secondary\000AuxiliaryWhitelist\000Bla"
-        "cklist\000";
+        "Unknown\000Primary\000Secondary\000AuxiliaryWhite"
+        "list\000Blacklist\000";
     static const int32_t values[] = {
+        TKMMeaning_Type_Unknown,
         TKMMeaning_Type_Primary,
         TKMMeaning_Type_Secondary,
         TKMMeaning_Type_AuxiliaryWhitelist,
@@ -133,6 +163,7 @@ GPBEnumDescriptor *TKMMeaning_Type_EnumDescriptor(void) {
 
 BOOL TKMMeaning_Type_IsValidValue(int32_t value__) {
   switch (value__) {
+    case TKMMeaning_Type_Unknown:
     case TKMMeaning_Type_Primary:
     case TKMMeaning_Type_Secondary:
     case TKMMeaning_Type_AuxiliaryWhitelist:
@@ -162,36 +193,33 @@ typedef struct TKMReading__storage_ {
 + (GPBDescriptor *)descriptor {
   static GPBDescriptor *descriptor = nil;
   if (!descriptor) {
-    static GPBMessageFieldDescriptionWithDefault fields[] = {
+    static GPBMessageFieldDescription fields[] = {
       {
-        .defaultValue.valueString = nil,
-        .core.name = "reading",
-        .core.dataTypeSpecific.className = NULL,
-        .core.number = TKMReading_FieldNumber_Reading,
-        .core.hasIndex = 0,
-        .core.offset = (uint32_t)offsetof(TKMReading__storage_, reading),
-        .core.flags = GPBFieldOptional,
-        .core.dataType = GPBDataTypeString,
+        .name = "reading",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMReading_FieldNumber_Reading,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMReading__storage_, reading),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
       },
       {
-        .defaultValue.valueBool = NO,
-        .core.name = "isPrimary",
-        .core.dataTypeSpecific.className = NULL,
-        .core.number = TKMReading_FieldNumber_IsPrimary,
-        .core.hasIndex = 1,
-        .core.offset = 2,  // Stored in _has_storage_ to save space.
-        .core.flags = GPBFieldOptional,
-        .core.dataType = GPBDataTypeBool,
+        .name = "isPrimary",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMReading_FieldNumber_IsPrimary,
+        .hasIndex = 1,
+        .offset = 2,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
       },
       {
-        .defaultValue.valueEnum = TKMReading_Type_Onyomi,
-        .core.name = "type",
-        .core.dataTypeSpecific.enumDescFunc = TKMReading_Type_EnumDescriptor,
-        .core.number = TKMReading_FieldNumber_Type,
-        .core.hasIndex = 3,
-        .core.offset = (uint32_t)offsetof(TKMReading__storage_, type),
-        .core.flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
-        .core.dataType = GPBDataTypeEnum,
+        .name = "type",
+        .dataTypeSpecific.enumDescFunc = TKMReading_Type_EnumDescriptor,
+        .number = TKMReading_FieldNumber_Type,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(TKMReading__storage_, type),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
+        .dataType = GPBDataTypeEnum,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -199,9 +227,9 @@ typedef struct TKMReading__storage_ {
                                      rootClass:[TKMWanikaniRoot class]
                                           file:TKMWanikaniRoot_FileDescriptor()
                                         fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescriptionWithDefault))
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMReading__storage_)
-                                         flags:GPBDescriptorInitializationFlag_FieldsWithDefault];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -212,14 +240,27 @@ typedef struct TKMReading__storage_ {
 
 @end
 
+int32_t TKMReading_Type_RawValue(TKMReading *message) {
+  GPBDescriptor *descriptor = [TKMReading descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TKMReading_FieldNumber_Type];
+  return GPBGetMessageRawEnumField(message, field);
+}
+
+void SetTKMReading_Type_RawValue(TKMReading *message, int32_t value) {
+  GPBDescriptor *descriptor = [TKMReading descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TKMReading_FieldNumber_Type];
+  GPBSetMessageRawEnumField(message, field, value);
+}
+
 #pragma mark - Enum TKMReading_Type
 
 GPBEnumDescriptor *TKMReading_Type_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "Onyomi\000Kunyomi\000Nanori\000";
+        "Unknown\000Onyomi\000Kunyomi\000Nanori\000";
     static const int32_t values[] = {
+        TKMReading_Type_Unknown,
         TKMReading_Type_Onyomi,
         TKMReading_Type_Kunyomi,
         TKMReading_Type_Nanori,
@@ -240,6 +281,7 @@ GPBEnumDescriptor *TKMReading_Type_EnumDescriptor(void) {
 
 BOOL TKMReading_Type_IsValidValue(int32_t value__) {
   switch (value__) {
+    case TKMReading_Type_Unknown:
     case TKMReading_Type_Onyomi:
     case TKMReading_Type_Kunyomi:
     case TKMReading_Type_Nanori:
@@ -277,7 +319,7 @@ typedef struct TKMRadical__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "characterImage",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMRadical_FieldNumber_CharacterImage,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(TKMRadical__storage_, characterImage),
@@ -286,7 +328,7 @@ typedef struct TKMRadical__storage_ {
       },
       {
         .name = "mnemonic",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMRadical_FieldNumber_Mnemonic,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(TKMRadical__storage_, mnemonic),
@@ -295,7 +337,7 @@ typedef struct TKMRadical__storage_ {
       },
       {
         .name = "hasCharacterImageFile",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMRadical_FieldNumber_HasCharacterImageFile,
         .hasIndex = 3,
         .offset = 4,  // Stored in _has_storage_ to save space.
@@ -304,7 +346,7 @@ typedef struct TKMRadical__storage_ {
       },
       {
         .name = "formattedMnemonicArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
         .number = TKMRadical_FieldNumber_FormattedMnemonicArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMRadical__storage_, formattedMnemonicArray),
@@ -313,7 +355,7 @@ typedef struct TKMRadical__storage_ {
       },
       {
         .name = "deprecatedMnemonic",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMRadical_FieldNumber_DeprecatedMnemonic,
         .hasIndex = 2,
         .offset = (uint32_t)offsetof(TKMRadical__storage_, deprecatedMnemonic),
@@ -322,7 +364,7 @@ typedef struct TKMRadical__storage_ {
       },
       {
         .name = "formattedDeprecatedMnemonicArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
         .number = TKMRadical_FieldNumber_FormattedDeprecatedMnemonicArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMRadical__storage_, formattedDeprecatedMnemonicArray),
@@ -337,7 +379,7 @@ typedef struct TKMRadical__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMRadical__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -369,7 +411,7 @@ typedef struct TKMVisuallySimilarKanji__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "id_p",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMVisuallySimilarKanji_FieldNumber_Id_p,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(TKMVisuallySimilarKanji__storage_, id_p),
@@ -378,7 +420,7 @@ typedef struct TKMVisuallySimilarKanji__storage_ {
       },
       {
         .name = "score",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMVisuallySimilarKanji_FieldNumber_Score,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(TKMVisuallySimilarKanji__storage_, score),
@@ -393,7 +435,7 @@ typedef struct TKMVisuallySimilarKanji__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMVisuallySimilarKanji__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -439,7 +481,7 @@ typedef struct TKMKanji__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "meaningMnemonic",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMKanji_FieldNumber_MeaningMnemonic,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(TKMKanji__storage_, meaningMnemonic),
@@ -448,7 +490,7 @@ typedef struct TKMKanji__storage_ {
       },
       {
         .name = "meaningHint",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMKanji_FieldNumber_MeaningHint,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(TKMKanji__storage_, meaningHint),
@@ -457,7 +499,7 @@ typedef struct TKMKanji__storage_ {
       },
       {
         .name = "readingMnemonic",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMKanji_FieldNumber_ReadingMnemonic,
         .hasIndex = 2,
         .offset = (uint32_t)offsetof(TKMKanji__storage_, readingMnemonic),
@@ -466,7 +508,7 @@ typedef struct TKMKanji__storage_ {
       },
       {
         .name = "readingHint",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMKanji_FieldNumber_ReadingHint,
         .hasIndex = 3,
         .offset = (uint32_t)offsetof(TKMKanji__storage_, readingHint),
@@ -475,7 +517,7 @@ typedef struct TKMKanji__storage_ {
       },
       {
         .name = "formattedMeaningMnemonicArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
         .number = TKMKanji_FieldNumber_FormattedMeaningMnemonicArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedMeaningMnemonicArray),
@@ -484,7 +526,7 @@ typedef struct TKMKanji__storage_ {
       },
       {
         .name = "formattedMeaningHintArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
         .number = TKMKanji_FieldNumber_FormattedMeaningHintArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedMeaningHintArray),
@@ -493,7 +535,7 @@ typedef struct TKMKanji__storage_ {
       },
       {
         .name = "formattedReadingMnemonicArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
         .number = TKMKanji_FieldNumber_FormattedReadingMnemonicArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedReadingMnemonicArray),
@@ -502,7 +544,7 @@ typedef struct TKMKanji__storage_ {
       },
       {
         .name = "formattedReadingHintArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
         .number = TKMKanji_FieldNumber_FormattedReadingHintArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedReadingHintArray),
@@ -511,7 +553,7 @@ typedef struct TKMKanji__storage_ {
       },
       {
         .name = "visuallySimilarKanjiArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMVisuallySimilarKanji),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMVisuallySimilarKanji),
         .number = TKMKanji_FieldNumber_VisuallySimilarKanjiArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMKanji__storage_, visuallySimilarKanjiArray),
@@ -526,7 +568,7 @@ typedef struct TKMKanji__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMKanji__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -568,7 +610,7 @@ typedef struct TKMVocabulary__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "meaningExplanation",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMVocabulary_FieldNumber_MeaningExplanation,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(TKMVocabulary__storage_, meaningExplanation),
@@ -577,7 +619,7 @@ typedef struct TKMVocabulary__storage_ {
       },
       {
         .name = "readingExplanation",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMVocabulary_FieldNumber_ReadingExplanation,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(TKMVocabulary__storage_, readingExplanation),
@@ -586,7 +628,7 @@ typedef struct TKMVocabulary__storage_ {
       },
       {
         .name = "sentencesArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMVocabulary_Sentence),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMVocabulary_Sentence),
         .number = TKMVocabulary_FieldNumber_SentencesArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMVocabulary__storage_, sentencesArray),
@@ -599,21 +641,21 @@ typedef struct TKMVocabulary__storage_ {
         .number = TKMVocabulary_FieldNumber_PartsOfSpeechArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMVocabulary__storage_, partsOfSpeechArray),
-        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldHasEnumDescriptor),
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked | GPBFieldHasEnumDescriptor),
         .dataType = GPBDataTypeEnum,
       },
       {
         .name = "audioIdsArray",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMVocabulary_FieldNumber_AudioIdsArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMVocabulary__storage_, audioIdsArray),
-        .flags = GPBFieldRepeated,
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
         .dataType = GPBDataTypeInt32,
       },
       {
         .name = "formattedMeaningExplanationArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
         .number = TKMVocabulary_FieldNumber_FormattedMeaningExplanationArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMVocabulary__storage_, formattedMeaningExplanationArray),
@@ -622,7 +664,7 @@ typedef struct TKMVocabulary__storage_ {
       },
       {
         .name = "formattedReadingExplanationArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMFormattedText),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
         .number = TKMVocabulary_FieldNumber_FormattedReadingExplanationArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMVocabulary__storage_, formattedReadingExplanationArray),
@@ -637,7 +679,7 @@ typedef struct TKMVocabulary__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMVocabulary__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -654,13 +696,14 @@ GPBEnumDescriptor *TKMVocabulary_PartOfSpeech_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "Noun\000Numeral\000IntransitiveVerb\000IchidanVer"
-        "b\000TransitiveVerb\000NoAdjective\000GodanVerb\000N"
-        "aAdjective\000IAdjective\000Suffix\000Adverb\000Suru"
-        "Verb\000Prefix\000ProperNoun\000Expression\000Adject"
-        "ive\000Interjection\000Counter\000Pronoun\000Conjunc"
-        "tion\000";
+        "Unknown\000Noun\000Numeral\000IntransitiveVerb\000Ic"
+        "hidanVerb\000TransitiveVerb\000NoAdjective\000God"
+        "anVerb\000NaAdjective\000IAdjective\000Suffix\000Adv"
+        "erb\000SuruVerb\000Prefix\000ProperNoun\000Expressio"
+        "n\000Adjective\000Interjection\000Counter\000Pronoun"
+        "\000Conjunction\000";
     static const int32_t values[] = {
+        TKMVocabulary_PartOfSpeech_Unknown,
         TKMVocabulary_PartOfSpeech_Noun,
         TKMVocabulary_PartOfSpeech_Numeral,
         TKMVocabulary_PartOfSpeech_IntransitiveVerb,
@@ -698,6 +741,7 @@ GPBEnumDescriptor *TKMVocabulary_PartOfSpeech_EnumDescriptor(void) {
 
 BOOL TKMVocabulary_PartOfSpeech_IsValidValue(int32_t value__) {
   switch (value__) {
+    case TKMVocabulary_PartOfSpeech_Unknown:
     case TKMVocabulary_PartOfSpeech_Noun:
     case TKMVocabulary_PartOfSpeech_Numeral:
     case TKMVocabulary_PartOfSpeech_IntransitiveVerb:
@@ -745,7 +789,7 @@ typedef struct TKMVocabulary_Sentence__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "japanese",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMVocabulary_Sentence_FieldNumber_Japanese,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(TKMVocabulary_Sentence__storage_, japanese),
@@ -754,7 +798,7 @@ typedef struct TKMVocabulary_Sentence__storage_ {
       },
       {
         .name = "english",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMVocabulary_Sentence_FieldNumber_English,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(TKMVocabulary_Sentence__storage_, english),
@@ -769,8 +813,8 @@ typedef struct TKMVocabulary_Sentence__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMVocabulary_Sentence__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
-    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(TKMVocabulary)];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
+    [localDescriptor setupContainingMessageClass:GPBObjCClass(TKMVocabulary)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -822,7 +866,7 @@ typedef struct TKMSubject__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "id_p",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_Id_p,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, id_p),
@@ -831,7 +875,7 @@ typedef struct TKMSubject__storage_ {
       },
       {
         .name = "level",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_Level,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, level),
@@ -840,7 +884,7 @@ typedef struct TKMSubject__storage_ {
       },
       {
         .name = "slug",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_Slug,
         .hasIndex = 2,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, slug),
@@ -849,7 +893,7 @@ typedef struct TKMSubject__storage_ {
       },
       {
         .name = "documentURL",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_DocumentURL,
         .hasIndex = 3,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, documentURL),
@@ -858,7 +902,7 @@ typedef struct TKMSubject__storage_ {
       },
       {
         .name = "japanese",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_Japanese,
         .hasIndex = 4,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, japanese),
@@ -867,7 +911,7 @@ typedef struct TKMSubject__storage_ {
       },
       {
         .name = "readingsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMReading),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMReading),
         .number = TKMSubject_FieldNumber_ReadingsArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, readingsArray),
@@ -876,7 +920,7 @@ typedef struct TKMSubject__storage_ {
       },
       {
         .name = "meaningsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMMeaning),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMMeaning),
         .number = TKMSubject_FieldNumber_MeaningsArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, meaningsArray),
@@ -885,16 +929,16 @@ typedef struct TKMSubject__storage_ {
       },
       {
         .name = "componentSubjectIdsArray",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_ComponentSubjectIdsArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, componentSubjectIdsArray),
-        .flags = GPBFieldRepeated,
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
         .dataType = GPBDataTypeInt32,
       },
       {
         .name = "radical",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMRadical),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMRadical),
         .number = TKMSubject_FieldNumber_Radical,
         .hasIndex = 5,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, radical),
@@ -903,7 +947,7 @@ typedef struct TKMSubject__storage_ {
       },
       {
         .name = "kanji",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMKanji),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMKanji),
         .number = TKMSubject_FieldNumber_Kanji,
         .hasIndex = 6,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, kanji),
@@ -912,7 +956,7 @@ typedef struct TKMSubject__storage_ {
       },
       {
         .name = "vocabulary",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMVocabulary),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMVocabulary),
         .number = TKMSubject_FieldNumber_Vocabulary,
         .hasIndex = 7,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, vocabulary),
@@ -921,11 +965,11 @@ typedef struct TKMSubject__storage_ {
       },
       {
         .name = "amalgamationSubjectIdsArray",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMSubject_FieldNumber_AmalgamationSubjectIdsArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMSubject__storage_, amalgamationSubjectIdsArray),
-        .flags = GPBFieldRepeated,
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
         .dataType = GPBDataTypeInt32,
       },
     };
@@ -936,7 +980,7 @@ typedef struct TKMSubject__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMSubject__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
         "\001\004\010\241!!\000";
@@ -958,8 +1002,9 @@ GPBEnumDescriptor *TKMSubject_Type_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "Radical\000Kanji\000Vocabulary\000";
+        "Unknown\000Radical\000Kanji\000Vocabulary\000";
     static const int32_t values[] = {
+        TKMSubject_Type_Unknown,
         TKMSubject_Type_Radical,
         TKMSubject_Type_Kanji,
         TKMSubject_Type_Vocabulary,
@@ -980,6 +1025,7 @@ GPBEnumDescriptor *TKMSubject_Type_EnumDescriptor(void) {
 
 BOOL TKMSubject_Type_IsValidValue(int32_t value__) {
   switch (value__) {
+    case TKMSubject_Type_Unknown:
     case TKMSubject_Type_Radical:
     case TKMSubject_Type_Kanji:
     case TKMSubject_Type_Vocabulary:
@@ -1019,86 +1065,78 @@ typedef struct TKMAssignment__storage_ {
 + (GPBDescriptor *)descriptor {
   static GPBDescriptor *descriptor = nil;
   if (!descriptor) {
-    static GPBMessageFieldDescriptionWithDefault fields[] = {
+    static GPBMessageFieldDescription fields[] = {
       {
-        .defaultValue.valueInt32 = 0,
-        .core.name = "id_p",
-        .core.dataTypeSpecific.className = NULL,
-        .core.number = TKMAssignment_FieldNumber_Id_p,
-        .core.hasIndex = 0,
-        .core.offset = (uint32_t)offsetof(TKMAssignment__storage_, id_p),
-        .core.flags = GPBFieldOptional,
-        .core.dataType = GPBDataTypeInt32,
+        .name = "id_p",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMAssignment_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMAssignment__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
       },
       {
-        .defaultValue.valueInt32 = 0,
-        .core.name = "level",
-        .core.dataTypeSpecific.className = NULL,
-        .core.number = TKMAssignment_FieldNumber_Level,
-        .core.hasIndex = 1,
-        .core.offset = (uint32_t)offsetof(TKMAssignment__storage_, level),
-        .core.flags = GPBFieldOptional,
-        .core.dataType = GPBDataTypeInt32,
+        .name = "level",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMAssignment_FieldNumber_Level,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TKMAssignment__storage_, level),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
       },
       {
-        .defaultValue.valueInt32 = 0,
-        .core.name = "subjectId",
-        .core.dataTypeSpecific.className = NULL,
-        .core.number = TKMAssignment_FieldNumber_SubjectId,
-        .core.hasIndex = 2,
-        .core.offset = (uint32_t)offsetof(TKMAssignment__storage_, subjectId),
-        .core.flags = GPBFieldOptional,
-        .core.dataType = GPBDataTypeInt32,
+        .name = "subjectId",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMAssignment_FieldNumber_SubjectId,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(TKMAssignment__storage_, subjectId),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
       },
       {
-        .defaultValue.valueEnum = TKMSubject_Type_Radical,
-        .core.name = "subjectType",
-        .core.dataTypeSpecific.enumDescFunc = TKMSubject_Type_EnumDescriptor,
-        .core.number = TKMAssignment_FieldNumber_SubjectType,
-        .core.hasIndex = 3,
-        .core.offset = (uint32_t)offsetof(TKMAssignment__storage_, subjectType),
-        .core.flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
-        .core.dataType = GPBDataTypeEnum,
+        .name = "subjectType",
+        .dataTypeSpecific.enumDescFunc = TKMSubject_Type_EnumDescriptor,
+        .number = TKMAssignment_FieldNumber_SubjectType,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(TKMAssignment__storage_, subjectType),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
+        .dataType = GPBDataTypeEnum,
       },
       {
-        .defaultValue.valueInt32 = 0,
-        .core.name = "availableAt",
-        .core.dataTypeSpecific.className = NULL,
-        .core.number = TKMAssignment_FieldNumber_AvailableAt,
-        .core.hasIndex = 4,
-        .core.offset = (uint32_t)offsetof(TKMAssignment__storage_, availableAt),
-        .core.flags = GPBFieldOptional,
-        .core.dataType = GPBDataTypeInt32,
+        .name = "availableAt",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMAssignment_FieldNumber_AvailableAt,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(TKMAssignment__storage_, availableAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
       },
       {
-        .defaultValue.valueInt32 = 0,
-        .core.name = "startedAt",
-        .core.dataTypeSpecific.className = NULL,
-        .core.number = TKMAssignment_FieldNumber_StartedAt,
-        .core.hasIndex = 5,
-        .core.offset = (uint32_t)offsetof(TKMAssignment__storage_, startedAt),
-        .core.flags = GPBFieldOptional,
-        .core.dataType = GPBDataTypeInt32,
+        .name = "startedAt",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMAssignment_FieldNumber_StartedAt,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(TKMAssignment__storage_, startedAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
       },
       {
-        .defaultValue.valueInt32 = 0,
-        .core.name = "srsStage",
-        .core.dataTypeSpecific.className = NULL,
-        .core.number = TKMAssignment_FieldNumber_SrsStage,
-        .core.hasIndex = 6,
-        .core.offset = (uint32_t)offsetof(TKMAssignment__storage_, srsStage),
-        .core.flags = GPBFieldOptional,
-        .core.dataType = GPBDataTypeInt32,
+        .name = "srsStage",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMAssignment_FieldNumber_SrsStage,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(TKMAssignment__storage_, srsStage),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
       },
       {
-        .defaultValue.valueInt32 = 0,
-        .core.name = "passedAt",
-        .core.dataTypeSpecific.className = NULL,
-        .core.number = TKMAssignment_FieldNumber_PassedAt,
-        .core.hasIndex = 7,
-        .core.offset = (uint32_t)offsetof(TKMAssignment__storage_, passedAt),
-        .core.flags = GPBFieldOptional,
-        .core.dataType = GPBDataTypeInt32,
+        .name = "passedAt",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMAssignment_FieldNumber_PassedAt,
+        .hasIndex = 7,
+        .offset = (uint32_t)offsetof(TKMAssignment__storage_, passedAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -1106,9 +1144,9 @@ typedef struct TKMAssignment__storage_ {
                                      rootClass:[TKMWanikaniRoot class]
                                           file:TKMWanikaniRoot_FileDescriptor()
                                         fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescriptionWithDefault))
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMAssignment__storage_)
-                                         flags:GPBDescriptorInitializationFlag_FieldsWithDefault];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -1118,6 +1156,18 @@ typedef struct TKMAssignment__storage_ {
 }
 
 @end
+
+int32_t TKMAssignment_SubjectType_RawValue(TKMAssignment *message) {
+  GPBDescriptor *descriptor = [TKMAssignment descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TKMAssignment_FieldNumber_SubjectType];
+  return GPBGetMessageRawEnumField(message, field);
+}
+
+void SetTKMAssignment_SubjectType_RawValue(TKMAssignment *message, int32_t value) {
+  GPBDescriptor *descriptor = [TKMAssignment descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:TKMAssignment_FieldNumber_SubjectType];
+  GPBSetMessageRawEnumField(message, field, value);
+}
 
 #pragma mark - TKMProgress
 
@@ -1143,7 +1193,7 @@ typedef struct TKMProgress__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "meaningWrong",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMProgress_FieldNumber_MeaningWrong,
         .hasIndex = 0,
         .offset = 1,  // Stored in _has_storage_ to save space.
@@ -1152,7 +1202,7 @@ typedef struct TKMProgress__storage_ {
       },
       {
         .name = "readingWrong",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMProgress_FieldNumber_ReadingWrong,
         .hasIndex = 2,
         .offset = 3,  // Stored in _has_storage_ to save space.
@@ -1161,7 +1211,7 @@ typedef struct TKMProgress__storage_ {
       },
       {
         .name = "isLesson",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMProgress_FieldNumber_IsLesson,
         .hasIndex = 4,
         .offset = 5,  // Stored in _has_storage_ to save space.
@@ -1170,7 +1220,7 @@ typedef struct TKMProgress__storage_ {
       },
       {
         .name = "assignment",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMAssignment),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMAssignment),
         .number = TKMProgress_FieldNumber_Assignment,
         .hasIndex = 6,
         .offset = (uint32_t)offsetof(TKMProgress__storage_, assignment),
@@ -1179,7 +1229,7 @@ typedef struct TKMProgress__storage_ {
       },
       {
         .name = "createdAt",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMProgress_FieldNumber_CreatedAt,
         .hasIndex = 7,
         .offset = (uint32_t)offsetof(TKMProgress__storage_, createdAt),
@@ -1194,7 +1244,7 @@ typedef struct TKMProgress__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMProgress__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -1234,7 +1284,7 @@ typedef struct TKMStudyMaterials__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "id_p",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMStudyMaterials_FieldNumber_Id_p,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(TKMStudyMaterials__storage_, id_p),
@@ -1243,7 +1293,7 @@ typedef struct TKMStudyMaterials__storage_ {
       },
       {
         .name = "subjectId",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMStudyMaterials_FieldNumber_SubjectId,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(TKMStudyMaterials__storage_, subjectId),
@@ -1252,7 +1302,7 @@ typedef struct TKMStudyMaterials__storage_ {
       },
       {
         .name = "meaningNote",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMStudyMaterials_FieldNumber_MeaningNote,
         .hasIndex = 3,
         .offset = (uint32_t)offsetof(TKMStudyMaterials__storage_, meaningNote),
@@ -1261,7 +1311,7 @@ typedef struct TKMStudyMaterials__storage_ {
       },
       {
         .name = "readingNote",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMStudyMaterials_FieldNumber_ReadingNote,
         .hasIndex = 4,
         .offset = (uint32_t)offsetof(TKMStudyMaterials__storage_, readingNote),
@@ -1270,7 +1320,7 @@ typedef struct TKMStudyMaterials__storage_ {
       },
       {
         .name = "meaningSynonymsArray",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMStudyMaterials_FieldNumber_MeaningSynonymsArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMStudyMaterials__storage_, meaningSynonymsArray),
@@ -1279,7 +1329,7 @@ typedef struct TKMStudyMaterials__storage_ {
       },
       {
         .name = "subjectType",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMStudyMaterials_FieldNumber_SubjectType,
         .hasIndex = 2,
         .offset = (uint32_t)offsetof(TKMStudyMaterials__storage_, subjectType),
@@ -1294,7 +1344,7 @@ typedef struct TKMStudyMaterials__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMStudyMaterials__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -1337,7 +1387,7 @@ typedef struct TKMUser__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "username",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMUser_FieldNumber_Username,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(TKMUser__storage_, username),
@@ -1346,7 +1396,7 @@ typedef struct TKMUser__storage_ {
       },
       {
         .name = "level",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMUser_FieldNumber_Level,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(TKMUser__storage_, level),
@@ -1355,7 +1405,7 @@ typedef struct TKMUser__storage_ {
       },
       {
         .name = "maxLevelGrantedBySubscription",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMUser_FieldNumber_MaxLevelGrantedBySubscription,
         .hasIndex = 2,
         .offset = (uint32_t)offsetof(TKMUser__storage_, maxLevelGrantedBySubscription),
@@ -1364,7 +1414,7 @@ typedef struct TKMUser__storage_ {
       },
       {
         .name = "profileURL",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMUser_FieldNumber_ProfileURL,
         .hasIndex = 3,
         .offset = (uint32_t)offsetof(TKMUser__storage_, profileURL),
@@ -1373,7 +1423,7 @@ typedef struct TKMUser__storage_ {
       },
       {
         .name = "startedAt",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMUser_FieldNumber_StartedAt,
         .hasIndex = 4,
         .offset = (uint32_t)offsetof(TKMUser__storage_, startedAt),
@@ -1382,7 +1432,7 @@ typedef struct TKMUser__storage_ {
       },
       {
         .name = "subscribed",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMUser_FieldNumber_Subscribed,
         .hasIndex = 5,
         .offset = 6,  // Stored in _has_storage_ to save space.
@@ -1391,7 +1441,7 @@ typedef struct TKMUser__storage_ {
       },
       {
         .name = "subscriptionEndsAt",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMUser_FieldNumber_SubscriptionEndsAt,
         .hasIndex = 7,
         .offset = (uint32_t)offsetof(TKMUser__storage_, subscriptionEndsAt),
@@ -1400,7 +1450,7 @@ typedef struct TKMUser__storage_ {
       },
       {
         .name = "vacationStartedAt",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMUser_FieldNumber_VacationStartedAt,
         .hasIndex = 8,
         .offset = (uint32_t)offsetof(TKMUser__storage_, vacationStartedAt),
@@ -1415,7 +1465,7 @@ typedef struct TKMUser__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMUser__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
         "\001\004\007\241!!\000";
@@ -1450,7 +1500,7 @@ typedef struct TKMSubjectOverrides__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "subjectArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMSubject),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMSubject),
         .number = TKMSubjectOverrides_FieldNumber_SubjectArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMSubjectOverrides__storage_, subjectArray),
@@ -1465,7 +1515,7 @@ typedef struct TKMSubjectOverrides__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMSubjectOverrides__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -1503,12 +1553,12 @@ typedef struct TKMFormattedText__storage_ {
         .number = TKMFormattedText_FieldNumber_FormatArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMFormattedText__storage_, formatArray),
-        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldHasEnumDescriptor),
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked | GPBFieldHasEnumDescriptor),
         .dataType = GPBDataTypeEnum,
       },
       {
         .name = "text",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMFormattedText_FieldNumber_Text,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(TKMFormattedText__storage_, text),
@@ -1517,7 +1567,7 @@ typedef struct TKMFormattedText__storage_ {
       },
       {
         .name = "linkURL",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMFormattedText_FieldNumber_LinkURL,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(TKMFormattedText__storage_, linkURL),
@@ -1532,7 +1582,7 @@ typedef struct TKMFormattedText__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMFormattedText__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
         "\001\003\004\241!!\000";
@@ -1554,9 +1604,10 @@ GPBEnumDescriptor *TKMFormattedText_Format_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "Radical\000Kanji\000Japanese\000Reading\000Vocabular"
-        "y\000Italic\000Bold\000Link\000";
+        "Unknown\000Radical\000Kanji\000Japanese\000Reading\000V"
+        "ocabulary\000Italic\000Bold\000Link\000";
     static const int32_t values[] = {
+        TKMFormattedText_Format_Unknown,
         TKMFormattedText_Format_Radical,
         TKMFormattedText_Format_Kanji,
         TKMFormattedText_Format_Japanese,
@@ -1582,6 +1633,7 @@ GPBEnumDescriptor *TKMFormattedText_Format_EnumDescriptor(void) {
 
 BOOL TKMFormattedText_Format_IsValidValue(int32_t value__) {
   switch (value__) {
+    case TKMFormattedText_Format_Unknown:
     case TKMFormattedText_Format_Radical:
     case TKMFormattedText_Format_Kanji:
     case TKMFormattedText_Format_Japanese:
@@ -1621,7 +1673,7 @@ typedef struct TKMDataFileHeader__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "subjectsByLevelArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(TKMSubjectsByLevel),
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMSubjectsByLevel),
         .number = TKMDataFileHeader_FieldNumber_SubjectsByLevelArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMDataFileHeader__storage_, subjectsByLevelArray),
@@ -1630,29 +1682,29 @@ typedef struct TKMDataFileHeader__storage_ {
       },
       {
         .name = "subjectByteOffsetArray",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMDataFileHeader_FieldNumber_SubjectByteOffsetArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMDataFileHeader__storage_, subjectByteOffsetArray),
-        .flags = GPBFieldRepeated,
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
         .dataType = GPBDataTypeUInt32,
       },
       {
         .name = "deletedSubjectIdsArray",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMDataFileHeader_FieldNumber_DeletedSubjectIdsArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMDataFileHeader__storage_, deletedSubjectIdsArray),
-        .flags = GPBFieldRepeated,
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
         .dataType = GPBDataTypeInt32,
       },
       {
         .name = "levelBySubjectArray",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMDataFileHeader_FieldNumber_LevelBySubjectArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMDataFileHeader__storage_, levelBySubjectArray),
-        .flags = GPBFieldRepeated,
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
         .dataType = GPBDataTypeInt32,
       },
     };
@@ -1663,7 +1715,7 @@ typedef struct TKMDataFileHeader__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMDataFileHeader__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -1697,29 +1749,29 @@ typedef struct TKMSubjectsByLevel__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "radicalsArray",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMSubjectsByLevel_FieldNumber_RadicalsArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMSubjectsByLevel__storage_, radicalsArray),
-        .flags = GPBFieldRepeated,
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
         .dataType = GPBDataTypeInt32,
       },
       {
         .name = "kanjiArray",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMSubjectsByLevel_FieldNumber_KanjiArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMSubjectsByLevel__storage_, kanjiArray),
-        .flags = GPBFieldRepeated,
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
         .dataType = GPBDataTypeInt32,
       },
       {
         .name = "vocabularyArray",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMSubjectsByLevel_FieldNumber_VocabularyArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMSubjectsByLevel__storage_, vocabularyArray),
-        .flags = GPBFieldRepeated,
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
         .dataType = GPBDataTypeInt32,
       },
     };
@@ -1730,7 +1782,7 @@ typedef struct TKMSubjectsByLevel__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMSubjectsByLevel__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -1774,7 +1826,7 @@ typedef struct TKMLevel__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "id_p",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMLevel_FieldNumber_Id_p,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(TKMLevel__storage_, id_p),
@@ -1783,7 +1835,7 @@ typedef struct TKMLevel__storage_ {
       },
       {
         .name = "level",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMLevel_FieldNumber_Level,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(TKMLevel__storage_, level),
@@ -1792,7 +1844,7 @@ typedef struct TKMLevel__storage_ {
       },
       {
         .name = "abandonedAt",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMLevel_FieldNumber_AbandonedAt,
         .hasIndex = 2,
         .offset = (uint32_t)offsetof(TKMLevel__storage_, abandonedAt),
@@ -1801,7 +1853,7 @@ typedef struct TKMLevel__storage_ {
       },
       {
         .name = "completedAt",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMLevel_FieldNumber_CompletedAt,
         .hasIndex = 3,
         .offset = (uint32_t)offsetof(TKMLevel__storage_, completedAt),
@@ -1810,7 +1862,7 @@ typedef struct TKMLevel__storage_ {
       },
       {
         .name = "createdAt",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMLevel_FieldNumber_CreatedAt,
         .hasIndex = 4,
         .offset = (uint32_t)offsetof(TKMLevel__storage_, createdAt),
@@ -1819,7 +1871,7 @@ typedef struct TKMLevel__storage_ {
       },
       {
         .name = "passedAt",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMLevel_FieldNumber_PassedAt,
         .hasIndex = 5,
         .offset = (uint32_t)offsetof(TKMLevel__storage_, passedAt),
@@ -1828,7 +1880,7 @@ typedef struct TKMLevel__storage_ {
       },
       {
         .name = "startedAt",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMLevel_FieldNumber_StartedAt,
         .hasIndex = 6,
         .offset = (uint32_t)offsetof(TKMLevel__storage_, startedAt),
@@ -1837,7 +1889,7 @@ typedef struct TKMLevel__storage_ {
       },
       {
         .name = "unlockedAt",
-        .dataTypeSpecific.className = NULL,
+        .dataTypeSpecific.clazz = Nil,
         .number = TKMLevel_FieldNumber_UnlockedAt,
         .hasIndex = 7,
         .offset = (uint32_t)offsetof(TKMLevel__storage_, unlockedAt),
@@ -1852,7 +1904,109 @@ typedef struct TKMLevel__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TKMLevel__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - TKMDeprecatedMnemonicFile
+
+@implementation TKMDeprecatedMnemonicFile
+
+@dynamic subjectsArray, subjectsArray_Count;
+
+typedef struct TKMDeprecatedMnemonicFile__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *subjectsArray;
+} TKMDeprecatedMnemonicFile__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "subjectsArray",
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMDeprecatedMnemonicFile_Subject),
+        .number = TKMDeprecatedMnemonicFile_FieldNumber_SubjectsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMDeprecatedMnemonicFile__storage_, subjectsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMDeprecatedMnemonicFile class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMDeprecatedMnemonicFile__storage_)
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - TKMDeprecatedMnemonicFile_Subject
+
+@implementation TKMDeprecatedMnemonicFile_Subject
+
+@dynamic hasId_p, id_p;
+@dynamic formattedDeprecatedMnemonicArray, formattedDeprecatedMnemonicArray_Count;
+
+typedef struct TKMDeprecatedMnemonicFile_Subject__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t id_p;
+  NSMutableArray *formattedDeprecatedMnemonicArray;
+} TKMDeprecatedMnemonicFile_Subject__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "id_p",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMDeprecatedMnemonicFile_Subject_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TKMDeprecatedMnemonicFile_Subject__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "formattedDeprecatedMnemonicArray",
+        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
+        .number = TKMDeprecatedMnemonicFile_Subject_FieldNumber_FormattedDeprecatedMnemonicArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(TKMDeprecatedMnemonicFile_Subject__storage_, formattedDeprecatedMnemonicArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TKMDeprecatedMnemonicFile_Subject class]
+                                     rootClass:[TKMWanikaniRoot class]
+                                          file:TKMWanikaniRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TKMDeprecatedMnemonicFile_Subject__storage_)
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
+    [localDescriptor setupContainingMessageClass:GPBObjCClass(TKMDeprecatedMnemonicFile)];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG

@@ -15,8 +15,8 @@
 #import <Foundation/Foundation.h>
 
 #import "Client.h"
-#import "Reachability.h"
 #import "Extensions/ProtobufExtensions.h"
+#import "Reachability.h"
 #import "proto/Wanikani.pbobjc.h"
 
 NS_ASSUME_NONNULL_BEGIN

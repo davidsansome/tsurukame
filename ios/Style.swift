@@ -105,6 +105,8 @@ class TKMStyle: NSObject {
       return kanjiColor2
     case .vocabulary:
       return vocabularyColor2
+    case .unknown: fallthrough
+    case .gpbUnrecognizedEnumeratorValue: fallthrough
     @unknown default:
       fatalError()
     }
@@ -118,6 +120,8 @@ class TKMStyle: NSObject {
       return kanjiGradient
     case .vocabulary:
       return vocabularyGradient
+    case .unknown: fallthrough
+    case .gpbUnrecognizedEnumeratorValue: fallthrough
     @unknown default:
       fatalError()
     }

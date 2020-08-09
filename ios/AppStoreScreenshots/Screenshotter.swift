@@ -78,6 +78,7 @@ import Foundation
       // Return some assignments for a review.
       let a = TKMAssignment()
       a.subjectId = 511
+      a.subjectType = .kanji
       a.availableAt = 42
       a.srsStage = 2
       return Array(repeating: a, count: Int(availableReviewCount))

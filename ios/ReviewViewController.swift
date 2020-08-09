@@ -552,6 +552,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         subjectTypePrompt = "Radical"
       case .vocabulary:
         subjectTypePrompt = "Vocabulary"
+      case .unknown: fallthrough
+      case .gpbUnrecognizedEnumeratorValue: fallthrough
     @unknown default:
         fatalError()
       }

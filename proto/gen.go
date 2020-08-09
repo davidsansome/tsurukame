@@ -14,4 +14,4 @@
 
 package proto
 
-//go:generate protoc --go_out=. wanikani.proto
+//go:generate protoc --experimental_allow_proto3_optional --go_opt=paths=source_relative --go_out=. wanikani.proto

@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-syntax = "proto2";
-
+syntax = "proto3";
+option go_package = "github.com/davidsansome/tsurukame;proto";
 option objc_class_prefix = "TKM";
+option swift_prefix = "TKM";
 
 package proto;
 
 message Meaning {
   enum Type {
+    UNKNOWN = 0;
     PRIMARY = 1;
     SECONDARY = 2;
 
@@ -44,6 +46,7 @@ message Reading {
 
   // Type is only set for Kanji readings - not for Vocabulary.
   enum Type {
+    UNKNOWN = 0;
     ONYOMI = 1;
     KUNYOMI = 2;
     NANORI = 3;
@@ -94,6 +97,7 @@ message Vocabulary {
   repeated Sentence sentences = 3;
 
   enum PartOfSpeech {
+    UNKNOWN = 0;
     NOUN = 1;
     NUMERAL = 2;
     INTRANSITIVE_VERB = 3;
@@ -137,6 +141,7 @@ message Subject {
   optional Vocabulary vocabulary = 11;
 
   enum Type {
+    UNKNOWN = 0;
     RADICAL = 1;
     KANJI = 2;
     VOCABULARY = 3;
@@ -156,8 +161,7 @@ message Assignment {
 }
 
 message Progress {
-  reserved 1;
-  reserved 2;
+  reserved 1, 2;
   optional bool meaning_wrong = 3;
   optional bool reading_wrong = 4;
   optional bool is_lesson = 5;
@@ -191,6 +195,7 @@ message SubjectOverrides {
 
 message FormattedText {
   enum Format {
+    UNKNOWN = 0;
     RADICAL = 1;
     KANJI = 2;
     JAPANESE = 3;
