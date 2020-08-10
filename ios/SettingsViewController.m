@@ -14,13 +14,13 @@
 
 #import "SettingsViewController.h"
 
+#import "Extensions/ProtobufExtensions.h"
 #import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "TKMFontsViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
-#import "Extensions/ProtobufExtensions.h"
 
 #import <UserNotifications/UserNotifications.h>
 

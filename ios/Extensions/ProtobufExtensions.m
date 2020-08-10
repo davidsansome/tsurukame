@@ -14,8 +14,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "Tsurukame-Swift.h"
 #import "ProtobufExtensions.h"
+#import "Tsurukame-Swift.h"
 
 static const int kGuruStage = 5;
 
@@ -27,6 +27,9 @@ NSString *TKMSubjectTypeName(TKMSubject_Type subjectType) {
       return @"Kanji";
     case TKMSubject_Type_Vocabulary:
       return @"Vocabulary";
+    case TKMSubject_Type_Unknown:
+    case TKMSubject_Type_GPBUnrecognizedEnumeratorValue:
+      return @"Random";
   }
 }
 
@@ -264,6 +267,9 @@ NSTimeInterval TKMMinimumTimeUntilGuruSeconds(int itemLevel, int srsStage) {
       enumerateValuesWithBlock:^(int32_t value, NSUInteger idx, BOOL *_Nonnull stop) {
         NSString *str;
         switch ((TKMVocabulary_PartOfSpeech)value) {
+          case TKMVocabulary_PartOfSpeech_GPBUnrecognizedEnumeratorValue:
+          case TKMVocabulary_PartOfSpeech_Unknown:
+            break;
           case TKMVocabulary_PartOfSpeech_Noun:
             str = @"Noun";
             break;

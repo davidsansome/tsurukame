@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import "ReviewItem.h"
-#import "Tsurukame-Swift.h"
 #import "Extensions/ProtobufExtensions.h"
+#import "Tsurukame-Swift.h"
 
 @implementation ReviewItem
 
