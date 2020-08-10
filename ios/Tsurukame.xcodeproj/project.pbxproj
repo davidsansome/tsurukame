@@ -71,7 +71,7 @@
 		63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
 		63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */; };
 		63BFA78B218EB1B30058E885 /* TKMDownloadModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */; };
-		63BFA78E218EB6890058E885 /* TKMOfflineAudioViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA78D218EB6890058E885 /* TKMOfflineAudioViewController.mm */; };
+		63BFA78E218EB6890058E885 /* OfflineAudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA78D218EB6890058E885 /* OfflineAudioViewController.swift */; };
 		63BFA791218EB7AB0058E885 /* TKMDownloadModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */; };
 		63C42A2621B6A28D008CA938 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C42A2521B6A28D008CA938 /* AppDelegate.swift */; };
 		63C42A2821B6A28D008CA938 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C42A2721B6A28D008CA938 /* ViewController.swift */; };
@@ -295,8 +295,7 @@
 		63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SuccessAnimation.h; sourceTree = "<group>"; };
 		63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SuccessAnimation.m; sourceTree = "<group>"; };
 		63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMDownloadModelItem.xib; sourceTree = "<group>"; };
-		63BFA78C218EB6890058E885 /* TKMOfflineAudioViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMOfflineAudioViewController.h; sourceTree = "<group>"; };
-		63BFA78D218EB6890058E885 /* TKMOfflineAudioViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TKMOfflineAudioViewController.mm; sourceTree = "<group>"; };
+		63BFA78D218EB6890058E885 /* OfflineAudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineAudioViewController.swift; sourceTree = "<group>"; };
 		63BFA78F218EB7AB0058E885 /* TKMDownloadModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMDownloadModelItem.h; sourceTree = "<group>"; };
 		63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMDownloadModelItem.m; sourceTree = "<group>"; };
 		63C42A2321B6A28D008CA938 /* FontScreenshotter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FontScreenshotter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -539,6 +538,7 @@
 				63F7F52223D423E9006A31FB /* MainViewController.swift */,
 				63BDA9A5200E04E500D75DA2 /* NavigationController.h */,
 				63BDA9A6200E04E500D75DA2 /* NavigationController.m */,
+				63BFA78D218EB6890058E885 /* OfflineAudioViewController.swift */,
 				684AE501E6BF8ED5D65DA298 /* Pods */,
 				63CAAAD61FC6E0BF00E09DA1 /* proto */,
 				41897D922372287F00F6A0B7 /* Resources */,
@@ -588,8 +588,6 @@
 				BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */,
 				63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */,
 				63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */,
-				63BFA78C218EB6890058E885 /* TKMOfflineAudioViewController.h */,
-				63BFA78D218EB6890058E885 /* TKMOfflineAudioViewController.mm */,
 				4826740B23ECE46900F704E4 /* TKMReviewBatchSizeViewController.h */,
 				48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */,
 				63CE766121F47100002A417B /* TKMReviewContainerViewController.h */,
@@ -1240,7 +1238,7 @@
 				636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */,
 				6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */,
 				63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */,
-				63BFA78E218EB6890058E885 /* TKMOfflineAudioViewController.mm in Sources */,
+				63BFA78E218EB6890058E885 /* OfflineAudioViewController.swift in Sources */,
 				63F7F52E23D4C2CA006A31FB /* Audio.swift in Sources */,
 				93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */,
 				63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */,
