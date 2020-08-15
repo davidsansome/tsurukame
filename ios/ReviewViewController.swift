@@ -1308,6 +1308,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
                                         discoverabilityTitle: "Previous font"))
       }
     }
+    if !previousSubjectButton.isHidden {
+      keyCommands.append(UIKeyCommand(input: "p",
+                                      modifierFlags: [],
+                                      action: #selector(previousSubjectButtonPressed(_:)),
+                                      discoverabilityTitle: "Previous subject"))
+    }
     return keyCommands
   }
 
