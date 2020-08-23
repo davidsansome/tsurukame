@@ -1183,6 +1183,8 @@ typedef struct TKMProgress__storage_ {
   uint32_t _has_storage_[1];
   int32_t createdAt;
   TKMAssignment *assignment;
+  int32_t meaningWrongCount;
+  int32_t readingWrongCount;
 } TKMProgress__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1233,6 +1235,24 @@ typedef struct TKMProgress__storage_ {
         .number = TKMProgress_FieldNumber_CreatedAt,
         .hasIndex = 7,
         .offset = (uint32_t)offsetof(TKMProgress__storage_, createdAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "meaningWrongCount",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMProgress_FieldNumber_MeaningWrongCount,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(TKMProgress__storage_, meaningWrongCount),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "readingWrongCount",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMProgress_FieldNumber_ReadingWrongCount,
+        .hasIndex = 9,
+        .offset = (uint32_t)offsetof(TKMProgress__storage_, readingWrongCount),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
