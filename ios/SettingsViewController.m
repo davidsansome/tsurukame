@@ -205,6 +205,14 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                 on:Settings.allowSkippingReviews
                             target:self
                             action:@selector(allowSkippingReviewsSwitchChanged:)]];
+  [model addItem:[[TKMSwitchModelItem alloc]
+                     initWithStyle:UITableViewCellStyleSubtitle
+                             title:@"Minimize review penalty"
+                          subtitle:@"Treat reviews answered incorrect multiple times as if "
+                                   @"answered incorrect once"
+                                on:Settings.minimizeReviewPenalty
+                            target:self
+                            action:@selector(minimizeReviewPenaltySwitchChanged:)]];
 
   [model addSection:@"Audio"];
   [model addItem:[[TKMSwitchModelItem alloc]
@@ -369,6 +377,10 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 
 - (void)allowSkippingReviewsSwitchChanged:(UISwitch *)switchView {
   Settings.allowSkippingReviews = switchView.on;
+}
+
+- (void)minimizeReviewPenaltySwitchChanged:(UISwitch *)switchView {
+  Settings.minimizeReviewPenalty = switchView.on;
 }
 
 - (void)enableCheatsSwitchChanged:(UISwitch *)switchView {

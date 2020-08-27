@@ -1178,13 +1178,15 @@ void SetTKMAssignment_SubjectType_RawValue(TKMAssignment *message, int32_t value
 @dynamic hasIsLesson, isLesson;
 @dynamic hasAssignment, assignment;
 @dynamic hasCreatedAt, createdAt;
+@dynamic hasMeaningWrongCount, meaningWrongCount;
+@dynamic hasReadingWrongCount, readingWrongCount;
 
 typedef struct TKMProgress__storage_ {
   uint32_t _has_storage_[1];
   int32_t createdAt;
-  TKMAssignment *assignment;
   int32_t meaningWrongCount;
   int32_t readingWrongCount;
+  TKMAssignment *assignment;
 } TKMProgress__storage_;
 
 // This method is threadsafe because it is initially called

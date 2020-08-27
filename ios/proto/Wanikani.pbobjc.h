@@ -596,12 +596,12 @@ GPB_FINAL @interface TKMProgress : GPBMessage
 @property(nonatomic, readwrite) int32_t createdAt;
 
 @property(nonatomic, readwrite) BOOL hasCreatedAt;
-
-/** Record wrong meaning counts during reviews. */
 @property(nonatomic, readwrite) int32_t meaningWrongCount;
-/** Record wrong reading counts during reviews. */
+
+@property(nonatomic, readwrite) BOOL hasMeaningWrongCount;
 @property(nonatomic, readwrite) int32_t readingWrongCount;
 
+@property(nonatomic, readwrite) BOOL hasReadingWrongCount;
 @end
 
 #pragma mark - TKMStudyMaterials
