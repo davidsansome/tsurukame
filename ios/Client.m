@@ -816,7 +816,7 @@ static NSString *GetSessionCookie(NSURLSession *session) {
                          studyMaterials.meaningNote = d[@"data"][@"meaning_note"];
                        }
                        if (d[@"data"][@"reading_note"] != [NSNull null]) {
-                         studyMaterials.meaningNote = d[@"data"][@"reading_note"];
+                         studyMaterials.readingNote = d[@"data"][@"reading_note"];
                        }
                        if (d[@"data"][@"meaning_synonyms"] != [NSNull null]) {
                          studyMaterials.meaningSynonymsArray = d[@"data"][@"meaning_synonyms"];
