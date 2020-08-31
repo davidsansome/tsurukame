@@ -52,11 +52,15 @@ import Foundation
 
   var wrappedValue: T {
     get {
+      // Encode anything not encoded
       if let notEncodedObject = UserDefaults.standard.object(forKey: key) as? T {
-        return notEncodedObject
+        UserDefaults.standard.set(archiveData(notEncodedObject), forKey: key)
       }
-      guard let data = UserDefaults.standard.object(forKey: key) as? Data
-      else { return defaultValue }
+      // Decode value if obtainable and return it
+      guard let data = UserDefaults.standard.object(forKey: key) as? Data else {
+        UserDefaults.standard.set(archiveData(defaultValue), forKey: key)
+        return defaultValue
+      }
       return (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? T) ?? defaultValue
     }
     set(newValue) { UserDefaults.standard.set(archiveData(newValue), forKey: key) }
@@ -68,7 +72,7 @@ import Foundation
   @Setting("", #keyPath(userEmailAddress)) static var userEmailAddress: String
   @Setting("", #keyPath(userApiToken)) static var userApiToken: String
 
-  @Setting(.system, #keyPath(interfaceStyle)) static var interfaceStyle: InterfaceStyle
+  @Setting(InterfaceStyle.system.rawValue, #keyPath(interfaceStyle)) static var interfaceStyle: UInt
 
   @Setting(false, #keyPath(notificationsAllReviews)) static var notificationsAllReviews: Bool
   @Setting(true, #keyPath(notificationsBadging)) static var notificationsBadging: Bool
@@ -81,7 +85,7 @@ import Foundation
   ], #keyPath(lessonOrder)) static var lessonOrder: [Int32]
   @Setting(5, #keyPath(lessonBatchSize)) static var lessonBatchSize: Int
 
-  @Setting(.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
+  @Setting(ReviewOrder.random.rawValue, #keyPath(reviewOrder)) static var reviewOrder: UInt
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
   @Setting(false, #keyPath(groupMeaningReading)) static var groupMeaningReading: Bool
   @Setting(true, #keyPath(meaningFirst)) static var meaningFirst: Bool
