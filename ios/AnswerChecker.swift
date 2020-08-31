@@ -115,6 +115,10 @@ import Foundation
         .replacingOccurrences(of: "/", with: "")
     if taskType == TKMTaskType.reading {
       s = s.replacingOccurrences(of: "n", with: alphabet == TKMAlphabet.hiragana ? "ん" : "ン")
+        
+      // Gboard Godan layout uses "ｎ" or Unicode code point U+FF4E.
+      s = s.replacingOccurrences(of: "ｎ", with: alphabet == TKMAlphabet.hiragana ? "ん" : "ン")
+                
       s = s.replacingOccurrences(of: " ", with: "")
     }
     return s
