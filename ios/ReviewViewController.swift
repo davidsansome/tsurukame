@@ -1310,7 +1310,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     }
     if !previousSubjectButton.isHidden {
       keyCommands.append(UIKeyCommand(input: "p",
-                                      modifierFlags: [],
+                                      modifierFlags: [.command],
                                       action: #selector(previousSubjectButtonPressed(_:)),
                                       discoverabilityTitle: "Previous subject"))
     }
