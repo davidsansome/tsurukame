@@ -20,7 +20,7 @@
 import XCTest
 
 class FontScreenshotterUITests: XCTestCase {
-  let app: XCUIApplication = XCUIApplication()
+  let app = XCUIApplication()
 
   override func setUp() {
     continueAfterFailure = false
