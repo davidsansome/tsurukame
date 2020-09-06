@@ -1076,15 +1076,31 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       if firstTimeAnswered ||
         (lastMarkAnswerWasFirstTime && result == .OverrideAnswerCorrect) {
         activeTask.answer.meaningWrong = !correct
+        if result == .OverrideAnswerCorrect {
+          activeTask.answer.meaningWrongCount -= 1
+        }
       }
       activeTask.answeredMeaning = correct
+
+      if !correct {
+        activeTask.answer.meaningWrongCount += 1
+      }
+
     case .reading:
       firstTimeAnswered = !activeTask.answer.hasReadingWrong
       if firstTimeAnswered ||
         (lastMarkAnswerWasFirstTime && result == .OverrideAnswerCorrect) {
         activeTask.answer.readingWrong = !correct
+        if result == .OverrideAnswerCorrect {
+          activeTask.answer.readingWrongCount -= 1
+        }
       }
       activeTask.answeredReading = correct
+
+      if !correct {
+        activeTask.answer.readingWrongCount += 1
+      }
+
     default:
       fatalError()
     }

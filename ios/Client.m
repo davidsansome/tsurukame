@@ -757,8 +757,13 @@ static NSString *GetSessionCookie(NSURLSession *session) {
   // Encode the data to send in the request.
   NSMutableDictionary *review = [NSMutableDictionary dictionary];
   [review setObject:@(progress.assignment.id_p) forKey:@"assignment_id"];
-  [review setObject:@(progress.meaningWrong ? 1 : 0) forKey:@"incorrect_meaning_answers"];
-  [review setObject:@(progress.readingWrong ? 1 : 0) forKey:@"incorrect_reading_answers"];
+  if (Settings.minimizeReviewPenalty) {
+    [review setObject:@(progress.meaningWrong ? 1 : 0) forKey:@"incorrect_meaning_answers"];
+    [review setObject:@(progress.readingWrong ? 1 : 0) forKey:@"incorrect_reading_answers"];
+  } else {
+    [review setObject:@(progress.meaningWrongCount) forKey:@"incorrect_meaning_answers"];
+    [review setObject:@(progress.readingWrongCount) forKey:@"incorrect_reading_answers"];
+  }
   if (progress.hasCreatedAt) {
     NSTimeInterval interval = [progress.createdAtDate timeIntervalSinceNow];
     // Don't set created_at if it's very recent to try and allow for some

@@ -1178,10 +1178,14 @@ void SetTKMAssignment_SubjectType_RawValue(TKMAssignment *message, int32_t value
 @dynamic hasIsLesson, isLesson;
 @dynamic hasAssignment, assignment;
 @dynamic hasCreatedAt, createdAt;
+@dynamic hasMeaningWrongCount, meaningWrongCount;
+@dynamic hasReadingWrongCount, readingWrongCount;
 
 typedef struct TKMProgress__storage_ {
   uint32_t _has_storage_[1];
   int32_t createdAt;
+  int32_t meaningWrongCount;
+  int32_t readingWrongCount;
   TKMAssignment *assignment;
 } TKMProgress__storage_;
 
@@ -1233,6 +1237,24 @@ typedef struct TKMProgress__storage_ {
         .number = TKMProgress_FieldNumber_CreatedAt,
         .hasIndex = 7,
         .offset = (uint32_t)offsetof(TKMProgress__storage_, createdAt),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "meaningWrongCount",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMProgress_FieldNumber_MeaningWrongCount,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(TKMProgress__storage_, meaningWrongCount),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "readingWrongCount",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMProgress_FieldNumber_ReadingWrongCount,
+        .hasIndex = 9,
+        .offset = (uint32_t)offsetof(TKMProgress__storage_, readingWrongCount),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },

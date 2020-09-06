@@ -104,6 +104,8 @@
   _answer.hasReadingWrong = NO;
   _answeredMeaning = NO;
   _answeredReading = NO;
+  _answer.meaningWrongCount = 0;
+  _answer.readingWrongCount = 0;
 }
 
 @end
