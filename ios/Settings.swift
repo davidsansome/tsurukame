@@ -96,7 +96,7 @@ import Foundation
   @Setting(false, #keyPath(showAllReadings)) static var showAllReadings: Bool
   @Setting(false, #keyPath(autoSwitchKeyboard)) static var autoSwitchKeyboard: Bool
   @Setting(false, #keyPath(allowSkippingReviews)) static var allowSkippingReviews: Bool
-  @Setting(false, #keyPath(minimizeReviewPenalty)) static var minimizeReviewPenalty: Bool
+  @Setting(true, #keyPath(minimizeReviewPenalty)) static var minimizeReviewPenalty: Bool
 
   @Setting(false, #keyPath(playAudioAutomatically)) static var playAudioAutomatically: Bool
   @Setting([], #keyPath(installedAudioPackages)) static var installedAudioPackages: Set<String>

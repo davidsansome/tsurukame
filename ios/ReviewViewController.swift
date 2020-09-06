@@ -1054,6 +1054,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     if result == .AskAgainLater {
       // Take the task out of the queue so it comes back later.
       activeQueue.remove(at: activeTaskIndex)
+      activeTask.reset()
       reviewQueue.append(activeTask)
       refillActiveQueue()
       randomTask()
@@ -1075,11 +1076,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       if firstTimeAnswered ||
         (lastMarkAnswerWasFirstTime && result == .OverrideAnswerCorrect) {
         activeTask.answer.meaningWrong = !correct
+        if result == .OverrideAnswerCorrect {
+          activeTask.answer.meaningWrongCount -= 1
+        }
       }
       activeTask.answeredMeaning = correct
 
-      // A false answeredMeaning indicates an incorrect answer.
-      if !activeTask.answeredMeaning {
+      if !correct {
         activeTask.answer.meaningWrongCount += 1
       }
 
@@ -1088,11 +1091,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       if firstTimeAnswered ||
         (lastMarkAnswerWasFirstTime && result == .OverrideAnswerCorrect) {
         activeTask.answer.readingWrong = !correct
+        if result == .OverrideAnswerCorrect {
+          activeTask.answer.readingWrongCount -= 1
+        }
       }
       activeTask.answeredReading = correct
 
-      // A false answeredReading indicates an incorrect answer.
-      if !activeTask.answeredReading {
+      if !correct {
         activeTask.answer.readingWrongCount += 1
       }
 
