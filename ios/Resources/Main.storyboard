@@ -350,7 +350,7 @@
                                     <constraint firstAttribute="trailing" secondItem="kc6-Lm-8sK" secondAttribute="trailing" constant="8" id="hnc-JP-Evv"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="Nab-RQ-m49">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="Nab-RQ-m49">
                                 <rect key="frame" x="0.0" y="20" width="375" height="543"/>
                                 <fontDescription key="fontDescription" name=".SFNSDisplay" family=".SF NS Display" pointSize="60"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
