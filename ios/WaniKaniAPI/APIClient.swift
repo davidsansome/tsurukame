@@ -168,7 +168,7 @@ class WaniKaniAPIClient: NSObject {
   }
 
   private func createReview(_ progress: TKMProgress) -> Promise<TKMAssignment> {
-    let url = URL(string: "\(kBaseUrl)/reviews/")!
+    let url = URL(string: "\(kBaseUrl)/reviews")!
     let body = CreateReviewRequest(review: CreateReviewRequest
       .Review(assignment_id: Int(progress.assignment!.id_p),
               incorrect_meaning_answers: progress

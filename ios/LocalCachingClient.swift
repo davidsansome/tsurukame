@@ -503,7 +503,7 @@ class LocalCachingClient: NSObject {
             // cannot be accepted. This most commonly happens when doing reviews before
             // progress from elsewhere has synced, leaving the app trying to report
             // progress on reviews you already did elsewhere.
-            break
+            self.clearPendingProgress(p)
 
           default:
             throw err
@@ -610,6 +610,14 @@ class LocalCachingClient: NSObject {
     let responseHeaders = response?.allHeaderFields.description
 
     NSLog("Logging error: \(description ?? "")")
+    if let request = request {
+      if let url = request.url {
+        NSLog("Failed request URL: \(url)")
+      }
+      if let body = request.httpBody {
+        NSLog("Failed request body: \(String(data: body, encoding: .utf8) ?? "")")
+      }
+    }
 
     db.inTransaction { db in
       // Delete old log entries.
