@@ -114,7 +114,7 @@ private func dateFormatter(dateStyle: DateFormatter.Style,
 
 @objc(TKMSubjectDetailsView)
 class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
-  private let statsDateFormatter = dateFormatter(dateStyle: .medium, timeStyle: .medium)
+  private let statsDateFormatter = dateFormatter(dateStyle: .medium, timeStyle: .short)
 
   required init?(coder: NSCoder) {
     super.init(coder: coder)
@@ -342,24 +342,29 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     // Your progress, SRS level, next review, first started, reached guru
     if let subjectAssignment = assignment {
       model.addSection("Stats")
-      var statString = "WK Level: \(subjectAssignment.level)"
+      model.add(TKMBasicModelItem(style: .value1, title: "WaniKani Level",
+                                  subtitle: String(subjectAssignment.level)))
+
       if subjectAssignment.hasStartedAt {
-        statString += "First started at: " + statsDateFormatter
-          .string(from: subjectAssignment.startedAtDate)
         if subjectAssignment.hasSrsStage {
-          statString += "\nSRS stage: " + TKMDetailedSRSStageName(subjectAssignment.srsStage)
+          model.add(TKMBasicModelItem(style: .value1, title: "SRS Stage",
+                                      subtitle: TKMDetailedSRSStageName(subjectAssignment
+                                        .srsStage)))
         }
+        model.add(TKMBasicModelItem(style: .value1, title: "Started",
+                                    subtitle: statsDateFormatter
+                                      .string(from: subjectAssignment.startedAtDate)))
         if subjectAssignment.hasAvailableAt {
-          statString += "\nNext review at: " + statsDateFormatter
-            .string(from: subjectAssignment.availableAtDate)
+          model.add(TKMBasicModelItem(style: .value1, title: "Next Review",
+                                      subtitle: statsDateFormatter
+                                        .string(from: subjectAssignment.availableAtDate)))
         }
         if subjectAssignment.hasPassedAt {
-          statString += "\nPassed at: " + statsDateFormatter
-            .string(from: subjectAssignment.passedAtDate)
+          model.add(TKMBasicModelItem(style: .value1, title: "Passed",
+                                      subtitle: statsDateFormatter
+                                        .string(from: subjectAssignment.passedAtDate)))
         }
       }
-      let font = UIFont.systemFont(ofSize: kFontSize, weight: .regular)
-      model.add(AttributedModelItem(text: attrString(statString, attrs: [.font: font])))
 
       // TODO: When possible in the API, add a resurrect button.
     }
