@@ -50,7 +50,7 @@
              name:kLocalCachingClientUserInfoChangedNotification
            object:nil];
 
-  if (Settings.userApiToken && Settings.userCookie) {
+  if (Settings.userApiToken.length && Settings.userCookie.length) {
     [self setMainViewControllerAnimated:NO clearUserData:NO];
   } else {
     [self pushLoginViewController];
