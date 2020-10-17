@@ -70,10 +70,6 @@ private class ContextSentenceModelCell: AttributedModelCell {
     contentView.addSubview(blurredOverlay)
   }
 
-  required init?(coder _: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
   override func update(with baseItem: TKMModelItem!) {
     super.update(with: baseItem)
     blurredOverlay.alpha = 1

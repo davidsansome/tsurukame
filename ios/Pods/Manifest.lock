@@ -19,7 +19,7 @@ PODS:
     - MMDrawerController/Core
   - MMDrawerController/Subclass (0.6.0):
     - MMDrawerController/Core
-  - Protobuf (4.0.0-rc1)
+  - Protobuf (3.13.0)
   - Reachability (3.2)
 
 DEPENDENCIES:
@@ -28,7 +28,7 @@ DEPENDENCIES:
   - Haneke (~> 1.0.2)
   - Light-Untar (~> 0.3.0)
   - MMDrawerController (~> 0.6.0)
-  - Protobuf (~> 4.0.0-rc1)
+  - Protobuf (~> 3.13.0)
   - Reachability (~> 3.2)
 
 SPEC REPOS:
@@ -47,9 +47,9 @@ SPEC CHECKSUMS:
   Haneke: 01454a67322faa0dd9d81fc0f447885044e71521
   Light-Untar: e901c312974d36f3910aec73436296a5a3faf799
   MMDrawerController: e3a54a5570388463ad3b36975251575b50c4e1a0
-  Protobuf: 4f17d10ac4c40626e36f2612842f1a9bc9cf734f
+  Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
-PODFILE CHECKSUM: 7b0cd22df0fb914f256dd102c6dd00a351c57d64
+PODFILE CHECKSUM: a52b6d352de5b5593be7d503acecb2cf1fc9ab67
 
 COCOAPODS: 1.9.3

@@ -16,7 +16,7 @@ import Foundation
 
 private let kDefaultAnimationDuration: TimeInterval = 0.25
 // Undocumented, but it's what the keyboard animations use.
-private let kDefaultAnimationCurve: UIView.AnimationCurve = UIView.AnimationCurve(rawValue: 7)!
+private let kDefaultAnimationCurve = UIView.AnimationCurve(rawValue: 7)!
 
 private let kPreviousSubjectScale: CGFloat = 0.25
 private let kPreviousSubjectButtonPadding: CGFloat = 6.0
@@ -554,7 +554,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         subjectTypePrompt = "Vocabulary"
       case .unknown: fallthrough
       case .gpbUnrecognizedEnumeratorValue: fallthrough
-    @unknown default:
+      @unknown default:
         fatalError()
       }
       switch activeTaskType! {
@@ -572,7 +572,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         taskTypePlaceholder = "答え"
       case ._Max:
         fallthrough
-    @unknown default:
+      @unknown default:
         fatalError()
       }
 
