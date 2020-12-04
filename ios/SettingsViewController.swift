@@ -41,7 +41,7 @@ typealias NotificationPermissionHandler = (Bool) -> Void
   }
 
   func rerender() {
-    let model: TKMMutableTableModel = TKMMutableTableModel(tableView: tableView)
+    let model = TKMMutableTableModel(tableView: tableView)
 
     // MARK: - UI Appearance
 
@@ -180,12 +180,12 @@ typealias NotificationPermissionHandler = (Bool) -> Void
                                 subtitle: "To attach to bug reports or email to the developer",
                                 accessoryType: disclosureIndicator, target: self,
                                 action: #selector(didTapExportDatabase(sender:))))
-    let logOutItem: TKMBasicModelItem = TKMBasicModelItem(style: .default,
-                                                          title: "Log out", subtitle: nil,
-                                                          accessoryType: UITableViewCell
-                                                            .AccessoryType.none,
-                                                          target: self,
-                                                          action: #selector(didTapLogOut(sender:)))
+    let logOutItem = TKMBasicModelItem(style: .default,
+                                       title: "Log out", subtitle: nil,
+                                       accessoryType: UITableViewCell
+                                         .AccessoryType.none,
+                                       target: self,
+                                       action: #selector(didTapLogOut(sender:)))
     logOutItem.textColor = UIColor.systemRed
     model.add(logOutItem)
 
@@ -264,7 +264,7 @@ typealias NotificationPermissionHandler = (Bool) -> Void
 
   func applicationDidBecomeActive(notification _: Notification) {
     if let notificationHandler = self.notificationHandler {
-      let center: UNUserNotificationCenter = UNUserNotificationCenter.current()
+      let center = UNUserNotificationCenter.current()
       center.getNotificationSettings { (settings: UNNotificationSettings) in
         var granted: Bool = settings.authorizationStatus == UNAuthorizationStatus.authorized
         if #available(iOS 12.0, *) {
@@ -297,7 +297,7 @@ typealias NotificationPermissionHandler = (Bool) -> Void
     self.notificationHandler = __handler(granted:)
 
     let notificationHandler: NotificationPermissionHandler = self.notificationHandler!
-    let center: UNUserNotificationCenter = UNUserNotificationCenter.current()
+    let center = UNUserNotificationCenter.current()
     let options: UNAuthorizationOptions = [.badge, .alert]
 
     center.getNotificationSettings { (settings: UNNotificationSettings) in
@@ -316,7 +316,7 @@ typealias NotificationPermissionHandler = (Bool) -> Void
           UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
                                     options: Dictionary(), completionHandler: nil)
         }
-          @unknown default:
+      @unknown default:
         fatalError()
       }
     }
