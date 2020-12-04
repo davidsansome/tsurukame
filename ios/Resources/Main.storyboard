@@ -596,7 +596,7 @@
         <!--Settings-->
         <scene sceneID="3hY-tc-sfR">
             <objects>
-                <tableViewController title="Settings" id="thM-jC-nT8" customClass="SettingsViewController" sceneMemberID="viewController">
+                <tableViewController title="Settings" id="thM-jC-nT8" customClass="SettingsViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="CVb-cb-bd0">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

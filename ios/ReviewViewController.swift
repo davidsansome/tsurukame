@@ -1029,7 +1029,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     case .Precise:
       markAnswer(.Correct)
     case .Imprecise:
-      markAnswer(.Correct)
+      if Settings.exactMatch { shakeView(answerField) }
+      else { markAnswer(.Correct) }
     case .Incorrect:
       markAnswer(.Incorrect)
     case .OtherKanjiReading:

@@ -25,7 +25,7 @@
 		631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD5E234AC507008CEA73 /* DataLoader.swift */; };
 		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
-		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
+		6321E6112068F3A9003460BC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.swift */; };
 		6335B46523CF0C820071671E /* AppStoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B46423CF0C820071671E /* AppStoreScreenshots.swift */; };
 		6335B4C823CF0D390071671E /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B48C23CF0D390071671E /* SnapshotHelper.swift */; };
 		6335B4E723CF14280071671E /* Screenshotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B4E623CF14280071671E /* Screenshotter.swift */; };
@@ -231,8 +231,7 @@
 		631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCheckerTest.swift; sourceTree = "<group>"; };
 		631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelTimeRemainingItem.swift; sourceTree = "<group>"; };
 		631CAD71234B4A96008CEA73 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
-		6321E60F2068F3A9003460BC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
-		6321E6102068F3A9003460BC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		6321E6102068F3A9003460BC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppStoreScreenshots.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6335B46423CF0C820071671E /* AppStoreScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshots.swift; sourceTree = "<group>"; };
 		6335B46623CF0C820071671E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -555,8 +554,7 @@
 				63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */,
 				63F7F52B23D43DF6006A31FB /* Services.swift */,
 				633632EE201F3490006D582B /* Settings.swift */,
-				6321E60F2068F3A9003460BC /* SettingsViewController.h */,
-				6321E6102068F3A9003460BC /* SettingsViewController.m */,
+				6321E6102068F3A9003460BC /* SettingsViewController.swift */,
 				C970BC0223D262CE001F3735 /* SiriShortcutHelper.swift */,
 				636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */,
 				63F7F52423D429A4006A31FB /* String+MD5.swift */,
@@ -1236,7 +1234,7 @@
 				633DE96120C5656B00AC25F4 /* TKMMarkupModelItem.m in Sources */,
 				63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */,
 				636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */,
-				6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */,
+				6321E6112068F3A9003460BC /* SettingsViewController.swift in Sources */,
 				63EEFEBD1FC45C440070C05F /* AppDelegate.m in Sources */,
 				63BFA78E218EB6890058E885 /* OfflineAudioViewController.swift in Sources */,
 				63F7F52E23D4C2CA006A31FB /* Audio.swift in Sources */,
