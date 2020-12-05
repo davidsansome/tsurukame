@@ -88,7 +88,7 @@
 		63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */; };
 		63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
 		63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */; };
-		63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */; };
+		63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.swift */; };
 		63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766221F47100002A417B /* TKMReviewContainerViewController.m */; };
 		63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766521F47669002A417B /* TKMReviewMenuViewController.m */; };
 		63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */; };
@@ -317,8 +317,7 @@
 		63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+LevenshteinDistance.m"; sourceTree = "<group>"; };
 		63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		63CAAB121FD7FEA400E09DA1 /* LocalCachingClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalCachingClient.h; sourceTree = "<group>"; };
-		63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LocalCachingClient.mm; sourceTree = "<group>"; };
+		63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCachingClient.swift; sourceTree = "<group>"; };
 		63CE766121F47100002A417B /* TKMReviewContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewContainerViewController.h; sourceTree = "<group>"; };
 		63CE766221F47100002A417B /* TKMReviewContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMReviewContainerViewController.m; sourceTree = "<group>"; };
 		63CE766421F47669002A417B /* TKMReviewMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewMenuViewController.h; sourceTree = "<group>"; };
@@ -528,8 +527,7 @@
 				637C12D6203847BE009E92DB /* LessonsViewController.h */,
 				637C12D7203847BE009E92DB /* LessonsViewController.m */,
 				631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */,
-				63CAAB121FD7FEA400E09DA1 /* LocalCachingClient.h */,
-				63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.mm */,
+				63CAAB131FD7FEA400E09DA1 /* LocalCachingClient.swift */,
 				633632EA201F3011006D582B /* LoginViewController.h */,
 				633632EB201F3011006D582B /* LoginViewController.m */,
 				63EEFEB81FC45C440070C05F /* main.m */,
@@ -1254,7 +1252,7 @@
 				C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */,
 				633DE95520C5634A00AC25F4 /* TKMSwitchModelItem.m in Sources */,
 				63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */,
-				63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.mm in Sources */,
+				63CAAB141FD7FEA400E09DA1 /* LocalCachingClient.swift in Sources */,
 				631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */,
 				63CAAB031FCD755300E09DA1 /* ProtobufExtensions.m in Sources */,
 				63F7F52923D42C6E006A31FB /* MainViewController.swift in Sources */,

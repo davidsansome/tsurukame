@@ -15,11 +15,13 @@
 #ifndef Tsurukame_Bridging_Header_h
 #define Tsurukame_Bridging_Header_h
 
+#import "Client.h"
+#import "Extensions/ProtobufExtensions.h"
 #import "LessonsViewController.h"
-#import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "NSMutableAttributedString+Replacements.h"
 #import "NSString+LevenshteinDistance.h"
+#import "Reachability.h"
 #import "ReviewItem.h"
 #import "ReviewSummaryViewController.h"
 #import "SearchResultViewController.h"

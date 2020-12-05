@@ -113,19 +113,23 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     let nc = NotificationCenter.default
     nc.addObserver(self,
                    selector: #selector(availableItemsChanged),
-                   name: NSNotification.Name.localCachingClientAvailableItemsChanged,
+                   name: NSNotification
+                     .Name(rawValue: "LocalCachingClientAvailableItemsChangedNotification"),
                    object: services.localCachingClient)
     nc.addObserver(self,
                    selector: #selector(userInfoChanged),
-                   name: NSNotification.Name.localCachingClientUserInfoChanged,
+                   name: NSNotification
+                     .Name(rawValue: "LocalCachingClientUserInfoChangedNotification"),
                    object: services.localCachingClient)
     nc.addObserver(self,
                    selector: #selector(srsLevelCountsChanged),
-                   name: NSNotification.Name.localCachingClientSrsLevelCountsChanged,
+                   name: NSNotification
+                     .Name(rawValue: "LocalCachingClientSRSLevelCountsChangedNotification"),
                    object: services.localCachingClient)
     nc.addObserver(self,
                    selector: #selector(clientIsUnauthorized),
-                   name: NSNotification.Name.localCachingClientUnauthorized,
+                   name: NSNotification
+                     .Name(rawValue: "LocalCachingClientUnauthorizedNotification"),
                    object: services.localCachingClient)
     nc.addObserver(self,
                    selector: #selector(applicationDidEnterBackground),
@@ -155,8 +159,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
     let lessons = Int(services.localCachingClient.availableLessonCount)
     let reviews = Int(services.localCachingClient.availableReviewCount)
-    let upcomingReviews = services.localCachingClient.upcomingReviews as! [Int]
-    let currentLevelAssignments = services.localCachingClient.getAssignmentsAtUsersCurrentLevel()
+    let upcomingReviews = services.localCachingClient.upcomingReviews.map { Int($0) }
+    let currentLevelAssignments = services.localCachingClient.currentLevelAssignments()
 
     let model = TKMMutableTableModel(tableView: tableView)
 
@@ -212,7 +216,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     model.addSection("All levels")
     for i in TKMSRSStageCategory.apprentice.rawValue ... TKMSRSStageCategory.burned.rawValue {
       let category = TKMSRSStageCategory(rawValue: i)!
-      let count = services.localCachingClient.getSrsLevelCount(category)
+      let count = services.localCachingClient.getSRSLevelCount(at: category)
       model.add(SRSStageCategoryItem(stageCategory: category, count: Int(count)))
     }
 
@@ -364,9 +368,9 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     scheduleTableModelUpdate()
     guard let headerView = headerView else { return }
     headerView.setProgress(0)
-    services.localCachingClient.sync(progressHandler: { progress in
-      self.headerView.setProgress(progress)
-    }, quick: quick)
+    services.localCachingClient.sync(quickly: quick) { progress in
+      self.headerView.setProgress(Float(progress))
+    }
   }
 
   @objc func availableItemsChanged() {

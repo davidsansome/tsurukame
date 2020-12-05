@@ -15,7 +15,6 @@
 #import "SubjectsByLevelViewController.h"
 
 #import "Extensions/ProtobufExtensions.h"
-#import "LocalCachingClient.h"
 #import "SubjectDetailsViewController.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
@@ -47,7 +46,7 @@
   [model addSection:@"Kanji"];
   [model addSection:@"Vocabulary"];
 
-  for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtLevel:_level]) {
+  for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsWithLevel:_level]) {
     TKMSubject *subject = [_services.dataLoader loadSubject:assignment.subjectId];
     if (!subject) {
       continue;

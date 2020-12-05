@@ -77,10 +77,10 @@ extern bool TKMIsClientError(NSError *error);
 + (void)getApiTokenForCookie:(NSString *)cookie handler:(ApiTokenHandler)handler;
 
 - (void)updateApiToken:(NSString *)apiToken cookie:(NSString *)cookie;
-- (void)getAssignmentsModifiedAfter:(NSString *)date
+- (void)getAssignmentsModifiedAfter:(NSString *_Nullable)date
                     progressHandler:(PartialCompletionHandler)progressHandler
                             handler:(AssignmentHandler)handler;
-- (void)getStudyMaterialsModifiedAfter:(NSString *)date
+- (void)getStudyMaterialsModifiedAfter:(NSString *_Nullable)date
                        progressHandler:(PartialCompletionHandler)progressHandler
                                handler:(StudyMaterialsHandler)handler;
 - (void)sendProgress:(TKMProgress *)progress handler:(ProgressHandler)handler;

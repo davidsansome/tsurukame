@@ -15,7 +15,6 @@
 #import "SettingsViewController.h"
 
 #import "Extensions/ProtobufExtensions.h"
-#import "LocalCachingClient.h"
 #import "LoginViewController.h"
 #import "TKMFontsViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
@@ -583,7 +582,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
 }
 
 - (void)didTapSendBugReport:(id)sender {
-  NSURL *url = [LocalCachingClient databaseFileUrl];
+  NSURL *url = [NSURL fileURLWithPath:LocalCachingClient.databaseFilePath];
   UIActivityViewController *c = [[UIActivityViewController alloc] initWithActivityItems:@[ url ]
                                                                   applicationActivities:nil];
   [self presentViewController:c animated:YES completion:nil];

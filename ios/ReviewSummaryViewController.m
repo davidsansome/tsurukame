@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "ReviewSummaryViewController.h"
-#import "LocalCachingClient.h"
 #import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"
 #import "Tables/TKMBasicModelItem.h"

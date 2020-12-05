@@ -15,7 +15,6 @@
 #import "SubjectsRemainingViewController.h"
 
 #import "Extensions/ProtobufExtensions.h"
-#import "LocalCachingClient.h"
 #import "SubjectDetailsViewController.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
@@ -44,8 +43,7 @@
   NSMutableArray<TKMSubjectModelItem *> *radicals = [NSMutableArray array];
   NSMutableArray<TKMSubjectModelItem *> *kanji = [NSMutableArray array];
 
-  for (TKMAssignment *assignment in
-       [_services.localCachingClient getAssignmentsAtUsersCurrentLevel]) {
+  for (TKMAssignment *assignment in [_services.localCachingClient currentLevelAssignments]) {
     if (assignment.srsStage > 4) {
       continue;
     }
