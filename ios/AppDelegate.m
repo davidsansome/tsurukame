@@ -172,7 +172,7 @@
     return;
   }
 
-  int reviewCount = _services.localCachingClient.availableReviewCount;
+  int reviewCount = (int)_services.localCachingClient.availableReviewCount;
   NSArray<NSNumber *> *upcomingReviews = _services.localCachingClient.upcomingReviews;
   TKMUser *user = _services.localCachingClient.getUserInfo;
 

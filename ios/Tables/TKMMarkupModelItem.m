@@ -64,6 +64,7 @@ static NSAttributedString *AttributedStringForFormattedText(
         [attributes setValue:formattedText.linkURL forKey:NSLinkAttributeName];
         break;
       case TKMFormattedText_Format_GPBUnrecognizedEnumeratorValue:
+      case TKMFormattedText_Format_Unknown:
         break;
     }
   }

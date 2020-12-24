@@ -482,7 +482,8 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
       getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *_Nonnull settings) {
         switch (settings.authorizationStatus) {
           case UNAuthorizationStatusAuthorized:
-          case UNAuthorizationStatusProvisional: {
+          case UNAuthorizationStatusProvisional:
+          case case UNAuthorizationStatusEphemeral: {
             _notificationHandler(YES);
             break;
           }

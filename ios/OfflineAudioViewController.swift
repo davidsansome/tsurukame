@@ -52,10 +52,11 @@ struct AudioPackage {
     func decompress(size bufferSize: inout Int, compressedData: Data) -> Data {
       NSLog("Decompressing data of size \(compressedData.count) into buffer of size \(bufferSize)")
 
-      var destinationBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+      let destinationBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
 
-      let decodedData = compressedData.withUnsafeBytes { (buffer: UnsafePointer<UInt8>) -> Data in
-        let decodedSize = compression_decode_buffer(destinationBuffer, bufferSize, buffer,
+      let decodedData = compressedData.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) -> Data in
+        let unsafePointer = buffer.bindMemory(to: UInt8.self).baseAddress!
+        let decodedSize = compression_decode_buffer(destinationBuffer, bufferSize, unsafePointer,
                                                     compressedData.count, nil, COMPRESSION_LZFSE)
 
         if decodedSize == 0 {
