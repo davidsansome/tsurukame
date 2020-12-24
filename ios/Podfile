@@ -36,7 +36,8 @@ target 'Tsurukame' do
   target 'Tests' do
     inherit! :search_paths
 
-    pod 'MockURLSession', '~> 3.1.0'
+    platform :ios, '12.0'
+    pod 'Hippolyte', '~> 1.2.3'
   end
 end
 

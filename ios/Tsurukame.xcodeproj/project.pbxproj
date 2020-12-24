@@ -74,6 +74,7 @@
 		63996B44259438C400149414 /* FMDatabase+Assert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */; };
 		63996B4C259438E100149414 /* ProtobufExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB011FCD755300E09DA1 /* ProtobufExtensions.m */; };
 		63996B542594390300149414 /* GPBPrimitiveArray+Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16771253AD8AE00B5BCD6 /* GPBPrimitiveArray+Sequence.swift */; };
+		63996BB72594754400149414 /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63996BB62594754400149414 /* TestUtils.swift */; };
 		63A16772253AD8AE00B5BCD6 /* NSRegularExpression+Matches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1676D253AD8AD00B5BCD6 /* NSRegularExpression+Matches.swift */; };
 		63A16773253AD8AE00B5BCD6 /* URLRequest+SetBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1676E253AD8AD00B5BCD6 /* URLRequest+SetBody.swift */; };
 		63A16774253AD8AE00B5BCD6 /* CGContext+Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1676F253AD8AD00B5BCD6 /* CGContext+Blur.swift */; };
@@ -295,6 +296,7 @@
 		6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContextSentenceModelItem.swift; path = Tables/ContextSentenceModelItem.swift; sourceTree = "<group>"; };
 		63996ADF2594236F00149414 /* APIClientTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTest.swift; sourceTree = "<group>"; };
 		63996AE82594265B00149414 /* FakeDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeDataLoader.swift; sourceTree = "<group>"; };
+		63996BB62594754400149414 /* TestUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUtils.swift; sourceTree = "<group>"; };
 		63A1676D253AD8AD00B5BCD6 /* NSRegularExpression+Matches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSRegularExpression+Matches.swift"; sourceTree = "<group>"; };
 		63A1676E253AD8AD00B5BCD6 /* URLRequest+SetBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLRequest+SetBody.swift"; sourceTree = "<group>"; };
 		63A1676F253AD8AD00B5BCD6 /* CGContext+Blur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGContext+Blur.swift"; sourceTree = "<group>"; };
@@ -730,6 +732,7 @@
 				633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */,
 				63996ADF2594236F00149414 /* APIClientTest.swift */,
 				63996AE82594265B00149414 /* FakeDataLoader.swift */,
+				63996BB62594754400149414 /* TestUtils.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1367,6 +1370,7 @@
 				63996B0D2594356E00149414 /* APIClient.swift in Sources */,
 				63996B24259436F500149414 /* URLRequest+SetBody.swift in Sources */,
 				631CAD69234B0F0C008CEA73 /* ReviewItem.m in Sources */,
+				63996BB72594754400149414 /* TestUtils.swift in Sources */,
 				63F7F52823D42BDD006A31FB /* String+MD5Test.swift in Sources */,
 				631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */,
 				63996B2C2594383C00149414 /* WebClient.swift in Sources */,

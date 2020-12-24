@@ -483,7 +483,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
         switch (settings.authorizationStatus) {
           case UNAuthorizationStatusAuthorized:
           case UNAuthorizationStatusProvisional:
-          case case UNAuthorizationStatusEphemeral: {
+          case UNAuthorizationStatusEphemeral: {
             _notificationHandler(YES);
             break;
           }

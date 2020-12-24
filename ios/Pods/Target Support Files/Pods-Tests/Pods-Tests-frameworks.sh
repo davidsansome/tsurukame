@@ -197,10 +197,10 @@ if [ -r "${ARTIFACT_LIST_FILE}" ]; then
 fi
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/MockURLSession/MockURLSession.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Hippolyte/Hippolyte.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/MockURLSession/MockURLSession.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Hippolyte/Hippolyte.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

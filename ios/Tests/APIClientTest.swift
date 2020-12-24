@@ -12,20 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import MockURLSession
+import Hippolyte
+
 import XCTest
 
 class APIClientTest: XCTestCase {
   var dataLoader: FakeDataLoader!
-  var urlSession: URLSession!
-
   var client: WaniKaniAPIClient!
 
   override func setUp() {
     dataLoader = FakeDataLoader()
-    urlSession = MockURLSession()
+    client = WaniKaniAPIClient(apiToken: "bob", dataLoader: dataLoader)
 
-    client = WaniKaniAPIClient(apiToken: "token", dataLoader: dataLoader, urlSession: urlSession)
+    Hippolyte.shared.start()
+  }
+
+  override class func tearDown() {
+    Hippolyte.shared.stop()
   }
 
   func testDateParsing() {
@@ -49,5 +52,769 @@ class APIClientTest: XCTestCase {
     XCTAssertEqual(parse("2018-08-05T11:08:39+03:00"), 1_533_467_319.0 - 3 * 60 * 60)
     XCTAssertEqual(parse("2018-08-05T11:08:39+0300"), 1_533_467_319.0 - 3 * 60 * 60)
     XCTAssertEqual(parse("2018-08-05T11:08:39+03"), 1_533_467_319.0 - 3 * 60 * 60)
+  }
+
+  func testUser() {
+    var request = StubRequest(method: .GET, url: URL(string: "https://api.wanikani.com/v2/user")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "user",
+      "url": "https://api.wanikani.com/v2/user",
+      "data_updated_at": "2018-04-06T14:26:53.022245Z",
+      "data": {
+        "id": "5a6a5234-a392-4a87-8f3f-33342afe8a42",
+        "username": "example_user",
+        "level": 5,
+        "profile_url": "https://www.wanikani.com/users/example_user",
+        "started_at": "2012-05-11T00:52:18.958466Z",
+        "current_vacation_started_at": null,
+        "subscription": {
+          "active": true,
+          "type": "recurring",
+          "max_level_granted": 60,
+          "period_ends_at": "2018-12-11T13:32:19.485748Z"
+        },
+        "preferences": {
+          "default_voice_actor_id": 1,
+          "lessons_autoplay_audio": false,
+          "lessons_batch_size": 10,
+          "lessons_presentation_order": "ascending_level_then_subject",
+          "reviews_autoplay_audio": false,
+          "reviews_display_srs_indicator": true
+        }
+      }
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    let expected = """
+    username: "example_user"
+    level: 5
+    max_level_granted_by_subscription: 60
+    profile_url: "https://www.wanikani.com/users/example_user"
+    started_at: 1336697538
+    subscribed: true
+    subscription_ends_at: 1544535139
+    """
+
+    if let result = waitForPromise(client.user()) {
+      assertProtoEquals(result, expected)
+    }
+  }
+
+  func testAllAssignments() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/assignments" +
+                                "?unlocked=true&hidden=false")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/assignments",
+      "pages": {
+        "per_page": 500,
+        "next_url": null,
+        "previous_url": null
+      },
+      "total_count": 1600,
+      "data_updated_at": "2017-11-29T19:37:03.571377Z",
+      "data": [
+        {
+          "id": 80463006,
+          "object": "assignment",
+          "url": "https://api.wanikani.com/v2/assignments/80463006",
+          "data_updated_at": "2017-10-30T01:51:10.438432Z",
+          "data": {
+            "created_at": "2017-09-05T23:38:10.695133Z",
+            "subject_id": 8761,
+            "subject_type": "radical",
+            "srs_stage": 8,
+            "unlocked_at": "2017-09-05T23:38:10.695133Z",
+            "started_at": "2017-09-05T23:41:28.980679Z",
+            "passed_at": "2017-09-07T17:14:14.491889Z",
+            "burned_at": null,
+            "available_at": "2018-02-27T00:00:00.000000Z",
+            "resurrected_at": null
+          }
+        }
+      ]
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    let expected = """
+    id: 80463006
+    level: 0
+    subject_id: 8761
+    subject_type: RADICAL
+    available_at: 1519689600
+    started_at: 1504654888
+    srs_stage: 8
+    passed_at: 1504804454
+    """
+
+    if let result = waitForPromise(client.assignments()) {
+      XCTAssertEqual(result.assignments.count, 1)
+      assertProtoEquals(result.assignments[0], expected)
+      XCTAssertEqual(result.updatedAt, "2017-11-29T19:37:03.571377Z")
+    }
+  }
+
+  func testAssignmentsUpdatedAfter() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/assignments" +
+                                "?unlocked=true&hidden=false&updated_after=foobar")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/assignments",
+      "pages": {
+        "per_page": 500,
+        "next_url": null,
+        "previous_url": null
+      },
+      "total_count": 1600,
+      "data_updated_at": "2017-11-29T19:37:03.571377Z",
+      "data": []
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    if let result = waitForPromise(client.assignments(updatedAfter: "foobar")) {
+      XCTAssertEqual(result.assignments.count, 0)
+      XCTAssertEqual(result.updatedAt, "2017-11-29T19:37:03.571377Z")
+    }
+  }
+
+  func testAssignmentPagination() {
+    var request1 = StubRequest(method: .GET,
+                               url: URL(string: "https://api.wanikani.com/v2/assignments" +
+                                 "?unlocked=true&hidden=false")!)
+    request1.setHeader(key: "Authorization", value: "Token token=bob")
+    request1.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/assignments",
+      "pages": {
+        "per_page": 500,
+        "next_url": "https://api.wanikani.com/v2/assignments?page_after_id=80469434",
+        "previous_url": null
+      },
+      "total_count": 1600,
+      "data_updated_at": "first-updated-at",
+      "data": [
+        {
+          "id": 42,
+          "object": "assignment",
+          "url": "https://api.wanikani.com/v2/assignments/80463006",
+          "data_updated_at": "2017-10-30T01:51:10.438432Z",
+          "data": {
+            "created_at": "2017-09-05T23:38:10.695133Z",
+            "subject_id": 42,
+            "subject_type": "radical",
+            "srs_stage": 8,
+            "unlocked_at": "2017-09-05T23:38:10.695133Z",
+            "started_at": "2017-09-05T23:41:28.980679Z",
+            "passed_at": "2017-09-07T17:14:14.491889Z",
+            "burned_at": null,
+            "available_at": "2018-02-27T00:00:00.000000Z",
+            "resurrected_at": null
+          }
+        }
+      ]
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request1)
+
+    var request2 = StubRequest(method: .GET,
+                               url: URL(string: "https://api.wanikani.com/v2/assignments" +
+                                 "?page_after_id=80469434")!)
+    request2.setHeader(key: "Authorization", value: "Token token=bob")
+    request2.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/assignments",
+      "pages": {
+        "per_page": 500,
+        "next_url": null,
+        "previous_url": null
+      },
+      "total_count": 1600,
+      "data_updated_at": "second-updated-at",
+      "data": [
+        {
+          "id": 43,
+          "object": "assignment",
+          "url": "https://api.wanikani.com/v2/assignments/80463006",
+          "data_updated_at": "2017-10-30T01:51:10.438432Z",
+          "data": {
+            "created_at": "2017-09-05T23:38:10.695133Z",
+            "subject_id": 43,
+            "subject_type": "radical",
+            "srs_stage": 8,
+            "unlocked_at": "2017-09-05T23:38:10.695133Z",
+            "started_at": "2017-09-05T23:41:28.980679Z",
+            "passed_at": "2017-09-07T17:14:14.491889Z",
+            "burned_at": null,
+            "available_at": "2018-02-27T00:00:00.000000Z",
+            "resurrected_at": null
+          }
+        }
+      ]
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request2)
+
+    if let result = waitForPromise(client.assignments()) {
+      XCTAssertEqual(result.assignments.count, 2)
+      XCTAssertEqual(result.assignments[0].id_p, 42)
+      XCTAssertEqual(result.assignments[1].id_p, 43)
+      XCTAssertEqual(result.updatedAt, "second-updated-at")
+    }
+  }
+
+  func testAllStudyMaterials() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/study_materials")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/study_materials",
+      "pages": {
+        "per_page": 500,
+        "next_url": null,
+        "previous_url": null
+      },
+      "total_count": 88,
+      "data_updated_at": "2017-12-21T22:42:11.468155Z",
+      "data": [
+        {
+          "id": 65231,
+          "object": "study_material",
+          "url": "https://api.wanikani.com/v2/study_materials/65231",
+          "data_updated_at": "2017-09-30T01:42:13.453291Z",
+          "data": {
+            "created_at": "2017-09-30T01:42:13.453291Z",
+            "subject_id": 241,
+            "subject_type": "radical",
+            "meaning_note": "I like turtles",
+            "reading_note": "I like durtles",
+            "meaning_synonyms": ["burn", "sizzle"]
+          }
+        }
+      ]
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    let expected = """
+    id: 65231
+    subject_id: 241
+    meaning_note: "I like turtles"
+    reading_note: "I like durtles"
+    meaning_synonyms: "burn"
+    meaning_synonyms: "sizzle"
+    subject_type: "radical"
+    """
+
+    if let result = waitForPromise(client.studyMaterials()) {
+      XCTAssertEqual(result.studyMaterials.count, 1)
+      assertProtoEquals(result.studyMaterials[0], expected)
+      XCTAssertEqual(result.updatedAt, "2017-12-21T22:42:11.468155Z")
+    }
+  }
+
+  func testStudyMaterialsUpdatedAfter() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/study_materials" +
+                                "?updated_after=foobar")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/study_materials",
+      "pages": {
+        "per_page": 500,
+        "next_url": null,
+        "previous_url": null
+      },
+      "total_count": 88,
+      "data_updated_at": "2017-12-21T22:42:11.468155Z",
+      "data": []
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    if let result = waitForPromise(client.studyMaterials(updatedAfter: "foobar")) {
+      XCTAssertEqual(result.studyMaterials.count, 0)
+      XCTAssertEqual(result.updatedAt, "2017-12-21T22:42:11.468155Z")
+    }
+  }
+
+  func testStudyMaterialBySubjectId() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/study_materials" +
+                                "?subject_ids=65231")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/study_materials",
+      "pages": {
+        "per_page": 500,
+        "next_url": "https://api.wanikani.com/v2/study_materials?page_after_id=52342",
+        "previous_url": null
+      },
+      "total_count": 88,
+      "data_updated_at": "2017-12-21T22:42:11.468155Z",
+      "data": [
+        {
+          "id": 65231,
+          "object": "study_material",
+          "url": "https://api.wanikani.com/v2/study_materials/65231",
+          "data_updated_at": "2017-09-30T01:42:13.453291Z",
+          "data": {
+            "created_at": "2017-09-30T01:42:13.453291Z",
+            "subject_id": 241,
+            "subject_type": "radical",
+            "meaning_note": "I like turtles",
+            "reading_note": "I like durtles",
+            "meaning_synonyms": ["burn", "sizzle"]
+          }
+        }
+      ]
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    let expected = """
+    id: 65231
+    subject_id: 241
+    meaning_note: "I like turtles"
+    reading_note: "I like durtles"
+    meaning_synonyms: "burn"
+    meaning_synonyms: "sizzle"
+    subject_type: "radical"
+    """
+
+    if let result = waitForPromise(client.studyMaterial(subjectId: 65231)) {
+      assertProtoEquals(result!, expected)
+    }
+  }
+
+  func testStudyMaterialBySubjectIdNoResult() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/study_materials" +
+                                "?subject_ids=65231")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/study_materials",
+      "pages": {
+        "per_page": 500,
+        "next_url": "https://api.wanikani.com/v2/study_materials?page_after_id=52342",
+        "previous_url": null
+      },
+      "total_count": 88,
+      "data_updated_at": "2017-12-21T22:42:11.468155Z",
+      "data": []
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    if let result = waitForPromise(client.studyMaterial(subjectId: 65231)) {
+      XCTAssertNil(result)
+    }
+  }
+
+  func testAllLevelProgressions() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/level_progressions")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/level_progressions",
+      "pages": {
+        "per_page": 500,
+        "next_url": null,
+        "previous_url": null
+      },
+      "total_count": 42,
+      "data_updated_at": "2017-09-21T11:45:01.691388Z",
+      "data": [
+        {
+          "id": 49392,
+          "object": "level_progression",
+          "url": "https://api.wanikani.com/v2/level_progressions/49392",
+          "data_updated_at": "2017-03-30T11:31:20.438432Z",
+          "data": {
+            "created_at": "2017-03-30T08:21:51.439918Z",
+            "level": 42,
+            "unlocked_at": "2017-03-30T08:21:51.439918Z",
+            "started_at": "2017-03-30T11:31:20.438432Z",
+            "passed_at": null,
+            "completed_at": null,
+            "abandoned_at": null
+          }
+        }
+      ]
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    let expected = """
+    id: 49392
+    level: 42
+    created_at: 1490862111
+    started_at: 1490873480
+    unlocked_at: 1490862111
+    """
+
+    if let result = waitForPromise(client.levelProgressions()) {
+      XCTAssertEqual(result.levels.count, 1)
+      assertProtoEquals(result.levels[0], expected)
+      XCTAssertEqual(result.updatedAt, "2017-09-21T11:45:01.691388Z")
+    }
+  }
+
+  func testLevelProgressionsUpdatedAfter() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/level_progressions" +
+                                "?updated_after=foobar")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/level_progressions",
+      "pages": {
+        "per_page": 500,
+        "next_url": null,
+        "previous_url": null
+      },
+      "total_count": 42,
+      "data_updated_at": "2017-09-21T11:45:01.691388Z",
+      "data": []
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    if let result = waitForPromise(client.levelProgressions(updatedAfter: "foobar")) {
+      XCTAssertEqual(result.levels.count, 0)
+      XCTAssertEqual(result.updatedAt, "2017-09-21T11:45:01.691388Z")
+    }
+  }
+
+  func testStartAssignment() {
+    let progress = TKMProgress()
+    progress.assignment = TKMAssignment()
+    progress.assignment.id_p = 42
+    progress.isLesson = true
+    progress.createdAt = 123_456_789
+
+    var request = StubRequest(method: .PUT,
+                              url: URL(string: "https://api.wanikani.com/v2/assignments/42/start")!)
+    request
+      .bodyMatcher = DataMatcher(data: "{\"started_at\":\"1973-11-29T21:33:09.000000Z\"}"
+        .data(using: .utf8)!)
+    request.setHeader(key: "Content-Type", value: "application/json")
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "id": 42,
+      "object": "assignment",
+      "url": "https://api.wanikani.com/v2/assignments/42",
+      "data_updated_at": "2017-11-29T19:37:03.571377Z",
+      "data": {
+        "created_at": "2017-09-05T23:38:10.695133Z",
+        "subject_id": 8761,
+        "subject_type": "radical",
+        "level": 1,
+        "srs_stage": 1,
+        "unlocked_at": "2017-09-05T23:38:10.695133Z",
+        "started_at": "2017-09-05T23:41:28.980679Z",
+        "passed_at": null,
+        "burned_at": null,
+        "available_at": "2018-02-27T00:00:00.000000Z",
+        "resurrected_at": null
+      }
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    let expected = """
+    id: 42
+    level: 0
+    subject_id: 8761
+    subject_type: RADICAL
+    available_at: 1519689600
+    started_at: 1504654888
+    srs_stage: 1
+    """
+
+    if let result = waitForPromise(client.sendProgress(progress)) {
+      assertProtoEquals(result, expected)
+    }
+  }
+
+  func testCreateReview() {
+    let progress = TKMProgress()
+    progress.assignment = TKMAssignment()
+    progress.assignment.id_p = 42
+    progress.isLesson = false
+    progress.createdAt = 123_456_789
+    progress.meaningWrongCount = 3
+    progress.readingWrongCount = 4
+
+    var request = StubRequest(method: .POST,
+                              url: URL(string: "https://api.wanikani.com/v2/reviews")!)
+    request.bodyMatcher = DataMatcher(data: ("{\"review\":{\"assignment_id\":42," +
+        "\"incorrect_reading_answers\":4" +
+        ",\"incorrect_meaning_answers\":3" +
+        ",\"created_at\":\"1973-11-29T21:33:09.000000Z\"}}")
+      .data(using: .utf8)!)
+    request.setHeader(key: "Content-Type", value: "application/json")
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "id": 72,
+      "object": "review",
+      "url": "https://api.wanikani.com/v2/reviews/72",
+      "data_updated_at": "2018-05-13T03:34:54.000000Z",
+      "data": {
+        "created_at": "2018-05-13T03:34:54.000000Z",
+        "assignment_id": 1422,
+        "spaced_repetition_system_id": 1,
+        "subject_id": 997,
+        "starting_srs_stage": 1,
+        "ending_srs_stage": 1,
+        "incorrect_meaning_answers": 1,
+        "incorrect_reading_answers": 2
+      },
+      "resources_updated": {
+        "assignment": {
+          "id": 1422,
+          "object": "assignment",
+          "url": "https://api.wanikani.com/v2/assignments/1422",
+          "data_updated_at": "2018-05-14T03:35:34.180006Z",
+          "data": {
+            "created_at": "2018-01-24T21:32:38.967244Z",
+            "subject_id": 997,
+            "subject_type": "vocabulary",
+            "level": 2,
+            "srs_stage": 1,
+            "unlocked_at": "2018-01-24T21:32:39.888359Z",
+            "started_at": "2018-01-24T21:52:47.926376Z",
+            "passed_at": null,
+            "burned_at": null,
+            "available_at": "2018-05-14T07:00:00.000000Z",
+            "resurrected_at": null,
+            "passed": false,
+            "resurrected": false,
+            "hidden": false
+          }
+        },
+        "review_statistic": {
+          "id": 342,
+          "object": "review_statistic",
+          "url": "https://api.wanikani.com/v2/review_statistics/342",
+          "data_updated_at": "2018-05-14T03:35:34.223515Z",
+          "data": {
+            "created_at": "2018-01-24T21:35:55.127513Z",
+            "subject_id": 997,
+            "subject_type": "vocabulary",
+            "meaning_correct": 1,
+            "meaning_incorrect": 1,
+            "meaning_max_streak": 1,
+            "meaning_current_streak": 1,
+            "reading_correct": 1,
+            "reading_incorrect": 2,
+            "reading_max_streak": 1,
+            "reading_current_streak": 1,
+            "percentage_correct": 67,
+            "hidden": false
+          }
+        }
+      }
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    let expected = """
+    id: 1422
+    level: 0
+    subject_id: 997
+    subject_type: VOCABULARY
+    available_at: 1526281200
+    started_at: 1516830767
+    srs_stage: 1
+    """
+
+    if let result = waitForPromise(client.sendProgress(progress)) {
+      assertProtoEquals(result, expected)
+    }
+  }
+
+  func testCreateNewStudyMaterial() {
+    let material = TKMStudyMaterials()
+    material.subjectId = 42
+    material.meaningSynonymsArray = ["foo", "bar"]
+
+    var getRequest = StubRequest(method: .GET,
+                                 url: URL(string: "https://api.wanikani.com/v2/study_materials?subject_ids=42")!)
+    getRequest.setHeader(key: "Authorization", value: "Token token=bob")
+    getRequest.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/study_materials",
+      "pages": {
+        "per_page": 500,
+        "next_url": "https://api.wanikani.com/v2/study_materials?page_after_id=52342",
+        "previous_url": null
+      },
+      "total_count": 88,
+      "data_updated_at": "2017-12-21T22:42:11.468155Z",
+      "data": []
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: getRequest)
+
+    var postRequest = StubRequest(method: .POST,
+                                  url: URL(string: "https://api.wanikani.com/v2/study_materials")!)
+    postRequest
+      .bodyMatcher =
+      DataMatcher(data: "{\"study_material\":{\"meaning_synonyms\":[\"foo\",\"bar\"],\"subject_id\":42}}"
+        .data(using: .utf8)!)
+    postRequest.setHeader(key: "Content-Type", value: "application/json")
+    postRequest.setHeader(key: "Authorization", value: "Token token=bob")
+    Hippolyte.shared.add(stubbedRequest: postRequest)
+
+    waitForPromise(client.updateStudyMaterial(material))
+  }
+
+  func testUpdateExistingStudyMaterial() {
+    let material = TKMStudyMaterials()
+    material.subjectId = 42
+    material.meaningSynonymsArray = ["foo", "bar"]
+
+    var getRequest = StubRequest(method: .GET,
+                                 url: URL(string: "https://api.wanikani.com/v2/study_materials?subject_ids=42")!)
+    getRequest.setHeader(key: "Authorization", value: "Token token=bob")
+    getRequest.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/study_materials",
+      "pages": {
+        "per_page": 500,
+        "next_url": "https://api.wanikani.com/v2/study_materials?page_after_id=52342",
+        "previous_url": null
+      },
+      "total_count": 88,
+      "data_updated_at": "2017-12-21T22:42:11.468155Z",
+      "data": [
+        {
+          "id": 65231,
+          "object": "study_material",
+          "url": "https://api.wanikani.com/v2/study_materials/65231",
+          "data_updated_at": "2017-09-30T01:42:13.453291Z",
+          "data": {
+            "created_at": "2017-09-30T01:42:13.453291Z",
+            "subject_id": 241,
+            "subject_type": "radical",
+            "meaning_note": "I like turtles",
+            "reading_note": "I like durtles",
+            "meaning_synonyms": ["burn", "sizzle"]
+          }
+        }
+      ]
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: getRequest)
+
+    var postRequest = StubRequest(method: .PUT,
+                                  url: URL(string: "https://api.wanikani.com/v2/study_materials/65231")!)
+    postRequest
+      .bodyMatcher =
+      DataMatcher(data: "{\"study_material\":{\"meaning_synonyms\":[\"foo\",\"bar\"]}}"
+        .data(using: .utf8)!)
+    postRequest.setHeader(key: "Content-Type", value: "application/json")
+    postRequest.setHeader(key: "Authorization", value: "Token token=bob")
+    Hippolyte.shared.add(stubbedRequest: postRequest)
+
+    waitForPromise(client.updateStudyMaterial(material))
+  }
+
+  func test4xxErrorResponse() {
+    var request = StubRequest(method: .GET, url: URL(string: "https://api.wanikani.com/v2/user")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.statusCode = 400
+    request.response.body = """
+    {
+      "error": "Foobar",
+      "code": 400
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    if let error = waitForError(client.user()) {
+      guard let apiError = error as? WaniKaniAPIError else {
+        XCTFail("Bad error type: " + error.localizedDescription)
+        return
+      }
+
+      XCTAssertEqual(apiError.code, 400)
+      XCTAssertEqual(apiError.message, "Foobar")
+      XCTAssertEqual(apiError.request.url!.absoluteString, "https://api.wanikani.com/v2/user")
+      XCTAssertEqual(apiError.response.statusCode, 400)
+    }
+  }
+
+  func test5xxErrorResponse() {
+    var request = StubRequest(method: .GET, url: URL(string: "https://api.wanikani.com/v2/user")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.statusCode = 500
+    request.response.body = """
+    {
+      "error": "Foobar",
+      "code": 400
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    if let error = waitForError(client.user()) {
+      guard let apiError = error as? WaniKaniAPIError else {
+        XCTFail("Bad error type: " + error.localizedDescription)
+        return
+      }
+
+      XCTAssertEqual(apiError.code, 500)
+      XCTAssertNil(apiError.message)
+      XCTAssertEqual(apiError.request.url!.absoluteString, "https://api.wanikani.com/v2/user")
+      XCTAssertEqual(apiError.response.statusCode, 500)
+    }
+  }
+
+  func testJSONDecodeError() {
+    var request = StubRequest(method: .GET, url: URL(string: "https://api.wanikani.com/v2/user")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = "invalid json".data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    if let error = waitForError(client.user()) {
+      guard let apiError = error as? WaniKaniJSONDecodeError else {
+        XCTFail("Bad error type: " + error.localizedDescription)
+        return
+      }
+
+      XCTAssertEqual(apiError.data, request.response.body)
+      XCTAssertEqual(apiError.error.localizedDescription,
+                     "The data couldn’t be read because it isn’t in the correct format.")
+      XCTAssertEqual(apiError.request.url!.absoluteString, "https://api.wanikani.com/v2/user")
+      XCTAssertEqual(apiError.response.statusCode, 200)
+    }
   }
 }

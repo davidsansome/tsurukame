@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double MockURLSessionVersionNumber;
-FOUNDATION_EXPORT const unsigned char MockURLSessionVersionString[];
+FOUNDATION_EXPORT double HippolyteVersionNumber;
+FOUNDATION_EXPORT const unsigned char HippolyteVersionString[];
 

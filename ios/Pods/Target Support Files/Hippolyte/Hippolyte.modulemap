@@ -1,0 +1,6 @@
+framework module Hippolyte {
+  umbrella header "Hippolyte-umbrella.h"
+
+  export *
+  module * { export * }
+}

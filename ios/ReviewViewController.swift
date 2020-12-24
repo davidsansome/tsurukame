@@ -1136,6 +1136,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         activeTask.answer.createdAt = date
       }
 
+      if Settings.minimizeReviewPenalty {
+        if activeTask.answer.meaningWrong {
+          activeTask.answer.meaningWrongCount = 1
+        }
+        if activeTask.answer.readingWrong {
+          activeTask.answer.readingWrongCount = 1
+        }
+      }
+
       services.localCachingClient!.sendProgress([activeTask.answer])
 
       reviewsCompleted += 1

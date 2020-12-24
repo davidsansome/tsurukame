@@ -27,10 +27,13 @@ class WaniKaniAPIClient: NSObject {
   private let session: URLSession
 
   @objc
-  init(apiToken: String, dataLoader: DataLoaderProtocol, urlSession: URLSession) {
+  init(apiToken: String, dataLoader: DataLoaderProtocol) {
     self.dataLoader = dataLoader
     self.apiToken = apiToken
-    session = urlSession
+
+    let sessionConfig = URLSessionConfiguration.default
+    sessionConfig.requestCachePolicy = .reloadIgnoringLocalCacheData
+    session = URLSession(configuration: sessionConfig)
 
     super.init()
   }
@@ -59,19 +62,19 @@ class WaniKaniAPIClient: NSObject {
       URLQueryItem(name: "hidden", value: "false"),
     ]
     if !updatedAfter.isEmpty {
-      url.queryItems?.append(URLQueryItem(name: "updated_after",
+      url.queryItems!.append(URLQueryItem(name: "updated_after",
                                           value: updatedAfter))
     }
 
     // Fetch the data and convert to protobufs.
     return firstly {
       pagedQuery(url: url.url!)
-    }.map { (allData: [Response<AssignmentData>]) -> Assignments in
+    }.map { (allData: Response<[Response<AssignmentData>]>) -> Assignments in
       var ret = [TKMAssignment]()
-      for data in allData {
+      for data in allData.data {
         ret.append(data.data.toProto(id: data.id, dataLoader: self.dataLoader))
       }
-      return (assignments: ret, updatedAt: allData[0].data_updated_at)
+      return (assignments: ret, updatedAt: allData.data_updated_at)
     }
   }
 
@@ -85,19 +88,20 @@ class WaniKaniAPIClient: NSObject {
     // Build the URL.
     var url = URLComponents(string: "\(kBaseUrl)/study_materials")!
     if !updatedAfter.isEmpty {
-      url.queryItems?.append(URLQueryItem(name: "updated_after",
+      url.queryItems = []
+      url.queryItems!.append(URLQueryItem(name: "updated_after",
                                           value: updatedAfter))
     }
 
     // Fetch the data and convert to protobufs.
     return firstly {
       pagedQuery(url: url.url!)
-    }.map { (allData: [Response<StudyMaterialData>]) -> StudyMaterials in
+    }.map { (allData: Response<[Response<StudyMaterialData>]>) -> StudyMaterials in
       var ret = [TKMStudyMaterials]()
-      for data in allData {
+      for data in allData.data {
         ret.append(data.data.toProto(id: data.id))
       }
-      return (studyMaterials: ret, updatedAt: allData[0].data_updated_at)
+      return (studyMaterials: ret, updatedAt: allData.data_updated_at)
     }
   }
 
@@ -110,9 +114,9 @@ class WaniKaniAPIClient: NSObject {
 
     // Fetch the data and convert to a protobuf.
     return firstly {
-      pagedQuery(url: url.url!)
-    }.map { (allData: [Response<StudyMaterialData>]) -> TKMStudyMaterials? in
-      guard let response = allData.first else {
+      query(authorize(url.url!))
+    }.map { (allData: Response<[Response<StudyMaterialData>]>) -> TKMStudyMaterials? in
+      guard let response = allData.data.first else {
         return nil
       }
       return response.data.toProto(id: response.id)
@@ -125,19 +129,20 @@ class WaniKaniAPIClient: NSObject {
     // Build the URL.
     var url = URLComponents(string: "\(kBaseUrl)/level_progressions")!
     if !updatedAfter.isEmpty {
-      url.queryItems?.append(URLQueryItem(name: "updated_after",
+      url.queryItems = []
+      url.queryItems!.append(URLQueryItem(name: "updated_after",
                                           value: updatedAfter))
     }
 
     // Fetch the data and convert to protobufs.
     return firstly {
       pagedQuery(url: url.url!)
-    }.map { (allData: [Response<LevelProgressionData>]) -> LevelProgressions in
+    }.map { (allData: Response<[Response<LevelProgressionData>]>) -> LevelProgressions in
       var ret = [TKMLevel]()
-      for data in allData {
+      for data in allData.data {
         ret.append(data.data.toProto(id: data.id))
       }
-      return (levels: ret, updatedAt: allData[0].data_updated_at)
+      return (levels: ret, updatedAt: allData.data_updated_at)
     }
   }
 
@@ -168,12 +173,9 @@ class WaniKaniAPIClient: NSObject {
     let url = URL(string: "\(kBaseUrl)/reviews")!
     let body = CreateReviewRequest(review: CreateReviewRequest
       .Review(assignment_id: Int(progress.assignment!.id_p),
-              incorrect_meaning_answers: progress
-                .meaningWrong ? 1 : 0,
-              incorrect_reading_answers: progress
-                .readingWrong ? 1 : 0,
-              created_at: WaniKaniDate(date: progress
-                .createdAtDate)))
+              incorrect_meaning_answers: Int(progress.meaningWrongCount),
+              incorrect_reading_answers: Int(progress.readingWrongCount),
+              created_at: WaniKaniDate(date: progress.createdAtDate)))
 
     return firstly { () -> Promise<MultiResourceResponse<ReviewData>> in
       var request = self.authorize(url)
@@ -231,17 +233,21 @@ class WaniKaniAPIClient: NSObject {
   }
 
   /** Fetches all pages of a multi-page query and combines the results into an array. */
-  private func pagedQuery<DataType: Codable>(url: URL) -> Promise<[DataType]> {
-    pagedQuery(url: url, results: [])
+  private func pagedQuery<DataType: Codable>(url: URL) -> Promise<Response<[DataType]>> {
+    let results = try! JSONDecoder()
+      .decode(Response<[DataType]>.self, from: kEmptyPaginatedResultJson)
+    return pagedQuery(url: url, results: results)
   }
 
-  private func pagedQuery<DataType: Codable>(url: URL, results: [DataType]) -> Promise<[DataType]> {
+  private func pagedQuery<DataType: Codable>(url: URL,
+                                             results: Response<[DataType]>)
+    -> Promise<Response<[DataType]>> {
     firstly {
       query(authorize(url))
-    }.then { (response: PaginatedResponse<[DataType]>) -> Promise<[DataType]> in
+    }.then { (response: PaginatedResponse<[DataType]>) -> Promise<Response<[DataType]>> in
       // Add these results to the previous ones.
-      var results = results
-      results.append(contentsOf: response.data)
+      results.data_updated_at = response.data_updated_at
+      results.data.append(contentsOf: response.data)
 
       // If there's a next page, request that.
       if let pages = response.pages, let nextURLString = pages.next_url,
@@ -396,32 +402,60 @@ private class Response<DataType: Codable>: Codable {
 
 /** Container for paginated API responses. */
 private class PaginatedResponse<DataType: Codable>: Response<DataType> {
-  // Pagination information.  Present in paginated responses.
+  // Pagination information. Present in paginated responses.
   struct Pages: Codable {
-    var per_page: Int
     var next_url: String?
-    var previous_url: String?
   }
 
   var pages: Pages?
   var total_count: Int?
+
+  private enum CodingKeys: String, CodingKey {
+    case pages
+    case total_count
+  }
+
+  // A custom decoder function is needed here as by default only the base class' fields are decoded.
+  required init(from decoder: Decoder) throws {
+    try super.init(from: decoder)
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    pages = try values.decodeIfPresent(Pages.self, forKey: .pages)
+    total_count = try values.decodeIfPresent(Int.self, forKey: .total_count)
+  }
 }
+
+private let kEmptyPaginatedResultJson = """
+{
+  "data_updated_at": "",
+  "data": []
+}
+""".data(using: .utf8)!
 
 /** Container for API responses that update multiple resources. */
 private class MultiResourceResponse<DataType: Codable>: Response<DataType> {
-  // Other resources that were updated by this request.  Present most notably in the create
-  // review response.
+  // Other resources that were updated by this request. Present in the create review response.
   struct ResourcesUpdated: Codable {
     var assignment: Response<AssignmentData>?
     // TODO: review_statistic
   }
 
   var resources_updated: ResourcesUpdated?
+
+  private enum CodingKeys: String, CodingKey {
+    case resources_updated
+  }
+
+  // A custom decoder function is needed here as by default only the base class' fields are decoded.
+  required init(from decoder: Decoder) throws {
+    try super.init(from: decoder)
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    resources_updated = try values.decodeIfPresent(ResourcesUpdated.self,
+                                                   forKey: .resources_updated)
+  }
 }
 
 /** Response type for /user. */
 private struct UserData: Codable {
-  var id: String
   var username: String
   var level: Int
   var profile_url: String
@@ -430,23 +464,11 @@ private struct UserData: Codable {
 
   struct Subscription: Codable {
     var active: Bool
-    var type: String
     var max_level_granted: Int
     var period_ends_at: WaniKaniDate?
   }
 
   var subscription: Subscription
-
-  struct Preferences: Codable {
-    var default_voice_actor_id: Int?
-    var lessons_autoplay_audio: Bool?
-    var lessons_batch_size: Int?
-    var lessons_presentation_order: String?
-    var reviews_autoplay_audio: Bool?
-    var reviews_display_srs_indicator: Bool?
-  }
-
-  var preferences: Preferences
 
   func toProto() -> TKMUser {
     let ret = TKMUser()
@@ -464,18 +486,13 @@ private struct UserData: Codable {
 
 /** Response type for /assignments. */
 private struct AssignmentData: Codable {
-  var created_at: WaniKaniDate
   var subject_id: Int
   var subject_type: String
   var srs_stage: Int
-  var srs_stage_name: String
   var unlocked_at: WaniKaniDate?
   var started_at: WaniKaniDate?
   var passed_at: WaniKaniDate?
-  var burned_at: WaniKaniDate?
   var available_at: WaniKaniDate?
-  var resurrected_at: WaniKaniDate?
-  var passed: Bool
 
   func toProto(id: Int?, dataLoader: DataLoaderProtocol) -> TKMAssignment {
     let ret = TKMAssignment()
@@ -503,7 +520,6 @@ private struct AssignmentData: Codable {
 
 /** Response type for /study_materials. */
 private struct StudyMaterialData: Codable {
-  var created_at: WaniKaniDate
   var subject_id: Int
   var subject_type: String
   var meaning_note: String?
@@ -560,9 +576,7 @@ private struct ReviewData: Codable {
   var assignment_id: Int
   var subject_id: Int
   var starting_srs_stage: Int
-  var starting_srs_stage_name: String
   var ending_srs_stage: Int
-  var ending_srs_stage_name: String
   var incorrect_meaning_answers: Int
   var incorrect_reading_answers: Int
 }
