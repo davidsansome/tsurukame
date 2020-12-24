@@ -22,18 +22,15 @@ import PromiseKit
  */
 @objc(Client)
 class WaniKaniAPIClient: NSObject {
-  private let dataLoader: DataLoader
+  private let dataLoader: DataLoaderProtocol
   private let apiToken: String
   private let session: URLSession
 
   @objc
-  init(apiToken: String, dataLoader: DataLoader) {
+  init(apiToken: String, dataLoader: DataLoaderProtocol, urlSession: URLSession) {
     self.dataLoader = dataLoader
     self.apiToken = apiToken
-
-    let configuration = URLSessionConfiguration.default
-    configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
-    session = URLSession(configuration: configuration)
+    session = urlSession
 
     super.init()
   }
@@ -332,27 +329,26 @@ struct WaniKaniDate: Codable {
     self.date = date
   }
 
-  // Implements Decodable.
-  init(from decoder: Decoder) throws {
-    let container = try decoder.singleValueContainer()
-    let str = try container.decode(String.self)
+  init?(fromString str: String) {
     for formatter in WaniKaniDate.formatters {
       if let date = formatter.date(from: str) {
         self.init(date: date)
         return
       }
     }
-    throw DecodingError.dataCorruptedError(in: container,
-                                           debugDescription: "Invalid date format")
+    return nil
   }
 
-  static func fromString(_ str: String) -> WaniKaniDate? {
-    for formatter in WaniKaniDate.formatters {
-      if let date = formatter.date(from: str) {
-        return WaniKaniDate(date: date)
-      }
+  // Implements Decodable.
+  init(from decoder: Decoder) throws {
+    let container = try decoder.singleValueContainer()
+    let str = try container.decode(String.self)
+    if let date = WaniKaniDate(fromString: str) {
+      self = date
+    } else {
+      throw DecodingError.dataCorruptedError(in: container,
+                                             debugDescription: "Invalid date format")
     }
-    return nil
   }
 
   // Implements Encodable.
@@ -481,7 +477,7 @@ private struct AssignmentData: Codable {
   var resurrected_at: WaniKaniDate?
   var passed: Bool
 
-  func toProto(id: Int?, dataLoader: DataLoader) -> TKMAssignment {
+  func toProto(id: Int?, dataLoader: DataLoaderProtocol) -> TKMAssignment {
     let ret = TKMAssignment()
     ret.id_p = Int32(id ?? 0)
     ret.subjectId = Int32(subject_id)

@@ -83,8 +83,14 @@
 }
 
 - (void)setMainViewControllerAnimated:(BOOL)animated clearUserData:(BOOL)clearUserData {
+  NSURLSessionConfiguration *urlSessionConfiguration =
+      NSURLSessionConfiguration.defaultSessionConfiguration;
+  urlSessionConfiguration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+  NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:urlSessionConfiguration];
+
   _services.client = [[Client alloc] initWithApiToken:Settings.userApiToken
-                                           dataLoader:_services.dataLoader];
+                                           dataLoader:_services.dataLoader
+                                           urlSession:urlSession];
 
   Class localCachingClientClass = TKMScreenshotter.localCachingClientClass;
   _services.localCachingClient =

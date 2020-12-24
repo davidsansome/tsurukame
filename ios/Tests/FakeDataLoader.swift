@@ -1,4 +1,4 @@
-// Copyright 2018 David Sansome
+// Copyright 2020 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,10 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
+class FakeDataLoader: DataLoaderProtocol {
+  func levelOf(subjectID id: Int) -> Int {
+    if !isValid(subjectID: id) {
+      return 0
+    }
+    return 7
+  }
 
-@interface NSString (MD5)
+  func isValid(subjectID id: Int) -> Bool {
+    id == 42
+  }
 
-- (NSString *)MD5;
+  func load(subjectID id: Int) -> TKMSubject? {
+    if !isValid(subjectID: id) {
+      return nil
+    }
 
-@end
+    let ret = TKMSubject()
+    ret.id_p = 42
+    return ret
+  }
+}

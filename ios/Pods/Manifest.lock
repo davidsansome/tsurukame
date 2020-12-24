@@ -19,6 +19,7 @@ PODS:
     - MMDrawerController/Core
   - MMDrawerController/Subclass (0.6.0):
     - MMDrawerController/Core
+  - MockURLSession (3.1.0)
   - PromiseKit/CorePromise (6.8.5)
   - PromiseKit/Foundation (6.8.5):
     - PromiseKit/CorePromise
@@ -31,6 +32,7 @@ DEPENDENCIES:
   - Haneke (~> 1.0.2)
   - Light-Untar (~> 0.3.0)
   - MMDrawerController (~> 0.6.0)
+  - MockURLSession (~> 3.1.0)
   - PromiseKit/CorePromise (~> 6.8.1)
   - PromiseKit/Foundation (~> 6.8.1)
   - Protobuf (~> 3.13.0)
@@ -43,6 +45,7 @@ SPEC REPOS:
     - Haneke
     - Light-Untar
     - MMDrawerController
+    - MockURLSession
     - PromiseKit
     - Protobuf
     - Reachability
@@ -53,10 +56,11 @@ SPEC CHECKSUMS:
   Haneke: 01454a67322faa0dd9d81fc0f447885044e71521
   Light-Untar: e901c312974d36f3910aec73436296a5a3faf799
   MMDrawerController: e3a54a5570388463ad3b36975251575b50c4e1a0
+  MockURLSession: 9a4184db7a82875df5e61b16f220ed6066a0e987
   PromiseKit: 9616b0afef31eae56ab9ce044c8ec2b8612a15cd
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
-PODFILE CHECKSUM: d55c5972fe30f3e909f95d3813103c9745438bfc
+PODFILE CHECKSUM: fa9c94f0d37ef197835843d63213ae0d8b9b48da
 
 COCOAPODS: 1.9.3

@@ -23,8 +23,19 @@ private func readUInt32(_ fh: FileHandle, _ offset: UInt64) -> UInt32 {
   }
 }
 
+@objc
+protocol DataLoaderProtocol {
+  func levelOf(subjectID id: Int) -> Int
+
+  @objc(isValidSubjectID:)
+  func isValid(subjectID id: Int) -> Bool
+
+  @objc(loadSubject:)
+  func load(subjectID id: Int) -> TKMSubject?
+}
+
 @objcMembers
-class DataLoader: NSObject {
+class DataLoader: NSObject, DataLoaderProtocol {
   let header: TKMDataFileHeader
 
   private let file: FileHandle

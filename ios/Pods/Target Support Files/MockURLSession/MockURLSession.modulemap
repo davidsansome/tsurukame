@@ -1,0 +1,6 @@
+framework module MockURLSession {
+  umbrella header "MockURLSession-umbrella.h"
+
+  export *
+  module * { export * }
+}
