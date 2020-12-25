@@ -42,7 +42,7 @@ func waitForPromise<T>(_ p: Promise<T>,
   p.done { result in
     ret = result
   }.catch { error in
-    XCTFail("Promise failed: \(error)", file: file, line: line)
+    XCTFail("Promise failed: \(error.localizedDescription)", file: file, line: line)
   }.finally {
     expectation.fulfill()
   }
@@ -71,9 +71,9 @@ func waitForError<T>(_ p: Promise<T>,
     expectation.fulfill()
   }
 
-  let result = XCTWaiter().wait(for: [expectation], timeout: 1)
-  if result != .completed {
-    XCTFail("Promise never completed: \(result.rawValue)", file: file, line: line)
+  let waitResult = XCTWaiter().wait(for: [expectation], timeout: 100)
+  if waitResult != .completed {
+    XCTFail("Promise never completed: \(waitResult.rawValue)", file: file, line: line)
   }
   return ret
 }

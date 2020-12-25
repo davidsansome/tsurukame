@@ -30,7 +30,7 @@ DEPENDENCIES:
   - Charts (~> 3.5.0)
   - FMDB (~> 2.7.5)
   - Haneke (~> 1.0.2)
-  - Hippolyte (~> 1.2.3)
+  - Hippolyte (from `https://github.com/davidsansome/Hippolyte.git`, branch `url-session-cookies`)
   - Light-Untar (~> 0.3.0)
   - MMDrawerController (~> 0.6.0)
   - PromiseKit/CorePromise (~> 6.8.1)
@@ -43,12 +43,21 @@ SPEC REPOS:
     - Charts
     - FMDB
     - Haneke
-    - Hippolyte
     - Light-Untar
     - MMDrawerController
     - PromiseKit
     - Protobuf
     - Reachability
+
+EXTERNAL SOURCES:
+  Hippolyte:
+    :branch: url-session-cookies
+    :git: https://github.com/davidsansome/Hippolyte.git
+
+CHECKOUT OPTIONS:
+  Hippolyte:
+    :commit: deb5537f47b49fa666d384b60db026969bd3f8ca
+    :git: https://github.com/davidsansome/Hippolyte.git
 
 SPEC CHECKSUMS:
   Charts: 40a08591df1f8ad5c223ddedfb1a06da92f24f7c
@@ -61,6 +70,6 @@ SPEC CHECKSUMS:
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
-PODFILE CHECKSUM: 3a173a0f1ed5c0e237472346780c9b1d90b845fa
+PODFILE CHECKSUM: 5f531ec4c6ef7943257ceef3d08c354e6a2292ff
 
 COCOAPODS: 1.9.3

@@ -37,7 +37,7 @@ target 'Tsurukame' do
     inherit! :search_paths
 
     platform :ios, '12.0'
-    pod 'Hippolyte', '~> 1.2.3'
+    pod 'Hippolyte', :git => 'https://github.com/davidsansome/Hippolyte.git', :branch => 'url-session-cookies'
   end
 end
 

@@ -27,13 +27,45 @@ final class HTTPStubURLProtocol: URLProtocol {
     false
   }
 
+  private var urlSessionTask: URLSessionTask?
+
+  @available(iOS 8, *)
+  init(task: URLSessionTask, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
+    super.init(request: task.currentRequest!, cachedResponse: cachedResponse, client: client)
+    self.urlSessionTask = task
+  }
+
+  @available(iOS 8, *)
+  override var task: URLSessionTask? {
+    urlSessionTask
+  }
+
   override func startLoading() {
+    var request = self.request
+
+    // Get the cookie storage that applies to this request. We can only do this on iOS >= 8.0 which
+    // gives us access to the URLSessionTask and its configuration.
+    var cookieStorage = HTTPCookieStorage.shared
+    if #available(iOS 8, *),
+       let configuration = task?.value(forKey: "configuration") as? URLSessionConfiguration,
+       let configurationCookieStorage = configuration.httpCookieStorage {
+      cookieStorage = configurationCookieStorage
+    }
+
+    // Get the cookies that apply to this URL and add them to the request headers.
+    if let url = request.url, let cookies = cookieStorage.cookies(for: url) {
+      if request.allHTTPHeaderFields == nil {
+        request.allHTTPHeaderFields = [String: String]()
+      }
+      request.allHTTPHeaderFields!.merge(HTTPCookie.requestHeaderFields(with: cookies)) { (current, _) in current }
+    }
+
+    // Find the stubbed response for this request.
     guard let stubbedResponse = try? Hippolyte.shared.response(for: request), let url = request.url else {
       client?.urlProtocol(self, didFailWithError: NoMatchError(request: request))
       return
     }
 
-    let cookieStorage = HTTPCookieStorage.shared
     cookieStorage.setCookies(HTTPCookie.cookies(withResponseHeaderFields: stubbedResponse.headers, for: url),
                              for: url, mainDocumentURL: url)
     if stubbedResponse.shouldFail {
