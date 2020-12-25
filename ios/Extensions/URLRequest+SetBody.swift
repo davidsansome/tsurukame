@@ -27,7 +27,7 @@ extension URLRequest {
   mutating func setFormBody(method: String, queryItems: [URLQueryItem]) throws {
     var components = URLComponents()
     components.queryItems = queryItems
-    let data = components.query!.data(using: .utf8)!
+    let data = components.percentEncodedQuery!.data(using: .utf8)!
 
     setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
     setValue(String(data.count), forHTTPHeaderField: "Content-Length")
