@@ -47,8 +47,8 @@ final class HTTPStubURLProtocol: URLProtocol {
     // gives us access to the URLSessionTask and its configuration.
     var cookieStorage = HTTPCookieStorage.shared
     if #available(iOS 8, *),
-       let configuration = task?.value(forKey: "configuration") as? URLSessionConfiguration,
-       let configurationCookieStorage = configuration.httpCookieStorage {
+       let session = task?.value(forKey: "session") as? URLSession,
+       let configurationCookieStorage = session.configuration.httpCookieStorage {
       cookieStorage = configurationCookieStorage
     }
 

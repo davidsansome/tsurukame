@@ -41,9 +41,12 @@ class WaniKaniAPIClient: NSObject {
   // MARK: - Retrieving data
 
   /** Fetches information about the logged-in user. */
-  func user() -> Promise<TKMUser> {
-    firstly {
+  func user(progress: Progress) -> Promise<TKMUser> {
+    progress.totalUnitCount = 1
+    return firstly {
       query(authorize(URL(string: "\(kBaseUrl)/user")!))
+    }.ensure {
+      progress.completedUnitCount = 1
     }.map { (data: Response<UserData>) -> TKMUser in
       data.data.toProto()
     }
@@ -54,7 +57,7 @@ class WaniKaniAPIClient: NSObject {
    * Fetches the user's assignments.  If updatedAfter is empty, all assignments are returned,
    * otherwise returns only the ones modified after that date.
    */
-  func assignments(updatedAfter: String = "") -> Promise<Assignments> {
+  func assignments(progress: Progress, updatedAfter: String = "") -> Promise<Assignments> {
     // Build the URL.
     var url = URLComponents(string: "\(kBaseUrl)/assignments")!
     url.queryItems = [
@@ -68,13 +71,13 @@ class WaniKaniAPIClient: NSObject {
 
     // Fetch the data and convert to protobufs.
     return firstly {
-      pagedQuery(url: url.url!)
+      pagedQuery(url: url.url!, progress: progress)
     }.map { (allData: Response<[Response<AssignmentData>]>) -> Assignments in
       var ret = [TKMAssignment]()
       for data in allData.data {
         ret.append(data.data.toProto(id: data.id, dataLoader: self.dataLoader))
       }
-      return (assignments: ret, updatedAt: allData.data_updated_at)
+      return (assignments: ret, updatedAt: allData.data_updated_at ?? updatedAfter)
     }
   }
 
@@ -84,7 +87,7 @@ class WaniKaniAPIClient: NSObject {
    * Fetches the user's study materials.  If updatedAfter is empty, all study materials are
    * returned, otherwise returns only the ones modified after that date.
    */
-  func studyMaterials(updatedAfter: String = "") -> Promise<StudyMaterials> {
+  func studyMaterials(progress: Progress, updatedAfter: String = "") -> Promise<StudyMaterials> {
     // Build the URL.
     var url = URLComponents(string: "\(kBaseUrl)/study_materials")!
     if !updatedAfter.isEmpty {
@@ -95,26 +98,30 @@ class WaniKaniAPIClient: NSObject {
 
     // Fetch the data and convert to protobufs.
     return firstly {
-      pagedQuery(url: url.url!)
+      pagedQuery(url: url.url!, progress: progress)
     }.map { (allData: Response<[Response<StudyMaterialData>]>) -> StudyMaterials in
       var ret = [TKMStudyMaterials]()
       for data in allData.data {
         ret.append(data.data.toProto(id: data.id))
       }
-      return (studyMaterials: ret, updatedAt: allData.data_updated_at)
+      return (studyMaterials: ret, updatedAt: allData.data_updated_at ?? updatedAfter)
     }
   }
 
   /**
    * Fetches one study material by Subject ID.
    */
-  func studyMaterial(subjectId: Int) -> Promise<TKMStudyMaterials?> {
+  func studyMaterial(subjectId: Int, progress: Progress) -> Promise<TKMStudyMaterials?> {
+    progress.totalUnitCount = 1
+
     // Build the URL.
     let url = URLComponents(string: "\(kBaseUrl)/study_materials?subject_ids=\(subjectId)")!
 
     // Fetch the data and convert to a protobuf.
     return firstly {
       query(authorize(url.url!))
+    }.ensure {
+      progress.completedUnitCount = 1
     }.map { (allData: Response<[Response<StudyMaterialData>]>) -> TKMStudyMaterials? in
       guard let response = allData.data.first else {
         return nil
@@ -125,7 +132,8 @@ class WaniKaniAPIClient: NSObject {
 
   typealias LevelProgressions = (levels: [TKMLevel], updatedAt: String)
 
-  func levelProgressions(updatedAfter: String = "") -> Promise<LevelProgressions> {
+  func levelProgressions(progress: Progress,
+                         updatedAfter: String = "") -> Promise<LevelProgressions> {
     // Build the URL.
     var url = URLComponents(string: "\(kBaseUrl)/level_progressions")!
     if !updatedAfter.isEmpty {
@@ -136,13 +144,13 @@ class WaniKaniAPIClient: NSObject {
 
     // Fetch the data and convert to protobufs.
     return firstly {
-      pagedQuery(url: url.url!)
+      pagedQuery(url: url.url!, progress: progress)
     }.map { (allData: Response<[Response<LevelProgressionData>]>) -> LevelProgressions in
       var ret = [TKMLevel]()
       for data in allData.data {
         ret.append(data.data.toProto(id: data.id))
       }
-      return (levels: ret, updatedAt: allData.data_updated_at)
+      return (levels: ret, updatedAt: allData.data_updated_at ?? updatedAfter)
     }
   }
 
@@ -195,7 +203,7 @@ class WaniKaniAPIClient: NSObject {
   func updateStudyMaterial(_ pb: TKMStudyMaterials) -> Promise<Void> {
     firstly { () -> Promise<TKMStudyMaterials?> in
       // We need to check if a study material for the subject already exists.
-      studyMaterial(subjectId: Int(pb.subjectId))
+      studyMaterial(subjectId: Int(pb.subjectId), progress: Progress(totalUnitCount: 1))
     }.then { (existing: TKMStudyMaterials?) -> DataTaskPromise in
       var synonyms = [String]()
       for synonym in pb.meaningSynonymsArray {
@@ -233,18 +241,30 @@ class WaniKaniAPIClient: NSObject {
   }
 
   /** Fetches all pages of a multi-page query and combines the results into an array. */
-  private func pagedQuery<DataType: Codable>(url: URL) -> Promise<Response<[DataType]>> {
+  private func pagedQuery<DataType: Codable>(url: URL,
+                                             progress: Progress) -> Promise<Response<[DataType]>> {
     let results = try! JSONDecoder()
       .decode(Response<[DataType]>.self, from: kEmptyPaginatedResultJson)
-    return pagedQuery(url: url, results: results)
+    return pagedQuery(url: url, results: results, progress: progress)
   }
 
   private func pagedQuery<DataType: Codable>(url: URL,
-                                             results: Response<[DataType]>)
+                                             results: Response<[DataType]>,
+                                             progress: Progress)
     -> Promise<Response<[DataType]>> {
     firstly {
       query(authorize(url))
     }.then { (response: PaginatedResponse<[DataType]>) -> Promise<Response<[DataType]>> in
+      // Set the total progress unit count if this was the first page.
+      if progress.totalUnitCount == -1,
+        let totalCount = response.total_count,
+        let perPage = response.pages?.per_page {
+        progress.totalUnitCount = max(1, Int64(ceil(Double(totalCount) / Double(perPage))))
+        progress.completedUnitCount = 1
+      } else {
+        progress.completedUnitCount += 1
+      }
+
       // Add these results to the previous ones.
       results.data_updated_at = response.data_updated_at
       results.data.append(contentsOf: response.data)
@@ -252,7 +272,7 @@ class WaniKaniAPIClient: NSObject {
       // If there's a next page, request that.
       if let pages = response.pages, let nextURLString = pages.next_url,
         let nextURL = URL(string: nextURLString) {
-        return self.pagedQuery(url: nextURL, results: results)
+        return self.pagedQuery(url: nextURL, results: results, progress: progress)
       }
 
       // Otherwise we're done - return the results.
@@ -307,8 +327,6 @@ private let kBaseUrl = "https://api.wanikani.com/v2"
 func decodeJSON<T: Decodable>(_ data: Data, request: URLRequest,
                               response: HTTPURLResponse) throws -> T {
   do {
-    NSLog("Decoding JSON as %@: %@", String(describing: T.self),
-          String(data: data, encoding: .utf8)!)
     return try JSONDecoder().decode(T.self, from: data)
   } catch {
     throw WaniKaniJSONDecodeError(data: data, error: error, request: request, response: response)
@@ -396,7 +414,7 @@ private func setProtoDate(_ pb: GPBMessage, field: String, to date: WaniKaniDate
 private class Response<DataType: Codable>: Codable {
   // Fields common to all responses.
   var id: Int?
-  var data_updated_at: String
+  var data_updated_at: String?
   var data: DataType
 }
 
@@ -404,6 +422,7 @@ private class Response<DataType: Codable>: Codable {
 private class PaginatedResponse<DataType: Codable>: Response<DataType> {
   // Pagination information. Present in paginated responses.
   struct Pages: Codable {
+    var per_page: Int?
     var next_url: String?
   }
 

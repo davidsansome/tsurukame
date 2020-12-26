@@ -365,10 +365,10 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     updateUserInfo()
     scheduleTableModelUpdate()
     guard let headerView = headerView else { return }
-    headerView.setProgress(0)
 
-    // TODO: Use Progress and update header view.
-    services.localCachingClient.sync(quick: quick)
+    let progress = Progress(totalUnitCount: -1)
+    headerView.setProgress(progress: progress)
+    services.localCachingClient.sync(quick: quick, progress: progress)
   }
 
   @objc func availableItemsChanged() {

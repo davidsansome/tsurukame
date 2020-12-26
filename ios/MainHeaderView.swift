@@ -172,17 +172,24 @@ class MainHeaderView: UIView {
     setNeedsLayout()
   }
 
-  @objc func setProgress(_ progress: Float) {
-    UIView.animate(withDuration: 0.2) {
-      self.progressView.progress = progress
+  private var progressKvoToken: NSKeyValueObservation?
 
-      let shouldShow = progress != 1.0
-      if shouldShow != self.isShowingProgress {
-        self.progressView.alpha = shouldShow ? 1.0 : 0.0
-        self.isShowingProgress = shouldShow
-        self.layoutSubviews()
+  @objc func setProgress(progress: Progress) {
+    progressKvoToken?.invalidate()
+    progressKvoToken = progress.observe(\.isFinished, options: [.new]) { _, change in
+      if let isFinished = change.newValue, isFinished {
+        self.progressKvoToken?.invalidate()
+
+        UIView.animate(withDuration: 0.6) {
+          self.progressView.alpha = 0.0
+        }
       }
     }
+
+    UIView.animate(withDuration: 0.2) {
+      self.progressView.alpha = 1.0
+    }
+    progressView.observedProgress = progress
   }
 
   @IBAction func didTapSearchButton(_: Any) {

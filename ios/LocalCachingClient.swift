@@ -252,7 +252,7 @@ class LocalCachingClient: NSObject {
 
       // Update the table schema.
       var shouldPopulateSubjectProgress = false
-      for version in currentVersion ... targetVersion {
+      for version in currentVersion ..< targetVersion {
         db.mustExecuteStatements(schemas[version])
 
         if version == 2 {
@@ -381,7 +381,10 @@ class LocalCachingClient: NSObject {
   }
 
   func getAssignmentsAtUsersCurrentLevel() -> [TKMAssignment] {
-    getAssignments(level: Int(getUserInfo()!.level))
+    guard let userInfo = getUserInfo() else {
+      return []
+    }
+    return getAssignments(level: Int(userInfo.level))
   }
 
   private func getAssignments(level: Int, transaction db: FMDatabase) -> [TKMAssignment] {
@@ -474,11 +477,11 @@ class LocalCachingClient: NSObject {
     _srsCategoryCounts.invalidate()
     _guruKanjiCount.invalidate()
 
-    return sendPendingProgress(progress)
+    return sendPendingProgress(progress, progress: Progress(totalUnitCount: -1))
   }
 
-  private func sendAllPendingProgress() -> Promise<Void> {
-    sendPendingProgress(getAllPendingProgress())
+  private func sendAllPendingProgress(progress: Progress) -> Promise<Void> {
+    sendPendingProgress(getAllPendingProgress(), progress: progress)
   }
 
   private func clearPendingProgress(_ progress: TKMProgress) {
@@ -489,10 +492,18 @@ class LocalCachingClient: NSObject {
     _pendingProgressCount.invalidate()
   }
 
-  private func sendPendingProgress(_ progress: [TKMProgress]) -> Promise<Void> {
+  private func sendPendingProgress(_ items: [TKMProgress], progress: Progress) -> Promise<Void> {
+    if items.isEmpty {
+      progress.totalUnitCount = 1
+      progress.completedUnitCount = 1
+      return .value(())
+    }
+
+    progress.totalUnitCount = Int64(items.count)
+
     // Send all progress, one at a time.
     var promise = Promise.value(())
-    for p in progress {
+    for p in items {
       promise = promise.then { _ in
         firstly {
           self.client.sendProgress(p).asVoid()
@@ -510,6 +521,8 @@ class LocalCachingClient: NSObject {
           }
         }.map {
           self.clearPendingProgress(p)
+        }.ensure {
+          progress.completedUnitCount += 1
         }
       }
     }
@@ -526,7 +539,7 @@ class LocalCachingClient: NSObject {
     }
 
     _pendingStudyMaterialsCount.invalidate()
-    return sendPendingStudyMaterials([material])
+    return sendPendingStudyMaterials([material], progress: Progress(totalUnitCount: 1))
   }
 
   private func getAllPendingStudyMaterials() -> [TKMStudyMaterials] {
@@ -540,11 +553,20 @@ class LocalCachingClient: NSObject {
     }
   }
 
-  private func sendAllPendingStudyMaterials() -> Promise<Void> {
-    sendPendingStudyMaterials(getAllPendingStudyMaterials())
+  private func sendAllPendingStudyMaterials(progress: Progress) -> Promise<Void> {
+    sendPendingStudyMaterials(getAllPendingStudyMaterials(), progress: progress)
   }
 
-  private func sendPendingStudyMaterials(_ materials: [TKMStudyMaterials]) -> Promise<Void> {
+  private func sendPendingStudyMaterials(_ materials: [TKMStudyMaterials],
+                                         progress: Progress) -> Promise<Void> {
+    if materials.isEmpty {
+      progress.totalUnitCount = 1
+      progress.completedUnitCount = 1
+      return .value(())
+    }
+
+    progress.totalUnitCount = Int64(materials.count)
+
     // Send all study materials, one at a time.
     var promise = Promise.value(())
     for m in materials {
@@ -553,6 +575,8 @@ class LocalCachingClient: NSObject {
           self.client.updateStudyMaterial(m).asVoid()
         }.map {
           self.clearPendingStudyMaterial(m)
+        }.ensure {
+          progress.completedUnitCount += 1
         }
       }
     }
@@ -609,7 +633,7 @@ class LocalCachingClient: NSObject {
     let requestHeaders = request?.allHTTPHeaderFields?.description
     let responseHeaders = response?.allHeaderFields.description
 
-    NSLog("Logging error: \(description ?? "")")
+    NSLog("Logging error: \(code ?? 0) \(description ?? "")")
     if let request = request {
       if let url = request.url {
         NSLog("Failed request URL: \(url)")
@@ -617,6 +641,12 @@ class LocalCachingClient: NSObject {
       if let body = request.httpBody {
         NSLog("Failed request body: \(String(data: body, encoding: .utf8) ?? "")")
       }
+    }
+    if let response = response {
+      NSLog("Failed response: \(response)")
+    }
+    if let responseData = responseData {
+      NSLog("Failed response body: \(String(data: responseData, encoding: .utf8)!)")
     }
 
     db.inTransaction { db in
@@ -653,7 +683,7 @@ class LocalCachingClient: NSObject {
 
   // MARK: - Syncing
 
-  private func fetchAssignments() -> Promise<Void> {
+  private func fetchAssignments(progress: Progress) -> Promise<Void> {
     // Get the last assignment update time.
     let updatedAfter: String = db.inDatabase { db in
       let cursor = db.query("SELECT assignments_updated_after FROM sync")
@@ -664,7 +694,7 @@ class LocalCachingClient: NSObject {
     }
 
     return firstly { () -> Promise<WaniKaniAPIClient.Assignments> in
-      client.assignments(updatedAfter: updatedAfter)
+      client.assignments(progress: progress, updatedAfter: updatedAfter)
     }.done { assignments, updatedAt in
       NSLog("Updated %d assignments at %@", assignments.count, updatedAt)
       self.db.inTransaction { db in
@@ -683,7 +713,7 @@ class LocalCachingClient: NSObject {
     }
   }
 
-  private func fetchStudyMaterials() -> Promise<Void> {
+  private func fetchStudyMaterials(progress: Progress) -> Promise<Void> {
     // Get the last assignment update time.
     let updatedAfter: String = db.inDatabase { db in
       let cursor = db.query("SELECT study_materials_updated_after FROM sync")
@@ -694,7 +724,7 @@ class LocalCachingClient: NSObject {
     }
 
     return firstly { () -> Promise<WaniKaniAPIClient.StudyMaterials> in
-      client.studyMaterials(updatedAfter: updatedAfter)
+      client.studyMaterials(progress: progress, updatedAfter: updatedAfter)
     }.done { materials, updatedAt in
       NSLog("Updated %d study materials at %@", materials.count, updatedAt)
       self.db.inTransaction { db in
@@ -710,9 +740,9 @@ class LocalCachingClient: NSObject {
   }
 
   // TODO: do everything on database queue.
-  private func fetchUserInfo() -> Promise<Void> {
+  private func fetchUserInfo(progress: Progress) -> Promise<Void> {
     firstly {
-      client.user()
+      client.user(progress: progress)
     }.done { user in
       NSLog("Updated user: %@", user.debugDescription)
       self.db.inTransaction { db in
@@ -722,9 +752,9 @@ class LocalCachingClient: NSObject {
     }
   }
 
-  private func fetchLevelProgression() -> Promise<Void> {
+  private func fetchLevelProgression(progress: Progress) -> Promise<Void> {
     firstly {
-      client.levelProgressions()
+      client.levelProgressions(progress: progress)
     }.done { progressions, _ in
       NSLog("Updated %d level progressions", progressions.count)
       self.db.inTransaction { db in
@@ -737,11 +767,16 @@ class LocalCachingClient: NSObject {
   }
 
   private var busy = false
-  func sync(quick: Bool) -> PMKFinalizer {
+  func sync(quick: Bool, progress: Progress) -> PMKFinalizer {
     guard !busy else {
       return Promise.value(()).cauterize()
     }
     busy = true
+
+    progress.totalUnitCount = 13
+    let childProgress = { (units: Int64) in
+      Progress(totalUnitCount: -1, parent: progress, pendingUnitCount: units)
+    }
 
     if !quick {
       // Clear the sync table before doing anything else.  This forces us to re-download all
@@ -752,14 +787,15 @@ class LocalCachingClient: NSObject {
     }
 
     return when(fulfilled: [
-      sendAllPendingProgress(),
-      sendAllPendingStudyMaterials(),
-    ]).then {
+      sendAllPendingProgress(progress: childProgress(1)),
+      sendAllPendingStudyMaterials(progress: childProgress(1)),
+    ]).then { _ in
+
       when(fulfilled: [
-        self.fetchAssignments(),
-        self.fetchStudyMaterials(),
-        self.fetchUserInfo(),
-        self.fetchLevelProgression(),
+        self.fetchAssignments(progress: childProgress(8)),
+        self.fetchStudyMaterials(progress: childProgress(1)),
+        self.fetchUserInfo(progress: childProgress(1)),
+        self.fetchLevelProgression(progress: childProgress(1)),
       ])
     }.done {
       self._availableSubjects.invalidate()
@@ -767,6 +803,7 @@ class LocalCachingClient: NSObject {
       postNotificationOnMainQueue(.lccUserInfoChanged)
     }.ensure {
       self.busy = false
+      progress.completedUnitCount = progress.totalUnitCount
     }.catch(handleError)
   }
 
@@ -797,7 +834,7 @@ class LocalCachingClient: NSObject {
 
   @objc(syncQuick:completionHandler:)
   func sync(quick: Bool, completionHandler: @escaping () -> Void) {
-    sync(quick: quick).finally {
+    sync(quick: quick, progress: Progress(totalUnitCount: -1)).finally {
       completionHandler()
     }
   }

@@ -98,9 +98,12 @@ class APIClientTest: XCTestCase {
     subscription_ends_at: 1544535139
     """
 
-    if let result = waitForPromise(client.user()) {
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.user(progress: progress)) {
       assertProtoEquals(result, expected)
     }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func testAllAssignments() {
@@ -154,11 +157,14 @@ class APIClientTest: XCTestCase {
     passed_at: 1504804454
     """
 
-    if let result = waitForPromise(client.assignments()) {
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.assignments(progress: progress)) {
       XCTAssertEqual(result.assignments.count, 1)
       assertProtoEquals(result.assignments[0], expected)
       XCTAssertEqual(result.updatedAt, "2017-11-29T19:37:03.571377Z")
     }
+    XCTAssertEqual(progress.totalUnitCount, 4)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func testAssignmentsUpdatedAfter() {
@@ -182,10 +188,43 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    if let result = waitForPromise(client.assignments(updatedAfter: "foobar")) {
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.assignments(progress: progress, updatedAfter: "foobar")) {
       XCTAssertEqual(result.assignments.count, 0)
       XCTAssertEqual(result.updatedAt, "2017-11-29T19:37:03.571377Z")
     }
+    XCTAssertEqual(progress.totalUnitCount, 4)
+    XCTAssertEqual(progress.completedUnitCount, 1)
+  }
+
+  func testAssignmentsUpdatedAfterNoResults() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/assignments" +
+                                "?unlocked=true&hidden=false&updated_after=foobar")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/assignments",
+      "pages": {
+        "per_page": 500,
+        "next_url": null,
+        "previous_url": null
+      },
+      "total_count": 0,
+      "data_updated_at": null,
+      "data": []
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.assignments(progress: progress, updatedAfter: "foobar")) {
+      XCTAssertEqual(result.assignments.count, 0)
+      XCTAssertEqual(result.updatedAt, "foobar")
+    }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func testAssignmentPagination() {
@@ -267,12 +306,15 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request2)
 
-    if let result = waitForPromise(client.assignments()) {
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.assignments(progress: progress)) {
       XCTAssertEqual(result.assignments.count, 2)
       XCTAssertEqual(result.assignments[0].id_p, 42)
       XCTAssertEqual(result.assignments[1].id_p, 43)
       XCTAssertEqual(result.updatedAt, "second-updated-at")
     }
+    XCTAssertEqual(progress.totalUnitCount, 4)
+    XCTAssertEqual(progress.completedUnitCount, 2)
   }
 
   func testAllStudyMaterials() {
@@ -320,11 +362,14 @@ class APIClientTest: XCTestCase {
     subject_type: "radical"
     """
 
-    if let result = waitForPromise(client.studyMaterials()) {
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.studyMaterials(progress: progress)) {
       XCTAssertEqual(result.studyMaterials.count, 1)
       assertProtoEquals(result.studyMaterials[0], expected)
       XCTAssertEqual(result.updatedAt, "2017-12-21T22:42:11.468155Z")
     }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func testStudyMaterialsUpdatedAfter() {
@@ -348,10 +393,14 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    if let result = waitForPromise(client.studyMaterials(updatedAfter: "foobar")) {
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client
+      .studyMaterials(progress: progress, updatedAfter: "foobar")) {
       XCTAssertEqual(result.studyMaterials.count, 0)
       XCTAssertEqual(result.updatedAt, "2017-12-21T22:42:11.468155Z")
     }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func testStudyMaterialBySubjectId() {
@@ -400,9 +449,12 @@ class APIClientTest: XCTestCase {
     subject_type: "radical"
     """
 
-    if let result = waitForPromise(client.studyMaterial(subjectId: 65231)) {
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.studyMaterial(subjectId: 65231, progress: progress)) {
       assertProtoEquals(result!, expected)
     }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func testStudyMaterialBySubjectIdNoResult() {
@@ -426,9 +478,12 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    if let result = waitForPromise(client.studyMaterial(subjectId: 65231)) {
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.studyMaterial(subjectId: 65231, progress: progress)) {
       XCTAssertNil(result)
     }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func testAllLevelProgressions() {
@@ -475,11 +530,14 @@ class APIClientTest: XCTestCase {
     unlocked_at: 1490862111
     """
 
-    if let result = waitForPromise(client.levelProgressions()) {
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.levelProgressions(progress: progress)) {
       XCTAssertEqual(result.levels.count, 1)
       assertProtoEquals(result.levels[0], expected)
       XCTAssertEqual(result.updatedAt, "2017-09-21T11:45:01.691388Z")
     }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func testLevelProgressionsUpdatedAfter() {
@@ -503,10 +561,14 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    if let result = waitForPromise(client.levelProgressions(updatedAfter: "foobar")) {
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client
+      .levelProgressions(progress: progress, updatedAfter: "foobar")) {
       XCTAssertEqual(result.levels.count, 0)
       XCTAssertEqual(result.updatedAt, "2017-09-21T11:45:01.691388Z")
     }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func testStartAssignment() {
@@ -760,7 +822,8 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    if let error = waitForError(client.user()) {
+    let progress = Progress(totalUnitCount: -1)
+    if let error = waitForError(client.user(progress: progress)) {
       guard let apiError = error as? WaniKaniAPIError else {
         XCTFail("Bad error type: " + error.localizedDescription)
         return
@@ -771,6 +834,8 @@ class APIClientTest: XCTestCase {
       XCTAssertEqual(apiError.request.url!.absoluteString, "https://api.wanikani.com/v2/user")
       XCTAssertEqual(apiError.response.statusCode, 400)
     }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func test5xxErrorResponse() {
@@ -785,7 +850,8 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    if let error = waitForError(client.user()) {
+    let progress = Progress(totalUnitCount: -1)
+    if let error = waitForError(client.user(progress: progress)) {
       guard let apiError = error as? WaniKaniAPIError else {
         XCTFail("Bad error type: " + error.localizedDescription)
         return
@@ -796,6 +862,8 @@ class APIClientTest: XCTestCase {
       XCTAssertEqual(apiError.request.url!.absoluteString, "https://api.wanikani.com/v2/user")
       XCTAssertEqual(apiError.response.statusCode, 500)
     }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
   func testJSONDecodeError() {
@@ -804,7 +872,8 @@ class APIClientTest: XCTestCase {
     request.response.body = "invalid json".data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    if let error = waitForError(client.user()) {
+    let progress = Progress(totalUnitCount: -1)
+    if let error = waitForError(client.user(progress: progress)) {
       guard let apiError = error as? WaniKaniJSONDecodeError else {
         XCTFail("Bad error type: " + error.localizedDescription)
         return
@@ -816,5 +885,7 @@ class APIClientTest: XCTestCase {
       XCTAssertEqual(apiError.request.url!.absoluteString, "https://api.wanikani.com/v2/user")
       XCTAssertEqual(apiError.response.statusCode, 200)
     }
+    XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
   }
 }
