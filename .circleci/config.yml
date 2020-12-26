@@ -39,7 +39,6 @@ jobs:
       - run:
           command: bundle install
           working_directory: ios
-      - run: git --no-pager diff
       - run:
           command: bundle exec fastlane test
           working_directory: ios
