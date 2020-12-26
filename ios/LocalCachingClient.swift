@@ -273,7 +273,7 @@ class LocalCachingClient: NSObject {
             assignment.subjectId,
             assignment.level,
             assignment.srsStage,
-            assignment.subjectType,
+            assignment.subjectType.rawValue,
           ])
         }
         for progress in getAllPendingProgress(transaction: db) {
@@ -282,7 +282,7 @@ class LocalCachingClient: NSObject {
             assignment.subjectId,
             assignment.level,
             assignment.srsStage,
-            assignment.subjectType,
+            assignment.subjectType.rawValue,
           ])
         }
       }
@@ -705,7 +705,7 @@ class LocalCachingClient: NSObject {
           db.mustExecuteUpdate("REPLACE INTO subject_progress (id, level, " +
             "srs_stage, subject_type) VALUES (?, ?, ?, ?)",
             args: [assignment.subjectId, assignment.level,
-                   assignment.srsStage, assignment.subjectType])
+                   assignment.srsStage, assignment.subjectType.rawValue])
         }
         db.mustExecuteUpdate("UPDATE sync SET assignments_updated_after = ?",
                              args: [updatedAt])
