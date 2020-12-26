@@ -175,4 +175,4 @@ DEPENDENCIES
   fastlane (>= 2.150.rc2)
 
 BUNDLED WITH
-   1.17.2
+   2.2.3
