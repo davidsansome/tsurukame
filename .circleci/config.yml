@@ -39,6 +39,7 @@ jobs:
       - run:
           command: bundle install
           working_directory: ios
+      - run: git diff
       - run:
           command: bundle exec fastlane test
           working_directory: ios
