@@ -78,14 +78,14 @@ final class HTTPStubURLProtocol: URLProtocol {
       if 300...399 ~= statusCode && (statusCode != 304 && statusCode != 305) {
         guard let location = stubbedResponse.headers["Location"], let url = URL(string: location),
               let cookies = cookieStorage.cookies(for: url) else {
-                return
+          return
         }
         var redirect = URLRequest(url: url)
         redirect.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
-		
+
         client?.urlProtocol(self, wasRedirectedTo: redirect, redirectResponse: response!)
       }
-		
+
       let body = stubbedResponse.body
       client?.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
       client?.urlProtocol(self, didLoad: body!)

@@ -111,6 +111,10 @@
 		63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766221F47100002A417B /* TKMReviewContainerViewController.m */; };
 		63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766521F47669002A417B /* TKMReviewMenuViewController.m */; };
 		63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */; };
+		63DB064025A0372E0071DC1C /* MarkupFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */; };
+		63DB064125A0372E0071DC1C /* MarkupFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */; };
+		63DB064B25A03BD50071DC1C /* MarkupFormatterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB064925A03BD50071DC1C /* MarkupFormatterTest.swift */; };
+		63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
 		63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */; };
 		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
@@ -346,6 +350,9 @@
 		63CE766421F47669002A417B /* TKMReviewMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewMenuViewController.h; sourceTree = "<group>"; };
 		63CE766521F47669002A417B /* TKMReviewMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMReviewMenuViewController.m; sourceTree = "<group>"; };
 		63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+InterfaceStyle.swift"; sourceTree = "<group>"; };
+		63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkupFormatter.swift; sourceTree = "<group>"; };
+		63DB064925A03BD50071DC1C /* MarkupFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkupFormatterTest.swift; sourceTree = "<group>"; };
+		63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingAppDelegate.swift; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63E9A8CA210D6CC000418CE1 /* SubjectsByLevelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsByLevelViewController.h; sourceTree = "<group>"; };
 		63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsByLevelViewController.m; sourceTree = "<group>"; };
@@ -684,6 +691,7 @@
 			children = (
 				63A1678F253AD8E600B5BCD6 /* APIClient.swift */,
 				63A16790253AD8E600B5BCD6 /* WebClient.swift */,
+				63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */,
 			);
 			path = WaniKaniAPI;
 			sourceTree = "<group>";
@@ -736,6 +744,8 @@
 				BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */,
 				633AFAE82352B81E004F732F /* VocabularyHighlighterTest.swift */,
 				63996BE52595D1B700149414 /* WebClientTest.swift */,
+				63DB064925A03BD50071DC1C /* MarkupFormatterTest.swift */,
+				63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1301,6 +1311,7 @@
 				6392DBA720D14915003019EB /* TKMSubjectChip.m in Sources */,
 				63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */,
 				633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */,
+				63DB064025A0372E0071DC1C /* MarkupFormatter.swift in Sources */,
 				C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */,
 				633DE95520C5634A00AC25F4 /* TKMSwitchModelItem.m in Sources */,
 				63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */,
@@ -1374,15 +1385,18 @@
 				63996B24259436F500149414 /* URLRequest+SetBody.swift in Sources */,
 				631CAD69234B0F0C008CEA73 /* ReviewItem.m in Sources */,
 				63996BB72594754400149414 /* TestUtils.swift in Sources */,
+				63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */,
 				63F7F52823D42BDD006A31FB /* String+MD5Test.swift in Sources */,
 				631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */,
 				63996B2C2594383C00149414 /* WebClient.swift in Sources */,
+				63DB064B25A03BD50071DC1C /* MarkupFormatterTest.swift in Sources */,
 				63996B4C259438E100149414 /* ProtobufExtensions.m in Sources */,
 				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
 				63996B542594390300149414 /* GPBPrimitiveArray+Sequence.swift in Sources */,
 				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
 				63996B3C2594389500149414 /* LocalCachingClient.swift in Sources */,
 				633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */,
+				63DB064125A0372E0071DC1C /* MarkupFormatter.swift in Sources */,
 				633AFAE92352B81E004F732F /* VocabularyHighlighterTest.swift in Sources */,
 				4820306724D849E100B40FDD /* Settings.swift in Sources */,
 				63996B15259435DF00149414 /* String+MD5.swift in Sources */,

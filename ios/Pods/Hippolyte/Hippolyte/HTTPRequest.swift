@@ -12,23 +12,23 @@ public protocol HTTPRequest {
 }
 
 extension URLRequest: HTTPRequest {
-
+  
   public var method: HTTPMethod? {
     guard let method = httpMethod else {
       return nil
     }
     return HTTPMethod(rawValue: method)
   }
-
+  
   public var headers: [String : String]? {
     allHTTPHeaderFields
   }
-
+  
   public var body: Data? {
     guard let stream = httpBodyStream else {
       return httpBody
     }
-
+    
     var data = Data()
     stream.open()
     let bufferSize = 4096
@@ -41,5 +41,5 @@ extension URLRequest: HTTPRequest {
     stream.close()
     return data
   }
-
+  
 }

@@ -9,9 +9,9 @@ protocol Matcheable {
 }
 
 extension URL: Matcheable {
-
+  
   func matcher() -> Matcher {
     StringMatcher(string: absoluteString)
   }
-
+  
 }

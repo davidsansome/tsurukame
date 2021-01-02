@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -886,6 +886,229 @@ class APIClientTest: XCTestCase {
       XCTAssertEqual(apiError.response.statusCode, 200)
     }
     XCTAssertEqual(progress.totalUnitCount, 1)
+    XCTAssertEqual(progress.completedUnitCount, 1)
+  }
+
+  func testAllSubjects() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/subjects" +
+                                "?hidden=false")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/subjects?types=kanji",
+      "pages": {
+        "per_page": 1000,
+        "next_url": null,
+        "previous_url": null
+      },
+      "total_count": 2027,
+      "data_updated_at": "2018-04-09T18:08:59.946969Z",
+      "data": [
+        {
+          "id": 440,
+          "object": "kanji",
+          "url": "https://api.wanikani.com/v2/subjects/440",
+          "data_updated_at": "2018-03-29T23:14:30.805034Z",
+          "data": {
+            "created_at": "2012-02-27T19:55:19.000000Z",
+            "level": 1,
+            "slug": "一",
+            "hidden_at": null,
+            "document_url": "https://www.wanikani.com/kanji/%E4%B8%80",
+            "characters": "一",
+            "meanings": [
+              {
+                "meaning": "One",
+                "primary": true,
+                "accepted_answer": true
+              }
+            ],
+            "readings": [
+              {
+                "type": "onyomi",
+                "primary": true,
+                "accepted_answer": true,
+                "reading": "いち"
+              },
+              {
+                "type": "kunyomi",
+                "primary": false,
+                "accepted_answer": false,
+                "reading": "ひと"
+              },
+              {
+                "type": "nanori",
+                "primary": false,
+                "accepted_answer": false,
+                "reading": "かず"
+              }
+            ],
+            "component_subject_ids": [
+              1
+            ],
+            "amalgamation_subject_ids": [
+              56,
+              88,
+              91
+            ],
+            "visually_similar_subject_ids": [],
+            "meaning_mnemonic": "Lying on the <radical>ground</radical> is something that looks just like the ground, the number <kanji>One</kanji>. Why is this One lying down? It's been shot by the number two. It's lying there, bleeding out and dying. The number One doesn't have long to live.",
+            "meaning_hint": "To remember the meaning of <kanji>One</kanji>, imagine yourself there at the scene of the crime. You grab <kanji>One</kanji> in your arms, trying to prop it up, trying to hear its last words. Instead, it just splatters some blood on your face. \\"Who did this to you?\\" you ask. The number One points weakly, and you see number Two running off into an alleyway. He's always been jealous of number One and knows he can be number one now that he's taken the real number one out.",
+            "reading_mnemonic": "As you're sitting there next to <kanji>One</kanji>, holding him up, you start feeling a weird sensation all over your skin. From the wound comes a fine powder (obviously coming from the special bullet used to kill One) that causes the person it touches to get extremely <reading>itchy</reading> (いち)",
+            "reading_hint": "Make sure you feel the ridiculously <reading>itchy</reading> sensation covering your body. It climbs from your hands, where you're holding the number <kanji>One</kanji> up, and then goes through your arms, crawls up your neck, goes down your body, and then covers everything. It becomes uncontrollable, and you're scratching everywhere, writhing on the ground. It's so itchy that it's the most painful thing you've ever experienced (you should imagine this vividly, so you remember the reading of this kanji).",
+            "lesson_position": 2,
+            "spaced_repetition_system_id": 1
+          }
+        }
+      ]
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    let expected = """
+    id: 440
+    level: 1
+    slug: "一"
+    document_url: "https://www.wanikani.com/kanji/%E4%B8%80"
+    japanese: "一"
+    readings {
+      reading: "いち"
+      is_primary: true
+      type: ONYOMI
+    }
+    readings {
+      reading: "ひと"
+      is_primary: false
+      type: KUNYOMI
+    }
+    readings {
+      reading: "かず"
+      is_primary: false
+      type: NANORI
+    }
+    meanings {
+      meaning: "One"
+      type: PRIMARY
+    }
+    component_subject_ids: 1
+    kanji {
+      meaning_mnemonic: "Lying on the <radical>ground</radical> is something that looks just like the ground, the number <kanji>One</kanji>. Why is this One lying down? It\\'s been shot by the number two. It\\'s lying there, bleeding out and dying. The number One doesn\\'t have long to live."
+      meaning_hint: "To remember the meaning of <kanji>One</kanji>, imagine yourself there at the scene of the crime. You grab <kanji>One</kanji> in your arms, trying to prop it up, trying to hear its last words. Instead, it just splatters some blood on your face. \\"Who did this to you?\\" you ask. The number One points weakly, and you see number Two running off into an alleyway. He\\'s always been jealous of number One and knows he can be number one now that he\\'s taken the real number one out."
+      reading_mnemonic: "As you\\'re sitting there next to <kanji>One</kanji>, holding him up, you start feeling a weird sensation all over your skin. From the wound comes a fine powder (obviously coming from the special bullet used to kill One) that causes the person it touches to get extremely <reading>itchy</reading> (いち)"
+      reading_hint: "Make sure you feel the ridiculously <reading>itchy</reading> sensation covering your body. It climbs from your hands, where you\\'re holding the number <kanji>One</kanji> up, and then goes through your arms, crawls up your neck, goes down your body, and then covers everything. It becomes uncontrollable, and you\\'re scratching everywhere, writhing on the ground. It\\'s so itchy that it\\'s the most painful thing you\\'ve ever experienced (you should imagine this vividly, so you remember the reading of this kanji)."
+      formatted_meaning_mnemonic {
+        text: "Lying on the "
+      }
+      formatted_meaning_mnemonic {
+        format: RADICAL
+        text: "ground"
+      }
+      formatted_meaning_mnemonic {
+        text: " is something that looks just like the ground, the number "
+      }
+      formatted_meaning_mnemonic {
+        format: KANJI
+        text: "One"
+      }
+      formatted_meaning_mnemonic {
+        text: ". Why is this One lying down? It\\'s been shot by the number two. It\\'s lying there, bleeding out and dying. The number One doesn\\'t have long to live."
+      }
+      formatted_meaning_hint {
+        text: "To remember the meaning of "
+      }
+      formatted_meaning_hint {
+        format: KANJI
+        text: "One"
+      }
+      formatted_meaning_hint {
+        text: ", imagine yourself there at the scene of the crime. You grab "
+      }
+      formatted_meaning_hint {
+        format: KANJI
+        text: "One"
+      }
+      formatted_meaning_hint {
+        text: " in your arms, trying to prop it up, trying to hear its last words. Instead, it just splatters some blood on your face. \\"Who did this to you?\\" you ask. The number One points weakly, and you see number Two running off into an alleyway. He\\'s always been jealous of number One and knows he can be number one now that he\\'s taken the real number one out."
+      }
+      formatted_reading_mnemonic {
+        text: "As you\\'re sitting there next to "
+      }
+      formatted_reading_mnemonic {
+        format: KANJI
+        text: "One"
+      }
+      formatted_reading_mnemonic {
+        text: ", holding him up, you start feeling a weird sensation all over your skin. From the wound comes a fine powder (obviously coming from the special bullet used to kill One) that causes the person it touches to get extremely "
+      }
+      formatted_reading_mnemonic {
+        format: READING
+        text: "itchy"
+      }
+      formatted_reading_mnemonic {
+        text: " (いち)"
+      }
+      formatted_reading_hint {
+        text: "Make sure you feel the ridiculously "
+      }
+      formatted_reading_hint {
+        format: READING
+        text: "itchy"
+      }
+      formatted_reading_hint {
+        text: " sensation covering your body. It climbs from your hands, where you\\'re holding the number "
+      }
+      formatted_reading_hint {
+        format: KANJI
+        text: "One"
+      }
+      formatted_reading_hint {
+        text: " up, and then goes through your arms, crawls up your neck, goes down your body, and then covers everything. It becomes uncontrollable, and you\\'re scratching everywhere, writhing on the ground. It\\'s so itchy that it\\'s the most painful thing you\\'ve ever experienced (you should imagine this vividly, so you remember the reading of this kanji)."
+      }
+    }
+    amalgamation_subject_ids: 56
+    amalgamation_subject_ids: 88
+    amalgamation_subject_ids: 91
+    """
+
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.subjects(progress: progress)) {
+      XCTAssertEqual(result.subjects.count, 1)
+      assertProtoEquals(result.subjects[0], expected)
+      XCTAssertEqual(result.updatedAt, "2018-04-09T18:08:59.946969Z")
+    }
+    XCTAssertEqual(progress.totalUnitCount, 3)
+    XCTAssertEqual(progress.completedUnitCount, 1)
+  }
+
+  func testSubjectsUpdatedAfter() {
+    var request = StubRequest(method: .GET,
+                              url: URL(string: "https://api.wanikani.com/v2/subjects" +
+                                "?hidden=false&updated_after=foobar")!)
+    request.setHeader(key: "Authorization", value: "Token token=bob")
+    request.response.body = """
+    {
+      "object": "collection",
+      "url": "https://api.wanikani.com/v2/subjects",
+      "pages": {
+        "per_page": 500,
+        "next_url": null,
+        "previous_url": null
+      },
+      "total_count": 1600,
+      "data_updated_at": "2017-11-29T19:37:03.571377Z",
+      "data": []
+    }
+    """.data(using: .utf8)
+    Hippolyte.shared.add(stubbedRequest: request)
+
+    let progress = Progress(totalUnitCount: -1)
+    if let result = waitForPromise(client.subjects(progress: progress, updatedAfter: "foobar")) {
+      XCTAssertEqual(result.subjects.count, 0)
+      XCTAssertEqual(result.updatedAt, "2017-11-29T19:37:03.571377Z")
+    }
+    XCTAssertEqual(progress.totalUnitCount, 4)
     XCTAssertEqual(progress.completedUnitCount, 1)
   }
 }
