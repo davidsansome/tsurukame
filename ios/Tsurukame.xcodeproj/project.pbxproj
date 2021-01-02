@@ -115,6 +115,10 @@
 		63DB064125A0372E0071DC1C /* MarkupFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */; };
 		63DB064B25A03BD50071DC1C /* MarkupFormatterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB064925A03BD50071DC1C /* MarkupFormatterTest.swift */; };
 		63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */; };
+		63DB06C125A091710071DC1C /* old-mnemonics.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06C025A091710071DC1C /* old-mnemonics.json */; };
+		63DB06C225A091710071DC1C /* old-mnemonics.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06C025A091710071DC1C /* old-mnemonics.json */; };
+		63DB06D225A091FF0071DC1C /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB06D125A091FF0071DC1C /* Subject.swift */; };
+		63DB06D325A091FF0071DC1C /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB06D125A091FF0071DC1C /* Subject.swift */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
 		63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */; };
 		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
@@ -353,6 +357,8 @@
 		63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkupFormatter.swift; sourceTree = "<group>"; };
 		63DB064925A03BD50071DC1C /* MarkupFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkupFormatterTest.swift; sourceTree = "<group>"; };
 		63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingAppDelegate.swift; sourceTree = "<group>"; };
+		63DB06C025A091710071DC1C /* old-mnemonics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "old-mnemonics.json"; sourceTree = "<group>"; };
+		63DB06D125A091FF0071DC1C /* Subject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63E9A8CA210D6CC000418CE1 /* SubjectsByLevelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsByLevelViewController.h; sourceTree = "<group>"; };
 		63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsByLevelViewController.m; sourceTree = "<group>"; };
@@ -483,11 +489,12 @@
 		41897D922372287F00F6A0B7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				63EEFEBC1FC45C440070C05F /* Assets.xcassets */,
+				BB2909A5217FAF8B00B1816F /* fonts */,
 				63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */,
 				63E903C51FE643BF00D73C3A /* Main.storyboard */,
-				BB2909A5217FAF8B00B1816F /* fonts */,
+				63DB06C025A091710071DC1C /* old-mnemonics.json */,
 				489894D423670CB000A20AF8 /* Tsurukame.entitlements */,
-				63EEFEBC1FC45C440070C05F /* Assets.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -690,8 +697,9 @@
 			isa = PBXGroup;
 			children = (
 				63A1678F253AD8E600B5BCD6 /* APIClient.swift */,
-				63A16790253AD8E600B5BCD6 /* WebClient.swift */,
 				63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */,
+				63DB06D125A091FF0071DC1C /* Subject.swift */,
+				63A16790253AD8E600B5BCD6 /* WebClient.swift */,
 			);
 			path = WaniKaniAPI;
 			sourceTree = "<group>";
@@ -1021,6 +1029,7 @@
 				63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */,
 				63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */,
 				63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */,
+				63DB06C125A091710071DC1C /* old-mnemonics.json in Resources */,
 				63BFA78B218EB1B30058E885 /* TKMDownloadModelItem.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1055,6 +1064,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63DB06C225A091710071DC1C /* old-mnemonics.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1280,6 +1290,7 @@
 				633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */,
 				63A16772253AD8AE00B5BCD6 /* NSRegularExpression+Matches.swift in Sources */,
 				631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
+				63DB06D225A091FF0071DC1C /* Subject.swift in Sources */,
 				6335B4E723CF14280071671E /* Screenshotter.swift in Sources */,
 				63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */,
 				636A63DE238A107A00902269 /* CurrentLevelChartItem.swift in Sources */,
@@ -1390,6 +1401,7 @@
 				631CAD6A234B0F88008CEA73 /* DataLoader.swift in Sources */,
 				63996B2C2594383C00149414 /* WebClient.swift in Sources */,
 				63DB064B25A03BD50071DC1C /* MarkupFormatterTest.swift in Sources */,
+				63DB06D325A091FF0071DC1C /* Subject.swift in Sources */,
 				63996B4C259438E100149414 /* ProtobufExtensions.m in Sources */,
 				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
 				63996B542594390300149414 /* GPBPrimitiveArray+Sequence.swift in Sources */,
