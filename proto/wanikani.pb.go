@@ -249,7 +249,7 @@ func (x Vocabulary_PartOfSpeech) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Vocabulary_PartOfSpeech.Descriptor instead.
 func (Vocabulary_PartOfSpeech) EnumDescriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{5, 0}
+	return file_wanikani_proto_rawDescGZIP(), []int{4, 0}
 }
 
 type Subject_Type int32
@@ -301,7 +301,7 @@ func (x Subject_Type) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Subject_Type.Descriptor instead.
 func (Subject_Type) EnumDescriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{6, 0}
+	return file_wanikani_proto_rawDescGZIP(), []int{5, 0}
 }
 
 type FormattedText_Format int32
@@ -368,7 +368,7 @@ func (x FormattedText_Format) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use FormattedText_Format.Descriptor instead.
 func (FormattedText_Format) EnumDescriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{12, 0}
+	return file_wanikani_proto_rawDescGZIP(), []int{11, 0}
 }
 
 type Meaning struct {
@@ -562,77 +562,22 @@ func (x *Radical) GetHasCharacterImageFile() bool {
 	return false
 }
 
-type VisuallySimilarKanji struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id    *int32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Score *int32 `protobuf:"varint,2,opt,name=score,proto3,oneof" json:"score,omitempty"` // From 0 to 1000.
-}
-
-func (x *VisuallySimilarKanji) Reset() {
-	*x = VisuallySimilarKanji{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *VisuallySimilarKanji) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*VisuallySimilarKanji) ProtoMessage() {}
-
-func (x *VisuallySimilarKanji) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use VisuallySimilarKanji.ProtoReflect.Descriptor instead.
-func (*VisuallySimilarKanji) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *VisuallySimilarKanji) GetId() int32 {
-	if x != nil && x.Id != nil {
-		return *x.Id
-	}
-	return 0
-}
-
-func (x *VisuallySimilarKanji) GetScore() int32 {
-	if x != nil && x.Score != nil {
-		return *x.Score
-	}
-	return 0
-}
-
 type Kanji struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	MeaningMnemonic      *string                 `protobuf:"bytes,1,opt,name=meaning_mnemonic,json=meaningMnemonic,proto3,oneof" json:"meaning_mnemonic,omitempty"`
-	MeaningHint          *string                 `protobuf:"bytes,2,opt,name=meaning_hint,json=meaningHint,proto3,oneof" json:"meaning_hint,omitempty"`
-	ReadingMnemonic      *string                 `protobuf:"bytes,3,opt,name=reading_mnemonic,json=readingMnemonic,proto3,oneof" json:"reading_mnemonic,omitempty"`
-	ReadingHint          *string                 `protobuf:"bytes,4,opt,name=reading_hint,json=readingHint,proto3,oneof" json:"reading_hint,omitempty"`
-	VisuallySimilarKanji []*VisuallySimilarKanji `protobuf:"bytes,9,rep,name=visually_similar_kanji,json=visuallySimilarKanji,proto3" json:"visually_similar_kanji,omitempty"`
+	MeaningMnemonic      *string `protobuf:"bytes,1,opt,name=meaning_mnemonic,json=meaningMnemonic,proto3,oneof" json:"meaning_mnemonic,omitempty"`
+	MeaningHint          *string `protobuf:"bytes,2,opt,name=meaning_hint,json=meaningHint,proto3,oneof" json:"meaning_hint,omitempty"`
+	ReadingMnemonic      *string `protobuf:"bytes,3,opt,name=reading_mnemonic,json=readingMnemonic,proto3,oneof" json:"reading_mnemonic,omitempty"`
+	ReadingHint          *string `protobuf:"bytes,4,opt,name=reading_hint,json=readingHint,proto3,oneof" json:"reading_hint,omitempty"`
+	VisuallySimilarKanji *string `protobuf:"bytes,10,opt,name=visually_similar_kanji,json=visuallySimilarKanji,proto3,oneof" json:"visually_similar_kanji,omitempty"`
 }
 
 func (x *Kanji) Reset() {
 	*x = Kanji{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[4]
+		mi := &file_wanikani_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -645,7 +590,7 @@ func (x *Kanji) String() string {
 func (*Kanji) ProtoMessage() {}
 
 func (x *Kanji) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[4]
+	mi := &file_wanikani_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -658,7 +603,7 @@ func (x *Kanji) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Kanji.ProtoReflect.Descriptor instead.
 func (*Kanji) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{4}
+	return file_wanikani_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Kanji) GetMeaningMnemonic() string {
@@ -689,11 +634,11 @@ func (x *Kanji) GetReadingHint() string {
 	return ""
 }
 
-func (x *Kanji) GetVisuallySimilarKanji() []*VisuallySimilarKanji {
-	if x != nil {
-		return x.VisuallySimilarKanji
+func (x *Kanji) GetVisuallySimilarKanji() string {
+	if x != nil && x.VisuallySimilarKanji != nil {
+		return *x.VisuallySimilarKanji
 	}
-	return nil
+	return ""
 }
 
 type Vocabulary struct {
@@ -711,7 +656,7 @@ type Vocabulary struct {
 func (x *Vocabulary) Reset() {
 	*x = Vocabulary{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[5]
+		mi := &file_wanikani_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -724,7 +669,7 @@ func (x *Vocabulary) String() string {
 func (*Vocabulary) ProtoMessage() {}
 
 func (x *Vocabulary) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[5]
+	mi := &file_wanikani_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -737,7 +682,7 @@ func (x *Vocabulary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Vocabulary.ProtoReflect.Descriptor instead.
 func (*Vocabulary) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{5}
+	return file_wanikani_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Vocabulary) GetMeaningExplanation() string {
@@ -797,7 +742,7 @@ type Subject struct {
 func (x *Subject) Reset() {
 	*x = Subject{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[6]
+		mi := &file_wanikani_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -810,7 +755,7 @@ func (x *Subject) String() string {
 func (*Subject) ProtoMessage() {}
 
 func (x *Subject) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[6]
+	mi := &file_wanikani_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -823,7 +768,7 @@ func (x *Subject) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Subject.ProtoReflect.Descriptor instead.
 func (*Subject) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{6}
+	return file_wanikani_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Subject) GetId() int32 {
@@ -928,7 +873,7 @@ type Assignment struct {
 func (x *Assignment) Reset() {
 	*x = Assignment{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[7]
+		mi := &file_wanikani_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -941,7 +886,7 @@ func (x *Assignment) String() string {
 func (*Assignment) ProtoMessage() {}
 
 func (x *Assignment) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[7]
+	mi := &file_wanikani_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -954,7 +899,7 @@ func (x *Assignment) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Assignment.ProtoReflect.Descriptor instead.
 func (*Assignment) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{7}
+	return file_wanikani_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Assignment) GetId() int32 {
@@ -1030,7 +975,7 @@ type Progress struct {
 func (x *Progress) Reset() {
 	*x = Progress{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[8]
+		mi := &file_wanikani_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1043,7 +988,7 @@ func (x *Progress) String() string {
 func (*Progress) ProtoMessage() {}
 
 func (x *Progress) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[8]
+	mi := &file_wanikani_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1056,7 +1001,7 @@ func (x *Progress) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Progress.ProtoReflect.Descriptor instead.
 func (*Progress) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{8}
+	return file_wanikani_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Progress) GetMeaningWrong() bool {
@@ -1124,7 +1069,7 @@ type StudyMaterials struct {
 func (x *StudyMaterials) Reset() {
 	*x = StudyMaterials{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[9]
+		mi := &file_wanikani_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1137,7 +1082,7 @@ func (x *StudyMaterials) String() string {
 func (*StudyMaterials) ProtoMessage() {}
 
 func (x *StudyMaterials) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[9]
+	mi := &file_wanikani_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1150,7 +1095,7 @@ func (x *StudyMaterials) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StudyMaterials.ProtoReflect.Descriptor instead.
 func (*StudyMaterials) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{9}
+	return file_wanikani_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *StudyMaterials) GetId() int32 {
@@ -1213,7 +1158,7 @@ type User struct {
 func (x *User) Reset() {
 	*x = User{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[10]
+		mi := &file_wanikani_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1226,7 +1171,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[10]
+	mi := &file_wanikani_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1239,7 +1184,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{10}
+	return file_wanikani_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *User) GetUsername() string {
@@ -1309,7 +1254,7 @@ type SubjectOverrides struct {
 func (x *SubjectOverrides) Reset() {
 	*x = SubjectOverrides{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[11]
+		mi := &file_wanikani_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1322,7 +1267,7 @@ func (x *SubjectOverrides) String() string {
 func (*SubjectOverrides) ProtoMessage() {}
 
 func (x *SubjectOverrides) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[11]
+	mi := &file_wanikani_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1335,7 +1280,7 @@ func (x *SubjectOverrides) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubjectOverrides.ProtoReflect.Descriptor instead.
 func (*SubjectOverrides) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{11}
+	return file_wanikani_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *SubjectOverrides) GetSubject() []*Subject {
@@ -1358,7 +1303,7 @@ type FormattedText struct {
 func (x *FormattedText) Reset() {
 	*x = FormattedText{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[12]
+		mi := &file_wanikani_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1371,7 +1316,7 @@ func (x *FormattedText) String() string {
 func (*FormattedText) ProtoMessage() {}
 
 func (x *FormattedText) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[12]
+	mi := &file_wanikani_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1384,7 +1329,7 @@ func (x *FormattedText) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FormattedText.ProtoReflect.Descriptor instead.
 func (*FormattedText) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{12}
+	return file_wanikani_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *FormattedText) GetFormat() []FormattedText_Format {
@@ -1427,7 +1372,7 @@ type DataFileHeader struct {
 func (x *DataFileHeader) Reset() {
 	*x = DataFileHeader{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[13]
+		mi := &file_wanikani_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1440,7 +1385,7 @@ func (x *DataFileHeader) String() string {
 func (*DataFileHeader) ProtoMessage() {}
 
 func (x *DataFileHeader) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[13]
+	mi := &file_wanikani_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1453,7 +1398,7 @@ func (x *DataFileHeader) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DataFileHeader.ProtoReflect.Descriptor instead.
 func (*DataFileHeader) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{13}
+	return file_wanikani_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *DataFileHeader) GetSubjectsByLevel() []*SubjectsByLevel {
@@ -1497,7 +1442,7 @@ type SubjectsByLevel struct {
 func (x *SubjectsByLevel) Reset() {
 	*x = SubjectsByLevel{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[14]
+		mi := &file_wanikani_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1510,7 +1455,7 @@ func (x *SubjectsByLevel) String() string {
 func (*SubjectsByLevel) ProtoMessage() {}
 
 func (x *SubjectsByLevel) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[14]
+	mi := &file_wanikani_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1523,7 +1468,7 @@ func (x *SubjectsByLevel) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubjectsByLevel.ProtoReflect.Descriptor instead.
 func (*SubjectsByLevel) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{14}
+	return file_wanikani_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *SubjectsByLevel) GetRadicals() []int32 {
@@ -1565,7 +1510,7 @@ type Level struct {
 func (x *Level) Reset() {
 	*x = Level{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[15]
+		mi := &file_wanikani_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1578,7 +1523,7 @@ func (x *Level) String() string {
 func (*Level) ProtoMessage() {}
 
 func (x *Level) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[15]
+	mi := &file_wanikani_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1591,7 +1536,7 @@ func (x *Level) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Level.ProtoReflect.Descriptor instead.
 func (*Level) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{15}
+	return file_wanikani_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *Level) GetId() int32 {
@@ -1661,7 +1606,7 @@ type DeprecatedMnemonicFile struct {
 func (x *DeprecatedMnemonicFile) Reset() {
 	*x = DeprecatedMnemonicFile{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[16]
+		mi := &file_wanikani_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1674,7 +1619,7 @@ func (x *DeprecatedMnemonicFile) String() string {
 func (*DeprecatedMnemonicFile) ProtoMessage() {}
 
 func (x *DeprecatedMnemonicFile) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[16]
+	mi := &file_wanikani_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1687,7 +1632,7 @@ func (x *DeprecatedMnemonicFile) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeprecatedMnemonicFile.ProtoReflect.Descriptor instead.
 func (*DeprecatedMnemonicFile) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{16}
+	return file_wanikani_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *DeprecatedMnemonicFile) GetSubjects() []*DeprecatedMnemonicFile_Subject {
@@ -1709,7 +1654,7 @@ type Vocabulary_Sentence struct {
 func (x *Vocabulary_Sentence) Reset() {
 	*x = Vocabulary_Sentence{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[17]
+		mi := &file_wanikani_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1722,7 +1667,7 @@ func (x *Vocabulary_Sentence) String() string {
 func (*Vocabulary_Sentence) ProtoMessage() {}
 
 func (x *Vocabulary_Sentence) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[17]
+	mi := &file_wanikani_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1735,7 +1680,7 @@ func (x *Vocabulary_Sentence) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Vocabulary_Sentence.ProtoReflect.Descriptor instead.
 func (*Vocabulary_Sentence) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{5, 0}
+	return file_wanikani_proto_rawDescGZIP(), []int{4, 0}
 }
 
 func (x *Vocabulary_Sentence) GetJapanese() string {
@@ -1764,7 +1709,7 @@ type DeprecatedMnemonicFile_Subject struct {
 func (x *DeprecatedMnemonicFile_Subject) Reset() {
 	*x = DeprecatedMnemonicFile_Subject{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_wanikani_proto_msgTypes[18]
+		mi := &file_wanikani_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1777,7 +1722,7 @@ func (x *DeprecatedMnemonicFile_Subject) String() string {
 func (*DeprecatedMnemonicFile_Subject) ProtoMessage() {}
 
 func (x *DeprecatedMnemonicFile_Subject) ProtoReflect() protoreflect.Message {
-	mi := &file_wanikani_proto_msgTypes[18]
+	mi := &file_wanikani_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1790,7 +1735,7 @@ func (x *DeprecatedMnemonicFile_Subject) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeprecatedMnemonicFile_Subject.ProtoReflect.Descriptor instead.
 func (*DeprecatedMnemonicFile_Subject) Descriptor() ([]byte, []int) {
-	return file_wanikani_proto_rawDescGZIP(), []int{16, 0}
+	return file_wanikani_proto_rawDescGZIP(), []int{15, 0}
 }
 
 func (x *DeprecatedMnemonicFile_Subject) GetId() int32 {
@@ -1857,35 +1802,30 @@ var file_wanikani_proto_rawDesc = []byte{
 	0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63, 0x42, 0x1b, 0x0a, 0x19, 0x5f, 0x68, 0x61, 0x73, 0x5f,
 	0x63, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x5f,
 	0x66, 0x69, 0x6c, 0x65, 0x4a, 0x04, 0x08, 0x04, 0x10, 0x05, 0x4a, 0x04, 0x08, 0x06, 0x10, 0x07,
-	0x22, 0x57, 0x0a, 0x14, 0x56, 0x69, 0x73, 0x75, 0x61, 0x6c, 0x6c, 0x79, 0x53, 0x69, 0x6d, 0x69,
-	0x6c, 0x61, 0x72, 0x4b, 0x61, 0x6e, 0x6a, 0x69, 0x12, 0x13, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x05, 0x48, 0x00, 0x52, 0x02, 0x69, 0x64, 0x88, 0x01, 0x01, 0x12, 0x19, 0x0a,
-	0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x48, 0x01, 0x52, 0x05,
-	0x73, 0x63, 0x6f, 0x72, 0x65, 0x88, 0x01, 0x01, 0x42, 0x05, 0x0a, 0x03, 0x5f, 0x69, 0x64, 0x42,
-	0x08, 0x0a, 0x06, 0x5f, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x22, 0xee, 0x02, 0x0a, 0x05, 0x4b, 0x61,
-	0x6e, 0x6a, 0x69, 0x12, 0x2e, 0x0a, 0x10, 0x6d, 0x65, 0x61, 0x6e, 0x69, 0x6e, 0x67, 0x5f, 0x6d,
-	0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52,
-	0x0f, 0x6d, 0x65, 0x61, 0x6e, 0x69, 0x6e, 0x67, 0x4d, 0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63,
-	0x88, 0x01, 0x01, 0x12, 0x26, 0x0a, 0x0c, 0x6d, 0x65, 0x61, 0x6e, 0x69, 0x6e, 0x67, 0x5f, 0x68,
-	0x69, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x48, 0x01, 0x52, 0x0b, 0x6d, 0x65, 0x61,
-	0x6e, 0x69, 0x6e, 0x67, 0x48, 0x69, 0x6e, 0x74, 0x88, 0x01, 0x01, 0x12, 0x2e, 0x0a, 0x10, 0x72,
-	0x65, 0x61, 0x64, 0x69, 0x6e, 0x67, 0x5f, 0x6d, 0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x09, 0x48, 0x02, 0x52, 0x0f, 0x72, 0x65, 0x61, 0x64, 0x69, 0x6e, 0x67,
-	0x4d, 0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63, 0x88, 0x01, 0x01, 0x12, 0x26, 0x0a, 0x0c, 0x72,
-	0x65, 0x61, 0x64, 0x69, 0x6e, 0x67, 0x5f, 0x68, 0x69, 0x6e, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28,
-	0x09, 0x48, 0x03, 0x52, 0x0b, 0x72, 0x65, 0x61, 0x64, 0x69, 0x6e, 0x67, 0x48, 0x69, 0x6e, 0x74,
-	0x88, 0x01, 0x01, 0x12, 0x51, 0x0a, 0x16, 0x76, 0x69, 0x73, 0x75, 0x61, 0x6c, 0x6c, 0x79, 0x5f,
-	0x73, 0x69, 0x6d, 0x69, 0x6c, 0x61, 0x72, 0x5f, 0x6b, 0x61, 0x6e, 0x6a, 0x69, 0x18, 0x09, 0x20,
-	0x03, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x56, 0x69, 0x73, 0x75,
-	0x61, 0x6c, 0x6c, 0x79, 0x53, 0x69, 0x6d, 0x69, 0x6c, 0x61, 0x72, 0x4b, 0x61, 0x6e, 0x6a, 0x69,
-	0x52, 0x14, 0x76, 0x69, 0x73, 0x75, 0x61, 0x6c, 0x6c, 0x79, 0x53, 0x69, 0x6d, 0x69, 0x6c, 0x61,
-	0x72, 0x4b, 0x61, 0x6e, 0x6a, 0x69, 0x42, 0x13, 0x0a, 0x11, 0x5f, 0x6d, 0x65, 0x61, 0x6e, 0x69,
-	0x6e, 0x67, 0x5f, 0x6d, 0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63, 0x42, 0x0f, 0x0a, 0x0d, 0x5f,
-	0x6d, 0x65, 0x61, 0x6e, 0x69, 0x6e, 0x67, 0x5f, 0x68, 0x69, 0x6e, 0x74, 0x42, 0x13, 0x0a, 0x11,
-	0x5f, 0x72, 0x65, 0x61, 0x64, 0x69, 0x6e, 0x67, 0x5f, 0x6d, 0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69,
-	0x63, 0x42, 0x0f, 0x0a, 0x0d, 0x5f, 0x72, 0x65, 0x61, 0x64, 0x69, 0x6e, 0x67, 0x5f, 0x68, 0x69,
-	0x6e, 0x74, 0x4a, 0x04, 0x08, 0x05, 0x10, 0x06, 0x4a, 0x04, 0x08, 0x06, 0x10, 0x07, 0x4a, 0x04,
-	0x08, 0x07, 0x10, 0x08, 0x4a, 0x04, 0x08, 0x08, 0x10, 0x09, 0x22, 0x90, 0x06, 0x0a, 0x0a, 0x56,
+	0x22, 0xf7, 0x02, 0x0a, 0x05, 0x4b, 0x61, 0x6e, 0x6a, 0x69, 0x12, 0x2e, 0x0a, 0x10, 0x6d, 0x65,
+	0x61, 0x6e, 0x69, 0x6e, 0x67, 0x5f, 0x6d, 0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x0f, 0x6d, 0x65, 0x61, 0x6e, 0x69, 0x6e, 0x67, 0x4d,
+	0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63, 0x88, 0x01, 0x01, 0x12, 0x26, 0x0a, 0x0c, 0x6d, 0x65,
+	0x61, 0x6e, 0x69, 0x6e, 0x67, 0x5f, 0x68, 0x69, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x48, 0x01, 0x52, 0x0b, 0x6d, 0x65, 0x61, 0x6e, 0x69, 0x6e, 0x67, 0x48, 0x69, 0x6e, 0x74, 0x88,
+	0x01, 0x01, 0x12, 0x2e, 0x0a, 0x10, 0x72, 0x65, 0x61, 0x64, 0x69, 0x6e, 0x67, 0x5f, 0x6d, 0x6e,
+	0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x48, 0x02, 0x52, 0x0f,
+	0x72, 0x65, 0x61, 0x64, 0x69, 0x6e, 0x67, 0x4d, 0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63, 0x88,
+	0x01, 0x01, 0x12, 0x26, 0x0a, 0x0c, 0x72, 0x65, 0x61, 0x64, 0x69, 0x6e, 0x67, 0x5f, 0x68, 0x69,
+	0x6e, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x48, 0x03, 0x52, 0x0b, 0x72, 0x65, 0x61, 0x64,
+	0x69, 0x6e, 0x67, 0x48, 0x69, 0x6e, 0x74, 0x88, 0x01, 0x01, 0x12, 0x39, 0x0a, 0x16, 0x76, 0x69,
+	0x73, 0x75, 0x61, 0x6c, 0x6c, 0x79, 0x5f, 0x73, 0x69, 0x6d, 0x69, 0x6c, 0x61, 0x72, 0x5f, 0x6b,
+	0x61, 0x6e, 0x6a, 0x69, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x48, 0x04, 0x52, 0x14, 0x76, 0x69,
+	0x73, 0x75, 0x61, 0x6c, 0x6c, 0x79, 0x53, 0x69, 0x6d, 0x69, 0x6c, 0x61, 0x72, 0x4b, 0x61, 0x6e,
+	0x6a, 0x69, 0x88, 0x01, 0x01, 0x42, 0x13, 0x0a, 0x11, 0x5f, 0x6d, 0x65, 0x61, 0x6e, 0x69, 0x6e,
+	0x67, 0x5f, 0x6d, 0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63, 0x42, 0x0f, 0x0a, 0x0d, 0x5f, 0x6d,
+	0x65, 0x61, 0x6e, 0x69, 0x6e, 0x67, 0x5f, 0x68, 0x69, 0x6e, 0x74, 0x42, 0x13, 0x0a, 0x11, 0x5f,
+	0x72, 0x65, 0x61, 0x64, 0x69, 0x6e, 0x67, 0x5f, 0x6d, 0x6e, 0x65, 0x6d, 0x6f, 0x6e, 0x69, 0x63,
+	0x42, 0x0f, 0x0a, 0x0d, 0x5f, 0x72, 0x65, 0x61, 0x64, 0x69, 0x6e, 0x67, 0x5f, 0x68, 0x69, 0x6e,
+	0x74, 0x42, 0x19, 0x0a, 0x17, 0x5f, 0x76, 0x69, 0x73, 0x75, 0x61, 0x6c, 0x6c, 0x79, 0x5f, 0x73,
+	0x69, 0x6d, 0x69, 0x6c, 0x61, 0x72, 0x5f, 0x6b, 0x61, 0x6e, 0x6a, 0x69, 0x4a, 0x04, 0x08, 0x05,
+	0x10, 0x06, 0x4a, 0x04, 0x08, 0x06, 0x10, 0x07, 0x4a, 0x04, 0x08, 0x07, 0x10, 0x08, 0x4a, 0x04,
+	0x08, 0x08, 0x10, 0x09, 0x4a, 0x04, 0x08, 0x09, 0x10, 0x0a, 0x22, 0x90, 0x06, 0x0a, 0x0a, 0x56,
 	0x6f, 0x63, 0x61, 0x62, 0x75, 0x6c, 0x61, 0x72, 0x79, 0x12, 0x34, 0x0a, 0x13, 0x6d, 0x65, 0x61,
 	0x6e, 0x69, 0x6e, 0x67, 0x5f, 0x65, 0x78, 0x70, 0x6c, 0x61, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x12, 0x6d, 0x65, 0x61, 0x6e, 0x69, 0x6e,
@@ -2182,7 +2122,7 @@ func file_wanikani_proto_rawDescGZIP() []byte {
 }
 
 var file_wanikani_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_wanikani_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_wanikani_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_wanikani_proto_goTypes = []interface{}{
 	(Meaning_Type)(0),                      // 0: proto.Meaning.Type
 	(Reading_Type)(0),                      // 1: proto.Reading.Type
@@ -2192,46 +2132,44 @@ var file_wanikani_proto_goTypes = []interface{}{
 	(*Meaning)(nil),                        // 5: proto.Meaning
 	(*Reading)(nil),                        // 6: proto.Reading
 	(*Radical)(nil),                        // 7: proto.Radical
-	(*VisuallySimilarKanji)(nil),           // 8: proto.VisuallySimilarKanji
-	(*Kanji)(nil),                          // 9: proto.Kanji
-	(*Vocabulary)(nil),                     // 10: proto.Vocabulary
-	(*Subject)(nil),                        // 11: proto.Subject
-	(*Assignment)(nil),                     // 12: proto.Assignment
-	(*Progress)(nil),                       // 13: proto.Progress
-	(*StudyMaterials)(nil),                 // 14: proto.StudyMaterials
-	(*User)(nil),                           // 15: proto.User
-	(*SubjectOverrides)(nil),               // 16: proto.SubjectOverrides
-	(*FormattedText)(nil),                  // 17: proto.FormattedText
-	(*DataFileHeader)(nil),                 // 18: proto.DataFileHeader
-	(*SubjectsByLevel)(nil),                // 19: proto.SubjectsByLevel
-	(*Level)(nil),                          // 20: proto.Level
-	(*DeprecatedMnemonicFile)(nil),         // 21: proto.DeprecatedMnemonicFile
-	(*Vocabulary_Sentence)(nil),            // 22: proto.Vocabulary.Sentence
-	(*DeprecatedMnemonicFile_Subject)(nil), // 23: proto.DeprecatedMnemonicFile.Subject
+	(*Kanji)(nil),                          // 8: proto.Kanji
+	(*Vocabulary)(nil),                     // 9: proto.Vocabulary
+	(*Subject)(nil),                        // 10: proto.Subject
+	(*Assignment)(nil),                     // 11: proto.Assignment
+	(*Progress)(nil),                       // 12: proto.Progress
+	(*StudyMaterials)(nil),                 // 13: proto.StudyMaterials
+	(*User)(nil),                           // 14: proto.User
+	(*SubjectOverrides)(nil),               // 15: proto.SubjectOverrides
+	(*FormattedText)(nil),                  // 16: proto.FormattedText
+	(*DataFileHeader)(nil),                 // 17: proto.DataFileHeader
+	(*SubjectsByLevel)(nil),                // 18: proto.SubjectsByLevel
+	(*Level)(nil),                          // 19: proto.Level
+	(*DeprecatedMnemonicFile)(nil),         // 20: proto.DeprecatedMnemonicFile
+	(*Vocabulary_Sentence)(nil),            // 21: proto.Vocabulary.Sentence
+	(*DeprecatedMnemonicFile_Subject)(nil), // 22: proto.DeprecatedMnemonicFile.Subject
 }
 var file_wanikani_proto_depIdxs = []int32{
 	0,  // 0: proto.Meaning.type:type_name -> proto.Meaning.Type
 	1,  // 1: proto.Reading.type:type_name -> proto.Reading.Type
-	8,  // 2: proto.Kanji.visually_similar_kanji:type_name -> proto.VisuallySimilarKanji
-	22, // 3: proto.Vocabulary.sentences:type_name -> proto.Vocabulary.Sentence
-	2,  // 4: proto.Vocabulary.parts_of_speech:type_name -> proto.Vocabulary.PartOfSpeech
-	6,  // 5: proto.Subject.readings:type_name -> proto.Reading
-	5,  // 6: proto.Subject.meanings:type_name -> proto.Meaning
-	7,  // 7: proto.Subject.radical:type_name -> proto.Radical
-	9,  // 8: proto.Subject.kanji:type_name -> proto.Kanji
-	10, // 9: proto.Subject.vocabulary:type_name -> proto.Vocabulary
-	3,  // 10: proto.Assignment.subject_type:type_name -> proto.Subject.Type
-	12, // 11: proto.Progress.assignment:type_name -> proto.Assignment
-	11, // 12: proto.SubjectOverrides.subject:type_name -> proto.Subject
-	4,  // 13: proto.FormattedText.format:type_name -> proto.FormattedText.Format
-	19, // 14: proto.DataFileHeader.subjects_by_level:type_name -> proto.SubjectsByLevel
-	23, // 15: proto.DeprecatedMnemonicFile.subjects:type_name -> proto.DeprecatedMnemonicFile.Subject
-	17, // 16: proto.DeprecatedMnemonicFile.Subject.formatted_deprecated_mnemonic:type_name -> proto.FormattedText
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	21, // 2: proto.Vocabulary.sentences:type_name -> proto.Vocabulary.Sentence
+	2,  // 3: proto.Vocabulary.parts_of_speech:type_name -> proto.Vocabulary.PartOfSpeech
+	6,  // 4: proto.Subject.readings:type_name -> proto.Reading
+	5,  // 5: proto.Subject.meanings:type_name -> proto.Meaning
+	7,  // 6: proto.Subject.radical:type_name -> proto.Radical
+	8,  // 7: proto.Subject.kanji:type_name -> proto.Kanji
+	9,  // 8: proto.Subject.vocabulary:type_name -> proto.Vocabulary
+	3,  // 9: proto.Assignment.subject_type:type_name -> proto.Subject.Type
+	11, // 10: proto.Progress.assignment:type_name -> proto.Assignment
+	10, // 11: proto.SubjectOverrides.subject:type_name -> proto.Subject
+	4,  // 12: proto.FormattedText.format:type_name -> proto.FormattedText.Format
+	18, // 13: proto.DataFileHeader.subjects_by_level:type_name -> proto.SubjectsByLevel
+	22, // 14: proto.DeprecatedMnemonicFile.subjects:type_name -> proto.DeprecatedMnemonicFile.Subject
+	16, // 15: proto.DeprecatedMnemonicFile.Subject.formatted_deprecated_mnemonic:type_name -> proto.FormattedText
+	16, // [16:16] is the sub-list for method output_type
+	16, // [16:16] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_wanikani_proto_init() }
@@ -2277,18 +2215,6 @@ func file_wanikani_proto_init() {
 			}
 		}
 		file_wanikani_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*VisuallySimilarKanji); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_wanikani_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Kanji); i {
 			case 0:
 				return &v.state
@@ -2300,7 +2226,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Vocabulary); i {
 			case 0:
 				return &v.state
@@ -2312,7 +2238,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Subject); i {
 			case 0:
 				return &v.state
@@ -2324,7 +2250,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Assignment); i {
 			case 0:
 				return &v.state
@@ -2336,7 +2262,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Progress); i {
 			case 0:
 				return &v.state
@@ -2348,7 +2274,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*StudyMaterials); i {
 			case 0:
 				return &v.state
@@ -2360,7 +2286,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*User); i {
 			case 0:
 				return &v.state
@@ -2372,7 +2298,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SubjectOverrides); i {
 			case 0:
 				return &v.state
@@ -2384,7 +2310,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FormattedText); i {
 			case 0:
 				return &v.state
@@ -2396,7 +2322,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DataFileHeader); i {
 			case 0:
 				return &v.state
@@ -2408,7 +2334,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SubjectsByLevel); i {
 			case 0:
 				return &v.state
@@ -2420,7 +2346,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Level); i {
 			case 0:
 				return &v.state
@@ -2432,7 +2358,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeprecatedMnemonicFile); i {
 			case 0:
 				return &v.state
@@ -2444,7 +2370,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Vocabulary_Sentence); i {
 			case 0:
 				return &v.state
@@ -2456,7 +2382,7 @@ func file_wanikani_proto_init() {
 				return nil
 			}
 		}
-		file_wanikani_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+		file_wanikani_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeprecatedMnemonicFile_Subject); i {
 			case 0:
 				return &v.state
@@ -2479,18 +2405,17 @@ func file_wanikani_proto_init() {
 	file_wanikani_proto_msgTypes[7].OneofWrappers = []interface{}{}
 	file_wanikani_proto_msgTypes[8].OneofWrappers = []interface{}{}
 	file_wanikani_proto_msgTypes[9].OneofWrappers = []interface{}{}
-	file_wanikani_proto_msgTypes[10].OneofWrappers = []interface{}{}
-	file_wanikani_proto_msgTypes[12].OneofWrappers = []interface{}{}
-	file_wanikani_proto_msgTypes[15].OneofWrappers = []interface{}{}
+	file_wanikani_proto_msgTypes[11].OneofWrappers = []interface{}{}
+	file_wanikani_proto_msgTypes[14].OneofWrappers = []interface{}{}
+	file_wanikani_proto_msgTypes[16].OneofWrappers = []interface{}{}
 	file_wanikani_proto_msgTypes[17].OneofWrappers = []interface{}{}
-	file_wanikani_proto_msgTypes[18].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_wanikani_proto_rawDesc,
 			NumEnums:      5,
-			NumMessages:   19,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

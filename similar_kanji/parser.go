@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package similar_kanji
+package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"sort"
 
-	"github.com/golang/protobuf/proto"
+	"github.com/davidsansome/tsurukame/utils"
+)
 
-	"github.com/davidsansome/tsurukame/encoding"
-
-	pb "github.com/davidsansome/tsurukame/proto"
+const (
+	scoreThreshold = 0.4
 )
 
 type entry struct {
@@ -38,26 +39,13 @@ func (a entryList) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a entryList) Less(i, j int) bool { return a[i].Score > a[j].Score }
 
 type Index struct {
-	kanjiSubjectIDs map[string]int
-	data            map[string]entryList
+	data map[string]entryList
 }
 
-func Create(reader encoding.Reader) (*Index, error) {
-	idx := &Index{
-		kanjiSubjectIDs: make(map[string]int),
-		data:            make(map[string]entryList),
+func Create() *Index {
+	return &Index{
+		data: make(map[string]entryList),
 	}
-
-	// Index Kanji by ID so we can look them up in the similar kanji file.
-	if err := encoding.ForEachSubject(reader, func(id int, spb *pb.Subject) error {
-		if spb.Kanji != nil {
-			idx.kanjiSubjectIDs[spb.GetJapanese()] = int(spb.GetId())
-		}
-		return nil
-	}); err != nil {
-		return nil, err
-	}
-	return idx, nil
 }
 
 func (idx *Index) Add(kanji, similarKanji string, score float32) {
@@ -87,7 +75,9 @@ func (idx *Index) AddScoredFile(filename string) error {
 
 	for kanji, entries := range data {
 		for _, entry := range entries {
-			idx.Add(kanji, entry.Kan, entry.Score)
+			if entry.Score > scoreThreshold {
+				idx.Add(kanji, entry.Kan, entry.Score)
+			}
 		}
 	}
 	return nil
@@ -117,17 +107,26 @@ func (idx *Index) Sort() {
 	}
 }
 
-func (idx *Index) Lookup(kanji string) []*pb.VisuallySimilarKanji {
-	var ret []*pb.VisuallySimilarKanji
-	if entries, ok := idx.data[kanji]; ok {
-		for _, entry := range entries {
-			if id, ok := idx.kanjiSubjectIDs[entry.Kan]; ok {
-				ret = append(ret, &pb.VisuallySimilarKanji{
-					Id:    proto.Int32(int32(id)),
-					Score: proto.Int32(int32(entry.Score * 1000)),
-				})
-			}
+func main() {
+	idx := Create()
+	utils.Must(idx.AddUnscoredFile("from_keisei.json"))
+	utils.Must(idx.AddUnscoredFile("manual.json"))
+	utils.Must(idx.AddUnscoredFile("old_script.json"))
+	utils.Must(idx.AddScoredFile("stroke_edit_dist.json"))
+	utils.Must(idx.AddScoredFile("wk_niai_noto.json"))
+	utils.Must(idx.AddScoredFile("yl_radical.json"))
+	idx.Sort()
+
+	compact := map[string]string{}
+	for k, v := range idx.data {
+		var str string
+		for _, entry := range v {
+			str += entry.Kan
 		}
+		compact[k] = str
 	}
-	return ret
+
+	data, err := json.Marshal(compact)
+	utils.Must(err)
+	fmt.Println(string(data))
 }

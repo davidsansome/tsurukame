@@ -36,7 +36,6 @@ CF_EXTERN_C_BEGIN
 @class TKMReading;
 @class TKMSubject;
 @class TKMSubjectsByLevel;
-@class TKMVisuallySimilarKanji;
 @class TKMVocabulary;
 @class TKMVocabulary_Sentence;
 
@@ -297,24 +296,6 @@ GPB_FINAL @interface TKMRadical : GPBMessage
 @property(nonatomic, readwrite) BOOL hasHasCharacterImageFile;
 @end
 
-#pragma mark - TKMVisuallySimilarKanji
-
-typedef GPB_ENUM(TKMVisuallySimilarKanji_FieldNumber) {
-  TKMVisuallySimilarKanji_FieldNumber_Id_p = 1,
-  TKMVisuallySimilarKanji_FieldNumber_Score = 2,
-};
-
-GPB_FINAL @interface TKMVisuallySimilarKanji : GPBMessage
-
-@property(nonatomic, readwrite) int32_t id_p;
-
-@property(nonatomic, readwrite) BOOL hasId_p;
-/** From 0 to 1000. */
-@property(nonatomic, readwrite) int32_t score;
-
-@property(nonatomic, readwrite) BOOL hasScore;
-@end
-
 #pragma mark - TKMKanji
 
 typedef GPB_ENUM(TKMKanji_FieldNumber) {
@@ -322,7 +303,7 @@ typedef GPB_ENUM(TKMKanji_FieldNumber) {
   TKMKanji_FieldNumber_MeaningHint = 2,
   TKMKanji_FieldNumber_ReadingMnemonic = 3,
   TKMKanji_FieldNumber_ReadingHint = 4,
-  TKMKanji_FieldNumber_VisuallySimilarKanjiArray = 9,
+  TKMKanji_FieldNumber_VisuallySimilarKanji = 10,
 };
 
 GPB_FINAL @interface TKMKanji : GPBMessage
@@ -343,9 +324,9 @@ GPB_FINAL @interface TKMKanji : GPBMessage
 /** Test to see if @c readingHint has been set. */
 @property(nonatomic, readwrite) BOOL hasReadingHint;
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMVisuallySimilarKanji*> *visuallySimilarKanjiArray;
-/** The number of items in @c visuallySimilarKanjiArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger visuallySimilarKanjiArray_Count;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *visuallySimilarKanji;
+/** Test to see if @c visuallySimilarKanji has been set. */
+@property(nonatomic, readwrite) BOOL hasVisuallySimilarKanji;
 
 @end
 

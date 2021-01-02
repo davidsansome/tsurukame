@@ -226,10 +226,13 @@ class LocalCachingClient: NSObject {
     """
     CREATE TABLE subjects (
       id INTEGER PRIMARY KEY,
+      japanese TEXT,
       level INTEGER,
       type INTEGER,
       pb BLOB
     );
+    CREATE INDEX idx_japanese ON subjects (japanese);
+    CREATE INDEX idx_level ON subjects (level);
     ALTER TABLE sync ADD COLUMN subjects_updated_after TEXT;
     UPDATE sync SET subjects_updated_after = "";
     """,
@@ -465,6 +468,16 @@ class LocalCachingClient: NSObject {
   func getSubject(id: Int) -> TKMSubject? {
     db.inDatabase { db in
       let cursor = db.query("SELECT pb FROM subjects WHERE id = ?", args: [id])
+      if cursor.next() {
+        return cursor.proto(forColumnIndex: 0)
+      }
+      return nil
+    }
+  }
+
+  func getSubject(japanese: String) -> TKMSubject? {
+    db.inDatabase { db in
+      let cursor = db.query("SELECT pb FROM subjects WHERE japanese = ?", args: [japanese])
       if cursor.next() {
         return cursor.proto(forColumnIndex: 0)
       }
@@ -832,10 +845,11 @@ class LocalCachingClient: NSObject {
       NSLog("Updated %d subjects at %@", subjects.count, updatedAt)
       self.db.inTransaction { db in
         for subject in subjects {
-          db.mustExecuteUpdate("REPLACE INTO subjects (id, level, type, pb) " +
-            "VALUES (?, ?, ?, ?)",
+          db.mustExecuteUpdate("REPLACE INTO subjects (id, japanese, level, type, pb) " +
+            "VALUES (?, ?, ?, ?, ?)",
             args: [
               subject.id_p,
+              subject.japanese!,
               subject.level,
               subject.subjectType.rawValue,
               subject.data()!,

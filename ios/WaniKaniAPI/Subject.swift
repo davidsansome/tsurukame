@@ -12,17 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-private let kDeprecatedMnemonics: [Int: String] = {
-  let path = Bundle.main.path(forResource: "old-mnemonics.json", ofType: nil)
+private func jsonFromBundle<T>(_ fileName: String) -> T {
+  let path = Bundle.main.path(forResource: fileName, ofType: nil)
   let data = try! Data(contentsOf: URL(fileURLWithPath: path!))
-  let obj = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: String]
+  return try! JSONSerialization.jsonObject(with: data, options: []) as! T
+}
+
+private let kDeprecatedMnemonics: [Int: String] = {
+  let data: [String: String] = jsonFromBundle("old-mnemonics.json")
 
   var ret = [Int: String]()
-  for (id, text) in obj {
+  for (id, text) in data {
     ret[Int(id)!] = text
   }
   return ret
 }()
+
+private let kVisuallySimilarKanji: [String: String] = jsonFromBundle("visually-similar-kanji.json")
 
 /** Response type for /subjects. */
 struct SubjectData: Codable {
@@ -143,6 +149,9 @@ struct SubjectData: Codable {
       ret.kanji.meaningHint = meaning_hint
       ret.kanji.readingMnemonic = reading_mnemonic
       ret.kanji.readingHint = reading_hint
+      if let visuallySimilarKanji = kVisuallySimilarKanji[ret.japanese] {
+        ret.kanji.visuallySimilarKanji = visuallySimilarKanji
+      }
 
     case "vocabulary":
       ret.vocabulary = TKMVocabulary()
@@ -158,7 +167,6 @@ struct SubjectData: Codable {
     }
 
     // TODO:
-    // - visually similar kanji
     // - order component subject IDs
     // - sort amalgamation subject IDs by level
 

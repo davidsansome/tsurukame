@@ -18,8 +18,6 @@ private let kSectionHeaderHeight: CGFloat = 38.0
 private let kSectionFooterHeight: CGFloat = 0.0
 private let kFontSize: CGFloat = 14.0
 
-private let kVisuallySimilarKanjiScoreThreshold = 400
-
 private let kMeaningSynonymColor = UIColor(red: 0.231, green: 0.6, blue: 0.988, alpha: 1)
 private let kFont = TKMStyle.japaneseFont(size: kFontSize)
 
@@ -190,14 +188,11 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   private func addSimilarKanji(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
     let currentLevel = services.localCachingClient!.getUserInfo()!.level
     var addedSection = false
-    for similar in subject.kanji.visuallySimilarKanjiArray as! [TKMVisuallySimilarKanji] {
-      if similar.score < kVisuallySimilarKanjiScoreThreshold {
+    for similar in subject.kanji.visuallySimilarKanji {
+      guard let subject = services.localCachingClient.getSubject(japanese: String(similar)) else {
         continue
       }
-      guard let subject = services.localCachingClient.getSubject(id: Int(similar.id_p)) else {
-        continue
-      }
-      if subject.level > currentLevel {
+      if subject.level > currentLevel || subject.subjectType != .kanji {
         continue
       }
       if !addedSection {

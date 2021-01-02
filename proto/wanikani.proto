@@ -63,20 +63,15 @@ message Radical {
   reserved 4, 6;
 }
 
-message VisuallySimilarKanji {
-  optional int32 id = 1;
-  optional int32 score = 2;  // From 0 to 1000.
-}
-
 message Kanji {
   optional string meaning_mnemonic = 1;
   optional string meaning_hint = 2;
   optional string reading_mnemonic = 3;
   optional string reading_hint = 4;
 
-  reserved 5, 6, 7, 8;
+  reserved 5, 6, 7, 8, 9;
 
-  repeated VisuallySimilarKanji visually_similar_kanji = 9;
+  optional string visually_similar_kanji = 10;
 }
 
 message Vocabulary {

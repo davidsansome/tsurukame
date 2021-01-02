@@ -36,7 +36,6 @@ GPBObjCClassDeclaration(TKMRadical);
 GPBObjCClassDeclaration(TKMReading);
 GPBObjCClassDeclaration(TKMSubject);
 GPBObjCClassDeclaration(TKMSubjectsByLevel);
-GPBObjCClassDeclaration(TKMVisuallySimilarKanji);
 GPBObjCClassDeclaration(TKMVocabulary);
 GPBObjCClassDeclaration(TKMVocabulary_Sentence);
 
@@ -368,62 +367,6 @@ typedef struct TKMRadical__storage_ {
 
 @end
 
-#pragma mark - TKMVisuallySimilarKanji
-
-@implementation TKMVisuallySimilarKanji
-
-@dynamic hasId_p, id_p;
-@dynamic hasScore, score;
-
-typedef struct TKMVisuallySimilarKanji__storage_ {
-  uint32_t _has_storage_[1];
-  int32_t id_p;
-  int32_t score;
-} TKMVisuallySimilarKanji__storage_;
-
-// This method is threadsafe because it is initially called
-// in +initialize for each subclass.
-+ (GPBDescriptor *)descriptor {
-  static GPBDescriptor *descriptor = nil;
-  if (!descriptor) {
-    static GPBMessageFieldDescription fields[] = {
-      {
-        .name = "id_p",
-        .dataTypeSpecific.clazz = Nil,
-        .number = TKMVisuallySimilarKanji_FieldNumber_Id_p,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(TKMVisuallySimilarKanji__storage_, id_p),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt32,
-      },
-      {
-        .name = "score",
-        .dataTypeSpecific.clazz = Nil,
-        .number = TKMVisuallySimilarKanji_FieldNumber_Score,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(TKMVisuallySimilarKanji__storage_, score),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt32,
-      },
-    };
-    GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[TKMVisuallySimilarKanji class]
-                                     rootClass:[TKMWanikaniRoot class]
-                                          file:TKMWanikaniRoot_FileDescriptor()
-                                        fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(TKMVisuallySimilarKanji__storage_)
-                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
-    #if defined(DEBUG) && DEBUG
-      NSAssert(descriptor == nil, @"Startup recursed!");
-    #endif  // DEBUG
-    descriptor = localDescriptor;
-  }
-  return descriptor;
-}
-
-@end
-
 #pragma mark - TKMKanji
 
 @implementation TKMKanji
@@ -432,7 +375,7 @@ typedef struct TKMVisuallySimilarKanji__storage_ {
 @dynamic hasMeaningHint, meaningHint;
 @dynamic hasReadingMnemonic, readingMnemonic;
 @dynamic hasReadingHint, readingHint;
-@dynamic visuallySimilarKanjiArray, visuallySimilarKanjiArray_Count;
+@dynamic hasVisuallySimilarKanji, visuallySimilarKanji;
 
 typedef struct TKMKanji__storage_ {
   uint32_t _has_storage_[1];
@@ -440,7 +383,7 @@ typedef struct TKMKanji__storage_ {
   NSString *meaningHint;
   NSString *readingMnemonic;
   NSString *readingHint;
-  NSMutableArray *visuallySimilarKanjiArray;
+  NSString *visuallySimilarKanji;
 } TKMKanji__storage_;
 
 // This method is threadsafe because it is initially called
@@ -486,13 +429,13 @@ typedef struct TKMKanji__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "visuallySimilarKanjiArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(TKMVisuallySimilarKanji),
-        .number = TKMKanji_FieldNumber_VisuallySimilarKanjiArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(TKMKanji__storage_, visuallySimilarKanjiArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
+        .name = "visuallySimilarKanji",
+        .dataTypeSpecific.clazz = Nil,
+        .number = TKMKanji_FieldNumber_VisuallySimilarKanji,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(TKMKanji__storage_, visuallySimilarKanji),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =

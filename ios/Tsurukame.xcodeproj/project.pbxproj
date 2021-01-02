@@ -119,6 +119,8 @@
 		63DB06C225A091710071DC1C /* old-mnemonics.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06C025A091710071DC1C /* old-mnemonics.json */; };
 		63DB06D225A091FF0071DC1C /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB06D125A091FF0071DC1C /* Subject.swift */; };
 		63DB06D325A091FF0071DC1C /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB06D125A091FF0071DC1C /* Subject.swift */; };
+		63DB06EA25A09AA00071DC1C /* visually-similar-kanji.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */; };
+		63DB06EB25A09AA00071DC1C /* visually-similar-kanji.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
 		63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */; };
 		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
@@ -359,6 +361,7 @@
 		63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingAppDelegate.swift; sourceTree = "<group>"; };
 		63DB06C025A091710071DC1C /* old-mnemonics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "old-mnemonics.json"; sourceTree = "<group>"; };
 		63DB06D125A091FF0071DC1C /* Subject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
+		63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "visually-similar-kanji.json"; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63E9A8CA210D6CC000418CE1 /* SubjectsByLevelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsByLevelViewController.h; sourceTree = "<group>"; };
 		63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsByLevelViewController.m; sourceTree = "<group>"; };
@@ -495,6 +498,7 @@
 				63E903C51FE643BF00D73C3A /* Main.storyboard */,
 				63DB06C025A091710071DC1C /* old-mnemonics.json */,
 				489894D423670CB000A20AF8 /* Tsurukame.entitlements */,
+				63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1030,6 +1034,7 @@
 				63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */,
 				63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */,
 				63DB06C125A091710071DC1C /* old-mnemonics.json in Resources */,
+				63DB06EA25A09AA00071DC1C /* visually-similar-kanji.json in Resources */,
 				63BFA78B218EB1B30058E885 /* TKMDownloadModelItem.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1064,6 +1069,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63DB06EB25A09AA00071DC1C /* visually-similar-kanji.json in Resources */,
 				63DB06C225A091710071DC1C /* old-mnemonics.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
