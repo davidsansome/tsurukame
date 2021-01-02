@@ -218,6 +218,10 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       return
     }
 
+    subjects.sort { (a, b) -> Bool in
+      a.level < b.level
+    }
+
     model.addSection("Used in")
     for subject in subjects {
       model.add(TKMSubjectModelItem(subject: subject, delegate: subjectDelegate))

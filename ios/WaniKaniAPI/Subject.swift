@@ -166,10 +166,6 @@ struct SubjectData: Codable {
       return nil
     }
 
-    // TODO:
-    // - order component subject IDs
-    // - sort amalgamation subject IDs by level
-
     return ret
   }
 
