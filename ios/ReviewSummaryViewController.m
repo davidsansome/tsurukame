@@ -90,7 +90,8 @@
     }
 
     for (ReviewItem *item in incorrectItemsByLevel[level]) {
-      TKMSubject *subject = [_services.dataLoader loadSubject:item.assignment.subjectId];
+      TKMSubject *subject =
+          [_services.localCachingClient getSubjectWithId:item.assignment.subjectId];
       [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject
                                                          delegate:self
                                                      readingWrong:item.answer.readingWrong

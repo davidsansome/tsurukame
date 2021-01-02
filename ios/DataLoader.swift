@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,9 +29,6 @@ protocol DataLoaderProtocol {
 
   @objc(isValidSubjectID:)
   func isValid(subjectID id: Int) -> Bool
-
-  @objc(loadSubject:)
-  func load(subjectID id: Int) -> TKMSubject?
 }
 
 @objcMembers
@@ -67,35 +64,6 @@ class DataLoader: NSObject, DataLoaderProtocol {
     return level > 0 && level <= maxLevelGrantedBySubscription
   }
 
-  @objc(loadSubject:)
-  func load(subjectID id: Int) -> TKMSubject? {
-    if !isValid(subjectID: id) {
-      return nil
-    }
-
-    do {
-      let offset = firstSubjectOffset + header.subjectByteOffsetArray.value(at: UInt(id))
-      file.seek(toFileOffset: UInt64(offset))
-
-      var data: Data
-      if id == header.subjectByteOffsetArray.count - 1 {
-        data = file.readDataToEndOfFile()
-      } else {
-        // Read the offset of the next subject and compare to determine the length.
-        let nextOffset = firstSubjectOffset + header.subjectByteOffsetArray.value(at: UInt(id + 1))
-        let length = nextOffset - offset
-
-        data = file.readData(ofLength: Int(length))
-      }
-
-      let ret = try TKMSubject(data: data)
-      ret.id_p = Int32(id)
-      return ret
-    } catch {
-      return nil
-    }
-  }
-
   var maxSubjectLevel: Int {
     header.subjectsByLevelArray.count
   }
@@ -108,24 +76,6 @@ class DataLoader: NSObject, DataLoaderProtocol {
     set {
       _maxLevelGrantedBySubscription = newValue
     }
-  }
-
-  func loadAll() -> [TKMSubject] {
-    var ret = [TKMSubject]()
-    for id in 1 ... header.subjectByteOffsetArray.count {
-      if let subject = load(subjectID: Int(id)) {
-        ret.append(subject)
-      }
-    }
-    return ret
-  }
-
-  func subjects(byLevel level: Int) -> TKMSubjectsByLevel? {
-    if level <= 0 || level > maxLevelGrantedBySubscription {
-      return nil
-    }
-
-    return header.subjectsByLevelArray?[level - 1] as? TKMSubjectsByLevel
   }
 
   var deletedSubjectIDs: GPBInt32Array {

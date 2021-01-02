@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ extension URLRequest {
 
     setValue("application/json", forHTTPHeaderField: "Content-Type")
     setValue(String(data.count), forHTTPHeaderField: "Content-Length")
+    NSLog("JSON body: %@", String(data: data, encoding: .utf8)!)
     httpBody = data
     httpMethod = method
   }

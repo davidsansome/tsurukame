@@ -47,7 +47,7 @@
   [model addSection:@"Vocabulary"];
 
   for (TKMAssignment *assignment in [_services.localCachingClient getAssignmentsAtLevel:_level]) {
-    TKMSubject *subject = [_services.dataLoader loadSubject:assignment.subjectId];
+    TKMSubject *subject = [_services.localCachingClient getSubjectWithId:assignment.subjectId];
     if (!subject) {
       continue;
     }

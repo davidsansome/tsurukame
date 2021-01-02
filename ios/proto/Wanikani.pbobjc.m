@@ -299,16 +299,12 @@ BOOL TKMReading_Type_IsValidValue(int32_t value__) {
 @dynamic hasMnemonic, mnemonic;
 @dynamic hasDeprecatedMnemonic, deprecatedMnemonic;
 @dynamic hasHasCharacterImageFile, hasCharacterImageFile;
-@dynamic formattedMnemonicArray, formattedMnemonicArray_Count;
-@dynamic formattedDeprecatedMnemonicArray, formattedDeprecatedMnemonicArray_Count;
 
 typedef struct TKMRadical__storage_ {
   uint32_t _has_storage_[1];
   NSString *characterImage;
   NSString *mnemonic;
-  NSMutableArray *formattedMnemonicArray;
   NSString *deprecatedMnemonic;
-  NSMutableArray *formattedDeprecatedMnemonicArray;
 } TKMRadical__storage_;
 
 // This method is threadsafe because it is initially called
@@ -345,15 +341,6 @@ typedef struct TKMRadical__storage_ {
         .dataType = GPBDataTypeBool,
       },
       {
-        .name = "formattedMnemonicArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
-        .number = TKMRadical_FieldNumber_FormattedMnemonicArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(TKMRadical__storage_, formattedMnemonicArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
         .name = "deprecatedMnemonic",
         .dataTypeSpecific.clazz = Nil,
         .number = TKMRadical_FieldNumber_DeprecatedMnemonic,
@@ -361,15 +348,6 @@ typedef struct TKMRadical__storage_ {
         .offset = (uint32_t)offsetof(TKMRadical__storage_, deprecatedMnemonic),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "formattedDeprecatedMnemonicArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
-        .number = TKMRadical_FieldNumber_FormattedDeprecatedMnemonicArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(TKMRadical__storage_, formattedDeprecatedMnemonicArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -454,10 +432,6 @@ typedef struct TKMVisuallySimilarKanji__storage_ {
 @dynamic hasMeaningHint, meaningHint;
 @dynamic hasReadingMnemonic, readingMnemonic;
 @dynamic hasReadingHint, readingHint;
-@dynamic formattedMeaningMnemonicArray, formattedMeaningMnemonicArray_Count;
-@dynamic formattedMeaningHintArray, formattedMeaningHintArray_Count;
-@dynamic formattedReadingMnemonicArray, formattedReadingMnemonicArray_Count;
-@dynamic formattedReadingHintArray, formattedReadingHintArray_Count;
 @dynamic visuallySimilarKanjiArray, visuallySimilarKanjiArray_Count;
 
 typedef struct TKMKanji__storage_ {
@@ -466,10 +440,6 @@ typedef struct TKMKanji__storage_ {
   NSString *meaningHint;
   NSString *readingMnemonic;
   NSString *readingHint;
-  NSMutableArray *formattedMeaningMnemonicArray;
-  NSMutableArray *formattedMeaningHintArray;
-  NSMutableArray *formattedReadingMnemonicArray;
-  NSMutableArray *formattedReadingHintArray;
   NSMutableArray *visuallySimilarKanjiArray;
 } TKMKanji__storage_;
 
@@ -516,42 +486,6 @@ typedef struct TKMKanji__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "formattedMeaningMnemonicArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
-        .number = TKMKanji_FieldNumber_FormattedMeaningMnemonicArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedMeaningMnemonicArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
-        .name = "formattedMeaningHintArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
-        .number = TKMKanji_FieldNumber_FormattedMeaningHintArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedMeaningHintArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
-        .name = "formattedReadingMnemonicArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
-        .number = TKMKanji_FieldNumber_FormattedReadingMnemonicArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedReadingMnemonicArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
-        .name = "formattedReadingHintArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
-        .number = TKMKanji_FieldNumber_FormattedReadingHintArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(TKMKanji__storage_, formattedReadingHintArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
         .name = "visuallySimilarKanjiArray",
         .dataTypeSpecific.clazz = GPBObjCClass(TKMVisuallySimilarKanji),
         .number = TKMKanji_FieldNumber_VisuallySimilarKanjiArray,
@@ -585,8 +519,6 @@ typedef struct TKMKanji__storage_ {
 
 @dynamic hasMeaningExplanation, meaningExplanation;
 @dynamic hasReadingExplanation, readingExplanation;
-@dynamic formattedMeaningExplanationArray, formattedMeaningExplanationArray_Count;
-@dynamic formattedReadingExplanationArray, formattedReadingExplanationArray_Count;
 @dynamic sentencesArray, sentencesArray_Count;
 @dynamic partsOfSpeechArray, partsOfSpeechArray_Count;
 @dynamic audioIdsArray, audioIdsArray_Count;
@@ -598,8 +530,6 @@ typedef struct TKMVocabulary__storage_ {
   NSMutableArray *sentencesArray;
   GPBEnumArray *partsOfSpeechArray;
   GPBInt32Array *audioIdsArray;
-  NSMutableArray *formattedMeaningExplanationArray;
-  NSMutableArray *formattedReadingExplanationArray;
 } TKMVocabulary__storage_;
 
 // This method is threadsafe because it is initially called
@@ -652,24 +582,6 @@ typedef struct TKMVocabulary__storage_ {
         .offset = (uint32_t)offsetof(TKMVocabulary__storage_, audioIdsArray),
         .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
         .dataType = GPBDataTypeInt32,
-      },
-      {
-        .name = "formattedMeaningExplanationArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
-        .number = TKMVocabulary_FieldNumber_FormattedMeaningExplanationArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(TKMVocabulary__storage_, formattedMeaningExplanationArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
-        .name = "formattedReadingExplanationArray",
-        .dataTypeSpecific.clazz = GPBObjCClass(TKMFormattedText),
-        .number = TKMVocabulary_FieldNumber_FormattedReadingExplanationArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(TKMVocabulary__storage_, formattedReadingExplanationArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
       },
     };
     GPBDescriptor *localDescriptor =

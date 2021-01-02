@@ -274,9 +274,7 @@ typedef GPB_ENUM(TKMRadical_FieldNumber) {
   TKMRadical_FieldNumber_CharacterImage = 1,
   TKMRadical_FieldNumber_Mnemonic = 2,
   TKMRadical_FieldNumber_HasCharacterImageFile = 3,
-  TKMRadical_FieldNumber_FormattedMnemonicArray = 4,
   TKMRadical_FieldNumber_DeprecatedMnemonic = 5,
-  TKMRadical_FieldNumber_FormattedDeprecatedMnemonicArray = 6,
 };
 
 GPB_FINAL @interface TKMRadical : GPBMessage
@@ -297,14 +295,6 @@ GPB_FINAL @interface TKMRadical : GPBMessage
 @property(nonatomic, readwrite) BOOL hasCharacterImageFile;
 
 @property(nonatomic, readwrite) BOOL hasHasCharacterImageFile;
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedMnemonicArray;
-/** The number of items in @c formattedMnemonicArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger formattedMnemonicArray_Count;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedDeprecatedMnemonicArray;
-/** The number of items in @c formattedDeprecatedMnemonicArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger formattedDeprecatedMnemonicArray_Count;
-
 @end
 
 #pragma mark - TKMVisuallySimilarKanji
@@ -332,10 +322,6 @@ typedef GPB_ENUM(TKMKanji_FieldNumber) {
   TKMKanji_FieldNumber_MeaningHint = 2,
   TKMKanji_FieldNumber_ReadingMnemonic = 3,
   TKMKanji_FieldNumber_ReadingHint = 4,
-  TKMKanji_FieldNumber_FormattedMeaningMnemonicArray = 5,
-  TKMKanji_FieldNumber_FormattedMeaningHintArray = 6,
-  TKMKanji_FieldNumber_FormattedReadingMnemonicArray = 7,
-  TKMKanji_FieldNumber_FormattedReadingHintArray = 8,
   TKMKanji_FieldNumber_VisuallySimilarKanjiArray = 9,
 };
 
@@ -357,22 +343,6 @@ GPB_FINAL @interface TKMKanji : GPBMessage
 /** Test to see if @c readingHint has been set. */
 @property(nonatomic, readwrite) BOOL hasReadingHint;
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedMeaningMnemonicArray;
-/** The number of items in @c formattedMeaningMnemonicArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger formattedMeaningMnemonicArray_Count;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedMeaningHintArray;
-/** The number of items in @c formattedMeaningHintArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger formattedMeaningHintArray_Count;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedReadingMnemonicArray;
-/** The number of items in @c formattedReadingMnemonicArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger formattedReadingMnemonicArray_Count;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedReadingHintArray;
-/** The number of items in @c formattedReadingHintArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger formattedReadingHintArray_Count;
-
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMVisuallySimilarKanji*> *visuallySimilarKanjiArray;
 /** The number of items in @c visuallySimilarKanjiArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger visuallySimilarKanjiArray_Count;
@@ -387,8 +357,6 @@ typedef GPB_ENUM(TKMVocabulary_FieldNumber) {
   TKMVocabulary_FieldNumber_SentencesArray = 3,
   TKMVocabulary_FieldNumber_PartsOfSpeechArray = 4,
   TKMVocabulary_FieldNumber_AudioIdsArray = 5,
-  TKMVocabulary_FieldNumber_FormattedMeaningExplanationArray = 6,
-  TKMVocabulary_FieldNumber_FormattedReadingExplanationArray = 7,
 };
 
 GPB_FINAL @interface TKMVocabulary : GPBMessage
@@ -400,14 +368,6 @@ GPB_FINAL @interface TKMVocabulary : GPBMessage
 @property(nonatomic, readwrite, copy, null_resettable) NSString *readingExplanation;
 /** Test to see if @c readingExplanation has been set. */
 @property(nonatomic, readwrite) BOOL hasReadingExplanation;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedMeaningExplanationArray;
-/** The number of items in @c formattedMeaningExplanationArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger formattedMeaningExplanationArray_Count;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMFormattedText*> *formattedReadingExplanationArray;
-/** The number of items in @c formattedReadingExplanationArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger formattedReadingExplanationArray_Count;
 
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TKMVocabulary_Sentence*> *sentencesArray;
 /** The number of items in @c sentencesArray without causing the array to be created. */

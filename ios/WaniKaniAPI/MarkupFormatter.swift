@@ -29,8 +29,8 @@ private func copyEnumArray<ValueType: RawRepresentable>(_ array: [ValueType]) ->
   return ret
 }
 
-func parseFormattedText(_ text: String?) -> NSMutableArray {
-  let ret = NSMutableArray()
+func parseFormattedText(_ text: String?) -> [TKMFormattedText] {
+  var ret = [TKMFormattedText]()
   guard let text = text else {
     return ret
   }
@@ -59,7 +59,7 @@ func parseFormattedText(_ text: String?) -> NSMutableArray {
       if let url = linkUrlStack.last {
         formattedText.linkURL = url
       }
-      ret.add(formattedText)
+      ret.append(formattedText)
     }
 
     // Add the next format tag.
@@ -71,7 +71,7 @@ func parseFormattedText(_ text: String?) -> NSMutableArray {
         }
       }
     } else {
-      switch nextTag {
+      switch nextTag.lowercased() {
       case "radical":
         formatStack.append(.radical)
       case "ja", "jp":
@@ -100,7 +100,7 @@ func parseFormattedText(_ text: String?) -> NSMutableArray {
     let formattedText = TKMFormattedText()
     formattedText.text = nsString.substring(from: lastIndex)
     formattedText.formatArray = copyEnumArray(formatStack)
-    ret.add(formattedText)
+    ret.append(formattedText)
   }
 
   return ret

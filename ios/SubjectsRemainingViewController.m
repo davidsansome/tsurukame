@@ -49,7 +49,7 @@
       continue;
     }
 
-    TKMSubject *subject = [_services.dataLoader loadSubject:assignment.subjectId];
+    TKMSubject *subject = [_services.localCachingClient getSubjectWithId:assignment.subjectId];
     if (!subject || subject.subjectType == TKMSubject_Type_Vocabulary) {
       continue;
     }

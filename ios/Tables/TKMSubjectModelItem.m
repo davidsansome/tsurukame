@@ -224,12 +224,12 @@ static const CGFloat kFontSize = 14.f;
 @implementation TKMSubjectCollectionModelItem
 
 - (instancetype)initWithSubjects:(GPBInt32Array *)subjects
-                      dataLoader:(DataLoader *)dataLoader
+              localCachingClient:(LocalCachingClient *)localCachingClient
                         delegate:(id<TKMSubjectChipDelegate>)delegate {
   self = [super init];
   if (self) {
     _subjects = subjects;
-    _dataLoader = dataLoader;
+    _localCachingClient = localCachingClient;
     _delegate = delegate;
   }
   return self;
@@ -268,7 +268,7 @@ static const CGFloat kFontSize = 14.f;
   // Create a chip for each subject.
   for (int i = 0; i < item.subjects.count; ++i) {
     int subjectID = [item.subjects valueAtIndex:i];
-    TKMSubject *subject = [item.dataLoader loadSubject:subjectID];
+    TKMSubject *subject = [item.localCachingClient getSubjectWithId:subjectID];
     TKMSubjectChip *chip = [[TKMSubjectChip alloc] initWithSubject:subject
                                                        showMeaning:true
                                                           delegate:item.delegate];

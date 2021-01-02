@@ -1,7 +1,7 @@
 all: proto.so proto.dylib
 
 wanikani.pb.h: ../proto/wanikani.proto
-	protoc ../proto/wanikani.proto --cpp_out=. --proto_path=../proto
+	protoc ../proto/wanikani.proto --experimental_allow_proto3_optional --cpp_out=. --proto_path=../proto
 
 wanikani.pb.cc: wanikani.pb.h
 

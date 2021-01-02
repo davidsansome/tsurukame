@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -180,7 +180,8 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
                              title: String,
                              toModel model: TKMMutableTableModel) {
     let item = TKMSubjectCollectionModelItem(subjects: subject.componentSubjectIdsArray,
-                                             dataLoader: services.dataLoader, delegate: self)
+                                             localCachingClient: services.localCachingClient,
+                                             delegate: self)
 
     model.addSection(title)
     model.add(item)
@@ -193,7 +194,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       if similar.score < kVisuallySimilarKanjiScoreThreshold {
         continue
       }
-      guard let subject = services.dataLoader.load(subjectID: Int(similar.id_p)) else {
+      guard let subject = services.localCachingClient.getSubject(id: Int(similar.id_p)) else {
         continue
       }
       if subject.level > currentLevel {
@@ -213,7 +214,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     var subjects = [TKMSubject]()
     for i in 0 ..< subject.amalgamationSubjectIdsArray_Count {
       let subjectID = subject.amalgamationSubjectIdsArray.value(at: i)
-      if let subject = services.dataLoader.load(subjectID: Int(subjectID)) {
+      if let subject = services.localCachingClient.getSubject(id: Int(subjectID)) {
         subjects.append(subject)
       }
     }
@@ -228,19 +229,20 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     }
   }
 
-  private func addFormattedText(_ text: [TKMFormattedText],
+  private func addFormattedText(_ text: String,
                                 isHint: Bool,
                                 toModel model: TKMMutableTableModel) {
     if text.isEmpty {
       return
     }
+    let parsedText = parseFormattedText(text)
 
     var attributes = defaultStringAttrs()
     if isHint {
       attributes[.foregroundColor] = TKMStyle.Color.grey33
     }
 
-    let formattedText = TKMRenderFormattedText(text, attributes).replaceFontSize(kFontSize)
+    let formattedText = TKMRenderFormattedText(parsedText, attributes).replaceFontSize(kFontSize)
     model.add(AttributedModelItem(text: formattedText))
   }
 
@@ -282,13 +284,13 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
 
       if !isReview || meaningAttempted {
         model.addSection("Mnemonic")
-        addFormattedText(subject.radical.formattedMnemonicArray as! [TKMFormattedText],
+        addFormattedText(subject.radical.mnemonic,
                          isHint: false,
                          toModel: model)
 
-        if Settings.showOldMnemonic, subject.radical!.formattedDeprecatedMnemonicArray_Count != 0 {
+        if Settings.showOldMnemonic, !subject.radical!.deprecatedMnemonic.isEmpty {
           model.addSection("Old Mnemonic")
-          addFormattedText(subject.radical.formattedDeprecatedMnemonicArray as! [TKMFormattedText],
+          addFormattedText(subject.radical.deprecatedMnemonic,
                            isHint: false, toModel: model)
         }
       }
@@ -301,17 +303,17 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
 
       if !isReview || meaningAttempted {
         model.addSection("Meaning Explanation")
-        addFormattedText(subject.kanji.formattedMeaningMnemonicArray as! [TKMFormattedText],
+        addFormattedText(subject.kanji.meaningMnemonic,
                          isHint: false, toModel: model)
-        addFormattedText(subject.kanji.formattedMeaningHintArray as! [TKMFormattedText],
+        addFormattedText(subject.kanji.meaningHint,
                          isHint: true,
                          toModel: model)
       }
       if !isReview || readingAttempted {
         model.addSection("Reading Explanation")
-        addFormattedText(subject.kanji.formattedReadingMnemonicArray as! [TKMFormattedText],
+        addFormattedText(subject.kanji.readingMnemonic,
                          isHint: false, toModel: model)
-        addFormattedText(subject.kanji.formattedReadingHintArray as! [TKMFormattedText],
+        addFormattedText(subject.kanji.readingHint,
                          isHint: true,
                          toModel: model)
       }
@@ -325,12 +327,12 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
 
       if !isReview || meaningAttempted {
         model.addSection("Meaning Explanation")
-        addFormattedText(subject.vocabulary.formattedMeaningExplanationArray as! [TKMFormattedText],
+        addFormattedText(subject.vocabulary.meaningExplanation,
                          isHint: false, toModel: model)
       }
       if !isReview || readingAttempted {
         model.addSection("Reading Explanation")
-        addFormattedText(subject.vocabulary.formattedReadingExplanationArray as! [TKMFormattedText],
+        addFormattedText(subject.vocabulary.readingExplanation,
                          isHint: false, toModel: model)
       }
       addPartsOfSpeech(subject.vocabulary, toModel: model)

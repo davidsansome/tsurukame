@@ -222,12 +222,24 @@ class LocalCachingClient: NSObject {
       pb BLOB
     );
     """,
+
+    """
+    CREATE TABLE subjects (
+      id INTEGER PRIMARY KEY,
+      level INTEGER,
+      type INTEGER,
+      pb BLOB
+    );
+    ALTER TABLE sync ADD COLUMN subjects_updated_after TEXT;
+    UPDATE sync SET subjects_updated_after = "";
+    """,
   ]
 
   private let kClearAllData = """
   UPDATE sync SET
     assignments_updated_after = "",
-    study_materials_updated_after = ""
+    study_materials_updated_after = "",
+    subjects_updated_after = ""
   ;
   DELETE FROM assignments;
   DELETE FROM pending_progress;
@@ -237,6 +249,7 @@ class LocalCachingClient: NSObject {
   DELETE FROM subject_progress;
   DELETE FROM error_log;
   DELETE FROM level_progressions;
+  DELETE FROM subjects;
   """
 
   private func openDatabase() {
@@ -411,7 +424,7 @@ class LocalCachingClient: NSObject {
 
     // Add fake assignments for any other subjects at this level that don't have assignments yet (the
     // user hasn't unlocked the prerequisite radicals/kanji).
-    let subjectsByLevel = dataLoader.subjects(byLevel: level)!
+    let subjectsByLevel = getSubjects(byLevel: level, transaction: db)
     addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.radicalsArray, type: .radical,
                        level: level, excludeSubjectIds: subjectIds)
     addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.kanjiArray, type: .kanji, level: level,
@@ -437,6 +450,47 @@ class LocalCachingClient: NSObject {
       assignment.level = Int32(level)
       assignments.append(assignment)
     }
+  }
+
+  func getAllSubjects() -> [TKMSubject] {
+    var ret = [TKMSubject]()
+    db.inDatabase { db in
+      for cursor in db.query("SELECT pb FROM subjects") {
+        ret.append(cursor.proto(forColumnIndex: 0)!)
+      }
+    }
+    return ret
+  }
+
+  func getSubject(id: Int) -> TKMSubject? {
+    db.inDatabase { db in
+      let cursor = db.query("SELECT pb FROM subjects WHERE id = ?", args: [id])
+      if cursor.next() {
+        return cursor.proto(forColumnIndex: 0)
+      }
+      return nil
+    }
+  }
+
+  private func getSubjects(byLevel level: Int, transaction db: FMDatabase) -> TKMSubjectsByLevel {
+    let ret = TKMSubjectsByLevel()
+    let cursor = db.query("SELECT id, type FROM subjects WHERE level = ?", args: [level])
+    while cursor.next() {
+      let id = cursor.int(forColumnIndex: 0)
+      let type = cursor.int(forColumnIndex: 1)
+
+      switch type {
+      case TKMSubject_Type.radical.rawValue:
+        ret.radicalsArray.addValue(id)
+      case TKMSubject_Type.kanji.rawValue:
+        ret.kanjiArray.addValue(id)
+      case TKMSubject_Type.vocabulary.rawValue:
+        ret.vocabularyArray.addValue(id)
+      default:
+        break
+      }
+    }
+    return ret
   }
 
   func getAllLevelProgressions() -> [TKMLevel] {
@@ -502,28 +556,24 @@ class LocalCachingClient: NSObject {
     progress.totalUnitCount = Int64(items.count)
 
     // Send all progress, one at a time.
-    var promise = Promise.value(())
+    var promise = Promise()
     for p in items {
       promise = promise.then { _ in
-        firstly {
-          self.client.sendProgress(p).asVoid()
-        }.recover { err in
-          switch err {
-          case PMKHTTPError.badStatusCode(422, _, _):
-            // Drop the data if the server is clearly telling us our data is invalid and
-            // cannot be accepted. This most commonly happens when doing reviews before
-            // progress from elsewhere has synced, leaving the app trying to report
-            // progress on reviews you already did elsewhere.
-            self.clearPendingProgress(p)
-
-          default:
-            throw err
-          }
-        }.map {
-          self.clearPendingProgress(p)
-        }.ensure {
-          progress.completedUnitCount += 1
+        self.client.sendProgress(p).asVoid()
+      }.recover { err in
+        if let apiError = err as? WaniKaniAPIError, apiError.code == 422 {
+          // Drop the data if the server is clearly telling us our data is invalid and
+          // cannot be accepted. This most commonly happens when doing reviews before
+          // progress from elsewhere has synced, leaving the app trying to report
+          // progress on reviews you already did elsewhere.
+          return
+        } else {
+          throw err
         }
+      }.map {
+        self.clearPendingProgress(p)
+      }.ensure {
+        progress.completedUnitCount += 1
       }
     }
     return promise
@@ -532,7 +582,7 @@ class LocalCachingClient: NSObject {
   func updateStudyMaterial(_ material: TKMStudyMaterials) -> Promise<Void> {
     db.inTransaction { db in
       // Store the study material locally.
-      db.mustExecuteUpdate("REPLACE INTO study_materials (id, pb) VALUES(?, ?))",
+      db.mustExecuteUpdate("REPLACE INTO study_materials (id, pb) VALUES(?, ?)",
                            args: [material.subjectId, material.data()!])
       db.mustExecuteUpdate("REPLACE INTO pending_study_materials (id) VALUES(?)",
                            args: [material.subjectId])
@@ -731,7 +781,7 @@ class LocalCachingClient: NSObject {
         for material in materials {
           db.mustExecuteUpdate("REPLACE INTO study_materials (id, pb) " +
             "VALUES (?, ?)",
-            args: [material.id_p, material.data()!])
+            args: [material.subjectId, material.data()!])
         }
         db.mustExecuteUpdate("UPDATE sync SET study_materials_updated_after = ?",
                              args: [updatedAt])
@@ -766,6 +816,37 @@ class LocalCachingClient: NSObject {
     }
   }
 
+  private func fetchSubjects(progress: Progress) -> Promise<Void> {
+    // Get the last subject update time.
+    let updatedAfter: String = db.inDatabase { db in
+      let cursor = db.query("SELECT subjects_updated_after FROM sync")
+      if cursor.next() {
+        return cursor.string(forColumnIndex: 0)!
+      }
+      return ""
+    }
+
+    return firstly { () -> Promise<WaniKaniAPIClient.Subjects> in
+      client.subjects(progress: progress, updatedAfter: updatedAfter)
+    }.done { subjects, updatedAt in
+      NSLog("Updated %d subjects at %@", subjects.count, updatedAt)
+      self.db.inTransaction { db in
+        for subject in subjects {
+          db.mustExecuteUpdate("REPLACE INTO subjects (id, level, type, pb) " +
+            "VALUES (?, ?, ?, ?)",
+            args: [
+              subject.id_p,
+              subject.level,
+              subject.subjectType.rawValue,
+              subject.data()!,
+            ])
+        }
+        db.mustExecuteUpdate("UPDATE sync SET subjects_updated_after = ?",
+                             args: [updatedAt])
+      }
+    }
+  }
+
   private var busy = false
   func sync(quick: Bool, progress: Progress) -> PMKFinalizer {
     guard !busy else {
@@ -773,31 +854,41 @@ class LocalCachingClient: NSObject {
     }
     busy = true
 
-    progress.totalUnitCount = 13
+    let assignmentProgressUnits: Int64 = quick ? 1 : 8
+    let subjectProgressUnits: Int64 = quick ? 1 : 20
+    progress.totalUnitCount = 5 + assignmentProgressUnits + subjectProgressUnits
     let childProgress = { (units: Int64) in
       Progress(totalUnitCount: -1, parent: progress, pendingUnitCount: units)
     }
 
     if !quick {
-      // Clear the sync table before doing anything else.  This forces us to re-download all
-      // assignments.
+      // Clear the sync table before doing anything else. This forces us to re-download all
+      // assignments and subjects.
       db.inTransaction { db in
-        db.mustExecuteUpdate("UPDATE sync SET assignments_updated_after = \"\";")
+        db.mustExecuteStatements("""
+        UPDATE sync
+          SET assignments_updated_after = \"\",
+              subjects_updated_after = \"\";
+        DELETE FROM subjects;
+        """)
       }
     }
 
-    return when(fulfilled: [
+    // Fetch subjects in parallel with everything else.
+    let subjectPromise = fetchSubjects(progress: childProgress(subjectProgressUnits))
+    let syncPromise = when(fulfilled: [
       sendAllPendingProgress(progress: childProgress(1)),
       sendAllPendingStudyMaterials(progress: childProgress(1)),
     ]).then { _ in
-
       when(fulfilled: [
-        self.fetchAssignments(progress: childProgress(8)),
+        self.fetchAssignments(progress: childProgress(assignmentProgressUnits)),
         self.fetchStudyMaterials(progress: childProgress(1)),
         self.fetchUserInfo(progress: childProgress(1)),
         self.fetchLevelProgression(progress: childProgress(1)),
       ])
-    }.done {
+    }
+
+    return when(fulfilled: [subjectPromise, syncPromise]).done {
       self._availableSubjects.invalidate()
       self._srsCategoryCounts.invalidate()
       postNotificationOnMainQueue(.lccUserInfoChanged)

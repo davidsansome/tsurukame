@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@ import Foundation
                                subject: TKMSubject,
                                studyMaterials: TKMStudyMaterials?,
                                taskType: TKMTaskType,
-                               dataLoader: DataLoader) -> AnswerCheckerResult {
+                               localCachingClient: LocalCachingClient) -> AnswerCheckerResult {
     switch taskType {
     case .reading:
       let hiraganaText = convertKatakanaToHiragana(answer)
@@ -151,10 +151,10 @@ import Foundation
         subject.componentSubjectIdsArray_Count == 1 {
         // If the vocabulary is made up of only one Kanji, check whether the user wrote the Kanji
         // reading instead of the vocabulary reading.
-        if let kanji = dataLoader
-          .load(subjectID: Int(subject.componentSubjectIdsArray!.value(at: 0))) {
+        if let kanji = localCachingClient
+          .getSubject(id: Int(subject.componentSubjectIdsArray!.value(at: 0))) {
           let result = checkAnswer(answer, subject: kanji, studyMaterials: nil, taskType: taskType,
-                                   dataLoader: dataLoader)
+                                   localCachingClient: localCachingClient)
           if result == .Precise {
             return .OtherKanjiReading
           }

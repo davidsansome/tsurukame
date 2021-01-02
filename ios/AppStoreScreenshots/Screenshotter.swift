@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -110,9 +110,7 @@ import PromiseKit
     override func getAssignments(level: Int) -> [TKMAssignment] {
       // Return just enough to populate the SubjectsByLevelViewController.
       let level = getUserInfo()!.level
-      let subjects = dataLoader.loadAll().filter { (s) -> Bool in
-        s.level == level && s.subjectType != .vocabulary
-      }
+      let subjects = [TKMSubject]() // TODO: show some fake subjects.
 
       srand48(42)
 

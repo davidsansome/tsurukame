@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -520,7 +520,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       // Choose a random task from the active queue.
       activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
       activeTask = activeQueue[activeTaskIndex]
-      activeSubject = services.dataLoader.load(subjectID: Int(activeTask.assignment.subjectId))!
+      activeSubject = services.localCachingClient
+        .getSubject(id: Int(activeTask.assignment.subjectId))!
       activeStudyMaterials =
         services.localCachingClient
           .getStudyMaterial(subjectId: Int(activeTask.assignment.subjectId))
@@ -1024,7 +1025,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
                                            subject: activeSubject,
                                            studyMaterials: activeStudyMaterials,
                                            taskType: activeTaskType,
-                                           dataLoader: services.dataLoader)
+                                           localCachingClient: services.localCachingClient)
 
     switch result {
     case .Precise:

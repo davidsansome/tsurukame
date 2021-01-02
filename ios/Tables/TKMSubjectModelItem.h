@@ -17,7 +17,7 @@
 #import "TKMSubjectDelegate.h"
 #import "proto/Wanikani.pbobjc.h"
 
-@class DataLoader;
+@class LocalCachingClient;
 
 NS_ASSUME_NONNULL_BEGIN;
 
@@ -59,14 +59,14 @@ NS_ASSUME_NONNULL_BEGIN;
 @interface TKMSubjectCollectionModelItem : NSObject <TKMModelItem>
 
 - (instancetype)initWithSubjects:(GPBInt32Array *)subjects
-                      dataLoader:(DataLoader *)dataLoader
+              localCachingClient:(LocalCachingClient *)localCachingClient
                         delegate:(nullable id<TKMSubjectChipDelegate>)delegate
     NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic, copy) GPBInt32Array *subjects;
-@property(nonatomic) DataLoader *dataLoader;
+@property(nonatomic) LocalCachingClient *localCachingClient;
 @property(nonatomic, nullable, weak) id<TKMSubjectChipDelegate> delegate;
 
 @end

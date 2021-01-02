@@ -60,8 +60,7 @@ message Radical {
   optional string deprecated_mnemonic = 5;
   optional bool has_character_image_file = 3;
 
-  repeated FormattedText formatted_mnemonic = 4;
-  repeated FormattedText formatted_deprecated_mnemonic = 6;
+  reserved 4, 6;
 }
 
 message VisuallySimilarKanji {
@@ -75,10 +74,7 @@ message Kanji {
   optional string reading_mnemonic = 3;
   optional string reading_hint = 4;
 
-  repeated FormattedText formatted_meaning_mnemonic = 5;
-  repeated FormattedText formatted_meaning_hint = 6;
-  repeated FormattedText formatted_reading_mnemonic = 7;
-  repeated FormattedText formatted_reading_hint = 8;
+  reserved 5, 6, 7, 8;
 
   repeated VisuallySimilarKanji visually_similar_kanji = 9;
 }
@@ -87,8 +83,7 @@ message Vocabulary {
   optional string meaning_explanation = 1;
   optional string reading_explanation = 2;
 
-  repeated FormattedText formatted_meaning_explanation = 6;
-  repeated FormattedText formatted_reading_explanation = 7;
+  reserved 6, 7;
 
   message Sentence {
     optional string japanese = 1;

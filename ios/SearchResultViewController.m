@@ -85,7 +85,7 @@ static bool SubjectMatchesQueryExactly(TKMSubject *subject, NSString *query, NSS
 
 - (void)ensureAllSubjectsLoaded {
   if (_allSubjects == nil) {
-    _allSubjects = [_services.dataLoader loadAll];
+    _allSubjects = [_services.localCachingClient getAllSubjects];
   }
 }
 

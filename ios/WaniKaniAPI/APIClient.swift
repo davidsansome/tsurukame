@@ -210,11 +210,15 @@ class WaniKaniAPIClient: NSObject {
 
   private func createReview(_ progress: TKMProgress) -> Promise<TKMAssignment> {
     let url = URL(string: "\(kBaseUrl)/reviews")!
-    let body = CreateReviewRequest(review: CreateReviewRequest
+    var body = CreateReviewRequest(review: CreateReviewRequest
       .Review(assignment_id: Int(progress.assignment!.id_p),
               incorrect_meaning_answers: Int(progress.meaningWrongCount),
-              incorrect_reading_answers: Int(progress.readingWrongCount),
-              created_at: WaniKaniDate(date: progress.createdAtDate)))
+              incorrect_reading_answers: Int(progress.readingWrongCount)))
+
+    // Don't set created_at if it's very recent to try to allow for some clock drift.
+    if progress.hasCreatedAt, progress.createdAtDate.timeIntervalSinceNow < -900 {
+      body.review.created_at = WaniKaniDate(date: progress.createdAtDate)
+    }
 
     return firstly { () -> Promise<MultiResourceResponse<ReviewData>> in
       var request = self.authorize(url)
@@ -319,7 +323,7 @@ class WaniKaniAPIClient: NSObject {
     }.map { (data, response) -> Type in
       let response = response as! HTTPURLResponse
       switch response.statusCode {
-      case 200:
+      case 200, 201:
         // Decode the API response.
         return try decodeJSON(data, request: req, response: response)
       case 400 ..< 500:
@@ -636,7 +640,7 @@ private struct ReviewData: Codable {
 private struct SubjectData: Codable {
   // Common attributes.
   var auxiliary_meanings: [AuxiliaryMeaning]?
-  var characters: String
+  var characters: String?
   var created_at: WaniKaniDate
   var document_url: String
   var hidden_at: WaniKaniDate?
@@ -676,7 +680,7 @@ private struct SubjectData: Codable {
     var reading: String
     var primary: Bool
     var accepted_answer: Bool
-    var type: String // kunyomi, nanori, or onyomi
+    var type: String? // kunyomi, nanori, or onyomi
   }
 
   struct CharacterImage: Codable {
@@ -689,9 +693,9 @@ private struct SubjectData: Codable {
       var inline_styles: Bool?
 
       // image/png:
-      var color: String
-      var dimensions: String
-      var style_name: String
+      var color: String?
+      var dimensions: String?
+      var style_name: String?
     }
   }
 
@@ -706,12 +710,12 @@ private struct SubjectData: Codable {
     var metadata: Metadata
 
     struct Metadata: Codable {
-      var gender: String
-      var source_id: Int
-      var pronounciation: String
-      var voice_actor_id: Int
-      var voice_actor_name: String
-      var voice_description: String
+      var gender: String?
+      var source_id: Int?
+      var pronounciation: String?
+      var voice_actor_id: Int?
+      var voice_actor_name: String?
+      var voice_description: String?
     }
   }
 
@@ -740,8 +744,7 @@ private struct SubjectData: Codable {
     case "radical":
       ret.radical = TKMRadical()
       ret.radical.mnemonic = meaning_mnemonic
-      ret.radical.formattedMnemonicArray = parseFormattedText(meaning_mnemonic)
-      if let url = bestCharacterImageUrl() {
+      if ret.japanese.isEmpty, let url = bestCharacterImageUrl() {
         ret.radical.characterImage = url
         ret.radical.hasCharacterImageFile = true
       }
@@ -752,17 +755,11 @@ private struct SubjectData: Codable {
       ret.kanji.meaningHint = meaning_hint
       ret.kanji.readingMnemonic = reading_mnemonic
       ret.kanji.readingHint = reading_hint
-      ret.kanji.formattedMeaningMnemonicArray = parseFormattedText(meaning_mnemonic)
-      ret.kanji.formattedMeaningHintArray = parseFormattedText(meaning_hint)
-      ret.kanji.formattedReadingMnemonicArray = parseFormattedText(reading_mnemonic)
-      ret.kanji.formattedReadingHintArray = parseFormattedText(reading_hint)
 
     case "vocabulary":
       ret.vocabulary = TKMVocabulary()
       ret.vocabulary.meaningExplanation = meaning_mnemonic
       ret.vocabulary.readingExplanation = reading_mnemonic
-      ret.vocabulary.formattedMeaningExplanationArray = parseFormattedText(meaning_mnemonic)
-      ret.vocabulary.formattedReadingExplanationArray = parseFormattedText(reading_mnemonic)
       ret.vocabulary.audioIdsArray = convertAudioIds()
       ret.vocabulary.partsOfSpeechArray = convertPartsofSpeech()
       ret.vocabulary.sentencesArray = convertContextSentences()
@@ -856,16 +853,18 @@ private struct SubjectData: Codable {
         let pb = TKMReading()
         pb.reading = reading.reading
         pb.isPrimary = reading.primary
-        switch reading.type {
-        case "onyomi":
-          pb.type = .onyomi
-        case "kunyomi":
-          pb.type = .kunyomi
-        case "nanori":
-          pb.type = .nanori
-        default:
-          NSLog("Unknown reading type: %@", reading.type)
-          continue
+        if let type = reading.type {
+          switch type {
+          case "onyomi":
+            pb.type = .onyomi
+          case "kunyomi":
+            pb.type = .kunyomi
+          case "nanori":
+            pb.type = .nanori
+          default:
+            NSLog("Unknown reading type: %@", type)
+            continue
+          }
         }
         ret.add(pb)
       }

@@ -58,7 +58,7 @@
   // Set the subjects on the page control.
   NSMutableArray<TKMSubject *> *subjects = [NSMutableArray array];
   for (ReviewItem *item in _items) {
-    TKMSubject *subject = [_services.dataLoader loadSubject:item.assignment.subjectId];
+    TKMSubject *subject = [_services.localCachingClient getSubjectWithId:item.assignment.subjectId];
     if (!subject) {
       continue;
     }
@@ -164,7 +164,7 @@
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
   [vc setupWithServices:_services
-                subject:[_services.dataLoader loadSubject:item.assignment.subjectId]
+                subject:[_services.localCachingClient getSubjectWithId:item.assignment.subjectId]
               showHints:YES
          hideBackButton:YES
                   index:index];
