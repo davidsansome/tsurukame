@@ -279,6 +279,8 @@ static const CGFloat kFontSize = 14.f;
 }
 
 - (void)layoutSubviews {
+  [super layoutSubviews];
+
   NSArray<NSValue *> *chipFrames =
       TKMCalculateSubjectChipFrames(_chips, self.frame.size.width, NSTextAlignmentLeft);
   for (int i = 0; i < _chips.count; ++i) {
