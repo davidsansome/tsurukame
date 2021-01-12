@@ -14,7 +14,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class DataLoader;
 @class TKMServices;
 @class TKMSubject;
 

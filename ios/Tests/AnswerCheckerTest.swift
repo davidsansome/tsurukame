@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,14 +15,6 @@
 import XCTest
 
 class AnswerCheckerTest: XCTestCase {
-  var dataLoader: DataLoader!
-
-  override func setUp() {
-    dataLoader = try! DataLoader(fromURL: Bundle.main
-      .url(forResource: "data", withExtension: "bin")!)
-    super.setUp()
-  }
-
   func testKatakanaToHiragana() {
     XCTAssertEqual(AnswerChecker.convertKatakanaToHiragana("ヒラガナ"), "ひらがな")
     XCTAssertEqual(AnswerChecker.convertKatakanaToHiragana("ビール"), "びーる")
@@ -35,16 +27,5 @@ class AnswerCheckerTest: XCTestCase {
                    "foo bar nn")
     XCTAssertEqual(AnswerChecker.normalizedString(" Foo-B.a'/r nn ", taskType: TKMTaskType.reading),
                    "foobarんん")
-  }
-
-  func testBlacklistedMeaning() {
-    let subject = dataLoader.load(subjectID: 7535)!
-    XCTAssertEqual(AnswerChecker.checkAnswer("unintentionally", subject: subject,
-                                             studyMaterials: nil, taskType: TKMTaskType.meaning,
-                                             dataLoader: dataLoader),
-                   .Precise)
-    XCTAssertEqual(AnswerChecker.checkAnswer("intentionally", subject: subject, studyMaterials: nil,
-                                             taskType: TKMTaskType.meaning, dataLoader: dataLoader),
-                   .Incorrect)
   }
 }

@@ -11,21 +11,6 @@ jobs:
       - run: go build ./...
       - run: go test ./...
 
-  download-data-bin:
-    docker:
-      - image: google/cloud-sdk
-    steps:
-      - run:
-          name: Download data.bin
-          command: |
-            echo $SERVICE_ACCOUNT_KEY | gcloud auth activate-service-account --key-file=-
-            mkdir workspace
-            gsutil cp gs://tsurukame-data/1.21 workspace/data.bin
-      - persist_to_workspace:
-          root: workspace
-          paths:
-            - data.bin
-
   test-ios:
     macos:
       xcode: 12.3.0
@@ -38,7 +23,6 @@ jobs:
       - run: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
       - attach_workspace:
           at: workspace
-      - run: cp workspace/data.bin data.bin
       - run:
           command: bundle install
           working_directory: ios
@@ -61,7 +45,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: workspace
-      - run: cp workspace/data.bin data.bin
       - run:
           name: Install certificate service account
           command: echo $CERTIFICATE_SERVICE_ACCOUNT > ios/fastlane/gc_keys.json
@@ -77,11 +60,7 @@ workflows:
   all:
     jobs:
       - test-golang
-
-      - download-data-bin
-      - test-ios:
-          requires:
-            - download-data-bin
+      - test-ios
       - release-testflight:
           context: appstore_credentials
           requires:

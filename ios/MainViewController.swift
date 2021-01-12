@@ -190,8 +190,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     }
 
     model.addSection("This level")
-    model.add(CurrentLevelChartItem(dataLoader: services.dataLoader,
-                                    currentLevelAssignments: currentLevelAssignments))
+    model.add(CurrentLevelChartItem(currentLevelAssignments: currentLevelAssignments))
 
     if !user.hasVacationStartedAt {
       model
@@ -256,7 +255,6 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     case "startReviews":
       let assignments = services.localCachingClient.getAllAssignments()
       let items = ReviewItem.assignmentsReady(forReview: assignments,
-                                              dataLoader: services.dataLoader,
                                               localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return
@@ -268,7 +266,6 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     case "startLessons":
       let assignments = services.localCachingClient.getAllAssignments()
       var items = ReviewItem.assignmentsReady(forLesson: assignments,
-                                              dataLoader: services.dataLoader,
                                               localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return

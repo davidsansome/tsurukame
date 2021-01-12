@@ -19,7 +19,6 @@
 @implementation ReviewItem
 
 + (NSArray<ReviewItem *> *)assignmentsReadyForReview:(NSArray<TKMAssignment *> *)assignments
-                                          dataLoader:(DataLoader *)dataLoader
                                   localCachingClient:(LocalCachingClient *)localCachingClient {
   NSMutableArray *ret = [NSMutableArray array];
   TKMUser *userInfo = [localCachingClient getUserInfo];
@@ -40,7 +39,6 @@
 }
 
 + (NSArray<ReviewItem *> *)assignmentsReadyForLesson:(NSArray<TKMAssignment *> *)assignments
-                                          dataLoader:(DataLoader *)dataLoader
                                   localCachingClient:(LocalCachingClient *)localCachingClient {
   NSMutableArray *ret = [NSMutableArray array];
   TKMUser *userInfo = [localCachingClient getUserInfo];

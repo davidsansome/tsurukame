@@ -15,57 +15,53 @@
 import XCTest
 
 class MarkupFormatterTest: XCTestCase {
-  private func parse(_ text: String) -> TKMVocabulary {
-    let ret = TKMVocabulary()
-    ret.formattedMeaningExplanationArray = parseFormattedText(text)
-    return ret
-  }
-
   func testNestedTags() {
-    assertProtoEquals(parse("a[ja]b[b]c[i]d[/i]e[/b]f[/ja]g"), """
-    formatted_meaning_explanation {
-      text: "a"
-    }
-    formatted_meaning_explanation {
-      format: JAPANESE
-      text: "b"
-    }
-    formatted_meaning_explanation {
-      format: JAPANESE
-      format: BOLD
-      text: "c"
-    }
-    formatted_meaning_explanation {
-      format: JAPANESE
-      format: BOLD
-      format: ITALIC
-      text: "d"
-    }
-    formatted_meaning_explanation {
-      format: JAPANESE
-      format: BOLD
-      text: "e"
-    }
-    formatted_meaning_explanation {
-      format: JAPANESE
-      text: "f"
-    }
-    formatted_meaning_explanation {
-      text: "g"
-    }
+    let text = parseFormattedText("a[ja]b[b]c[i]d[/i]e[/b]f[/ja]g")
+    XCTAssertEqual(text.count, 7)
+
+    assertProtoEquals(text[0], """
+    text: "a"
+    """)
+    assertProtoEquals(text[1], """
+    format: JAPANESE
+    text: "b"
+    """)
+    assertProtoEquals(text[2], """
+    format: JAPANESE
+    format: BOLD
+    text: "c"
+    """)
+    assertProtoEquals(text[3], """
+    format: JAPANESE
+    format: BOLD
+    format: ITALIC
+    text: "d"
+    """)
+    assertProtoEquals(text[4], """
+    format: JAPANESE
+    format: BOLD
+    text: "e"
+    """)
+    assertProtoEquals(text[5], """
+    format: JAPANESE
+    text: "f"
+    """)
+    assertProtoEquals(text[6], """
+    text: "g"
     """)
   }
 
   func testLinkTag() {
-    assertProtoEquals(parse("foo<a href=\"bar\">baz</a>"), """
-    formatted_meaning_explanation {
-      text: "foo"
-    }
-    formatted_meaning_explanation {
-      format: LINK
-      text: "baz"
-      link_url: "bar"
-    }
+    let text = parseFormattedText("foo<a href=\"bar\">baz</a>")
+    XCTAssertEqual(text.count, 2)
+
+    assertProtoEquals(text[0], """
+    text: "foo"
+    """)
+    assertProtoEquals(text[1], """
+    format: LINK
+    text: "baz"
+    link_url: "bar"
     """)
   }
 }

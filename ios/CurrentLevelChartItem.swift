@@ -66,11 +66,9 @@ func unsetAllLabels(view: ChartViewBase) {
 }
 
 @objc class CurrentLevelChartItem: NSObject, TKMModelItem {
-  let dataLoader: DataLoader
   let currentLevelAssignments: [TKMAssignment]
 
-  @objc init(dataLoader: DataLoader, currentLevelAssignments: [TKMAssignment]) {
-    self.dataLoader = dataLoader
+  @objc init(currentLevelAssignments: [TKMAssignment]) {
     self.currentLevelAssignments = currentLevelAssignments
     super.init()
   }

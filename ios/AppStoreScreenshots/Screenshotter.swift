@@ -111,9 +111,8 @@ import Reachability
       nil
     }
 
-    override func getAssignments(level: Int) -> [TKMAssignment] {
+    override func getAssignments(level _: Int) -> [TKMAssignment] {
       // Return just enough to populate the SubjectsByLevelViewController.
-      let level = getUserInfo()!.level
       let subjects = [TKMSubject]() // TODO: show some fake subjects.
 
       srand48(42)

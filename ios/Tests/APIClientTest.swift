@@ -17,12 +17,14 @@ import Hippolyte
 import XCTest
 
 class APIClientTest: XCTestCase {
-  var dataLoader: FakeDataLoader!
   var client: WaniKaniAPIClient!
+  var subjectLevelGetter: FakeSubjectLevelGetter!
 
   override func setUp() {
-    dataLoader = FakeDataLoader()
-    client = WaniKaniAPIClient(apiToken: "bob", dataLoader: dataLoader)
+    subjectLevelGetter = FakeSubjectLevelGetter()
+
+    client = WaniKaniAPIClient(apiToken: "bob")
+    client.subjectLevelGetter = subjectLevelGetter
 
     Hippolyte.shared.start()
   }
@@ -148,7 +150,7 @@ class APIClientTest: XCTestCase {
 
     let expected = """
     id: 80463006
-    level: 0
+    level: 42
     subject_id: 8761
     subject_type: RADICAL
     available_at: 1519689600
@@ -610,7 +612,7 @@ class APIClientTest: XCTestCase {
 
     let expected = """
     id: 42
-    level: 0
+    level: 42
     subject_id: 8761
     subject_type: RADICAL
     available_at: 1519689600
@@ -708,7 +710,7 @@ class APIClientTest: XCTestCase {
 
     let expected = """
     id: 1422
-    level: 0
+    level: 42
     subject_id: 997
     subject_type: VOCABULARY
     available_at: 1526281200
@@ -998,74 +1000,7 @@ class APIClientTest: XCTestCase {
       meaning_hint: "To remember the meaning of <kanji>One</kanji>, imagine yourself there at the scene of the crime. You grab <kanji>One</kanji> in your arms, trying to prop it up, trying to hear its last words. Instead, it just splatters some blood on your face. \\"Who did this to you?\\" you ask. The number One points weakly, and you see number Two running off into an alleyway. He\\'s always been jealous of number One and knows he can be number one now that he\\'s taken the real number one out."
       reading_mnemonic: "As you\\'re sitting there next to <kanji>One</kanji>, holding him up, you start feeling a weird sensation all over your skin. From the wound comes a fine powder (obviously coming from the special bullet used to kill One) that causes the person it touches to get extremely <reading>itchy</reading> (いち)"
       reading_hint: "Make sure you feel the ridiculously <reading>itchy</reading> sensation covering your body. It climbs from your hands, where you\\'re holding the number <kanji>One</kanji> up, and then goes through your arms, crawls up your neck, goes down your body, and then covers everything. It becomes uncontrollable, and you\\'re scratching everywhere, writhing on the ground. It\\'s so itchy that it\\'s the most painful thing you\\'ve ever experienced (you should imagine this vividly, so you remember the reading of this kanji)."
-      formatted_meaning_mnemonic {
-        text: "Lying on the "
-      }
-      formatted_meaning_mnemonic {
-        format: RADICAL
-        text: "ground"
-      }
-      formatted_meaning_mnemonic {
-        text: " is something that looks just like the ground, the number "
-      }
-      formatted_meaning_mnemonic {
-        format: KANJI
-        text: "One"
-      }
-      formatted_meaning_mnemonic {
-        text: ". Why is this One lying down? It\\'s been shot by the number two. It\\'s lying there, bleeding out and dying. The number One doesn\\'t have long to live."
-      }
-      formatted_meaning_hint {
-        text: "To remember the meaning of "
-      }
-      formatted_meaning_hint {
-        format: KANJI
-        text: "One"
-      }
-      formatted_meaning_hint {
-        text: ", imagine yourself there at the scene of the crime. You grab "
-      }
-      formatted_meaning_hint {
-        format: KANJI
-        text: "One"
-      }
-      formatted_meaning_hint {
-        text: " in your arms, trying to prop it up, trying to hear its last words. Instead, it just splatters some blood on your face. \\"Who did this to you?\\" you ask. The number One points weakly, and you see number Two running off into an alleyway. He\\'s always been jealous of number One and knows he can be number one now that he\\'s taken the real number one out."
-      }
-      formatted_reading_mnemonic {
-        text: "As you\\'re sitting there next to "
-      }
-      formatted_reading_mnemonic {
-        format: KANJI
-        text: "One"
-      }
-      formatted_reading_mnemonic {
-        text: ", holding him up, you start feeling a weird sensation all over your skin. From the wound comes a fine powder (obviously coming from the special bullet used to kill One) that causes the person it touches to get extremely "
-      }
-      formatted_reading_mnemonic {
-        format: READING
-        text: "itchy"
-      }
-      formatted_reading_mnemonic {
-        text: " (いち)"
-      }
-      formatted_reading_hint {
-        text: "Make sure you feel the ridiculously "
-      }
-      formatted_reading_hint {
-        format: READING
-        text: "itchy"
-      }
-      formatted_reading_hint {
-        text: " sensation covering your body. It climbs from your hands, where you\\'re holding the number "
-      }
-      formatted_reading_hint {
-        format: KANJI
-        text: "One"
-      }
-      formatted_reading_hint {
-        text: " up, and then goes through your arms, crawls up your neck, goes down your body, and then covers everything. It becomes uncontrollable, and you\\'re scratching everywhere, writhing on the ground. It\\'s so itchy that it\\'s the most painful thing you\\'ve ever experienced (you should imagine this vividly, so you remember the reading of this kanji)."
-      }
+      visually_similar_kanji: "互下両土且正本末未士丁七二十"
     }
     amalgamation_subject_ids: 56
     amalgamation_subject_ids: 88
