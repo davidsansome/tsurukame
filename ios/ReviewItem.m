@@ -24,7 +24,7 @@
   NSMutableArray *ret = [NSMutableArray array];
   TKMUser *userInfo = [localCachingClient getUserInfo];
   for (TKMAssignment *assignment in assignments) {
-    if (![dataLoader isValidSubjectID:assignment.subjectId]) {
+    if (![localCachingClient isValidSubjectID:assignment.subjectId]) {
       continue;
     }
 
@@ -45,7 +45,7 @@
   NSMutableArray *ret = [NSMutableArray array];
   TKMUser *userInfo = [localCachingClient getUserInfo];
   for (TKMAssignment *assignment in assignments) {
-    if (![dataLoader isValidSubjectID:assignment.subjectId]) {
+    if (![localCachingClient isValidSubjectID:assignment.subjectId]) {
       continue;
     }
 

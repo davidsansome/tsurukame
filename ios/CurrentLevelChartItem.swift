@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -94,6 +94,7 @@ class CurrentLevelChartCell: TKMModelCell {
     strongDelegate = Delegate()
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     selectionStyle = .none
+    backgroundColor = TKMStyle.Color.cellBackground
 
     radicalChart = createChartView()
     kanjiChart = createChartView()

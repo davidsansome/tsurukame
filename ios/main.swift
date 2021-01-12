@@ -1,4 +1,4 @@
-// Copyright 2018 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,19 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <UIKit/UIKit.h>
-#import "AppDelegate.h"
+import Foundation
 
-int main(int argc, char *argv[]) {
-  // Ensure regexec(3) uses UTF-8 encoding for strings.
-  setlocale(LC_CTYPE, "UTF-8");
+private func main() {
+  setlocale(LC_CTYPE, "UTF-8")
 
-  Class appDelegateClass;
-  @autoreleasepool {
-    appDelegateClass = NSClassFromString(@"TestingAppDelegate");
-    if (!appDelegateClass) {
-      appDelegateClass = [AppDelegate class];
-    }
-  }
-  return UIApplicationMain(argc, argv, nil, NSStringFromClass(appDelegateClass));
+  let appDelegateClass: AnyClass = NSClassFromString("TestingAppDelegate") ?? AppDelegate.self
+  UIApplicationMain(CommandLine.argc, CommandLine.unsafeArgv, nil,
+                    NSStringFromClass(appDelegateClass))
 }
+
+main()

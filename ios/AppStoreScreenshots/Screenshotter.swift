@@ -14,6 +14,7 @@
 
 import Foundation
 import PromiseKit
+import Reachability
 
 #if !DEBUG
 
@@ -55,8 +56,11 @@ import PromiseKit
       }
     }
 
-    static let localCachingClientClass =
-      isActive ? FakeLocalCachingClient.self : LocalCachingClient.self
+    static func createLocalCachingClient(client: WaniKaniAPIClient,
+                                         reachability: Reachability) -> LocalCachingClient {
+      isActive ? FakeLocalCachingClient(client: client, reachability: reachability)
+        : LocalCachingClient(client: client, reachability: reachability)
+    }
   }
 
   class FakeLocalCachingClient: LocalCachingClient {

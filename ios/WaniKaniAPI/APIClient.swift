@@ -15,6 +15,10 @@
 import Foundation
 import PromiseKit
 
+protocol SubjectLevelGetter: AnyObject {
+  func levelOf(subjectId: Int) -> Int?
+}
+
 /**
  * Client for the WaniKani v2 API.
  * You need an API token to use this class.  Use WaniKaniWebClient to get an
@@ -22,13 +26,13 @@ import PromiseKit
  */
 @objc(Client)
 class WaniKaniAPIClient: NSObject {
-  private let dataLoader: DataLoaderProtocol
+  weak var subjectLevelGetter: SubjectLevelGetter!
+
   private let apiToken: String
   private let session: URLSession
 
   @objc
-  init(apiToken: String, dataLoader: DataLoaderProtocol) {
-    self.dataLoader = dataLoader
+  init(apiToken: String) {
     self.apiToken = apiToken
 
     let sessionConfig = URLSessionConfiguration.default
@@ -75,7 +79,7 @@ class WaniKaniAPIClient: NSObject {
     }.map { (allData: Response<[Response<AssignmentData>]>) -> Assignments in
       var ret = [TKMAssignment]()
       for data in allData.data {
-        ret.append(data.data.toProto(id: data.id, dataLoader: self.dataLoader))
+        ret.append(data.data.toProto(id: data.id, subjectLevelGetter: self.subjectLevelGetter))
       }
       return (assignments: ret, updatedAt: allData.data_updated_at ?? updatedAfter)
     }
@@ -206,7 +210,7 @@ class WaniKaniAPIClient: NSObject {
 
       return query(request)
     }.map { (data: Response<AssignmentData>) -> TKMAssignment in
-      data.data.toProto(id: data.id, dataLoader: self.dataLoader)
+      data.data.toProto(id: data.id, subjectLevelGetter: self.subjectLevelGetter)
     }
   }
 
@@ -229,7 +233,8 @@ class WaniKaniAPIClient: NSObject {
       return query(request)
     }.map { (data: MultiResourceResponse<ReviewData>) -> TKMAssignment in
       if let assignment = data.resources_updated?.assignment {
-        return assignment.data.toProto(id: assignment.id, dataLoader: self.dataLoader)
+        return assignment.data.toProto(id: assignment.id,
+                                       subjectLevelGetter: self.subjectLevelGetter)
       }
       return TKMAssignment()
     }
@@ -551,12 +556,12 @@ private struct AssignmentData: Codable {
   var passed_at: WaniKaniDate?
   var available_at: WaniKaniDate?
 
-  func toProto(id: Int?, dataLoader: DataLoaderProtocol) -> TKMAssignment {
+  func toProto(id: Int?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment {
     let ret = TKMAssignment()
     ret.id_p = Int32(id ?? 0)
     ret.subjectId = Int32(subject_id)
     ret.srsStage = Int32(srs_stage)
-    ret.level = Int32(dataLoader.levelOf(subjectID: subject_id))
+    ret.level = Int32(subjectLevelGetter.levelOf(subjectId: subject_id) ?? 0)
     setProtoDate(ret, field: "availableAt", to: available_at)
     setProtoDate(ret, field: "startedAt", to: started_at)
     setProtoDate(ret, field: "passedAt", to: passed_at)

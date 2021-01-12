@@ -33,9 +33,8 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
 @objc
 @objcMembers
-class LocalCachingClient: NSObject {
+class LocalCachingClient: NSObject, SubjectLevelGetter {
   let client: WaniKaniAPIClient
-  let dataLoader: DataLoader
   let reachability: Reachability
 
   private var db: FMDatabaseQueue!
@@ -53,10 +52,10 @@ class LocalCachingClient: NSObject {
 
   @Cached var guruKanjiCount: Int
   @Cached(notificationName: .lccSRSCategoryCountsChanged) var srsCategoryCounts: [Int]
+  @Cached var maxLevelGrantedBySubscription: Int
 
-  init(client: WaniKaniAPIClient, dataLoader: DataLoader, reachability: Reachability) {
+  init(client: WaniKaniAPIClient, reachability: Reachability) {
     self.client = client
-    self.dataLoader = dataLoader
     self.reachability = reachability
 
     super.init()
@@ -76,6 +75,9 @@ class LocalCachingClient: NSObject {
     }
     _srsCategoryCounts.updateBlock = {
       self.updateSrsCategoryCounts()
+    }
+    _maxLevelGrantedBySubscription.updateBlock = {
+      Int(self.getUserInfo()?.maxLevelGrantedBySubscription ?? 0)
     }
   }
 
@@ -119,7 +121,7 @@ class LocalCachingClient: NSObject {
     for assignment in getAllAssignments() {
       // Don't count assignments with invalid subjects.  This includes assignments for levels higher
       // than the user's max subscription level.
-      if !dataLoader.isValid(subjectID: Int(assignment.subjectId)) {
+      if !isValid(subjectId: Int(assignment.subjectId)) {
         continue
       }
 
@@ -303,13 +305,6 @@ class LocalCachingClient: NSObject {
         }
       }
     }
-
-    db.inTransaction { db in
-      for id in dataLoader.deletedSubjectIDs {
-        db.mustExecuteUpdate("DELETE FROM assignments WHERE subject_id = ?", args: [id])
-        db.mustExecuteUpdate("DELETE FROM subject_progress WHERE id = ?", args: [id])
-      }
-    }
   }
 
   func getAllAssignments() -> [TKMAssignment] {
@@ -483,6 +478,32 @@ class LocalCachingClient: NSObject {
       }
       return nil
     }
+  }
+
+  @objc(isValidSubjectID:)
+  func isValid(subjectId: Int) -> Bool {
+    guard let level = levelOf(subjectId: subjectId) else {
+      return false
+    }
+    return level <= maxLevelGrantedBySubscription
+  }
+
+  func levelOf(subjectId: Int) -> Int? {
+    db.inDatabase { db in
+      let cursor = db.query("SELECT level FROM subjects WHERE id = ?", args: [subjectId])
+      if cursor.next() {
+        return Int(cursor.int(forColumnIndex: 0))
+      }
+      return nil
+    }
+  }
+
+  @objc(levelOfSubjectID:)
+  func levelOfObjCWrapper(subjectId: Int) -> Int {
+    if let level = levelOf(subjectId: subjectId) {
+      return level
+    }
+    return 0
   }
 
   private func getSubjects(byLevel level: Int, transaction db: FMDatabase) -> TKMSubjectsByLevel {
@@ -812,6 +833,9 @@ class LocalCachingClient: NSObject {
         db.mustExecuteUpdate("REPLACE INTO user (id, pb) VALUES (0, ?)",
                              args: [user.data()!])
       }
+      if user.maxLevelGrantedBySubscription != self.maxLevelGrantedBySubscription {
+        self._maxLevelGrantedBySubscription.invalidate()
+      }
     }
   }
 
@@ -883,16 +907,17 @@ class LocalCachingClient: NSObject {
         UPDATE sync
           SET assignments_updated_after = \"\",
               subjects_updated_after = \"\";
-        DELETE FROM subjects;
         """)
       }
     }
 
-    // Fetch subjects in parallel with everything else.
-    let subjectPromise = fetchSubjects(progress: childProgress(subjectProgressUnits))
-    let syncPromise = when(fulfilled: [
+    return when(fulfilled: [
       sendAllPendingProgress(progress: childProgress(1)),
       sendAllPendingStudyMaterials(progress: childProgress(1)),
+
+      // Fetch subjects before fetching anything else - we need to know subject levels to use them
+      // in assignment protos.
+      fetchSubjects(progress: childProgress(subjectProgressUnits)),
     ]).then { _ in
       when(fulfilled: [
         self.fetchAssignments(progress: childProgress(assignmentProgressUnits)),
@@ -900,9 +925,7 @@ class LocalCachingClient: NSObject {
         self.fetchUserInfo(progress: childProgress(1)),
         self.fetchLevelProgression(progress: childProgress(1)),
       ])
-    }
-
-    return when(fulfilled: [subjectPromise, syncPromise]).done {
+    }.done {
       self._availableSubjects.invalidate()
       self._srsCategoryCounts.invalidate()
       postNotificationOnMainQueue(.lccUserInfoChanged)
@@ -916,6 +939,7 @@ class LocalCachingClient: NSObject {
     db.inDatabase { db in
       db.mustExecuteStatements(kClearAllData)
     }
+    _maxLevelGrantedBySubscription.invalidate()
   }
 
   func clearAllDataAndClose() {
@@ -969,6 +993,7 @@ struct Cached<T> {
     mutating get {
       if stale {
         value = updateBlock!()
+        stale = false
       }
       return value!
     }

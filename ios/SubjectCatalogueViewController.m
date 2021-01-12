@@ -29,7 +29,7 @@
 
 - (void)setupWithServices:(TKMServices *)services level:(int)level {
   _services = services;
-  _level = (int)MIN(level, _services.dataLoader.maxLevelGrantedBySubscription);
+  _level = (int)MIN(level, _services.localCachingClient.maxLevelGrantedBySubscription);
 }
 
 - (void)viewDidLoad {
@@ -71,7 +71,7 @@
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)createViewControllerForLevel:(int)level {
-  if (level < 1 || level > _services.dataLoader.maxLevelGrantedBySubscription) {
+  if (level < 1 || level > _services.localCachingClient.maxLevelGrantedBySubscription) {
     return nil;
   }
   SubjectsByLevelViewController *vc =
