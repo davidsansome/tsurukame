@@ -177,12 +177,23 @@ class WaniKaniAPIClient: NSObject {
 
     // Fetch the data and convert to protobufs.
     return firstly {
-      pagedQuery(url: url.url!, progress: progress)
+      updatedAfter.isEmpty ?
+        speculativeParallelPagedQuery(url: url.url!, progress: progress, perPage: 1000,
+                                      numPages: 9) :
+        pagedQuery(url: url.url!, progress: progress)
     }.map { (allData: Response<[Response<SubjectData>]>) -> Subjects in
       var ret = [TKMSubject]()
+      var seenIds = Set<Int>()
       for data in allData.data {
-        if let id = data.id,
-          let objectType = data.object,
+        guard let id = data.id else {
+          continue
+        }
+        if seenIds.contains(id) {
+          continue
+        }
+        seenIds.insert(id)
+
+        if let objectType = data.object,
           let subject = data.data.toProto(id: id, objectType: objectType) {
           ret.append(subject)
         }
@@ -320,6 +331,68 @@ class WaniKaniAPIClient: NSObject {
       // Otherwise we're done - return the results.
       return .value(results)
     }
+  }
+
+  private func speculativeParallelPagedQuery<DataType: Codable>(url: URL,
+                                                                progress: Progress,
+                                                                perPage: Int,
+                                                                numPages: Int)
+    -> Promise<Response<[DataType]>> {
+    let results = try! JSONDecoder()
+      .decode(Response<[DataType]>.self, from: kEmptyPaginatedResultJson)
+    return speculativeParallelPagedQuery(url: url, results: results, progress: progress,
+                                         perPage: perPage, numPages: numPages)
+  }
+
+  /**
+   * Speculatively fetches numPages in parallel from the given base URL (without any page_after_id
+   * parameter).
+   *
+   * If there are any more pages after the last one they will be fetched serially.
+   * The results array may contain duplicate items - it's the caller's responsibility to remove
+   * duplicates.
+   */
+  private func speculativeParallelPagedQuery<DataType: Codable>(url: URL,
+                                                                results: Response<[DataType]>,
+                                                                progress: Progress,
+                                                                perPage: Int,
+                                                                numPages: Int)
+    -> Promise<Response<[DataType]>> {
+    progress.totalUnitCount = 1
+
+    var promises = [Promise<Void>]()
+    for page in 0 ..< numPages {
+      let pageAfterId = page * perPage - 1
+      let isLastPage = page == numPages - 1
+
+      // Construct the new page URL.
+      var pageUrl = URLComponents(url: url, resolvingAgainstBaseURL: true)!
+      if pageUrl.queryItems == nil {
+        pageUrl.queryItems = []
+      }
+      pageUrl.queryItems!.append(URLQueryItem(name: "page_after_id", value: String(pageAfterId)))
+
+      if !isLastPage {
+        // Fetch the first N-1 pages as one-off queries for individual URLs.
+        promises.append(firstly {
+          query(authorize(pageUrl.url!))
+        }.map { (response: PaginatedResponse<[DataType]>) -> Void in
+          // Add these results to the previous ones.
+          results.data_updated_at = response.data_updated_at
+          results.data.append(contentsOf: response.data)
+          return ()
+        })
+      } else {
+        // Even though we think this is the last page it might have more pages after it, so fall
+        // back to the serial page fetching behaviour.
+        promises.append(firstly {
+          pagedQuery(url: pageUrl.url!, results: results, progress: Progress(totalUnitCount: -1))
+        }.asVoid())
+      }
+    }
+
+    // Wait for all page fetches to complete.
+    return when(fulfilled: promises).map { results }
   }
 
   /** Fetches a single URL from the WaniKani API and returns its data. */
