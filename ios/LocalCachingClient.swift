@@ -772,7 +772,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     let updatedAfter: String = db.inDatabase { db in
       let cursor = db.query("SELECT assignments_updated_after FROM sync")
       if cursor.next() {
-        return cursor.string(forColumnIndex: 0)!
+        return cursor.string(forColumnIndex: 0) ?? ""
       }
       return ""
     }
@@ -802,7 +802,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     let updatedAfter: String = db.inDatabase { db in
       let cursor = db.query("SELECT study_materials_updated_after FROM sync")
       if cursor.next() {
-        return cursor.string(forColumnIndex: 0)!
+        return cursor.string(forColumnIndex: 0) ?? ""
       }
       return ""
     }
@@ -858,7 +858,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     let updatedAfter: String = db.inDatabase { db in
       let cursor = db.query("SELECT subjects_updated_after FROM sync")
       if cursor.next() {
-        return cursor.string(forColumnIndex: 0)!
+        return cursor.string(forColumnIndex: 0) ?? ""
       }
       return ""
     }
