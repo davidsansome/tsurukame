@@ -23,7 +23,7 @@ PODS:
   - PromiseKit/CorePromise (6.8.5)
   - PromiseKit/Foundation (6.8.5):
     - PromiseKit/CorePromise
-  - Protobuf (3.13.0)
+  - Protobuf (4.0.0-rc1)
   - Reachability (3.2)
 
 DEPENDENCIES:
@@ -35,7 +35,7 @@ DEPENDENCIES:
   - MMDrawerController (~> 0.6.0)
   - PromiseKit/CorePromise (~> 6.8.1)
   - PromiseKit/Foundation (~> 6.8.1)
-  - Protobuf (~> 3.13.0)
+  - Protobuf (~> 4.0.0-rc1)
   - Reachability (~> 3.2)
 
 SPEC REPOS:
@@ -58,9 +58,9 @@ SPEC CHECKSUMS:
   Light-Untar: e901c312974d36f3910aec73436296a5a3faf799
   MMDrawerController: e3a54a5570388463ad3b36975251575b50c4e1a0
   PromiseKit: 9616b0afef31eae56ab9ce044c8ec2b8612a15cd
-  Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
+  Protobuf: 4f17d10ac4c40626e36f2612842f1a9bc9cf734f
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
-PODFILE CHECKSUM: 67fe70e7168b8e2dedb1d84d1cc19e55bc530163
+PODFILE CHECKSUM: cd300d23b2307968575341ffaf6125f7b40cc28d
 
 COCOAPODS: 1.9.3
