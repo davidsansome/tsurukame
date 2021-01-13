@@ -115,19 +115,19 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     nc.addObserver(self,
                    selector: #selector(availableItemsChanged),
                    name: NSNotification.Name.lccAvailableItemsChanged,
-                   object: services.localCachingClient)
+                   object: nil)
     nc.addObserver(self,
                    selector: #selector(userInfoChanged),
                    name: NSNotification.Name.lccUserInfoChanged,
-                   object: services.localCachingClient)
+                   object: nil)
     nc.addObserver(self,
                    selector: #selector(srsLevelCountsChanged),
                    name: NSNotification.Name.lccSRSCategoryCountsChanged,
-                   object: services.localCachingClient)
+                   object: nil)
     nc.addObserver(self,
                    selector: #selector(clientIsUnauthorized),
                    name: NSNotification.Name.lccUnauthorized,
-                   object: services.localCachingClient)
+                   object: nil)
     nc.addObserver(self,
                    selector: #selector(applicationDidEnterBackground),
                    name: UIApplication.didEnterBackgroundNotification,
