@@ -199,7 +199,7 @@ struct SubjectData: Codable {
       for audio in pronunciation_audios {
         if audio.content_type == "audio/mpeg",
           let dash = audio.url.firstIndex(of: "-"),
-          let id = Int32(audio.url[audio.url.index(audio.url.startIndex, offsetBy: 32) ... dash]) {
+          let id = Int32(audio.url[audio.url.index(audio.url.startIndex, offsetBy: 32) ..< dash]) {
           ret.addValue(id)
         }
       }

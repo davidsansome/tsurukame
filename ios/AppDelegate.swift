@@ -167,6 +167,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
     if !Settings.notificationsAllReviews, !Settings.notificationsBadging {
       return
     }
+    if services.localCachingClient == nil {
+      return
+    }
 
     let user = services.localCachingClient.getUserInfo()
     let reviewCount = services.localCachingClient.availableReviewCount
