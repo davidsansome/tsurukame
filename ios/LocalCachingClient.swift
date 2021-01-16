@@ -829,11 +829,18 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       client.user(progress: progress)
     }.done { user in
       NSLog("Updated user: %@", user.debugDescription)
+      let oldMaxLevel = self.maxLevelGrantedBySubscription
       self.db.inTransaction { db in
         db.mustExecuteUpdate("REPLACE INTO user (id, pb) VALUES (0, ?)",
                              args: [user.data()!])
+
+        if oldMaxLevel > 0, user.maxLevelGrantedBySubscription > oldMaxLevel {
+          // The user's max level increased, so more subjects might be available now. Clear the
+          // sync marker to force all the subjects to be downloaded again next sync.
+          db.mustExecuteUpdate("UPDATE sync SET subjects_updated_after = \"\"")
+        }
       }
-      if user.maxLevelGrantedBySubscription != self.maxLevelGrantedBySubscription {
+      if user.maxLevelGrantedBySubscription != oldMaxLevel {
         self._maxLevelGrantedBySubscription.invalidate()
       }
     }
@@ -959,13 +966,6 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
 
   var upcomingReviews: [Int] {
     availableSubjects.upcomingReviews
-  }
-
-  @objc(syncQuick:completionHandler:)
-  func sync(quick: Bool, completionHandler: @escaping () -> Void) {
-    sync(quick: quick, progress: Progress(totalUnitCount: -1)).finally {
-      completionHandler()
-    }
   }
 }
 
