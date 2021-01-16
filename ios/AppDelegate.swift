@@ -193,7 +193,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
         nc.removeAllPendingNotificationRequests()
 
         let startDate = NSCalendar.current.nextDate(after: Date(),
-                                                    matching: DateComponents(second: 0),
+                                                    matching: DateComponents(minute: 0, second: 0),
                                                     matchingPolicy: .nextTime)!
         let startInterval = startDate.timeIntervalSinceNow
         var cumulativeReviews = reviewCount
