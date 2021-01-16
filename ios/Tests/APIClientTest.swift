@@ -891,10 +891,10 @@ class APIClientTest: XCTestCase {
     XCTAssertEqual(progress.completedUnitCount, 1)
   }
 
-  func testAllSubjects() {
+  func testAllSubjectsParsesOneSubject() {
     var request = StubRequest(method: .GET,
                               url: URL(string: "https://api.wanikani.com/v2/subjects" +
-                                "?hidden=false")!)
+                                "?hidden=false&page_after_id=-1")!)
     request.setHeader(key: "Authorization", value: "Token token=bob")
     request.response.body = """
     {
@@ -969,6 +969,28 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
+    // Return empty responses for the other pages.
+    for pageAfterId in stride(from: 999, through: 7999, by: 1000) {
+      var request = StubRequest(method: .GET,
+                                url: URL(string: "https://api.wanikani.com/v2/subjects" +
+                                  "?hidden=false&page_after_id=\(pageAfterId)")!)
+      request.response.body = """
+      {
+        "object": "collection",
+        "url": "https://api.wanikani.com/v2/subjects?types=kanji",
+        "pages": {
+          "per_page": 1000,
+          "next_url": null,
+          "previous_url": null
+        },
+        "total_count": 2027,
+        "data_updated_at": "2018-04-09T18:08:59.946969Z",
+        "data": []
+      }
+      """.data(using: .utf8)
+      Hippolyte.shared.add(stubbedRequest: request)
+    }
+
     let expected = """
     id: 440
     level: 1
@@ -1013,7 +1035,7 @@ class APIClientTest: XCTestCase {
       assertProtoEquals(result.subjects[0], expected)
       XCTAssertEqual(result.updatedAt, "2018-04-09T18:08:59.946969Z")
     }
-    XCTAssertEqual(progress.totalUnitCount, 3)
+    XCTAssertEqual(progress.totalUnitCount, 1)
     XCTAssertEqual(progress.completedUnitCount, 1)
   }
 

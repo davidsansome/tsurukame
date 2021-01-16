@@ -392,7 +392,11 @@ class WaniKaniAPIClient: NSObject {
     }
 
     // Wait for all page fetches to complete.
-    return when(fulfilled: promises).map { results }
+    return when(fulfilled: promises).ensure {
+      progress.completedUnitCount = 1
+    }.map {
+      results
+    }
   }
 
   /** Fetches a single URL from the WaniKani API and returns its data. */
