@@ -205,7 +205,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
                                 on:Settings.allowSkippingReviews
                             target:self
                             action:@selector(allowSkippingReviewsSwitchChanged:)]];
-  
+
   TKMSwitchModelItem *minimizeReviewPenaltyItem =
       [[TKMSwitchModelItem alloc] initWithStyle:UITableViewCellStyleSubtitle
                                           title:@"Minimize review penalty"
