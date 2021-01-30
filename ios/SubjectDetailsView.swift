@@ -138,14 +138,14 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
                            studyMaterials: TKMStudyMaterials?,
                            toModel model: TKMMutableTableModel) {
     let text = renderMeanings(subject: subject, studyMaterials: studyMaterials)
-      .withFontSize(kFontSize)
+      .string(withFontSize: kFontSize)
     let item = AttributedModelItem(text: text)
 
     model.addSection("Meaning")
     model.add(item)
 
     if let notesText = renderNotes(studyMaterials: studyMaterials, isMeaning: true) {
-      let notesItem = AttributedModelItem(text: notesText.withFontSize(kFontSize))
+      let notesItem = AttributedModelItem(text: notesText.string(withFontSize: kFontSize))
       model.addSection("Meaning Note")
       model.add(notesItem)
     }
@@ -157,7 +157,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
     let text = renderReadings(readings: subject.readingsArray as! [TKMReading],
-                              primaryOnly: primaryOnly).withFontSize(kFontSize)
+                              primaryOnly: primaryOnly).string(withFontSize: kFontSize)
     let item = ReadingModelItem(text: text)
     if subject.hasVocabulary, subject.vocabulary.audioIdsArray_Count > 0 {
       item.setAudio(services.audio, subjectID: subject.id_p)
@@ -168,7 +168,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     model.add(item)
 
     if let notesText = renderNotes(studyMaterials: studyMaterials, isMeaning: false) {
-      let notesItem = AttributedModelItem(text: notesText.withFontSize(kFontSize))
+      let notesItem = AttributedModelItem(text: notesText.string(withFontSize: kFontSize))
       model.addSection("Reading Note")
       model.add(notesItem)
     }

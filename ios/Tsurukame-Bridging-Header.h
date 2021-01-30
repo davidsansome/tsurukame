@@ -17,7 +17,6 @@
 
 #import "LessonsViewController.h"
 #import "LoginViewController.h"
-#import "NSMutableAttributedString+Replacements.h"
 #import "NSString+LevenshteinDistance.h"
 #import "ReviewItem.h"
 #import "ReviewSummaryViewController.h"
