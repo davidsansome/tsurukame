@@ -14,7 +14,6 @@
 
 #import "SettingsViewController.h"
 
-#import "Extensions/ProtobufExtensions.h"
 #import "LoginViewController.h"
 #import "TKMFontsViewController.h"
 #import "Tables/TKMSwitchModelItem.h"
@@ -283,7 +282,7 @@ typedef void (^NotificationPermissionHandler)(BOOL granted);
   NSMutableArray<NSString *> *lessonOrderText = [NSMutableArray array];
   for (int i = 0; i < Settings.lessonOrder.count; i++) {
     TKMSubject_Type type = [Settings.lessonOrder objectAtIndex:i].intValue;
-    [lessonOrderText addObject:TKMSubjectTypeName(type)];
+    [lessonOrderText addObject:[TKMProtobufExtensions subjectTypeName:type]];
   }
   return [lessonOrderText componentsJoinedByString:@", "];
 }

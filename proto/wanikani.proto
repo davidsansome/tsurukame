@@ -146,7 +146,7 @@ message Assignment {
   optional Subject.Type subject_type = 4;
   optional int32 available_at = 5;
   optional int32 started_at = 6;
-  optional int32 srs_stage = 7;
+  optional int32 srs_stage_number = 7;
   optional int32 passed_at = 8;
 }
 
@@ -164,7 +164,7 @@ message Progress {
 message StudyMaterials {
   optional int32 id = 1;
   optional int32 subject_id = 2;
-  optional string subject_type = 6;
+  reserved 6;
   optional string meaning_note = 3;
   optional string reading_note = 4;
   repeated string meaning_synonyms = 5;

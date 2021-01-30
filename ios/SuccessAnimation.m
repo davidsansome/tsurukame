@@ -13,8 +13,6 @@
 // limitations under the License.
 
 #import "SuccessAnimation.h"
-
-#import "Extensions/ProtobufExtensions.h"
 #import "Tsurukame-Swift.h"
 
 static CGFloat RandFloat(CGFloat min, CGFloat max) {
@@ -282,7 +280,7 @@ void RunSuccessAnimation(UIView *answerField,
                          UILabel *srsLevelLabel,
                          bool isSubjectFinished,
                          bool didLevelUp,
-                         int newSrsStage) {
+                         NSInteger newSrsStage) {
   if (Settings.animateParticleExplosion) {
     CreateExplosion(answerField);
   }
@@ -317,7 +315,7 @@ void RunSuccessAnimation(UIView *answerField,
       default:
         return;
     }
-    NSString *srsLevelString = TKMSRSStageName(newSrsStage);
+    NSString *srsLevelString = [TKMProtobufExtensions srsStageName:newSrsStage];
 
     CreateSpringyBillboard(answerField, srsLevelString, [UIFont systemFontOfSize:16.0],
                            [UIColor whiteColor], srsLevelColor,

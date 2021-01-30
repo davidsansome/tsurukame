@@ -14,7 +14,6 @@
 
 #import "SubjectsByLevelViewController.h"
 
-#import "Extensions/ProtobufExtensions.h"
 #import "SubjectDetailsViewController.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
@@ -93,7 +92,7 @@
         } else if (assignment.isLessonStage) {
           label = @"Available in Lessons";
         } else {
-          label = TKMDetailedSRSStageName(assignment.srsStage);
+          label = [TKMProtobufExtensions srsStageName:assignment.srsStage];
         }
         [model insertItem:[[TKMListSeparatorItem alloc] initWithLabel:label]
                   atIndex:index

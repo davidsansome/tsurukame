@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
 import Foundation
 
 @objc class SRSStageCategoryItem: TKMBasicModelItem {
-  let stageCategory: TKMSRSStageCategory
+  let stageCategory: SRSStageCategory
 
-  @objc init(stageCategory: TKMSRSStageCategory, count: Int) {
+  @objc init(stageCategory: SRSStageCategory, count: Int) {
     self.stageCategory = stageCategory
     super.init(style: .value1,
-               title: TKMSRSStageCategoryName(stageCategory),
+               title: stageCategory.description,
                subtitle: String(count),
                accessoryType: .none,
                target: nil,
@@ -34,6 +34,6 @@ import Foundation
     }
     textColor = color
     imageTintColor = color
-    image = UIImage(named: TKMSRSStageCategoryName(stageCategory))!
+    image = UIImage(named: stageCategory.description)!
   }
 }

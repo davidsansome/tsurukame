@@ -101,7 +101,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       for cursor in cursor {
         let srsStage = cursor.int(forColumnIndex: 0)
         let count = Int(cursor.int(forColumnIndex: 1))
-        let srsCategory = TKMSRSStageCategoryForStage(srsStage).rawValue
+        let srsCategory = SRSStage(rawValue: Int(srsStage))!.category.rawValue
         ret[srsCategory] += count
       }
       return ret
@@ -290,7 +290,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
           db.mustExecuteUpdate(sql, args: [
             assignment.subjectId,
             assignment.level,
-            assignment.srsStage,
+            assignment.srsStage.rawValue,
             assignment.subjectType.rawValue,
           ])
         }
@@ -299,7 +299,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
           db.mustExecuteUpdate(sql, args: [
             assignment.subjectId,
             assignment.level,
-            assignment.srsStage,
+            assignment.srsStage.rawValue,
             assignment.subjectType.rawValue,
           ])
         }
@@ -414,7 +414,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         assignment!.level = cursor.int(forColumnIndex: 1)
         assignment!.subjectType = TKMSubject_Type(rawValue: cursor.int(forColumnIndex: 3))!
       }
-      assignment!.srsStage = cursor.int(forColumnIndex: 2)
+      assignment!.srsStageNumber = cursor.int(forColumnIndex: 2)
 
       ret.append(assignment!)
       subjectIds.insert(Int(assignment!.subjectId))
@@ -549,14 +549,18 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
 
         var newSrsStage = p.assignment.srsStage
         if p.isLesson || (!p.meaningWrong && !p.readingWrong) {
-          newSrsStage += 1
+          newSrsStage = newSrsStage.next
         } else if p.meaningWrong || p.readingWrong {
-          newSrsStage = max(0, newSrsStage - 1)
+          newSrsStage = newSrsStage.previous
         }
         db.mustExecuteUpdate("REPLACE INTO subject_progress (id, level, srs_stage, subject_type) " +
           "VALUES (?, ?, ?, ?)",
-          args: [p.assignment.subjectId, p.assignment.level, newSrsStage,
-                 p.assignment.subjectType.rawValue])
+          args: [
+            p.assignment.subjectId,
+            p.assignment.level,
+            newSrsStage.rawValue,
+            p.assignment.subjectType.rawValue,
+          ])
       }
     }
 
@@ -789,7 +793,8 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
           db.mustExecuteUpdate("REPLACE INTO subject_progress (id, level, " +
             "srs_stage, subject_type) VALUES (?, ?, ?, ?)",
             args: [assignment.subjectId, assignment.level,
-                   assignment.srsStage, assignment.subjectType.rawValue])
+                   assignment.srsStage.rawValue,
+                   assignment.subjectType.rawValue])
         }
         db.mustExecuteUpdate("UPDATE sync SET assignments_updated_after = ?",
                              args: [updatedAt])

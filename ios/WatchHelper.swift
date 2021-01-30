@@ -102,7 +102,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
       var halfLevel = false
       var assignmentsAtCurrentLevel = client.getAssignmentsAtUsersCurrentLevel()
       var learnedCount = assignmentsAtCurrentLevel.filter { (assignment) -> Bool in
-        assignment.srsStage >= 5
+        assignment.srsStage >= .guru1
       }.count
 
       // If the user is in the vocab and technically levels up but has 0
@@ -113,7 +113,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
         halfLevel = true
         assignmentsAtCurrentLevel = client.getAssignments(level: Int(assignment.level) - 1)
         learnedCount = assignmentsAtCurrentLevel.filter { (assignment) -> Bool in
-          assignment.srsStage >= 5
+          assignment.srsStage >= .guru1
         }.count
       }
 

@@ -18,8 +18,6 @@
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tsurukame-Swift.h"
 
-#import "Extensions/ProtobufExtensions.h"
-
 #import <WebKit/WebKit.h>
 
 @interface SubjectDetailsViewController () <TKMSubjectDelegate, TKMViewController>

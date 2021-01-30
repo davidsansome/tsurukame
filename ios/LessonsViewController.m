@@ -14,7 +14,6 @@
 
 #import "LessonsViewController.h"
 
-#import "Extensions/ProtobufExtensions.h"
 #import "LessonsPageControl.h"
 #import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0A943349E17FA7889EFEE41F /* Pods_Tsurukame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC80AAF9736A570E3C4CC09E /* Pods_Tsurukame.framework */; };
 		3DA8BAFC224C9580009E925B /* LessonOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8BAFB224C9580009E925B /* LessonOrderViewController.m */; };
-		480B243123D6830300FC2A82 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 480B243023D6830300FC2A82 /* SwiftPackageProductDependency */; };
+		480B243123D6830300FC2A82 /* Rexy in Frameworks */ = {isa = PBXBuildFile; productRef = 480B243023D6830300FC2A82 /* Rexy */; };
 		4811E39224D9CAE2003B5089 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4811E39124D9CAE2003B5089 /* NSDate+TimeAgo.m */; };
 		481B2FED23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */; };
 		4820306724D849E100B40FDD /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* Settings.swift */; };
@@ -71,7 +71,6 @@
 		63996B342594387100149414 /* NSRegularExpression+Matches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1676D253AD8AD00B5BCD6 /* NSRegularExpression+Matches.swift */; };
 		63996B3C2594389500149414 /* LocalCachingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */; };
 		63996B44259438C400149414 /* FMDatabase+Assert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */; };
-		63996B4C259438E100149414 /* ProtobufExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB011FCD755300E09DA1 /* ProtobufExtensions.m */; };
 		63996B542594390300149414 /* GPBPrimitiveArray+Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16771253AD8AE00B5BCD6 /* GPBPrimitiveArray+Sequence.swift */; };
 		63996BB72594754400149414 /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63996BB62594754400149414 /* TestUtils.swift */; };
 		63996BE62595D1B700149414 /* WebClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63996BE52595D1B700149414 /* WebClientTest.swift */; };
@@ -102,7 +101,6 @@
 		63C42A4821B6AF02008CA938 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63EEFEBC1FC45C440070C05F /* Assets.xcassets */; };
 		63CAAAD91FC6E0CB00E09DA1 /* Wanikani.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAAFD1FCD693500E09DA1 /* ReviewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */; };
-		63CAAB031FCD755300E09DA1 /* ProtobufExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB011FCD755300E09DA1 /* ProtobufExtensions.m */; };
 		63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */; };
 		63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
 		63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */; };
@@ -119,6 +117,8 @@
 		63DB06D325A091FF0071DC1C /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB06D125A091FF0071DC1C /* Subject.swift */; };
 		63DB06EA25A09AA00071DC1C /* visually-similar-kanji.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */; };
 		63DB06EB25A09AA00071DC1C /* visually-similar-kanji.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */; };
+		63DD391425C509D8004D4E5B /* ProtobufExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */; };
+		63DD391525C509D8004D4E5B /* ProtobufExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
 		63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */; };
 		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
@@ -238,7 +238,6 @@
 		4811E39424D9CB16003B5089 /* NSDate+TimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+TimeAgo.h"; sourceTree = "<group>"; };
 		481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLevelReviewTimeItem.swift; sourceTree = "<group>"; };
 		4826740B23ECE46900F704E4 /* TKMReviewBatchSizeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMReviewBatchSizeViewController.h; sourceTree = "<group>"; };
-		487445A724D9BA10009CE30A /* ProtobufExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProtobufExtensions.h; sourceTree = "<group>"; };
 		489894D423670CB000A20AF8 /* Tsurukame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tsurukame.entitlements; sourceTree = "<group>"; };
 		48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMReviewBatchSizeViewController.m; sourceTree = "<group>"; };
 		4B8236EC341CF1BA18D16857 /* Pods-Tsurukame-Tsurukame Complication Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame-Tsurukame Complication Extension.release.xcconfig"; path = "Target Support Files/Pods-Tsurukame-Tsurukame Complication Extension/Pods-Tsurukame-Tsurukame Complication Extension.release.xcconfig"; sourceTree = "<group>"; };
@@ -341,7 +340,6 @@
 		63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Wanikani.pbobjc.m; path = proto/Wanikani.pbobjc.m; sourceTree = "<group>"; };
 		63CAAAFB1FCD693500E09DA1 /* ReviewItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewItem.h; sourceTree = "<group>"; };
 		63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewItem.m; sourceTree = "<group>"; };
-		63CAAB011FCD755300E09DA1 /* ProtobufExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProtobufExtensions.m; sourceTree = "<group>"; };
 		63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+LevenshteinDistance.h"; sourceTree = "<group>"; };
 		63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+LevenshteinDistance.m"; sourceTree = "<group>"; };
 		63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -357,6 +355,7 @@
 		63DB06C025A091710071DC1C /* old-mnemonics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "old-mnemonics.json"; sourceTree = "<group>"; };
 		63DB06D125A091FF0071DC1C /* Subject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
 		63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "visually-similar-kanji.json"; sourceTree = "<group>"; };
+		63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtobufExtensions.swift; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63E9A8CA210D6CC000418CE1 /* SubjectsByLevelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsByLevelViewController.h; sourceTree = "<group>"; };
 		63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsByLevelViewController.m; sourceTree = "<group>"; };
@@ -428,7 +427,7 @@
 			files = (
 				637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */,
 				63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */,
-				480B243123D6830300FC2A82 /* BuildFile in Frameworks */,
+				480B243123D6830300FC2A82 /* Rexy in Frameworks */,
 				0A943349E17FA7889EFEE41F /* Pods_Tsurukame.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -508,8 +507,7 @@
 				63A1676D253AD8AD00B5BCD6 /* NSRegularExpression+Matches.swift */,
 				63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */,
 				63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */,
-				487445A724D9BA10009CE30A /* ProtobufExtensions.h */,
-				63CAAB011FCD755300E09DA1 /* ProtobufExtensions.m */,
+				63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */,
 				63F7F52423D429A4006A31FB /* String+MD5.swift */,
 				63A2375F1FE9264300C48657 /* UIColor+HexString.h */,
 				63A237601FE9264300C48657 /* UIColor+HexString.m */,
@@ -816,7 +814,7 @@
 			);
 			name = Tsurukame;
 			packageProductDependencies = (
-				480B243023D6830300FC2A82 /* SwiftPackageProductDependency */,
+				480B243023D6830300FC2A82 /* Rexy */,
 			);
 			productName = wk;
 			productReference = 6319C9B520441DE200C31F87 /* Tsurukame.app */;
@@ -991,7 +989,7 @@
 			);
 			mainGroup = 630FD60A1FC45BDF00D21C1F;
 			packageReferences = (
-				480B242F23D6830300FC2A82 /* RemoteSwiftPackageReference */,
+				480B242F23D6830300FC2A82 /* XCRemoteSwiftPackageReference "Rexy" */,
 			);
 			productRefGroup = 630FD60A1FC45BDF00D21C1F;
 			projectDirPath = "";
@@ -1274,6 +1272,7 @@
 				4811E39224D9CAE2003B5089 /* NSDate+TimeAgo.m in Sources */,
 				6398480E23D699E70077EB6B /* ContextSentenceModelItem.swift in Sources */,
 				63A16792253AD8E600B5BCD6 /* WebClient.swift in Sources */,
+				63DD391425C509D8004D4E5B /* ProtobufExtensions.swift in Sources */,
 				63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */,
 				63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */,
 				BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */,
@@ -1320,7 +1319,6 @@
 				63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */,
 				632E19C123DCD0D800E5F256 /* FontSizeViewController.swift in Sources */,
 				631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */,
-				63CAAB031FCD755300E09DA1 /* ProtobufExtensions.m in Sources */,
 				63A16791253AD8E600B5BCD6 /* APIClient.swift in Sources */,
 				63F7F52923D42C6E006A31FB /* MainViewController.swift in Sources */,
 				636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */,
@@ -1392,13 +1390,13 @@
 				63996B2C2594383C00149414 /* WebClient.swift in Sources */,
 				63DB064B25A03BD50071DC1C /* MarkupFormatterTest.swift in Sources */,
 				63DB06D325A091FF0071DC1C /* Subject.swift in Sources */,
-				63996B4C259438E100149414 /* ProtobufExtensions.m in Sources */,
 				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
 				63996B542594390300149414 /* GPBPrimitiveArray+Sequence.swift in Sources */,
 				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
 				63996B3C2594389500149414 /* LocalCachingClient.swift in Sources */,
 				633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */,
 				63DB064125A0372E0071DC1C /* MarkupFormatter.swift in Sources */,
+				63DD391525C509D8004D4E5B /* ProtobufExtensions.swift in Sources */,
 				638A5CAF25ADC844001A7AEE /* FakeSubjectLevelGetter.swift in Sources */,
 				4820306724D849E100B40FDD /* Settings.swift in Sources */,
 				63996B15259435DF00149414 /* String+MD5.swift in Sources */,
@@ -2058,7 +2056,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		480B242F23D6830300FC2A82 /* RemoteSwiftPackageReference */ = {
+		480B242F23D6830300FC2A82 /* XCRemoteSwiftPackageReference "Rexy" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vadymmarkov/Rexy";
 			requirement = {
@@ -2069,9 +2067,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		480B243023D6830300FC2A82 /* SwiftPackageProductDependency */ = {
+		480B243023D6830300FC2A82 /* Rexy */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 480B242F23D6830300FC2A82 /* RemoteSwiftPackageReference */;
+			package = 480B242F23D6830300FC2A82 /* XCRemoteSwiftPackageReference "Rexy" */;
 			productName = Rexy;
 		};
 /* End XCSwiftPackageProductDependency section */

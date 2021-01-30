@@ -637,7 +637,7 @@ private struct AssignmentData: Codable {
     let ret = TKMAssignment()
     ret.id_p = Int32(id ?? 0)
     ret.subjectId = Int32(subject_id)
-    ret.srsStage = Int32(srs_stage)
+    ret.srsStageNumber = Int32(srs_stage)
     ret.level = Int32(subjectLevelGetter.levelOf(subjectId: subject_id) ?? 0)
     setProtoDate(ret, field: "availableAt", to: available_at)
     setProtoDate(ret, field: "startedAt", to: started_at)
@@ -669,7 +669,6 @@ private struct StudyMaterialData: Codable {
     let ret = TKMStudyMaterials()
     ret.id_p = Int32(id ?? 0)
     ret.subjectId = Int32(subject_id)
-    ret.subjectType = subject_type
     if let note = meaning_note {
       ret.meaningNote = note
     }

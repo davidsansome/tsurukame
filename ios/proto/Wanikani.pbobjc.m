@@ -900,7 +900,7 @@ BOOL TKMSubject_Type_IsValidValue(int32_t value__) {
 @dynamic hasSubjectType, subjectType;
 @dynamic hasAvailableAt, availableAt;
 @dynamic hasStartedAt, startedAt;
-@dynamic hasSrsStage, srsStage;
+@dynamic hasSrsStageNumber, srsStageNumber;
 @dynamic hasPassedAt, passedAt;
 
 typedef struct TKMAssignment__storage_ {
@@ -911,7 +911,7 @@ typedef struct TKMAssignment__storage_ {
   TKMSubject_Type subjectType;
   int32_t availableAt;
   int32_t startedAt;
-  int32_t srsStage;
+  int32_t srsStageNumber;
   int32_t passedAt;
 } TKMAssignment__storage_;
 
@@ -976,11 +976,11 @@ typedef struct TKMAssignment__storage_ {
         .dataType = GPBDataTypeInt32,
       },
       {
-        .name = "srsStage",
+        .name = "srsStageNumber",
         .dataTypeSpecific.clazz = Nil,
-        .number = TKMAssignment_FieldNumber_SrsStage,
+        .number = TKMAssignment_FieldNumber_SrsStageNumber,
         .hasIndex = 6,
-        .offset = (uint32_t)offsetof(TKMAssignment__storage_, srsStage),
+        .offset = (uint32_t)offsetof(TKMAssignment__storage_, srsStageNumber),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
@@ -1138,7 +1138,6 @@ typedef struct TKMProgress__storage_ {
 
 @dynamic hasId_p, id_p;
 @dynamic hasSubjectId, subjectId;
-@dynamic hasSubjectType, subjectType;
 @dynamic hasMeaningNote, meaningNote;
 @dynamic hasReadingNote, readingNote;
 @dynamic meaningSynonymsArray, meaningSynonymsArray_Count;
@@ -1150,7 +1149,6 @@ typedef struct TKMStudyMaterials__storage_ {
   NSString *meaningNote;
   NSString *readingNote;
   NSMutableArray *meaningSynonymsArray;
-  NSString *subjectType;
 } TKMStudyMaterials__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1181,7 +1179,7 @@ typedef struct TKMStudyMaterials__storage_ {
         .name = "meaningNote",
         .dataTypeSpecific.clazz = Nil,
         .number = TKMStudyMaterials_FieldNumber_MeaningNote,
-        .hasIndex = 3,
+        .hasIndex = 2,
         .offset = (uint32_t)offsetof(TKMStudyMaterials__storage_, meaningNote),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -1190,7 +1188,7 @@ typedef struct TKMStudyMaterials__storage_ {
         .name = "readingNote",
         .dataTypeSpecific.clazz = Nil,
         .number = TKMStudyMaterials_FieldNumber_ReadingNote,
-        .hasIndex = 4,
+        .hasIndex = 3,
         .offset = (uint32_t)offsetof(TKMStudyMaterials__storage_, readingNote),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -1202,15 +1200,6 @@ typedef struct TKMStudyMaterials__storage_ {
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(TKMStudyMaterials__storage_, meaningSynonymsArray),
         .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "subjectType",
-        .dataTypeSpecific.clazz = Nil,
-        .number = TKMStudyMaterials_FieldNumber_SubjectType,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(TKMStudyMaterials__storage_, subjectType),
-        .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };

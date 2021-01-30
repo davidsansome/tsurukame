@@ -47,7 +47,7 @@ private func calculateCurrentLevelReviewTime(services: TKMServices,
       continue
     }
     guard let subject = services.localCachingClient.getSubject(id: Int(assignment.subjectId)),
-      let guruDate = assignment.guruDate(for: subject) else {
+      let guruDate = assignment.guruDate(subject: subject) else {
       continue
     }
     guruDates.append(guruDate)

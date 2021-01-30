@@ -23,7 +23,7 @@ void RunSuccessAnimation(UIView *answerField,
                          UILabel *srsLevelLabel,
                          bool isSubjectFinished,
                          bool didLevelUp,
-                         int newSrsLevel);
+                         NSInteger newSrsLevel);
 
 #ifdef __cplusplus
 }

@@ -347,10 +347,9 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
                                   subtitle: String(subjectAssignment.level)))
 
       if subjectAssignment.hasStartedAt {
-        if subjectAssignment.hasSrsStage {
+        if subjectAssignment.hasSrsStageNumber {
           model.add(TKMBasicModelItem(style: .value1, title: "SRS Stage",
-                                      subtitle: TKMDetailedSRSStageName(subjectAssignment
-                                        .srsStage)))
+                                      subtitle: subjectAssignment.srsStage.description))
         }
         model.add(TKMBasicModelItem(style: .value1, title: "Started",
                                     subtitle: statsDateFormatter

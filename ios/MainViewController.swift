@@ -211,9 +211,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
                                 action: #selector(showAll)))
 
     model.addSection("All levels")
-    for i in TKMSRSStageCategory.apprentice.rawValue ... TKMSRSStageCategory.burned.rawValue {
-      let category = TKMSRSStageCategory(rawValue: i)!
-      let count = services.localCachingClient.srsCategoryCounts[i]
+    for category in SRSStageCategory.apprentice ... SRSStageCategory.burned {
+      let count = services.localCachingClient.srsCategoryCounts[category.rawValue]
       model.add(SRSStageCategoryItem(stageCategory: category, count: Int(count)))
     }
 

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "TKMSubjectChip.h"
-#import "Extensions/ProtobufExtensions.h"
 #import "Tsurukame-Swift.h"
 
 static const CGFloat kChipHeight = 28.f;

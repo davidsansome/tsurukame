@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "TKMSubjectModelItem.h"
-#import "Extensions/ProtobufExtensions.h"
 #import "TKMSubjectChip.h"
 #import "Tsurukame-Swift.h"
 
@@ -109,12 +108,12 @@ static const CGFloat kFontSize = 14.f;
                                                       label:@"Review"];
       [self.meaningLabel setHidden:NO];
       self.meaningLabel.text =
-          [self formattedIntervalUntil:[item.assignment guruDateForSubject:item.subject]
+          [self formattedIntervalUntil:[item.assignment guruDateWithSubject:item.subject]
                                  label:@"Guru"];
     } else if (item.assignment.isLessonStage) {
       [self.readingLabel setHidden:NO];
       self.readingLabel.text =
-          [self formattedIntervalUntil:[item.assignment guruDateForSubject:item.subject]
+          [self formattedIntervalUntil:[item.assignment guruDateWithSubject:item.subject]
                                  label:@"Guru"];
       [self.meaningLabel setHidden:YES];
     } else {

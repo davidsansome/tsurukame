@@ -463,7 +463,7 @@ typedef GPB_ENUM(TKMAssignment_FieldNumber) {
   TKMAssignment_FieldNumber_SubjectType = 4,
   TKMAssignment_FieldNumber_AvailableAt = 5,
   TKMAssignment_FieldNumber_StartedAt = 6,
-  TKMAssignment_FieldNumber_SrsStage = 7,
+  TKMAssignment_FieldNumber_SrsStageNumber = 7,
   TKMAssignment_FieldNumber_PassedAt = 8,
 };
 
@@ -487,9 +487,9 @@ GPB_FINAL @interface TKMAssignment : GPBMessage
 @property(nonatomic, readwrite) int32_t startedAt;
 
 @property(nonatomic, readwrite) BOOL hasStartedAt;
-@property(nonatomic, readwrite) int32_t srsStage;
+@property(nonatomic, readwrite) int32_t srsStageNumber;
 
-@property(nonatomic, readwrite) BOOL hasSrsStage;
+@property(nonatomic, readwrite) BOOL hasSrsStageNumber;
 @property(nonatomic, readwrite) int32_t passedAt;
 
 @property(nonatomic, readwrite) BOOL hasPassedAt;
@@ -553,7 +553,6 @@ typedef GPB_ENUM(TKMStudyMaterials_FieldNumber) {
   TKMStudyMaterials_FieldNumber_MeaningNote = 3,
   TKMStudyMaterials_FieldNumber_ReadingNote = 4,
   TKMStudyMaterials_FieldNumber_MeaningSynonymsArray = 5,
-  TKMStudyMaterials_FieldNumber_SubjectType = 6,
 };
 
 GPB_FINAL @interface TKMStudyMaterials : GPBMessage
@@ -564,10 +563,6 @@ GPB_FINAL @interface TKMStudyMaterials : GPBMessage
 @property(nonatomic, readwrite) int32_t subjectId;
 
 @property(nonatomic, readwrite) BOOL hasSubjectId;
-@property(nonatomic, readwrite, copy, null_resettable) NSString *subjectType;
-/** Test to see if @c subjectType has been set. */
-@property(nonatomic, readwrite) BOOL hasSubjectType;
-
 @property(nonatomic, readwrite, copy, null_resettable) NSString *meaningNote;
 /** Test to see if @c meaningNote has been set. */
 @property(nonatomic, readwrite) BOOL hasMeaningNote;

@@ -87,7 +87,7 @@ import Reachability
       a.subjectId = 511
       a.subjectType = .kanji
       a.availableAt = 42
-      a.srsStage = 2
+      a.srsStageNumber = 2
       return Array(repeating: a, count: Int(availableSubjects.reviewCount))
     }
 
@@ -124,9 +124,9 @@ import Reachability
         a.subjectType = s.subjectType
 
         if a.subjectType == .radical {
-          a.srsStage = 5
+          a.srsStageNumber = 5
         } else {
-          a.srsStage = Int32(drand48() * 6)
+          a.srsStageNumber = Int32(drand48() * 6)
         }
         ret.append(a)
       }
@@ -155,7 +155,7 @@ import Reachability
       let ret = TKMAssignment()
       ret.subjectType = type
       if srsStage != -1 {
-        ret.srsStage = srsStage
+        ret.srsStageNumber = srsStage
       }
       return ret
     }

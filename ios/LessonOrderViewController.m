@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "LessonOrderViewController.h"
-#import "Extensions/ProtobufExtensions.h"
 #import "Tsurukame-Swift.h"
 
 @interface TKMLessonOrderCell : UITableViewCell
@@ -26,7 +25,7 @@
 
 - (void)setSubjectType:(TKMSubject_Type)subjectType {
   _subjectType = subjectType;
-  self.textLabel.text = TKMSubjectTypeName(subjectType);
+  self.textLabel.text = [TKMProtobufExtensions subjectTypeName:subjectType];
 }
 
 @end

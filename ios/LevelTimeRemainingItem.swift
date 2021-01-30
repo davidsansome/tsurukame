@@ -36,7 +36,7 @@ private func calculateLevelTimeRemaining(services: TKMServices,
       continue
     }
     guard let subject = services.localCachingClient.getSubject(id: Int(assignment.subjectId)),
-      let guruDate = assignment.guruDate(for: subject) else {
+      let guruDate = assignment.guruDate(subject: subject) else {
       continue
     }
     radicalDates.append(guruDate)
@@ -55,7 +55,7 @@ private func calculateLevelTimeRemaining(services: TKMServices,
       continue
     }
     guard let subject = services.localCachingClient.getSubject(id: Int(assignment.subjectId)),
-      let guruDate = assignment.guruDate(for: subject) else {
+      let guruDate = assignment.guruDate(subject: subject) else {
       continue
     }
     guruDates.append(guruDate)
@@ -73,7 +73,9 @@ private func calculateLevelTimeRemaining(services: TKMServices,
       var average = averageRemainingLevelTime(services.localCachingClient!)
       // But ensure it can't be less than the time it would take to get a fresh item
       // to Guru, if they've spent longer at the current level than the average.
-      average = max(average, TKMMinimumTimeUntilGuruSeconds(wkLevel, 1) + lastRadicalGuruTime)
+      average = max(average,
+                    SRSStage.apprentice1
+                      .minimumTimeUntilGuru(itemLevel: Int(wkLevel)) + lastRadicalGuruTime)
       return (Date(timeIntervalSinceNow: average), isEstimate: true)
     } else {
       return (lastGuruDate, isEstimate: false)
@@ -86,7 +88,7 @@ private func calculateLevelTimeRemaining(services: TKMServices,
 private func averageRemainingLevelTime(_ lcc: LocalCachingClient) -> TimeInterval {
   var timeSpentAtEachLevel = [TimeInterval]()
   for level in lcc.getAllLevelProgressions() {
-    timeSpentAtEachLevel.append(level.timeSpentCurrent())
+    timeSpentAtEachLevel.append(level.timeSpentCurrent)
   }
   if timeSpentAtEachLevel.isEmpty {
     return 0

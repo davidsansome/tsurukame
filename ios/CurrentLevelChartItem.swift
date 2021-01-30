@@ -29,9 +29,9 @@ enum PieSlice: Int {
     case .Lesson:
       return "Lesson"
     case .Apprentice:
-      return TKMSRSStageCategoryName(.apprentice)
+      return SRSStageCategory.apprentice.description
     case .Guru:
-      return TKMSRSStageCategoryName(.guru)
+      return SRSStageCategory.guru.description
     }
   }
 
@@ -175,9 +175,9 @@ class CurrentLevelChartCell: TKMModelCell {
       var slice: PieSlice
       if assignment.isLessonStage {
         slice = .Lesson
-      } else if !assignment.hasSrsStage {
+      } else if !assignment.hasSrsStageNumber {
         slice = .Locked
-      } else if assignment.srsStage < 5 {
+      } else if assignment.srsStage < .guru1 {
         slice = .Apprentice
       } else {
         slice = .Guru

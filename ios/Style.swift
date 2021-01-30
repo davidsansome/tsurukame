@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ class TKMStyle: NSObject {
   static var readingGradient: [Any] { [readingColor1.cgColor, readingColor2.cgColor] }
   static var meaningGradient: [Any] { [meaningColor1.cgColor, meaningColor2.cgColor] }
 
-  class func color(forSRSStageCategory srsStageCategory: TKMSRSStageCategory) -> UIColor {
+  class func color(forSRSStageCategory srsStageCategory: SRSStageCategory) -> UIColor {
     switch srsStageCategory {
     case .apprentice:
       return UIColor(red: 0.87, green: 0.00, blue: 0.58, alpha: 1.0)

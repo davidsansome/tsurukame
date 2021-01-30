@@ -53,43 +53,43 @@ private let kDotColorMaster = UIColor(red: 0.16, green: 0.30, blue: 0.86, alpha:
 private let kDotColorEnlightened = UIColor(red: 0.00, green: 0.58, blue: 0.87, alpha: 1.0)
 private let kDotColorBurned = UIColor(red: 0.26, green: 0.26, blue: 0.26, alpha: 1.0)
 
-private func getDotsForLevel(_ level: Int32) -> NSAttributedString? {
+private func getDots(stage: SRSStage) -> NSAttributedString? {
   var string: NSMutableAttributedString?
-  switch level {
-  case 1:
+  switch stage {
+  case .apprentice1:
     string = NSMutableAttributedString(string: "•◦◦◦",
                                        attributes: [.foregroundColor: kDotColorApprentice])
-  case 2:
+  case .apprentice2:
     string = NSMutableAttributedString(string: "••◦◦",
                                        attributes: [.foregroundColor: kDotColorApprentice])
-  case 3:
+  case .apprentice3:
     string = NSMutableAttributedString(string: "•••◦",
                                        attributes: [.foregroundColor: kDotColorApprentice])
-  case 4:
+  case .apprentice4:
     string = NSMutableAttributedString(string: "••••◦",
                                        attributes: [.foregroundColor: kDotColorApprentice])
     string?
       .addAttribute(.foregroundColor, value: kDotColorGuru, range: NSRange(location: 4, length: 1))
-  case 5:
+  case .guru1:
     string = NSMutableAttributedString(string: "•◦", attributes: [.foregroundColor: kDotColorGuru])
-  case 6:
+  case .guru2:
     string = NSMutableAttributedString(string: "••◦", attributes: [.foregroundColor: kDotColorGuru])
     string?
       .addAttribute(.foregroundColor, value: kDotColorMaster,
                     range: NSRange(location: 2, length: 1))
-  case 7:
+  case .master:
     string = NSMutableAttributedString(string: "•◦",
                                        attributes: [.foregroundColor: kDotColorMaster])
     string?
       .addAttribute(.foregroundColor, value: kDotColorEnlightened,
                     range: NSRange(location: 1, length: 1))
-  case 8:
+  case .enlightened:
     string = NSMutableAttributedString(string: "•◦",
                                        attributes: [.foregroundColor: kDotColorEnlightened])
     string?
       .addAttribute(.foregroundColor, value: kDotColorBurned,
                     range: NSRange(location: 1, length: 1))
-  case 9:
+  case .burned:
     string = NSMutableAttributedString(string: "•", attributes: [.foregroundColor: kDotColorBurned])
   default:
     string = nil
@@ -627,7 +627,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         .autoSwitchKeyboard && activeTaskType == .reading
 
       if Settings.showSRSLevelIndicator {
-        levelLabel.attributedText = getDotsForLevel(activeTask.assignment.srsStage)
+        levelLabel.attributedText = getDots(stage: activeTask.assignment.srsStage)
       } else {
         levelLabel.attributedText = nil
       }
@@ -1130,7 +1130,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
       activeTask.answeredMeaning && (activeSubject.hasRadical || activeTask.answeredReading)
     let didLevelUp = (!activeTask.answer.readingWrong && !activeTask.answer.meaningWrong)
     let newSrsStage =
-      didLevelUp ? activeTask.assignment.srsStage + 1 : activeTask.assignment.srsStage - 1
+      didLevelUp ? activeTask.assignment.srsStage.next : activeTask.assignment.srsStage.previous
     if isSubjectFinished {
       let date = Int32(Date().timeIntervalSince1970)
       if date > activeTask.assignment.availableAt {
@@ -1172,7 +1172,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         // new locations by randomTask(), so that, for example, the success sparkles animate from
         // the final position of the answerField, not the original position.
         RunSuccessAnimation(answerField, doneLabel, levelLabel, isSubjectFinished, didLevelUp,
-                            newSrsStage)
+                            newSrsStage.rawValue)
       }
 
       if let previousSubjectLabel = previousSubjectLabel {
@@ -1250,7 +1250,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     if activeStudyMaterials == nil {
       activeStudyMaterials = TKMStudyMaterials()
       activeStudyMaterials!.subjectId = activeSubject.id_p
-      activeStudyMaterials!.subjectType = activeSubject.subjectTypeString
     }
     activeStudyMaterials!.meaningSynonymsArray.add(answerField.text!)
     services.localCachingClient?.updateStudyMaterial(activeStudyMaterials!)
