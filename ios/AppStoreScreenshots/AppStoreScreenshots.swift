@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,11 @@ class AppStoreScreenshots: XCTestCase {
     app.launch()
   }
 
-  func testAppStoreScreenshots() {
+  // TODO(dsansome): Enable when the FakeLocalCachingClient contains the subjects that are being
+  // searched for here.
+  // Subject IDs: 743 3163 3164 355 1600 8911 8918 1787 1803 6556 1892 3516 3515 5907 6163 6812 6960
+  // 6961
+  func skip_testAppStoreScreenshots() {
     Thread.sleep(forTimeInterval: 1.0) // Wait for the profile photo to be downloaded.
 
     // Snapshot the home screen
