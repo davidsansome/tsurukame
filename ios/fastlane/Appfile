@@ -1,2 +1,3 @@
 app_identifier "com.davidsansome.wanikani"
 apple_id ENV["APPLE_ID"] || "me2@davidsansome.com"
+team_id "7B2GP77Y4A"
