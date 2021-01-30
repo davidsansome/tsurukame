@@ -155,7 +155,7 @@ class APIClientTest: XCTestCase {
     subject_type: RADICAL
     available_at: 1519689600
     started_at: 1504654888
-    srs_stage: 8
+    srs_stage_number: 8
     passed_at: 1504804454
     """
 
@@ -361,7 +361,6 @@ class APIClientTest: XCTestCase {
     reading_note: "I like durtles"
     meaning_synonyms: "burn"
     meaning_synonyms: "sizzle"
-    subject_type: "radical"
     """
 
     let progress = Progress(totalUnitCount: -1)
@@ -448,7 +447,6 @@ class APIClientTest: XCTestCase {
     reading_note: "I like durtles"
     meaning_synonyms: "burn"
     meaning_synonyms: "sizzle"
-    subject_type: "radical"
     """
 
     let progress = Progress(totalUnitCount: -1)
@@ -617,7 +615,7 @@ class APIClientTest: XCTestCase {
     subject_type: RADICAL
     available_at: 1519689600
     started_at: 1504654888
-    srs_stage: 1
+    srs_stage_number: 1
     """
 
     if let result = waitForPromise(client.sendProgress(progress)) {
@@ -715,7 +713,7 @@ class APIClientTest: XCTestCase {
     subject_type: VOCABULARY
     available_at: 1526281200
     started_at: 1516830767
-    srs_stage: 1
+    srs_stage_number: 1
     """
 
     if let result = waitForPromise(client.sendProgress(progress)) {
