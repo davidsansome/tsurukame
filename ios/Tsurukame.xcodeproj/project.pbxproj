@@ -87,6 +87,7 @@
 		63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */; };
 		63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
 		63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */; };
+		63BEBF9725C57D4000123147 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BEBF9625C57D4000123147 /* SearchResultViewController.swift */; };
 		63BFA78B218EB1B30058E885 /* TKMDownloadModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */; };
 		63BFA78E218EB6890058E885 /* OfflineAudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA78D218EB6890058E885 /* OfflineAudioViewController.swift */; };
 		63BFA791218EB7AB0058E885 /* TKMDownloadModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA790218EB7AB0058E885 /* TKMDownloadModelItem.m */; };
@@ -124,7 +125,6 @@
 		63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */; };
 		63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */; };
 		63E9E51121F424690022C16E /* TKMDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9E51021F424690022C16E /* TKMDownloadViewController.m */; };
-		63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */; };
 		63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63EEFEBC1FC45C440070C05F /* Assets.xcassets */; };
 		63F7F51F23D3F335006A31FB /* ReadingModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */; };
 		63F7F52123D3F36E006A31FB /* AttributedModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */; };
@@ -319,6 +319,7 @@
 		63BDA9A6200E04E500D75DA2 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SuccessAnimation.h; sourceTree = "<group>"; };
 		63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SuccessAnimation.m; sourceTree = "<group>"; };
+		63BEBF9625C57D4000123147 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMDownloadModelItem.xib; sourceTree = "<group>"; };
 		63BFA78D218EB6890058E885 /* OfflineAudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineAudioViewController.swift; sourceTree = "<group>"; };
 		63BFA78F218EB7AB0058E885 /* TKMDownloadModelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMDownloadModelItem.h; sourceTree = "<group>"; };
@@ -363,8 +364,6 @@
 		63E9A8E621199C8500418CE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63E9E50F21F424690022C16E /* TKMDownloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMDownloadViewController.h; sourceTree = "<group>"; };
 		63E9E51021F424690022C16E /* TKMDownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMDownloadViewController.m; sourceTree = "<group>"; };
-		63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchResultViewController.h; sourceTree = "<group>"; };
-		63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchResultViewController.m; sourceTree = "<group>"; };
 		63EEFEBC1FC45C440070C05F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63EEFEC21FC45CB10070C05F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadingModelItem.swift; sourceTree = "<group>"; };
@@ -512,7 +511,6 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
-				630EB13E25C5713000783E54 /* ReviewItem.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				638A5C4D25A471F9001A7AEE /* AppDelegate.swift */,
@@ -553,6 +551,7 @@
 				63CAAAD61FC6E0BF00E09DA1 /* proto */,
 				63A16765253AD87800B5BCD6 /* Recovered References */,
 				41897D922372287F00F6A0B7 /* Resources */,
+				630EB13E25C5713000783E54 /* ReviewItem.swift */,
 				633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */,
 				633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */,
 				63B1DE391FE7BCDA00FAB9C2 /* ReviewSummaryViewController.h */,
@@ -560,8 +559,7 @@
 				633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */,
 				633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */,
 				631CAD71234B4A96008CEA73 /* ReviewViewController.swift */,
-				63EDA403207E3A4D00382CE3 /* SearchResultViewController.h */,
-				63EDA404207E3A4D00382CE3 /* SearchResultViewController.m */,
+				63BEBF9625C57D4000123147 /* SearchResultViewController.swift */,
 				63F7F52B23D43DF6006A31FB /* Services.swift */,
 				633632EE201F3490006D582B /* Settings.swift */,
 				6321E60F2068F3A9003460BC /* SettingsViewController.h */,
@@ -1295,7 +1293,6 @@
 				63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */,
 				48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */,
 				63A16773253AD8AE00B5BCD6 /* URLRequest+SetBody.swift in Sources */,
-				63EDA405207E3A4D00382CE3 /* SearchResultViewController.m in Sources */,
 				637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */,
 				6392DBA720D14915003019EB /* TKMSubjectChip.m in Sources */,
 				63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */,
@@ -1310,6 +1307,7 @@
 				63F7F52923D42C6E006A31FB /* MainViewController.swift in Sources */,
 				636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */,
 				481B2FED23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */,
+				63BEBF9725C57D4000123147 /* SearchResultViewController.swift in Sources */,
 				63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */,
 				63F7F52C23D43DF6006A31FB /* Services.swift in Sources */,
 				63BFA791218EB7AB0058E885 /* TKMDownloadModelItem.m in Sources */,

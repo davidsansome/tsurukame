@@ -19,7 +19,6 @@
 #import "LoginViewController.h"
 #import "NSString+LevenshteinDistance.h"
 #import "ReviewSummaryViewController.h"
-#import "SearchResultViewController.h"
 #import "SettingsViewController.h"
 #import "SubjectCatalogueViewController.h"
 #import "SubjectDetailsViewController.h"

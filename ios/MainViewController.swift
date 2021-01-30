@@ -449,7 +449,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
   // MARK: - Search
 
-  func searchResultSelected(_ subject: TKMSubject) {
+  func searchResultSelected(subject: TKMSubject) {
     let vc = storyboard?
       .instantiateViewController(withIdentifier: "subjectDetailsViewController") as! SubjectDetailsViewController
     vc.setup(with: services, subject: subject, showHints: true, hideBackButton: false, index: 0)

@@ -177,7 +177,7 @@
         <!--Search Result View Controller-->
         <scene sceneID="HnA-CW-WKB">
             <objects>
-                <tableViewController storyboardIdentifier="searchResults" id="Gnt-eM-FLK" customClass="SearchResultViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="searchResults" id="Gnt-eM-FLK" customClass="SearchResultViewController" customModule="Tsurukame" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="rFV-0b-36v">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
