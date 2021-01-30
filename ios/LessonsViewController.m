@@ -14,7 +14,6 @@
 
 #import "LessonsViewController.h"
 
-#import "LessonsPageControl.h"
 #import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"
 #import "Tsurukame-Swift.h"
@@ -63,7 +62,7 @@
     }
     [subjects addObject:subject];
   }
-  _pageControl.subjects = subjects;
+  [_pageControl setSubjects:subjects];
 
   // Add it as a child view controller, below the back button.
   [self addChildViewController:_pageController];
