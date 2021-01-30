@@ -253,8 +253,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     switch segue.identifier {
     case "startReviews":
       let assignments = services.localCachingClient.getAllAssignments()
-      let items = ReviewItem.assignmentsReady(forReview: assignments,
-                                              localCachingClient: services.localCachingClient)
+      let items = ReviewItem.readyForReview(assignments: assignments,
+                                            localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return
       }
@@ -264,13 +264,13 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
     case "startLessons":
       let assignments = services.localCachingClient.getAllAssignments()
-      var items = ReviewItem.assignmentsReady(forLesson: assignments,
-                                              localCachingClient: services.localCachingClient)
+      var items = ReviewItem.readyForLessons(assignments: assignments,
+                                             localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return
       }
 
-      items = items.sorted(by: { a, b in a.compare(forLessons: b) })
+      items = items.sorted(by: { a, b in a.compareForLessons(other: b) })
       if items.count > Settings.lessonBatchSize {
         items = Array(items[0 ..< Int(Settings.lessonBatchSize)])
       }

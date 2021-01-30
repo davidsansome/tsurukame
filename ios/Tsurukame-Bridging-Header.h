@@ -18,7 +18,6 @@
 #import "LessonsViewController.h"
 #import "LoginViewController.h"
 #import "NSString+LevenshteinDistance.h"
-#import "ReviewItem.h"
 #import "ReviewSummaryViewController.h"
 #import "SearchResultViewController.h"
 #import "SettingsViewController.h"

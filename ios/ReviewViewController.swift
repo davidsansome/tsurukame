@@ -168,7 +168,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
   private var activeQueueSize = 1
 
   private var activeTaskIndex = 0 // An index into activeQueue.
-  private var activeTaskType: TKMTaskType!
+  private var activeTaskType: TaskType!
   private var activeTask: ReviewItem!
   private var activeSubject: TKMSubject!
   private var activeStudyMaterials: TKMStudyMaterials?
@@ -530,14 +530,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
 
       // Choose whether to ask the meaning or the reading.
       if activeTask.answeredMeaning {
-        activeTaskType = TKMTaskType.reading
+        activeTaskType = .reading
       } else if activeTask.answeredReading || activeSubject.hasRadical {
-        activeTaskType = TKMTaskType.meaning
+        activeTaskType = .meaning
       } else if Settings.groupMeaningReading {
-        activeTaskType = Settings.meaningFirst ? TKMTaskType.meaning : TKMTaskType.reading
+        activeTaskType = Settings.meaningFirst ? .meaning : .reading
       } else {
-        activeTaskType = TKMTaskType(rawValue: TKMTaskType
-          .RawValue(arc4random_uniform(UInt32(TKMTaskType._Max.rawValue))))!
+        activeTaskType = TaskType.random()
       }
 
       // Fill the question labels.
@@ -572,10 +571,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
         promptGradient = TKMStyle.readingGradient as! [CGColor]
         promptTextColor = kReadingTextColor
         taskTypePlaceholder = "答え"
-      case ._Max:
-        fallthrough
-      @unknown default:
-        fatalError()
       }
 
       // Choose a random font.

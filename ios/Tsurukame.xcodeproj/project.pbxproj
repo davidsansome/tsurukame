@@ -17,10 +17,10 @@
 		630ADB6F21F8256E00BC9801 /* TKMCheckmarkModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */; };
 		630EB10A25C561A900783E54 /* NSMutableAttributedString+Replacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB10925C561A900783E54 /* NSMutableAttributedString+Replacements.swift */; };
 		630EB12125C5652400783E54 /* LessonsPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB12025C5652400783E54 /* LessonsPageControl.swift */; };
+		630EB13F25C5713000783E54 /* ReviewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB13E25C5713000783E54 /* ReviewItem.swift */; };
 		631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
 		631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */; };
 		631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
-		631CAD69234B0F0C008CEA73 /* ReviewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */; };
 		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
 		6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321E6102068F3A9003460BC /* SettingsViewController.m */; };
@@ -99,7 +99,6 @@
 		63C42A4721B6AE7E008CA938 /* TKMDownloadModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63BFA78A218EB1B30058E885 /* TKMDownloadModelItem.xib */; };
 		63C42A4821B6AF02008CA938 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63EEFEBC1FC45C440070C05F /* Assets.xcassets */; };
 		63CAAAD91FC6E0CB00E09DA1 /* Wanikani.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		63CAAAFD1FCD693500E09DA1 /* ReviewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */; };
 		63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */; };
 		63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
 		63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */; };
@@ -242,6 +241,7 @@
 		630ADB6E21F8256E00BC9801 /* TKMCheckmarkModelItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMCheckmarkModelItem.m; sourceTree = "<group>"; };
 		630EB10925C561A900783E54 /* NSMutableAttributedString+Replacements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString+Replacements.swift"; sourceTree = "<group>"; };
 		630EB12025C5652400783E54 /* LessonsPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsPageControl.swift; sourceTree = "<group>"; };
+		630EB13E25C5713000783E54 /* ReviewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewItem.swift; sourceTree = "<group>"; };
 		6319C9B520441DE200C31F87 /* Tsurukame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tsurukame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerChecker.swift; sourceTree = "<group>"; };
 		631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCheckerTest.swift; sourceTree = "<group>"; };
@@ -333,8 +333,6 @@
 		63C42A4421B6A703008CA938 /* Tsurukame-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tsurukame-Bridging-Header.h"; sourceTree = "<group>"; };
 		63CAAAD71FC6E0CB00E09DA1 /* Wanikani.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wanikani.pbobjc.h; path = proto/Wanikani.pbobjc.h; sourceTree = "<group>"; };
 		63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Wanikani.pbobjc.m; path = proto/Wanikani.pbobjc.m; sourceTree = "<group>"; };
-		63CAAAFB1FCD693500E09DA1 /* ReviewItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewItem.h; sourceTree = "<group>"; };
-		63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewItem.m; sourceTree = "<group>"; };
 		63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+LevenshteinDistance.h"; sourceTree = "<group>"; };
 		63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+LevenshteinDistance.m"; sourceTree = "<group>"; };
 		63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -514,6 +512,7 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				630EB13E25C5713000783E54 /* ReviewItem.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				638A5C4D25A471F9001A7AEE /* AppDelegate.swift */,
@@ -554,8 +553,6 @@
 				63CAAAD61FC6E0BF00E09DA1 /* proto */,
 				63A16765253AD87800B5BCD6 /* Recovered References */,
 				41897D922372287F00F6A0B7 /* Resources */,
-				63CAAAFB1FCD693500E09DA1 /* ReviewItem.h */,
-				63CAAAFC1FCD693500E09DA1 /* ReviewItem.m */,
 				633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */,
 				633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */,
 				63B1DE391FE7BCDA00FAB9C2 /* ReviewSummaryViewController.h */,
@@ -1279,6 +1276,7 @@
 				636A63DE238A107A00902269 /* CurrentLevelChartItem.swift in Sources */,
 				BBE4E32E2172576B003A200E /* TKMFontLoader.mm in Sources */,
 				63A16774253AD8AE00B5BCD6 /* CGContext+Blur.swift in Sources */,
+				630EB13F25C5713000783E54 /* ReviewItem.swift in Sources */,
 				63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */,
 				C9164D3923D0CFCF00B6D93A /* InterfaceStyleViewController.swift in Sources */,
 				633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */,
@@ -1316,7 +1314,6 @@
 				63F7F52C23D43DF6006A31FB /* Services.swift in Sources */,
 				63BFA791218EB7AB0058E885 /* TKMDownloadModelItem.m in Sources */,
 				633DE95620C5634A00AC25F4 /* TKMTableModel.m in Sources */,
-				63CAAAFD1FCD693500E09DA1 /* ReviewItem.m in Sources */,
 				630EB12125C5652400783E54 /* LessonsPageControl.swift in Sources */,
 				633DE95720C5634A00AC25F4 /* TKMBasicModelItem.m in Sources */,
 				63F7F52123D3F36E006A31FB /* AttributedModelItem.swift in Sources */,
@@ -1373,7 +1370,6 @@
 				63996AE02594236F00149414 /* APIClientTest.swift in Sources */,
 				63996B0D2594356E00149414 /* APIClient.swift in Sources */,
 				63996B24259436F500149414 /* URLRequest+SetBody.swift in Sources */,
-				631CAD69234B0F0C008CEA73 /* ReviewItem.m in Sources */,
 				63996BB72594754400149414 /* TestUtils.swift in Sources */,
 				63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */,
 				63F7F52823D42BDD006A31FB /* String+MD5Test.swift in Sources */,

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "ReviewSummaryViewController.h"
-#import "ReviewItem.h"
 #import "SubjectDetailsViewController.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"

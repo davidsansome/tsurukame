@@ -104,8 +104,8 @@ import Foundation
     return text.applyingTransform(StringTransform.hiraganaToKatakana, reverse: true)!
   }
 
-  @objc class func normalizedString(_ text: String, taskType: TKMTaskType,
-                                    alphabet: TKMAlphabet = TKMAlphabet.hiragana) -> String {
+  class func normalizedString(_ text: String, taskType: TaskType,
+                              alphabet: TKMAlphabet = TKMAlphabet.hiragana) -> String {
     var s =
       text.trimmingCharacters(in: CharacterSet.whitespaces)
         .lowercased()
@@ -113,7 +113,7 @@ import Foundation
         .replacingOccurrences(of: ".", with: "")
         .replacingOccurrences(of: "'", with: "")
         .replacingOccurrences(of: "/", with: "")
-    if taskType == TKMTaskType.reading {
+    if taskType == .reading {
       s = s.replacingOccurrences(of: "n", with: alphabet == TKMAlphabet.hiragana ? "ん" : "ン")
 
       // Gboard Godan layout uses "ｎ" or Unicode code point U+FF4E.
@@ -124,11 +124,11 @@ import Foundation
     return s
   }
 
-  @objc class func checkAnswer(_ answer: String,
-                               subject: TKMSubject,
-                               studyMaterials: TKMStudyMaterials?,
-                               taskType: TKMTaskType,
-                               localCachingClient: LocalCachingClient) -> AnswerCheckerResult {
+  class func checkAnswer(_ answer: String,
+                         subject: TKMSubject,
+                         studyMaterials: TKMStudyMaterials?,
+                         taskType: TaskType,
+                         localCachingClient: LocalCachingClient) -> AnswerCheckerResult {
     switch taskType {
     case .reading:
       let hiraganaText = convertKatakanaToHiragana(answer)
@@ -203,11 +203,6 @@ import Foundation
           return .Imprecise
         }
       }
-
-    case ._Max:
-      fallthrough
-    @unknown default:
-      fatalError()
     }
 
     return .Incorrect
