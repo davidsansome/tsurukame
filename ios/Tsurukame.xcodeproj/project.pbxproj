@@ -58,6 +58,7 @@
 		638A5C6C25ADBB86001A7AEE /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5C6B25ADBB86001A7AEE /* main.swift */; };
 		638A5CAF25ADC844001A7AEE /* FakeSubjectLevelGetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5CAE25ADC844001A7AEE /* FakeSubjectLevelGetter.swift */; };
 		638D197525C6AA4B00B80544 /* MarkupModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638D197425C6AA4B00B80544 /* MarkupModelItem.swift */; };
+		638D198C25C6B5C600B80544 /* ReviewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB13E25C5713000783E54 /* ReviewItem.swift */; };
 		6392DBA220D130F0003019EB /* TKMSubjectModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA120D130F0003019EB /* TKMSubjectModelItem.m */; };
 		6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */; };
 		6392DBA720D14915003019EB /* TKMSubjectChip.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA620D14915003019EB /* TKMSubjectChip.m */; };
@@ -1375,6 +1376,7 @@
 				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
 				63996B542594390300149414 /* GPBPrimitiveArray+Sequence.swift in Sources */,
 				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
+				638D198C25C6B5C600B80544 /* ReviewItem.swift in Sources */,
 				63996B3C2594389500149414 /* LocalCachingClient.swift in Sources */,
 				633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */,
 				63DB064125A0372E0071DC1C /* MarkupFormatter.swift in Sources */,

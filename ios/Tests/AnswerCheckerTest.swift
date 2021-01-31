@@ -23,9 +23,9 @@ class AnswerCheckerTest: XCTestCase {
   }
 
   func testNormalizedString() {
-    XCTAssertEqual(AnswerChecker.normalizedString(" Foo-B.a'/r nn ", taskType: TKMTaskType.meaning),
+    XCTAssertEqual(AnswerChecker.normalizedString(" Foo-B.a'/r nn ", taskType: TaskType.meaning),
                    "foo bar nn")
-    XCTAssertEqual(AnswerChecker.normalizedString(" Foo-B.a'/r nn ", taskType: TKMTaskType.reading),
+    XCTAssertEqual(AnswerChecker.normalizedString(" Foo-B.a'/r nn ", taskType: TaskType.reading),
                    "foobarんん")
   }
 }
