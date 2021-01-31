@@ -24,7 +24,10 @@ import Reachability
   class Screenshotter: NSObject {
     static let isActive = false
     class func setUp() {}
-    static let localCachingClientClass = LocalCachingClient.self
+    static func createLocalCachingClient(client: WaniKaniAPIClient,
+                                         reachability: Reachability) -> LocalCachingClient {
+      return LocalCachingClient(client: client, reachability: reachability)
+    }
   }
 
 #else
