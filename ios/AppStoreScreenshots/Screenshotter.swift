@@ -26,7 +26,7 @@ import Reachability
     class func setUp() {}
     static func createLocalCachingClient(client: WaniKaniAPIClient,
                                          reachability: Reachability) -> LocalCachingClient {
-      return LocalCachingClient(client: client, reachability: reachability)
+      LocalCachingClient(client: client, reachability: reachability)
     }
   }
 

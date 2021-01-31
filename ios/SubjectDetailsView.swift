@@ -241,7 +241,8 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
       attributes[.foregroundColor] = TKMStyle.Color.grey33
     }
 
-    let formattedText = TKMRenderFormattedText(parsedText, attributes).replaceFontSize(kFontSize)
+    let formattedText = render(formattedText: parsedText, standardAttributes: attributes)
+      .replaceFontSize(kFontSize)
     model.add(AttributedModelItem(text: formattedText))
   }
 

@@ -32,7 +32,6 @@
 #import "TKMSubjectModelItem.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
-#import "Tables/TKMMarkupModelItem.h"
 #import "Tables/TKMModelItem.h"
 #import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
