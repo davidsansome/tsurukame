@@ -28,7 +28,13 @@ extension URLRequest {
   mutating func setFormBody(method: String, queryItems: [URLQueryItem]) throws {
     var components = URLComponents()
     components.queryItems = queryItems
-    let data = components.percentEncodedQuery!.data(using: .utf8)!
+
+    // By default URLComponents.percentEncodedQuery doesn't encode the '+' character. The WaniKani
+    // server interprets this as a space instead, so make sure we remove that from the allowed set.
+    var characterSet = CharacterSet.urlQueryAllowed
+    characterSet.remove("+")
+    let query = components.query!.addingPercentEncoding(withAllowedCharacters: characterSet)!
+    let data = query.data(using: .utf8)!
 
     setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
     setValue(String(data.count), forHTTPHeaderField: "Content-Length")
