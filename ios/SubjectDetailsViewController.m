@@ -15,7 +15,6 @@
 #import "SubjectDetailsViewController.h"
 
 #import "NavigationController.h"
-#import "Tables/TKMSubjectModelItem.h"
 #import "Tsurukame-Swift.h"
 
 #import <WebKit/WebKit.h>

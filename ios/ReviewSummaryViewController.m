@@ -15,7 +15,6 @@
 #import "ReviewSummaryViewController.h"
 #import "SubjectDetailsViewController.h"
 #import "Tables/TKMBasicModelItem.h"
-#import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
 
@@ -93,6 +92,7 @@
           [_services.localCachingClient getSubjectWithId:item.assignment.subjectId];
       [model addItem:[[TKMSubjectModelItem alloc] initWithSubject:subject
                                                          delegate:self
+                                                       assignment:nil
                                                      readingWrong:item.answer.readingWrong
                                                      meaningWrong:item.answer.meaningWrong]];
     }

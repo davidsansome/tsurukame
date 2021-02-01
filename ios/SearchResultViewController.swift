@@ -144,7 +144,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
         let model = TKMMutableTableModel(tableView: self.tableView)
         model.addSection()
         for subject in results {
-          model.add(TKMSubjectModelItem(subject: subject, delegate: self))
+          model.add(SubjectModelItem(subject: subject, delegate: self))
         }
         self.model = model
         self.tableView.reloadData()

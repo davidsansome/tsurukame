@@ -177,9 +177,9 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   private func addComponents(_ subject: TKMSubject,
                              title: String,
                              toModel model: TKMMutableTableModel) {
-    let item = TKMSubjectCollectionModelItem(subjects: subject.componentSubjectIdsArray,
-                                             localCachingClient: services.localCachingClient,
-                                             delegate: self)
+    let item = SubjectCollectionModelItem(subjects: subject.componentSubjectIdsArray,
+                                          localCachingClient: services.localCachingClient,
+                                          delegate: self)
 
     model.addSection(title)
     model.add(item)
@@ -200,7 +200,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
         addedSection = true
       }
 
-      let item = TKMSubjectModelItem(subject: subject, delegate: subjectDelegate)
+      let item = SubjectModelItem(subject: subject, delegate: subjectDelegate)
       model.add(item)
     }
   }
@@ -224,7 +224,7 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
 
     model.addSection("Used in")
     for subject in subjects {
-      model.add(TKMSubjectModelItem(subject: subject, delegate: subjectDelegate))
+      model.add(SubjectModelItem(subject: subject, delegate: subjectDelegate))
     }
   }
 

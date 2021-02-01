@@ -17,7 +17,6 @@
 #import "SubjectDetailsViewController.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
-#import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
 
@@ -54,8 +53,10 @@
     }
 
     TKMSubjectModelItem *item = [[TKMSubjectModelItem alloc] initWithSubject:subject
+                                                                    delegate:self
                                                                   assignment:assignment
-                                                                    delegate:self];
+                                                                readingWrong:false
+                                                                meaningWrong:false];
     item.showLevelNumber = false;
     item.showAnswers = false;
     item.showRemaining = true;

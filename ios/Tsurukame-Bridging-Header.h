@@ -29,11 +29,10 @@
 #import "TKMGradientView.h"
 #import "TKMKanaInput.h"
 #import "TKMReviewContainerViewController.h"
-#import "TKMSubjectModelItem.h"
+#import "TKMSubjectChip.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMModelItem.h"
-#import "Tables/TKMSubjectModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "UIView+SafeAreaInsets.h"
 
