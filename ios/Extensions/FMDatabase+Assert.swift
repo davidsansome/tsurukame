@@ -67,13 +67,13 @@ extension FMResultSet: Sequence {
     public typealias Element = FMResultSet
 
     public mutating func next() -> FMResultSet? {
-      if let resultSet = resultSet, resultSet.next() {
+      if resultSet.next() {
         return resultSet
       }
       return nil
     }
 
-    weak var resultSet: FMResultSet?
+    var resultSet: FMResultSet
   }
 
   public __consuming func makeIterator() -> FMResultSet.Iterator {
