@@ -50,9 +50,32 @@ end
 
 lane :beta do
   match(type: "appstore")
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame$",
+    profile:ENV["sigh_com.davidsansome.wanikani_appstore_profile-path"],
+    build_configuration: "Release"
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame Complication$",
+    profile:ENV["sigh_com.davidsansome.wanikani.watchapp_appstore_profile-path"],
+    build_configuration: "Release"
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame Complication Extension$",
+    profile:ENV["sigh_com.davidsansome.wanikani.watchapp.c_appstore_profile-path"],
+    build_configuration: "Release"
+  )
+
   build_app(
     scheme: "Tsurukame",
     include_bitcode: true,
+    codesigning_identity: "Apple Distribution: David Sansome (7B2GP77Y4A)",
   )
 
   # Generate the changelog from git commits since the last tag.
