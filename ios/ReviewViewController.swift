@@ -149,7 +149,7 @@ protocol ReviewViewControllerDelegate {
                                            tappedMenuButton menuButton: UIButton)
 }
 
-class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDelegate {
+class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelegate {
   private var kanaInput: TKMKanaInput!
   private let hapticGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator
     .FeedbackStyle.light)
@@ -227,7 +227,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     kanaInput = TKMKanaInput(delegate: self)
   }
 
-  @objc public func setup(withServices services: TKMServices,
+  @objc public func setup(services: TKMServices,
                           items: [ReviewItem],
                           showMenuButton: Bool,
                           showSubjectHistory: Bool,
@@ -328,7 +328,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
                                            name: UIResponder.keyboardWillShowNotification,
                                            object: nil)
 
-    subjectDetailsView.setup(withServices: services, delegate: self)
+    subjectDetailsView.setup(services: services, delegate: self)
 
     answerField.autocapitalizationType = .none
     answerField.delegate = kanaInput
@@ -1258,9 +1258,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, TKMSubjectDel
     super.canPerformAction(action, withSender: sender)
   }
 
-  // MARK: - TKMSubjectDelegate
+  // MARK: - SubjectDelegate
 
-  func didTap(_ subject: TKMSubject!) {
+  func didTapSubject(_ subject: TKMSubject) {
     performSegue(withIdentifier: "subjectDetails", sender: subject)
   }
 

@@ -15,8 +15,8 @@
 import Foundation
 
 @objc
-class LessonsPageControl: UIControl, TKMSubjectChipDelegate {
-  private var chips = [TKMSubjectChip]()
+class LessonsPageControl: UIControl, SubjectChipDelegate {
+  private var chips = [SubjectChip]()
 
   @objc
   func setSubjects(_ subjects: [TKMSubject]) {
@@ -28,7 +28,7 @@ class LessonsPageControl: UIControl, TKMSubjectChipDelegate {
 
     // Create a chip for each subject.
     for subject in subjects {
-      let chip = TKMSubjectChip(subject: subject, showMeaning: false, delegate: self)
+      let chip = SubjectChip(subject: subject, showMeaning: false, delegate: self)
       addSubview(chip)
       chips.append(chip)
     }
@@ -36,8 +36,8 @@ class LessonsPageControl: UIControl, TKMSubjectChipDelegate {
     // Create the quiz chip.
     let quizText = NSAttributedString(string: "Quiz")
     let gradient: [Any] = [TKMStyle.Color.grey80.cgColor, TKMStyle.Color.grey80.cgColor]
-    let quizChip = TKMSubjectChip(subject: nil, chipText: quizText, sideText: nil,
-                                  chipTextColor: .white, chipGradient: gradient, delegate: self)
+    let quizChip = SubjectChip(subject: nil, chipText: quizText, sideText: nil,
+                               chipTextColor: .white, chipGradient: gradient, delegate: self)
     addSubview(quizChip)
     chips.append(quizChip)
 
@@ -52,16 +52,17 @@ class LessonsPageControl: UIControl, TKMSubjectChipDelegate {
 
   private func currentPageIndexChanged() {
     for (idx, chip) in chips.enumerated() {
-      chip.dimmed = idx != currentPageIndex
+      chip.isDimmed = idx != currentPageIndex
     }
   }
 
   // MARK: - Layout
 
   override func layoutSubviews() {
-    let frames = TKMCalculateSubjectChipFrames(chips, frame.size.width, .center)
+    let frames = calculateSubjectChipFrames(chips: chips, width: frame.size.width,
+                                            alignment: .center)
     for (idx, chip) in chips.enumerated() {
-      chip.frame = frames[idx] as! CGRect
+      chip.frame = frames[idx]
     }
   }
 
@@ -70,17 +71,18 @@ class LessonsPageControl: UIControl, TKMSubjectChipDelegate {
       return size
     }
 
-    let frames = TKMCalculateSubjectChipFrames(chips, frame.size.width, .center)
+    let frames = calculateSubjectChipFrames(chips: chips, width: frame.size.width,
+                                            alignment: .center)
     return CGSize(width: size.width,
-                  height: (frames.last as! CGRect).maxY + kTKMSubjectChipCollectionEdgeInsets
+                  height: frames.last!.maxY + kSubjectChipCollectionEdgeInsets
                     .bottom)
   }
 
-  // MARK: - TKMSubjectChipDelegate
+  // MARK: - SubjectChipDelegate
 
-  func didTap(_ tappedChip: TKMSubjectChip) {
+  func didTapSubjectChip(_ subjectChip: SubjectChip) {
     for (idx, chip) in chips.enumerated() {
-      if chip == tappedChip {
+      if chip == subjectChip {
         currentPageIndex = idx
         sendActions(for: .valueChanged)
         break

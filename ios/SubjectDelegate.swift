@@ -1,4 +1,4 @@
-// Copyright 2018 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-@class TKMSubject;
-
-@protocol TKMSubjectDelegate <NSObject>
-
-- (void)didTapSubject:(TKMSubject *)subject;
-
-@end
+@objc(TKMSubjectDelegate)
+protocol SubjectDelegate {
+  func didTapSubject(_ subject: TKMSubject)
+}

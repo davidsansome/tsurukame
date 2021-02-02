@@ -60,7 +60,6 @@
 		638D197525C6AA4B00B80544 /* MarkupModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638D197425C6AA4B00B80544 /* MarkupModelItem.swift */; };
 		638D198C25C6B5C600B80544 /* ReviewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB13E25C5713000783E54 /* ReviewItem.swift */; };
 		6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */; };
-		6392DBA720D14915003019EB /* TKMSubjectChip.m in Sources */ = {isa = PBXBuildFile; fileRef = 6392DBA620D14915003019EB /* TKMSubjectChip.m */; };
 		6398480E23D699E70077EB6B /* ContextSentenceModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */; };
 		63996AE02594236F00149414 /* APIClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63996ADF2594236F00149414 /* APIClientTest.swift */; };
 		63996B0D2594356E00149414 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1678F253AD8E600B5BCD6 /* APIClient.swift */; };
@@ -101,6 +100,9 @@
 		63C42A4821B6AF02008CA938 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63EEFEBC1FC45C440070C05F /* Assets.xcassets */; };
 		63C74BC825C822C9004F6C99 /* SubjectModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C74BC725C822C9004F6C99 /* SubjectModelItem.swift */; };
 		63C74BD125C82B1D004F6C99 /* SubjectCollectionModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C74BD025C82B1D004F6C99 /* SubjectCollectionModelItem.swift */; };
+		63C74C6825C96088004F6C99 /* SubjectChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C74C6725C96088004F6C99 /* SubjectChip.swift */; };
+		63C74C7F25C96F58004F6C99 /* SubjectDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C74C7E25C96F58004F6C99 /* SubjectDelegate.swift */; };
+		63C74C8F25C970DA004F6C99 /* SubjectsByLevelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C74C8E25C970DA004F6C99 /* SubjectsByLevelViewController.swift */; };
 		63CAAAD91FC6E0CB00E09DA1 /* Wanikani.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */; };
 		63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
@@ -121,7 +123,6 @@
 		63DD391425C509D8004D4E5B /* ProtobufExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */; };
 		63DD391525C509D8004D4E5B /* ProtobufExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
-		63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */; };
 		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
 		63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */; };
 		63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */; };
@@ -291,9 +292,6 @@
 		638A5CAE25ADC844001A7AEE /* FakeSubjectLevelGetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeSubjectLevelGetter.swift; sourceTree = "<group>"; };
 		638D197425C6AA4B00B80544 /* MarkupModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkupModelItem.swift; sourceTree = "<group>"; };
 		6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMSubjectModelItem.xib; sourceTree = "<group>"; };
-		6392DBA520D14915003019EB /* TKMSubjectChip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMSubjectChip.h; sourceTree = "<group>"; };
-		6392DBA620D14915003019EB /* TKMSubjectChip.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMSubjectChip.m; sourceTree = "<group>"; };
-		6392DBA820D14997003019EB /* TKMSubjectDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMSubjectDelegate.h; sourceTree = "<group>"; };
 		6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContextSentenceModelItem.swift; path = Tables/ContextSentenceModelItem.swift; sourceTree = "<group>"; };
 		63996ADF2594236F00149414 /* APIClientTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTest.swift; sourceTree = "<group>"; };
 		63996BB62594754400149414 /* TestUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUtils.swift; sourceTree = "<group>"; };
@@ -333,6 +331,9 @@
 		63C42A4421B6A703008CA938 /* Tsurukame-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tsurukame-Bridging-Header.h"; sourceTree = "<group>"; };
 		63C74BC725C822C9004F6C99 /* SubjectModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectModelItem.swift; sourceTree = "<group>"; };
 		63C74BD025C82B1D004F6C99 /* SubjectCollectionModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectCollectionModelItem.swift; sourceTree = "<group>"; };
+		63C74C6725C96088004F6C99 /* SubjectChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectChip.swift; sourceTree = "<group>"; };
+		63C74C7E25C96F58004F6C99 /* SubjectDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDelegate.swift; sourceTree = "<group>"; };
+		63C74C8E25C970DA004F6C99 /* SubjectsByLevelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectsByLevelViewController.swift; sourceTree = "<group>"; };
 		63CAAAD71FC6E0CB00E09DA1 /* Wanikani.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wanikani.pbobjc.h; path = proto/Wanikani.pbobjc.h; sourceTree = "<group>"; };
 		63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Wanikani.pbobjc.m; path = proto/Wanikani.pbobjc.m; sourceTree = "<group>"; };
 		63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+LevenshteinDistance.h"; sourceTree = "<group>"; };
@@ -352,8 +353,6 @@
 		63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "visually-similar-kanji.json"; sourceTree = "<group>"; };
 		63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtobufExtensions.swift; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		63E9A8CA210D6CC000418CE1 /* SubjectsByLevelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectsByLevelViewController.h; sourceTree = "<group>"; };
-		63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectsByLevelViewController.m; sourceTree = "<group>"; };
 		63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMListSeparatorItem.xib; sourceTree = "<group>"; };
 		63E9A8CF2110859800418CE1 /* TKMListSeparatorItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMListSeparatorItem.h; sourceTree = "<group>"; };
 		63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMListSeparatorItem.m; sourceTree = "<group>"; };
@@ -512,6 +511,9 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				63C74C8E25C970DA004F6C99 /* SubjectsByLevelViewController.swift */,
+				63C74C7E25C96F58004F6C99 /* SubjectDelegate.swift */,
+				63C74C6725C96088004F6C99 /* SubjectChip.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				638A5C4D25A471F9001A7AEE /* AppDelegate.swift */,
@@ -573,8 +575,6 @@
 				633AFAE023516BE7004F732F /* SubjectDetailsView.swift */,
 				63B1DE3F1FE7D81600FAB9C2 /* SubjectDetailsViewController.h */,
 				63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */,
-				63E9A8CA210D6CC000418CE1 /* SubjectsByLevelViewController.h */,
-				63E9A8CB210D6CC000418CE1 /* SubjectsByLevelViewController.m */,
 				657E731C22DAD99C00F6F4C1 /* SubjectsRemainingViewController.h */,
 				657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */,
 				63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */,
@@ -601,9 +601,6 @@
 				63CE766221F47100002A417B /* TKMReviewContainerViewController.m */,
 				63CE766421F47669002A417B /* TKMReviewMenuViewController.h */,
 				63CE766521F47669002A417B /* TKMReviewMenuViewController.m */,
-				6392DBA520D14915003019EB /* TKMSubjectChip.h */,
-				6392DBA620D14915003019EB /* TKMSubjectChip.m */,
-				6392DBA820D14997003019EB /* TKMSubjectDelegate.h */,
 				C90846B8237F1C790068A272 /* Tsurukame Complication Extension.appex */,
 				C90846AC237F1C770068A272 /* Tsurukame Complication.app */,
 				63C42A4421B6A703008CA938 /* Tsurukame-Bridging-Header.h */,
@@ -1269,6 +1266,7 @@
 				633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */,
 				63A16772253AD8AE00B5BCD6 /* NSRegularExpression+Matches.swift in Sources */,
 				631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
+				63C74C6825C96088004F6C99 /* SubjectChip.swift in Sources */,
 				63DB06D225A091FF0071DC1C /* Subject.swift in Sources */,
 				6335B4E723CF14280071671E /* Screenshotter.swift in Sources */,
 				63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */,
@@ -1283,7 +1281,6 @@
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
 				657E731E22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m in Sources */,
 				63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */,
-				63E9A8CC210D6CC000418CE1 /* SubjectsByLevelViewController.m in Sources */,
 				636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */,
 				6321E6112068F3A9003460BC /* SettingsViewController.m in Sources */,
 				63BFA78E218EB6890058E885 /* OfflineAudioViewController.swift in Sources */,
@@ -1294,7 +1291,6 @@
 				48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */,
 				63A16773253AD8AE00B5BCD6 /* URLRequest+SetBody.swift in Sources */,
 				637C12D8203847BE009E92DB /* LessonsViewController.m in Sources */,
-				6392DBA720D14915003019EB /* TKMSubjectChip.m in Sources */,
 				63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */,
 				633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */,
 				63DB064025A0372E0071DC1C /* MarkupFormatter.swift in Sources */,
@@ -1303,6 +1299,7 @@
 				63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */,
 				632E19C123DCD0D800E5F256 /* FontSizeViewController.swift in Sources */,
 				631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */,
+				63C74C8F25C970DA004F6C99 /* SubjectsByLevelViewController.swift in Sources */,
 				63A16791253AD8E600B5BCD6 /* APIClient.swift in Sources */,
 				63F7F52923D42C6E006A31FB /* MainViewController.swift in Sources */,
 				636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */,
@@ -1323,6 +1320,7 @@
 				63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */,
 				63C74BD125C82B1D004F6C99 /* SubjectCollectionModelItem.swift in Sources */,
 				63FCAE78237F75CC00DB1418 /* Style.swift in Sources */,
+				63C74C7F25C96F58004F6C99 /* SubjectDelegate.swift in Sources */,
 				3DA8BAFC224C9580009E925B /* LessonOrderViewController.m in Sources */,
 				63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */,
 			);

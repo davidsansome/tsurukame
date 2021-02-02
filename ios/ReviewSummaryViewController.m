@@ -100,7 +100,7 @@
   _model = model;
 }
 
-#pragma mark - TKMSubjectDelegate
+#pragma mark - SubjectDelegate
 
 - (void)didTapSubject:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =

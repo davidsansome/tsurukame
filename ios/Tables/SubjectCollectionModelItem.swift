@@ -17,10 +17,10 @@ import Foundation
 class SubjectCollectionModelItem: NSObject, TKMModelItem {
   let subjects: GPBInt32Array
   let localCachingClient: LocalCachingClient
-  weak var delegate: TKMSubjectChipDelegate?
+  weak var delegate: SubjectChipDelegate?
 
   init(subjects: GPBInt32Array, localCachingClient: LocalCachingClient,
-       delegate: TKMSubjectChipDelegate) {
+       delegate: SubjectChipDelegate) {
     self.subjects = subjects
     self.localCachingClient = localCachingClient
     self.delegate = delegate
@@ -32,7 +32,7 @@ class SubjectCollectionModelItem: NSObject, TKMModelItem {
 }
 
 private class SubjectCollectionModelView: TKMModelCell {
-  var chips = [TKMSubjectChip]()
+  var chips = [SubjectChip]()
 
   override func update(with item: TKMModelItem!) {
     super.update(with: item)
@@ -53,7 +53,7 @@ private class SubjectCollectionModelView: TKMModelCell {
       let subjectId = item.subjects.value(at: i)
       if let subject = item.localCachingClient.getSubject(id: Int(subjectId)),
         let delegate = item.delegate {
-        let chip = TKMSubjectChip(subject: subject, showMeaning: true, delegate: delegate)
+        let chip = SubjectChip(subject: subject, showMeaning: true, delegate: delegate)
         contentView.addSubview(chip)
         chips.append(chip)
       }
@@ -64,9 +64,9 @@ private class SubjectCollectionModelView: TKMModelCell {
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    let frames = TKMCalculateSubjectChipFrames(chips, frame.size.width, .left)
+    let frames = calculateSubjectChipFrames(chips: chips, width: frame.size.width, alignment: .left)
     for (idx, frame) in frames.enumerated() {
-      chips[idx].frame = frame.cgRectValue
+      chips[idx].frame = frame
     }
   }
 
@@ -74,12 +74,12 @@ private class SubjectCollectionModelView: TKMModelCell {
     if chips.isEmpty {
       return size
     }
-    let frames = TKMCalculateSubjectChipFrames(chips, frame.size.width, .left)
+    let frames = calculateSubjectChipFrames(chips: chips, width: frame.size.width, alignment: .left)
     if frames.isEmpty {
       return size
     }
     return CGSize(width: size.width,
-                  height: frames.last!.cgRectValue.maxY +
-                    kTKMSubjectChipCollectionEdgeInsets.bottom)
+                  height: frames.last!.maxY +
+                    kSubjectChipCollectionEdgeInsets.bottom)
   }
 }

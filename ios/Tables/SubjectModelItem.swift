@@ -21,14 +21,14 @@ class SubjectModelItem: NSObject, TKMModelItem {
   let readingWrong: Bool
   let meaningWrong: Bool
 
-  weak var delegate: TKMSubjectDelegate?
+  weak var delegate: SubjectDelegate?
   var assignment: TKMAssignment?
   var showLevelNumber = true
   var showAnswers = true
   var showRemaining = false
   var gradientColors: [Any]?
 
-  init(subject: TKMSubject, delegate: TKMSubjectDelegate, assignment: TKMAssignment? = nil,
+  init(subject: TKMSubject, delegate: SubjectDelegate, assignment: TKMAssignment? = nil,
        readingWrong: Bool = false, meaningWrong: Bool = false) {
     self.subject = subject
     self.delegate = delegate
@@ -178,7 +178,7 @@ class SubjectModelView: TKMModelCell {
 
   override func didSelect() {
     if let item = item as? SubjectModelItem {
-      item.delegate?.didTap(item.subject)
+      item.delegate?.didTapSubject(item.subject)
     }
   }
 

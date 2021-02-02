@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "SubjectCatalogueViewController.h"
-#import "SubjectsByLevelViewController.h"
 #import "Tsurukame-Swift.h"
 
 @interface SubjectCatalogueViewController () <UIPageViewControllerDataSource,
@@ -54,7 +53,7 @@
 
 - (void)updateNavigationItem {
   SubjectsByLevelViewController *vc = self.viewControllers.firstObject;
-  _level = vc.level;
+  _level = (int)[vc getLevel];
   self.navigationItem.title = vc.navigationItem.title;
 }
 
@@ -84,13 +83,13 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
        viewControllerAfterViewController:(UIViewController *)viewController {
   SubjectsByLevelViewController *vc = (SubjectsByLevelViewController *)viewController;
-  return [self createViewControllerForLevel:vc.level + 1];
+  return [self createViewControllerForLevel:(int)[vc getLevel] + 1];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
       viewControllerBeforeViewController:(UIViewController *)viewController {
   SubjectsByLevelViewController *vc = (SubjectsByLevelViewController *)viewController;
-  return [self createViewControllerForLevel:vc.level - 1];
+  return [self createViewControllerForLevel:(int)[vc getLevel] - 1];
 }
 
 #pragma mark - UIPageViewControllerDelegate

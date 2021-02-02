@@ -111,7 +111,7 @@ private func dateFormatter(dateStyle: DateFormatter.Style,
 }
 
 @objc(TKMSubjectDetailsView)
-class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
+class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private let statsDateFormatter = dateFormatter(dateStyle: .medium, timeStyle: .short)
 
   required init?(coder: NSCoder) {
@@ -123,13 +123,13 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
   }
 
   private var services: TKMServices!
-  private weak var subjectDelegate: TKMSubjectDelegate!
+  private weak var subjectDelegate: SubjectDelegate!
 
   private var readingItem: ReadingModelItem?
   private var tableModel: TKMTableModel?
-  private var lastSubjectChipTapped: TKMSubjectChip?
+  private var lastSubjectChipTapped: SubjectChip?
 
-  @objc public func setup(withServices services: TKMServices, delegate: TKMSubjectDelegate) {
+  @objc public func setup(services: TKMServices, delegate: SubjectDelegate) {
     self.services = services
     subjectDelegate = delegate
   }
@@ -382,12 +382,14 @@ class SubjectDetailsView: UITableView, TKMSubjectChipDelegate {
     readingItem?.playAudio()
   }
 
-  // MARK: - TKMSubjectChipDelegate
+  // MARK: - SubjectChipDelegate
 
-  func didTap(_ chip: TKMSubjectChip) {
+  func didTapSubjectChip(_ chip: SubjectChip) {
     lastSubjectChipTapped = chip
 
     chip.backgroundColor = TKMStyle.Color.grey80
-    subjectDelegate.didTap(chip.subject)
+    if let subject = chip.subject {
+      subjectDelegate.didTapSubject(subject)
+    }
   }
 }

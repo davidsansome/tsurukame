@@ -53,7 +53,7 @@ private func subjectMatchesQueryExactly(subject: TKMSubject, query: String,
 private let kMaxResults = 50
 
 class SearchResultViewController: UITableViewController, UISearchResultsUpdating,
-  TKMSubjectDelegate {
+  SubjectDelegate {
   private var services: TKMServices!
   private weak var delegate: SearchResultViewControllerDelegate?
 
@@ -163,9 +163,9 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     }
   }
 
-  // MARK: - TKMSubjectDelegate
+  // MARK: - SubjectDelegate
 
-  func didTap(_ subject: TKMSubject!) {
+  func didTapSubject(_ subject: TKMSubject) {
     delegate?.searchResultSelected(subject: subject)
   }
 }
