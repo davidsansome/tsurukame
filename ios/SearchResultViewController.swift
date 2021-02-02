@@ -59,7 +59,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
 
   private var allSubjects: [TKMSubject]?
   private var model: TKMTableModel!
-  private var queue: DispatchQueue!
+  private var queue: DispatchQueue?
 
   func setup(with services: TKMServices, delegate: SearchResultViewControllerDelegate) {
     self.services = services
@@ -71,18 +71,25 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
                           autoreleaseFrequency: .inherit,
                           target: DispatchQueue.global(qos: .userInitiated))
 
-    queue.async {
+    queue!.async {
       self.ensureAllSubjectsLoaded()
     }
   }
 
   override func didReceiveMemoryWarning() {
+    guard let queue = queue else {
+      return
+    }
+
     queue.sync {
       self.allSubjects = nil
     }
   }
 
   override func viewWillDisappear(_ animated: Bool) {
+    guard let queue = queue else {
+      return
+    }
     super.viewWillDisappear(animated)
     queue.sync {
       self.allSubjects = nil
@@ -98,6 +105,10 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
   // MARK: - UISearchResultsUpdating
 
   func updateSearchResults(for searchController: UISearchController) {
+    guard let queue = queue else {
+      return
+    }
+
     let query = searchController.searchBar.text!.lowercased()
     queue.async {
       self.ensureAllSubjectsLoaded()

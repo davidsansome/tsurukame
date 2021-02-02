@@ -80,6 +80,6 @@ private class SubjectCollectionModelView: TKMModelCell {
     }
     return CGSize(width: size.width,
                   height: frames.last!.cgRectValue.maxY +
-                          kTKMSubjectChipCollectionEdgeInsets.bottom)
+                    kTKMSubjectChipCollectionEdgeInsets.bottom)
   }
 }
