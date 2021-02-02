@@ -14,7 +14,6 @@
 
 #import "LessonsViewController.h"
 
-#import "SubjectDetailsViewController.h"
 #import "Tsurukame-Swift.h"
 #import "UIView+SafeAreaInsets.h"
 

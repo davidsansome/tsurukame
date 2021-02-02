@@ -464,7 +464,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       vc.setup(with: services, items: completedReviews)
     case "subjectDetails":
       let vc = segue.destination as! SubjectDetailsViewController
-      vc.setup(with: services, subject: sender as! TKMSubject)
+      vc.setup(services: services, subject: sender as! TKMSubject)
     default:
       break
     }

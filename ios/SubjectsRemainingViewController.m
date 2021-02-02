@@ -14,7 +14,6 @@
 
 #import "SubjectsRemainingViewController.h"
 
-#import "SubjectDetailsViewController.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
 #import "Tables/TKMTableModel.h"
@@ -137,7 +136,7 @@
 - (void)didTapSubject:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
-  [vc setupWithServices:_services subject:subject];
+  [vc setupWithServices:_services subject:subject showHints:NO hideBackButton:NO index:0];
   [self.navigationController pushViewController:vc animated:YES];
 }
 

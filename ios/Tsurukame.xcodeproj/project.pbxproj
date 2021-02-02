@@ -82,7 +82,6 @@
 		63A16792253AD8E600B5BCD6 /* WebClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16790253AD8E600B5BCD6 /* WebClient.swift */; };
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */; };
-		63B1DE411FE7D81600FAB9C2 /* SubjectDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */; };
 		63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */; };
 		63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
 		63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */; };
@@ -103,6 +102,7 @@
 		63C74C6825C96088004F6C99 /* SubjectChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C74C6725C96088004F6C99 /* SubjectChip.swift */; };
 		63C74C7F25C96F58004F6C99 /* SubjectDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C74C7E25C96F58004F6C99 /* SubjectDelegate.swift */; };
 		63C74C8F25C970DA004F6C99 /* SubjectsByLevelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C74C8E25C970DA004F6C99 /* SubjectsByLevelViewController.swift */; };
+		63C74C9F25C9858D004F6C99 /* SubjectDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C74C9E25C9858D004F6C99 /* SubjectDetailsViewController.swift */; };
 		63CAAAD91FC6E0CB00E09DA1 /* Wanikani.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */; };
 		63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
@@ -308,8 +308,6 @@
 		63A237601FE9264300C48657 /* UIColor+HexString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
 		63B1DE391FE7BCDA00FAB9C2 /* ReviewSummaryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewSummaryViewController.h; sourceTree = "<group>"; };
 		63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewSummaryViewController.m; sourceTree = "<group>"; };
-		63B1DE3F1FE7D81600FAB9C2 /* SubjectDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectDetailsViewController.h; sourceTree = "<group>"; };
-		63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectDetailsViewController.m; sourceTree = "<group>"; };
 		63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMLessonBatchSizeViewController.h; sourceTree = "<group>"; };
 		63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMLessonBatchSizeViewController.m; sourceTree = "<group>"; };
 		63BDA9A5200E04E500D75DA2 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
@@ -334,6 +332,7 @@
 		63C74C6725C96088004F6C99 /* SubjectChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectChip.swift; sourceTree = "<group>"; };
 		63C74C7E25C96F58004F6C99 /* SubjectDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDelegate.swift; sourceTree = "<group>"; };
 		63C74C8E25C970DA004F6C99 /* SubjectsByLevelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectsByLevelViewController.swift; sourceTree = "<group>"; };
+		63C74C9E25C9858D004F6C99 /* SubjectDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsViewController.swift; sourceTree = "<group>"; };
 		63CAAAD71FC6E0CB00E09DA1 /* Wanikani.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wanikani.pbobjc.h; path = proto/Wanikani.pbobjc.h; sourceTree = "<group>"; };
 		63CAAAD81FC6E0CB00E09DA1 /* Wanikani.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Wanikani.pbobjc.m; path = proto/Wanikani.pbobjc.m; sourceTree = "<group>"; };
 		63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+LevenshteinDistance.h"; sourceTree = "<group>"; };
@@ -511,6 +510,7 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				63C74C9E25C9858D004F6C99 /* SubjectDetailsViewController.swift */,
 				63C74C8E25C970DA004F6C99 /* SubjectsByLevelViewController.swift */,
 				63C74C7E25C96F58004F6C99 /* SubjectDelegate.swift */,
 				63C74C6725C96088004F6C99 /* SubjectChip.swift */,
@@ -573,8 +573,6 @@
 				63E9A8D52111BFCD00418CE1 /* SubjectCatalogueViewController.h */,
 				63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */,
 				633AFAE023516BE7004F732F /* SubjectDetailsView.swift */,
-				63B1DE3F1FE7D81600FAB9C2 /* SubjectDetailsViewController.h */,
-				63B1DE401FE7D81600FAB9C2 /* SubjectDetailsViewController.m */,
 				657E731C22DAD99C00F6F4C1 /* SubjectsRemainingViewController.h */,
 				657E731D22DAD99C00F6F4C1 /* SubjectsRemainingViewController.m */,
 				63BDA9A8200E12F900D75DA2 /* SuccessAnimation.h */,
@@ -1244,7 +1242,6 @@
 				638D197525C6AA4B00B80544 /* MarkupModelItem.swift in Sources */,
 				63CAAAD91FC6E0CB00E09DA1 /* Wanikani.pbobjc.m in Sources */,
 				63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */,
-				63B1DE411FE7D81600FAB9C2 /* SubjectDetailsViewController.m in Sources */,
 				63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */,
 				63A16776253AD8AE00B5BCD6 /* GPBPrimitiveArray+Sequence.swift in Sources */,
 				638A5C4E25A471F9001A7AEE /* AppDelegate.swift in Sources */,
@@ -1311,6 +1308,7 @@
 				633DE95620C5634A00AC25F4 /* TKMTableModel.m in Sources */,
 				630EB12125C5652400783E54 /* LessonsPageControl.swift in Sources */,
 				633DE95720C5634A00AC25F4 /* TKMBasicModelItem.m in Sources */,
+				63C74C9F25C9858D004F6C99 /* SubjectDetailsViewController.swift in Sources */,
 				63F7F52123D3F36E006A31FB /* AttributedModelItem.swift in Sources */,
 				631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */,
 				633DE95D20C5635A00AC25F4 /* TKMKanaInput.m in Sources */,

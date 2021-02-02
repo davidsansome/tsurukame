@@ -874,7 +874,7 @@
         <!--Subject Details View Controller-->
         <scene sceneID="xr9-Lr-oHy">
             <objects>
-                <viewController storyboardIdentifier="subjectDetailsViewController" id="jdB-KF-QlJ" customClass="SubjectDetailsViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="subjectDetailsViewController" id="jdB-KF-QlJ" customClass="SubjectDetailsViewController" customModule="Tsurukame" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="r2h-5H-rEP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -899,7 +899,7 @@
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="backButtonPressed:" destination="jdB-KF-QlJ" eventType="touchUpInside" id="mII-7n-x4T"/>
+                                    <action selector="backButtonPressedWithSender:" destination="jdB-KF-QlJ" eventType="touchUpInside" id="Zrh-7k-eJD"/>
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="wFr-RK-iSq" customClass="TKMSubjectDetailsView">

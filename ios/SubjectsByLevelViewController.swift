@@ -144,7 +144,7 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
   func didTapSubject(_ subject: TKMSubject) {
     let vc = storyboard!
       .instantiateViewController(withIdentifier: "subjectDetailsViewController") as! SubjectDetailsViewController
-    vc.setup(with: services, subject: subject)
+    vc.setup(services: services, subject: subject)
     navigationController?.pushViewController(vc, animated: true)
   }
 }

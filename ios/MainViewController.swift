@@ -452,7 +452,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   func searchResultSelected(subject: TKMSubject) {
     let vc = storyboard?
       .instantiateViewController(withIdentifier: "subjectDetailsViewController") as! SubjectDetailsViewController
-    vc.setup(with: services, subject: subject, showHints: true, hideBackButton: false, index: 0)
+    vc.setup(services: services, subject: subject, showHints: true, hideBackButton: false, index: 0)
     searchController.dismiss(animated: true) {
       self.navigationController?.pushViewController(vc, animated: true)
     }

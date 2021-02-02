@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "ReviewSummaryViewController.h"
-#import "SubjectDetailsViewController.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
@@ -105,7 +104,7 @@
 - (void)didTapSubject:(TKMSubject *)subject {
   SubjectDetailsViewController *vc =
       [self.storyboard instantiateViewControllerWithIdentifier:@"subjectDetailsViewController"];
-  [vc setupWithServices:_services subject:subject];
+  [vc setupWithServices:_services subject:subject showHints:NO hideBackButton:NO index:0];
   [self.navigationController pushViewController:vc animated:YES];
 }
 
