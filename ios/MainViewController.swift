@@ -289,7 +289,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
     case "settings":
       let vc = segue.destination as! SettingsViewController
-      vc.setup(with: services)
+      vc.setup(services: services)
 
     default:
       break

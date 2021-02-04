@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ class InterfaceStyleViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    var selectedRow = Int(Settings.interfaceStyle - 1)
+    var selectedRow = Int(Settings.interfaceStyle.rawValue - 1)
     if selectedRow < 0 || selectedRow >= tableView.numberOfRows(inSection: 0) {
       selectedRow = 0
     }
@@ -29,8 +29,8 @@ class InterfaceStyleViewController: UITableViewController {
   }
 
   override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-    Settings.interfaceStyle = UInt(indexPath.row + 1)
-    view.window!.setInterfaceStyle(InterfaceStyle(rawValue: Settings.interfaceStyle)!)
+    Settings.interfaceStyle = InterfaceStyle(rawValue: UInt(indexPath.row + 1))!
+    view.window!.setInterfaceStyle(Settings.interfaceStyle)
     navigationController?.popViewController(animated: true)
   }
 }

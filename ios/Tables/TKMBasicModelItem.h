@@ -68,15 +68,16 @@ NS_ASSUME_NONNULL_BEGIN;
 
 @end
 
-#define TKM_BASIC_MODEL_ITEM_INITIALISERS_UNAVAILABLE                                           \
-  -(instancetype)initWithStyle : (UITableViewCellStyle)style title : (NSString *)title subtitle \
-      : (NSString *)subtitle accessoryType : (UITableViewCellAccessoryType)accessoryType target \
-      : (id)target action : (SEL)action NS_UNAVAILABLE;                                         \
-  -(instancetype)initWithStyle : (UITableViewCellStyle)style title : (NSString *)title subtitle \
-      : (NSString *)subtitle accessoryType                                                      \
-      : (UITableViewCellAccessoryType)accessoryType NS_UNAVAILABLE;                             \
-  -(instancetype)initWithStyle : (UITableViewCellStyle)style title : (NSString *)title subtitle \
-      : (NSString *)subtitle NS_UNAVAILABLE;                                                    \
+#define TKM_BASIC_MODEL_ITEM_INITIALISERS_UNAVAILABLE                                       \
+  -(instancetype)initWithStyle : (UITableViewCellStyle)style title                          \
+      : (nullable NSString *)title subtitle : (nullable NSString *)subtitle accessoryType   \
+      : (UITableViewCellAccessoryType)accessoryType target : (nullable id)target action     \
+      : (nullable SEL)action NS_UNAVAILABLE;                                                \
+  -(instancetype)initWithStyle : (UITableViewCellStyle)style title                          \
+      : (nullable NSString *)title subtitle : (nullable NSString *)subtitle accessoryType   \
+      : (UITableViewCellAccessoryType)accessoryType NS_UNAVAILABLE;                         \
+  -(instancetype)initWithStyle : (UITableViewCellStyle)style title                          \
+      : (nullable NSString *)title subtitle : (nullable NSString *)subtitle NS_UNAVAILABLE; \
   -(instancetype)init NS_UNAVAILABLE;
 
 NS_ASSUME_NONNULL_END;

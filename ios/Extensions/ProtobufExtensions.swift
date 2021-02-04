@@ -151,7 +151,7 @@ enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
   }
 }
 
-extension TKMSubject_Type: CustomStringConvertible {
+extension TKMSubject_Type: Codable, CustomStringConvertible {
   public var description: String {
     switch self {
     case .radical: return "Radical"

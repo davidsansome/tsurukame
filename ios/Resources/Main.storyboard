@@ -596,7 +596,7 @@
         <!--Settings-->
         <scene sceneID="3hY-tc-sfR">
             <objects>
-                <tableViewController title="Settings" id="thM-jC-nT8" customClass="SettingsViewController" sceneMemberID="viewController">
+                <tableViewController title="Settings" id="thM-jC-nT8" customClass="SettingsViewController" customModule="Tsurukame" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="CVb-cb-bd0">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1095,7 +1095,7 @@
         <!--Lesson order-->
         <scene sceneID="BjM-im-n92">
             <objects>
-                <tableViewController title="Lesson order" id="B5Q-PH-hTQ" userLabel="Lesson order" customClass="LessonOrderViewController" sceneMemberID="viewController">
+                <tableViewController title="Lesson order" id="B5Q-PH-hTQ" userLabel="Lesson order" customClass="LessonOrderViewController" customModule="Tsurukame" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ajq-lt-z5I">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

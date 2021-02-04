@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
 
     Screenshotter.setUp()
 
-    window?.setInterfaceStyle(InterfaceStyle(rawValue: Settings.interfaceStyle) ?? .system)
+    window?.setInterfaceStyle(Settings.interfaceStyle)
     application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
 
     storyboard = window!.rootViewController!.storyboard

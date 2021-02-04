@@ -246,7 +246,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     reviewQueue.shuffle()
-    switch ReviewOrder(rawValue: Settings.reviewOrder)! {
+    switch Settings.reviewOrder {
     case .ascendingSRSStage:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.srsStage < b.assignment.srsStage { return true }

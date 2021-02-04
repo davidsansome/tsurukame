@@ -74,7 +74,7 @@ class ReviewItem: NSObject {
 
   private func getSubjectTypeIndex(_ subjectType: TKMSubject_Type) -> Int {
     for (idx, typeValue) in Settings.lessonOrder.enumerated() {
-      if typeValue == subjectType.rawValue {
+      if typeValue == subjectType {
         return idx
       }
     }

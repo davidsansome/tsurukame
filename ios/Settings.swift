@@ -14,7 +14,7 @@
 
 import Foundation
 
-@objc enum ReviewOrder: UInt, Codable {
+@objc enum ReviewOrder: UInt, Codable, CustomStringConvertible {
   case random = 1
   case ascendingSRSStage = 2
   case currentLevelFirst = 3
@@ -22,12 +22,59 @@ import Foundation
   case newestAvailableFirst = 5
   case oldestAvailableFirst = 6
   case descendingSRSStage = 7
+
+  var description: String {
+    switch self {
+    case .random: return "Random"
+    case .ascendingSRSStage: return "Ascending SRS stage"
+    case .descendingSRSStage: return "Descending SRS stage"
+    case .currentLevelFirst: return "Current level first"
+    case .lowestLevelFirst: return "Lowest level first"
+    case .newestAvailableFirst: return "Newest available first"
+    case .oldestAvailableFirst: return "Oldest available first"
+    }
+  }
 }
 
-@objc enum InterfaceStyle: UInt, Codable {
+@objc enum InterfaceStyle: UInt, Codable, CustomStringConvertible {
   case system = 1
   case light = 2
   case dark = 3
+
+  var description: String {
+    switch self {
+    case .system: return "System"
+    case .light: return "Light"
+    case .dark: return "Dark"
+    }
+  }
+}
+
+private func setArchiveData<T: Codable>(_ object: T, key: String) {
+  var data: Data!
+  if #available(iOS 11.0, *) {
+    data = try! NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: true)
+  } else {
+    let archiver = NSKeyedArchiver()
+    archiver.requiresSecureCoding = true
+    archiver.encode(object, forKey: key)
+    data = archiver.encodedData
+  }
+
+  UserDefaults.standard.setValue(data, forKey: key)
+}
+
+private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
+  // Encode anything not encoded
+  if let notEncodedObject = UserDefaults.standard.object(forKey: key) as? T {
+    setArchiveData(notEncodedObject, key: key)
+  }
+  // Decode value if obtainable and return it
+  guard let data = UserDefaults.standard.object(forKey: key) as? Data else {
+    setArchiveData(defaultValue, key: key)
+    return defaultValue
+  }
+  return (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? T) ?? defaultValue
 }
 
 @propertyWrapper struct Setting<T: Codable> {
@@ -39,31 +86,56 @@ import Foundation
     self.key = key
   }
 
-  func archiveData(_ object: T) -> Data {
-    if #available(iOS 11.0, *) {
-      return try! NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: true)
-    } else {
-      let archiver = NSKeyedArchiver()
-      archiver.requiresSecureCoding = true
-      archiver.encode(object, forKey: key)
-      return archiver.encodedData
-    }
+  var wrappedValue: T {
+    get { getArchiveData(defaultValue, key: key) }
+    set(newValue) { setArchiveData(newValue, key: key) }
+  }
+}
+
+@propertyWrapper struct EnumSetting<T: RawRepresentable> where T.RawValue: Codable {
+  private let defaultValue: T
+  private let key: String
+
+  init(_ defaultValue: T, _ key: String) {
+    self.defaultValue = defaultValue
+    self.key = key
   }
 
   var wrappedValue: T {
-    get {
-      // Encode anything not encoded
-      if let notEncodedObject = UserDefaults.standard.object(forKey: key) as? T {
-        UserDefaults.standard.set(archiveData(notEncodedObject), forKey: key)
-      }
-      // Decode value if obtainable and return it
-      guard let data = UserDefaults.standard.object(forKey: key) as? Data else {
-        UserDefaults.standard.set(archiveData(defaultValue), forKey: key)
-        return defaultValue
-      }
-      return (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? T) ?? defaultValue
+    get { T(rawValue: getArchiveData(defaultValue.rawValue, key: key))! }
+    set(newValue) { setArchiveData(newValue.rawValue, key: key) }
+  }
+}
+
+@propertyWrapper struct EnumArraySetting<A: Sequence, T: RawRepresentable> where A.Element == T,
+  T.RawValue: Codable {
+  private let defaultValue: [T.RawValue]
+  private let key: String
+
+  init(_ defaultValues: A, _ key: String) {
+    defaultValue = EnumArraySetting<A, T>.toRawArray(defaultValues)
+    self.key = key
+  }
+
+  private static func toRawArray(_ values: A) -> [T.RawValue] {
+    var ret = [T.RawValue]()
+    for value in values {
+      ret.append(value.rawValue)
     }
-    set(newValue) { UserDefaults.standard.set(archiveData(newValue), forKey: key) }
+    return ret
+  }
+
+  private static func fromRawArray(_ values: [T.RawValue]) -> A {
+    var ret = [T]()
+    for value in values {
+      ret.append(T(rawValue: value)!)
+    }
+    return ret as! A
+  }
+
+  var wrappedValue: A {
+    get { EnumArraySetting<A, T>.fromRawArray(getArchiveData(defaultValue, key: key)) }
+    set(newValue) { setArchiveData(EnumArraySetting<A, T>.toRawArray(newValue), key: key) }
   }
 }
 
@@ -72,20 +144,21 @@ import Foundation
   @Setting("", #keyPath(userEmailAddress)) static var userEmailAddress: String
   @Setting("", #keyPath(userApiToken)) static var userApiToken: String
 
-  @Setting(InterfaceStyle.system.rawValue, #keyPath(interfaceStyle)) static var interfaceStyle: UInt
+  @EnumSetting(InterfaceStyle.system,
+               #keyPath(interfaceStyle)) static var interfaceStyle: InterfaceStyle
 
   @Setting(false, #keyPath(notificationsAllReviews)) static var notificationsAllReviews: Bool
   @Setting(true, #keyPath(notificationsBadging)) static var notificationsBadging: Bool
 
   @Setting(false, #keyPath(prioritizeCurrentLevel)) static var prioritizeCurrentLevel: Bool
-  @Setting([
-    TKMSubject_Type.radical.rawValue,
-    TKMSubject_Type.kanji.rawValue,
-    TKMSubject_Type.vocabulary.rawValue,
-  ], #keyPath(lessonOrder)) static var lessonOrder: [Int32]
+  @EnumArraySetting([
+    TKMSubject_Type.radical,
+    TKMSubject_Type.kanji,
+    TKMSubject_Type.vocabulary,
+  ], "lessonOrder") static var lessonOrder: [TKMSubject_Type]
   @Setting(5, #keyPath(lessonBatchSize)) static var lessonBatchSize: Int
 
-  @Setting(ReviewOrder.random.rawValue, #keyPath(reviewOrder)) static var reviewOrder: UInt
+  @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
   @Setting(false, #keyPath(groupMeaningReading)) static var groupMeaningReading: Bool
   @Setting(true, #keyPath(meaningFirst)) static var meaningFirst: Bool

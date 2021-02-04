@@ -16,17 +16,21 @@
 
 #import "TKMBasicModelItem.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TKMSwitchModelItem : TKMBasicModelItem
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
-                        title:(NSString *)title
-                     subtitle:(NSString *)subtitle
+                        title:(nullable NSString *)title
+                     subtitle:(nullable NSString *)subtitle
                            on:(BOOL)on
-                       target:(id)target
-                       action:(SEL)action NS_DESIGNATED_INITIALIZER;
+                       target:(nullable id)target
+                       action:(nullable SEL)action NS_DESIGNATED_INITIALIZER;
 
 TKM_BASIC_MODEL_ITEM_INITIALISERS_UNAVAILABLE;
 
 @property(nonatomic) BOOL on;
 
 @end
+
+NS_ASSUME_NONNULL_END
