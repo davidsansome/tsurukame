@@ -45,7 +45,7 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
     // Set the subjects on the page control.
     var subjects = [TKMSubject]()
     for item in items {
-      if let subject = services.localCachingClient.getSubject(id: item.assignment.subjectId) {
+      if let subject = services.localCachingClient.getSubject(id: item.assignment.subjectID) {
         subjects.append(subject)
       }
     }
@@ -138,7 +138,7 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
     }
 
     let item = items[index]
-    if let subject = services.localCachingClient.getSubject(id: item.assignment.subjectId) {
+    if let subject = services.localCachingClient.getSubject(id: item.assignment.subjectID) {
       let vc = storyboard?
         .instantiateViewController(withIdentifier: "subjectDetailsViewController") as! SubjectDetailsViewController
       vc.setup(services: services, subject: subject, showHints: true, hideBackButton: true,

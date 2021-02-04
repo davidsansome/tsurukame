@@ -520,13 +520,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       // Choose a random task from the active queue.
       activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
       activeTask = activeQueue[activeTaskIndex]
-      activeSubject = services.localCachingClient
-        .getSubject(id: activeTask.assignment.subjectId)!
+      activeSubject = services.localCachingClient.getSubject(id: activeTask.assignment.subjectID)!
       activeStudyMaterials =
         services.localCachingClient
-          .getStudyMaterial(subjectId: Int(activeTask.assignment.subjectId))
+          .getStudyMaterial(subjectId: activeTask.assignment.subjectID)
       activeAssignment =
-        services.localCachingClient.getAssignment(subjectId: Int(activeTask.assignment.subjectId))
+        services.localCachingClient.getAssignment(subjectId: activeTask.assignment.subjectID)
 
       // Choose whether to ask the meaning or the reading.
       if activeTask.answeredMeaning {
@@ -553,9 +552,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         subjectTypePrompt = "Radical"
       case .vocabulary:
         subjectTypePrompt = "Vocabulary"
-      case .unknown: fallthrough
-      case .gpbUnrecognizedEnumeratorValue: fallthrough
-      @unknown default:
+      default:
         fatalError()
       }
       switch activeTaskType! {
@@ -1152,8 +1149,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Show a new task if it was correct.
     if result != .Incorrect {
       if Settings.playAudioAutomatically, activeTaskType == .reading,
-        activeSubject.hasVocabulary, activeSubject.vocabulary.audioIdsArray_Count > 0 {
-        services.audio.play(subjectID: activeSubject!.id_p, delegate: nil)
+        activeSubject.hasVocabulary, !activeSubject.vocabulary.audioIds.isEmpty {
+        services.audio.play(subjectID: activeSubject!.id, delegate: nil)
       }
 
       var previousSubjectLabel: UILabel?
@@ -1244,9 +1241,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   @objc func addSynonym() {
     if activeStudyMaterials == nil {
       activeStudyMaterials = TKMStudyMaterials()
-      activeStudyMaterials!.subjectId = activeSubject.id_p
+      activeStudyMaterials!.subjectID = activeSubject.id
     }
-    activeStudyMaterials!.meaningSynonymsArray.add(answerField.text!)
+    activeStudyMaterials!.meaningSynonyms.append(answerField.text!)
     services.localCachingClient?.updateStudyMaterial(activeStudyMaterials!)
     markAnswer(.OverrideAnswerCorrect)
   }

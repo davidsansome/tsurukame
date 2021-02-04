@@ -42,7 +42,7 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
     model.addSection("Vocabulary")
 
     for assignment in services.localCachingClient.getAssignments(level: level) {
-      guard let subject = services.localCachingClient.getSubject(id: assignment.subjectId)
+      guard let subject = services.localCachingClient.getSubject(id: assignment.subjectID)
       else {
         continue
       }
@@ -55,7 +55,7 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
       if assignment.isLocked || assignment.isBurned {
         item.gradientColors = TKMStyle.lockedGradient
       }
-      model.add(item, toSection: section)
+      model.add(item, toSection: Int32(section))
     }
 
     let comparator = { (a: Any, b: Any) -> ComparisonResult in

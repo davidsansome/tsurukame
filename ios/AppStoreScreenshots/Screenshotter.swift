@@ -86,20 +86,20 @@ import Reachability
 
     override func getAllAssignments() -> [TKMAssignment] {
       // Return some assignments for a review.
-      let a = TKMAssignment()
-      a.subjectId = 511
+      var a = TKMAssignment()
+      a.subjectID = 511
       a.subjectType = .kanji
       a.availableAt = 42
       a.srsStageNumber = 2
       return Array(repeating: a, count: Int(availableSubjects.reviewCount))
     }
 
-    override func getStudyMaterial(subjectId _: Int) -> TKMStudyMaterials? {
+    override func getStudyMaterial(subjectId _: Int32) -> TKMStudyMaterials? {
       nil
     }
 
     override func getUserInfo() -> TKMUser? {
-      let user = TKMUser()
+      var user = TKMUser()
       user.level = 24
       user.username = "Fred"
       user.maxLevelGrantedBySubscription = 60
@@ -110,7 +110,7 @@ import Reachability
       []
     }
 
-    override func getAssignment(subjectId _: Int) -> TKMAssignment? {
+    override func getAssignment(subjectId _: Int32) -> TKMAssignment? {
       nil
     }
 
@@ -122,8 +122,8 @@ import Reachability
 
       var ret = [TKMAssignment]()
       for s in subjects {
-        let a = TKMAssignment()
-        a.subjectId = s.id_p
+        var a = TKMAssignment()
+        a.subjectID = s.id
         a.subjectType = s.subjectType
 
         if a.subjectType == .radical {
@@ -154,8 +154,8 @@ import Reachability
 
     override func clearAllDataAndClose() {}
 
-    private func makeAssignment(_ type: TKMSubject_Type, srsStage: Int32) -> TKMAssignment {
-      let ret = TKMAssignment()
+    private func makeAssignment(_ type: TKMSubject.TypeEnum, srsStage: Int32) -> TKMAssignment {
+      var ret = TKMAssignment()
       ret.subjectType = type
       if srsStage != -1 {
         ret.srsStageNumber = srsStage
@@ -163,7 +163,7 @@ import Reachability
       return ret
     }
 
-    private func makePieSlices(_ type: TKMSubject_Type,
+    private func makePieSlices(_ type: TKMSubject.TypeEnum,
                                locked: Int,
                                lesson: Int,
                                apprentice: Int,

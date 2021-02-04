@@ -229,7 +229,7 @@ private class ConjugationGroup {
                                             ])
 
   public static func get(for subject: TKMSubject,
-                         partOfSpeech: TKMVocabulary_PartOfSpeech) -> ConjugationGroup? {
+                         partOfSpeech: TKMVocabulary.PartOfSpeech) -> ConjugationGroup? {
     switch partOfSpeech {
     case .godanVerb:
       return godanVerbs[subject.japanese.last!]
@@ -251,16 +251,14 @@ private class ConjugationGroup {
   }
 }
 
-public func patternToHighlight(for subject: TKMSubject) -> String {
+func patternToHighlight(for subject: TKMSubject) -> String {
   // Always match the literal Japanese text.
-  var patterns = [subject.japanese!]
+  var patterns = [subject.japanese]
 
-  for i in 0 ..< subject.vocabulary.partsOfSpeechArray_Count {
-    let partOfSpeech = TKMVocabulary_PartOfSpeech(rawValue: subject.vocabulary.partsOfSpeechArray
-      .value(at: i))!
+  for partOfSpeech in subject.vocabulary.partsOfSpeech {
     if let conjugationGroup = ConjugationGroup.get(for: subject, partOfSpeech: partOfSpeech) {
       // Strip the prefix and suffix strings.
-      var japanese = subject.japanese!
+      var japanese = subject.japanese
       if japanese.hasPrefix(conjugationGroup.prefix) {
         japanese = String(japanese.dropFirst(conjugationGroup.prefix.count))
       }
@@ -275,8 +273,8 @@ public func patternToHighlight(for subject: TKMSubject) -> String {
   return "(" + patterns.joined(separator: "|") + ")"
 }
 
-public func highlightOccurrences(of subject: TKMSubject,
-                                 in text: NSAttributedString) -> NSAttributedString? {
+func highlightOccurrences(of subject: TKMSubject,
+                          in text: NSAttributedString) -> NSAttributedString? {
   if !subject.hasVocabulary {
     return nil
   }

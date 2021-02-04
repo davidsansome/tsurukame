@@ -9,7 +9,6 @@ target 'FontScreenshotter' do
 
   # Pods for FontScreenshotter
   pod 'Haneke', '~> 1.0.2', :inhibit_warnings => true
-  pod 'Protobuf', '~> 4.0.0-rc1'
   pod 'Reachability', '~> 3.2'
 
   target 'FontScreenshotterUITests' do
@@ -30,7 +29,6 @@ target 'Tsurukame' do
   pod 'MMDrawerController', '~> 0.6.0', :inhibit_warnings => true
   pod 'PromiseKit/CorePromise', '~> 6.8.1'
   pod 'PromiseKit/Foundation', '~> 6.8.1'
-  pod 'Protobuf', '~> 4.0.0-rc1'
   pod 'Reachability', '~> 3.2'
 
   target 'Tests' do

@@ -152,10 +152,10 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
 
   @Setting(false, #keyPath(prioritizeCurrentLevel)) static var prioritizeCurrentLevel: Bool
   @EnumArraySetting([
-    TKMSubject_Type.radical,
-    TKMSubject_Type.kanji,
-    TKMSubject_Type.vocabulary,
-  ], "lessonOrder") static var lessonOrder: [TKMSubject_Type]
+    .radical,
+    .kanji,
+    .vocabulary,
+  ], "lessonOrder") static var lessonOrder: [TKMSubject.TypeEnum]
   @Setting(5, #keyPath(lessonBatchSize)) static var lessonBatchSize: Int
 
   @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder

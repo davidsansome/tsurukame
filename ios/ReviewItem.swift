@@ -35,7 +35,7 @@ class ReviewItem: NSObject {
     }
 
     for assignment in assignments {
-      if !localCachingClient.isValid(subjectId: Int(assignment.subjectId)) ||
+      if !localCachingClient.isValid(subjectId: assignment.subjectID) ||
         (userInfo.hasLevel && userInfo.level < assignment.level) ||
         !isIncluded(assignment) {
         continue
@@ -72,7 +72,7 @@ class ReviewItem: NSObject {
     answer.isLesson = assignment.isLessonStage
   }
 
-  private func getSubjectTypeIndex(_ subjectType: TKMSubject_Type) -> Int {
+  private func getSubjectTypeIndex(_ subjectType: TKMSubject.TypeEnum) -> Int {
     for (idx, typeValue) in Settings.lessonOrder.enumerated() {
       if typeValue == subjectType {
         return idx
@@ -95,14 +95,14 @@ class ReviewItem: NSObject {
     } else if myIndex > otherIndex {
       return false
     }
-    return assignment.subjectId <= other.assignment.subjectId
+    return assignment.subjectID <= other.assignment.subjectID
   }
 
   func reset() {
-    answer.hasMeaningWrong = false
-    answer.hasReadingWrong = false
-    answer.meaningWrongCount = 0
-    answer.readingWrongCount = 0
+    answer.clearMeaningWrong()
+    answer.clearReadingWrong()
+    answer.clearMeaningWrongCount()
+    answer.clearReadingWrongCount()
     answeredMeaning = false
     answeredReading = false
   }

@@ -36,17 +36,17 @@ private func join(_ arr: [NSAttributedString], with joinString: String) -> NSAtt
 private func renderMeanings(subject: TKMSubject,
                             studyMaterials: TKMStudyMaterials?) -> NSAttributedString {
   var strings = [NSAttributedString]()
-  for meaning in subject.meaningsArray as! [TKMMeaning] {
+  for meaning in subject.meanings {
     if meaning.type == .primary {
       strings.append(attrString(meaning.meaning))
     }
   }
   if let studyMaterials = studyMaterials {
-    for meaning in studyMaterials.meaningSynonymsArray as! [String] {
+    for meaning in studyMaterials.meaningSynonyms {
       strings.append(attrString(meaning, attrs: [.foregroundColor: kMeaningSynonymColor]))
     }
   }
-  for meaning in subject.meaningsArray as! [TKMMeaning] {
+  for meaning in subject.meanings {
     if meaning.type != .primary, meaning.type != .blacklist,
       meaning.type != .auxiliaryWhitelist || !subject.hasRadical || Settings.showOldMnemonic {
       let font = UIFont.systemFont(ofSize: kFontSize, weight: .light)
@@ -129,7 +129,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private var tableModel: TKMTableModel?
   private var lastSubjectChipTapped: SubjectChip?
 
-  @objc public func setup(services: TKMServices, delegate: SubjectDelegate) {
+  public func setup(services: TKMServices, delegate: SubjectDelegate) {
     self.services = services
     subjectDelegate = delegate
   }
@@ -156,11 +156,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                            toModel model: TKMMutableTableModel) {
     let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
-    let text = renderReadings(readings: subject.readingsArray as! [TKMReading],
+    let text = renderReadings(readings: subject.readings,
                               primaryOnly: primaryOnly).string(withFontSize: kFontSize)
     let item = ReadingModelItem(text: text)
-    if subject.hasVocabulary, subject.vocabulary.audioIdsArray_Count > 0 {
-      item.setAudio(services.audio, subjectID: subject.id_p)
+    if subject.hasVocabulary, subject.vocabulary.audioIds.count > 0 {
+      item.setAudio(services.audio, subjectID: subject.id)
     }
 
     readingItem = item
@@ -177,7 +177,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private func addComponents(_ subject: TKMSubject,
                              title: String,
                              toModel model: TKMMutableTableModel) {
-    let item = SubjectCollectionModelItem(subjects: subject.componentSubjectIdsArray,
+    let item = SubjectCollectionModelItem(subjects: subject.componentSubjectIds,
                                           localCachingClient: services.localCachingClient,
                                           delegate: self)
 
@@ -207,8 +207,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   private func addAmalgamationSubjects(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
     var subjects = [TKMSubject]()
-    for i in 0 ..< subject.amalgamationSubjectIdsArray_Count {
-      let subjectID = subject.amalgamationSubjectIdsArray.value(at: i)
+    for subjectID in subject.amalgamationSubjectIds {
       if let subject = services.localCachingClient.getSubject(id: subjectID) {
         subjects.append(subject)
       }
@@ -247,12 +246,12 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   }
 
   private func addContextSentences(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
-    if subject.vocabulary.sentencesArray_Count == 0 {
+    if subject.vocabulary.sentences.isEmpty {
       return
     }
 
     model.addSection("Context Sentences")
-    for sentence in subject.vocabulary.sentencesArray as! [TKMVocabulary_Sentence] {
+    for sentence in subject.vocabulary.sentences {
       model.add(ContextSentenceModelItem(sentence, highlightSubject: subject,
                                          defaultAttributes: defaultStringAttrs(),
                                          fontSize: kFontSize))
@@ -271,8 +270,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     model.add(item)
   }
 
-  @objc public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
-                           assignment: TKMAssignment?, task: ReviewItem?) {
+  public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
+                     assignment: TKMAssignment?, task: ReviewItem?) {
     let model = TKMMutableTableModel(tableView: self), isReview = task != nil
     readingItem = nil
     let meaningAttempted = task?.answeredMeaning == true || task?.answer.meaningWrong == true
@@ -288,7 +287,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                          isHint: false,
                          toModel: model)
 
-        if Settings.showOldMnemonic, !subject.radical!.deprecatedMnemonic.isEmpty {
+        if Settings.showOldMnemonic, !subject.radical.deprecatedMnemonic.isEmpty {
           model.addSection("Old Mnemonic")
           addFormattedText(subject.radical.deprecatedMnemonic,
                            isHint: false, toModel: model)

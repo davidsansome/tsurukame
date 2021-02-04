@@ -26,8 +26,7 @@ func render(formattedText: [TKMFormattedText],
 private func render(formattedText: TKMFormattedText,
                     standardAttributes: [NSAttributedString.Key: Any]) -> NSAttributedString {
   var attributes = standardAttributes
-  for i in 0 ..< formattedText.formatArray_Count {
-    let format = TKMFormattedText_Format(rawValue: formattedText.formatArray.value(at: i))
+  for format in formattedText.format {
     switch format {
     case .kanji:
       attributes[.foregroundColor] = TKMStyle.Color.markupKanjiForeground

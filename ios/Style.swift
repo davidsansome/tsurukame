@@ -97,7 +97,7 @@ class TKMStyle: NSObject {
     }
   }
 
-  class func color2(forSubjectType subjectType: TKMSubject_Type) -> UIColor {
+  class func color2(forSubjectType subjectType: TKMSubject.TypeEnum) -> UIColor {
     switch subjectType {
     case .radical:
       return radicalColor2
@@ -105,9 +105,7 @@ class TKMStyle: NSObject {
       return kanjiColor2
     case .vocabulary:
       return vocabularyColor2
-    case .unknown: fallthrough
-    case .gpbUnrecognizedEnumeratorValue: fallthrough
-    @unknown default:
+    default:
       fatalError()
     }
   }
@@ -120,9 +118,7 @@ class TKMStyle: NSObject {
       return kanjiGradient
     case .vocabulary:
       return vocabularyGradient
-    case .unknown: fallthrough
-    case .gpbUnrecognizedEnumeratorValue: fallthrough
-    @unknown default:
+    default:
       fatalError()
     }
   }

@@ -25,8 +25,8 @@ class ProtobufExtensionsObjectiveC: NSObject {
     SRSStage(rawValue: value)!.description
   }
 
-  static func subjectTypeName(_ value: Int32) -> String {
-    TKMSubject_Type(rawValue: value)!.description
+  static func subjectTypeName(_ value: Int) -> String {
+    TKMSubject.TypeEnum(rawValue: value)!.description
   }
 }
 
@@ -151,7 +151,7 @@ enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
   }
 }
 
-extension TKMSubject_Type: Codable, CustomStringConvertible {
+extension TKMSubject.TypeEnum: Codable, CustomStringConvertible {
   public var description: String {
     switch self {
     case .radical: return "Radical"
@@ -162,9 +162,8 @@ extension TKMSubject_Type: Codable, CustomStringConvertible {
   }
 }
 
-@objc
 extension TKMSubject {
-  var subjectType: TKMSubject_Type {
+  var subjectType: TKMSubject.TypeEnum {
     if hasRadical {
       return .radical
     }
@@ -178,12 +177,12 @@ extension TKMSubject {
   }
 
   func japaneseText(imageSize: CGFloat) -> NSAttributedString {
-    if !hasRadical || !radical.hasCharacterImageFile {
+    if !hasRadical || !radical.hasCharacterImageFile_p {
       return NSAttributedString(string: japanese)
     }
 
     let imageAttachment = NSTextAttachment()
-    imageAttachment.image = UIImage(named: "radical-\(id_p)")
+    imageAttachment.image = UIImage(named: "radical-\(id)")
 
     var size = imageSize
     if size == 0 {
@@ -196,8 +195,8 @@ extension TKMSubject {
   var japaneseText: NSAttributedString { japaneseText(imageSize: 0) }
 
   var primaryMeaning: String {
-    for meaning in meaningsArray {
-      if let meaning = meaning as? TKMMeaning, meaning.type == .primary {
+    for meaning in meanings {
+      if meaning.type == .primary {
         return meaning.meaning
       }
     }
@@ -206,8 +205,8 @@ extension TKMSubject {
 
   private func readings(primary: Bool) -> [TKMReading] {
     var ret = [TKMReading]()
-    for reading in readingsArray {
-      if let reading = reading as? TKMReading, reading.isPrimary == primary {
+    for reading in readings {
+      if reading.isPrimary == primary {
         ret.append(reading)
       }
     }
@@ -219,8 +218,7 @@ extension TKMSubject {
 
   var commaSeparatedMeanings: String {
     var strings = [String]()
-    for meaning in meaningsArray {
-      let meaning = meaning as! TKMMeaning
+    for meaning in meanings {
       if meaning.type != .blacklist,
         meaning.type != .auxiliaryWhitelist || !hasRadical || Settings.showOldMnemonic {
         strings.append(meaning.meaning)
@@ -237,19 +235,18 @@ extension TKMSubject {
     return strings.joined(separator: ", ")
   }
 
-  var commaSeparatedReadings: String { commaSeparated(readings: readingsArray as! [TKMReading]) }
+  var commaSeparatedReadings: String { commaSeparated(readings: readings) }
   var commaSeparatedPrimaryReadings: String { commaSeparated(readings: primaryReadings) }
 
   func randomAudioID() -> Int {
-    if !hasVocabulary || vocabulary.audioIdsArray_Count < 1 {
+    if !hasVocabulary || vocabulary.audioIds.count < 1 {
       return 0
     }
-    let idx = arc4random_uniform(UInt32(vocabulary.audioIdsArray_Count))
-    return Int(vocabulary.audioIdsArray.value(at: UInt(idx)))
+    let idx = arc4random_uniform(UInt32(vocabulary.audioIds.count))
+    return Int(vocabulary.audioIds[Int(idx)])
   }
 }
 
-@objc
 extension TKMReading {
   var displayText: String {
     if hasType, type == .onyomi, Settings.useKatakanaForOnyomi {
@@ -259,7 +256,7 @@ extension TKMReading {
   }
 }
 
-extension TKMVocabulary_PartOfSpeech: CustomStringConvertible {
+extension TKMVocabulary.PartOfSpeech: CustomStringConvertible {
   public var description: String {
     switch self {
     case .noun:
@@ -308,23 +305,17 @@ extension TKMVocabulary_PartOfSpeech: CustomStringConvertible {
   }
 }
 
-@objc
 extension TKMVocabulary {
   var commaSeparatedPartsOfSpeech: String {
     var strings = [String]()
-    partsOfSpeechArray.enumerateValues { value, _, _ in
-      strings.append(TKMVocabulary_PartOfSpeech(rawValue: value)!.description)
+    for partOfSpeech in partsOfSpeech {
+      strings.append(partOfSpeech.description)
     }
     return strings.joined(separator: ", ")
   }
 
-  private func isA(partOfSpeech: TKMVocabulary_PartOfSpeech) -> Bool {
-    for i in 0 ..< partsOfSpeechArray_Count {
-      if TKMVocabulary_PartOfSpeech(rawValue: partsOfSpeechArray.value(at: i)) == partOfSpeech {
-        return true
-      }
-    }
-    return false
+  private func isA(partOfSpeech: TKMVocabulary.PartOfSpeech) -> Bool {
+    partsOfSpeech.contains(partOfSpeech)
   }
 
   var isGodanVerb: Bool { isA(partOfSpeech: .godanVerb) }
@@ -350,7 +341,6 @@ extension TKMVocabulary {
 
 private let kGuruStage = 5
 
-@objc
 extension TKMAssignment {
   var srsStage: SRSStage { SRSStage(rawValue: Int(srsStageNumber))! }
 
@@ -396,18 +386,15 @@ extension TKMAssignment {
   }
 }
 
-@objc
 extension TKMProgress {
   var createdAtDate: Date { Date(timeIntervalSince1970: TimeInterval(createdAt)) }
 }
 
-@objc
 extension TKMUser {
   var startedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(startedAt)) }
   var currentLevel: Int32 { min(level, maxLevelGrantedBySubscription) }
 }
 
-@objc
 extension TKMLevel {
   var unlockedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(unlockedAt)) }
   var startedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(startedAt)) }

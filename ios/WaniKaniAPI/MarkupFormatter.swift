@@ -21,21 +21,13 @@ private let kTagRE =
     #"(?: href="([^"]+)"[^>]*)?"# +
     #"[\]>])"#, options: [.caseInsensitive])
 
-private func copyEnumArray<ValueType: RawRepresentable>(_ array: [ValueType]) -> GPBEnumArray {
-  let ret = GPBEnumArray()
-  for item in array {
-    ret.addValue(item.rawValue as! Int32)
-  }
-  return ret
-}
-
 func parseFormattedText(_ text: String?) -> [TKMFormattedText] {
   var ret = [TKMFormattedText]()
   guard let text = text else {
     return ret
   }
 
-  var formatStack = [TKMFormattedText_Format]()
+  var formatStack = [TKMFormattedText.Format]()
   var linkUrlStack = [String]()
   var lastIndex = 0
 
@@ -53,9 +45,9 @@ func parseFormattedText(_ text: String?) -> [TKMFormattedText] {
 
     // Add this text.
     if !text.isEmpty {
-      let formattedText = TKMFormattedText()
+      var formattedText = TKMFormattedText()
       formattedText.text = text
-      formattedText.formatArray = copyEnumArray(formatStack)
+      formattedText.format = formatStack
       if let url = linkUrlStack.last {
         formattedText.linkURL = url
       }
@@ -97,9 +89,9 @@ func parseFormattedText(_ text: String?) -> [TKMFormattedText] {
 
   // Add the leftover text.
   if lastIndex != nsString.length {
-    let formattedText = TKMFormattedText()
+    var formattedText = TKMFormattedText()
     formattedText.text = nsString.substring(from: lastIndex)
-    formattedText.formatArray = copyEnumArray(formatStack)
+    formattedText.format = formatStack
     ret.append(formattedText)
   }
 

@@ -65,10 +65,10 @@ func unsetAllLabels(view: ChartViewBase) {
   }
 }
 
-@objc class CurrentLevelChartItem: NSObject, TKMModelItem {
+class CurrentLevelChartItem: NSObject, TKMModelItem {
   let currentLevelAssignments: [TKMAssignment]
 
-  @objc init(currentLevelAssignments: [TKMAssignment]) {
+  init(currentLevelAssignments: [TKMAssignment]) {
     self.currentLevelAssignments = currentLevelAssignments
     super.init()
   }
@@ -164,7 +164,7 @@ class CurrentLevelChartCell: TKMModelCell {
   }
 
   private func update(chart: PieChartView,
-                      subjectType: TKMSubject_Type,
+                      subjectType: TKMSubject.TypeEnum,
                       withAssignments assignments: [TKMAssignment]) {
     var sliceSizes = [Int](repeating: 0, count: PieSlice.count)
     for assignment in assignments {

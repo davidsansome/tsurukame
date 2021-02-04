@@ -18,7 +18,6 @@ import Foundation
 class LessonsPageControl: UIControl, SubjectChipDelegate {
   private var chips = [SubjectChip]()
 
-  @objc
   func setSubjects(_ subjects: [TKMSubject]) {
     // Remove all existing chips.
     for chip in chips {

@@ -31,9 +31,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   }
 }
 
-@objc
-@objcMembers
-class LocalCachingClient: NSObject, SubjectLevelGetter {
+@objc class LocalCachingClient: NSObject, SubjectLevelGetter {
   let client: WaniKaniAPIClient
   let reachability: Reachability
 
@@ -52,7 +50,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
 
   @Cached var guruKanjiCount: Int
   @Cached(notificationName: .lccSRSCategoryCountsChanged) var srsCategoryCounts: [Int]
-  @Cached var maxLevelGrantedBySubscription: Int
+  @objc @Cached var maxLevelGrantedBySubscription: Int
 
   init(client: WaniKaniAPIClient, reachability: Reachability) {
     self.client = client
@@ -84,7 +82,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   func updateGuruKanjiCount() -> Int {
     db.inDatabase { db in
       let cursor = db.query("SELECT COUNT(*) FROM subject_progress " +
-        "WHERE srs_stage >= 5 AND subject_type = \(TKMSubject_Type.kanji.rawValue)")
+        "WHERE srs_stage >= 5 AND subject_type = \(TKMSubject.TypeEnum.kanji.rawValue)")
       if cursor.next() {
         return Int(cursor.int(forColumnIndex: 0))
       }
@@ -121,7 +119,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     for assignment in getAllAssignments() {
       // Don't count assignments with invalid subjects.  This includes assignments for levels higher
       // than the user's max subscription level.
-      if !isValid(subjectId: Int(assignment.subjectId)) {
+      if !isValid(subjectId: assignment.subjectID) {
         continue
       }
 
@@ -288,16 +286,16 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
           "VALUES (?, ?, ?, ?)"
         for assignment in getAllAssignments(transaction: db) {
           db.mustExecuteUpdate(sql, args: [
-            assignment.subjectId,
+            assignment.subjectID,
             assignment.level,
             assignment.srsStage.rawValue,
             assignment.subjectType.rawValue,
           ])
         }
         for progress in getAllPendingProgress(transaction: db) {
-          let assignment = progress.assignment!
+          let assignment = progress.assignment
           db.mustExecuteUpdate(sql, args: [
-            assignment.subjectId,
+            assignment.subjectID,
             assignment.level,
             assignment.srsStage.rawValue,
             assignment.subjectType.rawValue,
@@ -335,8 +333,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     return ret
   }
 
-  @objc(getStudyMaterialForSubjectId:)
-  func getStudyMaterial(subjectId: Int) -> TKMStudyMaterials? {
+  func getStudyMaterial(subjectId: Int32) -> TKMStudyMaterials? {
     db.inDatabase { db in
       let cursor = db.query("SELECT pb FROM study_materials WHERE id = ?", args: [subjectId])
       if cursor.next() {
@@ -366,8 +363,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
-  @objc(getAssignmentForSubjectId:)
-  func getAssignment(subjectId: Int) -> TKMAssignment? {
+  func getAssignment(subjectId: Int32) -> TKMAssignment? {
     db.inDatabase { db in
       var cursor = db.query("SELECT pb FROM assignments WHERE subject_id = ?", args: [subjectId])
       if cursor.next() {
@@ -384,7 +380,6 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
-  @objc(getAssignmentsAtLevel:)
   func getAssignments(level: Int) -> [TKMAssignment] {
     db.inDatabase { db in
       getAssignments(level: level, transaction: db)
@@ -410,40 +405,40 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       var assignment: TKMAssignment? = cursor.proto(forColumnIndex: 4)
       if assignment == nil {
         assignment = TKMAssignment()
-        assignment!.subjectId = cursor.int(forColumnIndex: 0)
+        assignment!.subjectID = cursor.int(forColumnIndex: 0)
         assignment!.level = cursor.int(forColumnIndex: 1)
-        assignment!.subjectType = TKMSubject_Type(rawValue: cursor.int(forColumnIndex: 3))!
+        assignment!.subjectType = TKMSubject.TypeEnum(rawValue: Int(cursor.int(forColumnIndex: 3)))!
       }
       assignment!.srsStageNumber = cursor.int(forColumnIndex: 2)
 
       ret.append(assignment!)
-      subjectIds.insert(Int(assignment!.subjectId))
+      subjectIds.insert(Int(assignment!.subjectID))
     }
 
     // Add fake assignments for any other subjects at this level that don't have assignments yet (the
     // user hasn't unlocked the prerequisite radicals/kanji).
     let subjectsByLevel = getSubjects(byLevel: level, transaction: db)
-    addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.radicalsArray, type: .radical,
+    addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.radicals, type: .radical,
                        level: level, excludeSubjectIds: subjectIds)
-    addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.kanjiArray, type: .kanji, level: level,
+    addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.kanji, type: .kanji, level: level,
                        excludeSubjectIds: subjectIds)
-    addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.vocabularyArray, type: .vocabulary,
+    addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.vocabulary, type: .vocabulary,
                        level: level, excludeSubjectIds: subjectIds)
 
     return ret
   }
 
   private func addFakeAssignments(to assignments: inout [TKMAssignment],
-                                  subjectIds: GPBInt32Array,
-                                  type: TKMSubject_Type,
+                                  subjectIds: [Int32],
+                                  type: TKMSubject.TypeEnum,
                                   level: Int,
                                   excludeSubjectIds: Set<Int>) {
     for id in subjectIds {
       if excludeSubjectIds.contains(Int(id)) {
         continue
       }
-      let assignment = TKMAssignment()
-      assignment.subjectId = id
+      var assignment = TKMAssignment()
+      assignment.subjectID = id
       assignment.subjectType = type
       assignment.level = Int32(level)
       assignments.append(assignment)
@@ -480,15 +475,14 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
-  @objc(isValidSubjectID:)
-  func isValid(subjectId: Int) -> Bool {
+  func isValid(subjectId: Int32) -> Bool {
     guard let level = levelOf(subjectId: subjectId) else {
       return false
     }
     return level <= maxLevelGrantedBySubscription
   }
 
-  func levelOf(subjectId: Int) -> Int? {
+  func levelOf(subjectId: Int32) -> Int? {
     db.inDatabase { db in
       let cursor = db.query("SELECT level FROM subjects WHERE id = ?", args: [subjectId])
       if cursor.next() {
@@ -498,28 +492,20 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
-  @objc(levelOfSubjectID:)
-  func levelOfObjCWrapper(subjectId: Int) -> Int {
-    if let level = levelOf(subjectId: subjectId) {
-      return level
-    }
-    return 0
-  }
-
   private func getSubjects(byLevel level: Int, transaction db: FMDatabase) -> TKMSubjectsByLevel {
-    let ret = TKMSubjectsByLevel()
+    var ret = TKMSubjectsByLevel()
     let cursor = db.query("SELECT id, type FROM subjects WHERE level = ?", args: [level])
     while cursor.next() {
       let id = cursor.int(forColumnIndex: 0)
-      let type = cursor.int(forColumnIndex: 1)
+      let type = Int(cursor.int(forColumnIndex: 1))
 
       switch type {
-      case TKMSubject_Type.radical.rawValue:
-        ret.radicalsArray.addValue(id)
-      case TKMSubject_Type.kanji.rawValue:
-        ret.kanjiArray.addValue(id)
-      case TKMSubject_Type.vocabulary.rawValue:
-        ret.vocabularyArray.addValue(id)
+      case TKMSubject.TypeEnum.radical.rawValue:
+        ret.radicals.append(id)
+      case TKMSubject.TypeEnum.kanji.rawValue:
+        ret.kanji.append(id)
+      case TKMSubject.TypeEnum.vocabulary.rawValue:
+        ret.vocabulary.append(id)
       default:
         break
       }
@@ -541,11 +527,11 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     db.inTransaction { db in
       for p in progress {
         // Delete the assignment.
-        db.mustExecuteUpdate("DELETE FROM assignments WHERE id = ?", args: [p.assignment.id_p])
+        db.mustExecuteUpdate("DELETE FROM assignments WHERE id = ?", args: [p.assignment.id])
 
         // Store the progress locally.
         db.mustExecuteUpdate("REPLACE INTO pending_progress (id, pb) VALUES (?, ?)",
-                             args: [p.assignment.subjectId, p.data()!])
+                             args: [p.assignment.subjectID, try! p.serializedData()])
 
         var newSrsStage = p.assignment.srsStage
         if p.isLesson || (!p.meaningWrong && !p.readingWrong) {
@@ -556,7 +542,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         db.mustExecuteUpdate("REPLACE INTO subject_progress (id, level, srs_stage, subject_type) " +
           "VALUES (?, ?, ?, ?)",
           args: [
-            p.assignment.subjectId,
+            p.assignment.subjectID,
             p.assignment.level,
             newSrsStage.rawValue,
             p.assignment.subjectType.rawValue,
@@ -579,7 +565,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   private func clearPendingProgress(_ progress: TKMProgress) {
     db.inTransaction { db in
       db.mustExecuteUpdate("DELETE FROM pending_progress WHERE id = ?",
-                           args: [progress.assignment.subjectId])
+                           args: [progress.assignment.subjectID])
     }
     _pendingProgressCount.invalidate()
   }
@@ -621,9 +607,9 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     db.inTransaction { db in
       // Store the study material locally.
       db.mustExecuteUpdate("REPLACE INTO study_materials (id, pb) VALUES(?, ?)",
-                           args: [material.subjectId, material.data()!])
+                           args: [material.subjectID, try! material.serializedData()])
       db.mustExecuteUpdate("REPLACE INTO pending_study_materials (id) VALUES(?)",
-                           args: [material.subjectId])
+                           args: [material.subjectID])
     }
 
     _pendingStudyMaterialsCount.invalidate()
@@ -764,7 +750,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   private func clearPendingStudyMaterial(_ material: TKMStudyMaterials) {
     db.inTransaction { db in
       db.mustExecuteUpdate("DELETE FROM pending_study_materials WHERE id = ?",
-                           args: [material.subjectId])
+                           args: [material.subjectID])
     }
     _pendingStudyMaterialsCount.invalidate()
   }
@@ -789,10 +775,14 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         for assignment in assignments {
           db.mustExecuteUpdate("REPLACE INTO assignments (id, pb, subject_id) " +
             "VALUES (?, ?, ?)",
-            args: [assignment.id_p, assignment.data()!, assignment.subjectId])
+            args: [
+              assignment.id,
+              try! assignment.serializedData(),
+              assignment.subjectID,
+            ])
           db.mustExecuteUpdate("REPLACE INTO subject_progress (id, level, " +
             "srs_stage, subject_type) VALUES (?, ?, ?, ?)",
-            args: [assignment.subjectId, assignment.level,
+            args: [assignment.subjectID, assignment.level,
                    assignment.srsStage.rawValue,
                    assignment.subjectType.rawValue])
         }
@@ -820,7 +810,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         for material in materials {
           db.mustExecuteUpdate("REPLACE INTO study_materials (id, pb) " +
             "VALUES (?, ?)",
-            args: [material.subjectId, material.data()!])
+            args: [material.subjectID, try! material.serializedData()])
         }
         db.mustExecuteUpdate("UPDATE sync SET study_materials_updated_after = ?",
                              args: [updatedAt])
@@ -837,7 +827,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       let oldMaxLevel = self.maxLevelGrantedBySubscription
       self.db.inTransaction { db in
         db.mustExecuteUpdate("REPLACE INTO user (id, pb) VALUES (0, ?)",
-                             args: [user.data()!])
+                             args: [try! user.serializedData()])
 
         if oldMaxLevel > 0, user.maxLevelGrantedBySubscription > oldMaxLevel {
           // The user's max level increased, so more subjects might be available now. Clear the
@@ -859,7 +849,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       self.db.inTransaction { db in
         for level in progressions {
           db.mustExecuteUpdate("REPLACE INTO level_progressions (id, level, pb) VALUES (?, ?, ?)",
-                               args: [level.id_p, level.level, level.data()!])
+                               args: [level.id, level.level, try! level.serializedData()])
         }
       }
     }
@@ -884,11 +874,11 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
           db.mustExecuteUpdate("REPLACE INTO subjects (id, japanese, level, type, pb) " +
             "VALUES (?, ?, ?, ?, ?)",
             args: [
-              subject.id_p,
-              subject.japanese!,
+              subject.id,
+              subject.japanese,
               subject.level,
               subject.subjectType.rawValue,
-              subject.data()!,
+              try! subject.serializedData(),
             ])
         }
         db.mustExecuteUpdate("UPDATE sync SET subjects_updated_after = ?",

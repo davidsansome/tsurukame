@@ -14,6 +14,7 @@
 
 import FMDB
 import Foundation
+import SwiftProtobuf
 
 extension FMDatabaseQueue {
   /** Convenience inTransaction wrapper that lets the block return a value. */
@@ -83,17 +84,17 @@ extension FMResultSet: Sequence {
 
 /** Protobuf decoding methods. */
 extension FMResultSet {
-  public func proto<T: GPBMessage>(forColumnIndex columnIndex: Int) -> T? {
+  public func proto<T: SwiftProtobuf.Message>(forColumnIndex columnIndex: Int) -> T? {
     guard let d = data(forColumnIndex: Int32(columnIndex)) else {
       return nil
     }
-    return try? T(data: d)
+    return try? T(serializedData: d)
   }
 
-  public func proto<T: GPBMessage>(forColumn column: String) -> T? {
+  public func proto<T: SwiftProtobuf.Message>(forColumn column: String) -> T? {
     guard let d = data(forColumn: column) else {
       return nil
     }
-    return try? T(data: d)
+    return try? T(serializedData: d)
   }
 }

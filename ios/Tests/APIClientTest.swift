@@ -311,8 +311,8 @@ class APIClientTest: XCTestCase {
     let progress = Progress(totalUnitCount: -1)
     if let result = waitForPromise(client.assignments(progress: progress)) {
       XCTAssertEqual(result.assignments.count, 2)
-      XCTAssertEqual(result.assignments[0].id_p, 42)
-      XCTAssertEqual(result.assignments[1].id_p, 43)
+      XCTAssertEqual(result.assignments[0].id, 42)
+      XCTAssertEqual(result.assignments[1].id, 43)
       XCTAssertEqual(result.updatedAt, "second-updated-at")
     }
     XCTAssertEqual(progress.totalUnitCount, 4)
@@ -574,7 +574,7 @@ class APIClientTest: XCTestCase {
   func testStartAssignment() {
     let progress = TKMProgress()
     progress.assignment = TKMAssignment()
-    progress.assignment.id_p = 42
+    progress.assignment.id = 42
     progress.isLesson = true
     progress.createdAt = 123_456_789
 
@@ -626,7 +626,7 @@ class APIClientTest: XCTestCase {
   func testCreateReview() {
     let progress = TKMProgress()
     progress.assignment = TKMAssignment()
-    progress.assignment.id_p = 42
+    progress.assignment.id = 42
     progress.isLesson = false
     progress.createdAt = 123_456_789
     progress.meaningWrongCount = 3
@@ -723,8 +723,8 @@ class APIClientTest: XCTestCase {
 
   func testCreateNewStudyMaterial() {
     let material = TKMStudyMaterials()
-    material.subjectId = 42
-    material.meaningSynonymsArray = ["foo", "bar"]
+    material.subjectID = 42
+    material.meaningSynonyms = ["foo", "bar"]
 
     var getRequest = StubRequest(method: .GET,
                                  url: URL(string: "https://api.wanikani.com/v2/study_materials?subject_ids=42")!)
@@ -760,8 +760,8 @@ class APIClientTest: XCTestCase {
 
   func testUpdateExistingStudyMaterial() {
     let material = TKMStudyMaterials()
-    material.subjectId = 42
-    material.meaningSynonymsArray = ["foo", "bar"]
+    material.subjectID = 42
+    material.meaningSynonyms = ["foo", "bar"]
 
     var getRequest = StubRequest(method: .GET,
                                  url: URL(string: "https://api.wanikani.com/v2/study_materials?subject_ids=42")!)

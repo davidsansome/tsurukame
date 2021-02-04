@@ -34,8 +34,6 @@
 #import "Tables/TKMTableModel.h"
 #import "UIView+SafeAreaInsets.h"
 
-#import "proto/Wanikani.pbobjc.h"
-
 #import <Haneke/Haneke.h>
 #import <WatchConnectivity/WatchConnectivity.h>
 

@@ -14,7 +14,6 @@
 
 import Foundation
 
-@objc(TKMSubjectDelegate)
-protocol SubjectDelegate {
+protocol SubjectDelegate: AnyObject {
   func didTapSubject(_ subject: TKMSubject)
 }

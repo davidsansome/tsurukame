@@ -22,13 +22,13 @@ private func subjectMatchesQuery(subject: TKMSubject, query: String, kanaQuery: 
   if subject.japanese.hasPrefix(query) {
     return true
   }
-  for meaning in subject.meaningsArray {
-    if let meaning = meaning as? TKMMeaning, meaning.meaning.lowercased().hasPrefix(query) {
+  for meaning in subject.meanings {
+    if meaning.meaning.lowercased().hasPrefix(query) {
       return true
     }
   }
-  for reading in subject.readingsArray {
-    if let reading = reading as? TKMReading, reading.reading.hasPrefix(kanaQuery) {
+  for reading in subject.readings {
+    if reading.reading.hasPrefix(kanaQuery) {
       return true
     }
   }
@@ -37,13 +37,13 @@ private func subjectMatchesQuery(subject: TKMSubject, query: String, kanaQuery: 
 
 private func subjectMatchesQueryExactly(subject: TKMSubject, query: String,
                                         kanaQuery: String) -> Bool {
-  for meaning in subject.meaningsArray {
-    if let meaning = meaning as? TKMMeaning, meaning.meaning.lowercased() == query {
+  for meaning in subject.meanings {
+    if meaning.meaning.lowercased() == query {
       return true
     }
   }
-  for reading in subject.readingsArray {
-    if let reading = reading as? TKMReading, reading.reading == kanaQuery {
+  for reading in subject.readings {
+    if reading.reading == kanaQuery {
       return true
     }
   }

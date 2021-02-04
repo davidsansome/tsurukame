@@ -27,7 +27,6 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
   @IBOutlet var subjectTitle: UILabel!
   @IBOutlet var backButton: UIButton!
 
-  @objc
   func setup(services: TKMServices, subject: TKMSubject, showHints: Bool = false,
              hideBackButton: Bool = false,
              index: Int = 0) {
@@ -46,8 +45,8 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     super.viewDidLoad()
     subjectDetailsView.setup(services: services, delegate: self)
 
-    let studyMaterials = services.localCachingClient.getStudyMaterial(subjectId: Int(subject.id_p))
-    let assignment = services.localCachingClient.getAssignment(subjectId: Int(subject.id_p))
+    let studyMaterials = services.localCachingClient.getStudyMaterial(subjectId: subject.id)
+    let assignment = services.localCachingClient.getAssignment(subjectId: subject.id)
     subjectDetailsView.update(withSubject: subject, studyMaterials: studyMaterials,
                               assignment: assignment, task: nil)
 

@@ -53,7 +53,7 @@ class LessonOrderViewController: UITableViewController {
 }
 
 private class LessonOrderCell: UITableViewCell {
-  var subjectType: TKMSubject_Type = .unknown {
+  var subjectType: TKMSubject.TypeEnum = .unknown {
     didSet {
       textLabel?.text = subjectType.description
     }

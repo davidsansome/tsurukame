@@ -23,7 +23,7 @@ class ContextSentenceModelItem: AttributedModelItem {
   let japaneseText: NSAttributedString
   let englishText: NSAttributedString
 
-  init(_ sentence: TKMVocabulary_Sentence,
+  init(_ sentence: TKMVocabulary.Sentence,
        highlightSubject: TKMSubject,
        defaultAttributes: [NSAttributedString.Key: Any],
        fontSize: CGFloat) {

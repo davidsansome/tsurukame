@@ -14,9 +14,10 @@
 
 import Foundation
 import PromiseKit
+import SwiftProtobuf
 
 protocol SubjectLevelGetter: AnyObject {
-  func levelOf(subjectId: Int) -> Int?
+  func levelOf(subjectId: Int32) -> Int?
 }
 
 /**
@@ -115,7 +116,7 @@ class WaniKaniAPIClient: NSObject {
   /**
    * Fetches one study material by Subject ID.
    */
-  func studyMaterial(subjectId: Int, progress: Progress) -> Promise<TKMStudyMaterials?> {
+  func studyMaterial(subjectId: Int32, progress: Progress) -> Promise<TKMStudyMaterials?> {
     progress.totalUnitCount = 1
 
     // Build the URL.
@@ -183,7 +184,7 @@ class WaniKaniAPIClient: NSObject {
         pagedQuery(url: url.url!, progress: progress)
     }.map { (allData: Response<[Response<SubjectData>]>) -> Subjects in
       var ret = [TKMSubject]()
-      var seenIds = Set<Int>()
+      var seenIds = Set<Int32>()
       for data in allData.data {
         guard let id = data.id else {
           continue
@@ -212,7 +213,7 @@ class WaniKaniAPIClient: NSObject {
   }
 
   private func startAssignment(_ progress: TKMProgress) -> Promise<TKMAssignment> {
-    let url = URL(string: "\(kBaseUrl)/assignments/\(progress.assignment.id_p)/start")!
+    let url = URL(string: "\(kBaseUrl)/assignments/\(progress.assignment.id)/start")!
     let body = StartAssignmentRequest(started_at: WaniKaniDate(date: progress.createdAtDate))
 
     return firstly { () -> Promise<Response<AssignmentData>> in
@@ -228,7 +229,7 @@ class WaniKaniAPIClient: NSObject {
   private func createReview(_ progress: TKMProgress) -> Promise<TKMAssignment> {
     let url = URL(string: "\(kBaseUrl)/reviews")!
     var body = CreateReviewRequest(review: CreateReviewRequest
-      .Review(assignment_id: Int(progress.assignment!.id_p),
+      .Review(assignment_id: progress.assignment.id,
               incorrect_meaning_answers: Int(progress.meaningWrongCount),
               incorrect_reading_answers: Int(progress.readingWrongCount)))
 
@@ -256,11 +257,11 @@ class WaniKaniAPIClient: NSObject {
   func updateStudyMaterial(_ pb: TKMStudyMaterials) -> Promise<Void> {
     firstly { () -> Promise<TKMStudyMaterials?> in
       // We need to check if a study material for the subject already exists.
-      studyMaterial(subjectId: Int(pb.subjectId), progress: Progress(totalUnitCount: 1))
+      studyMaterial(subjectId: pb.subjectID, progress: Progress(totalUnitCount: 1))
     }.then { (existing: TKMStudyMaterials?) -> DataTaskPromise in
       var synonyms = [String]()
-      for synonym in pb.meaningSynonymsArray {
-        synonyms.append(synonym as! String)
+      for synonym in pb.meaningSynonyms {
+        synonyms.append(synonym)
       }
       var body = StudyMaterialRequest(study_material: StudyMaterialRequest
         .StudyMaterial(meaning_synonyms: synonyms))
@@ -269,11 +270,11 @@ class WaniKaniAPIClient: NSObject {
       var method: String
       if let existing = existing {
         method = "PUT"
-        url = URL(string: "\(kBaseUrl)/study_materials/\(existing.id_p)")!
+        url = URL(string: "\(kBaseUrl)/study_materials/\(existing.id)")!
       } else {
         method = "POST"
         url = URL(string: "\(kBaseUrl)/study_materials")!
-        body.study_material.subject_id = Int(pb.subjectId)
+        body.study_material.subject_id = pb.subjectID
       }
 
       var request = self.authorize(url)
@@ -483,7 +484,7 @@ struct WaniKaniDate: Codable {
   }
 
   // Implements Decodable.
-  init(from decoder: Decoder) throws {
+  init(from decoder: Swift.Decoder) throws {
     let container = try decoder.singleValueContainer()
     let str = try container.decode(String.self)
     if let date = WaniKaniDate(fromString: str) {
@@ -521,9 +522,9 @@ struct WaniKaniDate: Codable {
 }
 
 /** Sets a proto timestamp field to a WaniKaniDate. */
-private func setProtoDate(_ pb: GPBMessage, field: String, to date: WaniKaniDate?) {
+private func toProtoDate(_ date: WaniKaniDate?, setter: (Int32) -> Void) {
   if let date = date {
-    pb.setValue(date.seconds, forKey: field)
+    setter(date.seconds)
   }
 }
 
@@ -532,7 +533,7 @@ private func setProtoDate(_ pb: GPBMessage, field: String, to date: WaniKaniDate
 /** Base container for all successful API response types. */
 private class Response<DataType: Codable>: Codable {
   // Fields common to all responses.
-  var id: Int?
+  var id: Int32?
   var data_updated_at: String?
   var data: DataType
   var object: String?
@@ -555,7 +556,7 @@ private class PaginatedResponse<DataType: Codable>: Response<DataType> {
   }
 
   // A custom decoder function is needed here as by default only the base class' fields are decoded.
-  required init(from decoder: Decoder) throws {
+  required init(from decoder: Swift.Decoder) throws {
     try super.init(from: decoder)
     let values = try decoder.container(keyedBy: CodingKeys.self)
     pages = try values.decodeIfPresent(Pages.self, forKey: .pages)
@@ -585,7 +586,7 @@ private class MultiResourceResponse<DataType: Codable>: Response<DataType> {
   }
 
   // A custom decoder function is needed here as by default only the base class' fields are decoded.
-  required init(from decoder: Decoder) throws {
+  required init(from decoder: Swift.Decoder) throws {
     try super.init(from: decoder)
     let values = try decoder.container(keyedBy: CodingKeys.self)
     resources_updated = try values.decodeIfPresent(ResourcesUpdated.self,
@@ -610,15 +611,15 @@ private struct UserData: Codable {
   var subscription: Subscription
 
   func toProto() -> TKMUser {
-    let ret = TKMUser()
+    var ret = TKMUser()
     ret.username = username
     ret.level = Int32(level)
     ret.profileURL = profile_url
     ret.maxLevelGrantedBySubscription = Int32(subscription.max_level_granted)
     ret.subscribed = subscription.active
-    setProtoDate(ret, field: "subscriptionEndsAt", to: subscription.period_ends_at)
-    setProtoDate(ret, field: "startedAt", to: started_at)
-    setProtoDate(ret, field: "vacationStartedAt", to: current_vacation_started_at)
+    toProtoDate(subscription.period_ends_at) { ret.subscriptionEndsAt = $0 }
+    toProtoDate(started_at) { ret.startedAt = $0 }
+    toProtoDate(current_vacation_started_at) { ret.vacationStartedAt = $0 }
     return ret
   }
 }
@@ -633,15 +634,15 @@ private struct AssignmentData: Codable {
   var passed_at: WaniKaniDate?
   var available_at: WaniKaniDate?
 
-  func toProto(id: Int?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment {
-    let ret = TKMAssignment()
-    ret.id_p = Int32(id ?? 0)
-    ret.subjectId = Int32(subject_id)
+  func toProto(id: Int32?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment {
+    var ret = TKMAssignment()
+    ret.id = id ?? 0
+    ret.subjectID = Int32(subject_id)
     ret.srsStageNumber = Int32(srs_stage)
-    ret.level = Int32(subjectLevelGetter.levelOf(subjectId: subject_id) ?? 0)
-    setProtoDate(ret, field: "availableAt", to: available_at)
-    setProtoDate(ret, field: "startedAt", to: started_at)
-    setProtoDate(ret, field: "passedAt", to: passed_at)
+    ret.level = Int32(subjectLevelGetter.levelOf(subjectId: ret.subjectID) ?? 0)
+    toProtoDate(available_at) { ret.availableAt = $0 }
+    toProtoDate(started_at) { ret.startedAt = $0 }
+    toProtoDate(passed_at) { ret.passedAt = $0 }
 
     switch subject_type {
     case "radical":
@@ -659,26 +660,24 @@ private struct AssignmentData: Codable {
 
 /** Response type for /study_materials. */
 private struct StudyMaterialData: Codable {
-  var subject_id: Int
+  var subject_id: Int32
   var subject_type: String
   var meaning_note: String?
   var reading_note: String?
   var meaning_synonyms: [String]?
 
-  func toProto(id: Int?) -> TKMStudyMaterials {
-    let ret = TKMStudyMaterials()
-    ret.id_p = Int32(id ?? 0)
-    ret.subjectId = Int32(subject_id)
+  func toProto(id: Int32?) -> TKMStudyMaterials {
+    var ret = TKMStudyMaterials()
+    ret.id = Int32(id ?? 0)
+    ret.subjectID = Int32(subject_id)
     if let note = meaning_note {
       ret.meaningNote = note
     }
     if let note = reading_note {
       ret.readingNote = note
     }
-    if let synonyms = meaning_synonyms {
-      for synonym in synonyms {
-        ret.meaningSynonymsArray.add(NSMutableString(string: synonym))
-      }
+    if let meaning_synonyms = meaning_synonyms {
+      ret.meaningSynonyms = meaning_synonyms
     }
     return ret
   }
@@ -694,16 +693,16 @@ private struct LevelProgressionData: Codable {
   var completed_at: WaniKaniDate?
   var abandoned_at: WaniKaniDate?
 
-  func toProto(id: Int?) -> TKMLevel {
-    let ret = TKMLevel()
-    ret.id_p = Int32(id ?? 0)
+  func toProto(id: Int32?) -> TKMLevel {
+    var ret = TKMLevel()
+    ret.id = Int32(id ?? 0)
     ret.level = Int32(level)
     ret.createdAt = created_at.seconds
-    setProtoDate(ret, field: "abandonedAt", to: abandoned_at)
-    setProtoDate(ret, field: "completedAt", to: completed_at)
-    setProtoDate(ret, field: "passedAt", to: passed_at)
-    setProtoDate(ret, field: "startedAt", to: started_at)
-    setProtoDate(ret, field: "unlockedAt", to: unlocked_at)
+    toProtoDate(abandoned_at) { ret.abandonedAt = $0 }
+    toProtoDate(completed_at) { ret.completedAt = $0 }
+    toProtoDate(passed_at) { ret.passedAt = $0 }
+    toProtoDate(started_at) { ret.startedAt = $0 }
+    toProtoDate(unlocked_at) { ret.unlockedAt = $0 }
     return ret
   }
 }
@@ -712,7 +711,7 @@ private struct LevelProgressionData: Codable {
 private struct ReviewData: Codable {
   var created_at: WaniKaniDate
   var assignment_id: Int
-  var subject_id: Int
+  var subject_id: Int32
   var starting_srs_stage: Int
   var ending_srs_stage: Int
   var incorrect_meaning_answers: Int
@@ -727,7 +726,7 @@ private struct StartAssignmentRequest: Codable {
 /** Request type for POST /reviews. */
 private struct CreateReviewRequest: Codable {
   struct Review: Codable {
-    var assignment_id: Int
+    var assignment_id: Int32
     var incorrect_meaning_answers: Int
     var incorrect_reading_answers: Int
     var created_at: WaniKaniDate?
@@ -740,7 +739,7 @@ private struct CreateReviewRequest: Codable {
 private struct StudyMaterialRequest: Codable {
   struct StudyMaterial: Codable {
     // Only required when creating new study materials.
-    var subject_id: Int?
+    var subject_id: Int32?
 
     var meaning_note: String?
     var reading_note: String?

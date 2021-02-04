@@ -39,7 +39,8 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
     if items.isEmpty {
       summaryText = "0%"
     } else {
-      summaryText = "\(Int(Double(correct) / Double(items.count) * 100.0))% (\(correct)/\(items.count))"
+      summaryText =
+        "\(Int(Double(correct) / Double(items.count) * 100.0))% (\(correct)/\(items.count))"
     }
     model.addSection("Summary")
     model.add(TKMBasicModelItem(style: .value1, title: "Correct answers", subtitle: summaryText))
@@ -56,7 +57,7 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
       }
 
       for item in incorrectItemsByLevel[level]! {
-        if let subject = services.localCachingClient.getSubject(id: item.assignment.subjectId) {
+        if let subject = services.localCachingClient.getSubject(id: item.assignment.subjectID) {
           model.add(SubjectModelItem(subject: subject, delegate: self, assignment: nil,
                                      readingWrong: item.answer.readingWrong,
                                      meaningWrong: item.answer.meaningWrong))

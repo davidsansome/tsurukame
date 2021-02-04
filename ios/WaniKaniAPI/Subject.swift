@@ -18,12 +18,12 @@ private func jsonFromBundle<T>(_ fileName: String) -> T {
   return try! JSONSerialization.jsonObject(with: data, options: []) as! T
 }
 
-private let kDeprecatedMnemonics: [Int: String] = {
+private let kDeprecatedMnemonics: [Int32: String] = {
   let data: [String: String] = jsonFromBundle("old-mnemonics.json")
 
-  var ret = [Int: String]()
+  var ret = [Int32: String]()
   for (id, text) in data {
-    ret[Int(id)!] = text
+    ret[Int32(id)!] = text
   }
   return ret
 }()
@@ -113,30 +113,38 @@ struct SubjectData: Codable {
     }
   }
 
-  func toProto(id: Int, objectType: String) -> TKMSubject? {
-    let ret = TKMSubject()
-    ret.id_p = Int32(id)
+  func toProto(id: Int32, objectType: String) -> TKMSubject? {
+    var ret = TKMSubject()
+    ret.id = id
     ret.level = Int32(level)
     ret.slug = slug
     ret.documentURL = document_url
-    ret.japanese = characters
-    ret.meaningsArray = convertMeanings()
+    if let characters = characters {
+      ret.japanese = characters
+    }
+    ret.meanings = convertMeanings()
 
     if objectType == "kanji" || objectType == "vocabulary" {
-      ret.readingsArray = convertReadings()
-      ret.componentSubjectIdsArray = convertSubjectIDArray(component_subject_ids)
+      ret.readings = convertReadings()
+      if let component_subject_ids = component_subject_ids {
+        ret.componentSubjectIds = component_subject_ids
+      }
     }
     if objectType == "radical" || objectType == "kanji" {
-      ret.amalgamationSubjectIdsArray = convertSubjectIDArray(amalgamation_subject_ids)
+      if let amalgamation_subject_ids = amalgamation_subject_ids {
+        ret.amalgamationSubjectIds = amalgamation_subject_ids
+      }
     }
 
     switch objectType {
     case "radical":
       ret.radical = TKMRadical()
-      ret.radical.mnemonic = meaning_mnemonic
+      if let meaning_mnemonic = meaning_mnemonic {
+        ret.radical.mnemonic = meaning_mnemonic
+      }
       if ret.japanese.isEmpty, let url = bestCharacterImageUrl() {
         ret.radical.characterImage = url
-        ret.radical.hasCharacterImageFile = true
+        ret.radical.hasCharacterImageFile_p = true
       }
 
       if let deprecatedMnemonic = kDeprecatedMnemonics[id] {
@@ -145,38 +153,39 @@ struct SubjectData: Codable {
 
     case "kanji":
       ret.kanji = TKMKanji()
-      ret.kanji.meaningMnemonic = meaning_mnemonic
-      ret.kanji.meaningHint = meaning_hint
-      ret.kanji.readingMnemonic = reading_mnemonic
-      ret.kanji.readingHint = reading_hint
+      if let meaning_mnemonic = meaning_mnemonic {
+        ret.kanji.meaningMnemonic = meaning_mnemonic
+      }
+      if let meaning_hint = meaning_hint {
+        ret.kanji.meaningHint = meaning_hint
+      }
+      if let reading_mnemonic = reading_mnemonic {
+        ret.kanji.readingMnemonic = reading_mnemonic
+      }
+      if let reading_hint = reading_hint {
+        ret.kanji.readingHint = reading_hint
+      }
       if let visuallySimilarKanji = kVisuallySimilarKanji[ret.japanese] {
         ret.kanji.visuallySimilarKanji = visuallySimilarKanji
       }
 
     case "vocabulary":
       ret.vocabulary = TKMVocabulary()
-      ret.vocabulary.meaningExplanation = meaning_mnemonic
-      ret.vocabulary.readingExplanation = reading_mnemonic
-      ret.vocabulary.audioIdsArray = convertAudioIds()
-      ret.vocabulary.partsOfSpeechArray = convertPartsofSpeech()
-      ret.vocabulary.sentencesArray = convertContextSentences()
+      if let meaning_mnemonic = meaning_mnemonic {
+        ret.vocabulary.meaningExplanation = meaning_mnemonic
+      }
+      if let reading_mnemonic = reading_mnemonic {
+        ret.vocabulary.readingExplanation = reading_mnemonic
+      }
+      ret.vocabulary.audioIds = convertAudioIds()
+      ret.vocabulary.partsOfSpeech = convertPartsofSpeech()
+      ret.vocabulary.sentences = convertContextSentences()
 
     default:
       NSLog("Unknown subject type: %@", objectType)
       return nil
     }
 
-    return ret
-  }
-
-  private func convertSubjectIDArray(_ array: [Int32]?) -> GPBInt32Array? {
-    guard let array = array else {
-      return nil
-    }
-    let ret = GPBInt32Array()
-    for value in array {
-      ret.addValue(value)
-    }
     return ret
   }
 
@@ -193,31 +202,31 @@ struct SubjectData: Codable {
     return nil
   }
 
-  private func convertAudioIds() -> GPBInt32Array {
-    let ret = GPBInt32Array()
+  private func convertAudioIds() -> [Int32] {
+    var ret = [Int32]()
     if let pronunciation_audios = pronunciation_audios {
       for audio in pronunciation_audios {
         if audio.content_type == "audio/mpeg",
           let dash = audio.url.firstIndex(of: "-"),
           let id = Int32(audio.url[audio.url.index(audio.url.startIndex, offsetBy: 32) ..< dash]) {
-          ret.addValue(id)
+          ret.append(id)
         }
       }
     }
     return ret
   }
 
-  private func convertMeanings() -> NSMutableArray {
-    let ret = NSMutableArray()
+  private func convertMeanings() -> [TKMMeaning] {
+    var ret = [TKMMeaning]()
     for meaning in meanings {
-      let pb = TKMMeaning()
+      var pb = TKMMeaning()
       pb.meaning = meaning.meaning
       pb.type = meaning.primary ? .primary : .secondary
-      ret.add(pb)
+      ret.append(pb)
     }
     if let auxiliary_meanings = auxiliary_meanings {
       for meaning in auxiliary_meanings {
-        let pb = TKMMeaning()
+        var pb = TKMMeaning()
         pb.meaning = meaning.meaning
         switch meaning.type {
         case "blacklist":
@@ -228,20 +237,20 @@ struct SubjectData: Codable {
           NSLog("Unknown auxiliary meaning type: %@", meaning.type)
           continue
         }
-        ret.add(pb)
+        ret.append(pb)
       }
     }
     return ret
   }
 
-  private func convertReadings() -> NSMutableArray {
-    let ret = NSMutableArray()
+  private func convertReadings() -> [TKMReading] {
+    var ret = [TKMReading]()
     if let readings = readings {
       for reading in readings {
         if reading.reading == "None" {
           continue
         }
-        let pb = TKMReading()
+        var pb = TKMReading()
         pb.reading = reading.reading
         pb.isPrimary = reading.primary
         if let type = reading.type {
@@ -257,25 +266,25 @@ struct SubjectData: Codable {
             continue
           }
         }
-        ret.add(pb)
+        ret.append(pb)
       }
     }
     return ret
   }
 
-  private func convertPartsofSpeech() -> GPBEnumArray {
-    let ret = GPBEnumArray()
+  private func convertPartsofSpeech() -> [TKMVocabulary.PartOfSpeech] {
+    var ret = [TKMVocabulary.PartOfSpeech]()
     if let parts_of_speech = parts_of_speech {
       for part in parts_of_speech {
         if let enumValue = convertPartOfSpeech(part) {
-          ret.addValue(enumValue.rawValue)
+          ret.append(enumValue)
         }
       }
     }
     return ret
   }
 
-  private func convertPartOfSpeech(_ part: String) -> TKMVocabulary_PartOfSpeech? {
+  private func convertPartOfSpeech(_ part: String) -> TKMVocabulary.PartOfSpeech? {
     switch part.replacingOccurrences(of: " ", with: "_") {
     case "noun":
       return .noun
@@ -323,14 +332,14 @@ struct SubjectData: Codable {
     }
   }
 
-  private func convertContextSentences() -> NSMutableArray {
-    let ret = NSMutableArray()
+  private func convertContextSentences() -> [TKMVocabulary.Sentence] {
+    var ret = [TKMVocabulary.Sentence]()
     if let context_sentences = context_sentences {
       for context in context_sentences {
-        let pb = TKMVocabulary_Sentence()
+        var pb = TKMVocabulary.Sentence()
         pb.english = context.en
         pb.japanese = context.ja
-        ret.add(pb)
+        ret.append(pb)
       }
     }
     return ret

@@ -15,11 +15,11 @@
 import Foundation
 
 class SubjectCollectionModelItem: NSObject, TKMModelItem {
-  let subjects: GPBInt32Array
+  let subjects: [Int32]
   let localCachingClient: LocalCachingClient
   weak var delegate: SubjectChipDelegate?
 
-  init(subjects: GPBInt32Array, localCachingClient: LocalCachingClient,
+  init(subjects: [Int32], localCachingClient: LocalCachingClient,
        delegate: SubjectChipDelegate) {
     self.subjects = subjects
     self.localCachingClient = localCachingClient
@@ -49,8 +49,7 @@ private class SubjectCollectionModelView: TKMModelCell {
     chips.removeAll()
 
     // Create a chip for each subject.
-    for i in 0 ..< item.subjects.count {
-      let subjectId = item.subjects.value(at: i)
+    for subjectId in item.subjects {
       if let subject = item.localCachingClient.getSubject(id: subjectId),
         let delegate = item.delegate {
         let chip = SubjectChip(subject: subject, showMeaning: true, delegate: delegate)
