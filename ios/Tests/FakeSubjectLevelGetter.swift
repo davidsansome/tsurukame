@@ -15,7 +15,7 @@
 import Foundation
 
 class FakeSubjectLevelGetter: SubjectLevelGetter {
-  func levelOf(subjectId _: Int) -> Int? {
+  func levelOf(subjectId _: Int32) -> Int? {
     42
   }
 }

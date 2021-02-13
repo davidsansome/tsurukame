@@ -19,49 +19,49 @@ class MarkupFormatterTest: XCTestCase {
     let text = parseFormattedText("a[ja]b[b]c[i]d[/i]e[/b]f[/ja]g")
     XCTAssertEqual(text.count, 7)
 
-    assertProtoEquals(text[0], """
-    text: "a"
-    """)
-    assertProtoEquals(text[1], """
-    format: JAPANESE
-    text: "b"
-    """)
-    assertProtoEquals(text[2], """
-    format: JAPANESE
-    format: BOLD
-    text: "c"
-    """)
-    assertProtoEquals(text[3], """
-    format: JAPANESE
-    format: BOLD
-    format: ITALIC
-    text: "d"
-    """)
-    assertProtoEquals(text[4], """
-    format: JAPANESE
-    format: BOLD
-    text: "e"
-    """)
-    assertProtoEquals(text[5], """
-    format: JAPANESE
-    text: "f"
-    """)
-    assertProtoEquals(text[6], """
-    text: "g"
-    """)
+    XCTAssertEqual(text[0], try! TKMFormattedText(textFormatString: """
+      text: "a"
+    """))
+    XCTAssertEqual(text[1], try! TKMFormattedText(textFormatString: """
+      format: JAPANESE
+      text: "b"
+    """))
+    XCTAssertEqual(text[2], try! TKMFormattedText(textFormatString: """
+      format: JAPANESE
+      format: BOLD
+      text: "c"
+    """))
+    XCTAssertEqual(text[3], try! TKMFormattedText(textFormatString: """
+      format: JAPANESE
+      format: BOLD
+      format: ITALIC
+      text: "d"
+    """))
+    XCTAssertEqual(text[4], try! TKMFormattedText(textFormatString: """
+      format: JAPANESE
+      format: BOLD
+      text: "e"
+    """))
+    XCTAssertEqual(text[5], try! TKMFormattedText(textFormatString: """
+      format: JAPANESE
+      text: "f"
+    """))
+    XCTAssertEqual(text[6], try! TKMFormattedText(textFormatString: """
+      text: "g"
+    """))
   }
 
   func testLinkTag() {
     let text = parseFormattedText("foo<a href=\"bar\">baz</a>")
     XCTAssertEqual(text.count, 2)
 
-    assertProtoEquals(text[0], """
-    text: "foo"
-    """)
-    assertProtoEquals(text[1], """
-    format: LINK
-    text: "baz"
-    link_url: "bar"
-    """)
+    XCTAssertEqual(text[0], try! TKMFormattedText(textFormatString: """
+      text: "foo"
+    """))
+    XCTAssertEqual(text[1], try! TKMFormattedText(textFormatString: """
+      format: LINK
+      text: "baz"
+      link_url: "bar"
+    """))
   }
 }

@@ -59,6 +59,7 @@
 		637CA12C25D7EDFF0082580E /* ReviewSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */; };
 		637CA17625D7F2C70082580E /* wanikani.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA17525D7F2C70082580E /* wanikani.pb.swift */; };
 		637CA18725D7F5A10082580E /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 637CA18625D7F5A10082580E /* SwiftProtobuf */; };
+		637CA1BF25D806B60082580E /* wanikani.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA17525D7F2C70082580E /* wanikani.pb.swift */; };
 		637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6364A10A242DFB6F000ABF32 /* Intents.framework */; };
 		638A5C4E25A471F9001A7AEE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5C4D25A471F9001A7AEE /* AppDelegate.swift */; };
 		638A5C6C25ADBB86001A7AEE /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5C6B25ADBB86001A7AEE /* main.swift */; };
@@ -873,6 +874,8 @@
 				63E9A8E821199C8500418CE1 /* PBXTargetDependency */,
 			);
 			name = Tests;
+			packageProductDependencies = (
+			);
 			productName = Tests;
 			productReference = 63E9A8E221199C8500418CE1 /* Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -1371,6 +1374,7 @@
 				63996BB72594754400149414 /* TestUtils.swift in Sources */,
 				63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */,
 				63F7F52823D42BDD006A31FB /* String+MD5Test.swift in Sources */,
+				637CA1BF25D806B60082580E /* wanikani.pb.swift in Sources */,
 				63996B2C2594383C00149414 /* WebClient.swift in Sources */,
 				63DB064B25A03BD50071DC1C /* MarkupFormatterTest.swift in Sources */,
 				63DB06D325A091FF0071DC1C /* Subject.swift in Sources */,

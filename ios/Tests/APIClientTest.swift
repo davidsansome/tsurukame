@@ -90,19 +90,19 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    let expected = """
-    username: "example_user"
-    level: 5
-    max_level_granted_by_subscription: 60
-    profile_url: "https://www.wanikani.com/users/example_user"
-    started_at: 1336697538
-    subscribed: true
-    subscription_ends_at: 1544535139
-    """
+    let expected = try! TKMUser(textFormatString: """
+      username: "example_user"
+      level: 5
+      max_level_granted_by_subscription: 60
+      profile_url: "https://www.wanikani.com/users/example_user"
+      started_at: 1336697538
+      subscribed: true
+      subscription_ends_at: 1544535139
+    """)
 
     let progress = Progress(totalUnitCount: -1)
     if let result = waitForPromise(client.user(progress: progress)) {
-      assertProtoEquals(result, expected)
+      XCTAssertEqual(result, expected)
     }
     XCTAssertEqual(progress.totalUnitCount, 1)
     XCTAssertEqual(progress.completedUnitCount, 1)
@@ -148,21 +148,21 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    let expected = """
-    id: 80463006
-    level: 42
-    subject_id: 8761
-    subject_type: RADICAL
-    available_at: 1519689600
-    started_at: 1504654888
-    srs_stage_number: 8
-    passed_at: 1504804454
-    """
+    let expected = try! TKMAssignment(textFormatString: """
+      id: 80463006
+      level: 42
+      subject_id: 8761
+      subject_type: RADICAL
+      available_at: 1519689600
+      started_at: 1504654888
+      srs_stage_number: 8
+      passed_at: 1504804454
+    """)
 
     let progress = Progress(totalUnitCount: -1)
     if let result = waitForPromise(client.assignments(progress: progress)) {
       XCTAssertEqual(result.assignments.count, 1)
-      assertProtoEquals(result.assignments[0], expected)
+      XCTAssertEqual(result.assignments[0], expected)
       XCTAssertEqual(result.updatedAt, "2017-11-29T19:37:03.571377Z")
     }
     XCTAssertEqual(progress.totalUnitCount, 4)
@@ -354,19 +354,19 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    let expected = """
-    id: 65231
-    subject_id: 241
-    meaning_note: "I like turtles"
-    reading_note: "I like durtles"
-    meaning_synonyms: "burn"
-    meaning_synonyms: "sizzle"
-    """
+    let expected = try! TKMStudyMaterials(textFormatString: """
+      id: 65231
+      subject_id: 241
+      meaning_note: "I like turtles"
+      reading_note: "I like durtles"
+      meaning_synonyms: "burn"
+      meaning_synonyms: "sizzle"
+    """)
 
     let progress = Progress(totalUnitCount: -1)
     if let result = waitForPromise(client.studyMaterials(progress: progress)) {
       XCTAssertEqual(result.studyMaterials.count, 1)
-      assertProtoEquals(result.studyMaterials[0], expected)
+      XCTAssertEqual(result.studyMaterials[0], expected)
       XCTAssertEqual(result.updatedAt, "2017-12-21T22:42:11.468155Z")
     }
     XCTAssertEqual(progress.totalUnitCount, 1)
@@ -440,18 +440,18 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    let expected = """
-    id: 65231
-    subject_id: 241
-    meaning_note: "I like turtles"
-    reading_note: "I like durtles"
-    meaning_synonyms: "burn"
-    meaning_synonyms: "sizzle"
-    """
+    let expected = try! TKMStudyMaterials(textFormatString: """
+      id: 65231
+      subject_id: 241
+      meaning_note: "I like turtles"
+      reading_note: "I like durtles"
+      meaning_synonyms: "burn"
+      meaning_synonyms: "sizzle"
+    """)
 
     let progress = Progress(totalUnitCount: -1)
     if let result = waitForPromise(client.studyMaterial(subjectId: 65231, progress: progress)) {
-      assertProtoEquals(result!, expected)
+      XCTAssertEqual(result, expected)
     }
     XCTAssertEqual(progress.totalUnitCount, 1)
     XCTAssertEqual(progress.completedUnitCount, 1)
@@ -522,18 +522,18 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    let expected = """
-    id: 49392
-    level: 42
-    created_at: 1490862111
-    started_at: 1490873480
-    unlocked_at: 1490862111
-    """
+    let expected = try! TKMLevel(textFormatString: """
+      id: 49392
+      level: 42
+      created_at: 1490862111
+      started_at: 1490873480
+      unlocked_at: 1490862111
+    """)
 
     let progress = Progress(totalUnitCount: -1)
     if let result = waitForPromise(client.levelProgressions(progress: progress)) {
       XCTAssertEqual(result.levels.count, 1)
-      assertProtoEquals(result.levels[0], expected)
+      XCTAssertEqual(result.levels[0], expected)
       XCTAssertEqual(result.updatedAt, "2017-09-21T11:45:01.691388Z")
     }
     XCTAssertEqual(progress.totalUnitCount, 1)
@@ -572,11 +572,13 @@ class APIClientTest: XCTestCase {
   }
 
   func testStartAssignment() {
-    let progress = TKMProgress()
-    progress.assignment = TKMAssignment()
-    progress.assignment.id = 42
-    progress.isLesson = true
-    progress.createdAt = 123_456_789
+    let progress = try! TKMProgress(textFormatString: """
+      assignment {
+        id: 42
+      }
+      is_lesson: true
+      created_at: 123456789
+    """)
 
     var request = StubRequest(method: .PUT,
                               url: URL(string: "https://api.wanikani.com/v2/assignments/42/start")!)
@@ -608,29 +610,31 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    let expected = """
-    id: 42
-    level: 42
-    subject_id: 8761
-    subject_type: RADICAL
-    available_at: 1519689600
-    started_at: 1504654888
-    srs_stage_number: 1
-    """
+    let expected = try! TKMAssignment(textFormatString: """
+      id: 42
+      level: 42
+      subject_id: 8761
+      subject_type: RADICAL
+      available_at: 1519689600
+      started_at: 1504654888
+      srs_stage_number: 1
+    """)
 
     if let result = waitForPromise(client.sendProgress(progress)) {
-      assertProtoEquals(result, expected)
+      XCTAssertEqual(result, expected)
     }
   }
 
   func testCreateReview() {
-    let progress = TKMProgress()
-    progress.assignment = TKMAssignment()
-    progress.assignment.id = 42
-    progress.isLesson = false
-    progress.createdAt = 123_456_789
-    progress.meaningWrongCount = 3
-    progress.readingWrongCount = 4
+    let progress = try! TKMProgress(textFormatString: """
+      assignment {
+        id: 42
+      }
+      is_lesson: false
+      created_at: 123456789
+      meaning_wrong_count: 3
+      reading_wrong_count: 4
+    """)
 
     var request = StubRequest(method: .POST,
                               url: URL(string: "https://api.wanikani.com/v2/reviews")!)
@@ -706,25 +710,27 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    let expected = """
-    id: 1422
-    level: 42
-    subject_id: 997
-    subject_type: VOCABULARY
-    available_at: 1526281200
-    started_at: 1516830767
-    srs_stage_number: 1
-    """
+    let expected = try! TKMAssignment(textFormatString: """
+      id: 1422
+      level: 42
+      subject_id: 997
+      subject_type: VOCABULARY
+      available_at: 1526281200
+      started_at: 1516830767
+      srs_stage_number: 1
+    """)
 
     if let result = waitForPromise(client.sendProgress(progress)) {
-      assertProtoEquals(result, expected)
+      XCTAssertEqual(result, expected)
     }
   }
 
   func testCreateNewStudyMaterial() {
-    let material = TKMStudyMaterials()
-    material.subjectID = 42
-    material.meaningSynonyms = ["foo", "bar"]
+    let material = try! TKMStudyMaterials(textFormatString: """
+      subject_id: 42
+      meaning_synonyms: "foo"
+      meaning_synonyms: "bar"
+    """)
 
     var getRequest = StubRequest(method: .GET,
                                  url: URL(string: "https://api.wanikani.com/v2/study_materials?subject_ids=42")!)
@@ -759,9 +765,11 @@ class APIClientTest: XCTestCase {
   }
 
   func testUpdateExistingStudyMaterial() {
-    let material = TKMStudyMaterials()
-    material.subjectID = 42
-    material.meaningSynonyms = ["foo", "bar"]
+    let material = try! TKMStudyMaterials(textFormatString: """
+      subject_id: 42
+      meaning_synonyms: "foo"
+      meaning_synonyms: "bar"
+    """)
 
     var getRequest = StubRequest(method: .GET,
                                  url: URL(string: "https://api.wanikani.com/v2/study_materials?subject_ids=42")!)
@@ -989,48 +997,48 @@ class APIClientTest: XCTestCase {
       Hippolyte.shared.add(stubbedRequest: request)
     }
 
-    let expected = """
-    id: 440
-    level: 1
-    slug: "一"
-    document_url: "https://www.wanikani.com/kanji/%E4%B8%80"
-    japanese: "一"
-    readings {
-      reading: "いち"
-      is_primary: true
-      type: ONYOMI
-    }
-    readings {
-      reading: "ひと"
-      is_primary: false
-      type: KUNYOMI
-    }
-    readings {
-      reading: "かず"
-      is_primary: false
-      type: NANORI
-    }
-    meanings {
-      meaning: "One"
-      type: PRIMARY
-    }
-    component_subject_ids: 1
-    kanji {
-      meaning_mnemonic: "Lying on the <radical>ground</radical> is something that looks just like the ground, the number <kanji>One</kanji>. Why is this One lying down? It\\'s been shot by the number two. It\\'s lying there, bleeding out and dying. The number One doesn\\'t have long to live."
-      meaning_hint: "To remember the meaning of <kanji>One</kanji>, imagine yourself there at the scene of the crime. You grab <kanji>One</kanji> in your arms, trying to prop it up, trying to hear its last words. Instead, it just splatters some blood on your face. \\"Who did this to you?\\" you ask. The number One points weakly, and you see number Two running off into an alleyway. He\\'s always been jealous of number One and knows he can be number one now that he\\'s taken the real number one out."
-      reading_mnemonic: "As you\\'re sitting there next to <kanji>One</kanji>, holding him up, you start feeling a weird sensation all over your skin. From the wound comes a fine powder (obviously coming from the special bullet used to kill One) that causes the person it touches to get extremely <reading>itchy</reading> (いち)"
-      reading_hint: "Make sure you feel the ridiculously <reading>itchy</reading> sensation covering your body. It climbs from your hands, where you\\'re holding the number <kanji>One</kanji> up, and then goes through your arms, crawls up your neck, goes down your body, and then covers everything. It becomes uncontrollable, and you\\'re scratching everywhere, writhing on the ground. It\\'s so itchy that it\\'s the most painful thing you\\'ve ever experienced (you should imagine this vividly, so you remember the reading of this kanji)."
-      visually_similar_kanji: "互下両土且正本末未士丁七二十"
-    }
-    amalgamation_subject_ids: 56
-    amalgamation_subject_ids: 88
-    amalgamation_subject_ids: 91
-    """
+    let expected = try! TKMSubject(textFormatString: """
+      id: 440
+      level: 1
+      slug: "一"
+      document_url: "https://www.wanikani.com/kanji/%E4%B8%80"
+      japanese: "一"
+      readings {
+        reading: "いち"
+        is_primary: true
+        type: ONYOMI
+      }
+      readings {
+        reading: "ひと"
+        is_primary: false
+        type: KUNYOMI
+      }
+      readings {
+        reading: "かず"
+        is_primary: false
+        type: NANORI
+      }
+      meanings {
+        meaning: "One"
+        type: PRIMARY
+      }
+      component_subject_ids: 1
+      kanji {
+        meaning_mnemonic: "Lying on the <radical>ground</radical> is something that looks just like the ground, the number <kanji>One</kanji>. Why is this One lying down? It\\'s been shot by the number two. It\\'s lying there, bleeding out and dying. The number One doesn\\'t have long to live."
+        meaning_hint: "To remember the meaning of <kanji>One</kanji>, imagine yourself there at the scene of the crime. You grab <kanji>One</kanji> in your arms, trying to prop it up, trying to hear its last words. Instead, it just splatters some blood on your face. \\"Who did this to you?\\" you ask. The number One points weakly, and you see number Two running off into an alleyway. He\\'s always been jealous of number One and knows he can be number one now that he\\'s taken the real number one out."
+        reading_mnemonic: "As you\\'re sitting there next to <kanji>One</kanji>, holding him up, you start feeling a weird sensation all over your skin. From the wound comes a fine powder (obviously coming from the special bullet used to kill One) that causes the person it touches to get extremely <reading>itchy</reading> (いち)"
+        reading_hint: "Make sure you feel the ridiculously <reading>itchy</reading> sensation covering your body. It climbs from your hands, where you\\'re holding the number <kanji>One</kanji> up, and then goes through your arms, crawls up your neck, goes down your body, and then covers everything. It becomes uncontrollable, and you\\'re scratching everywhere, writhing on the ground. It\\'s so itchy that it\\'s the most painful thing you\\'ve ever experienced (you should imagine this vividly, so you remember the reading of this kanji)."
+        visually_similar_kanji: "互下両土且正本末未士丁七二十"
+      }
+      amalgamation_subject_ids: 56
+      amalgamation_subject_ids: 88
+      amalgamation_subject_ids: 91
+    """)
 
     let progress = Progress(totalUnitCount: -1)
     if let result = waitForPromise(client.subjects(progress: progress)) {
       XCTAssertEqual(result.subjects.count, 1)
-      assertProtoEquals(result.subjects[0], expected)
+      XCTAssertEqual(result.subjects[0], expected)
       XCTAssertEqual(result.updatedAt, "2018-04-09T18:08:59.946969Z")
     }
     XCTAssertEqual(progress.totalUnitCount, 1)

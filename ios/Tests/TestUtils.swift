@@ -13,22 +13,8 @@
 // limitations under the License.
 
 import PromiseKit
+import SwiftProtobuf
 import XCTest
-
-/** Asserts the text format of the given proto message equals the given string. */
-func assertProtoEquals(_ actual: GPBMessage,
-                       _ expected: String,
-                       file: StaticString = #file,
-                       line: UInt = #line) {
-  // Objective C's protobuf library doesn't include a text format parser, so we have to go the other
-  // way instead.
-  let actualTrimmed = GPBTextFormatForMessage(actual, nil)
-    .trimmingCharacters(in: .whitespacesAndNewlines)
-  let expectedTrimmed = expected.trimmingCharacters(in: .whitespacesAndNewlines)
-  XCTAssert(actualTrimmed == expectedTrimmed,
-            "assertProtoEquals failed:\nActual:\n\(actualTrimmed)\n\nExpected:\n\(expectedTrimmed)",
-            file: file, line: line)
-}
 
 /**
  * Waits for the promise to be fulfilled and returns its value.
