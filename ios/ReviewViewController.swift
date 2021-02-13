@@ -386,7 +386,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     super.viewWillAppear(animated)
     SiriShortcutHelper.shared
-      .attachShortcutActivity(self, type: SiriShortcutHelper.ShortcutTypeReviews)
+      .attachShortcutActivity(self, type: .reviews)
     navigationController?.setNavigationBarHidden(true, animated: false)
     if subjectDetailsView.isHidden {
       answerField.becomeFirstResponder()
@@ -521,7 +521,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
       activeTask = activeQueue[activeTaskIndex]
       activeSubject = services.localCachingClient
-        .getSubject(id: Int(activeTask.assignment.subjectId))!
+        .getSubject(id: activeTask.assignment.subjectId)!
       activeStudyMaterials =
         services.localCachingClient
           .getStudyMaterial(subjectId: Int(activeTask.assignment.subjectId))
@@ -1153,7 +1153,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     if result != .Incorrect {
       if Settings.playAudioAutomatically, activeTaskType == .reading,
         activeSubject.hasVocabulary, activeSubject.vocabulary.audioIdsArray_Count > 0 {
-        services.audio.play(subjectID: Int(activeSubject!.id_p), delegate: nil)
+        services.audio.play(subjectID: activeSubject!.id_p, delegate: nil)
       }
 
       var previousSubjectLabel: UILabel?

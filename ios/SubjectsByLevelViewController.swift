@@ -42,7 +42,7 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
     model.addSection("Vocabulary")
 
     for assignment in services.localCachingClient.getAssignments(level: level) {
-      guard let subject = services.localCachingClient.getSubject(id: Int(assignment.subjectId))
+      guard let subject = services.localCachingClient.getSubject(id: assignment.subjectId)
       else {
         continue
       }

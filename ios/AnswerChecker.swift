@@ -152,7 +152,7 @@ import Foundation
         // If the vocabulary is made up of only one Kanji, check whether the user wrote the Kanji
         // reading instead of the vocabulary reading.
         if let kanji = localCachingClient
-          .getSubject(id: Int(subject.componentSubjectIdsArray!.value(at: 0))) {
+          .getSubject(id: subject.componentSubjectIdsArray!.value(at: 0)) {
           let result = checkAnswer(answer, subject: kanji, studyMaterials: nil, taskType: taskType,
                                    localCachingClient: localCachingClient)
           if result == .Precise {

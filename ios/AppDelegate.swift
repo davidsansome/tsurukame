@@ -54,13 +54,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
     guard let mainVC = findMainViewController() else {
       return true
     }
-    if userActivityType == SiriShortcutHelper.ShortcutTypeReviews {
+    if userActivityType == SiriShortcutHelper.ShortcutType.reviews.rawValue {
       if services.localCachingClient.availableReviewCount > 0 {
         // If the user has 0 reviews proceed to the main view controller. If they have
         // 1+ reviews then launch directly into reviews.
         mainVC.performSegue(withIdentifier: "startReviews", sender: nil)
       }
-    } else if userActivityType == SiriShortcutHelper.ShortcutTypeLessons {
+    } else if userActivityType == SiriShortcutHelper.ShortcutType.lessons.rawValue {
       if services.localCachingClient.availableLessonCount > 0 {
         // If the user has 0 lessons proceed to the main view controller. If they have
         // 1+ lessons pending then launch directly into lessons.

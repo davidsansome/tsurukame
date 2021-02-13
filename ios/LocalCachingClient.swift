@@ -460,7 +460,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     return ret
   }
 
-  func getSubject(id: Int) -> TKMSubject? {
+  func getSubject(id: Int32) -> TKMSubject? {
     db.inDatabase { db in
       let cursor = db.query("SELECT pb FROM subjects WHERE id = ?", args: [id])
       if cursor.next() {

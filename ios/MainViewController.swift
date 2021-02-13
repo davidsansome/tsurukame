@@ -276,7 +276,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
       }
 
       let vc = segue.destination as! LessonsViewController
-      vc.setup(with: services, items: items)
+      vc.setup(services: services, items: items)
 
     case "showAll":
       let vc = segue.destination as! SubjectCatalogueViewController

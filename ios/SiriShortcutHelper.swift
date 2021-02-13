@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,14 +17,15 @@ import Foundation
 import Intents
 import MobileCoreServices
 
-@objc class SiriShortcutHelper: NSObject {
-  @objc static let ShortcutTypeReviews = "com.tsurukame.reviews"
-  @objc static let ShortcutTypeLessons = "com.tsurukame.lessons"
+class SiriShortcutHelper: NSObject {
+  enum ShortcutType: String {
+    case reviews = "com.tsurukame.reviews"
+    case lessons = "com.tsurukame.lessons"
+  }
 
-  @objc public static let shared = SiriShortcutHelper()
+  public static let shared = SiriShortcutHelper()
 
-  @objc(attachShortcutActivity:type:)
-  func attachShortcutActivity(_ vc: UIViewController, type: String) {
+  func attachShortcutActivity(_ vc: UIViewController, type: ShortcutType) {
     if #available(iOS 12.0, *) {
       vc.userActivity = newShortcutActivity(type: type)
       vc.userActivity?.becomeCurrent()
@@ -32,9 +33,9 @@ import MobileCoreServices
   }
 
   @available(iOS 12.0, *)
-  func newShortcutActivity(type: String) -> NSUserActivity {
-    let activity = NSUserActivity(activityType: type)
-    activity.persistentIdentifier = NSUserActivityPersistentIdentifier(type)
+  func newShortcutActivity(type: ShortcutType) -> NSUserActivity {
+    let activity = NSUserActivity(activityType: type.rawValue)
+    activity.persistentIdentifier = NSUserActivityPersistentIdentifier(type.rawValue)
     activity.isEligibleForSearch = true
     activity.isEligibleForPrediction = true
 
@@ -43,23 +44,21 @@ import MobileCoreServices
     return activity
   }
 
-  func configureType(_ type: String, activity: NSUserActivity) {
+  private func configureType(_ type: ShortcutType, activity: NSUserActivity) {
     let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
     switch type {
-    case SiriShortcutHelper.ShortcutTypeReviews:
+    case .reviews:
       activity.title = "Start Wanikani Reviews"
       if #available(iOS 12.0, *) {
         activity.suggestedInvocationPhrase = "Start Wanikani Reviews"
       }
       attributes.contentDescription = "Keep it up and burn every one"
-    case SiriShortcutHelper.ShortcutTypeLessons:
+    case .lessons:
       activity.title = "Start Wanikani Lessons"
       if #available(iOS 12.0, *) {
         activity.suggestedInvocationPhrase = "Start Wanikani Lessons"
       }
       attributes.contentDescription = "Learn something new"
-    default:
-      NSLog("unknown type")
     }
     activity.contentAttributeSet = attributes
   }

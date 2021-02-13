@@ -11,7 +11,7 @@
         <!--Lessons View Controller-->
         <scene sceneID="7xY-aI-FVw">
             <objects>
-                <viewController id="dLz-hZ-OJ5" customClass="LessonsViewController" sceneMemberID="viewController">
+                <viewController id="dLz-hZ-OJ5" customClass="LessonsViewController" customModule="Tsurukame" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="o3G-Oa-y1B">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -28,7 +28,7 @@
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="didTapBackButton:" destination="dLz-hZ-OJ5" eventType="touchUpInside" id="Coh-Oh-dGb"/>
+                                    <action selector="didTapBackButtonWithSender:" destination="dLz-hZ-OJ5" eventType="touchUpInside" id="UI3-wj-Ic0"/>
                                 </connections>
                             </button>
                         </subviews>

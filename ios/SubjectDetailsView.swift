@@ -209,7 +209,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     var subjects = [TKMSubject]()
     for i in 0 ..< subject.amalgamationSubjectIdsArray_Count {
       let subjectID = subject.amalgamationSubjectIdsArray.value(at: i)
-      if let subject = services.localCachingClient.getSubject(id: Int(subjectID)) {
+      if let subject = services.localCachingClient.getSubject(id: subjectID) {
         subjects.append(subject)
       }
     }

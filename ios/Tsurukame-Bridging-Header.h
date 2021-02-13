@@ -15,7 +15,6 @@
 #ifndef Tsurukame_Bridging_Header_h
 #define Tsurukame_Bridging_Header_h
 
-#import "LessonsViewController.h"
 #import "LoginViewController.h"
 #import "NSString+LevenshteinDistance.h"
 #import "NavigationController.h"

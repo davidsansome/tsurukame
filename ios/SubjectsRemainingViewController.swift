@@ -36,7 +36,7 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate {
       if assignment.srsStage > .apprentice4 {
         continue
       }
-      guard let subject = services.localCachingClient.getSubject(id: Int(assignment.subjectId))
+      guard let subject = services.localCachingClient.getSubject(id: assignment.subjectId)
       else {
         continue
       }

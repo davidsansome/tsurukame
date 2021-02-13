@@ -76,7 +76,7 @@ class Audio: NSObject {
     }
   }
 
-  func play(subjectID: Int, delegate: AudioDelegate?) {
+  func play(subjectID: Int32, delegate: AudioDelegate?) {
     guard let subject = services.localCachingClient.getSubject(id: subjectID) else {
       return
     }
