@@ -269,7 +269,7 @@ class SettingsViewController: UITableViewController {
 
   private var fontSizeValueText: String {
     if Settings.fontSize != 0.0 {
-      return "\(Int(Settings.fontSize * 100))"
+      return "\(Int(Settings.fontSize * 100))%"
     }
     return ""
   }

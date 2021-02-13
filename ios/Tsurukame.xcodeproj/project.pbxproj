@@ -47,6 +47,10 @@
 		634EB1A321B6BC7000E1831C /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = BB2909A5217FAF8B00B1816F /* fonts */; };
 		635D0079218D94AA006CD711 /* TKMGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D0078218D94AA006CD711 /* TKMGradientView.m */; };
 		636502B325D7A39600801C2D /* SubjectsRemainingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636502B225D7A39600801C2D /* SubjectsRemainingViewController.swift */; };
+		6365040D25D7DC8000801C2D /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6365040C25D7DC8000801C2D /* Settings.storyboard */; };
+		6365041625D7DDB700801C2D /* Reviews.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6365041525D7DDB700801C2D /* Reviews.storyboard */; };
+		6365041F25D7DE0900801C2D /* Lessons.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6365041E25D7DE0900801C2D /* Lessons.storyboard */; };
+		6365042825D7DE3600801C2D /* Subjects.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6365042725D7DE3600801C2D /* Subjects.storyboard */; };
 		636A63DE238A107A00902269 /* CurrentLevelChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */; };
 		636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */; };
 		636A63E4238A5D6B00902269 /* MainHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 636A63E3238A5D6B00902269 /* MainHeaderView.xib */; };
@@ -278,6 +282,10 @@
 		635D0078218D94AA006CD711 /* TKMGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMGradientView.m; sourceTree = "<group>"; };
 		6364A10A242DFB6F000ABF32 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Intents.framework; sourceTree = DEVELOPER_DIR; };
 		636502B225D7A39600801C2D /* SubjectsRemainingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectsRemainingViewController.swift; sourceTree = "<group>"; };
+		6365040C25D7DC8000801C2D /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		6365041525D7DDB700801C2D /* Reviews.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Reviews.storyboard; sourceTree = "<group>"; };
+		6365041E25D7DE0900801C2D /* Lessons.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Lessons.storyboard; sourceTree = "<group>"; };
+		6365042725D7DE3600801C2D /* Subjects.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Subjects.storyboard; sourceTree = "<group>"; };
 		636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLevelChartItem.swift; sourceTree = "<group>"; };
 		636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSStageCategoryItem.swift; sourceTree = "<group>"; };
 		636A63E3238A5D6B00902269 /* MainHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainHeaderView.xib; sourceTree = "<group>"; };
@@ -475,6 +483,10 @@
 				BB2909A5217FAF8B00B1816F /* fonts */,
 				63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */,
 				63E903C51FE643BF00D73C3A /* Main.storyboard */,
+				6365042725D7DE3600801C2D /* Subjects.storyboard */,
+				6365041E25D7DE0900801C2D /* Lessons.storyboard */,
+				6365041525D7DDB700801C2D /* Reviews.storyboard */,
+				6365040C25D7DC8000801C2D /* Settings.storyboard */,
 				63DB06C025A091710071DC1C /* old-mnemonics.json */,
 				489894D423670CB000A20AF8 /* Tsurukame.entitlements */,
 				63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */,
@@ -990,11 +1002,15 @@
 				6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */,
 				63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */,
 				63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */,
+				6365041625D7DDB700801C2D /* Reviews.storyboard in Resources */,
 				63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */,
 				63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */,
 				63DB06C125A091710071DC1C /* old-mnemonics.json in Resources */,
+				6365041F25D7DE0900801C2D /* Lessons.storyboard in Resources */,
 				63DB06EA25A09AA00071DC1C /* visually-similar-kanji.json in Resources */,
 				63BFA78B218EB1B30058E885 /* TKMDownloadModelItem.xib in Resources */,
+				6365042825D7DE3600801C2D /* Subjects.storyboard in Resources */,
+				6365040D25D7DC8000801C2D /* Settings.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
