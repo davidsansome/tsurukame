@@ -56,6 +56,7 @@
 		636A63E4238A5D6B00902269 /* MainHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 636A63E3238A5D6B00902269 /* MainHeaderView.xib */; };
 		636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E6238A607A00902269 /* MainHeaderView.swift */; };
 		637CA11525D7E48A0082580E /* LessonsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA11425D7E48A0082580E /* LessonsViewController.swift */; };
+		637CA12C25D7EDFF0082580E /* ReviewSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */; };
 		637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6364A10A242DFB6F000ABF32 /* Intents.framework */; };
 		638A5C4E25A471F9001A7AEE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5C4D25A471F9001A7AEE /* AppDelegate.swift */; };
 		638A5C6C25ADBB86001A7AEE /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5C6B25ADBB86001A7AEE /* main.swift */; };
@@ -86,7 +87,6 @@
 		63A16791253AD8E600B5BCD6 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1678F253AD8E600B5BCD6 /* APIClient.swift */; };
 		63A16792253AD8E600B5BCD6 /* WebClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16790253AD8E600B5BCD6 /* WebClient.swift */; };
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
-		63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */; };
 		63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */; };
 		63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
 		63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */; };
@@ -291,6 +291,7 @@
 		636A63E3238A5D6B00902269 /* MainHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainHeaderView.xib; sourceTree = "<group>"; };
 		636A63E6238A607A00902269 /* MainHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHeaderView.swift; sourceTree = "<group>"; };
 		637CA11425D7E48A0082580E /* LessonsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsViewController.swift; sourceTree = "<group>"; };
+		637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewSummaryViewController.swift; sourceTree = "<group>"; };
 		638A5C4D25A471F9001A7AEE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		638A5C6B25ADBB86001A7AEE /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		638A5CAE25ADC844001A7AEE /* FakeSubjectLevelGetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeSubjectLevelGetter.swift; sourceTree = "<group>"; };
@@ -312,8 +313,6 @@
 		63A16790253AD8E600B5BCD6 /* WebClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebClient.swift; sourceTree = "<group>"; };
 		63A2375F1FE9264300C48657 /* UIColor+HexString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
 		63A237601FE9264300C48657 /* UIColor+HexString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
-		63B1DE391FE7BCDA00FAB9C2 /* ReviewSummaryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewSummaryViewController.h; sourceTree = "<group>"; };
-		63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewSummaryViewController.m; sourceTree = "<group>"; };
 		63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMLessonBatchSizeViewController.h; sourceTree = "<group>"; };
 		63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMLessonBatchSizeViewController.m; sourceTree = "<group>"; };
 		63BDA9A5200E04E500D75DA2 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
@@ -518,6 +517,7 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				638A5C4D25A471F9001A7AEE /* AppDelegate.swift */,
@@ -559,8 +559,6 @@
 				630EB13E25C5713000783E54 /* ReviewItem.swift */,
 				633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */,
 				633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */,
-				63B1DE391FE7BCDA00FAB9C2 /* ReviewSummaryViewController.h */,
-				63B1DE3A1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m */,
 				633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */,
 				633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */,
 				631CAD71234B4A96008CEA73 /* ReviewViewController.swift */,
@@ -1257,6 +1255,7 @@
 				630ADB6F21F8256E00BC9801 /* TKMCheckmarkModelItem.m in Sources */,
 				633632EF201F3490006D582B /* Settings.swift in Sources */,
 				63A16775253AD8AE00B5BCD6 /* FMDatabase+Assert.swift in Sources */,
+				637CA12C25D7EDFF0082580E /* ReviewSummaryViewController.swift in Sources */,
 				63C74BC825C822C9004F6C99 /* SubjectModelItem.swift in Sources */,
 				638A5C6C25ADBB86001A7AEE /* main.swift in Sources */,
 				6398480E23D699E70077EB6B /* ContextSentenceModelItem.swift in Sources */,
@@ -1284,7 +1283,6 @@
 				633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */,
 				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
-				63B1DE3B1FE7BCDA00FAB9C2 /* ReviewSummaryViewController.m in Sources */,
 				636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */,
 				63BFA78E218EB6890058E885 /* OfflineAudioViewController.swift in Sources */,
 				63A16786253AD8D200B5BCD6 /* LocalCachingClient.swift in Sources */,

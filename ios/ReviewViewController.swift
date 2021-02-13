@@ -461,7 +461,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     switch segue.identifier {
     case "reviewSummary":
       let vc = segue.destination as! ReviewSummaryViewController
-      vc.setup(with: services, items: completedReviews)
+      vc.setup(services: services, items: completedReviews)
     case "subjectDetails":
       let vc = segue.destination as! SubjectDetailsViewController
       vc.setup(services: services, subject: sender as! TKMSubject)

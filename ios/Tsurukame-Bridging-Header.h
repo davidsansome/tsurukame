@@ -18,7 +18,6 @@
 #import "LoginViewController.h"
 #import "NSString+LevenshteinDistance.h"
 #import "NavigationController.h"
-#import "ReviewSummaryViewController.h"
 #import "SubjectCatalogueViewController.h"
 #import "SuccessAnimation.h"
 #import "TKMDownloadViewController.h"
