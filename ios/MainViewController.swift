@@ -285,7 +285,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
     case "showRemaining":
       let vc = segue.destination as! SubjectsRemainingViewController
-      vc.setup(with: services)
+      vc.setup(services: services)
 
     case "settings":
       let vc = segue.destination as! SettingsViewController
