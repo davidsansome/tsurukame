@@ -52,6 +52,9 @@ jobs:
           name: Install certificate service account
           command: echo $CERTIFICATE_SERVICE_ACCOUNT > ios/fastlane/gc_keys.json
       - run:
+          name: Install App Store API key
+          command: echo $APP_STORE_API_KEY_JSON > ios/fastlane/app_store_api_key.json
+      - run:
           command: bundle install
           working_directory: ios
       - run:

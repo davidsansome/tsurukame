@@ -49,7 +49,10 @@ lane :new_version do
 end
 
 lane :beta do
-  match(type: "appstore")
+  match(
+    type: "appstore",
+    api_key_path: "fastlane/app_store_api_key.json",
+  )
 
   update_project_provisioning(
     xcodeproj: "Tsurukame.xcodeproj",
@@ -86,6 +89,7 @@ lane :beta do
     groups: "Testers",
     demo_account_required: true,
     reject_build_waiting_for_review: true,
+    api_key_path: "fastlane/app_store_api_key.json",
   )
 end
 
