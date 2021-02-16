@@ -203,12 +203,17 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
       UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [],
                    action: #selector(prevPage),
                    discoverabilityTitle: "Previous"),
+      UIKeyCommand(input: "a", modifierFlags: [], action: #selector(prevPage)),
       UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [],
                    action: #selector(nextPage),
                    discoverabilityTitle: "Next"),
+      UIKeyCommand(input: "d", modifierFlags: [], action: #selector(nextPage)),
       UIKeyCommand(input: "\r", modifierFlags: [], action: #selector(nextPage)),
       UIKeyCommand(input: " ", modifierFlags: [], action: #selector(playAudio),
                    discoverabilityTitle: "Play reading"),
+      UIKeyCommand(input: "j", modifierFlags: [], action: #selector(playAudio)),
+      UIKeyCommand(input: "q", modifierFlags: [], action: #selector(jumpToQuiz),
+                   discoverabilityTitle: "Jump to quiz"),
     ]
   }
 
@@ -224,6 +229,11 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
       pageControl.currentPageIndex += 1
       pageChanged()
     }
+  }
+  
+  @objc func jumpToQuiz() {
+    pageControl.currentPageIndex = items.count
+    pageChanged()
   }
 
   @objc func playAudio() {
