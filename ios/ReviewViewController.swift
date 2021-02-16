@@ -1294,6 +1294,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                                    modifierFlags: [],
                                                    action: #selector(playAudio),
                                                    discoverabilityTitle: "Play reading"),
+                                      UIKeyCommand(input: "j", modifierFlags: [],
+                                                   action: #selector(playAudio)),
                                       UIKeyCommand(input: "a",
                                                    modifierFlags: [.command],
                                                    action: #selector(askAgain),
