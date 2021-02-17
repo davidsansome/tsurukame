@@ -230,7 +230,7 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
       pageChanged()
     }
   }
-  
+
   @objc func jumpToQuiz() {
     pageControl.currentPageIndex = items.count
     pageChanged()

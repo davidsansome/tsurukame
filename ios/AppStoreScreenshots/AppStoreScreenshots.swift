@@ -32,11 +32,7 @@ class AppStoreScreenshots: XCTestCase {
     app.launch()
   }
 
-  // TODO(dsansome): Enable when the FakeLocalCachingClient contains the subjects that are being
-  // searched for here.
-  // Subject IDs: 743 3163 3164 355 1600 8911 8918 1787 1803 6556 1892 3516 3515 5907 6163 6812 6960
-  // 6961
-  func skip_testAppStoreScreenshots() {
+  func testAppStoreScreenshots() {
     Thread.sleep(forTimeInterval: 1.0) // Wait for the profile photo to be downloaded.
 
     // Snapshot the home screen
@@ -48,8 +44,7 @@ class AppStoreScreenshots: XCTestCase {
     search.typeText("sake\n")
     Thread.sleep(forTimeInterval: 0.5)
     snapshot("04_search")
-    search.tap()
-    search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 4))
+    search.buttons["Clear text"].tap()
 
     // Select a subject and snapshot the subject details
     search.typeText("person")
@@ -62,7 +57,7 @@ class AppStoreScreenshots: XCTestCase {
     snapshot("05_catalogue")
     app.navigationBars["Level 24"].buttons["Back"].tap()
 
-    // Lessons view
+    // Reviews view
     app.tables.staticTexts["Reviews"].tap()
     snapshot("02_lesson")
   }
