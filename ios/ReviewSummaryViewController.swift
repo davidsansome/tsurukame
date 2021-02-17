@@ -67,6 +67,15 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
     self.model = model
   }
 
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    navigationController?.isNavigationBarHidden = false
+  }
+
+  @IBAction private func doneClicked() {
+    navigationController?.popToRootViewController(animated: true)
+  }
+
   // MARK: - SubjectDelegate
 
   func didTapSubject(_ subject: TKMSubject) {

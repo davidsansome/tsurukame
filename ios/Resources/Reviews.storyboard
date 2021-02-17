@@ -340,7 +340,7 @@
                     <navigationItem key="navigationItem" title="Review Summary" id="ikp-lf-4Rr">
                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="MkD-at-oFX">
                             <connections>
-                                <action selector="doneClicked:" destination="EMo-56-STG" id="jMm-8h-wPp"/>
+                                <action selector="doneClicked" destination="EMo-56-STG" id="IdG-G0-8TU"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
