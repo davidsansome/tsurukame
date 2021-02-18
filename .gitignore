@@ -9,6 +9,7 @@
 /sqlite3-extension/wanikani.pb.*
 **/xcuserdata/
 **/xcshareddata/
+!/ios/Tsurukame.xcodeproj/xcshareddata/
 /ios/*.ipa
 /ios/*.dSYM.zip
 /workspace
