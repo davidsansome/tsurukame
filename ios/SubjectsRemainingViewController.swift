@@ -48,7 +48,7 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate {
                                   readingWrong: false, meaningWrong: false)
       item.showLevelNumber = false
       item.showAnswers = false
-      item.showRemaining = false
+      item.showRemaining = true
       if assignment.isLocked || assignment.isBurned {
         item.gradientColors = TKMStyle.lockedGradient
       }
