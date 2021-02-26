@@ -51,9 +51,9 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
     }
     for level in incorrectItemLevels {
       if level == currentLevel {
-        model.addSection("Current level (\(currentLevel))")
+        model.addSection("Current level (\(level))")
       } else {
-        model.addSection("Level \(currentLevel)")
+        model.addSection("Level \(level)")
       }
 
       for item in incorrectItemsByLevel[level]! {
