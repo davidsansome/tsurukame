@@ -20,8 +20,8 @@ PODS:
     - MMDrawerController/Core
   - MMDrawerController/Subclass (0.6.0):
     - MMDrawerController/Core
-  - PromiseKit/CorePromise (6.8.5)
-  - PromiseKit/Foundation (6.8.5):
+  - PromiseKit/CorePromise (6.13.1)
+  - PromiseKit/Foundation (6.13.1):
     - PromiseKit/CorePromise
   - Reachability (3.2)
 
@@ -32,8 +32,8 @@ DEPENDENCIES:
   - Hippolyte (~> 1.3.0)
   - Light-Untar (~> 0.3.0)
   - MMDrawerController (~> 0.6.0)
-  - PromiseKit/CorePromise (~> 6.8.1)
-  - PromiseKit/Foundation (~> 6.8.1)
+  - PromiseKit/CorePromise (~> 6.13.0)
+  - PromiseKit/Foundation (~> 6.13.0)
   - Reachability (~> 3.2)
 
 SPEC REPOS:
@@ -54,9 +54,9 @@ SPEC CHECKSUMS:
   Hippolyte: 62bb4cc730776cebd58a1cb51f5546253597ffd7
   Light-Untar: e901c312974d36f3910aec73436296a5a3faf799
   MMDrawerController: e3a54a5570388463ad3b36975251575b50c4e1a0
-  PromiseKit: 9616b0afef31eae56ab9ce044c8ec2b8612a15cd
+  PromiseKit: 28fda91c973cc377875d8c0ea4f973013c05b6db
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
-PODFILE CHECKSUM: a9957a19aa3ac491c5af9432381643273f08f13a
+PODFILE CHECKSUM: 3b5773ae113ef73345058ea3cba37154a744f5ea
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1
