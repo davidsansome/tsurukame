@@ -96,17 +96,19 @@ class WaniKaniWebClient: NSObject {
       firstCookie = try self.getSessionCookie(session)
 
       // Build the login request.
-      let queryItems = [
+      var req = URLRequest(url: kLoginUrl)
+      req.httpMethod = "POST"
+      req.setValue("application/x-www-form-urlencoded;charset=UTF-8", forHTTPHeaderField: "Content-Type")
+
+      var urlComponents = URLComponents()
+      urlComponents.queryItems = [
         URLQueryItem(name: "user[login]", value: username),
         URLQueryItem(name: "user[password]", value: password),
         URLQueryItem(name: "user[remember_me]", value: "0"),
         URLQueryItem(name: "authenticity_token", value: csrfToken),
         URLQueryItem(name: "utf8", value: "✓"),
       ]
-
-      var req = URLRequest(url: kLoginUrl)
-      req.httpShouldHandleCookies = true
-      try req.setFormBody(method: "POST", queryItems: queryItems)
+      request.httpBody = urlComponents.percentEncodedQuery?.data(using: .utf8)
       return request(req, session: session)
     }.map {
       secondCookie = try self.getSessionCookie(session)
