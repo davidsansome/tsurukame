@@ -138,10 +138,13 @@ enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     switch self {
     case .apprentice1:
       hours += (isAccelerated ? 2 : 4)
+      fallthrough
     case .apprentice2:
       hours += (isAccelerated ? 4 : 8)
+      fallthrough
     case .apprentice3:
       hours += (isAccelerated ? 8 : 23)
+      fallthrough
     case .apprentice4:
       hours += (isAccelerated ? 23 : 47)
     default:
