@@ -98,7 +98,8 @@ class WaniKaniWebClient: NSObject {
       // Build the login request.
       var req = URLRequest(url: kLoginUrl)
       req.httpMethod = "POST"
-      req.setValue("application/x-www-form-urlencoded;charset=UTF-8", forHTTPHeaderField: "Content-Type")
+      req.setValue("application/x-www-form-urlencoded;charset=UTF-8",
+                   forHTTPHeaderField: "Content-Type")
 
       var urlComponents = URLComponents()
       urlComponents.queryItems = [
