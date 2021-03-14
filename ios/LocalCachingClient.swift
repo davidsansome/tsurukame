@@ -49,6 +49,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   // swiftformat:enable all
 
   @Cached var guruKanjiCount: Int
+  @Cached var apprenticeCount: Int
   @Cached(notificationName: .lccSRSCategoryCountsChanged) var srsCategoryCounts: [Int]
   @objc @Cached var maxLevelGrantedBySubscription: Int
 
@@ -71,6 +72,9 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     _guruKanjiCount.updateBlock = {
       self.updateGuruKanjiCount()
     }
+    _apprenticeCount.updateBlock = {
+      self.updateApprenticeCount()
+    }
     _srsCategoryCounts.updateBlock = {
       self.updateSrsCategoryCounts()
     }
@@ -83,6 +87,17 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     db.inDatabase { db in
       let cursor = db.query("SELECT COUNT(*) FROM subject_progress " +
         "WHERE srs_stage >= 5 AND subject_type = \(TKMSubject.TypeEnum.kanji.rawValue)")
+      if cursor.next() {
+        return Int(cursor.int(forColumnIndex: 0))
+      }
+      return 0
+    }
+  }
+
+  func updateApprenticeCount() -> Int {
+    db.inDatabase { db in
+      let cursor = db.query("SELECT COUNT(*) FROM subject_progress " +
+        "WHERE srs_stage >= 1 AND srs_stage <= 4")
       if cursor.next() {
         return Int(cursor.int(forColumnIndex: 0))
       }
@@ -554,6 +569,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     _availableSubjects.invalidate()
     _srsCategoryCounts.invalidate()
     _guruKanjiCount.invalidate()
+    _apprenticeCount.invalidate()
 
     return sendPendingProgress(progress, progress: Progress(totalUnitCount: -1))
   }

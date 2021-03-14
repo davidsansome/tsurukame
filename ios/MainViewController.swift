@@ -31,9 +31,18 @@ private func userProfileImageURL(emailAddress: String) -> URL {
   return URL(string: "https://www.gravatar.com/avatar/\(hash).jpg?s=\(size)&d=\(kDefaultProfileImageURL)")!
 }
 
-private func setTableViewCellCount(_ item: TKMBasicModelItem, count: Int) -> Bool {
+private func setTableViewCellCount(_ item: TKMBasicModelItem,
+                                   count: Int,
+                                   disabledClosure: () -> Bool = { false },
+                                   disabledMessage: String? = nil) -> Bool {
+  let disabled = disabledClosure()
   item.subtitle = count < 0 ? "-" : "\(count)"
-  item.enabled = count > 0
+  item.enabled = count > 0 && !disabled
+
+  if disabled {
+    item.title = item.title! + " (\(disabledMessage ?? "Disabled"))"
+  }
+
   return item.enabled
 }
 
@@ -170,7 +179,12 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
                                           accessoryType: .disclosureIndicator,
                                           target: self,
                                           action: #selector(startLessons))
-      hasLessons = setTableViewCellCount(lessonsItem, count: lessons)
+      hasLessons = setTableViewCellCount(lessonsItem, count: lessons,
+                                         disabledClosure: {
+                                           services.localCachingClient.apprenticeCount >= Settings
+                                             .apprenticeLessonsLimit
+                                         },
+                                         disabledMessage: "Apprentice limit reached...")
       model.add(lessonsItem)
 
       let reviewsItem = TKMBasicModelItem(style: .value1,

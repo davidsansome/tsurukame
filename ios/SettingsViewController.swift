@@ -87,6 +87,14 @@ class SettingsViewController: UITableViewController {
                                 accessoryType: .disclosureIndicator,
                                 target: self,
                                 action: #selector(didTapLessonBatchSize(_:))))
+    model.add(TKMBasicModelItem(style: .value1,
+                                title: "Lesson apprentice limit",
+                                subtitle: apprenticeLessonsLimitText,
+                                accessoryType: .disclosureIndicator,
+                                target: self,
+                                action: #selector(didTapApprenticeLessonsLimit(_:))))
+
+    // apprenticeLessonsLimit
 
     model.addSection("Reviews")
     model.add(TKMBasicModelItem(style: .value1,
@@ -259,6 +267,12 @@ class SettingsViewController: UITableViewController {
     "\(Settings.lessonBatchSize)"
   }
 
+  private var apprenticeLessonsLimitText: String {
+    Settings.apprenticeLessonsLimit != Int.max
+      ? "\(Settings.apprenticeLessonsLimit)"
+      : "Disabled"
+  }
+
   private var reviewOrderValueText: String {
     Settings.reviewOrder.description
   }
@@ -429,6 +443,10 @@ class SettingsViewController: UITableViewController {
 
   @objc private func didTapLessonBatchSize(_: TKMBasicModelItem) {
     performSegue(withIdentifier: "lessonBatchSize", sender: self)
+  }
+
+  @objc private func didTapApprenticeLessonsLimit(_: TKMBasicModelItem) {
+    performSegue(withIdentifier: "apprenticeLessonsLimit", sender: self)
   }
 
   @objc private func didTapReviewBatchSize(_: TKMBasicModelItem) {

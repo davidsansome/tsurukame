@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0A943349E17FA7889EFEE41F /* Pods_Tsurukame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC80AAF9736A570E3C4CC09E /* Pods_Tsurukame.framework */; };
 		480B243123D6830300FC2A82 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 480B243023D6830300FC2A82 /* SwiftPackageProductDependency */; };
+		34D15E6525FEB348007114EF /* TKMLessonApprenticeLimitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D15E6425FEB348007114EF /* TKMLessonApprenticeLimitViewController.m */; };
 		481B2FED23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */; };
 		4820306724D849E100B40FDD /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* Settings.swift */; };
 		48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */; };
@@ -235,6 +236,8 @@
 		20A6D3E1C6F7A492EB9DDF0C /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		21894D9E0883B0107075DD6F /* Pods-Tsurukame.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame.release.xcconfig"; path = "Target Support Files/Pods-Tsurukame/Pods-Tsurukame.release.xcconfig"; sourceTree = "<group>"; };
 		301BAAC2C21E4A99238D1E80 /* Pods-FontScreenshotter-FontScreenshotterUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter-FontScreenshotterUITests.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests.release.xcconfig"; sourceTree = "<group>"; };
+		34D15E6325FEB348007114EF /* TKMLessonApprenticeLimitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMLessonApprenticeLimitViewController.h; sourceTree = "<group>"; };
+		34D15E6425FEB348007114EF /* TKMLessonApprenticeLimitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMLessonApprenticeLimitViewController.m; sourceTree = "<group>"; };
 		34E86AD95515CD815B3086D0 /* Pods-Tsurukame.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame.debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame/Pods-Tsurukame.debug.xcconfig"; sourceTree = "<group>"; };
 		404461BC39B4A19B128F9E69 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter_FontScreenshotterUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLevelReviewTimeItem.swift; sourceTree = "<group>"; };
@@ -591,6 +594,8 @@
 				633DE95B20C5635900AC25F4 /* TKMKanaInput.h */,
 				633DE95920C5635900AC25F4 /* TKMKanaInput.m */,
 				BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */,
+				34D15E6325FEB348007114EF /* TKMLessonApprenticeLimitViewController.h */,
+				34D15E6425FEB348007114EF /* TKMLessonApprenticeLimitViewController.m */,
 				63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */,
 				63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */,
 				4826740B23ECE46900F704E4 /* TKMReviewBatchSizeViewController.h */,
@@ -1302,6 +1307,7 @@
 				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
 				636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */,
+				34D15E6525FEB348007114EF /* TKMLessonApprenticeLimitViewController.m in Sources */,
 				63BFA78E218EB6890058E885 /* OfflineAudioViewController.swift in Sources */,
 				63A16786253AD8D200B5BCD6 /* LocalCachingClient.swift in Sources */,
 				63F7F52E23D4C2CA006A31FB /* Audio.swift in Sources */,

@@ -157,6 +157,7 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
     .vocabulary,
   ], "lessonOrder") static var lessonOrder: [TKMSubject.TypeEnum]
   @Setting(5, #keyPath(lessonBatchSize)) static var lessonBatchSize: Int
+  @Setting(Int.max, #keyPath(apprenticeLessonsLimit)) static var apprenticeLessonsLimit: Int
 
   @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
