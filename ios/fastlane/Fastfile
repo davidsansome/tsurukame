@@ -94,15 +94,44 @@ lane :beta do
 end
 
 lane :release do
-  match(type: "appstore")
+  match(
+    type: "appstore",
+    api_key_path: "fastlane/app_store_api_key.json",
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame$",
+    profile:ENV["sigh_com.davidsansome.wanikani_appstore_profile-path"],
+    build_configuration: "Release"
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame Complication$",
+    profile:ENV["sigh_com.davidsansome.wanikani.watchapp_appstore_profile-path"],
+    build_configuration: "Release"
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame Complication Extension$",
+    profile:ENV["sigh_com.davidsansome.wanikani.watchapp.c_appstore_profile-path"],
+    build_configuration: "Release"
+  )
+
   build_app(
     scheme: "Tsurukame",
     include_bitcode: true,
+    codesigning_identity: "Apple Distribution: David Sansome (7B2GP77Y4A)",
   )
+
   upload_to_app_store(
     app_icon: "Resources/appicon1024.png",
     submit_for_review: true,
     automatic_release: true,
+    phased_release: true,
+    api_key_path: "fastlane/app_store_api_key.json",
   )
   tag_release
 end
