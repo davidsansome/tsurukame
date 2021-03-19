@@ -1,3 +1,8 @@
-* Fixed a crash when trying to play audio while offline.
-* Added a skip button to skip a review.
-* Updated to the latest version of the WaniKani data.
+New features:
+* Always use the latest WaniKani meanings, mnemonics and levels.
+* Add an option that makes repeated incorrect answers count as multiple SRS-level penalties.
+
+Bug fixes and cleanups:
+* Allow hardware keyboard control during wrong answers.
+* Allow trailing n-kana completion in Gboard Godan layout.
+* Many internal changes to convert from Objective-C to Swift.
