@@ -133,6 +133,9 @@ lane :release do
     phased_release: true,
     api_key_path: "fastlane/app_store_api_key.json",
     precheck_include_in_app_purchases: false,
+    submission_information: {
+      add_id_info_uses_idfa: false
+    }
   )
   tag_release
 end
