@@ -112,6 +112,7 @@
 		63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */; };
 		63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
 		63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */; };
+		63CAB3FB2604A1450057E1C2 /* URLRequest+SetBodyTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CAB3FA2604A1450057E1C2 /* URLRequest+SetBodyTest.swift */; };
 		63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766221F47100002A417B /* TKMReviewContainerViewController.m */; };
 		63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766521F47669002A417B /* TKMReviewMenuViewController.m */; };
 		63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */; };
@@ -342,6 +343,7 @@
 		63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+LevenshteinDistance.m"; sourceTree = "<group>"; };
 		63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		63CAB3FA2604A1450057E1C2 /* URLRequest+SetBodyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+SetBodyTest.swift"; sourceTree = "<group>"; };
 		63CE766121F47100002A417B /* TKMReviewContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewContainerViewController.h; sourceTree = "<group>"; };
 		63CE766221F47100002A417B /* TKMReviewContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMReviewContainerViewController.m; sourceTree = "<group>"; };
 		63CE766421F47669002A417B /* TKMReviewMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewMenuViewController.h; sourceTree = "<group>"; };
@@ -724,6 +726,7 @@
 				63996BB62594754400149414 /* TestUtils.swift */,
 				BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */,
 				63996BE52595D1B700149414 /* WebClientTest.swift */,
+				63CAB3FA2604A1450057E1C2 /* URLRequest+SetBodyTest.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1400,6 +1403,7 @@
 				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
 				638D198C25C6B5C600B80544 /* ReviewItem.swift in Sources */,
 				63996B3C2594389500149414 /* LocalCachingClient.swift in Sources */,
+				63CAB3FB2604A1450057E1C2 /* URLRequest+SetBodyTest.swift in Sources */,
 				633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */,
 				63DB064125A0372E0071DC1C /* MarkupFormatter.swift in Sources */,
 				63DD391525C509D8004D4E5B /* ProtobufExtensions.swift in Sources */,

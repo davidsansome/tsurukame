@@ -14,6 +14,13 @@
 
 import Foundation
 
+extension CharacterSet {
+  // By default URLComponents.percentEncodedQuery doesn't encode the '+' character. The WaniKani
+  // server interprets this as a space instead, so make our own character set.
+  static let rfc3986Unreserved =
+    CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~")
+}
+
 extension URLRequest {
   mutating func setJSONBody<T: Codable>(method: String, body: T) throws {
     let data = try JSONEncoder().encode(body)
@@ -26,14 +33,16 @@ extension URLRequest {
   }
 
   mutating func setFormBody(method: String, queryItems: [URLQueryItem]) throws {
-    var components = URLComponents()
-    components.queryItems = queryItems
-
-    // By default URLComponents.percentEncodedQuery doesn't encode the '+' character. The WaniKani
-    // server interprets this as a space instead, so make sure we remove that from the allowed set.
-    var characterSet = CharacterSet.urlQueryAllowed
-    characterSet.remove("+")
-    let query = components.query!.addingPercentEncoding(withAllowedCharacters: characterSet)!
+    // Build the query string manually. We can't use URLComponents.percentEncodedQuery because it
+    // doesn't let us use custom character sets, and we can't use String.addingPercentEncoding on
+    // the whole thing because it would leave = and & unencoded.
+    var encodedQueryItems = [String]()
+    for queryItem in queryItems {
+      let name = queryItem.name.addingPercentEncoding(withAllowedCharacters: .rfc3986Unreserved)!
+      let value = queryItem.value!.addingPercentEncoding(withAllowedCharacters: .rfc3986Unreserved)!
+      encodedQueryItems.append("\(name)=\(value)")
+    }
+    let query = encodedQueryItems.joined(separator: "&")
     let data = query.data(using: .utf8)!
 
     setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
