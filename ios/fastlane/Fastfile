@@ -58,21 +58,21 @@ lane :beta do
     xcodeproj: "Tsurukame.xcodeproj",
     target_filter: "^Tsurukame$",
     profile:ENV["sigh_com.davidsansome.wanikani_appstore_profile-path"],
-    build_configuration: "Release"
+    build_configuration: "Release",
   )
 
   update_project_provisioning(
     xcodeproj: "Tsurukame.xcodeproj",
     target_filter: "^Tsurukame Complication$",
     profile:ENV["sigh_com.davidsansome.wanikani.watchapp_appstore_profile-path"],
-    build_configuration: "Release"
+    build_configuration: "Release",
   )
 
   update_project_provisioning(
     xcodeproj: "Tsurukame.xcodeproj",
     target_filter: "^Tsurukame Complication Extension$",
     profile:ENV["sigh_com.davidsansome.wanikani.watchapp.c_appstore_profile-path"],
-    build_configuration: "Release"
+    build_configuration: "Release",
   )
 
   build_app(
@@ -103,21 +103,21 @@ lane :release do
     xcodeproj: "Tsurukame.xcodeproj",
     target_filter: "^Tsurukame$",
     profile:ENV["sigh_com.davidsansome.wanikani_appstore_profile-path"],
-    build_configuration: "Release"
+    build_configuration: "Release",
   )
 
   update_project_provisioning(
     xcodeproj: "Tsurukame.xcodeproj",
     target_filter: "^Tsurukame Complication$",
     profile:ENV["sigh_com.davidsansome.wanikani.watchapp_appstore_profile-path"],
-    build_configuration: "Release"
+    build_configuration: "Release",
   )
 
   update_project_provisioning(
     xcodeproj: "Tsurukame.xcodeproj",
     target_filter: "^Tsurukame Complication Extension$",
     profile:ENV["sigh_com.davidsansome.wanikani.watchapp.c_appstore_profile-path"],
-    build_configuration: "Release"
+    build_configuration: "Release",
   )
 
   build_app(
