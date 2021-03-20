@@ -61,9 +61,9 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
 
     let comparator = { (a: Any, b: Any) -> ComparisonResult in
       guard let a = a as? SubjectModelItem,
-        let b = b as? SubjectModelItem,
-        let aAssignment = a.assignment,
-        let bAssignment = b.assignment else {
+            let b = b as? SubjectModelItem,
+            let aAssignment = a.assignment,
+            let bAssignment = b.assignment else {
         return .orderedSame
       }
 

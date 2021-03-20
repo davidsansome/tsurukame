@@ -83,15 +83,15 @@ extension FMResultSet: Sequence {
 }
 
 /** Protobuf decoding methods. */
-extension FMResultSet {
-  public func proto<T: SwiftProtobuf.Message>(forColumnIndex columnIndex: Int) -> T? {
+public extension FMResultSet {
+  func proto<T: SwiftProtobuf.Message>(forColumnIndex columnIndex: Int) -> T? {
     guard let d = data(forColumnIndex: Int32(columnIndex)) else {
       return nil
     }
     return try? T(serializedData: d)
   }
 
-  public func proto<T: SwiftProtobuf.Message>(forColumn column: String) -> T? {
+  func proto<T: SwiftProtobuf.Message>(forColumn column: String) -> T? {
     guard let d = data(forColumn: column) else {
       return nil
     }

@@ -817,6 +817,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				63EF57A826061C540038551A /* PBXTargetDependency */,
 				63E9A8E821199C8500418CE1 /* PBXTargetDependency */,
 			);
 			name = Tests;
@@ -1081,7 +1082,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd SwiftFormatTools\nSDKROOT=macosx #Swift Format itself always runs on Mac\n# swift run -c release swiftformat \"$SRCROOT\"\n\nset -e\ncd ../ # Back to previous directory\n\n# Run clang-format on all .h, .m or .mm files.\nfind . -not '(' \\\n       -path '*/Pods/*' -or \\\n       -name 'Reachability.*' -or \\\n       -name '*.pbobjc.*' \\\n     ')' -and '(' \\\n       -name '*.h' -or \\\n       -name '*.m' -or \\\n       -name '*.mm' \\\n     ')' \\\n     -exec ../utils/clang-format -style=file -i {} '+'\n";
+			shellScript = "cd SwiftFormatTools\nSDKROOT=macosx #Swift Format itself always runs on Mac\nswift run -c release swiftformat \"$SRCROOT\"\n\nset -e\ncd ../ # Back to previous directory\n\n# Run clang-format on all .h, .m or .mm files.\nfind . -not '(' \\\n       -path '*/Pods/*' -or \\\n       -name 'Reachability.*' -or \\\n       -name '*.pbobjc.*' \\\n     ')' -and '(' \\\n       -name '*.h' -or \\\n       -name '*.m' -or \\\n       -name '*.mm' \\\n     ')' \\\n     -exec ../utils/clang-format -style=file -i {} '+'\n";
 		};
 		7FE9DC587EA0191626D4E150 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1352,6 +1353,10 @@
 		63EF56FD26060BE50038551A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = 63EF56FC26060BE50038551A /* WaniKaniAPI */;
+		};
+		63EF57A826061C540038551A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 63EF57A726061C540038551A /* WaniKaniAPI */;
 		};
 		C90846BB237F1C790068A272 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2027,6 +2032,10 @@
 			productName = WaniKaniAPI;
 		};
 		63EF56FC26060BE50038551A /* WaniKaniAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WaniKaniAPI;
+		};
+		63EF57A726061C540038551A /* WaniKaniAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WaniKaniAPI;
 		};

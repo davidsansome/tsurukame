@@ -180,7 +180,7 @@ public extension TKMSubject {
     return .unknown
   }
 
-  public func japaneseText(imageSize: CGFloat) -> NSAttributedString {
+  func japaneseText(imageSize: CGFloat) -> NSAttributedString {
     if !hasRadical || !radical.hasCharacterImageFile_p {
       return NSAttributedString(string: japanese)
     }
@@ -196,9 +196,9 @@ public extension TKMSubject {
     return NSAttributedString(attachment: imageAttachment)
   }
 
-  public var japaneseText: NSAttributedString { japaneseText(imageSize: 0) }
+  var japaneseText: NSAttributedString { japaneseText(imageSize: 0) }
 
-  public var primaryMeaning: String {
+  var primaryMeaning: String {
     for meaning in meanings {
       if meaning.type == .primary {
         return meaning.meaning
@@ -217,14 +217,14 @@ public extension TKMSubject {
     return ret
   }
 
-  public var primaryReadings: [TKMReading] { readings(primary: true) }
-  public var alternateReadings: [TKMReading] { readings(primary: false) }
+  var primaryReadings: [TKMReading] { readings(primary: true) }
+  var alternateReadings: [TKMReading] { readings(primary: false) }
 
-  public func commaSeparatedMeanings(showOldMnemonic: Bool) -> String {
+  func commaSeparatedMeanings(showOldMnemonic: Bool) -> String {
     var strings = [String]()
     for meaning in meanings {
       if meaning.type != .blacklist,
-        meaning.type != .auxiliaryWhitelist || !hasRadical || showOldMnemonic {
+         meaning.type != .auxiliaryWhitelist || !hasRadical || showOldMnemonic {
         strings.append(meaning.meaning)
       }
     }
@@ -239,10 +239,10 @@ public extension TKMSubject {
     return strings.joined(separator: ", ")
   }
 
-  public var commaSeparatedReadings: String { commaSeparated(readings: readings) }
-  public var commaSeparatedPrimaryReadings: String { commaSeparated(readings: primaryReadings) }
+  var commaSeparatedReadings: String { commaSeparated(readings: readings) }
+  var commaSeparatedPrimaryReadings: String { commaSeparated(readings: primaryReadings) }
 
-  public func randomAudioID() -> Int {
+  func randomAudioID() -> Int {
     if !hasVocabulary || vocabulary.audioIds.count < 1 {
       return 0
     }
@@ -252,7 +252,7 @@ public extension TKMSubject {
 }
 
 public extension TKMReading {
-  public func displayText(useKatakanaForOnyomi: Bool) -> String {
+  func displayText(useKatakanaForOnyomi: Bool) -> String {
     if hasType, type == .onyomi, useKatakanaForOnyomi {
       return reading.applyingTransform(.hiraganaToKatakana, reverse: false)!
     }
@@ -310,7 +310,7 @@ extension TKMVocabulary.PartOfSpeech: CustomStringConvertible {
 }
 
 public extension TKMVocabulary {
-  public var commaSeparatedPartsOfSpeech: String {
+  var commaSeparatedPartsOfSpeech: String {
     var strings = [String]()
     for partOfSpeech in partsOfSpeech {
       strings.append(partOfSpeech.description)
@@ -322,10 +322,10 @@ public extension TKMVocabulary {
     partsOfSpeech.contains(partOfSpeech)
   }
 
-  public var isGodanVerb: Bool { isA(partOfSpeech: .godanVerb) }
-  public var isSuruVerb: Bool { isA(partOfSpeech: .suruVerb) }
-  public var isNoun: Bool { isA(partOfSpeech: .noun) }
-  public var isVerb: Bool {
+  var isGodanVerb: Bool { isA(partOfSpeech: .godanVerb) }
+  var isSuruVerb: Bool { isA(partOfSpeech: .suruVerb) }
+  var isNoun: Bool { isA(partOfSpeech: .noun) }
+  var isVerb: Bool {
     isA(partOfSpeech: .godanVerb) ||
       isA(partOfSpeech: .ichidanVerb) ||
       isA(partOfSpeech: .suruVerb) ||
@@ -333,30 +333,30 @@ public extension TKMVocabulary {
       isA(partOfSpeech: .intransitiveVerb)
   }
 
-  public var isAdjective: Bool {
+  var isAdjective: Bool {
     isA(partOfSpeech: .adjective) ||
       isA(partOfSpeech: .iAdjective) ||
       isA(partOfSpeech: .naAdjective) ||
       isA(partOfSpeech: .noAdjective)
   }
 
-  public var isPrefixOrSuffix: Bool { isA(partOfSpeech: .prefix) || isA(partOfSpeech: .suffix) }
+  var isPrefixOrSuffix: Bool { isA(partOfSpeech: .prefix) || isA(partOfSpeech: .suffix) }
 }
 
 private let kGuruStage = 5
 
 public extension TKMAssignment {
-  public var srsStage: SRSStage { SRSStage(rawValue: Int(srsStageNumber))! }
+  var srsStage: SRSStage { SRSStage(rawValue: Int(srsStageNumber))! }
 
-  public var isLessonStage: Bool { !isLocked && !hasStartedAt && srsStage == .unlocking }
-  public var isReviewStage: Bool { !isLocked && hasAvailableAt }
-  public var isBurned: Bool { srsStage == .burned }
-  public var isLocked: Bool { !hasSrsStageNumber }
-  public var availableAtDate: Date { Date(timeIntervalSince1970: TimeInterval(availableAt)) }
-  public var startedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(startedAt)) }
-  public var passedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(passedAt)) }
+  var isLessonStage: Bool { !isLocked && !hasStartedAt && srsStage == .unlocking }
+  var isReviewStage: Bool { !isLocked && hasAvailableAt }
+  var isBurned: Bool { srsStage == .burned }
+  var isLocked: Bool { !hasSrsStageNumber }
+  var availableAtDate: Date { Date(timeIntervalSince1970: TimeInterval(availableAt)) }
+  var startedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(startedAt)) }
+  var passedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(passedAt)) }
 
-  public var reviewDate: Date? {
+  var reviewDate: Date? {
     if isBurned || isLocked {
       return nil
     }
@@ -378,7 +378,7 @@ public extension TKMAssignment {
     return reviewDate
   }
 
-  public func guruDate(subject: TKMSubject) -> Date? {
+  func guruDate(subject: TKMSubject) -> Date? {
     if hasPassedAt, srsStage > .guru1 {
       return passedAtDate
     } else if srsStage >= .guru1 {
@@ -391,23 +391,23 @@ public extension TKMAssignment {
 }
 
 public extension TKMProgress {
-  public var createdAtDate: Date { Date(timeIntervalSince1970: TimeInterval(createdAt)) }
+  var createdAtDate: Date { Date(timeIntervalSince1970: TimeInterval(createdAt)) }
 }
 
 public extension TKMUser {
-  public var startedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(startedAt)) }
-  public var currentLevel: Int32 { min(level, maxLevelGrantedBySubscription) }
+  var startedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(startedAt)) }
+  var currentLevel: Int32 { min(level, maxLevelGrantedBySubscription) }
 }
 
 public extension TKMLevel {
-  public var unlockedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(unlockedAt)) }
-  public var startedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(startedAt)) }
-  public var passedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(passedAt)) }
-  public var abandonedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(abandonedAt)) }
-  public var completedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(completedAt)) }
-  public var createdAtDate: Date { Date(timeIntervalSince1970: TimeInterval(createdAt)) }
+  var unlockedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(unlockedAt)) }
+  var startedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(startedAt)) }
+  var passedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(passedAt)) }
+  var abandonedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(abandonedAt)) }
+  var completedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(completedAt)) }
+  var createdAtDate: Date { Date(timeIntervalSince1970: TimeInterval(createdAt)) }
 
-  public var timeSpentCurrent: TimeInterval {
+  var timeSpentCurrent: TimeInterval {
     if !hasUnlockedAt {
       return 0
     }

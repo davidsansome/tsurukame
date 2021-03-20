@@ -196,7 +196,7 @@ public class WaniKaniAPIClient: NSObject {
         seenIds.insert(id)
 
         if let objectType = data.object,
-          let subject = data.data.toProto(id: id, objectType: objectType) {
+           let subject = data.data.toProto(id: id, objectType: objectType) {
           ret.append(subject)
         }
       }
@@ -312,8 +312,8 @@ public class WaniKaniAPIClient: NSObject {
     }.then { (response: PaginatedResponse<[DataType]>) -> Promise<Response<[DataType]>> in
       // Set the total progress unit count if this was the first page.
       if progress.totalUnitCount == -1,
-        let totalCount = response.total_count,
-        let perPage = response.pages?.per_page {
+         let totalCount = response.total_count,
+         let perPage = response.pages?.per_page {
         progress.totalUnitCount = max(1, Int64(ceil(Double(totalCount) / Double(perPage))))
         progress.completedUnitCount = 1
       } else {
@@ -326,7 +326,7 @@ public class WaniKaniAPIClient: NSObject {
 
       // If there's a next page, request that.
       if let pages = response.pages, let nextURLString = pages.next_url,
-        let nextURL = URL(string: nextURLString) {
+         let nextURL = URL(string: nextURLString) {
         return self.pagedQuery(url: nextURL, results: results, progress: progress)
       }
 

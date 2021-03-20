@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
 
   func getTimelineEndDate(for _: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
     if let data = DataManager.sharedInstance.latestData,
-      let dataSentAt = data[WatchHelper.keySentAt] as? EpochTimeInt,
-      let hourlyCounts = data[WatchHelper.keyReviewUpcomingHourlyCounts] as? [Int] {
+       let dataSentAt = data[WatchHelper.keySentAt] as? EpochTimeInt,
+       let hourlyCounts = data[WatchHelper.keyReviewUpcomingHourlyCounts] as? [Int] {
       let endInterval = TimeInterval((60 * 60 * 24) * hourlyCounts.count)
       let endDate = Date(timeIntervalSince1970: TimeInterval(dataSentAt))
         .addingTimeInterval(endInterval)
@@ -84,9 +84,9 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                           withHandler handler: @escaping ([CLKComplicationTimelineEntry]?)
                             -> Void) {
     if DataManager.sharedInstance.dataSource == .ReviewCounts,
-      let data = DataManager.sharedInstance.latestData,
-      let dataSentAt = data[WatchHelper.keySentAt] as? EpochTimeInt,
-      let hourlyCounts = data[WatchHelper.keyReviewUpcomingHourlyCounts] as? [Int] {
+       let data = DataManager.sharedInstance.latestData,
+       let dataSentAt = data[WatchHelper.keySentAt] as? EpochTimeInt,
+       let hourlyCounts = data[WatchHelper.keyReviewUpcomingHourlyCounts] as? [Int] {
       var entries: [CLKComplicationTimelineEntry] = []
       for (idx, _) in hourlyCounts.enumerated() {
         if idx > 23 {
@@ -105,8 +105,8 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
       }
       handler(entries)
     } else if let staleDate = DataManager.sharedInstance.dataStaleAfter(),
-      after.distance(to: staleDate) >= 0,
-      let staleEntry = staleTimelineEntry(complication: complication) {
+              after.distance(to: staleDate) >= 0,
+              let staleEntry = staleTimelineEntry(complication: complication) {
       handler([staleEntry])
     } else {
       handler(nil)
@@ -115,7 +115,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
 
   func staleTimelineEntry(complication: CLKComplication) -> CLKComplicationTimelineEntry? {
     if let staleDate = DataManager.sharedInstance.dataStaleAfter(),
-      let template = templateForStaleData(complication) {
+       let template = templateForStaleData(complication) {
       return CLKComplicationTimelineEntry(date: staleDate, complicationTemplate: template)
     }
     return nil
@@ -180,8 +180,8 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
       }
 
       if let offsetIdx = offset,
-        let hourlyCounts = data[WatchHelper.keyReviewUpcomingHourlyCounts] as? [Int],
-        hourlyCounts.count >= offsetIdx + 2 {
+         let hourlyCounts = data[WatchHelper.keyReviewUpcomingHourlyCounts] as? [Int],
+         hourlyCounts.count >= offsetIdx + 2 {
         reviewsPending = hourlyCounts[offsetIdx]
         nextHour = hourlyCounts[offsetIdx + 1]
         nextReview = nil

@@ -681,7 +681,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   func nextCustomFont(thatCanRenderText _: String) -> String? {
     if let availableFonts = self.availableFonts,
-      let index = availableFonts.firstIndex(of: currentFontName) {
+       let index = availableFonts.firstIndex(of: currentFontName) {
       if index + 1 >= availableFonts.count {
         return availableFonts.first
       } else {
@@ -693,7 +693,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   func previousCustomFont(thatCanRenderText _: String) -> String? {
     if let availableFonts = self.availableFonts,
-      let index = availableFonts.firstIndex(of: currentFontName) {
+       let index = availableFonts.firstIndex(of: currentFontName) {
       if index == 0 {
         return availableFonts.last
       } else {
@@ -979,7 +979,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Keep the cursor in the text field on OtherKanjiReading or ContainsInvalidCharacters
     // AnswerCheckerResult cases except when subject details are displayed.
     if subjectDetailsView.isHidden,
-      activeTask.answer.hasMeaningWrong || activeTask.answer.hasReadingWrong {
+       activeTask.answer.hasMeaningWrong || activeTask.answer.hasReadingWrong {
       return false
     }
 
@@ -991,7 +991,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       return
     }
     if Settings.allowSkippingReviews,
-      answerField.text!.trimmingCharacters(in: .whitespaces).isEmpty {
+       answerField.text!.trimmingCharacters(in: .whitespaces).isEmpty {
       markAnswer(.AskAgainLater)
       return
     }
@@ -1150,7 +1150,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Show a new task if it was correct.
     if result != .Incorrect {
       if Settings.playAudioAutomatically, activeTaskType == .reading,
-        activeSubject.hasVocabulary, !activeSubject.vocabulary.audioIds.isEmpty {
+         activeSubject.hasVocabulary, !activeSubject.vocabulary.audioIds.isEmpty {
         services.audio.play(subjectID: activeSubject!.id, delegate: nil)
       }
 

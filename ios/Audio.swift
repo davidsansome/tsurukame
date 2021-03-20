@@ -122,7 +122,7 @@ class Audio: NSObject {
                              context _: UnsafeMutableRawPointer?) {
     if keyPath == "currentItem.status" {
       guard let player = player,
-        let currentItem = player.currentItem else {
+            let currentItem = player.currentItem else {
         return
       }
 
@@ -146,7 +146,7 @@ class Audio: NSObject {
 
   private func showErrorDialog(_ error: Error) {
     guard let currentItem = player?.currentItem,
-      let asset = currentItem.asset as? AVURLAsset else {
+          let asset = currentItem.asset as? AVURLAsset else {
       return
     }
 

@@ -109,15 +109,18 @@ class SubjectModelView: TKMModelCell {
       switch item.subject.subjectType {
       case .radical:
         readingLabel.isHidden = true
-        meaningLabel.text = item.subject.commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
+        meaningLabel.text = item.subject
+          .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
       case .kanji:
         readingLabel.isHidden = false
         readingLabel.text = item.subject.commaSeparatedPrimaryReadings
-        meaningLabel.text = item.subject.commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
+        meaningLabel.text = item.subject
+          .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
       case .vocabulary:
         readingLabel.isHidden = false
         readingLabel.text = item.subject.commaSeparatedReadings
-        meaningLabel.text = item.subject.commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
+        meaningLabel.text = item.subject
+          .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
       default:
         break
       }

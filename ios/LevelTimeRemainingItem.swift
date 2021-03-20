@@ -37,7 +37,7 @@ private func calculateLevelTimeRemaining(services: TKMServices,
       continue
     }
     guard let subject = services.localCachingClient.getSubject(id: assignment.subjectID),
-      let guruDate = assignment.guruDate(subject: subject) else {
+          let guruDate = assignment.guruDate(subject: subject) else {
       continue
     }
     radicalDates.append(guruDate)
@@ -56,7 +56,7 @@ private func calculateLevelTimeRemaining(services: TKMServices,
       continue
     }
     guard let subject = services.localCachingClient.getSubject(id: assignment.subjectID),
-      let guruDate = assignment.guruDate(subject: subject) else {
+          let guruDate = assignment.guruDate(subject: subject) else {
       continue
     }
     guruDates.append(guruDate)

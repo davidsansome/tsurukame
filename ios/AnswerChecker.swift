@@ -149,7 +149,7 @@ import WaniKaniAPI
         }
       }
       if subject.hasVocabulary, subject.japanese.count == 1,
-        subject.componentSubjectIds.count == 1 {
+         subject.componentSubjectIds.count == 1 {
         // If the vocabulary is made up of only one Kanji, check whether the user wrote the Kanji
         // reading instead of the vocabulary reading.
         if let kanji = localCachingClient

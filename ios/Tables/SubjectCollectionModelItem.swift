@@ -51,7 +51,7 @@ private class SubjectCollectionModelView: TKMModelCell {
     // Create a chip for each subject.
     for subjectId in item.subjects {
       if let subject = item.localCachingClient.getSubject(id: subjectId),
-        let delegate = item.delegate {
+         let delegate = item.delegate {
         let chip = SubjectChip(subject: subject, showMeaning: true, delegate: delegate)
         contentView.addSubview(chip)
         chips.append(chip)

@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ class AnswerTextField: UITextField {
   @objc public class var japaneseTextInputMode: UITextInputMode? {
     for textInputMode in UITextInputMode.activeInputModes {
       if let primaryLanguage = textInputMode.primaryLanguage,
-        primaryLanguage.starts(with: "ja") {
+         primaryLanguage.starts(with: "ja") {
         return textInputMode
       }
     }

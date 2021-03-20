@@ -380,8 +380,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
   func updateUserInfo() {
     guard let user = services.localCachingClient.getUserInfo(),
-      let headerView = headerView,
-      Settings.userEmailAddress != "" else { return }
+          let headerView = headerView,
+          Settings.userEmailAddress != "" else { return }
     let email = Settings.userEmailAddress
     let guruKanji = services.localCachingClient.guruKanjiCount
     let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)

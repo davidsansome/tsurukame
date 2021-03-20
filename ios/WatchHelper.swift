@@ -108,8 +108,8 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
       // If the user is in the vocab and technically levels up but has 0
       // learned treat it as the prior level and set halfLevel=true
       if learnedCount == 0,
-        let assignment = assignmentsAtCurrentLevel.first,
-        assignment.level > 0 {
+         let assignment = assignmentsAtCurrentLevel.first,
+         assignment.level > 0 {
         halfLevel = true
         assignmentsAtCurrentLevel = client.getAssignments(level: Int(assignment.level) - 1)
         learnedCount = assignmentsAtCurrentLevel.filter { (assignment) -> Bool in
@@ -174,7 +174,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
 
   func shouldSendPacket(packet: [String: Any]) -> Bool {
     guard let lastSignature = lastPacketSignature,
-      let lastSent = lastPacketSentAt else {
+          let lastSent = lastPacketSentAt else {
       // The first one's always free.
       return true
     }

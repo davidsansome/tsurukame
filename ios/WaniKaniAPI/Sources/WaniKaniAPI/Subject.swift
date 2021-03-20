@@ -195,8 +195,8 @@ struct SubjectData: Codable {
     if let character_images = character_images {
       for image in character_images {
         if image.content_type == "image/svg+xml",
-          let inline_styles = image.metadata.inline_styles,
-          inline_styles {
+           let inline_styles = image.metadata.inline_styles,
+           inline_styles {
           return image.url
         }
       }
@@ -209,8 +209,8 @@ struct SubjectData: Codable {
     if let pronunciation_audios = pronunciation_audios {
       for audio in pronunciation_audios {
         if audio.content_type == "audio/mpeg",
-          let dash = audio.url.firstIndex(of: "-"),
-          let id = Int32(audio.url[audio.url.index(audio.url.startIndex, offsetBy: 32) ..< dash]) {
+           let dash = audio.url.firstIndex(of: "-"),
+           let id = Int32(audio.url[audio.url.index(audio.url.startIndex, offsetBy: 32) ..< dash]) {
           ret.append(id)
         }
       }

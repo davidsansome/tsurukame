@@ -49,7 +49,7 @@ private func renderMeanings(subject: TKMSubject,
   }
   for meaning in subject.meanings {
     if meaning.type != .primary, meaning.type != .blacklist,
-      meaning.type != .auxiliaryWhitelist || !subject.hasRadical || Settings.showOldMnemonic {
+       meaning.type != .auxiliaryWhitelist || !subject.hasRadical || Settings.showOldMnemonic {
       let font = UIFont.systemFont(ofSize: kFontSize, weight: .light)
       strings.append(attrString(meaning.meaning, attrs: [.font: font]))
     }
@@ -65,14 +65,19 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
       if !primaryOnly, readings.count > 1 {
         font = TKMStyle.japaneseFontBold(size: kFontSize)
       }
-      strings.append(attrString(reading.displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi), attrs: [.font: font]))
+      strings
+        .append(attrString(reading.displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi),
+                           attrs: [.font: font]))
     }
   }
   if !primaryOnly {
     let font = TKMStyle.japaneseFontLight(size: kFontSize)
     for reading in readings {
       if !reading.isPrimary {
-        strings.append(attrString(reading.displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi), attrs: [.font: font]))
+        strings
+          .append(attrString(reading
+              .displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi),
+            attrs: [.font: font]))
       }
     }
   }

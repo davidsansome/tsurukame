@@ -30,7 +30,7 @@ class SRSStageCategoryItem: TKMBasicModelItem {
     var color = TKMStyle.color(forSRSStageCategory: stageCategory)
 
     if #available(iOS 13.0, *), stageCategory == .burned,
-      UITraitCollection.current.userInterfaceStyle == .dark {
+       UITraitCollection.current.userInterfaceStyle == .dark {
       color = UIColor.label
     }
     textColor = color

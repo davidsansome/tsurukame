@@ -1,4 +1,4 @@
-// Copyright 2020 David Sansome
+// Copyright 2021 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -185,7 +185,7 @@ open class Snapshot: NSObject {
 
       let screenshot = XCUIScreen.main.screenshot()
       guard var simulator = ProcessInfo().environment["SIMULATOR_DEVICE_NAME"],
-        let screenshotsDir = screenshotsDirectory else { return }
+            let screenshotsDir = screenshotsDirectory else { return }
 
       do {
         // The simulator name contains "Clone X of " inside the screenshot file when running parallelized UI Tests on concurrent devices

@@ -80,7 +80,7 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate {
     for section in 0 ..< model.sectionCount {
       model.sortSection(section) { (itemA, itemB) -> ComparisonResult in
         if let itemA = itemA as? SubjectModelItem, let itemB = itemB as? SubjectModelItem,
-          let a = itemA.assignment, let b = itemB.assignment {
+           let a = itemA.assignment, let b = itemB.assignment {
           if a.isLocked, !b.isLocked { return .orderedDescending }
           if !a.isLocked, b.isLocked { return .orderedAscending }
           if a.isReviewStage, !b.isReviewStage { return .orderedAscending }
