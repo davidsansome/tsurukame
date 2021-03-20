@@ -16,7 +16,7 @@ import Foundation
 import PromiseKit
 
 @objc
-enum WaniKaniWebClientError: Int, Error {
+enum WaniKaniWebClientError: Int, LocalizedError {
   case csrfTokenNotFound
   case apiTokenNotFound
   case emailNotFound
@@ -24,7 +24,7 @@ enum WaniKaniWebClientError: Int, Error {
   case badCredentials
   case unknown
 
-  var localizedDescription: String {
+  var errorDescription: String? {
     switch self {
     case .csrfTokenNotFound:
       return "CSRF token not found"

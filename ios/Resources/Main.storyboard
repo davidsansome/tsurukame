@@ -24,7 +24,7 @@
         <!--Login View Controller-->
         <scene sceneID="WF6-O5-sla">
             <objects>
-                <viewController storyboardIdentifier="login" id="RE3-Ck-N2j" customClass="LoginViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="login" id="RE3-Ck-N2j" customClass="LoginViewController" customModule="Tsurukame" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dX7-mn-Kqu">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -56,7 +56,7 @@
                                     <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="didTapSignInButton:" destination="RE3-Ck-N2j" eventType="touchUpInside" id="o4R-XY-8aQ"/>
+                                    <action selector="didTapSignInButton" destination="RE3-Ck-N2j" eventType="touchUpInside" id="ZUH-s5-wJR"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This app uses your WaniKani credentials to synchronise your progress with the WaniKani website." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XQW-gv-i5e">
@@ -72,7 +72,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="didTapPrivacyPolicyButton:" destination="RE3-Ck-N2j" eventType="touchUpInside" id="l1n-Ab-3lP"/>
+                                    <action selector="didTapPrivacyPolicyButton" destination="RE3-Ck-N2j" eventType="touchDragInside" id="15x-gX-AOL"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in to your WaniKani account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d7n-s4-OyH">

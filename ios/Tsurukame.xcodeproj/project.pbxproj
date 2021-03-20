@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A943349E17FA7889EFEE41F /* Pods_Tsurukame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC80AAF9736A570E3C4CC09E /* Pods_Tsurukame.framework */; };
-		480B243123D6830300FC2A82 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 480B243023D6830300FC2A82 /* SwiftPackageProductDependency */; };
+		480B243123D6830300FC2A82 /* Rexy in Frameworks */ = {isa = PBXBuildFile; productRef = 480B243023D6830300FC2A82 /* Rexy */; };
 		481B2FED23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */; };
 		4820306724D849E100B40FDD /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* Settings.swift */; };
 		48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */; };
@@ -27,7 +27,6 @@
 		6335B4C823CF0D390071671E /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B48C23CF0D390071671E /* SnapshotHelper.swift */; };
 		6335B4E723CF14280071671E /* Screenshotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B4E623CF14280071671E /* Screenshotter.swift */; };
 		633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */; };
-		633632EC201F3011006D582B /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633632EB201F3011006D582B /* LoginViewController.m */; };
 		633632EF201F3490006D582B /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* Settings.swift */; };
 		633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE023516BE7004F732F /* SubjectDetailsView.swift */; };
 		633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */; };
@@ -58,7 +57,7 @@
 		637CA11525D7E48A0082580E /* LessonsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA11425D7E48A0082580E /* LessonsViewController.swift */; };
 		637CA12C25D7EDFF0082580E /* ReviewSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */; };
 		637CA17625D7F2C70082580E /* wanikani.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA17525D7F2C70082580E /* wanikani.pb.swift */; };
-		637CA18725D7F5A10082580E /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 637CA18625D7F5A10082580E /* SwiftPackageProductDependency */; };
+		637CA18725D7F5A10082580E /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 637CA18625D7F5A10082580E /* SwiftProtobuf */; };
 		637CA1BF25D806B60082580E /* wanikani.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA17525D7F2C70082580E /* wanikani.pb.swift */; };
 		637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6364A10A242DFB6F000ABF32 /* Intents.framework */; };
 		638A5C4E25A471F9001A7AEE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5C4D25A471F9001A7AEE /* AppDelegate.swift */; };
@@ -135,6 +134,7 @@
 		63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */; };
 		63E9E51121F424690022C16E /* TKMDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9E51021F424690022C16E /* TKMDownloadViewController.m */; };
 		63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63EEFEBC1FC45C440070C05F /* Assets.xcassets */; };
+		63EF5730260616420038551A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EF572F260616420038551A /* LoginViewController.swift */; };
 		63F7F51F23D3F335006A31FB /* ReadingModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */; };
 		63F7F52123D3F36E006A31FB /* AttributedModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */; };
 		63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52423D429A4006A31FB /* String+MD5.swift */; };
@@ -259,8 +259,6 @@
 		6335B46623CF0C820071671E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6335B48C23CF0D390071671E /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		6335B4E623CF14280071671E /* Screenshotter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screenshotter.swift; sourceTree = "<group>"; };
-		633632EA201F3011006D582B /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		633632EB201F3011006D582B /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		633632EE201F3490006D582B /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		633AFAE023516BE7004F732F /* SubjectDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsView.swift; sourceTree = "<group>"; };
 		633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyHighlighter.swift; sourceTree = "<group>"; };
@@ -370,6 +368,7 @@
 		63E9E51021F424690022C16E /* TKMDownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMDownloadViewController.m; sourceTree = "<group>"; };
 		63EEFEBC1FC45C440070C05F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63EEFEC21FC45CB10070C05F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63EF572F260616420038551A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadingModelItem.swift; sourceTree = "<group>"; };
 		63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedModelItem.swift; sourceTree = "<group>"; };
 		63F7F52223D423E9006A31FB /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -421,8 +420,8 @@
 			files = (
 				637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */,
 				63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */,
-				480B243123D6830300FC2A82 /* BuildFile in Frameworks */,
-				637CA18725D7F5A10082580E /* BuildFile in Frameworks */,
+				480B243123D6830300FC2A82 /* Rexy in Frameworks */,
+				637CA18725D7F5A10082580E /* SwiftProtobuf in Frameworks */,
 				0A943349E17FA7889EFEE41F /* Pods_Tsurukame.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -517,6 +516,7 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				63EF572F260616420038551A /* LoginViewController.swift */,
 				637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
@@ -543,8 +543,6 @@
 				637CA11425D7E48A0082580E /* LessonsViewController.swift */,
 				631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */,
 				63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */,
-				633632EA201F3011006D582B /* LoginViewController.h */,
-				633632EB201F3011006D582B /* LoginViewController.m */,
 				638A5C6B25ADBB86001A7AEE /* main.swift */,
 				636A63E6238A607A00902269 /* MainHeaderView.swift */,
 				636A63E3238A5D6B00902269 /* MainHeaderView.xib */,
@@ -797,8 +795,8 @@
 			);
 			name = Tsurukame;
 			packageProductDependencies = (
-				480B243023D6830300FC2A82 /* SwiftPackageProductDependency */,
-				637CA18625D7F5A10082580E /* SwiftPackageProductDependency */,
+				480B243023D6830300FC2A82 /* Rexy */,
+				637CA18625D7F5A10082580E /* SwiftProtobuf */,
 			);
 			productName = wk;
 			productReference = 6319C9B520441DE200C31F87 /* Tsurukame.app */;
@@ -973,8 +971,8 @@
 			);
 			mainGroup = 630FD60A1FC45BDF00D21C1F;
 			packageReferences = (
-				480B242F23D6830300FC2A82 /* RemoteSwiftPackageReference */,
-				637CA18525D7F5A10082580E /* RemoteSwiftPackageReference */,
+				480B242F23D6830300FC2A82 /* XCRemoteSwiftPackageReference "Rexy" */,
+				637CA18525D7F5A10082580E /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 			);
 			productRefGroup = 630FD60A1FC45BDF00D21C1F;
 			projectDirPath = "";
@@ -1267,6 +1265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63EF5730260616420038551A /* LoginViewController.swift in Sources */,
 				638D197525C6AA4B00B80544 /* MarkupModelItem.swift in Sources */,
 				63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */,
 				63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */,
@@ -1342,7 +1341,6 @@
 				636502B325D7A39600801C2D /* SubjectsRemainingViewController.swift in Sources */,
 				630EB10A25C561A900783E54 /* NSMutableAttributedString+Replacements.swift in Sources */,
 				635D0079218D94AA006CD711 /* TKMGradientView.m in Sources */,
-				633632EC201F3011006D582B /* LoginViewController.m in Sources */,
 				63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */,
 				63C74BD125C82B1D004F6C99 /* SubjectCollectionModelItem.swift in Sources */,
 				63FCAE78237F75CC00DB1418 /* Style.swift in Sources */,
@@ -2066,7 +2064,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		480B242F23D6830300FC2A82 /* RemoteSwiftPackageReference */ = {
+		480B242F23D6830300FC2A82 /* XCRemoteSwiftPackageReference "Rexy" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vadymmarkov/Rexy";
 			requirement = {
@@ -2074,7 +2072,7 @@
 				version = 1.0.1;
 			};
 		};
-		637CA18525D7F5A10082580E /* RemoteSwiftPackageReference */ = {
+		637CA18525D7F5A10082580E /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf";
 			requirement = {
@@ -2085,14 +2083,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		480B243023D6830300FC2A82 /* SwiftPackageProductDependency */ = {
+		480B243023D6830300FC2A82 /* Rexy */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 480B242F23D6830300FC2A82 /* RemoteSwiftPackageReference */;
+			package = 480B242F23D6830300FC2A82 /* XCRemoteSwiftPackageReference "Rexy" */;
 			productName = Rexy;
 		};
-		637CA18625D7F5A10082580E /* SwiftPackageProductDependency */ = {
+		637CA18625D7F5A10082580E /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 637CA18525D7F5A10082580E /* RemoteSwiftPackageReference */;
+			package = 637CA18525D7F5A10082580E /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobuf;
 		};
 /* End XCSwiftPackageProductDependency section */
