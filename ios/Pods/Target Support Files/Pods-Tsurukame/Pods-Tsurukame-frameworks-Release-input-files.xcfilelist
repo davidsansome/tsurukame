@@ -5,4 +5,3 @@ ${BUILT_PRODUCTS_DIR}/Charts/Charts.framework
 ${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework
 ${BUILT_PRODUCTS_DIR}/Light-Untar/Light_Untar.framework
 ${BUILT_PRODUCTS_DIR}/MMDrawerController/MMDrawerController.framework
-${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework

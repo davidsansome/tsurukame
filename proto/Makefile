@@ -1,7 +1,11 @@
 .PHONY : generate
 
-generate: wanikani.pb.go
-	protoc --experimental_allow_proto3_optional --swift_out=../ios/proto wanikani.proto
+generate: wanikani_api.pb.go
+	protoc \
+		--experimental_allow_proto3_optional \
+		--swift_out=../ios/WaniKaniAPI/Sources/WaniKaniAPI \
+		--swift_opt=Visibility=Public \
+		wanikani_api.proto
 
-wanikani.pb.go: ../proto/wanikani.proto
+wanikani_api.pb.go: ../proto/wanikani_api.proto
 	go generate .

@@ -14,6 +14,7 @@
 
 import Foundation
 import PromiseKit
+import WaniKaniAPI
 
 private let kDefaultProfileImageURL =
   "https://cdn.wanikani.com/default-avatar-300x300-20121121.png"

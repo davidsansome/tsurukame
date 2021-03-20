@@ -15,6 +15,7 @@
 import Foundation
 import PromiseKit
 import Reachability
+import WaniKaniAPI
 
 #if !DEBUG
 

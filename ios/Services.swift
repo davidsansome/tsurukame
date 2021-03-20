@@ -14,6 +14,7 @@
 
 import Foundation
 import Reachability
+import WaniKaniAPI
 
 @objc
 @objcMembers

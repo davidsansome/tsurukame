@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import WaniKaniAPI
 
 class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
   private var services: TKMServices!

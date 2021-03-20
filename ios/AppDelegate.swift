@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import WaniKaniAPI
 import UIKit
 
 class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelegate {

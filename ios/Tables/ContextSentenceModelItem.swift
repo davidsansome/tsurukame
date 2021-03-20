@@ -14,6 +14,7 @@
 
 import Accelerate
 import Foundation
+import WaniKaniAPI
 
 private let kBlurKernelSize: UInt32 = 19
 private let kBlurAlpha: CGFloat = 0.75

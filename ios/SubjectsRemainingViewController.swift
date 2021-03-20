@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import WaniKaniAPI
 
 class SubjectsRemainingViewController: UITableViewController, SubjectDelegate {
   var services: TKMServices!

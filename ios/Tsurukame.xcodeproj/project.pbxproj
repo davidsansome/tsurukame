@@ -56,36 +56,22 @@
 		636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E6238A607A00902269 /* MainHeaderView.swift */; };
 		637CA11525D7E48A0082580E /* LessonsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA11425D7E48A0082580E /* LessonsViewController.swift */; };
 		637CA12C25D7EDFF0082580E /* ReviewSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */; };
-		637CA17625D7F2C70082580E /* wanikani.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA17525D7F2C70082580E /* wanikani.pb.swift */; };
 		637CA18725D7F5A10082580E /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 637CA18625D7F5A10082580E /* SwiftProtobuf */; };
-		637CA1BF25D806B60082580E /* wanikani.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA17525D7F2C70082580E /* wanikani.pb.swift */; };
 		637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6364A10A242DFB6F000ABF32 /* Intents.framework */; };
 		638A5C4E25A471F9001A7AEE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5C4D25A471F9001A7AEE /* AppDelegate.swift */; };
 		638A5C6C25ADBB86001A7AEE /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5C6B25ADBB86001A7AEE /* main.swift */; };
-		638A5CAF25ADC844001A7AEE /* FakeSubjectLevelGetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5CAE25ADC844001A7AEE /* FakeSubjectLevelGetter.swift */; };
 		638D197525C6AA4B00B80544 /* MarkupModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638D197425C6AA4B00B80544 /* MarkupModelItem.swift */; };
 		638D198C25C6B5C600B80544 /* ReviewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB13E25C5713000783E54 /* ReviewItem.swift */; };
 		6392DBA420D130FB003019EB /* TKMSubjectModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */; };
 		639528ED25CC0688009845ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639528EC25CC0688009845ED /* SettingsViewController.swift */; };
 		639528FD25CC2F4F009845ED /* LessonOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639528FC25CC2F4F009845ED /* LessonOrderViewController.swift */; };
 		6398480E23D699E70077EB6B /* ContextSentenceModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */; };
-		63996AE02594236F00149414 /* APIClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63996ADF2594236F00149414 /* APIClientTest.swift */; };
-		63996B0D2594356E00149414 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1678F253AD8E600B5BCD6 /* APIClient.swift */; };
 		63996B15259435DF00149414 /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52423D429A4006A31FB /* String+MD5.swift */; };
-		63996B24259436F500149414 /* URLRequest+SetBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1676E253AD8AD00B5BCD6 /* URLRequest+SetBody.swift */; };
-		63996B2C2594383C00149414 /* WebClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16790253AD8E600B5BCD6 /* WebClient.swift */; };
-		63996B342594387100149414 /* NSRegularExpression+Matches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1676D253AD8AD00B5BCD6 /* NSRegularExpression+Matches.swift */; };
 		63996B3C2594389500149414 /* LocalCachingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */; };
 		63996B44259438C400149414 /* FMDatabase+Assert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */; };
-		63996BB72594754400149414 /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63996BB62594754400149414 /* TestUtils.swift */; };
-		63996BE62595D1B700149414 /* WebClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63996BE52595D1B700149414 /* WebClientTest.swift */; };
-		63A16772253AD8AE00B5BCD6 /* NSRegularExpression+Matches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1676D253AD8AD00B5BCD6 /* NSRegularExpression+Matches.swift */; };
-		63A16773253AD8AE00B5BCD6 /* URLRequest+SetBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1676E253AD8AD00B5BCD6 /* URLRequest+SetBody.swift */; };
 		63A16774253AD8AE00B5BCD6 /* CGContext+Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1676F253AD8AD00B5BCD6 /* CGContext+Blur.swift */; };
 		63A16775253AD8AE00B5BCD6 /* FMDatabase+Assert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */; };
 		63A16786253AD8D200B5BCD6 /* LocalCachingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */; };
-		63A16791253AD8E600B5BCD6 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1678F253AD8E600B5BCD6 /* APIClient.swift */; };
-		63A16792253AD8E600B5BCD6 /* WebClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16790253AD8E600B5BCD6 /* WebClient.swift */; };
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */; };
 		63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
@@ -112,21 +98,11 @@
 		63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */; };
 		63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */; };
 		63CAB3FB2604A1450057E1C2 /* URLRequest+SetBodyTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CAB3FA2604A1450057E1C2 /* URLRequest+SetBodyTest.swift */; };
+		63CAB5012605FB1B0057E1C2 /* PromiseKit in Frameworks */ = {isa = PBXBuildFile; productRef = 63CAB5002605FB1B0057E1C2 /* PromiseKit */; };
 		63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766221F47100002A417B /* TKMReviewContainerViewController.m */; };
 		63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766521F47669002A417B /* TKMReviewMenuViewController.m */; };
 		63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */; };
-		63DB064025A0372E0071DC1C /* MarkupFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */; };
-		63DB064125A0372E0071DC1C /* MarkupFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */; };
-		63DB064B25A03BD50071DC1C /* MarkupFormatterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB064925A03BD50071DC1C /* MarkupFormatterTest.swift */; };
 		63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */; };
-		63DB06C125A091710071DC1C /* old-mnemonics.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06C025A091710071DC1C /* old-mnemonics.json */; };
-		63DB06C225A091710071DC1C /* old-mnemonics.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06C025A091710071DC1C /* old-mnemonics.json */; };
-		63DB06D225A091FF0071DC1C /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB06D125A091FF0071DC1C /* Subject.swift */; };
-		63DB06D325A091FF0071DC1C /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB06D125A091FF0071DC1C /* Subject.swift */; };
-		63DB06EA25A09AA00071DC1C /* visually-similar-kanji.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */; };
-		63DB06EB25A09AA00071DC1C /* visually-similar-kanji.json in Resources */ = {isa = PBXBuildFile; fileRef = 63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */; };
-		63DD391425C509D8004D4E5B /* ProtobufExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */; };
-		63DD391525C509D8004D4E5B /* ProtobufExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
 		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
 		63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */; };
@@ -134,7 +110,10 @@
 		63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */; };
 		63E9E51121F424690022C16E /* TKMDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9E51021F424690022C16E /* TKMDownloadViewController.m */; };
 		63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63EEFEBC1FC45C440070C05F /* Assets.xcassets */; };
-		63EF5730260616420038551A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EF572F260616420038551A /* LoginViewController.swift */; };
+		63EF56DE26060B980038551A /* WaniKaniAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 63EF56DD26060B980038551A /* WaniKaniAPI */; };
+		63EF56E026060BA00038551A /* WaniKaniAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 63EF56DF26060BA00038551A /* WaniKaniAPI */; };
+		63EF56E226060BA70038551A /* WaniKaniAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 63EF56E126060BA70038551A /* WaniKaniAPI */; };
+		63EF5752260617E30038551A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EF5751260617E30038551A /* LoginViewController.swift */; };
 		63F7F51F23D3F335006A31FB /* ReadingModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */; };
 		63F7F52123D3F36E006A31FB /* AttributedModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */; };
 		63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52423D429A4006A31FB /* String+MD5.swift */; };
@@ -291,25 +270,16 @@
 		636A63E6238A607A00902269 /* MainHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHeaderView.swift; sourceTree = "<group>"; };
 		637CA11425D7E48A0082580E /* LessonsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsViewController.swift; sourceTree = "<group>"; };
 		637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewSummaryViewController.swift; sourceTree = "<group>"; };
-		637CA17525D7F2C70082580E /* wanikani.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = wanikani.pb.swift; path = proto/wanikani.pb.swift; sourceTree = "<group>"; };
 		638A5C4D25A471F9001A7AEE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		638A5C6B25ADBB86001A7AEE /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		638A5CAE25ADC844001A7AEE /* FakeSubjectLevelGetter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeSubjectLevelGetter.swift; sourceTree = "<group>"; };
 		638D197425C6AA4B00B80544 /* MarkupModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkupModelItem.swift; sourceTree = "<group>"; };
 		6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMSubjectModelItem.xib; sourceTree = "<group>"; };
 		639528EC25CC0688009845ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		639528FC25CC2F4F009845ED /* LessonOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonOrderViewController.swift; sourceTree = "<group>"; };
 		6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContextSentenceModelItem.swift; path = Tables/ContextSentenceModelItem.swift; sourceTree = "<group>"; };
-		63996ADF2594236F00149414 /* APIClientTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTest.swift; sourceTree = "<group>"; };
-		63996BB62594754400149414 /* TestUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUtils.swift; sourceTree = "<group>"; };
-		63996BE52595D1B700149414 /* WebClientTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClientTest.swift; sourceTree = "<group>"; };
-		63A1676D253AD8AD00B5BCD6 /* NSRegularExpression+Matches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSRegularExpression+Matches.swift"; sourceTree = "<group>"; };
-		63A1676E253AD8AD00B5BCD6 /* URLRequest+SetBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLRequest+SetBody.swift"; sourceTree = "<group>"; };
 		63A1676F253AD8AD00B5BCD6 /* CGContext+Blur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGContext+Blur.swift"; sourceTree = "<group>"; };
 		63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FMDatabase+Assert.swift"; sourceTree = "<group>"; };
 		63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalCachingClient.swift; sourceTree = "<group>"; };
-		63A1678F253AD8E600B5BCD6 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
-		63A16790253AD8E600B5BCD6 /* WebClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebClient.swift; sourceTree = "<group>"; };
 		63A2375F1FE9264300C48657 /* UIColor+HexString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
 		63A237601FE9264300C48657 /* UIColor+HexString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
 		63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMLessonBatchSizeViewController.h; sourceTree = "<group>"; };
@@ -342,18 +312,13 @@
 		63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		63CAB3FA2604A1450057E1C2 /* URLRequest+SetBodyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+SetBodyTest.swift"; sourceTree = "<group>"; };
+		63CAB4F72605F9AF0057E1C2 /* WaniKaniAPI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = WaniKaniAPI; sourceTree = "<group>"; };
 		63CE766121F47100002A417B /* TKMReviewContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewContainerViewController.h; sourceTree = "<group>"; };
 		63CE766221F47100002A417B /* TKMReviewContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMReviewContainerViewController.m; sourceTree = "<group>"; };
 		63CE766421F47669002A417B /* TKMReviewMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewMenuViewController.h; sourceTree = "<group>"; };
 		63CE766521F47669002A417B /* TKMReviewMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMReviewMenuViewController.m; sourceTree = "<group>"; };
 		63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+InterfaceStyle.swift"; sourceTree = "<group>"; };
-		63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkupFormatter.swift; sourceTree = "<group>"; };
-		63DB064925A03BD50071DC1C /* MarkupFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkupFormatterTest.swift; sourceTree = "<group>"; };
 		63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingAppDelegate.swift; sourceTree = "<group>"; };
-		63DB06C025A091710071DC1C /* old-mnemonics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "old-mnemonics.json"; sourceTree = "<group>"; };
-		63DB06D125A091FF0071DC1C /* Subject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
-		63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "visually-similar-kanji.json"; sourceTree = "<group>"; };
-		63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtobufExtensions.swift; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMListSeparatorItem.xib; sourceTree = "<group>"; };
 		63E9A8CF2110859800418CE1 /* TKMListSeparatorItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMListSeparatorItem.h; sourceTree = "<group>"; };
@@ -368,7 +333,7 @@
 		63E9E51021F424690022C16E /* TKMDownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMDownloadViewController.m; sourceTree = "<group>"; };
 		63EEFEBC1FC45C440070C05F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63EEFEC21FC45CB10070C05F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		63EF572F260616420038551A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		63EF5751260617E30038551A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadingModelItem.swift; sourceTree = "<group>"; };
 		63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedModelItem.swift; sourceTree = "<group>"; };
 		63F7F52223D423E9006A31FB /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -418,7 +383,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63EF56DE26060B980038551A /* WaniKaniAPI in Frameworks */,
 				637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */,
+				63CAB5012605FB1B0057E1C2 /* PromiseKit in Frameworks */,
 				63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */,
 				480B243123D6830300FC2A82 /* Rexy in Frameworks */,
 				637CA18725D7F5A10082580E /* SwiftProtobuf in Frameworks */,
@@ -438,6 +405,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C82B2908507339A293B0E59 /* Pods_FontScreenshotter.framework in Frameworks */,
+				63EF56E226060BA70038551A /* WaniKaniAPI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,6 +422,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F5E95176B5DCA719A6EED55 /* Pods_Tests.framework in Frameworks */,
+				63EF56E026060BA00038551A /* WaniKaniAPI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,9 +454,7 @@
 				6365041E25D7DE0900801C2D /* Lessons.storyboard */,
 				6365041525D7DDB700801C2D /* Reviews.storyboard */,
 				6365040C25D7DC8000801C2D /* Settings.storyboard */,
-				63DB06C025A091710071DC1C /* old-mnemonics.json */,
 				489894D423670CB000A20AF8 /* Tsurukame.entitlements */,
-				63DB06E925A09A9F0071DC1C /* visually-similar-kanji.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -498,17 +465,14 @@
 				63A1676F253AD8AD00B5BCD6 /* CGContext+Blur.swift */,
 				63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */,
 				630EB10925C561A900783E54 /* NSMutableAttributedString+Replacements.swift */,
-				63A1676D253AD8AD00B5BCD6 /* NSRegularExpression+Matches.swift */,
 				63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */,
 				63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */,
-				63DD391325C509D8004D4E5B /* ProtobufExtensions.swift */,
 				63F7F52423D429A4006A31FB /* String+MD5.swift */,
 				63A2375F1FE9264300C48657 /* UIColor+HexString.h */,
 				63A237601FE9264300C48657 /* UIColor+HexString.m */,
 				63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */,
 				63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */,
 				63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */,
-				63A1676E253AD8AD00B5BCD6 /* URLRequest+SetBody.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -516,8 +480,6 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
-				63EF572F260616420038551A /* LoginViewController.swift */,
-				637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				638A5C4D25A471F9001A7AEE /* AppDelegate.swift */,
@@ -543,6 +505,7 @@
 				637CA11425D7E48A0082580E /* LessonsViewController.swift */,
 				631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */,
 				63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */,
+				63EF5751260617E30038551A /* LoginViewController.swift */,
 				638A5C6B25ADBB86001A7AEE /* main.swift */,
 				636A63E6238A607A00902269 /* MainHeaderView.swift */,
 				636A63E3238A5D6B00902269 /* MainHeaderView.xib */,
@@ -551,12 +514,12 @@
 				63BDA9A6200E04E500D75DA2 /* NavigationController.m */,
 				63BFA78D218EB6890058E885 /* OfflineAudioViewController.swift */,
 				684AE501E6BF8ED5D65DA298 /* Pods */,
-				63CAAAD61FC6E0BF00E09DA1 /* proto */,
 				63A16765253AD87800B5BCD6 /* Recovered References */,
 				41897D922372287F00F6A0B7 /* Resources */,
 				630EB13E25C5713000783E54 /* ReviewItem.swift */,
 				633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */,
 				633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */,
+				637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */,
 				633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */,
 				633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */,
 				631CAD71234B4A96008CEA73 /* ReviewViewController.swift */,
@@ -605,7 +568,7 @@
 				6319C9B520441DE200C31F87 /* Tsurukame.app */,
 				93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */,
 				633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */,
-				63A1678E253AD8E600B5BCD6 /* WaniKaniAPI */,
+				63CAB4F72605F9AF0057E1C2 /* WaniKaniAPI */,
 				C92AB96E237F280300F79904 /* WatchHelper.swift */,
 			);
 			sourceTree = "<group>";
@@ -665,17 +628,6 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
-		63A1678E253AD8E600B5BCD6 /* WaniKaniAPI */ = {
-			isa = PBXGroup;
-			children = (
-				63A1678F253AD8E600B5BCD6 /* APIClient.swift */,
-				63DB063F25A0372E0071DC1C /* MarkupFormatter.swift */,
-				63DB06D125A091FF0071DC1C /* Subject.swift */,
-				63A16790253AD8E600B5BCD6 /* WebClient.swift */,
-			);
-			path = WaniKaniAPI;
-			sourceTree = "<group>";
-		};
 		63C42A2421B6A28D008CA938 /* FontScreenshotter */ = {
 			isa = PBXGroup;
 			children = (
@@ -685,14 +637,6 @@
 				63C42A3121B6A290008CA938 /* Info.plist */,
 			);
 			path = FontScreenshotter;
-			sourceTree = "<group>";
-		};
-		63CAAAD61FC6E0BF00E09DA1 /* proto */ = {
-			isa = PBXGroup;
-			children = (
-				637CA17525D7F2C70082580E /* wanikani.pb.swift */,
-			);
-			name = proto;
 			sourceTree = "<group>";
 		};
 		63CAAB0F1FD7FAC500E09DA1 /* Frameworks */ = {
@@ -715,15 +659,10 @@
 			isa = PBXGroup;
 			children = (
 				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
-				63996ADF2594236F00149414 /* APIClientTest.swift */,
-				638A5CAE25ADC844001A7AEE /* FakeSubjectLevelGetter.swift */,
 				63E9A8E621199C8500418CE1 /* Info.plist */,
-				63DB064925A03BD50071DC1C /* MarkupFormatterTest.swift */,
 				63F7F52623D42BC1006A31FB /* String+MD5Test.swift */,
 				63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */,
-				63996BB62594754400149414 /* TestUtils.swift */,
 				BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */,
-				63996BE52595D1B700149414 /* WebClientTest.swift */,
 				63CAB3FA2604A1450057E1C2 /* URLRequest+SetBodyTest.swift */,
 			);
 			path = Tests;
@@ -791,12 +730,15 @@
 			buildRules = (
 			);
 			dependencies = (
+				63EF56FD26060BE50038551A /* PBXTargetDependency */,
 				C90846C7237F1C790068A272 /* PBXTargetDependency */,
 			);
 			name = Tsurukame;
 			packageProductDependencies = (
 				480B243023D6830300FC2A82 /* Rexy */,
 				637CA18625D7F5A10082580E /* SwiftProtobuf */,
+				63CAB5002605FB1B0057E1C2 /* PromiseKit */,
+				63EF56DD26060B980038551A /* WaniKaniAPI */,
 			);
 			productName = wk;
 			productReference = 6319C9B520441DE200C31F87 /* Tsurukame.app */;
@@ -835,6 +777,9 @@
 			dependencies = (
 			);
 			name = FontScreenshotter;
+			packageProductDependencies = (
+				63EF56E126060BA70038551A /* WaniKaniAPI */,
+			);
 			productName = FontScreenshotter;
 			productReference = 63C42A2321B6A28D008CA938 /* FontScreenshotter.app */;
 			productType = "com.apple.product-type.application";
@@ -875,6 +820,9 @@
 				63E9A8E821199C8500418CE1 /* PBXTargetDependency */,
 			);
 			name = Tests;
+			packageProductDependencies = (
+				63EF56DF26060BA00038551A /* WaniKaniAPI */,
+			);
 			productName = Tests;
 			productReference = 63E9A8E221199C8500418CE1 /* Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -973,6 +921,7 @@
 			packageReferences = (
 				480B242F23D6830300FC2A82 /* XCRemoteSwiftPackageReference "Rexy" */,
 				637CA18525D7F5A10082580E /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+				63CAB4FF2605FB1B0057E1C2 /* XCRemoteSwiftPackageReference "PromiseKit" */,
 			);
 			productRefGroup = 630FD60A1FC45BDF00D21C1F;
 			projectDirPath = "";
@@ -1001,9 +950,7 @@
 				6365041625D7DDB700801C2D /* Reviews.storyboard in Resources */,
 				63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */,
 				63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */,
-				63DB06C125A091710071DC1C /* old-mnemonics.json in Resources */,
 				6365041F25D7DE0900801C2D /* Lessons.storyboard in Resources */,
-				63DB06EA25A09AA00071DC1C /* visually-similar-kanji.json in Resources */,
 				63BFA78B218EB1B30058E885 /* TKMDownloadModelItem.xib in Resources */,
 				6365042825D7DE3600801C2D /* Subjects.storyboard in Resources */,
 				6365040D25D7DC8000801C2D /* Settings.storyboard in Resources */,
@@ -1040,8 +987,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63DB06EB25A09AA00071DC1C /* visually-similar-kanji.json in Resources */,
-				63DB06C225A091710071DC1C /* old-mnemonics.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1070,25 +1015,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Tsurukame/Pods-Tsurukame-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Haneke/Haneke.framework",
-				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
-				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
-				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
-				"${BUILT_PRODUCTS_DIR}/Light-Untar/Light_Untar.framework",
-				"${BUILT_PRODUCTS_DIR}/MMDrawerController/MMDrawerController.framework",
-				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tsurukame/Pods-Tsurukame-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Haneke.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Light_Untar.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMDrawerController.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tsurukame/Pods-Tsurukame-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1122,13 +1054,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Hippolyte/Hippolyte.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hippolyte.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1150,7 +1081,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd SwiftFormatTools\nSDKROOT=macosx #Swift Format itself always runs on Mac\nswift run -c release swiftformat \"$SRCROOT\"\n\nset -e\ncd ../ # Back to previous directory\n\n# Run clang-format on all .h, .m or .mm files.\nfind . -not '(' \\\n       -path '*/Pods/*' -or \\\n       -name 'Reachability.*' -or \\\n       -name '*.pbobjc.*' \\\n     ')' -and '(' \\\n       -name '*.h' -or \\\n       -name '*.m' -or \\\n       -name '*.mm' \\\n     ')' \\\n     -exec ../utils/clang-format -style=file -i {} '+'\n";
+			shellScript = "cd SwiftFormatTools\nSDKROOT=macosx #Swift Format itself always runs on Mac\n# swift run -c release swiftformat \"$SRCROOT\"\n\nset -e\ncd ../ # Back to previous directory\n\n# Run clang-format on all .h, .m or .mm files.\nfind . -not '(' \\\n       -path '*/Pods/*' -or \\\n       -name 'Reachability.*' -or \\\n       -name '*.pbobjc.*' \\\n     ')' -and '(' \\\n       -name '*.h' -or \\\n       -name '*.m' -or \\\n       -name '*.mm' \\\n     ')' \\\n     -exec ../utils/clang-format -style=file -i {} '+'\n";
 		};
 		7FE9DC587EA0191626D4E150 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1179,15 +1110,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Haneke/Haneke.framework",
-				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Haneke.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1243,15 +1171,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Haneke/Haneke.framework",
-				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Haneke.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1265,7 +1190,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63EF5730260616420038551A /* LoginViewController.swift in Sources */,
 				638D197525C6AA4B00B80544 /* MarkupModelItem.swift in Sources */,
 				63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */,
 				63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */,
@@ -1273,14 +1197,11 @@
 				63E9E51121F424690022C16E /* TKMDownloadViewController.m in Sources */,
 				630ADB6F21F8256E00BC9801 /* TKMCheckmarkModelItem.m in Sources */,
 				633632EF201F3490006D582B /* Settings.swift in Sources */,
-				637CA17625D7F2C70082580E /* wanikani.pb.swift in Sources */,
 				63A16775253AD8AE00B5BCD6 /* FMDatabase+Assert.swift in Sources */,
 				637CA12C25D7EDFF0082580E /* ReviewSummaryViewController.swift in Sources */,
 				63C74BC825C822C9004F6C99 /* SubjectModelItem.swift in Sources */,
 				638A5C6C25ADBB86001A7AEE /* main.swift in Sources */,
 				6398480E23D699E70077EB6B /* ContextSentenceModelItem.swift in Sources */,
-				63A16792253AD8E600B5BCD6 /* WebClient.swift in Sources */,
-				63DD391425C509D8004D4E5B /* ProtobufExtensions.swift in Sources */,
 				63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */,
 				63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */,
 				BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */,
@@ -1288,10 +1209,8 @@
 				63F7F51F23D3F335006A31FB /* ReadingModelItem.swift in Sources */,
 				633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */,
 				633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */,
-				63A16772253AD8AE00B5BCD6 /* NSRegularExpression+Matches.swift in Sources */,
 				631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
 				63C74C6825C96088004F6C99 /* SubjectChip.swift in Sources */,
-				63DB06D225A091FF0071DC1C /* Subject.swift in Sources */,
 				6335B4E723CF14280071671E /* Screenshotter.swift in Sources */,
 				63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */,
 				636A63DE238A107A00902269 /* CurrentLevelChartItem.swift in Sources */,
@@ -1300,6 +1219,7 @@
 				630EB13F25C5713000783E54 /* ReviewItem.swift in Sources */,
 				63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */,
 				C9164D3923D0CFCF00B6D93A /* InterfaceStyleViewController.swift in Sources */,
+				63EF5752260617E30038551A /* LoginViewController.swift in Sources */,
 				633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */,
 				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
@@ -1310,10 +1230,8 @@
 				93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */,
 				63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */,
 				48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */,
-				63A16773253AD8AE00B5BCD6 /* URLRequest+SetBody.swift in Sources */,
 				63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */,
 				633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */,
-				63DB064025A0372E0071DC1C /* MarkupFormatter.swift in Sources */,
 				C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */,
 				633DE95520C5634A00AC25F4 /* TKMSwitchModelItem.m in Sources */,
 				63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */,
@@ -1322,7 +1240,6 @@
 				639528ED25CC0688009845ED /* SettingsViewController.swift in Sources */,
 				631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */,
 				63C74C8F25C970DA004F6C99 /* SubjectsByLevelViewController.swift in Sources */,
-				63A16791253AD8E600B5BCD6 /* APIClient.swift in Sources */,
 				63F7F52923D42C6E006A31FB /* MainViewController.swift in Sources */,
 				636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */,
 				481B2FED23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */,
@@ -1387,29 +1304,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63996AE02594236F00149414 /* APIClientTest.swift in Sources */,
-				63996B0D2594356E00149414 /* APIClient.swift in Sources */,
-				63996B24259436F500149414 /* URLRequest+SetBody.swift in Sources */,
-				63996BB72594754400149414 /* TestUtils.swift in Sources */,
 				63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */,
 				63F7F52823D42BDD006A31FB /* String+MD5Test.swift in Sources */,
-				637CA1BF25D806B60082580E /* wanikani.pb.swift in Sources */,
-				63996B2C2594383C00149414 /* WebClient.swift in Sources */,
-				63DB064B25A03BD50071DC1C /* MarkupFormatterTest.swift in Sources */,
-				63DB06D325A091FF0071DC1C /* Subject.swift in Sources */,
 				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
 				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
 				638D198C25C6B5C600B80544 /* ReviewItem.swift in Sources */,
 				63996B3C2594389500149414 /* LocalCachingClient.swift in Sources */,
 				63CAB3FB2604A1450057E1C2 /* URLRequest+SetBodyTest.swift in Sources */,
 				633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */,
-				63DB064125A0372E0071DC1C /* MarkupFormatter.swift in Sources */,
-				63DD391525C509D8004D4E5B /* ProtobufExtensions.swift in Sources */,
-				638A5CAF25ADC844001A7AEE /* FakeSubjectLevelGetter.swift in Sources */,
 				4820306724D849E100B40FDD /* Settings.swift in Sources */,
 				63996B15259435DF00149414 /* String+MD5.swift in Sources */,
-				63996BE62595D1B700149414 /* WebClientTest.swift in Sources */,
-				63996B342594387100149414 /* NSRegularExpression+Matches.swift in Sources */,
 				631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */,
 				63996B44259438C400149414 /* FMDatabase+Assert.swift in Sources */,
 			);
@@ -1444,6 +1348,10 @@
 			isa = PBXTargetDependency;
 			target = 630FD6121FC45BDF00D21C1F /* Tsurukame */;
 			targetProxy = 63E9A8E721199C8500418CE1 /* PBXContainerItemProxy */;
+		};
+		63EF56FD26060BE50038551A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 63EF56FC26060BE50038551A /* WaniKaniAPI */;
 		};
 		C90846BB237F1C790068A272 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2080,6 +1988,14 @@
 				minimumVersion = 1.15.0;
 			};
 		};
+		63CAB4FF2605FB1B0057E1C2 /* XCRemoteSwiftPackageReference "PromiseKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mxcl/PromiseKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.13.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2092,6 +2008,27 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 637CA18525D7F5A10082580E /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobuf;
+		};
+		63CAB5002605FB1B0057E1C2 /* PromiseKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 63CAB4FF2605FB1B0057E1C2 /* XCRemoteSwiftPackageReference "PromiseKit" */;
+			productName = PromiseKit;
+		};
+		63EF56DD26060B980038551A /* WaniKaniAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WaniKaniAPI;
+		};
+		63EF56DF26060BA00038551A /* WaniKaniAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WaniKaniAPI;
+		};
+		63EF56E126060BA70038551A /* WaniKaniAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WaniKaniAPI;
+		};
+		63EF56FC26060BE50038551A /* WaniKaniAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WaniKaniAPI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

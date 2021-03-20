@@ -13,11 +13,12 @@
 // limitations under the License.
 
 import Foundation
+import WaniKaniAPI
 
-@objc class SRSStageCategoryItem: TKMBasicModelItem {
+class SRSStageCategoryItem: TKMBasicModelItem {
   let stageCategory: SRSStageCategory
 
-  @objc init(stageCategory: SRSStageCategory, count: Int) {
+  init(stageCategory: SRSStageCategory, count: Int) {
     self.stageCategory = stageCategory
     super.init(style: .value1,
                title: stageCategory.description,

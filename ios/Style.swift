@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import WaniKaniAPI
 
 private func UIColorFromHex(_ hexColor: Int32) -> UIColor {
   let red = (CGFloat)((hexColor & 0xFF0000) >> 16) / 255
@@ -40,11 +41,10 @@ private func AdaptiveColorHex(light: Int32, dark: Int32) -> UIColor {
 }
 
 @objc
-@objcMembers
 class TKMStyle: NSObject {
   // MARK: - Shadows
 
-  class func addShadowToView(_ view: UIView, offset: Float, opacity: Float, radius: Float) {
+  @objc class func addShadowToView(_ view: UIView, offset: Float, opacity: Float, radius: Float) {
     view.layer.shadowColor = UIColor.black.cgColor
     view.layer.shadowOffset = CGSize(width: 0.0, height: Double(offset))
     view.layer.shadowOpacity = opacity
@@ -54,7 +54,7 @@ class TKMStyle: NSObject {
 
   // MARK: - WaniKani colors and gradients
 
-  static let defaultTintColor = UIColor(red: 0.0, green: 122.0 / 255.0, blue: 1.0, alpha: 1.0)
+  @objc static let defaultTintColor = UIColor(red: 0.0, green: 122.0 / 255.0, blue: 1.0, alpha: 1.0)
   static let radicalColor1 = AdaptiveColorHex(light: 0x00AAFF, dark: 0x006090)
   static let radicalColor2 = AdaptiveColorHex(light: 0x0093DD, dark: 0x005080)
   static let kanjiColor1 = AdaptiveColorHex(light: 0xFF00AA, dark: 0x940060)

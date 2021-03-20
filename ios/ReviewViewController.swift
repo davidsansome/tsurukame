@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import WaniKaniAPI
 
 private let kDefaultAnimationDuration: TimeInterval = 0.25
 // Undocumented, but it's what the keyboard animations use.

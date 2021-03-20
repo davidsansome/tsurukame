@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import WaniKaniAPI
 
 private let kSectionHeaderHeight: CGFloat = 38.0
 private let kSectionFooterHeight: CGFloat = 0.0
@@ -64,14 +65,14 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
       if !primaryOnly, readings.count > 1 {
         font = TKMStyle.japaneseFontBold(size: kFontSize)
       }
-      strings.append(attrString(reading.displayText, attrs: [.font: font]))
+      strings.append(attrString(reading.displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi), attrs: [.font: font]))
     }
   }
   if !primaryOnly {
     let font = TKMStyle.japaneseFontLight(size: kFontSize)
     for reading in readings {
       if !reading.isPrimary {
-        strings.append(attrString(reading.displayText, attrs: [.font: font]))
+        strings.append(attrString(reading.displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi), attrs: [.font: font]))
       }
     }
   }

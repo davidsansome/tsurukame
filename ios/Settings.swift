@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import WaniKaniAPI
 
 @objc enum ReviewOrder: UInt, Codable, CustomStringConvertible {
   case random = 1
