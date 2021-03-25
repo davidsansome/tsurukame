@@ -928,11 +928,11 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
         self.fetchUserInfo(progress: childProgress(1)),
         self.fetchLevelProgression(progress: childProgress(1)),
       ])
-    }.done {
+    }.ensure {
       self._availableSubjects.invalidate()
       self._srsCategoryCounts.invalidate()
       postNotificationOnMainQueue(.lccUserInfoChanged)
-    }.ensure {
+
       self.busy = false
       progress.completedUnitCount = progress.totalUnitCount
     }.catch(handleError)
