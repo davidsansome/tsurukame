@@ -137,7 +137,7 @@ public class WaniKaniWebClient: NSObject {
 
   private func createApiToken(cookie: String) -> Promise<String> {
     firstly { () -> DataTaskPromise in
-      let req = authorize(kNewAccessTokenUrl, cookie: cookie)
+      let req = authorize(kAccessTokenUrl, cookie: cookie)
       return request(req)
     }.then { (arg) -> DataTaskPromise in
       let csrfToken = try self.extractCSRFToken(arg.data)
@@ -155,7 +155,7 @@ public class WaniKaniWebClient: NSObject {
         URLQueryItem(name: "utf8", value: "✓"),
       ]
 
-      var req = self.authorize(kNewAccessTokenUrl, cookie: cookie)
+      var req = self.authorize(kAccessTokenUrl, cookie: cookie)
       try req.setFormBody(method: "POST", queryItems: queryItems)
       return request(req)
     }.map { (arg) throws -> String in
@@ -220,8 +220,6 @@ private let kWanikaniSessionCookieName = "_wanikani_session"
 private let kAccountUrl = URL(string: "https://www.wanikani.com/settings/account")!
 private let kAccessTokenUrl =
   URL(string: "https://www.wanikani.com/settings/personal_access_tokens")!
-private let kNewAccessTokenUrl =
-  URL(string: "https://www.wanikani.com/settings/personal_access_tokens/new")!
 private let kLoginUrl = URL(string: "https://www.wanikani.com/login")!
 private let kDashboardUrl = URL(string: "https://www.wanikani.com/dashboard")!
 
