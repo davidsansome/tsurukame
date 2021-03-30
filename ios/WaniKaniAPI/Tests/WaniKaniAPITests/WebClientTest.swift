@@ -75,13 +75,13 @@ class WebClientTest: XCTestCase {
     """.data(using: .utf8)
 
     createApiTokenGet = StubRequest(method: .GET, url:
-      URL(string: "https://www.wanikani.com/settings/personal_access_tokens/new")!)
+      URL(string: "https://www.wanikani.com/settings/personal_access_tokens")!)
     createApiTokenGet.response.body = """
       <meta name="csrf-token" content="foobar123"/>
     """.data(using: .utf8)
 
     createApiToken = StubRequest(method: .POST, url:
-      URL(string: "https://www.wanikani.com/settings/personal_access_tokens/new")!)
+      URL(string: "https://www.wanikani.com/settings/personal_access_tokens")!)
     createApiToken.setHeader(key: "Cookie", value: "_wanikani_session=sessioncookie2")
     createApiToken
       .bodyMatcher = StringMatcher(string: "personal_access_token%5Bdescription%5D=Tsurukame&" +

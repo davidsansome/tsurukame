@@ -43,7 +43,7 @@ public class WaniKaniAPIClient: NSObject {
     super.init()
   }
 
-  func updateApiToken(_ apiToken: String) {
+  public func updateApiToken(_ apiToken: String) {
     self.apiToken = apiToken
   }
 

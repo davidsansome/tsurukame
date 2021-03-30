@@ -21,7 +21,7 @@ extension CharacterSet {
     CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~")
 }
 
-extension URLRequest {
+public extension URLRequest {
   mutating func setJSONBody<T: Codable>(method: String, body: T) throws {
     let data = try JSONEncoder().encode(body)
 
