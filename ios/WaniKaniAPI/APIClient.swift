@@ -29,7 +29,7 @@ protocol SubjectLevelGetter: AnyObject {
 class WaniKaniAPIClient: NSObject {
   weak var subjectLevelGetter: SubjectLevelGetter!
 
-  private let apiToken: String
+  private var apiToken: String
   private let session: URLSession
 
   @objc
@@ -41,6 +41,10 @@ class WaniKaniAPIClient: NSObject {
     session = URLSession(configuration: sessionConfig)
 
     super.init()
+  }
+
+  func updateApiToken(_ apiToken: String) {
+    self.apiToken = apiToken
   }
 
   // MARK: - Retrieving data
