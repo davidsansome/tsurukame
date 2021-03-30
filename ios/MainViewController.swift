@@ -436,9 +436,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   func loginComplete() {
-    // TODO: uncomment
-    // services.localCachingClient.client
-    //  .updateApiToken(Settings.userApiToken, cookie: Settings.userCookie)
+    services.localCachingClient.client.updateApiToken(Settings.userApiToken)
     navigationController?.popViewController(animated: true)
     isShowingUnauthorizedAlert = false
   }
