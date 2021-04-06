@@ -89,7 +89,7 @@ class SettingsViewController: UITableViewController {
                                 action: #selector(didTapLessonBatchSize(_:))))
     model.add(TKMSwitchModelItem(style: .subtitle,
                                  title: "Show stats section",
-                                 subtitle: "Show view with level, SRS stage, and more",
+                                 subtitle: "Show section with level, SRS stage, and more",
                                  on: Settings.showStatsSection,
                                  target: self,
                                  action: #selector(showStatsSectionChanged(_:))))
