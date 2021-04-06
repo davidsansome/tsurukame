@@ -87,6 +87,12 @@ class SettingsViewController: UITableViewController {
                                 accessoryType: .disclosureIndicator,
                                 target: self,
                                 action: #selector(didTapLessonBatchSize(_:))))
+    model.add(TKMSwitchModelItem(style: .subtitle,
+                                 title: "Show stats section",
+                                 subtitle: "Show view with level, SRS stage, and more",
+                                 on: Settings.showStatsSection,
+                                 target: self,
+                                 action: #selector(showStatsSectionChanged(_:))))
 
     model.addSection("Reviews")
     model.add(TKMBasicModelItem(style: .value1,
@@ -290,6 +296,10 @@ class SettingsViewController: UITableViewController {
 
   @objc private func prioritizeCurrentLevelChanged(_ switchView: UISwitch) {
     Settings.prioritizeCurrentLevel = switchView.isOn
+  }
+  
+  @objc private func showStatsSectionChanged(_ switchView: UISwitch) {
+    Settings.showStatsSection = switchView.isOn
   }
 
   @objc private func groupMeaningReadingSwitchChanged(_ switchView: UISwitch) {

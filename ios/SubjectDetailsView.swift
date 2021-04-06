@@ -347,7 +347,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     }
 
     // Your progress, SRS level, next review, first started, reached guru
-    if let subjectAssignment = assignment {
+    if let subjectAssignment = assignment, Settings.showStatsSection {
       model.addSection("Stats")
       model.add(TKMBasicModelItem(style: .value1, title: "WaniKani Level",
                                   subtitle: String(subjectAssignment.level)))
