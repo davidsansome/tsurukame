@@ -158,6 +158,7 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
     .vocabulary,
   ], "lessonOrder") static var lessonOrder: [TKMSubject.TypeEnum]
   @Setting(5, #keyPath(lessonBatchSize)) static var lessonBatchSize: Int
+  @Setting(true, #keyPath(showStatsSection)) static var showStatsSection: Bool
 
   @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
@@ -169,7 +170,7 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
   @Setting(false, #keyPath(exactMatch)) static var exactMatch: Bool
   @Setting(true, #keyPath(enableCheats)) static var enableCheats: Bool
   @Setting(true, #keyPath(showOldMnemonic)) static var showOldMnemonic: Bool
-  @Setting(true, #keyPath(useKatakanaForOnyomi)) static var useKatakanaForOnyomi: Bool
+  @Setting(false, #keyPath(useKatakanaForOnyomi)) static var useKatakanaForOnyomi: Bool
   @Setting(false, #keyPath(showSRSLevelIndicator)) static var showSRSLevelIndicator: Bool
   @Setting(false, #keyPath(showAllReadings)) static var showAllReadings: Bool
   @Setting(false, #keyPath(autoSwitchKeyboard)) static var autoSwitchKeyboard: Bool
