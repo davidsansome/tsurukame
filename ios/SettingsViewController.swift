@@ -297,7 +297,7 @@ class SettingsViewController: UITableViewController {
   @objc private func prioritizeCurrentLevelChanged(_ switchView: UISwitch) {
     Settings.prioritizeCurrentLevel = switchView.isOn
   }
-  
+
   @objc private func showStatsSectionChanged(_ switchView: UISwitch) {
     Settings.showStatsSection = switchView.isOn
   }
