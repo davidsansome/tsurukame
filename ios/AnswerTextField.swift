@@ -30,6 +30,7 @@ class AnswerTextField: UITextField {
   public var useJapaneseKeyboard: Bool = false {
     didSet {
       if oldValue != useJapaneseKeyboard {
+        self.autocorrectionType = useJapaneseKeyboard ? .no : .yes
         if self.isFirstResponder {
           // Reload the keyboard if we just changed its language.
           self.resignFirstResponder()

@@ -173,7 +173,7 @@ class SettingsViewController: UITableViewController {
 
     let keyboardSwitchItem = TKMSwitchModelItem(style: .subtitle,
                                                 title: "Switch to Japanese keyboard",
-                                                subtitle: "Automatically switch to a Japanese keyboard to type reading answers",
+                                                subtitle: "Automatically switch to a Japanese keyboard to type reading answers, and hides kanji suggestions",
                                                 on: Settings.autoSwitchKeyboard,
                                                 target: self,
                                                 action: #selector(autoSwitchKeyboardSwitchChanged(_:)))
