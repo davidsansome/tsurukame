@@ -87,6 +87,12 @@ class SettingsViewController: UITableViewController {
                                 accessoryType: .disclosureIndicator,
                                 target: self,
                                 action: #selector(didTapLessonBatchSize(_:))))
+    model.add(TKMBasicModelItem(style: .value1,
+                                title: "Lesson apprentice limit",
+                                subtitle: apprenticeLessonsLimitText,
+                                accessoryType: .disclosureIndicator,
+                                target: self,
+                                action: #selector(didTapApprenticeLessonsLimit(_:))))
     model.add(TKMSwitchModelItem(style: .subtitle,
                                  title: "Show stats section",
                                  subtitle: "Show section with level, SRS stage, and more",
@@ -265,6 +271,11 @@ class SettingsViewController: UITableViewController {
     "\(Settings.lessonBatchSize)"
   }
 
+  private var apprenticeLessonsLimitText: String {
+    Settings.apprenticeLessonsLimit != Int.max ?
+      "\(Settings.apprenticeLessonsLimit)" : "None"
+  }
+
   private var reviewOrderValueText: String {
     Settings.reviewOrder.description
   }
@@ -297,7 +308,7 @@ class SettingsViewController: UITableViewController {
   @objc private func prioritizeCurrentLevelChanged(_ switchView: UISwitch) {
     Settings.prioritizeCurrentLevel = switchView.isOn
   }
-  
+
   @objc private func showStatsSectionChanged(_ switchView: UISwitch) {
     Settings.showStatsSection = switchView.isOn
   }
@@ -439,6 +450,10 @@ class SettingsViewController: UITableViewController {
 
   @objc private func didTapLessonBatchSize(_: TKMBasicModelItem) {
     performSegue(withIdentifier: "lessonBatchSize", sender: self)
+  }
+
+  @objc private func didTapApprenticeLessonsLimit(_: TKMBasicModelItem) {
+    performSegue(withIdentifier: "apprenticeLessonsLimit", sender: self)
   }
 
   @objc private func didTapReviewBatchSize(_: TKMBasicModelItem) {
