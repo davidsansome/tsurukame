@@ -80,13 +80,7 @@ class Audio: NSObject {
     guard let subject = services.localCachingClient.getSubject(id: subjectID) else {
       return
     }
-
-    var audioID: Int
-    if Settings.playAudioRandomly {
-      audioID = subject.randomAudioID()
-    } else {
-      audioID = subject.nextAudioID()
-    }
+    let audioID = subject.randomAudioID()
 
     // Is the audio available offline?
     let filename = String(format: kOfflineFilePattern, Audio.cacheDirectoryPath, audioID)
