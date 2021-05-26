@@ -179,6 +179,7 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
   @Setting(true, #keyPath(minimizeReviewPenalty)) static var minimizeReviewPenalty: Bool
 
   @Setting(false, #keyPath(playAudioAutomatically)) static var playAudioAutomatically: Bool
+  @Setting(false, #keyPath(playAudioRandomly)) static var playAudioRandomly: Bool
   @Setting([], #keyPath(installedAudioPackages)) static var installedAudioPackages: Set<String>
 
   @Setting(true, #keyPath(animateParticleExplosion)) static var animateParticleExplosion: Bool
