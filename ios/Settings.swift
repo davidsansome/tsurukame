@@ -56,10 +56,7 @@ private func setArchiveData<T: Codable>(_ object: T, key: String) {
   if #available(iOS 11.0, *) {
     data = try! NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: true)
   } else {
-    let archiver = NSKeyedArchiver()
-    archiver.requiresSecureCoding = true
-    archiver.encode(object, forKey: key)
-    data = archiver.encodedData
+    data = NSKeyedArchiver.archivedData(withRootObject: object)
   }
 
   UserDefaults.standard.setValue(data, forKey: key)
