@@ -55,6 +55,20 @@
                                 on:Settings.playAudioAutomatically
                             target:self
                             action:@selector(playAudioAutomaticallySwitchChanged:)]];
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                 title:@"Review order"
+                                              subtitle:nil
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(didTapReviewOrder:)]];
+  [model
+      addItem:[[TKMBasicModelItem alloc] initWithStyle:UITableViewCellStyleDefault
+                                                 title:@"Review type order"
+                                              subtitle:nil
+                                         accessoryType:UITableViewCellAccessoryDisclosureIndicator
+                                                target:self
+                                                action:@selector(didTapReviewTypeOrder:)]];
 
   [model addSection:@"End review session"];
   TKMBasicModelItem *endReviewSession =
@@ -129,6 +143,14 @@
 
 - (void)playAudioAutomaticallySwitchChanged:(TKMCheckmarkModelItem *)item {
   Settings.playAudioAutomatically = item.on;
+}
+
+- (void)didTapReviewOrder:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"reviewOrder" sender:self];
+}
+
+- (void)didTapReviewTypeOrder:(TKMBasicModelItem *)item {
+  [self performSegueWithIdentifier:@"reviewTypeOrder" sender:self];
 }
 
 - (void)endSession:(TKMBasicModelItem *)item {

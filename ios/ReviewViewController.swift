@@ -247,53 +247,74 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     reviewQueue.shuffle()
+    sortReviewQueue()
+    refillActiveQueue()
+  }
+
+  private func sortTypeOrder(_ a: ReviewItem, _ b: ReviewItem) -> Bool? {
+    func getSubjectTypeIndex(type: TKMSubject.TypeEnum) -> Int {
+      let order = Settings.reviewTypeOrder.filter { $0 != .unknown }
+      for subject in order {
+        if subject == type { return Settings.reviewTypeOrder.firstIndex(of: subject)! }
+      }
+      return order.count // All types set to random sort equal and last
+    }
+
+    let aIndex = getSubjectTypeIndex(type: a.assignment.subjectType)
+    let bIndex = getSubjectTypeIndex(type: b.assignment.subjectType)
+    if aIndex < bIndex { return true }
+    else if aIndex > bIndex { return false }
+    else { return nil }
+  }
+
+  private func sortReviewQueue() {
     switch Settings.reviewOrder {
     case .ascendingSRSStage:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         if a.assignment.srsStage < b.assignment.srsStage { return true }
         if a.assignment.srsStage > b.assignment.srsStage { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if !Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .descendingSRSStage:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         if a.assignment.srsStage < b.assignment.srsStage { return false }
         if a.assignment.srsStage > b.assignment.srsStage { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if !Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .currentLevelFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         if a.assignment.level < b.assignment.level { return false }
         if a.assignment.level > b.assignment.level { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if !Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .lowestLevelFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         if a.assignment.level < b.assignment.level { return true }
         if a.assignment.level > b.assignment.level { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if !Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .newestAvailableFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         if a.assignment.availableAt < b.assignment.availableAt { return false }
         if a.assignment.availableAt > b.assignment.availableAt { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if !Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .oldestAvailableFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         if a.assignment.availableAt < b.assignment.availableAt { return true }
         if a.assignment.availableAt > b.assignment.availableAt { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if !Settings.typeOrderPrecedence, let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .random:
@@ -302,8 +323,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     @unknown default:
       fatalError()
     }
-
-    refillActiveQueue()
   }
 
   @objc public var activeQueueLength: Int {

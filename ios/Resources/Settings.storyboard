@@ -27,9 +27,10 @@
                         <segue destination="uj2-VH-hcW" kind="show" identifier="reviewOrder" id="7Yf-CB-TUU"/>
                         <segue destination="AG2-Tf-RDu" kind="show" identifier="offlineAudio" id="EkU-M7-aeu"/>
                         <segue destination="QeO-rY-q75" kind="show" identifier="fonts" id="l0d-dJ-or1"/>
-                        <segue destination="B5Q-PH-hTQ" kind="show" identifier="lessonOrder" id="gQL-Z8-EnR"/>
+                        <segue destination="B5Q-PH-hTQ" kind="show" identifier="lessonTypeOrder" id="gQL-Z8-EnR"/>
                         <segue destination="EY9-1W-ElO" kind="show" identifier="lessonBatchSize" id="Cy0-Qk-xdX"/>
                         <segue destination="tqb-JV-rpw" kind="show" identifier="reviewBatchSize" id="R3v-Bc-S1z"/>
+                        <segue destination="T0u-zX-TsY" kind="show" identifier="reviewTypeOrder" id="gQR-Z8-EnR"/>
                         <segue destination="QeO-rY-q01" kind="show" identifier="fontSize" id="OPI-OP-002"/>
                         <segue destination="uR7-9a-Wx4" kind="show" identifier="interfaceStyle" id="GNf-yk-azk"/>
                         <segue destination="IU0-Pn-GZ5" kind="show" identifier="apprenticeLessonsLimit" id="96F-X8-J9c"/>
@@ -42,7 +43,7 @@
         <!--Review order-->
         <scene sceneID="xmU-v5-GWs">
             <objects>
-                <tableViewController title="Review order" id="uj2-VH-hcW" customClass="ReviewOrderViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="reviewOrderViewController" title="Review order" id="uj2-VH-hcW" customClass="ReviewOrderViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="3zz-A3-952">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -420,16 +421,16 @@
             </objects>
             <point key="canvasLocation" x="2482" y="-493"/>
         </scene>
-        <!--Lesson order-->
+        <!--Lesson Item Order-->
         <scene sceneID="BjM-im-n92">
             <objects>
-                <tableViewController title="Lesson order" id="B5Q-PH-hTQ" userLabel="Lesson order" customClass="LessonOrderViewController" customModule="Tsurukame" sceneMemberID="viewController">
+                <tableViewController title="Lesson Item Order" id="B5Q-PH-hTQ" customClass="LessonTypeOrderViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ajq-lt-z5I">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <sections>
-                            <tableViewSection id="Djf-HP-Gkg">
+                            <tableViewSection headerTitle="In Order:" id="Djf-HP-Gkg">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" indentationWidth="10" textLabel="Cm6-A9-ZLv" style="IBUITableViewCellStyleDefault" id="Xjr-zw-H4e">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
@@ -483,6 +484,9 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Then Shuffle:" id="tqw-I9-emx">
+                                <cells/>
                             </tableViewSection>
                         </sections>
                         <connections>
@@ -1071,6 +1075,85 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eor-f7-5Vg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2430" y="-1155"/>
+        </scene>
+        <!--Review Item Order-->
+        <scene sceneID="qHv-RY-gbD">
+            <objects>
+                <tableViewController storyboardIdentifier="reviewTypeOrderViewController" title="Review Item Order" id="T0u-zX-TsY" customClass="ReviewTypeOrderViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="3Jl-zW-BwJ">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <sections>
+                            <tableViewSection headerTitle="In Order:" id="cJ9-16-Xsm">
+                            	<cells/>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Then Shuffle:" id="d74-mE-G20">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" indentationWidth="10" textLabel="bVL-fI-QMU" style="IBUITableViewCellStyleDefault" id="LtC-ZQ-m3d">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LtC-ZQ-m3d" id="BQR-R4-Y9o">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Radicals" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bVL-fI-QMU">
+                                                    <rect key="frame" x="16" y="0.0" width="343" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" indentationWidth="10" textLabel="Foh-Qi-62c" style="IBUITableViewCellStyleDefault" id="EWU-ru-HmI">
+                                        <rect key="frame" x="0.0" y="72" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EWU-ru-HmI" id="2hI-GY-BqW">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Kanji" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Foh-Qi-62c">
+                                                    <rect key="frame" x="16" y="0.0" width="343" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" indentationWidth="10" textLabel="Cxr-eN-9Fr" style="IBUITableViewCellStyleDefault" id="OxP-hC-Oyp">
+                                        <rect key="frame" x="0.0" y="116" width="800" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OxP-hC-Oyp" id="jxu-d5-RwK">
+                                            <rect key="frame" x="0.0" y="0.0" width="800" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Vocabulary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Cxr-eN-9Fr">
+                                                    <rect key="frame" x="16" y="0.0" width="760" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="T0u-zX-TsY" id="iPe-gn-v8j"/>
+                            <outlet property="delegate" destination="T0u-zX-TsY" id="Qjn-gh-Vxg"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Lesson Order" id="cdU-5A-UkC"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="C8B-uJ-VhJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-92" y="-1155"/>
         </scene>
     </scenes>
     <resources>

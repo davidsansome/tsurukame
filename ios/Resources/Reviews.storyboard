@@ -35,6 +35,8 @@
                     <connections>
                         <outlet property="rightConstraint" destination="b0x-9z-FQf" id="XfF-ci-DGf"/>
                         <outlet property="tableView" destination="BPO-IH-trC" id="iBA-jA-7nq"/>
+                        <segue destination="JL6-la-3Q9" kind="show" identifier="reviewOrder" id="gQL-Z9-EnR"/>
+                        <segue destination="iPL-7D-6GT" kind="show" identifier="reviewTypeOrder" id="gQR-Z9-EnR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iNI-Dc-s59" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -355,6 +357,22 @@
             <objects>
                 <viewControllerPlaceholder storyboardIdentifier="subjectDetailsViewController" storyboardName="Subjects" referencedIdentifier="subjectDetailsViewController" id="K53-ny-wyx" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HeD-4Z-LC8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1818" y="944"/>
+        </scene>
+        <!--reviewOrderViewController-->
+        <scene sceneID="zwb-pI-bfH">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Settings" referencedIdentifier="reviewOrderViewController" id="JL6-la-3Q9" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="u22-uN-upX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1818" y="944"/>
+        </scene>
+        <!--reviewTypeOrderViewController-->
+        <scene sceneID="P8j-A5-4rT">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Settings" referencedIdentifier="reviewTypeOrderViewController" id="iPL-7D-6GT" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="43u-TC-SFg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1818" y="944"/>
         </scene>

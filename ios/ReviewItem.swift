@@ -74,12 +74,11 @@ class ReviewItem: NSObject {
   }
 
   private func getSubjectTypeIndex(_ subjectType: TKMSubject.TypeEnum) -> Int {
-    for (idx, typeValue) in Settings.lessonOrder.enumerated() {
-      if typeValue == subjectType {
-        return idx
-      }
+    let order = Settings.lessonTypeOrder.filter { $0 != .unknown }
+    for (idx, typeValue) in order.enumerated() {
+      if typeValue == subjectType { return idx }
     }
-    return 0
+    return order.count // All types set to random sort equal and last
   }
 
   func compareForLessons(other: ReviewItem) -> Bool {
