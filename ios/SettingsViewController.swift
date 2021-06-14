@@ -210,12 +210,6 @@ class SettingsViewController: UITableViewController {
                                  on: Settings.playAudioAutomatically,
                                  target: self,
                                  action: #selector(playAudioAutomaticallySwitchChanged(_:))))
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Play audio randomly",
-                                 subtitle: "Randomly select audio reading",
-                                 on: Settings.playAudioRandomly,
-                                 target: self,
-                                 action: #selector(playAudioRandomlySwitchChanged(_:))))
     model.add(TKMBasicModelItem(style: .default,
                                 title: "Offline audio",
                                 subtitle: nil,
@@ -376,10 +370,6 @@ class SettingsViewController: UITableViewController {
 
   @objc private func playAudioAutomaticallySwitchChanged(_ switchView: UISwitch) {
     Settings.playAudioAutomatically = switchView.isOn
-  }
-
-  @objc private func playAudioRandomlySwitchChanged(_ switchView: UISwitch) {
-    Settings.playAudioRandomly = switchView.isOn
   }
 
   @objc private func allReviewsSwitchChanged(_ switchView: UISwitch) {
