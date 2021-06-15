@@ -241,30 +241,6 @@ public extension TKMSubject {
 
   var commaSeparatedReadings: String { commaSeparated(readings: readings) }
   var commaSeparatedPrimaryReadings: String { commaSeparated(readings: primaryReadings) }
-
-  func randomAudioID() -> Int {
-    if !hasVocabulary || vocabulary.audioIds.count < 1 {
-      return 0
-    }
-    let idx = arc4random_uniform(UInt32(vocabulary.audioIds.count))
-    return Int(vocabulary.audioIds[Int(idx)])
-  }
-
-  func nextAudioID() -> Int {
-    if !hasVocabulary || vocabulary.audioIds.count < 1 {
-      return 0
-    }
-    enum audioIdx {
-      static var idx: Int = 0
-    }
-    audioIdx.idx += 1
-
-    if audioIdx.idx >= vocabulary.audioIds.count {
-      audioIdx.idx = 0
-    }
-
-    return Int(vocabulary.audioIds[Int(audioIdx.idx)])
-  }
 }
 
 public extension TKMReading {

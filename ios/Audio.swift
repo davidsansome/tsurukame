@@ -38,6 +38,7 @@ class Audio: NSObject {
 
   private let services: TKMServices
   private var player: AVPlayer?
+  private var lastPlayedAudioIndex: Int = 0
   private var waitingToPlay = false
   private weak var delegate: AudioDelegate?
 
@@ -82,10 +83,17 @@ class Audio: NSObject {
     }
 
     var audioID: Int
-    if Settings.playAudioRandomly {
-      audioID = subject.randomAudioID()
+
+    if !subject.hasVocabulary || subject.vocabulary.audioIds.count < 1 {
+      audioID = 0
     } else {
-      audioID = subject.nextAudioID()
+      lastPlayedAudioIndex += 1
+
+      if lastPlayedAudioIndex >= subject.vocabulary.audioIds.count {
+        lastPlayedAudioIndex = 0
+      }
+
+      audioID = Int(subject.vocabulary.audioIds[lastPlayedAudioIndex])
     }
 
     // Is the audio available offline?
