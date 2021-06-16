@@ -241,14 +241,6 @@ public extension TKMSubject {
 
   var commaSeparatedReadings: String { commaSeparated(readings: readings) }
   var commaSeparatedPrimaryReadings: String { commaSeparated(readings: primaryReadings) }
-
-  func randomAudioID() -> Int {
-    if !hasVocabulary || vocabulary.audioIds.count < 1 {
-      return 0
-    }
-    let idx = arc4random_uniform(UInt32(vocabulary.audioIds.count))
-    return Int(vocabulary.audioIds[Int(idx)])
-  }
 }
 
 public extension TKMReading {

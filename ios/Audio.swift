@@ -38,6 +38,7 @@ class Audio: NSObject {
 
   private let services: TKMServices
   private var player: AVPlayer?
+  private var lastPlayedAudioIndex: Int = 0
   private var waitingToPlay = false
   private weak var delegate: AudioDelegate?
 
@@ -80,7 +81,20 @@ class Audio: NSObject {
     guard let subject = services.localCachingClient.getSubject(id: subjectID) else {
       return
     }
-    let audioID = subject.randomAudioID()
+
+    var audioID: Int
+
+    if !subject.hasVocabulary || subject.vocabulary.audioIds.count < 1 {
+      audioID = 0
+    } else {
+      lastPlayedAudioIndex += 1
+
+      if lastPlayedAudioIndex >= subject.vocabulary.audioIds.count {
+        lastPlayedAudioIndex = 0
+      }
+
+      audioID = Int(subject.vocabulary.audioIds[lastPlayedAudioIndex])
+    }
 
     // Is the audio available offline?
     let filename = String(format: kOfflineFilePattern, Audio.cacheDirectoryPath, audioID)
