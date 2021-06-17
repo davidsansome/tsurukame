@@ -666,11 +666,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     var availableFonts: [String] = []
 
     for filename in Settings.selectedFonts {
-      if let font = services.fontLoader.font(byName: filename) {
+      if let font = services.fontLoader.font(name: filename) {
         if let ex = exclude, ex.contains(font.fontName) {
           continue
         }
-        if TKMFontCanRenderText(font.fontName, text) {
+        if font.canRenderText(fontName: font.fontName, text: text) {
           availableFonts.append(font.fontName)
         }
       }
