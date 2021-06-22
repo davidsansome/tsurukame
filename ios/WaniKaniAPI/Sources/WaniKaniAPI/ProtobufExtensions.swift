@@ -131,6 +131,33 @@ public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     }
   }
 
+  public static func duration(_ stage: SRSStage, _ accelerated: Bool) -> TimeInterval {
+    TimeInterval(hours(stage, accelerated) * 60 * 60)
+  }
+
+  private static func hours(_ stage: SRSStage, _ accelerated: Bool) -> Int {
+    switch stage {
+    case .apprentice1:
+      return accelerated ? 2 : 4
+    case .apprentice2:
+      return accelerated ? 4 : 8
+    case .apprentice3:
+      return accelerated ? 8 : 23
+    case .apprentice4:
+      return accelerated ? 23 : 47
+    case .guru1:
+      return 167 // 7d - 1h
+    case .guru2:
+      return 335 // 14d - 1h
+    case .master:
+      return 719 // 30d - 1h
+    case .enlightened:
+      return 2879 // 120d - 1h
+    case .unlocking, .burned:
+      return 0
+    }
+  }
+
   public func minimumTimeUntilGuru(itemLevel: Int) -> TimeInterval {
     let isAccelerated = itemLevel <= 2
 
@@ -138,16 +165,16 @@ public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     // From https://docs.api.wanikani.com/20170710/#additional-information
     switch self {
     case .apprentice1:
-      hours += (isAccelerated ? 2 : 4)
+      hours += SRSStage.hours(.apprentice1, isAccelerated)
       fallthrough
     case .apprentice2:
-      hours += (isAccelerated ? 4 : 8)
+      hours += SRSStage.hours(.apprentice2, isAccelerated)
       fallthrough
     case .apprentice3:
-      hours += (isAccelerated ? 8 : 23)
+      hours += SRSStage.hours(.apprentice3, isAccelerated)
       fallthrough
     case .apprentice4:
-      hours += (isAccelerated ? 23 : 47)
+      hours += SRSStage.hours(.apprentice4, isAccelerated)
     default:
       break
     }
