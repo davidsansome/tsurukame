@@ -183,5 +183,7 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
   @Setting(true, #keyPath(animatePlusOne)) static var animatePlusOne: Bool
 
   @Setting(true,
+           #keyPath(reviewSummaryViewShowAnswers)) static var reviewSummaryViewShowAnswers: Bool
+  @Setting(true,
            #keyPath(subjectCatalogueViewShowAnswers)) static var subjectCatalogueViewShowAnswers: Bool
 }

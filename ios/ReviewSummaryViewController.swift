@@ -45,6 +45,12 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
     }
     model.addSection("Summary")
     model.add(TKMBasicModelItem(style: .value1, title: "Correct answers", subtitle: summaryText))
+    model.add(TKMSwitchModelItem(style: .default,
+                                 title: "Show answers",
+                                 subtitle: nil,
+                                 on: Settings.reviewSummaryViewShowAnswers,
+                                 target: self,
+                                 action: #selector(showAnswersChanged(_:))))
 
     // Add a section for each level.
     let incorrectItemLevels = incorrectItemsByLevel.keys.sorted { (a, b) -> Bool in
@@ -59,9 +65,11 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
 
       for item in incorrectItemsByLevel[level]! {
         if let subject = services.localCachingClient.getSubject(id: item.assignment.subjectID) {
-          model.add(SubjectModelItem(subject: subject, delegate: self, assignment: nil,
-                                     readingWrong: item.answer.readingWrong,
-                                     meaningWrong: item.answer.meaningWrong))
+          let item = SubjectModelItem(subject: subject, delegate: self, assignment: nil,
+                                      readingWrong: item.answer.readingWrong,
+                                      meaningWrong: item.answer.meaningWrong)
+          item.showAnswers = Settings.reviewSummaryViewShowAnswers
+          model.add(item)
         }
       }
     }
@@ -75,6 +83,27 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
 
   @IBAction private func doneClicked() {
     navigationController?.popToRootViewController(animated: true)
+  }
+  
+  @IBAction private func showAnswersChanged(_ switchView: UISwitch) {
+    Settings.reviewSummaryViewShowAnswers = switchView.isOn
+    setShowAnswers(switchView.isOn, true)
+  }
+  
+  func setShowAnswers(_ showAnswers: Bool, _ animated: Bool) {
+    for section in 0..<model.sectionCount {
+      for item in model.items(inSection: section) {
+        if let subjectModelItem = item as? SubjectModelItem {
+          subjectModelItem.showAnswers = showAnswers
+        }
+      }
+    }
+    
+    for cell in tableView.visibleCells {
+      if let subjectCell = cell as? SubjectModelView {
+        subjectCell.setShowAnswers(showAnswers, animated: animated)
+      }
+    }
   }
 
   // MARK: - SubjectDelegate
