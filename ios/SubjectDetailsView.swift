@@ -135,6 +135,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private var tableModel: TKMTableModel?
   private var lastSubjectChipTapped: SubjectChip?
 
+  private var subject: TKMSubject!
+  private var studyMaterials: TKMStudyMaterials?
+  private var assignment: TKMAssignment?
+  private var task: ReviewItem?
+
   public func setup(services: TKMServices, delegate: SubjectDelegate) {
     self.services = services
     subjectDelegate = delegate
@@ -276,18 +281,38 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     model.add(item)
   }
 
+  @objc private func showAllFields() {
+    update(withSubject: subject, studyMaterials: studyMaterials, assignment: assignment, task: nil)
+  }
+
   public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
                      assignment: TKMAssignment?, task: ReviewItem?) {
     let model = TKMMutableTableModel(tableView: self), isReview = task != nil
     readingItem = nil
-    let meaningAttempted = task?.answeredMeaning == true || task?.answer.meaningWrong == true
-    let readingAttempted = subject.hasRadical == true || task?.answeredReading == true ||
-      task?.answer.readingWrong == true
+    self.subject = subject
+    self.studyMaterials = studyMaterials
+    self.assignment = assignment
+    self.task = task
+
+    let meaningAttempted = task?.answeredMeaning == true || task?.answer.meaningWrong == true,
+        readingAttempted = task?.answeredReading == true || task?.answer.readingWrong == true,
+        meaningShown = !isReview || meaningAttempted,
+        readingShown = !isReview || readingAttempted,
+        showMeaningItem = TKMBasicModelItem(style: .default, title: "Show meaning & explanations",
+                                            subtitle: nil,
+                                            accessoryType: .none, target: self,
+                                            action: #selector(showAllFields)),
+        showReadingItem = TKMBasicModelItem(style: .default, title: "Show reading & explanation",
+                                            subtitle: nil,
+                                            accessoryType: .none, target: self,
+                                            action: #selector(showAllFields))
+    showMeaningItem.textColor = .systemRed
+    showReadingItem.textColor = .systemRed
 
     if subject.hasRadical {
-      addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
+      if meaningShown {
+        addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
 
-      if !isReview || meaningAttempted {
         model.addSection("Mnemonic")
         addFormattedText(subject.radical.mnemonic,
                          isHint: false,
@@ -298,15 +323,25 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
           addFormattedText(subject.radical.deprecatedMnemonic,
                            isHint: false, toModel: model)
         }
+      } else {
+        model.add(showMeaningItem)
       }
       addAmalgamationSubjects(subject, toModel: model)
     }
     if subject.hasKanji {
-      addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
-      addReadings(subject, studyMaterials: studyMaterials, toModel: model)
+      if meaningShown {
+        addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
+      } else {
+        model.add(showMeaningItem)
+      }
+      if readingShown {
+        addReadings(subject, studyMaterials: studyMaterials, toModel: model)
+      } else {
+        model.add(showReadingItem)
+      }
       addComponents(subject, title: "Radicals", toModel: model)
 
-      if !isReview || meaningAttempted {
+      if meaningShown {
         model.addSection("Meaning Explanation")
         addFormattedText(subject.kanji.meaningMnemonic,
                          isHint: false, toModel: model)
@@ -314,7 +349,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                          isHint: true,
                          toModel: model)
       }
-      if !isReview || readingAttempted {
+      if meaningShown, readingShown {
         model.addSection("Reading Explanation")
         addFormattedText(subject.kanji.readingMnemonic,
                          isHint: false, toModel: model)
@@ -326,22 +361,30 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       addAmalgamationSubjects(subject, toModel: model)
     }
     if subject.hasVocabulary {
-      addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
-      addReadings(subject, studyMaterials: studyMaterials, toModel: model)
+      if meaningShown {
+        addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
+      } else {
+        model.add(showMeaningItem)
+      }
+      if readingShown {
+        addReadings(subject, studyMaterials: studyMaterials, toModel: model)
+      } else {
+        model.add(showReadingItem)
+      }
       addComponents(subject, title: "Kanji", toModel: model)
 
-      if !isReview || meaningAttempted {
+      if meaningShown {
         model.addSection("Meaning Explanation")
         addFormattedText(subject.vocabulary.meaningExplanation,
                          isHint: false, toModel: model)
       }
-      if !isReview || readingAttempted {
+      if meaningShown, readingShown {
         model.addSection("Reading Explanation")
         addFormattedText(subject.vocabulary.readingExplanation,
                          isHint: false, toModel: model)
       }
       addPartsOfSpeech(subject.vocabulary, toModel: model)
-      if !isReview || meaningAttempted {
+      if meaningShown {
         addContextSentences(subject, toModel: model)
       }
     }

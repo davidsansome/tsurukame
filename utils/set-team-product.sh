@@ -33,7 +33,7 @@ cp "${MAIN_PROJ}" "${BKP_PROJ}"
 sed 's|DEVELOPMENT_TEAM = .*;|DEVELOPMENT_TEAM = '"${DEVELOPMENT_TEAM}"';|g' "${MAIN_PROJ}" > "${TEMP_PROJ}.1"
 
 # Step 2: Change PRODUCT_BUNDLE_IDENTIFIER
-sed 's|PRODUCT_BUNDLE_IDENTIFIER = com.[^.]*\.[^.;]*|PRODUCT_BUNDLE_IDENTIFIER = '"${PRODUCT_ID}"'|g' "${TEMP_PROJ}.1" > "${TEMP_PROJ}.2"
+sed 's|PRODUCT_BUNDLE_IDENTIFIER = com\.[^.]*\.[^.;]*|PRODUCT_BUNDLE_IDENTIFIER = '"${PRODUCT_ID}"'|g' "${TEMP_PROJ}.1" > "${TEMP_PROJ}.2"
 
 # Copy back into place
 cp "${TEMP_PROJ}.2" "${MAIN_PROJ}"
@@ -44,7 +44,7 @@ WATCH_TEMP="/tmp/watch.plist"
 
 # Step 3: Watch complication Info.plist
 if [[ -f "${WATCH_PLIST}" ]];then
-  sed 's|com.[^.]*\.[^.<]*|'"${PRODUCT_ID}"'|g' "${WATCH_PLIST}" > "$WATCH_TEMP"
+  sed 's|com\.[^.]*\.[^.<]*|'"${PRODUCT_ID}"'|g' "${WATCH_PLIST}" > "$WATCH_TEMP"
   cp "$WATCH_TEMP" "${WATCH_PLIST}"
 
   # Step 4: Watch complication extension Info.plist
