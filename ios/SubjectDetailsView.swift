@@ -378,6 +378,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         addFormattedText(subject.vocabulary.meaningExplanation,
                          isHint: false, toModel: model)
       }
+      // Reading explanations often contain the meaning, so require it as well
       if meaningShown, readingShown {
         model.addSection("Reading Explanation")
         addFormattedText(subject.vocabulary.readingExplanation,
