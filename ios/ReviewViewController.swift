@@ -717,7 +717,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // MARK: - Animation
 
   private func animateSubjectDetailsView(shown: Bool,
-                                         setupContextFunc: ((AnimationContext) -> Void)?) {
+                                         setupContextFunc: ((AnimationContext) -> Void)?,
+                                         partiallyCorrect: Bool = false) {
     let cheats = delegate.reviewViewControllerAllowsCheats(forReviewItem: activeTask)
 
     if shown {
@@ -782,7 +783,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     previousSubjectButton.alpha = shown ? 0.0 : 1.0
 
     // Change the foreground color of the answer field.
-    answerField.textColor = shown ? UIColor.systemRed : TKMStyle.Color.label
+    answerField.textColor = shown ? (partiallyCorrect ? .systemYellow : .systemRed) : TKMStyle.Color.label
 
     // Scroll to the top.
     subjectDetailsView
@@ -995,7 +996,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       markAnswer(.AskAgainLater)
       return
     }
-    if !answerField.isEnabled {
+    if !answerField.isEnabled, Settings.pausePartiallyCorrect {
+      markCorrect()
+    } else if !answerField.isEnabled {
       randomTask()
     } else {
       submit()
@@ -1025,6 +1028,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       markAnswer(.Correct)
     case .Imprecise:
       if Settings.exactMatch { shakeView(answerField) }
+      else if Settings.pausePartiallyCorrect { markAnswer(.Incorrect, partially: true) }
       else { markAnswer(.Correct) }
     case .Incorrect:
       markAnswer(.Incorrect)
@@ -1046,7 +1050,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     view.layer.add(animation, forKey: nil)
   }
 
-  private func markAnswer(_ result: AnswerResult) {
+  private func markAnswer(_ result: AnswerResult, partially: Bool = false) {
     if result == .AskAgainLater {
       // Take the task out of the queue so it comes back later.
       activeQueue.remove(at: activeTaskIndex)
@@ -1180,7 +1184,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       revealAnswerButton.isHidden = false
       UIView.animate(withDuration: animationDuration,
                      animations: {
-                       self.answerField.textColor = UIColor.systemRed
+                      self.answerField.textColor = partially ? .systemYellow : .systemRed
                        self.answerField.isEnabled = false
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)
@@ -1191,6 +1195,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   @IBAction func revealAnswerButtonPressed(_: Any) {
+    revealAnswerButtonPressed(true, partiallyCorrect: false)
+  }
+  
+  func revealAnswerButtonPressed(_: Any, partiallyCorrect: Bool = false) {
     subjectDetailsView.update(withSubject: activeSubject, studyMaterials: activeStudyMaterials,
                               assignment: activeAssignment, task: activeTask)
 
@@ -1201,7 +1209,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
           .font = UIFont(name: self.normalFontName, size: self.questionLabelFontSize())
       }
     }
-    animateSubjectDetailsView(shown: true, setupContextFunc: setupContextFunc)
+    animateSubjectDetailsView(shown: true, setupContextFunc: setupContextFunc,
+                              partiallyCorrect: partiallyCorrect)
   }
 
   // MARK: - Ignoring incorrect answers
@@ -1215,9 +1224,16 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     c.popoverPresentationController?.sourceView = addSynonymButton
     c.popoverPresentationController?.sourceRect = addSynonymButton.bounds
 
-    c.addAction(UIAlertAction(title: "My answer was correct",
-                              style: .default,
-                              handler: { _ in self.markCorrect() }))
+    if !Settings.pausePartiallyCorrect {
+      c.addAction(UIAlertAction(title: "My answer was correct",
+                                style: .default,
+                                handler: { _ in self.markCorrect() }))
+    }
+    if Settings.pausePartiallyCorrect {
+      c.addAction(UIAlertAction(title: "My answer was incorrect",
+                                style: .default,
+                                handler: { _ in self.markIncorrect() }))
+    }
     c.addAction(UIAlertAction(title: "Ask again later",
                               style: .default,
                               handler: { _ in self.askAgain() }))
@@ -1234,6 +1250,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   @objc func markCorrect() {
     markAnswer(.OverrideAnswerCorrect)
+  }
+  
+  @objc func markIncorrect() {
+    randomTask()
   }
 
   @objc func askAgain() {
