@@ -160,6 +160,12 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       model.addSection("Meaning Note")
       model.add(notesItem)
     }
+    let hasMeaningNote = studyMaterials?.hasMeaningNote != nil
+    model.add(TKMBasicModelItem(style: .default,
+                                title: "\(hasMeaningNote ? "Edit" : "Create") meaning note",
+                                subtitle: nil,
+                                accessoryType: .none, target: self,
+                                action: #selector(editMeaningNote)))
   }
 
   private func addReadings(_ subject: TKMSubject,
@@ -183,6 +189,12 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       model.addSection("Reading Note")
       model.add(notesItem)
     }
+    let hasReadingNote = studyMaterials?.hasReadingNote != nil
+    model.add(TKMBasicModelItem(style: .default,
+                                title: "\(hasReadingNote ? "Edit" : "Create") reading note",
+                                subtitle: nil,
+                                accessoryType: .none, target: self,
+                                action: #selector(editReadingNote)))
   }
 
   private func addComponents(_ subject: TKMSubject,
@@ -429,6 +441,44 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   @objc public func playAudio() {
     readingItem?.playAudio()
+  }
+
+  @objc public func editMeaningNote() {
+    editNote(subject: subject, studyMaterials: studyMaterials, isMeaningNote: true)
+  }
+
+  @objc public func editReadingNote() {
+    editNote(subject: subject, studyMaterials: studyMaterials, isMeaningNote: false)
+  }
+
+  func editNote(subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
+                isMeaningNote: Bool) {
+    var materials = studyMaterials ?? TKMStudyMaterials()
+    if studyMaterials == nil {
+      materials.subjectID = subject.id
+    }
+    let hasNote = isMeaningNote ? materials.hasMeaningNote : materials.hasReadingNote
+    let ac = UIAlertController(title: "\(hasNote ? "Edit" : "Create") note",
+                               message: "\(hasNote ? "Edit" : "Create") the \(isMeaningNote ? "meaning" : "reading") note",
+                               preferredStyle: .alert)
+    ac.addTextField(configurationHandler: { textField in
+      textField.placeholder = "Type \(isMeaningNote ? "meaning" : "reading") note here"
+      if hasNote {
+        textField.text = isMeaningNote ? materials.meaningNote : materials.readingNote
+      }
+    })
+    ac.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+      let noteText = ac.textFields?.first?.text ?? ""
+      if isMeaningNote { materials.meaningNote = noteText }
+      else { materials.readingNote = noteText }
+      _ = self.services.localCachingClient.updateStudyMaterial(materials)
+      self.update(withSubject: subject, studyMaterials: materials, assignment: self.assignment,
+                  task: self.task)
+    }))
+    ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+    let vc = UIApplication.shared.keyWindow!.rootViewController!
+    vc.present(ac, animated: true, completion: nil)
   }
 
   // MARK: - SubjectChipDelegate
