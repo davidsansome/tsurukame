@@ -131,54 +131,39 @@ public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     }
   }
 
-  public static func duration(_ stage: SRSStage, _ accelerated: Bool) -> TimeInterval {
-    TimeInterval(hours(stage, accelerated) * 60 * 60)
-  }
-
-  private static func hours(_ stage: SRSStage, _ accelerated: Bool) -> Int {
-    switch stage {
+  public func duration(itemLevel: Int) -> TimeInterval {
+    let isAccelerated = itemLevel <= 2
+    
+    // From https://docs.api.wanikani.com/20170710/#spaced-repetition-systems
+    switch self {
     case .apprentice1:
-      return accelerated ? 2 : 4
+      return isAccelerated ? 7200 : 14400
     case .apprentice2:
-      return accelerated ? 4 : 8
+      return isAccelerated ? 14400 : 28800
     case .apprentice3:
-      return accelerated ? 8 : 23
+      return isAccelerated ? 28800 : 82800
     case .apprentice4:
-      return accelerated ? 23 : 47
+      return isAccelerated ? 82800 : 169200
     case .guru1:
-      return 167 // 7d - 1h
+      return 601200
     case .guru2:
-      return 335 // 14d - 1h
+      return 1206000
     case .master:
-      return 719 // 30d - 1h
+      return 2588400
     case .enlightened:
-      return 2879 // 120d - 1h
+      return 10364400
     case .unlocking, .burned:
       return 0
     }
   }
 
   public func minimumTimeUntilGuru(itemLevel: Int) -> TimeInterval {
-    let isAccelerated = itemLevel <= 2
-
-    var hours = 0
-    // From https://docs.api.wanikani.com/20170710/#additional-information
-    switch self {
-    case .apprentice1:
-      hours += SRSStage.hours(.apprentice1, isAccelerated)
-      fallthrough
-    case .apprentice2:
-      hours += SRSStage.hours(.apprentice2, isAccelerated)
-      fallthrough
-    case .apprentice3:
-      hours += SRSStage.hours(.apprentice3, isAccelerated)
-      fallthrough
-    case .apprentice4:
-      hours += SRSStage.hours(.apprentice4, isAccelerated)
-    default:
-      break
+    var time: TimeInterval = 0, stage = self
+    while stage.category == .apprentice {
+      time += stage.duration(itemLevel: itemLevel)
+      stage = stage.next
     }
-    return TimeInterval(hours * 60 * 60)
+    return time
   }
 }
 
