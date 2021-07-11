@@ -59,7 +59,7 @@ private func calculateCurrentLevelReviewTime(services: TKMServices,
   let levelKanjiUnlocked = guruDates.last != nil ? (guruDates.last! != Date.distantFuture) : true
 
   for assignment in currentLevelAssignments {
-    if assignment
+    if assignment.hasPassedAt || assignment
       .subjectType == .vocabulary || (levelKanjiUnlocked && assignment.subjectType == .radical) {
       continue
     }
