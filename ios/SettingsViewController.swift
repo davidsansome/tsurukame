@@ -244,6 +244,12 @@ class SettingsViewController: UITableViewController {
                                 accessoryType: .disclosureIndicator,
                                 target: self,
                                 action: #selector(didTapSendBugReport(_:))))
+    if let coreVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
+       let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+      let version = "\(coreVersion).\(build)"
+      model.add(TKMBasicModelItem(style: .value1, title: "Version", subtitle: version,
+                                  accessoryType: .none))
+    }
     let logOutItem = TKMBasicModelItem(style: .default,
                                        title: "Log out",
                                        subtitle: nil,
