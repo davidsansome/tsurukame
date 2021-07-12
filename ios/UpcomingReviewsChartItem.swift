@@ -103,7 +103,7 @@ class UpcomingReviewsChartCell: TKMModelCell {
     cumulativeData.append(ChartDataEntry(x: 0, y: Double(cumulativeReviews)))
 
     // Add upcoming hourly reviews.
-    for i in 0 ..< item.upcomingReviews.count {
+    for i in 0 ..< min(48, item.upcomingReviews.count) {
       let x = i + 1
       let y = item.upcomingReviews[i]
 

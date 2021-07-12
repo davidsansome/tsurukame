@@ -162,9 +162,9 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     guard let user = services.localCachingClient.getUserInfo() else { return }
 
     let availableSubjects = services.localCachingClient.availableSubjects
-    let lessons = Int(availableSubjects.lessonCount)
-    let reviews = Int(availableSubjects.reviewCount)
-    let upcomingReviews = availableSubjects.upcomingReviews
+    let lessons = services.localCachingClient.availableLessonCount
+    let reviews = services.localCachingClient.availableReviewCount
+    let upcomingReviews = services.localCachingClient.upcomingReviews
     let currentLevelAssignments = services.localCachingClient.getAssignmentsAtUsersCurrentLevel()
 
     let model = TKMMutableTableModel(tableView: tableView)
