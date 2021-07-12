@@ -27,27 +27,9 @@ extension Notification.Name {
 }
 
 struct ReviewComposition {
-  var reviews: Int,
-      radical: Int,
-      kanji: Int,
-      vocab: Int,
-      apprentice: Int,
-      guru: Int,
-      master: Int,
-      enlightened: Int
-}
-
-extension ReviewComposition {
-  init() {
-    reviews = 0
-    radical = 0
-    kanji = 0
-    vocab = 0
-    apprentice = 0
-    guru = 0
-    master = 0
-    enlightened = 0
-  }
+  var availableReviews = 0,
+      countByType: [TKMSubject.TypeEnum: Int] = [.radical: 0, .kanji: 0, .vocabulary: 0],
+      countByCategory: [SRSStageCategory: Int] = [.apprentice: 0, .guru: 0, .master: 0, .enlightened: 0]
 }
 
 private func postNotificationOnMainQueue(_ notification: Notification.Name) {
@@ -152,20 +134,14 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
     let now = Date()
     var lessonCount = 0,
-      reviewComposition = Array(repeating: ReviewComposition(), count: SRSStage.maxHours + 1)
+      reviewComposition = Array(repeating: ReviewComposition(),
+                                count: Int(SRSStage.maxDuration / 60 / 60) + 1)
 
     func iterateValidReview(_ type: TKMSubject.TypeEnum, hours: Int, stage: SRSStage) {
       guard hours < reviewComposition.count else { return }
-      reviewComposition[hours].reviews += 1
-
-      if type == .radical { reviewComposition[hours].radical += 1 }
-      else if type == .kanji { reviewComposition[hours].kanji += 1 }
-      else if type == .vocabulary { reviewComposition[hours].vocab += 1 }
-
-      if stage.category == .apprentice { reviewComposition[hours].apprentice += 1 }
-      else if stage.category == .guru { reviewComposition[hours].guru += 1 }
-      else if stage.category == .master { reviewComposition[hours].master += 1 }
-      else if stage.category == .enlightened { reviewComposition[hours].enlightened += 1 }
+      reviewComposition[hours].availableReviews += 1
+      reviewComposition[hours].countByType[type, default: 0] += 1
+      reviewComposition[hours].countByCategory[stage.category, default: 0] += 1
     }
 
     for assignment in getAllAssignments() {
@@ -185,8 +161,8 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       if assignment.isLessonStage {
         lessonCount += 1
       } else if assignment.isReviewStage {
-        var interval = max(0, assignment.availableAtDate.timeIntervalSince(now)),
-            stage = assignment.srsStage
+        let stage = assignment.srsStage,
+            interval = max(0, assignment.availableAtDate.timeIntervalSince(now))
         iterateValidReview(assignment.subjectType, hours: Int(ceil(interval / 3600)), stage: stage)
       }
     }
@@ -999,7 +975,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   // MARK: - Objective-C support
 
   var availableReviewCount: Int {
-    availableSubjects.reviewComposition.first?.reviews ?? 0
+    availableSubjects.reviewComposition.first?.availableReviews ?? 0
   }
 
   var availableLessonCount: Int {
@@ -1007,7 +983,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   }
 
   var upcomingReviews: [Int] {
-    availableSubjects.reviewComposition[1...].map { return $0.reviews }
+    availableSubjects.reviewComposition[1...].map { return $0.availableReviews }
   }
 }
 

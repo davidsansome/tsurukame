@@ -131,7 +131,8 @@ public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     }
   }
   
-  public static let maxHours = 2879
+  // Maximum value of duration(itemLevel:) to determine maximum time for an upcoming review to be
+  public static let maxDuration: TimeInterval = 10364400
 
   public func duration(itemLevel: Int) -> TimeInterval {
     let isAccelerated = itemLevel <= 2

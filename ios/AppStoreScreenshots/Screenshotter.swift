@@ -1242,9 +1242,9 @@ import WaniKaniAPI
     private func createComposition(_ source: Int...) -> [ReviewComposition] {
       var composition: [ReviewComposition] = []
       for reviews in source {
-        composition.append(ReviewComposition(reviews: reviews, radical: reviews, kanji: 0, vocab: 0,
-                                             apprentice: reviews, guru: 0, master: 0,
-                                             enlightened: 0))
+        composition.append(ReviewComposition(availableReviews: reviews,
+                                             countByType: [.radical: reviews],
+                                             countByCategory: [.apprentice: 0]))
       }
       return composition
     }
