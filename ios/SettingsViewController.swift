@@ -147,11 +147,11 @@ class SettingsViewController: UITableViewController {
                                 action: #selector(fontSizeChanged(_:))))
 
     model.add(TKMSwitchModelItem(style: .subtitle,
-                                     title: "Exact match",
-                                     subtitle: "Requires typing in answers exactly correct",
-                                     on: Settings.exactMatch,
-                                     target: self,
-                                     action: #selector(exactMatchSwitchChanged(_:))))
+                                 title: "Exact match",
+                                 subtitle: "Requires typing in answers exactly correct",
+                                 on: Settings.exactMatch,
+                                 target: self,
+                                 action: #selector(exactMatchSwitchChanged(_:))))
     model.add(TKMSwitchModelItem(style: .subtitle,
                                  title: "Allow cheating",
                                  subtitle: "Ignore Typos and Add Synonym",
