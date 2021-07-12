@@ -26,6 +26,30 @@ extension Notification.Name {
   static let lccSRSCategoryCountsChanged = Notification.Name("lccSRSCategoryCountsChanged")
 }
 
+struct ReviewComposition {
+  var reviews: Int,
+      radical: Int,
+      kanji: Int,
+      vocab: Int,
+      apprentice: Int,
+      guru: Int,
+      master: Int,
+      enlightened: Int
+}
+
+extension ReviewComposition {
+  init() {
+    reviews = 0
+    radical = 0
+    kanji = 0
+    vocab = 0
+    apprentice = 0
+    guru = 0
+    master = 0
+    enlightened = 0
+  }
+}
+
 private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   DispatchQueue.main.async {
     NotificationCenter.default.post(name: notification, object: nil)
@@ -44,8 +68,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   // swiftformat:disable all
   @Cached(notificationName: .lccAvailableItemsChanged) var availableSubjects: (
     lessonCount: Int,
-    reviewCount: Int,
-    upcomingReviews: [Int]
+    reviewComposition: [ReviewComposition]
   )
   // swiftformat:enable all
 
@@ -122,15 +145,28 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
-  func updateAvailableSubjects() -> (Int, Int, [Int]) {
+  func updateAvailableSubjects() -> (Int, [ReviewComposition]) {
     guard let user = getUserInfo() else {
-      return (0, 0, [])
+      return (0, [])
     }
 
     let now = Date()
-    var lessonCount = 0
-    var reviewCount = 0
-    var upcomingReviews = Array(repeating: 0, count: 48)
+    var lessonCount = 0,
+      reviewComposition = Array(repeating: ReviewComposition(), count: SRSStage.maxHours + 1)
+
+    func iterateValidReview(_ type: TKMSubject.TypeEnum, hours: Int, stage: SRSStage) {
+      guard hours < reviewComposition.count else { return }
+      reviewComposition[hours].reviews += 1
+
+      if type == .radical { reviewComposition[hours].radical += 1 }
+      else if type == .kanji { reviewComposition[hours].kanji += 1 }
+      else if type == .vocabulary { reviewComposition[hours].vocab += 1 }
+
+      if stage.category == .apprentice { reviewComposition[hours].apprentice += 1 }
+      else if stage.category == .guru { reviewComposition[hours].guru += 1 }
+      else if stage.category == .master { reviewComposition[hours].master += 1 }
+      else if stage.category == .enlightened { reviewComposition[hours].enlightened += 1 }
+    }
 
     for assignment in getAllAssignments() {
       // Don't count assignments with invalid subjects.  This includes assignments for levels higher
@@ -149,19 +185,13 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       if assignment.isLessonStage {
         lessonCount += 1
       } else if assignment.isReviewStage {
-        let availableInSeconds = assignment.availableAtDate.timeIntervalSince(now)
-        if availableInSeconds <= 0 {
-          reviewCount += 1
-          continue
-        }
-        let availableInHours = Int(availableInSeconds / (60 * 60))
-        if availableInHours < upcomingReviews.count {
-          upcomingReviews[availableInHours] += 1
-        }
+        var interval = max(0, assignment.availableAtDate.timeIntervalSince(now)),
+            stage = assignment.srsStage
+        iterateValidReview(assignment.subjectType, hours: Int(ceil(interval / 3600)), stage: stage)
       }
     }
 
-    return (lessonCount, reviewCount, upcomingReviews)
+    return (lessonCount, reviewComposition)
   }
 
   class func databaseUrl() -> URL {
@@ -969,7 +999,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   // MARK: - Objective-C support
 
   var availableReviewCount: Int {
-    availableSubjects.reviewCount
+    availableSubjects.reviewComposition.first?.reviews ?? 0
   }
 
   var availableLessonCount: Int {
@@ -977,7 +1007,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   }
 
   var upcomingReviews: [Int] {
-    availableSubjects.upcomingReviews
+    availableSubjects.reviewComposition[1...].map { return $0.reviews }
   }
 }
 

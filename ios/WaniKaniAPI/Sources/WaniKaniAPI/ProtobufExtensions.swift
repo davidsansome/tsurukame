@@ -130,6 +130,8 @@ public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     case .burned: return .burned
     }
   }
+  
+  public static let maxHours = 2879
 
   public func duration(itemLevel: Int) -> TimeInterval {
     let isAccelerated = itemLevel <= 2
