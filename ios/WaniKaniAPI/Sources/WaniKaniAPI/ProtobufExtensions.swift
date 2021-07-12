@@ -131,27 +131,39 @@ public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     }
   }
 
-  public func minimumTimeUntilGuru(itemLevel: Int) -> TimeInterval {
+  public func duration(itemLevel: Int) -> TimeInterval {
     let isAccelerated = itemLevel <= 2
-
-    var hours = 0
-    // From https://docs.api.wanikani.com/20170710/#additional-information
+    
+    // From https://docs.api.wanikani.com/20170710/#spaced-repetition-systems
     switch self {
     case .apprentice1:
-      hours += (isAccelerated ? 2 : 4)
-      fallthrough
+      return isAccelerated ? 7200 : 14400
     case .apprentice2:
-      hours += (isAccelerated ? 4 : 8)
-      fallthrough
+      return isAccelerated ? 14400 : 28800
     case .apprentice3:
-      hours += (isAccelerated ? 8 : 23)
-      fallthrough
+      return isAccelerated ? 28800 : 82800
     case .apprentice4:
-      hours += (isAccelerated ? 23 : 47)
-    default:
-      break
+      return isAccelerated ? 82800 : 169200
+    case .guru1:
+      return 601200
+    case .guru2:
+      return 1206000
+    case .master:
+      return 2588400
+    case .enlightened:
+      return 10364400
+    case .unlocking, .burned:
+      return 0
     }
-    return TimeInterval(hours * 60 * 60)
+  }
+
+  public func minimumTimeUntilGuru(itemLevel: Int) -> TimeInterval {
+    var time: TimeInterval = 0, stage = self
+    while stage.category == .apprentice {
+      time += stage.duration(itemLevel: itemLevel)
+      stage = stage.next
+    }
+    return time
   }
 }
 

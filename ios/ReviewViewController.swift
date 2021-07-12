@@ -296,6 +296,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
+    case .longestRelativeWait:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if availableRatio(a.assignment) < availableRatio(b.assignment) { return false }
+        if availableRatio(a.assignment) > availableRatio(b.assignment) { return true }
+        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
+        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        return false
+      }
     case .random:
       break
 
@@ -304,6 +312,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     refillActiveQueue()
+  }
+
+  private func availableRatio(_ assignment: TKMAssignment) -> TimeInterval {
+    let truncatedDate =
+      Date(timeIntervalSince1970: Double((Int(Date().timeIntervalSince1970) / 3600) * 3600))
+    return truncatedDate.timeIntervalSince(assignment.availableAtDate) /
+      assignment.srsStage.duration(itemLevel: Int(assignment.level))
   }
 
   @objc public var activeQueueLength: Int {
