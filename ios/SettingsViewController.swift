@@ -147,6 +147,12 @@ class SettingsViewController: UITableViewController {
                                 action: #selector(fontSizeChanged(_:))))
 
     model.add(TKMSwitchModelItem(style: .subtitle,
+                                 title: "Exact match",
+                                 subtitle: "Requires typing in answers exactly correct",
+                                 on: Settings.exactMatch,
+                                 target: self,
+                                 action: #selector(exactMatchSwitchChanged(_:))))
+    model.add(TKMSwitchModelItem(style: .subtitle,
                                  title: "Allow cheating",
                                  subtitle: "Ignore Typos and Add Synonym",
                                  on: Settings.enableCheats,
@@ -342,6 +348,10 @@ class SettingsViewController: UITableViewController {
 
   @objc private func minimizeReviewPenaltySwitchChanged(_ switchView: UISwitch) {
     Settings.minimizeReviewPenalty = switchView.isOn
+  }
+
+  @objc private func exactMatchSwitchChanged(_ switchView: UISwitch) {
+    Settings.exactMatch = switchView.isOn
   }
 
   @objc private func enableCheatsSwitchChanged(_ switchView: UISwitch) {
