@@ -1284,10 +1284,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     randomTask()
   }
 
-  @objc func markIncorrect() {
-    randomTask()
-  }
-
   @objc func askAgain() {
     markAnswer(.AskAgainLater)
   }
