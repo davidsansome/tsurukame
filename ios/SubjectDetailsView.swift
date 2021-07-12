@@ -160,7 +160,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       model.addSection("Meaning Note")
       model.add(notesItem)
     }
-    let hasMeaningNote = studyMaterials?.hasMeaningNote != nil
+    let hasMeaningNote = !(studyMaterials?.meaningNote ?? "").isEmpty
     model.add(TKMBasicModelItem(style: .default,
                                 title: "\(hasMeaningNote ? "Edit" : "Create") meaning note",
                                 subtitle: nil,
@@ -189,7 +189,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       model.addSection("Reading Note")
       model.add(notesItem)
     }
-    let hasReadingNote = studyMaterials?.hasReadingNote != nil
+    let hasReadingNote = !(studyMaterials?.readingNote ?? "").isEmpty
     model.add(TKMBasicModelItem(style: .default,
                                 title: "\(hasReadingNote ? "Edit" : "Create") reading note",
                                 subtitle: nil,
@@ -457,7 +457,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     if studyMaterials == nil {
       materials.subjectID = subject.id
     }
-    let hasNote = isMeaningNote ? materials.hasMeaningNote : materials.hasReadingNote
+    let hasNote = isMeaningNote ? !materials.meaningNote.isEmpty : !materials.readingNote.isEmpty
     let ac = UIAlertController(title: "\(hasNote ? "Edit" : "Create") note",
                                message: "\(hasNote ? "Edit" : "Create") the \(isMeaningNote ? "meaning" : "reading") note",
                                preferredStyle: .alert)
