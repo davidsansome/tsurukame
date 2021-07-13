@@ -146,6 +146,7 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
 
   @EnumSetting(InterfaceStyle.system,
                #keyPath(interfaceStyle)) static var interfaceStyle: InterfaceStyle
+  @Setting(false, #keyPath(upcomingTypeOverSRS)) static var upcomingTypeOverSRS: Bool
 
   @Setting(false, #keyPath(notificationsAllReviews)) static var notificationsAllReviews: Bool
   @Setting(true, #keyPath(notificationsBadging)) static var notificationsBadging: Bool

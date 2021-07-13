@@ -18,11 +18,12 @@ import Foundation
 class UpcomingReviewsXAxisValueFormatter: IAxisValueFormatter {
   let startTime: Date
   let dateFormatter: DateFormatter
+  let hourFormat: String = "ha"
 
   init(_ startTime: Date) {
     self.startTime = startTime
     dateFormatter = DateFormatter()
-    dateFormatter.setLocalizedDateFormatFromTemplate("ha")
+    dateFormatter.setLocalizedDateFormatFromTemplate(hourFormat)
   }
 
   func stringForValue(_ value: Double, axis _: AxisBase?) -> String {
@@ -39,12 +40,17 @@ class UpcomingReviewsXAxisValueFormatter: IAxisValueFormatter {
 class UpcomingReviewsChartItem: NSObject, TKMModelItem {
   let upcomingReviews: [Int]
   let currentReviewCount: Int
+  let target: MainViewController
+  let action: Selector
   let date: Date
 
-  @objc init(_ upcomingReviews: [Int], currentReviewCount: Int, at date: Date) {
+  @objc init(_ upcomingReviews: [Int], currentReviewCount: Int, at date: Date,
+             target: MainViewController, action: Selector) {
     self.upcomingReviews = upcomingReviews
     self.currentReviewCount = currentReviewCount
     self.date = date
+    self.target = target
+    self.action = action
   }
 
   func cellClass() -> AnyClass! {
@@ -58,6 +64,8 @@ class UpcomingReviewsChartItem: NSObject, TKMModelItem {
 
 class UpcomingReviewsChartCell: TKMModelCell {
   private let view: CombinedChartView
+  private var mainVC: MainViewController!
+  private var action: Selector!
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     view = CombinedChartView()
@@ -94,6 +102,8 @@ class UpcomingReviewsChartCell: TKMModelCell {
 
   override func update(with baseItem: TKMModelItem!) {
     let item = baseItem as! UpcomingReviewsChartItem
+    mainVC = item.target
+    action = item.action
 
     var hourlyData = [BarChartDataEntry]()
     var cumulativeData = [ChartDataEntry]()
@@ -136,5 +146,9 @@ class UpcomingReviewsChartCell: TKMModelCell {
 
     view.data = data
     view.xAxis.valueFormatter = UpcomingReviewsXAxisValueFormatter(item.date)
+  }
+
+  override func didSelect() {
+    mainVC.perform(action)
   }
 }
