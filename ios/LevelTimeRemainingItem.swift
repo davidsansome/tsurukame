@@ -30,7 +30,7 @@ private func calculateLevelTimeRemaining(services: TKMServices,
   -> (finish: Date, isEstimate: Bool) {
   var radicalDates = [Date]()
   var guruDates = [Date]()
-  var levels = [Int32]()
+  var subjects = [TKMSubject]()
 
   for assignment in currentLevelAssignments {
     if assignment.subjectType != .radical {
@@ -49,7 +49,6 @@ private func calculateLevelTimeRemaining(services: TKMServices,
     if assignment.subjectType != .kanji {
       continue
     }
-    levels.append(assignment.level)
     if !assignment.hasAvailableAt {
       // This kanji is locked, but it might not be essential for level-up
       guruDates.append(Date.distantFuture)
@@ -60,13 +59,14 @@ private func calculateLevelTimeRemaining(services: TKMServices,
       continue
     }
     guruDates.append(guruDate)
+    subjects.append(subject)
   }
 
   // Sort the list of dates and remove the most distant 10%.
   guruDates = Array(guruDates.sorted().dropLast(Int(Double(guruDates.count) * 0.1)))
-  levels = Array(levels.sorted(by: >).dropLast(Int(Double(levels.count) * 0.1)))
+  subjects = Array(subjects.sorted{$0.level > $1.level}.dropLast(Int(Double(subjects.count) * 0.1)))
 
-  if let lastGuruDate = guruDates.last, let wkLevel = levels.last {
+  if let lastGuruDate = guruDates.last, let lastSubject = subjects.last {
     if lastGuruDate == Date.distantFuture {
       // There is still a locked kanji needed for level-up, so we don't know how long
       // the user will take to level up. Use their average level time, minus the time
@@ -75,8 +75,7 @@ private func calculateLevelTimeRemaining(services: TKMServices,
       // But ensure it can't be less than the time it would take to get a fresh item
       // to Guru, if they've spent longer at the current level than the average.
       average = max(average,
-                    SRSStage.apprentice1
-                      .minimumTimeUntilGuru(itemLevel: Int(wkLevel)) + lastRadicalGuruTime)
+                    SRSStage.apprentice1.minimumTimeUntilGuru(lastSubject) + lastRadicalGuruTime)
       return (Date(timeIntervalSinceNow: average), isEstimate: true)
     } else {
       return (lastGuruDate, isEstimate: false)
