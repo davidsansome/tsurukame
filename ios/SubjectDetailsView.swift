@@ -160,12 +160,14 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       model.addSection("Meaning Note")
       model.add(notesItem)
     }
-    let hasMeaningNote = !(studyMaterials?.meaningNote ?? "").isEmpty
-    model.add(TKMBasicModelItem(style: .default,
-                                title: "\(hasMeaningNote ? "Edit" : "Create") meaning note",
-                                subtitle: nil,
-                                accessoryType: .none, target: self,
-                                action: #selector(editMeaningNote)))
+    if Settings.enableNoteEditing || task == nil {
+      let hasMeaningNote = !(studyMaterials?.meaningNote ?? "").isEmpty
+      model.add(TKMBasicModelItem(style: .default,
+                                  title: "\(hasMeaningNote ? "Edit" : "Create") meaning note",
+                                  subtitle: nil,
+                                  accessoryType: .none, target: self,
+                                  action: #selector(editMeaningNote)))
+    }
   }
 
   private func addReadings(_ subject: TKMSubject,
@@ -189,12 +191,14 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       model.addSection("Reading Note")
       model.add(notesItem)
     }
-    let hasReadingNote = !(studyMaterials?.readingNote ?? "").isEmpty
-    model.add(TKMBasicModelItem(style: .default,
-                                title: "\(hasReadingNote ? "Edit" : "Create") reading note",
-                                subtitle: nil,
-                                accessoryType: .none, target: self,
-                                action: #selector(editReadingNote)))
+    if Settings.enableNoteEditing || task == nil {
+      let hasReadingNote = !(studyMaterials?.readingNote ?? "").isEmpty
+      model.add(TKMBasicModelItem(style: .default,
+                                  title: "\(hasReadingNote ? "Edit" : "Create") reading note",
+                                  subtitle: nil,
+                                  accessoryType: .none, target: self,
+                                  action: #selector(editReadingNote)))
+    }
   }
 
   private func addComponents(_ subject: TKMSubject,
