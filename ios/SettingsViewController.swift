@@ -220,6 +220,12 @@ class SettingsViewController: UITableViewController {
                                  on: Settings.ankiMode,
                                  target: self,
                                  action: #selector(ankiModeSwitchChanged(_:))))
+    model.add(TKMSwitchModelItem(style: .subtitle,
+                                 title: "Enable note editing",
+                                 subtitle: "Allows editing meaning/reading notes in reviews",
+                                 on: Settings.enableNoteEditing,
+                                 target: self,
+                                 action: #selector(enableNoteEditingSwitchChanged(_:))))
 
     model.addSection("Audio")
     model.add(TKMSwitchModelItem(style: .subtitle,
@@ -402,6 +408,10 @@ class SettingsViewController: UITableViewController {
 
   @objc private func ankiModeSwitchChanged(_ switchView: UISwitch) {
     Settings.ankiMode = switchView.isOn
+  }
+  
+  @objc private func enableNoteEditingSwitchChanged(_ switchView: UISwitch) {
+    Settings.enableNoteEditing = switchView.isOn
   }
 
   @objc private func playAudioAutomaticallySwitchChanged(_ switchView: UISwitch) {
