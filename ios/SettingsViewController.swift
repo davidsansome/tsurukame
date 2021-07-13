@@ -216,7 +216,7 @@ class SettingsViewController: UITableViewController {
                                      action: #selector(partiallyCorrectSwitchChanged(_:))))
     model.add(TKMSwitchModelItem(style: .subtitle,
                                  title: "Anki mode",
-                                 subtitle: "Allows doing reviews without typing answers",
+                                 subtitle: "Do reviews without typing answers",
                                  on: Settings.ankiMode,
                                  target: self,
                                  action: #selector(ankiModeSwitchChanged(_:))))
