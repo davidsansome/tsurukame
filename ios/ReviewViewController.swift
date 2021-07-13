@@ -317,8 +317,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private func availableRatio(_ assignment: TKMAssignment) -> TimeInterval {
     let truncatedDate =
       Date(timeIntervalSince1970: Double((Int(Date().timeIntervalSince1970) / 3600) * 3600))
-    return truncatedDate.timeIntervalSince(assignment.availableAtDate) /
-      assignment.srsStage.duration(itemLevel: Int(assignment.level))
+    let subject = services.localCachingClient.getSubject(id: assignment.subjectID)!
+    return truncatedDate.timeIntervalSince(assignment.availableAtDate) / assignment.srsStage.duration(subject)
   }
 
   @objc public var activeQueueLength: Int {

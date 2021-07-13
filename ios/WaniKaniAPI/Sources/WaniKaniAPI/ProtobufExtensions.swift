@@ -131,22 +131,20 @@ public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     }
   }
   
-  // Maximum value of duration(itemLevel:) to determine maximum time for an upcoming review to be
+  // Maximum value of duration to determine maximum time for an upcoming review to be
   public static let maxDuration: TimeInterval = 10364400
 
-  public func duration(itemLevel: Int) -> TimeInterval {
-    let isAccelerated = itemLevel <= 2
-    
+  public func duration(_ subject: TKMSubject) -> TimeInterval {
     // From https://docs.api.wanikani.com/20170710/#spaced-repetition-systems
     switch self {
     case .apprentice1:
-      return isAccelerated ? 7200 : 14400
+      return subject.isAccelerated ? 7200 : 14400
     case .apprentice2:
-      return isAccelerated ? 14400 : 28800
+      return subject.isAccelerated ? 14400 : 28800
     case .apprentice3:
-      return isAccelerated ? 28800 : 82800
+      return subject.isAccelerated ? 28800 : 82800
     case .apprentice4:
-      return isAccelerated ? 82800 : 169200
+      return subject.isAccelerated ? 82800 : 169200
     case .guru1:
       return 601200
     case .guru2:
@@ -160,10 +158,10 @@ public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     }
   }
 
-  public func minimumTimeUntilGuru(itemLevel: Int) -> TimeInterval {
+  public func minimumTimeUntilGuru(_ subject: TKMSubject) -> TimeInterval {
     var time: TimeInterval = 0, stage = self
     while stage.category == .apprentice {
-      time += stage.duration(itemLevel: itemLevel)
+      time += stage.duration(subject)
       stage = stage.next
     }
     return time
@@ -194,6 +192,8 @@ public extension TKMSubject {
     }
     return .unknown
   }
+  
+  var isAccelerated: Bool { level <= 2 }
 
   func japaneseText(imageSize: CGFloat) -> NSAttributedString {
     if !hasRadical || !radical.hasCharacterImageFile_p {
@@ -392,7 +392,7 @@ public extension TKMAssignment {
       return Date.distantPast
     }
 
-    let guruSeconds = srsStage.next.minimumTimeUntilGuru(itemLevel: Int(subject.level))
+    let guruSeconds = srsStage.next.minimumTimeUntilGuru(subject)
     return reviewDate?.addingTimeInterval(guruSeconds)
   }
 }
