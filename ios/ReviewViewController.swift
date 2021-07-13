@@ -318,7 +318,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     let truncatedDate =
       Date(timeIntervalSince1970: Double((Int(Date().timeIntervalSince1970) / 3600) * 3600))
     let subject = services.localCachingClient.getSubject(id: assignment.subjectID)!
-    return truncatedDate.timeIntervalSince(assignment.availableAtDate) / assignment.srsStage.duration(subject)
+    return truncatedDate.timeIntervalSince(assignment.availableAtDate) / assignment.srsStage
+      .duration(subject)
   }
 
   @objc public var activeQueueLength: Int {
@@ -804,7 +805,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     previousSubjectButton.alpha = shown ? 0.0 : 1.0
 
     // Change the foreground color of the answer field.
-    answerField.textColor = shown ? (partiallyCorrect ? .systemYellow : .systemRed) : TKMStyle.Color.label
+    answerField.textColor = shown ? (partiallyCorrect ? .systemYellow : .systemRed) : TKMStyle.Color
+      .label
 
     // Scroll to the top.
     subjectDetailsView
@@ -1212,7 +1214,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       revealAnswerButton.isHidden = false
       UIView.animate(withDuration: animationDuration,
                      animations: {
-                      self.answerField.textColor = partially ? .systemYellow : .systemRed
+                       self.answerField.textColor = partially ? .systemYellow : .systemRed
                        self.answerField.isEnabled = false
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)
@@ -1225,7 +1227,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   @IBAction func revealAnswerButtonPressed(_: Any) {
     revealAnswerButtonPressed(true, partiallyCorrect: false)
   }
-  
+
   func revealAnswerButtonPressed(_: Any, partiallyCorrect: Bool = false) {
     subjectDetailsView.update(withSubject: activeSubject, studyMaterials: activeStudyMaterials,
                               assignment: activeAssignment, task: activeTask)
@@ -1279,7 +1281,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   @objc func markCorrect() {
     markAnswer(.OverrideAnswerCorrect)
   }
-  
+
   @objc func markIncorrect() {
     randomTask()
   }

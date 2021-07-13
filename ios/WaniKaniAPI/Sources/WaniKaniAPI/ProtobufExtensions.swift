@@ -130,9 +130,9 @@ public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     case .burned: return .burned
     }
   }
-  
+
   // Maximum value of duration to determine maximum time for an upcoming review to be
-  public static let maxDuration: TimeInterval = 10364400
+  public static let maxDuration: TimeInterval = 10_364_400
 
   public func duration(_ subject: TKMSubject) -> TimeInterval {
     // From https://docs.api.wanikani.com/20170710/#spaced-repetition-systems
@@ -144,15 +144,15 @@ public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
     case .apprentice3:
       return subject.isAccelerated ? 28800 : 82800
     case .apprentice4:
-      return subject.isAccelerated ? 82800 : 169200
+      return subject.isAccelerated ? 82800 : 169_200
     case .guru1:
-      return 601200
+      return 601_200
     case .guru2:
-      return 1206000
+      return 1_206_000
     case .master:
-      return 2588400
+      return 2_588_400
     case .enlightened:
-      return 10364400
+      return 10_364_400
     case .unlocking, .burned:
       return 0
     }
@@ -192,7 +192,7 @@ public extension TKMSubject {
     }
     return .unknown
   }
-  
+
   var isAccelerated: Bool { level <= 2 }
 
   func japaneseText(imageSize: CGFloat) -> NSAttributedString {
