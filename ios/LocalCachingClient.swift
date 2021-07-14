@@ -984,7 +984,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   }
 
   var upcomingReviews: [Int] {
-    availableSubjects.reviewComposition[1...].map { $0.availableReviews }
+    availableSubjects.reviewComposition.dropFirst().map { $0.availableReviews }
   }
 }
 
