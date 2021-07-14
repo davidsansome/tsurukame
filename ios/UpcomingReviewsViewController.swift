@@ -44,19 +44,11 @@ class UpcomingReviewsViewController: UITableViewController {
     rerender()
   }
 
-  private typealias ReviewData = ReviewComposition
-
-  private func combineData(_ a: ReviewData, _ b: ReviewData) -> ReviewData {
-    return ReviewData(availableReviews: a.availableReviews + b.availableReviews,
-                      countByType: a.countByType.merging(b.countByType, uniquingKeysWith: +),
-                      countByCategory: a.countByCategory.merging(b.countByCategory, uniquingKeysWith: +))
-  }
-
-  private func getReviewData() -> [ReviewData] {
+  private func getReviewData() -> [ReviewComposition] {
     let subjects = services.localCachingClient.availableSubjects
-    var cumulativeData: [ReviewData] = []
+    var cumulativeData: [ReviewComposition] = []
     for data in subjects.reviewComposition {
-      cumulativeData.append(combineData(cumulativeData.last ?? ReviewData(), data))
+      cumulativeData.append(data + (cumulativeData.last ?? ReviewComposition()))
     }
     return cumulativeData
   }

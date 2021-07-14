@@ -40,12 +40,12 @@ class UpcomingReviewsXAxisValueFormatter: IAxisValueFormatter {
 class UpcomingReviewsChartItem: NSObject, TKMModelItem {
   let upcomingReviews: [Int]
   let currentReviewCount: Int
-  let target: MainViewController
+  let target: NSObject
   let action: Selector
   let date: Date
 
   @objc init(_ upcomingReviews: [Int], currentReviewCount: Int, at date: Date,
-             target: MainViewController, action: Selector) {
+             target: NSObject, action: Selector) {
     self.upcomingReviews = upcomingReviews
     self.currentReviewCount = currentReviewCount
     self.date = date
@@ -64,7 +64,7 @@ class UpcomingReviewsChartItem: NSObject, TKMModelItem {
 
 class UpcomingReviewsChartCell: TKMModelCell {
   private let view: CombinedChartView
-  private var mainVC: MainViewController!
+  private var targetController: NSObject!
   private var action: Selector!
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -102,7 +102,7 @@ class UpcomingReviewsChartCell: TKMModelCell {
 
   override func update(with baseItem: TKMModelItem!) {
     let item = baseItem as! UpcomingReviewsChartItem
-    mainVC = item.target
+    targetController = item.target
     action = item.action
 
     var hourlyData = [BarChartDataEntry]()
@@ -149,6 +149,6 @@ class UpcomingReviewsChartCell: TKMModelCell {
   }
 
   override func didSelect() {
-    mainVC.perform(action)
+    targetController.perform(action)
   }
 }

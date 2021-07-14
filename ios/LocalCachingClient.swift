@@ -30,6 +30,12 @@ struct ReviewComposition {
   var availableReviews = 0,
       countByType: [TKMSubject.TypeEnum: Int] = [.radical: 0, .kanji: 0, .vocabulary: 0],
       countByCategory: [SRSStageCategory: Int] = [.apprentice: 0, .guru: 0, .master: 0, .enlightened: 0]
+  
+  static func +(left: ReviewComposition, right: ReviewComposition) -> ReviewComposition {
+    ReviewComposition(availableReviews: left.availableReviews + right.availableReviews,
+                      countByType: left.countByType.merging(right.countByType, uniquingKeysWith: +),
+                      countByCategory: left.countByCategory.merging(right.countByCategory, uniquingKeysWith: +))
+  }
 }
 
 private func postNotificationOnMainQueue(_ notification: Notification.Name) {
