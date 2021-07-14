@@ -214,7 +214,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
           let content = UNMutableNotificationContent()
           if Settings.notificationsAllReviews {
             content.body = "\(cumulativeReviews) review\(cumulativeReviews == 1 ? "" : "s") " +
-                            "available (\(upcomingReviews[hour]) new)"
+              "available (\(upcomingReviews[hour]) new)"
           }
           if Settings.notificationsBadging {
             content.badge = NSNumber(value: cumulativeReviews)
