@@ -29,7 +29,8 @@ extension Notification.Name {
 struct ReviewComposition {
   var availableReviews = 0,
       countByType: [TKMSubject.TypeEnum: Int] = [.radical: 0, .kanji: 0, .vocabulary: 0],
-      countByCategory: [SRSStageCategory: Int] = [.apprentice: 0, .guru: 0, .master: 0, .enlightened: 0]
+      countByCategory: [SRSStageCategory: Int] = [.apprentice: 0, .guru: 0, .master: 0,
+                                                  .enlightened: 0]
   
   static func +(left: ReviewComposition, right: ReviewComposition) -> ReviewComposition {
     ReviewComposition(availableReviews: left.availableReviews + right.availableReviews,
@@ -140,8 +141,8 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
     let now = Date()
     var lessonCount = 0,
-      reviewComposition = Array(repeating: ReviewComposition(),
-                                count: Int(SRSStage.maxDuration / 60 / 60) + 1)
+        reviewComposition = Array(repeating: ReviewComposition(),
+                                  count: Int(SRSStage.maxDuration / 60 / 60) + 1)
 
     func iterateValidReview(_ type: TKMSubject.TypeEnum, hours: Int, stage: SRSStage) {
       guard hours < reviewComposition.count else { return }
@@ -989,7 +990,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   }
 
   var upcomingReviews: [Int] {
-    availableSubjects.reviewComposition[1...].map { return $0.availableReviews }
+    availableSubjects.reviewComposition.dropFirst().map { $0.availableReviews }
   }
 }
 
