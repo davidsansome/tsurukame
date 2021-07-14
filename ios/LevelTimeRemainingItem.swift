@@ -64,7 +64,8 @@ private func calculateLevelTimeRemaining(services: TKMServices,
 
   // Sort the list of dates and remove the most distant 10%.
   guruDates = Array(guruDates.sorted().dropLast(Int(Double(guruDates.count) * 0.1)))
-  subjects = Array(subjects.sorted{$0.level > $1.level}.dropLast(Int(Double(subjects.count) * 0.1)))
+  subjects = Array(subjects.sorted { $0.level > $1.level }
+    .dropLast(Int(Double(subjects.count) * 0.1)))
 
   if let lastGuruDate = guruDates.last, let lastSubject = subjects.last {
     if lastGuruDate == Date.distantFuture {
