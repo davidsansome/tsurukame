@@ -611,6 +611,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         submitButton.setImage(skipImage, for: .normal)
       } else if !Settings.ankiMode {
         submitButton.isEnabled = false
+      } else {
+        // Hide the submit button in Anki mode if skipping reviews are off
+        submitButton.isHidden = true
       }
 
       // Background gradients.
@@ -744,13 +747,19 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     if shown {
       subjectDetailsView.isHidden = false
-      if cheats {
+      if cheats, !Settings.ankiMode {
         addSynonymButton.isHidden = false
+      }
+      if Settings.ankiMode, Settings.allowSkippingReviews {
+        submitButton.isHidden = true
       }
     } else {
       if previousSubject != nil {
         previousSubjectLabel?.isHidden = false
         previousSubjectButton.isHidden = false
+      }
+      if Settings.ankiMode, Settings.allowSkippingReviews {
+        submitButton.isHidden = false
       }
     }
 
@@ -910,6 +919,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   @objc func didShortPressQuestionLabel(_: UITapGestureRecognizer) {
     toggleFont()
+    if Settings.ankiMode { submit() }
   }
 
   @objc func didSwipeQuestionLabel(_ sender: UISwipeGestureRecognizer) {
@@ -1208,7 +1218,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     // Otherwise show the correct answer.
-    if !Settings.showAnswerImmediately {
+    if !Settings.showAnswerImmediately, !Settings.ankiMode {
       revealAnswerButton.isHidden = false
       UIView.animate(withDuration: animationDuration,
                      animations: {
