@@ -550,7 +550,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       } else if activeTask.answeredReading || activeSubject.hasRadical {
         activeTaskType = .meaning
       } else if Settings.groupMeaningReading {
-        activeTaskType = Settings.meaningFirst ? .meaning : .reading
+        activeTaskType = Settings.meaningFirst || Settings.meaningOnly ? .meaning : .reading
       } else {
         activeTaskType = TaskType.random()
       }
@@ -1164,8 +1164,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     // Remove it from the active queue if that was the last part.
-    let isSubjectFinished =
-      activeTask.answeredMeaning && (activeSubject.hasRadical || activeTask.answeredReading)
+    let isSubjectFinished = activeTask.answeredMeaning &&
+      (Settings.meaningOnly || activeSubject.hasRadical || activeTask.answeredReading)
     let didLevelUp = (!activeTask.answer.readingWrong && !activeTask.answer.meaningWrong)
     let newSrsStage =
       didLevelUp ? activeTask.assignment.srsStage.next : activeTask.assignment.srsStage.previous

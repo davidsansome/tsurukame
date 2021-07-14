@@ -311,7 +311,8 @@ class SettingsViewController: UITableViewController {
   }
 
   private var taskOrderValueText: String {
-    Settings.meaningFirst ? "Meaning first" : "Reading first"
+    Settings.meaningFirst ? "Meaning first" :
+      Settings.meaningOnly ? "Meaning only" : "Reading first"
   }
 
   private var fontSizeValueText: String {

@@ -164,6 +164,7 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
   @Setting(Int.max, #keyPath(apprenticeLessonsLimit)) static var apprenticeLessonsLimit: Int
   @Setting(false, #keyPath(groupMeaningReading)) static var groupMeaningReading: Bool
   @Setting(true, #keyPath(meaningFirst)) static var meaningFirst: Bool
+  @Setting(false, #keyPath(meaningOnly)) static var meaningOnly: Bool
   @Setting(true, #keyPath(showAnswerImmediately)) static var showAnswerImmediately: Bool
   @Setting([], #keyPath(selectedFonts)) static var selectedFonts: Set<String>
   @Setting(1.0, #keyPath(fontSize)) static var fontSize: Float

@@ -23,7 +23,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  NSInteger selectedRow = Settings.meaningFirst ? 0 : 1;
+  NSInteger selectedRow = Settings.meaningOnly ? 2 : (Settings.meaningFirst ? 0 : 1);
   if (selectedRow < 0 || selectedRow >= [self.tableView numberOfRowsInSection:0]) {
     selectedRow = 0;
   }
@@ -34,7 +34,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  Settings.meaningFirst = indexPath.row == 0;
+  Settings.meaningFirst = indexPath.row != 1;
+  Settings.meaningOnly = indexPath.row == 2;
   [self.navigationController popViewControllerAnimated:YES];
 }
 
