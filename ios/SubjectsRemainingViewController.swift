@@ -96,8 +96,8 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate {
       let items = model.items(inSection: section)
       var lastAssignment: TKMAssignment?
       var index = 0
-      while index < items.count {
-        let assignment = (items[index] as! SubjectModelItem).assignment!
+      for item in items {
+        let assignment = (item as! SubjectModelItem).assignment!
         if lastAssignment == nil || lastAssignment!.srsStage != assignment.srsStage ||
           lastAssignment!.isReviewStage != assignment.isReviewStage ||
           lastAssignment!.isLessonStage != assignment.isLessonStage {
