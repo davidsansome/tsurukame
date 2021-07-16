@@ -49,17 +49,16 @@ private func calculateLevelTimeRemaining(services: TKMServices,
     if assignment.subjectType != .kanji {
       continue
     }
-    if !assignment.hasAvailableAt {
+    let subject = services.localCachingClient.getSubject(id: assignment.subjectID)
+    if let subject = subject { subjects.append(subject) }
+    if assignment.isLocked {
       // This kanji is locked, but it might not be essential for level-up
       guruDates.append(Date.distantFuture)
       continue
     }
-    guard let subject = services.localCachingClient.getSubject(id: assignment.subjectID),
-          let guruDate = assignment.guruDate(subject: subject) else {
-      continue
+    if let subject = subject, let guruDate = assignment.guruDate(subject: subject) {
+      guruDates.append(guruDate)
     }
-    guruDates.append(guruDate)
-    subjects.append(subject)
   }
 
   // Sort the list of dates and remove the most distant 10%.
