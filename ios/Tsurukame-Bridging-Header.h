@@ -20,7 +20,6 @@
 #import "SubjectCatalogueViewController.h"
 #import "SuccessAnimation.h"
 #import "TKMDownloadViewController.h"
-#import "TKMFontLoader.h"
 #import "TKMFontsViewController.h"
 #import "TKMGradientView.h"
 #import "TKMKanaInput.h"
