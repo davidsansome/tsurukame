@@ -1050,7 +1050,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     if Settings.ankiMode {
       // Mark the answer incorrect to show the details. This can still be overriden.
       if subjectDetailsView.isHidden { markAnswer(.Incorrect) }
-      addSynonymButtonPressed(true)
+      if Settings.showAnswerImmediately || !subjectDetailsView.isHidden { addSynonymButtonPressed(true) }
       return
     }
 

@@ -127,9 +127,9 @@ class SettingsViewController: UITableViewController {
                                                                action: #selector(didTapTaskOrder(_:))),
                                              hidden:!Settings
                                                .groupMeaningReading)
-    model.add(TKMSwitchModelItem(style: .default,
+    model.add(TKMSwitchModelItem(style: .subtitle,
                                  title: "Reveal answer automatically",
-                                 subtitle: nil,
+                                 subtitle: "In Anki mode, this reveals the mark answer pop-up instead.",
                                  on: Settings.showAnswerImmediately,
                                  target: self,
                                  action: #selector(showAnswerImmediatelySwitchChanged(_:))))
