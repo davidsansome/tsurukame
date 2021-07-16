@@ -61,11 +61,12 @@ class UpcomingReviewsViewController: UITableViewController {
       let data = reviewData[hour],
           difference = data.availableReviews - (hour > 0 ? reviewData[hour - 1].availableReviews : 0)
       return "\(data.availableReviews) (+\(difference)): " +
-        (Settings.upcomingTypeOverSRS ? data.countByType.reduce("") {
-          $0.isEmpty ? "\($1.value)" : "\($0)/\($1.value)"
-        } : data.countByCategory.reduce("") {
-          $0.isEmpty ? "\($1.value)" : "\($0)/\($1.value)"
-        })
+        (Settings.upcomingTypeOverSRS ?
+          data.countByType.sorted{$0.key.rawValue < $1.key.rawValue}.reduce("") {
+            $0.isEmpty ? "\($1.value)" : "\($0)/\($1.value)"
+          } : data.countByCategory.sorted{$0.key.rawValue < $1.key.rawValue}.reduce("") {
+            $0.isEmpty ? "\($1.value)" : "\($0)/\($1.value)"
+          })
     }
 
     for hour in 0 ..< reviewData.count {
