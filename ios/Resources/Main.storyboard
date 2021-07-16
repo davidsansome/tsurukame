@@ -168,6 +168,7 @@
                         <segue destination="Qs4-9j-s1J" kind="show" identifier="showRemaining" id="9oa-Qm-fW5"/>
                         <segue destination="MHj-tV-Wy7" kind="show" identifier="showAll" id="Gsa-0g-2hk"/>
                         <segue destination="HVF-EF-j9e" kind="show" identifier="settings" id="XTh-OI-gtz"/>
+                        <segue destination="vBH-2Y-r3P" kind="show" identifier="tableForecast" id="XTh-OP-gtz"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dob-5V-x24" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -277,6 +278,26 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pib-TB-EmN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-727" y="834"/>
+        </scene>
+        <!--Upcoming Reviews View Controller-->
+        <scene sceneID="4xW-Gu-ryi">
+            <objects>
+                <tableViewController storyboardIdentifier="upcomingReviews" id="vBH-2Y-r3P" customClass="UpcomingReviewsViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" contentMode="scaleToFill" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="1YJ-wh-YRi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="vBH-2Y-r3P" id="SNd-1o-sx1"/>
+                            <outlet property="delegate" destination="vBH-2Y-r3P" id="vv9-ub-Dbp"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="r5Y-Ak-tJZ"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CGk-60-mVf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1362" y="-493"/>
         </scene>
     </scenes>
     <resources>

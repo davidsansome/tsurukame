@@ -161,7 +161,6 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   private func recreateTableModel() {
     guard let user = services.localCachingClient.getUserInfo() else { return }
 
-    let availableSubjects = services.localCachingClient.availableSubjects
     let lessons = services.localCachingClient.availableLessonCount
     let reviews = services.localCachingClient.availableReviewCount
     let upcomingReviews = services.localCachingClient.upcomingReviews
@@ -194,7 +193,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
       model.add(reviewsItem)
 
       model.addSection("Upcoming reviews")
-      model.add(UpcomingReviewsChartItem(upcomingReviews, currentReviewCount: reviews, at: Date()))
+      model.add(UpcomingReviewsChartItem(upcomingReviews, currentReviewCount: reviews, at: Date(),
+                                         target: self, action: #selector(showTableForecast)))
       model
         .add(createCurrentLevelReviewTimeItem(services: services,
                                               currentLevelAssignments: currentLevelAssignments))
@@ -300,6 +300,10 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
     case "settings":
       let vc = segue.destination as! SettingsViewController
+      vc.setup(services: services)
+
+    case "tableForecast":
+      let vc = segue.destination as! UpcomingReviewsViewController
       vc.setup(services: services)
 
     default:
@@ -483,6 +487,10 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
   @objc func showAll() {
     performSegue(withIdentifier: "showAll", sender: self)
+  }
+
+  @objc func showTableForecast() {
+    performSegue(withIdentifier: "tableForecast", sender: self)
   }
 
   override var keyCommands: [UIKeyCommand]? {
