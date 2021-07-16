@@ -20,7 +20,7 @@ import WaniKaniAPI
 @objcMembers
 class TKMServices: NSObject {
   let reachability: Reachability
-  let fontLoader: TKMFontLoader
+  let fontLoader: FontLoader
 
   private(set) var audio: Audio!
   var client: WaniKaniAPIClient!
@@ -28,7 +28,7 @@ class TKMServices: NSObject {
 
   override init() {
     reachability = Reachability.forInternetConnection()
-    fontLoader = TKMFontLoader()
+    fontLoader = FontLoader()
 
     super.init()
 

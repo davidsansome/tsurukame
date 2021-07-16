@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "TKMFontsViewController.h"
-#import "TKMFontLoader.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMTableModel.h"
@@ -61,7 +60,7 @@ static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";
       item.previewImage = [font loadScreenshot];
       item.state = TKMDownloadModelItemDownloading;
     } else if (font.available) {
-      item.previewText = kTKMFontPreviewText;
+      item.previewText = TKMFont.fontPreviewText;
       item.previewFontName = font.fontName;
       if ([Settings.selectedFonts containsObject:font.fileName]) {
         item.state = TKMDownloadModelItemInstalledSelected;
