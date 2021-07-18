@@ -430,6 +430,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                                       subtitle: statsDateFormatter
                                         .string(from: subjectAssignment.passedAtDate)))
         }
+        if subjectAssignment.hasBurnedAt {
+          model.add(TKMBasicModelItem(style: .value1, title: "Burned",
+                                      subtitle: statsDateFormatter
+                                        .string(from: subjectAssignment.burnedAtDate)))
+        }
       }
 
       // TODO: When possible in the API, add a resurrect button.

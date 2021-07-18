@@ -637,6 +637,7 @@ private struct AssignmentData: Codable {
   var unlocked_at: WaniKaniDate?
   var started_at: WaniKaniDate?
   var passed_at: WaniKaniDate?
+  var burned_at: WaniKaniDate?
   var available_at: WaniKaniDate?
 
   func toProto(id: Int32?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment {
@@ -648,6 +649,7 @@ private struct AssignmentData: Codable {
     toProtoDate(available_at) { ret.availableAt = $0 }
     toProtoDate(started_at) { ret.startedAt = $0 }
     toProtoDate(passed_at) { ret.passedAt = $0 }
+    toProtoDate(burned_at) { ret.burnedAt = $0 }
 
     switch subject_type {
     case "radical":
