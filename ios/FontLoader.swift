@@ -56,7 +56,7 @@ struct FontDefinition {
     super.init()
     reload()
   }
-  
+
   func canRender(_ text: String) -> Bool {
     let fontRef = CTFontCreateWithName(NSString(string: fontName), 0.0, nil)
     let count = text.count, characters = text.utf16.map { $0 }
