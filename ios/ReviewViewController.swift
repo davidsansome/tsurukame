@@ -1390,16 +1390,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                       modifierFlags: [],
                                       action: #selector(toggleFont),
                                       discoverabilityTitle: "Toggle font"))
-      if #available(macOS 10.14, *) {
-        keyCommands.append(UIKeyCommand(input: UIKeyCommand.inputRightArrow,
-                                        modifierFlags: [],
-                                        action: #selector(showNextCustomFont),
-                                        discoverabilityTitle: "Next font"))
-        keyCommands.append(UIKeyCommand(input: UIKeyCommand.inputLeftArrow,
-                                        modifierFlags: [],
-                                        action: #selector(showPreviousCustomFont),
-                                        discoverabilityTitle: "Previous font"))
-      }
+      keyCommands.append(UIKeyCommand(input: UIKeyCommand.inputRightArrow,
+                                      modifierFlags: [],
+                                      action: #selector(showNextCustomFont),
+                                      discoverabilityTitle: "Next font"))
+      keyCommands.append(UIKeyCommand(input: UIKeyCommand.inputLeftArrow,
+                                      modifierFlags: [],
+                                      action: #selector(showPreviousCustomFont),
+                                      discoverabilityTitle: "Previous font"))
     }
     if !previousSubjectButton.isHidden {
       keyCommands.append(UIKeyCommand(input: "p",
