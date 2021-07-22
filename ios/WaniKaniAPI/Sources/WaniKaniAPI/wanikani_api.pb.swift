@@ -742,6 +742,15 @@ public struct TKMAssignment {
   /// Clears the value of `passedAt`. Subsequent reads from it will return its default value.
   public mutating func clearPassedAt() {self._passedAt = nil}
 
+  public var burnedAt: Int32 {
+    get {return _burnedAt ?? 0}
+    set {_burnedAt = newValue}
+  }
+  /// Returns true if `burnedAt` has been explicitly set.
+  public var hasBurnedAt: Bool {return self._burnedAt != nil}
+  /// Clears the value of `burnedAt`. Subsequent reads from it will return its default value.
+  public mutating func clearBurnedAt() {self._burnedAt = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -754,6 +763,7 @@ public struct TKMAssignment {
   fileprivate var _startedAt: Int32? = nil
   fileprivate var _srsStageNumber: Int32? = nil
   fileprivate var _passedAt: Int32? = nil
+  fileprivate var _burnedAt: Int32? = nil
 }
 
 public struct TKMProgress {
@@ -1750,6 +1760,7 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     6: .standard(proto: "started_at"),
     7: .standard(proto: "srs_stage_number"),
     8: .standard(proto: "passed_at"),
+    9: .standard(proto: "burned_at"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1766,6 +1777,7 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
       case 6: try { try decoder.decodeSingularInt32Field(value: &self._startedAt) }()
       case 7: try { try decoder.decodeSingularInt32Field(value: &self._srsStageNumber) }()
       case 8: try { try decoder.decodeSingularInt32Field(value: &self._passedAt) }()
+      case 9: try { try decoder.decodeSingularInt32Field(value: &self._burnedAt) }()
       default: break
       }
     }
@@ -1796,6 +1808,9 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     if let v = self._passedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 8)
     }
+    if let v = self._burnedAt {
+      try visitor.visitSingularInt32Field(value: v, fieldNumber: 9)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1808,6 +1823,7 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     if lhs._startedAt != rhs._startedAt {return false}
     if lhs._srsStageNumber != rhs._srsStageNumber {return false}
     if lhs._passedAt != rhs._passedAt {return false}
+    if lhs._burnedAt != rhs._burnedAt {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

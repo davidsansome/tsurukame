@@ -362,6 +362,7 @@ public extension TKMAssignment {
   var availableAtDate: Date { Date(timeIntervalSince1970: TimeInterval(availableAt)) }
   var startedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(startedAt)) }
   var passedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(passedAt)) }
+  var burnedAtDate: Date { Date(timeIntervalSince1970: TimeInterval(burnedAt)) }
 
   var reviewDate: Date? {
     if isBurned || isLocked {
