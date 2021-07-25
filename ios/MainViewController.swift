@@ -167,6 +167,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     let currentLevelAssignments = services.localCachingClient.getAssignmentsAtUsersCurrentLevel()
 
     let model = TKMMutableTableModel(tableView: tableView)
+    AppGroup.writeGroupData(lessons, reviews, upcomingReviews)
 
     if !user.hasVacationStartedAt {
       model.addSection("Currently available")
