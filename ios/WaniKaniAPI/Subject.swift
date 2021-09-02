@@ -177,7 +177,7 @@ struct SubjectData: Codable {
       if let reading_mnemonic = reading_mnemonic {
         ret.vocabulary.readingExplanation = reading_mnemonic
       }
-      ret.vocabulary.audioIds = convertAudioIds()
+      ret.vocabulary.audio = convertAudio()
       ret.vocabulary.partsOfSpeech = convertPartsofSpeech()
       ret.vocabulary.sentences = convertContextSentences()
 
@@ -202,14 +202,15 @@ struct SubjectData: Codable {
     return nil
   }
 
-  private func convertAudioIds() -> [Int32] {
-    var ret = [Int32]()
+  private func convertAudio() -> [TKMVocabulary.PronunciationAudio] {
+    var ret = [TKMVocabulary.PronunciationAudio]()
     if let pronunciation_audios = pronunciation_audios {
       for audio in pronunciation_audios {
-        if audio.content_type == "audio/mpeg",
-          let dash = audio.url.firstIndex(of: "-"),
-          let id = Int32(audio.url[audio.url.index(audio.url.startIndex, offsetBy: 32) ..< dash]) {
-          ret.append(id)
+        if audio.content_type == "audio/mpeg" {
+          var audioPb = TKMVocabulary.PronunciationAudio()
+          audioPb.url = audio.url
+          audioPb.voiceActorID = Int32(audio.metadata.voice_actor_id ?? 0)
+          ret.append(audioPb)
         }
       }
     }

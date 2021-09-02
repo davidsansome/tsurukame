@@ -236,6 +236,11 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     ALTER TABLE sync ADD COLUMN subjects_updated_after TEXT;
     UPDATE sync SET subjects_updated_after = "";
     """,
+
+    // Re-download all subjects after the audio URL parsing was fixed.
+    """
+    UPDATE sync SET subjects_updated_after = "";
+    """,
   ]
 
   private let kClearAllData = """

@@ -241,12 +241,12 @@ extension TKMSubject {
   var commaSeparatedReadings: String { commaSeparated(readings: readings) }
   var commaSeparatedPrimaryReadings: String { commaSeparated(readings: primaryReadings) }
 
-  func randomAudioID() -> Int {
-    if !hasVocabulary || vocabulary.audioIds.count < 1 {
-      return 0
+  func randomAudio() -> TKMVocabulary.PronunciationAudio? {
+    if !hasVocabulary || vocabulary.audio.isEmpty {
+      return nil
     }
-    let idx = arc4random_uniform(UInt32(vocabulary.audioIds.count))
-    return Int(vocabulary.audioIds[Int(idx)])
+    let idx = arc4random_uniform(UInt32(vocabulary.audio.count))
+    return vocabulary.audio[Int(idx)]
   }
 }
 
