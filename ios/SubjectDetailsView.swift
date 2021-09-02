@@ -178,7 +178,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     let text = renderReadings(readings: subject.readings,
                               primaryOnly: primaryOnly).string(withFontSize: kFontSize)
     let item = ReadingModelItem(text: text)
-    if subject.hasVocabulary, subject.vocabulary.audioIds.count > 0 {
+    if subject.hasVocabulary, !subject.vocabulary.audio.isEmpty {
       item.setAudio(services.audio, subjectID: subject.id)
     }
 

@@ -353,7 +353,7 @@ public struct TKMVocabulary {
 
   public var partsOfSpeech: [TKMVocabulary.PartOfSpeech] = []
 
-  public var audioIds: [Int32] = []
+  public var audio: [TKMVocabulary.PronunciationAudio] = []
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -471,6 +471,37 @@ public struct TKMVocabulary {
 
     fileprivate var _japanese: String? = nil
     fileprivate var _english: String? = nil
+  }
+
+  public struct PronunciationAudio {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    public var url: String {
+      get {return _url ?? String()}
+      set {_url = newValue}
+    }
+    /// Returns true if `url` has been explicitly set.
+    public var hasURL: Bool {return self._url != nil}
+    /// Clears the value of `url`. Subsequent reads from it will return its default value.
+    public mutating func clearURL() {self._url = nil}
+
+    public var voiceActorID: Int32 {
+      get {return _voiceActorID ?? 0}
+      set {_voiceActorID = newValue}
+    }
+    /// Returns true if `voiceActorID` has been explicitly set.
+    public var hasVoiceActorID: Bool {return self._voiceActorID != nil}
+    /// Clears the value of `voiceActorID`. Subsequent reads from it will return its default value.
+    public mutating func clearVoiceActorID() {self._voiceActorID = nil}
+
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    public init() {}
+
+    fileprivate var _url: String? = nil
+    fileprivate var _voiceActorID: Int32? = nil
   }
 
   public init() {}
@@ -1475,7 +1506,7 @@ extension TKMVocabulary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     2: .standard(proto: "reading_explanation"),
     3: .same(proto: "sentences"),
     4: .standard(proto: "parts_of_speech"),
-    5: .standard(proto: "audio_ids"),
+    8: .same(proto: "audio"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1488,7 +1519,7 @@ extension TKMVocabulary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
       case 2: try { try decoder.decodeSingularStringField(value: &self._readingExplanation) }()
       case 3: try { try decoder.decodeRepeatedMessageField(value: &self.sentences) }()
       case 4: try { try decoder.decodeRepeatedEnumField(value: &self.partsOfSpeech) }()
-      case 5: try { try decoder.decodeRepeatedInt32Field(value: &self.audioIds) }()
+      case 8: try { try decoder.decodeRepeatedMessageField(value: &self.audio) }()
       default: break
       }
     }
@@ -1507,8 +1538,8 @@ extension TKMVocabulary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     if !self.partsOfSpeech.isEmpty {
       try visitor.visitPackedEnumField(value: self.partsOfSpeech, fieldNumber: 4)
     }
-    if !self.audioIds.isEmpty {
-      try visitor.visitPackedInt32Field(value: self.audioIds, fieldNumber: 5)
+    if !self.audio.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.audio, fieldNumber: 8)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -1518,7 +1549,7 @@ extension TKMVocabulary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     if lhs._readingExplanation != rhs._readingExplanation {return false}
     if lhs.sentences != rhs.sentences {return false}
     if lhs.partsOfSpeech != rhs.partsOfSpeech {return false}
-    if lhs.audioIds != rhs.audioIds {return false}
+    if lhs.audio != rhs.audio {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1583,6 +1614,44 @@ extension TKMVocabulary.Sentence: SwiftProtobuf.Message, SwiftProtobuf._MessageI
   public static func ==(lhs: TKMVocabulary.Sentence, rhs: TKMVocabulary.Sentence) -> Bool {
     if lhs._japanese != rhs._japanese {return false}
     if lhs._english != rhs._english {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension TKMVocabulary.PronunciationAudio: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = TKMVocabulary.protoMessageName + ".PronunciationAudio"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "url"),
+    2: .standard(proto: "voice_actor_id"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self._url) }()
+      case 2: try { try decoder.decodeSingularInt32Field(value: &self._voiceActorID) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if let v = self._url {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
+    }
+    if let v = self._voiceActorID {
+      try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: TKMVocabulary.PronunciationAudio, rhs: TKMVocabulary.PronunciationAudio) -> Bool {
+    if lhs._url != rhs._url {return false}
+    if lhs._voiceActorID != rhs._voiceActorID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

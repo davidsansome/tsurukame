@@ -78,7 +78,7 @@ message Vocabulary {
   optional string meaning_explanation = 1;
   optional string reading_explanation = 2;
 
-  reserved 6, 7;
+  reserved 5, 6, 7;
 
   message Sentence {
     optional string japanese = 1;
@@ -111,7 +111,12 @@ message Vocabulary {
   }
   repeated PartOfSpeech parts_of_speech = 4;
 
-  repeated int32 audio_ids = 5;
+  message PronunciationAudio {
+    optional string url = 1;
+    optional int32 voice_actor_id = 2;
+  }
+
+  repeated PronunciationAudio audio = 8;
 }
 
 message Subject {

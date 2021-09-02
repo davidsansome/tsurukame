@@ -27,8 +27,7 @@ class Audio: NSObject {
     "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/audio"
   }
 
-  private let kURLPattern = "https://cdn.wanikani.com/audios/%d-subject-%d.mp3"
-  private let kOfflineFilePattern = "%@/a%d.mp3"
+  private let kOfflineFilePattern = "%@/a%d-%d.mp3"
 
   enum PlaybackState {
     case loading
@@ -81,23 +80,19 @@ class Audio: NSObject {
     guard let subject = services.localCachingClient.getSubject(id: subjectID) else {
       return
     }
-
-    var audioID: Int
-
-    if !subject.hasVocabulary || subject.vocabulary.audioIds.count < 1 {
-      audioID = 0
-    } else {
-      lastPlayedAudioIndex += 1
-
-      if lastPlayedAudioIndex >= subject.vocabulary.audioIds.count {
-        lastPlayedAudioIndex = 0
-      }
-
-      audioID = Int(subject.vocabulary.audioIds[lastPlayedAudioIndex])
+    if !subject.hasVocabulary || subject.vocabulary.audio.isEmpty {
+      return
     }
 
+    lastPlayedAudioIndex += 1
+    if lastPlayedAudioIndex >= subject.vocabulary.audio.count {
+      lastPlayedAudioIndex = 0
+    }
+    let audio = subject.vocabulary.audio[lastPlayedAudioIndex]
+
     // Is the audio available offline?
-    let filename = String(format: kOfflineFilePattern, Audio.cacheDirectoryPath, audioID)
+    let filename = String(format: kOfflineFilePattern, Audio.cacheDirectoryPath, subject.id,
+                          audio.voiceActorID)
     if FileManager.default.fileExists(atPath: filename) {
       play(url: URL(fileURLWithPath: filename), delegate: delegate)
       return
@@ -108,8 +103,7 @@ class Audio: NSObject {
       return
     }
 
-    let urlString = String(format: kURLPattern, audioID, subjectID)
-    play(url: URL(string: urlString)!, delegate: delegate)
+    play(url: URL(string: audio.url)!, delegate: delegate)
   }
 
   private func play(url: URL, delegate: AudioDelegate?) {

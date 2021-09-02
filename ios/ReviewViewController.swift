@@ -1196,7 +1196,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Show a new task if it was correct.
     if result != .Incorrect {
       if Settings.playAudioAutomatically, activeTaskType == .reading,
-         activeSubject.hasVocabulary, !activeSubject.vocabulary.audioIds.isEmpty {
+         activeSubject.hasVocabulary, !activeSubject.vocabulary.audio.isEmpty {
         services.audio.play(subjectID: activeSubject!.id, delegate: nil)
       }
 
