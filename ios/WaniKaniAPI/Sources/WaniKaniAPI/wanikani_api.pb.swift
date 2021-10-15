@@ -701,7 +701,7 @@ public struct TKMAssignment {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var id: Int32 {
+  public var id: Int64 {
     get {return _id ?? 0}
     set {_id = newValue}
   }
@@ -786,7 +786,7 @@ public struct TKMAssignment {
 
   public init() {}
 
-  fileprivate var _id: Int32? = nil
+  fileprivate var _id: Int64? = nil
   fileprivate var _level: Int32? = nil
   fileprivate var _subjectID: Int32? = nil
   fileprivate var _subjectType: TKMSubject.TypeEnum? = nil
@@ -883,7 +883,7 @@ public struct TKMStudyMaterials {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var id: Int32 {
+  public var id: Int64 {
     get {return _id ?? 0}
     set {_id = newValue}
   }
@@ -925,7 +925,7 @@ public struct TKMStudyMaterials {
 
   public init() {}
 
-  fileprivate var _id: Int32? = nil
+  fileprivate var _id: Int64? = nil
   fileprivate var _subjectID: Int32? = nil
   fileprivate var _meaningNote: String? = nil
   fileprivate var _readingNote: String? = nil
@@ -1838,7 +1838,7 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt32Field(value: &self._id) }()
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self._id) }()
       case 2: try { try decoder.decodeSingularInt32Field(value: &self._level) }()
       case 3: try { try decoder.decodeSingularInt32Field(value: &self._subjectID) }()
       case 4: try { try decoder.decodeSingularEnumField(value: &self._subjectType) }()
@@ -1854,7 +1854,7 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if let v = self._id {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 1)
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
     }
     if let v = self._level {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
@@ -1982,7 +1982,7 @@ extension TKMStudyMaterials: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt32Field(value: &self._id) }()
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self._id) }()
       case 2: try { try decoder.decodeSingularInt32Field(value: &self._subjectID) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self._meaningNote) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self._readingNote) }()
@@ -1994,7 +1994,7 @@ extension TKMStudyMaterials: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if let v = self._id {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 1)
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
     }
     if let v = self._subjectID {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)

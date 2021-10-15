@@ -158,7 +158,7 @@ public class WaniKaniAPIClient: NSObject {
     }.map { (allData: Response<[Response<LevelProgressionData>]>) -> LevelProgressions in
       var ret = [TKMLevel]()
       for data in allData.data {
-        ret.append(data.data.toProto(id: data.id))
+        ret.append(data.data.toProto(id: data.id.map(Int32.init)))
       }
       return (levels: ret, updatedAt: allData.data_updated_at ?? updatedAfter)
     }
@@ -191,7 +191,7 @@ public class WaniKaniAPIClient: NSObject {
       var ret = [TKMSubject]()
       var seenIds = Set<Int32>()
       for data in allData.data {
-        guard let id = data.id else {
+        guard let id = data.id.map(Int32.init) else {
           continue
         }
         if seenIds.contains(id) {
@@ -538,7 +538,7 @@ private func toProtoDate(_ date: WaniKaniDate?, setter: (Int32) -> Void) {
 /** Base container for all successful API response types. */
 private class Response<DataType: Codable>: Codable {
   // Fields common to all responses.
-  var id: Int32?
+  var id: Int64?
   var data_updated_at: String?
   var data: DataType
   var object: String?
@@ -640,7 +640,7 @@ private struct AssignmentData: Codable {
   var burned_at: WaniKaniDate?
   var available_at: WaniKaniDate?
 
-  func toProto(id: Int32?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment {
+  func toProto(id: Int64?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment {
     var ret = TKMAssignment()
     ret.id = id ?? 0
     ret.subjectID = Int32(subject_id)
@@ -673,9 +673,9 @@ private struct StudyMaterialData: Codable {
   var reading_note: String?
   var meaning_synonyms: [String]?
 
-  func toProto(id: Int32?) -> TKMStudyMaterials {
+  func toProto(id: Int64?) -> TKMStudyMaterials {
     var ret = TKMStudyMaterials()
-    ret.id = Int32(id ?? 0)
+    ret.id = id ?? 0
     ret.subjectID = Int32(subject_id)
     if let note = meaning_note {
       ret.meaningNote = note
@@ -733,7 +733,7 @@ private struct StartAssignmentRequest: Codable {
 /** Request type for POST /reviews. */
 private struct CreateReviewRequest: Codable {
   struct Review: Codable {
-    var assignment_id: Int32
+    var assignment_id: Int64
     var incorrect_meaning_answers: Int
     var incorrect_reading_answers: Int
     var created_at: WaniKaniDate?

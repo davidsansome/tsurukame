@@ -144,7 +144,7 @@ message Subject {
 }
 
 message Assignment {
-  optional int32 id = 1;
+  optional int64 id = 1;
   optional int32 level = 2;
 
   optional int32 subject_id = 3;
@@ -168,7 +168,7 @@ message Progress {
 }
 
 message StudyMaterials {
-  optional int32 id = 1;
+  optional int64 id = 1;
   optional int32 subject_id = 2;
   reserved 6;
   optional string meaning_note = 3;
