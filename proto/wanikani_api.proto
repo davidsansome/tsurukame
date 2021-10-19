@@ -120,7 +120,7 @@ message Vocabulary {
 }
 
 message Subject {
-  optional int32 id = 1;
+  optional int64 id = 1;
   optional int32 level = 2;
   optional string slug = 3;
   optional string document_url = 4;
@@ -128,8 +128,8 @@ message Subject {
   optional string japanese = 5;
   repeated Reading readings = 6;  // Does not apply to radicals.
   repeated Meaning meanings = 7;
-  repeated int32 component_subject_ids = 8;  // Does not apply to radicals.
-  repeated int32 amalgamation_subject_ids = 12;  // Does not apply to vocabulary.
+  repeated int64 component_subject_ids = 8;  // Does not apply to radicals.
+  repeated int64 amalgamation_subject_ids = 12;  // Does not apply to vocabulary.
 
   optional Radical radical = 9;
   optional Kanji kanji = 10;
@@ -147,7 +147,7 @@ message Assignment {
   optional int64 id = 1;
   optional int32 level = 2;
 
-  optional int32 subject_id = 3;
+  optional int64 subject_id = 3;
   optional Subject.Type subject_type = 4;
   optional int32 available_at = 5;
   optional int32 started_at = 6;
@@ -169,7 +169,7 @@ message Progress {
 
 message StudyMaterials {
   optional int64 id = 1;
-  optional int32 subject_id = 2;
+  optional int64 subject_id = 2;
   reserved 6;
   optional string meaning_note = 3;
   optional string reading_note = 4;
@@ -220,13 +220,13 @@ message DataFileHeader {
 }
 
 message SubjectsByLevel {
-  repeated int32 radicals = 1;
-  repeated int32 kanji = 2;
-  repeated int32 vocabulary = 3;
+  repeated int64 radicals = 1;
+  repeated int64 kanji = 2;
+  repeated int64 vocabulary = 3;
 }
 
 message Level {
-  optional int32 id = 1;
+  optional int64 id = 1;
   optional int32 level = 2;
   optional int32 abandoned_at = 3;
   optional int32 completed_at = 4;

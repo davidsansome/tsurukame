@@ -368,7 +368,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     return ret
   }
 
-  func getStudyMaterial(subjectId: Int32) -> TKMStudyMaterials? {
+  func getStudyMaterial(subjectId: Int64) -> TKMStudyMaterials? {
     db.inDatabase { db in
       let cursor = db.query("SELECT pb FROM study_materials WHERE id = ?", args: [subjectId])
       if cursor.next() {
@@ -398,7 +398,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
-  func getAssignment(subjectId: Int32) -> TKMAssignment? {
+  func getAssignment(subjectId: Int64) -> TKMAssignment? {
     db.inDatabase { db in
       var cursor = db.query("SELECT pb FROM assignments WHERE subject_id = ?", args: [subjectId])
       if cursor.next() {
@@ -440,7 +440,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       var assignment: TKMAssignment? = cursor.proto(forColumnIndex: 4)
       if assignment == nil {
         assignment = TKMAssignment()
-        assignment!.subjectID = cursor.int(forColumnIndex: 0)
+        assignment!.subjectID = cursor.longLongInt(forColumnIndex: 0)
         assignment!.level = cursor.int(forColumnIndex: 1)
         assignment!.subjectType = TKMSubject.TypeEnum(rawValue: Int(cursor.int(forColumnIndex: 3)))!
       }
@@ -464,7 +464,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   }
 
   private func addFakeAssignments(to assignments: inout [TKMAssignment],
-                                  subjectIds: [Int32],
+                                  subjectIds: [Int64],
                                   type: TKMSubject.TypeEnum,
                                   level: Int,
                                   excludeSubjectIds: Set<Int>) {
@@ -490,7 +490,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     return ret
   }
 
-  func getSubject(id: Int32) -> TKMSubject? {
+  func getSubject(id: Int64) -> TKMSubject? {
     db.inDatabase { db in
       let cursor = db.query("SELECT pb FROM subjects WHERE id = ?", args: [id])
       if cursor.next() {
@@ -510,14 +510,14 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
-  func isValid(subjectId: Int32) -> Bool {
+  func isValid(subjectId: Int64) -> Bool {
     guard let level = levelOf(subjectId: subjectId) else {
       return false
     }
     return level <= maxLevelGrantedBySubscription
   }
 
-  func levelOf(subjectId: Int32) -> Int? {
+  func levelOf(subjectId: Int64) -> Int? {
     db.inDatabase { db in
       let cursor = db.query("SELECT level FROM subjects WHERE id = ?", args: [subjectId])
       if cursor.next() {
@@ -531,7 +531,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     var ret = TKMSubjectsByLevel()
     let cursor = db.query("SELECT id, type FROM subjects WHERE level = ?", args: [level])
     while cursor.next() {
-      let id = cursor.int(forColumnIndex: 0)
+      let id = cursor.longLongInt(forColumnIndex: 0)
       let type = Int(cursor.int(forColumnIndex: 1))
 
       switch type {

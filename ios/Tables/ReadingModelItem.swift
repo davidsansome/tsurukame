@@ -18,7 +18,7 @@ import Foundation
 @objcMembers
 class ReadingModelItem: AttributedModelItem {
   var audio: Audio?
-  var audioSubjectID: Int32 = 0
+  var audioSubjectID: Int64 = 0
 
   weak var audioDelegate: AudioDelegate?
 
@@ -26,7 +26,7 @@ class ReadingModelItem: AttributedModelItem {
     super.init(text: text)
   }
 
-  func setAudio(_ audio: Audio, subjectID: Int32) {
+  func setAudio(_ audio: Audio, subjectID: Int64) {
     self.audio = audio
     audioSubjectID = subjectID
   }

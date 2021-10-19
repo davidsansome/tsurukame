@@ -16,7 +16,7 @@ import Foundation
 import WaniKaniAPI
 
 class FakeSubjectLevelGetter: SubjectLevelGetter {
-  func levelOf(subjectId _: Int32) -> Int? {
+  func levelOf(subjectId _: Int64) -> Int? {
     42
   }
 }
