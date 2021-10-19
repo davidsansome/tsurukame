@@ -15,11 +15,11 @@
 import Foundation
 
 class SubjectCollectionModelItem: NSObject, TKMModelItem {
-  let subjects: [Int32]
+  let subjects: [Int64]
   let localCachingClient: LocalCachingClient
   weak var delegate: SubjectChipDelegate?
 
-  init(subjects: [Int32], localCachingClient: LocalCachingClient,
+  init(subjects: [Int64], localCachingClient: LocalCachingClient,
        delegate: SubjectChipDelegate) {
     self.subjects = subjects
     self.localCachingClient = localCachingClient

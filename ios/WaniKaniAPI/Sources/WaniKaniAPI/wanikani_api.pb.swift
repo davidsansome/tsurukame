@@ -546,7 +546,7 @@ public struct TKMSubject {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var id: Int32 {
+  public var id: Int64 {
     get {return _storage._id ?? 0}
     set {_uniqueStorage()._id = newValue}
   }
@@ -603,13 +603,13 @@ public struct TKMSubject {
   }
 
   /// Does not apply to radicals.
-  public var componentSubjectIds: [Int32] {
+  public var componentSubjectIds: [Int64] {
     get {return _storage._componentSubjectIds}
     set {_uniqueStorage()._componentSubjectIds = newValue}
   }
 
   /// Does not apply to vocabulary.
-  public var amalgamationSubjectIds: [Int32] {
+  public var amalgamationSubjectIds: [Int64] {
     get {return _storage._amalgamationSubjectIds}
     set {_uniqueStorage()._amalgamationSubjectIds = newValue}
   }
@@ -701,7 +701,7 @@ public struct TKMAssignment {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var id: Int32 {
+  public var id: Int64 {
     get {return _id ?? 0}
     set {_id = newValue}
   }
@@ -719,7 +719,7 @@ public struct TKMAssignment {
   /// Clears the value of `level`. Subsequent reads from it will return its default value.
   public mutating func clearLevel() {self._level = nil}
 
-  public var subjectID: Int32 {
+  public var subjectID: Int64 {
     get {return _subjectID ?? 0}
     set {_subjectID = newValue}
   }
@@ -786,9 +786,9 @@ public struct TKMAssignment {
 
   public init() {}
 
-  fileprivate var _id: Int32? = nil
+  fileprivate var _id: Int64? = nil
   fileprivate var _level: Int32? = nil
-  fileprivate var _subjectID: Int32? = nil
+  fileprivate var _subjectID: Int64? = nil
   fileprivate var _subjectType: TKMSubject.TypeEnum? = nil
   fileprivate var _availableAt: Int32? = nil
   fileprivate var _startedAt: Int32? = nil
@@ -883,7 +883,7 @@ public struct TKMStudyMaterials {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var id: Int32 {
+  public var id: Int64 {
     get {return _id ?? 0}
     set {_id = newValue}
   }
@@ -892,7 +892,7 @@ public struct TKMStudyMaterials {
   /// Clears the value of `id`. Subsequent reads from it will return its default value.
   public mutating func clearID() {self._id = nil}
 
-  public var subjectID: Int32 {
+  public var subjectID: Int64 {
     get {return _subjectID ?? 0}
     set {_subjectID = newValue}
   }
@@ -925,8 +925,8 @@ public struct TKMStudyMaterials {
 
   public init() {}
 
-  fileprivate var _id: Int32? = nil
-  fileprivate var _subjectID: Int32? = nil
+  fileprivate var _id: Int64? = nil
+  fileprivate var _subjectID: Int64? = nil
   fileprivate var _meaningNote: String? = nil
   fileprivate var _readingNote: String? = nil
 }
@@ -1151,11 +1151,11 @@ public struct TKMSubjectsByLevel {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var radicals: [Int32] = []
+  public var radicals: [Int64] = []
 
-  public var kanji: [Int32] = []
+  public var kanji: [Int64] = []
 
-  public var vocabulary: [Int32] = []
+  public var vocabulary: [Int64] = []
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1167,7 +1167,7 @@ public struct TKMLevel {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var id: Int32 {
+  public var id: Int64 {
     get {return _id ?? 0}
     set {_id = newValue}
   }
@@ -1243,7 +1243,7 @@ public struct TKMLevel {
 
   public init() {}
 
-  fileprivate var _id: Int32? = nil
+  fileprivate var _id: Int64? = nil
   fileprivate var _level: Int32? = nil
   fileprivate var _abandonedAt: Int32? = nil
   fileprivate var _completedAt: Int32? = nil
@@ -1675,15 +1675,15 @@ extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   ]
 
   fileprivate class _StorageClass {
-    var _id: Int32? = nil
+    var _id: Int64? = nil
     var _level: Int32? = nil
     var _slug: String? = nil
     var _documentURL: String? = nil
     var _japanese: String? = nil
     var _readings: [TKMReading] = []
     var _meanings: [TKMMeaning] = []
-    var _componentSubjectIds: [Int32] = []
-    var _amalgamationSubjectIds: [Int32] = []
+    var _componentSubjectIds: [Int64] = []
+    var _amalgamationSubjectIds: [Int64] = []
     var _radical: TKMRadical? = nil
     var _kanji: TKMKanji? = nil
     var _vocabulary: TKMVocabulary? = nil
@@ -1723,18 +1723,18 @@ extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
         // allocates stack space for every case branch when no optimizations are
         // enabled. https://github.com/apple/swift-protobuf/issues/1034
         switch fieldNumber {
-        case 1: try { try decoder.decodeSingularInt32Field(value: &_storage._id) }()
+        case 1: try { try decoder.decodeSingularInt64Field(value: &_storage._id) }()
         case 2: try { try decoder.decodeSingularInt32Field(value: &_storage._level) }()
         case 3: try { try decoder.decodeSingularStringField(value: &_storage._slug) }()
         case 4: try { try decoder.decodeSingularStringField(value: &_storage._documentURL) }()
         case 5: try { try decoder.decodeSingularStringField(value: &_storage._japanese) }()
         case 6: try { try decoder.decodeRepeatedMessageField(value: &_storage._readings) }()
         case 7: try { try decoder.decodeRepeatedMessageField(value: &_storage._meanings) }()
-        case 8: try { try decoder.decodeRepeatedInt32Field(value: &_storage._componentSubjectIds) }()
+        case 8: try { try decoder.decodeRepeatedInt64Field(value: &_storage._componentSubjectIds) }()
         case 9: try { try decoder.decodeSingularMessageField(value: &_storage._radical) }()
         case 10: try { try decoder.decodeSingularMessageField(value: &_storage._kanji) }()
         case 11: try { try decoder.decodeSingularMessageField(value: &_storage._vocabulary) }()
-        case 12: try { try decoder.decodeRepeatedInt32Field(value: &_storage._amalgamationSubjectIds) }()
+        case 12: try { try decoder.decodeRepeatedInt64Field(value: &_storage._amalgamationSubjectIds) }()
         default: break
         }
       }
@@ -1744,7 +1744,7 @@ extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       if let v = _storage._id {
-        try visitor.visitSingularInt32Field(value: v, fieldNumber: 1)
+        try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
       }
       if let v = _storage._level {
         try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
@@ -1765,7 +1765,7 @@ extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
         try visitor.visitRepeatedMessageField(value: _storage._meanings, fieldNumber: 7)
       }
       if !_storage._componentSubjectIds.isEmpty {
-        try visitor.visitPackedInt32Field(value: _storage._componentSubjectIds, fieldNumber: 8)
+        try visitor.visitPackedInt64Field(value: _storage._componentSubjectIds, fieldNumber: 8)
       }
       if let v = _storage._radical {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
@@ -1777,7 +1777,7 @@ extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
         try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
       }
       if !_storage._amalgamationSubjectIds.isEmpty {
-        try visitor.visitPackedInt32Field(value: _storage._amalgamationSubjectIds, fieldNumber: 12)
+        try visitor.visitPackedInt64Field(value: _storage._amalgamationSubjectIds, fieldNumber: 12)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -1838,9 +1838,9 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt32Field(value: &self._id) }()
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self._id) }()
       case 2: try { try decoder.decodeSingularInt32Field(value: &self._level) }()
-      case 3: try { try decoder.decodeSingularInt32Field(value: &self._subjectID) }()
+      case 3: try { try decoder.decodeSingularInt64Field(value: &self._subjectID) }()
       case 4: try { try decoder.decodeSingularEnumField(value: &self._subjectType) }()
       case 5: try { try decoder.decodeSingularInt32Field(value: &self._availableAt) }()
       case 6: try { try decoder.decodeSingularInt32Field(value: &self._startedAt) }()
@@ -1854,13 +1854,13 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if let v = self._id {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 1)
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
     }
     if let v = self._level {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
     }
     if let v = self._subjectID {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
     }
     if let v = self._subjectType {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
@@ -1982,8 +1982,8 @@ extension TKMStudyMaterials: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt32Field(value: &self._id) }()
-      case 2: try { try decoder.decodeSingularInt32Field(value: &self._subjectID) }()
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self._id) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self._subjectID) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self._meaningNote) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self._readingNote) }()
       case 5: try { try decoder.decodeRepeatedStringField(value: &self.meaningSynonyms) }()
@@ -1994,10 +1994,10 @@ extension TKMStudyMaterials: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if let v = self._id {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 1)
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
     }
     if let v = self._subjectID {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
     }
     if let v = self._meaningNote {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
@@ -2218,9 +2218,9 @@ extension TKMSubjectsByLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeRepeatedInt32Field(value: &self.radicals) }()
-      case 2: try { try decoder.decodeRepeatedInt32Field(value: &self.kanji) }()
-      case 3: try { try decoder.decodeRepeatedInt32Field(value: &self.vocabulary) }()
+      case 1: try { try decoder.decodeRepeatedInt64Field(value: &self.radicals) }()
+      case 2: try { try decoder.decodeRepeatedInt64Field(value: &self.kanji) }()
+      case 3: try { try decoder.decodeRepeatedInt64Field(value: &self.vocabulary) }()
       default: break
       }
     }
@@ -2228,13 +2228,13 @@ extension TKMSubjectsByLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.radicals.isEmpty {
-      try visitor.visitPackedInt32Field(value: self.radicals, fieldNumber: 1)
+      try visitor.visitPackedInt64Field(value: self.radicals, fieldNumber: 1)
     }
     if !self.kanji.isEmpty {
-      try visitor.visitPackedInt32Field(value: self.kanji, fieldNumber: 2)
+      try visitor.visitPackedInt64Field(value: self.kanji, fieldNumber: 2)
     }
     if !self.vocabulary.isEmpty {
-      try visitor.visitPackedInt32Field(value: self.vocabulary, fieldNumber: 3)
+      try visitor.visitPackedInt64Field(value: self.vocabulary, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -2267,7 +2267,7 @@ extension TKMLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt32Field(value: &self._id) }()
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self._id) }()
       case 2: try { try decoder.decodeSingularInt32Field(value: &self._level) }()
       case 3: try { try decoder.decodeSingularInt32Field(value: &self._abandonedAt) }()
       case 4: try { try decoder.decodeSingularInt32Field(value: &self._completedAt) }()
@@ -2282,7 +2282,7 @@ extension TKMLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if let v = self._id {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 1)
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
     }
     if let v = self._level {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)

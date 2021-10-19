@@ -17,7 +17,7 @@ import PromiseKit
 import SwiftProtobuf
 
 public protocol SubjectLevelGetter: AnyObject {
-  func levelOf(subjectId: Int32) -> Int?
+  func levelOf(subjectId: Int64) -> Int?
 }
 
 /**
@@ -121,7 +121,7 @@ public class WaniKaniAPIClient: NSObject {
   /**
    * Fetches one study material by Subject ID.
    */
-  public func studyMaterial(subjectId: Int32, progress: Progress) -> Promise<TKMStudyMaterials?> {
+  public func studyMaterial(subjectId: Int64, progress: Progress) -> Promise<TKMStudyMaterials?> {
     progress.totalUnitCount = 1
 
     // Build the URL.
@@ -189,7 +189,7 @@ public class WaniKaniAPIClient: NSObject {
         pagedQuery(url: url.url!, progress: progress)
     }.map { (allData: Response<[Response<SubjectData>]>) -> Subjects in
       var ret = [TKMSubject]()
-      var seenIds = Set<Int32>()
+      var seenIds = Set<Int64>()
       for data in allData.data {
         guard let id = data.id else {
           continue
@@ -538,7 +538,7 @@ private func toProtoDate(_ date: WaniKaniDate?, setter: (Int32) -> Void) {
 /** Base container for all successful API response types. */
 private class Response<DataType: Codable>: Codable {
   // Fields common to all responses.
-  var id: Int32?
+  var id: Int64?
   var data_updated_at: String?
   var data: DataType
   var object: String?
@@ -640,10 +640,10 @@ private struct AssignmentData: Codable {
   var burned_at: WaniKaniDate?
   var available_at: WaniKaniDate?
 
-  func toProto(id: Int32?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment {
+  func toProto(id: Int64?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment {
     var ret = TKMAssignment()
     ret.id = id ?? 0
-    ret.subjectID = Int32(subject_id)
+    ret.subjectID = Int64(subject_id)
     ret.srsStageNumber = Int32(srs_stage)
     ret.level = Int32(subjectLevelGetter.levelOf(subjectId: ret.subjectID) ?? 0)
     toProtoDate(available_at) { ret.availableAt = $0 }
@@ -667,16 +667,16 @@ private struct AssignmentData: Codable {
 
 /** Response type for /study_materials. */
 private struct StudyMaterialData: Codable {
-  var subject_id: Int32
+  var subject_id: Int64
   var subject_type: String
   var meaning_note: String?
   var reading_note: String?
   var meaning_synonyms: [String]?
 
-  func toProto(id: Int32?) -> TKMStudyMaterials {
+  func toProto(id: Int64?) -> TKMStudyMaterials {
     var ret = TKMStudyMaterials()
-    ret.id = Int32(id ?? 0)
-    ret.subjectID = Int32(subject_id)
+    ret.id = id ?? 0
+    ret.subjectID = subject_id
     if let note = meaning_note {
       ret.meaningNote = note
     }
@@ -700,9 +700,9 @@ private struct LevelProgressionData: Codable {
   var completed_at: WaniKaniDate?
   var abandoned_at: WaniKaniDate?
 
-  func toProto(id: Int32?) -> TKMLevel {
+  func toProto(id: Int64?) -> TKMLevel {
     var ret = TKMLevel()
-    ret.id = Int32(id ?? 0)
+    ret.id = id ?? 0
     ret.level = Int32(level)
     ret.createdAt = created_at.seconds
     toProtoDate(abandoned_at) { ret.abandonedAt = $0 }
@@ -733,7 +733,7 @@ private struct StartAssignmentRequest: Codable {
 /** Request type for POST /reviews. */
 private struct CreateReviewRequest: Codable {
   struct Review: Codable {
-    var assignment_id: Int32
+    var assignment_id: Int64
     var incorrect_meaning_answers: Int
     var incorrect_reading_answers: Int
     var created_at: WaniKaniDate?
@@ -746,7 +746,7 @@ private struct CreateReviewRequest: Codable {
 private struct StudyMaterialRequest: Codable {
   struct StudyMaterial: Codable {
     // Only required when creating new study materials.
-    var subject_id: Int32?
+    var subject_id: Int64?
 
     var meaning_note: String?
     var reading_note: String?

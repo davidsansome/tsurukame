@@ -20,12 +20,12 @@ private func jsonFromBundle<T>(_ fileName: String) -> T {
   return try! JSONSerialization.jsonObject(with: data, options: []) as! T
 }
 
-private let kDeprecatedMnemonics: [Int32: String] = {
+private let kDeprecatedMnemonics: [Int64: String] = {
   let data: [String: String] = jsonFromBundle("old-mnemonics.json")
 
-  var ret = [Int32: String]()
+  var ret = [Int64: String]()
   for (id, text) in data {
-    ret[Int32(id)!] = text
+    ret[Int64(id)!] = text
   }
   return ret
 }()
@@ -52,9 +52,9 @@ struct SubjectData: Codable {
   var meaning_hint: String?
   var reading_hint: String?
 
-  var amalgamation_subject_ids: [Int32]? // Radical and Kanji.
+  var amalgamation_subject_ids: [Int64]? // Radical and Kanji.
   var character_images: [CharacterImage]? // Radical.
-  var component_subject_ids: [Int32]? // Kanji and Vocabulary.
+  var component_subject_ids: [Int64]? // Kanji and Vocabulary.
   var readings: [Reading]? // Kanji and Vocabulary.
   var visually_similar_subject_ids: [Int]? // Kanji.
   var context_sentences: [ContextSentence]? // Vocabulary.
@@ -115,7 +115,7 @@ struct SubjectData: Codable {
     }
   }
 
-  func toProto(id: Int32, objectType: String) -> TKMSubject? {
+  func toProto(id: Int64, objectType: String) -> TKMSubject? {
     var ret = TKMSubject()
     ret.id = id
     ret.level = Int32(level)
