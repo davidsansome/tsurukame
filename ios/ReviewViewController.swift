@@ -468,7 +468,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                       to: window)
     let windowBottom = window.bounds.maxY
     let distanceFromViewBottomToWindowBottom = windowBottom - viewBottomLeft.y
-    let insetHeight = CGFloat(height) - distanceFromViewBottomToWindowBottom
+    let insetHeight = max(0, CGFloat(height) - distanceFromViewBottomToWindowBottom)
 
     answerFieldToBottomConstraint.constant = insetHeight
 
