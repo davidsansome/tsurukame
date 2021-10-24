@@ -126,7 +126,7 @@ class AttributedModelCell: TKMModelCell {
   }
 
   func removeRightButton() {
-    let item = item as! AttributedModelItem
+    let item = self.item as! AttributedModelItem
     item.rightButtonImage = nil
 
     rightButton?.removeFromSuperview()
@@ -135,7 +135,7 @@ class AttributedModelCell: TKMModelCell {
   }
 
   @objc func didTapRightButton() {
-    let item = item as! AttributedModelItem
+    let item = self.item as! AttributedModelItem
     item.rightButtonCallback?(self)
   }
 }

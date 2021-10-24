@@ -85,7 +85,7 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
   override func didTapRightButton() {
     removeRightButton()
 
-    let item = item as! EditableTextModelItem
+    let item = self.item as! EditableTextModelItem
     item.hasEditButton = false
     item.rightButtonImage = nil
 
@@ -109,7 +109,7 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
       self?.tableView?.endUpdates()
     }
 
-    let item = item as! EditableTextModelItem
+    let item = self.item as! EditableTextModelItem
     item.text = textView.attributedText
     item.textChangedCallback?(textView.text)
   }
