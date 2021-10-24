@@ -945,6 +945,9 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
         UPDATE sync
           SET assignments_updated_after = \"\",
               subjects_updated_after = \"\";
+        DELETE FROM assignments;
+        DELETE FROM subjects;
+        DELETE FROM subject_progress;
         """)
       }
     }
