@@ -344,6 +344,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
                                            name: UIResponder.keyboardWillShowNotification,
                                            object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                           name: UIResponder.keyboardWillHideNotification,
+                                           object: nil)
 
     subjectDetailsView.setup(services: services, delegate: self)
 
@@ -449,6 +452,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     resizeKeyboard(toHeight: Double(keyboardFrame.size.height))
   }
 
+  @objc private func keyboardWillHide(notification _: NSNotification) {
+    subjectDetailsView.contentInset = .zero
+  }
+
   private func resizeKeyboard(toHeight height: Double) {
     // When the review view is embedded in a lesson view controller, the review view doesn't extend
     // all the way to the bottom - the page selector view is below it.  Take this into account:
@@ -461,8 +468,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                       to: window)
     let windowBottom = window.bounds.maxY
     let distanceFromViewBottomToWindowBottom = windowBottom - viewBottomLeft.y
+    let insetHeight = CGFloat(height) - distanceFromViewBottomToWindowBottom
 
-    answerFieldToBottomConstraint.constant = CGFloat(height) - distanceFromViewBottomToWindowBottom
+    answerFieldToBottomConstraint.constant = insetHeight
+
+    var subjectDetailsViewInset = subjectDetailsView.contentInset
+    subjectDetailsViewInset.bottom = insetHeight
+    subjectDetailsView.contentInset = subjectDetailsViewInset
 
     UIView.beginAnimations(nil, context: nil)
     UIView.setAnimationDuration(animationDuration)
@@ -1032,6 +1044,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     if !answerField.isEnabled, Settings.pausePartiallyCorrect {
       markCorrect()
     } else if !answerField.isEnabled, !Settings.ankiMode {
+      if !subjectDetailsView.isHidden {
+        subjectDetailsView.saveStudyMaterials()
+      }
       randomTask()
     } else {
       submit()

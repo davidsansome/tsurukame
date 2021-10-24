@@ -156,7 +156,7 @@
   // Disable animations when reusing a cell.
   [CATransaction begin];
   [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-  [cell updateWithItem:item];
+  [cell updateWithItem:item tableView:_tableView];
   [CATransaction commit];
   return cell;
 }

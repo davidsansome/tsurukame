@@ -33,8 +33,10 @@ extern void TKMSafePerformSelector(id target, SEL selector, id object);
 @interface TKMModelCell : UITableViewCell
 
 @property(nonatomic, readonly, weak) id<TKMModelItem> item;
+@property(nonatomic, readonly, weak) UITableView *tableView;
 
 - (void)updateWithItem:(id<TKMModelItem>)item;
+- (void)updateWithItem:(id<TKMModelItem>)item tableView:(UITableView *)tableView;
 
 - (void)didSelectCell;
 

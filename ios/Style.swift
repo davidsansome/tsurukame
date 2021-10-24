@@ -187,6 +187,13 @@ class TKMStyle: NSObject {
     static let markupKanjiBackground = AdaptiveColorHex(light: 0xFFD6F1, dark: 0x1C1C1E)
     static let markupVocabularyForeground = AdaptiveColorHex(light: 0x000000, dark: 0xC34AFF)
     static let markupVocabularyBackground = AdaptiveColorHex(light: 0xF1D6FF, dark: 0x1C1C1E)
+
+    static var placeholderText: UIColor {
+      if #available(iOS 13.0, *) {
+        return UIColor.placeholderText
+      }
+      return UIColor(red: 0, green: 0, blue: 0.0980392, alpha: 0.22)
+    }
   }
 
   // Wrapper around UITraitCollection.performAsCurrent that just does nothing

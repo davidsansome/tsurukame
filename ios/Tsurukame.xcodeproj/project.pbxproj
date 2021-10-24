@@ -111,6 +111,7 @@
 		63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */; };
 		63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */; };
 		63E9E51121F424690022C16E /* TKMDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9E51021F424690022C16E /* TKMDownloadViewController.m */; };
+		63ED9A0F2725037200937944 /* EditableTextModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ED9A0E2725037200937944 /* EditableTextModelItem.swift */; };
 		63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63EEFEBC1FC45C440070C05F /* Assets.xcassets */; };
 		63EF56DE26060B980038551A /* WaniKaniAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 63EF56DD26060B980038551A /* WaniKaniAPI */; };
 		63EF56E226060BA70038551A /* WaniKaniAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 63EF56E126060BA70038551A /* WaniKaniAPI */; };
@@ -335,6 +336,7 @@
 		63E9A8E621199C8500418CE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63E9E50F21F424690022C16E /* TKMDownloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMDownloadViewController.h; sourceTree = "<group>"; };
 		63E9E51021F424690022C16E /* TKMDownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMDownloadViewController.m; sourceTree = "<group>"; };
+		63ED9A0E2725037200937944 /* EditableTextModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTextModelItem.swift; sourceTree = "<group>"; };
 		63EEFEBC1FC45C440070C05F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63EEFEC21FC45CB10070C05F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63EF5751260617E30038551A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -607,7 +609,11 @@
 			isa = PBXGroup;
 			children = (
 				63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */,
+				63ED9A0E2725037200937944 /* EditableTextModelItem.swift */,
+				638D197425C6AA4B00B80544 /* MarkupModelItem.swift */,
 				63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */,
+				63C74BD025C82B1D004F6C99 /* SubjectCollectionModelItem.swift */,
+				63C74BC725C822C9004F6C99 /* SubjectModelItem.swift */,
 				633DE94D20C5634900AC25F4 /* TKMBasicModelItem.h */,
 				633DE95220C5634A00AC25F4 /* TKMBasicModelItem.m */,
 				630ADB6D21F8256E00BC9801 /* TKMCheckmarkModelItem.h */,
@@ -625,9 +631,6 @@
 				633DE95020C5634A00AC25F4 /* TKMSwitchModelItem.m */,
 				633DE94E20C5634A00AC25F4 /* TKMTableModel.h */,
 				633DE95120C5634A00AC25F4 /* TKMTableModel.m */,
-				638D197425C6AA4B00B80544 /* MarkupModelItem.swift */,
-				63C74BC725C822C9004F6C99 /* SubjectModelItem.swift */,
-				63C74BD025C82B1D004F6C99 /* SubjectCollectionModelItem.swift */,
 			);
 			path = Tables;
 			sourceTree = "<group>";
@@ -1208,6 +1211,7 @@
 				6398480E23D699E70077EB6B /* ContextSentenceModelItem.swift in Sources */,
 				63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */,
 				63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */,
+				63ED9A0F2725037200937944 /* EditableTextModelItem.swift in Sources */,
 				BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */,
 				C92AB96F237F280300F79904 /* WatchHelper.swift in Sources */,
 				63F7F51F23D3F335006A31FB /* ReadingModelItem.swift in Sources */,

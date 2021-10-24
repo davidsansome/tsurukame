@@ -24,6 +24,10 @@ class ReadingModelItem: AttributedModelItem {
 
   override init(text: NSAttributedString) {
     super.init(text: text)
+    rightButtonImage = UIImage(named: "baseline_volume_up_black_24pt")
+    rightButtonCallback = { [weak self] (_: AttributedModelCell) in
+      self?.playAudio()
+    }
   }
 
   func setAudio(_ audio: Audio, subjectID: Int64) {
@@ -52,17 +56,8 @@ class ReadingModelCell: AttributedModelCell, AudioDelegate {
     let item = baseItem as! ReadingModelItem
 
     if item.audioSubjectID != 0 {
-      if rightButton == nil {
-        rightButton = UIButton()
-        rightButton!
-          .addTarget(item, action: #selector(ReadingModelItem.playAudio), for: .touchUpInside)
-        addSubview(rightButton!)
-      }
-      rightButton!.setImage(UIImage(named: "baseline_volume_up_black_24pt"), for: .normal)
       item.audioDelegate = self
     } else {
-      rightButton?.removeFromSuperview()
-      rightButton = nil
       item.audioDelegate = nil
     }
   }

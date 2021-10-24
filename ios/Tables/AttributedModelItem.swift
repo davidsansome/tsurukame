@@ -14,12 +14,15 @@
 
 import Foundation
 
-private let kEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+private let kEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 4, right: 16)
 private let kMinimumHeight: CGFloat = 44
 
 @objc(TKMAttributedModelItem)
 class AttributedModelItem: NSObject, TKMModelItem {
-  let text: NSAttributedString
+  var text: NSAttributedString
+
+  var rightButtonImage: UIImage?
+  var rightButtonCallback: ((_ cell: AttributedModelCell) -> Void)?
 
   init(text: NSAttributedString) {
     self.text = text
@@ -64,29 +67,33 @@ class AttributedModelCell: TKMModelCell {
     return availableRect.size
   }
 
+  func textViewSize(_ availableRect: CGRect) -> CGSize {
+    // [UITextView sizeToFit] gives the wrong size for attributed strings that mix bold and normal
+    // weight Japanese text.  We use [NSAttributedString boundingRectWithSize] which gives the correct
+    // size.
+    let text = textView.attributedText!
+    return text.boundingRect(with: availableRect.size,
+                             options: .usesLineFragmentOrigin,
+                             context: nil).size
+  }
+
   override func layoutSubviews() {
     super.layoutSubviews()
 
     var availableRect = bounds.inset(by: kEdgeInsets)
+    var exclusionPaths = [UIBezierPath]()
 
     if let rightButton = rightButton {
       let buttonSize = rightButton.intrinsicContentSize
       rightButton.frame = CGRect(x: availableRect.maxX - buttonSize.width - kEdgeInsets.right,
                                  y: availableRect.origin.y - kEdgeInsets.top,
                                  width: buttonSize.width + kEdgeInsets.right * 2,
-                                 height: availableRect.size.height + kEdgeInsets.top + kEdgeInsets
+                                 height: buttonSize.height + kEdgeInsets.top + kEdgeInsets
                                    .bottom)
-
-      availableRect.size.width -= buttonSize.width + kEdgeInsets.right
+      exclusionPaths.append(UIBezierPath(rect: rightButton.frame))
     }
 
-    // [UITextView sizeToFit] gives the wrong size for attributed strings that mix bold and normal
-    // weight Japanese text.  We use [NSAttributedString boundingRectWithSize] which gives the correct
-    // size.
-    let text = textView.attributedText!
-    let textViewSize = text.boundingRect(with: availableRect.size,
-                                         options: .usesLineFragmentOrigin,
-                                         context: nil).size
+    let textViewSize = self.textViewSize(availableRect)
 
     // Center the text vertically.
     if textViewSize.height < availableRect.size.height {
@@ -95,12 +102,40 @@ class AttributedModelCell: TKMModelCell {
     }
 
     textView.frame = availableRect
+    textView.textContainer.exclusionPaths = exclusionPaths
   }
 
   override func update(with baseItem: TKMModelItem!) {
     super.update(with: baseItem)
-
     let item = baseItem as! AttributedModelItem
+
     textView.attributedText = item.text
+
+    if let rightButtonImage = item.rightButtonImage {
+      if rightButton == nil {
+        rightButton = UIButton()
+        rightButton!
+          .addTarget(self, action: #selector(AttributedModelCell.didTapRightButton),
+                     for: .touchUpInside)
+        addSubview(rightButton!)
+      }
+      rightButton!.setImage(rightButtonImage, for: .normal)
+    } else {
+      removeRightButton()
+    }
+  }
+
+  func removeRightButton() {
+    let item = item as! AttributedModelItem
+    item.rightButtonImage = nil
+
+    rightButton?.removeFromSuperview()
+    rightButton = nil
+    textView.textContainer.exclusionPaths = []
+  }
+
+  @objc func didTapRightButton() {
+    let item = item as! AttributedModelItem
+    item.rightButtonCallback?(self)
   }
 }

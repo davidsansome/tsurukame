@@ -32,6 +32,11 @@ void TKMSafePerformSelector(id target, SEL selector, id object) {
   _item = item;
 }
 
+- (void)updateWithItem:(id<TKMModelItem>)item tableView:(UITableView *)tableView {
+  _tableView = tableView;
+  [self updateWithItem:item];
+}
+
 - (void)didSelectCell {
 }
 
