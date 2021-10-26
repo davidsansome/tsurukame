@@ -239,6 +239,10 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   override func viewWillAppear(_ animated: Bool) {
+    // Assume the hour changed while the view was invisible. This will invalidate the upcoming
+    // review cache which depends on the current time.
+    services.localCachingClient.currentHourChanged()
+
     refresh(quick: true)
     updateHourlyTimer()
 
@@ -355,6 +359,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   func hourlyTimerExpired() {
+    services.localCachingClient.currentHourChanged()
     refresh(quick: true)
     updateHourlyTimer()
   }
@@ -366,6 +371,10 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
   @objc
   func applicationWillEnterForeground() {
+    // Assume the hour changed while the application was in the background. This will invalidate the
+    // upcoming review cache which depends on the current time.
+    services.localCachingClient.currentHourChanged()
+
     updateHourlyTimer()
   }
 

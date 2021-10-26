@@ -988,6 +988,11 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     db.close()
   }
 
+  // Invalidate any cached data that depends on the hour component of the current time.
+  func currentHourChanged() {
+    _availableSubjects.invalidate()
+  }
+
   // MARK: - Objective-C support
 
   var availableReviewCount: Int {
