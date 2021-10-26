@@ -135,7 +135,6 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   public func saveStudyMaterials() {
     if studyMaterialsChanged {
-      NSLog("Saving study material changes")
       _ = services.localCachingClient.updateStudyMaterial(studyMaterials)
       studyMaterialsChanged = false
     }
