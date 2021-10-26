@@ -333,20 +333,14 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       self?.studyMaterialsChanged = true
     }
 
-    let meaningAttempted = task?.answeredMeaning == true || task?.answer.meaningWrong == true,
-        readingAttempted = task?.answeredReading == true || task?.answer.readingWrong == true,
-        meaningShown = !isReview || meaningAttempted,
-        readingShown = !isReview || readingAttempted,
-        showMeaningItem = TKMBasicModelItem(style: .default, title: "Show meaning & explanations",
-                                            subtitle: nil,
-                                            accessoryType: .none, target: self,
-                                            action: #selector(showAllFields)),
-        showReadingItem = TKMBasicModelItem(style: .default, title: "Show reading & explanation",
-                                            subtitle: nil,
-                                            accessoryType: .none, target: self,
-                                            action: #selector(showAllFields))
-    showMeaningItem.textColor = .systemRed
-    showReadingItem.textColor = .systemRed
+    let meaningAttempted = task?.answeredMeaning == true || task?.answer.meaningWrong == true
+    let readingAttempted = task?.answeredReading == true || task?.answer.readingWrong == true
+    let meaningShown = !isReview || meaningAttempted
+    let readingShown = !isReview || readingAttempted
+    let showAllItem = PillModelItem(text: "Show all information",
+                                    fontSize: kFontSize) { [weak self] in
+      self?.showAllFields()
+    }
 
     if subject.hasRadical {
       if meaningShown {
@@ -360,20 +354,16 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                          text: subject.radical.deprecatedMnemonic)
         }
       } else {
-        model.add(showMeaningItem)
+        model.add(showAllItem)
       }
       addAmalgamationSubjects(subject, toModel: model)
     }
     if subject.hasKanji {
       if meaningShown {
         addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
-      } else {
-        model.add(showMeaningItem)
       }
       if readingShown {
         addReadings(subject, studyMaterials: studyMaterials, toModel: model)
-      } else {
-        model.add(showReadingItem)
       }
       addComponents(subject, title: "Radicals", toModel: model)
 
@@ -387,19 +377,18 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                        text: subject.kanji.readingMnemonic, hint: subject.kanji.readingHint,
                        note: studyMaterials?.readingNote, noteChangedCallback: setReadingNote)
       }
+      if !meaningShown || !readingShown {
+        model.add(showAllItem)
+      }
       addSimilarKanji(subject, toModel: model)
       addAmalgamationSubjects(subject, toModel: model)
     }
     if subject.hasVocabulary {
       if meaningShown {
         addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
-      } else {
-        model.add(showMeaningItem)
       }
       if readingShown {
         addReadings(subject, studyMaterials: studyMaterials, toModel: model)
-      } else {
-        model.add(showReadingItem)
       }
       addComponents(subject, title: "Kanji", toModel: model)
 
@@ -413,6 +402,9 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         addExplanation(model: model, title: "Reading Explanation",
                        text: subject.vocabulary.readingExplanation,
                        note: studyMaterials?.readingNote, noteChangedCallback: setReadingNote)
+      }
+      if !meaningShown || !readingShown {
+        model.add(showAllItem)
       }
       addPartsOfSpeech(subject.vocabulary, toModel: model)
       if meaningShown {
