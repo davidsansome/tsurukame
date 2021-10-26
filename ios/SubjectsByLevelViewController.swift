@@ -15,22 +15,16 @@
 import Foundation
 import WaniKaniAPI
 
-@objc
 class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
   private var services: TKMServices!
-  private var level: Int!
+  private(set) var level: Int!
   private var showAnswers: Bool!
   private var model: TKMTableModel?
 
-  @objc func setup(services: TKMServices, level: Int, showAnswers: Bool) {
+  func setup(services: TKMServices, level: Int, showAnswers: Bool) {
     self.services = services
     self.level = level
     setShowAnswers(showAnswers, animated: false)
-  }
-
-  // Only for objective-c compatibility.
-  @objc func getLevel() -> Int {
-    level
   }
 
   override func viewDidLoad() {
@@ -118,7 +112,6 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
     navigationController?.isNavigationBarHidden = false
   }
 
-  @objc
   func setShowAnswers(_ value: Bool, animated: Bool = false) {
     showAnswers = value
     guard let model = model else {

@@ -75,6 +75,7 @@ class SubjectModelView: TKMModelCell {
     guard let item = item as? SubjectModelItem else {
       return
     }
+    setShowAnswers(item.showAnswers, animated: false)
 
     levelLabel.isHidden = !item.showLevelNumber
     if item.showLevelNumber {

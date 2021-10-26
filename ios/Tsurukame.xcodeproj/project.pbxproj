@@ -26,6 +26,7 @@
 		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
 		632E19C123DCD0D800E5F256 /* FontSizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632E19C023DCD0D800E5F256 /* FontSizeViewController.swift */; };
+		633252882727E8A700ABBA04 /* SubjectCatalogueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */; };
 		6335B46523CF0C820071671E /* AppStoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B46423CF0C820071671E /* AppStoreScreenshots.swift */; };
 		6335B4C823CF0D390071671E /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B48C23CF0D390071671E /* SnapshotHelper.swift */; };
 		6335B4E723CF14280071671E /* Screenshotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B4E623CF14280071671E /* Screenshotter.swift */; };
@@ -109,7 +110,6 @@
 		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
 		63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */; };
 		63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */; };
-		63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */; };
 		63E9E51121F424690022C16E /* TKMDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9E51021F424690022C16E /* TKMDownloadViewController.m */; };
 		63ED9A0F2725037200937944 /* EditableTextModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ED9A0E2725037200937944 /* EditableTextModelItem.swift */; };
 		63EEFEC11FC45C440070C05F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63EEFEBC1FC45C440070C05F /* Assets.xcassets */; };
@@ -239,6 +239,7 @@
 		631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelTimeRemainingItem.swift; sourceTree = "<group>"; };
 		631CAD71234B4A96008CEA73 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		632E19C023DCD0D800E5F256 /* FontSizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSizeViewController.swift; sourceTree = "<group>"; };
+		633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectCatalogueViewController.swift; sourceTree = "<group>"; };
 		6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppStoreScreenshots.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6335B46423CF0C820071671E /* AppStoreScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshots.swift; sourceTree = "<group>"; };
 		6335B46623CF0C820071671E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -330,8 +331,6 @@
 		63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMListSeparatorItem.m; sourceTree = "<group>"; };
 		63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+SafeAreaInsets.h"; sourceTree = "<group>"; };
 		63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+SafeAreaInsets.m"; sourceTree = "<group>"; };
-		63E9A8D52111BFCD00418CE1 /* SubjectCatalogueViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubjectCatalogueViewController.h; sourceTree = "<group>"; };
-		63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubjectCatalogueViewController.m; sourceTree = "<group>"; };
 		63E9A8E221199C8500418CE1 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63E9A8E621199C8500418CE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63E9E50F21F424690022C16E /* TKMDownloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMDownloadViewController.h; sourceTree = "<group>"; };
@@ -496,9 +495,9 @@
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				638A5C4D25A471F9001A7AEE /* AppDelegate.swift */,
+				482D7C0E261CC29900104F69 /* ApprenticeLimitViewController.swift */,
 				6335B46323CF0C820071671E /* AppStoreScreenshots */,
 				6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */,
-				482D7C0E261CC29900104F69 /* ApprenticeLimitViewController.swift */,
 				63F7F52D23D4C2CA006A31FB /* Audio.swift */,
 				C90846AD237F1C770068A272 /* Complication */,
 				C90846BC237F1C790068A272 /* ComplicationExtension */,
@@ -509,8 +508,8 @@
 				6335B46E23CF0D390071671E /* fastlane */,
 				BBE4E32D2172576B003A200E /* FontLoader.swift */,
 				63C42A2421B6A28D008CA938 /* FontScreenshotter */,
-				4874562C261DD28E00F33AA3 /* FontScreenshotterUITests */,
 				63C42A2321B6A28D008CA938 /* FontScreenshotter.app */,
+				4874562C261DD28E00F33AA3 /* FontScreenshotterUITests */,
 				63C42A3621B6A290008CA938 /* FontScreenshotterUITests.xctest */,
 				632E19C023DCD0D800E5F256 /* FontSizeViewController.swift */,
 				63CAAB0F1FD7FAC500E09DA1 /* Frameworks */,
@@ -545,8 +544,7 @@
 				C970BC0223D262CE001F3735 /* SiriShortcutHelper.swift */,
 				636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */,
 				63FCAE77237F75CC00DB1418 /* Style.swift */,
-				63E9A8D52111BFCD00418CE1 /* SubjectCatalogueViewController.h */,
-				63E9A8D62111BFCD00418CE1 /* SubjectCatalogueViewController.m */,
+				633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */,
 				63C74C6725C96088004F6C99 /* SubjectChip.swift */,
 				63C74C7E25C96F58004F6C99 /* SubjectDelegate.swift */,
 				633AFAE023516BE7004F732F /* SubjectDetailsView.swift */,
@@ -1210,7 +1208,6 @@
 				638A5C6C25ADBB86001A7AEE /* main.swift in Sources */,
 				6398480E23D699E70077EB6B /* ContextSentenceModelItem.swift in Sources */,
 				63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */,
-				63E9A8D72111BFCD00418CE1 /* SubjectCatalogueViewController.m in Sources */,
 				63ED9A0F2725037200937944 /* EditableTextModelItem.swift in Sources */,
 				BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */,
 				C92AB96F237F280300F79904 /* WatchHelper.swift in Sources */,
@@ -1256,6 +1253,7 @@
 				63BEBF9725C57D4000123147 /* SearchResultViewController.swift in Sources */,
 				63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */,
 				639528FD25CC2F4F009845ED /* LessonOrderViewController.swift in Sources */,
+				633252882727E8A700ABBA04 /* SubjectCatalogueViewController.swift in Sources */,
 				63F7F52C23D43DF6006A31FB /* Services.swift in Sources */,
 				63BFA791218EB7AB0058E885 /* TKMDownloadModelItem.m in Sources */,
 				633DE95620C5634A00AC25F4 /* TKMTableModel.m in Sources */,

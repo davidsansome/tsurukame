@@ -296,7 +296,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     case "showAll":
       let vc = segue.destination as! SubjectCatalogueViewController
       let level = services.localCachingClient.getUserInfo()!.level
-      vc.setup(with: services, level: level)
+      vc.setup(services: services, level: Int(level))
 
     case "showRemaining":
       let vc = segue.destination as! SubjectsRemainingViewController
