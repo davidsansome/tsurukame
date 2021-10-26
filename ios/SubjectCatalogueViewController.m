@@ -49,6 +49,18 @@
                   animated:NO
                 completion:nil];
   [self updateNavigationItem];
+
+  if (@available(iOS 15.0, *)) {
+    // On iOS 15 the scrollEdgeAppearance is used when the view is scrolled all the way to the top
+    // edge. Unfortunately here the scroll view is in the nested view controller, so the navigation
+    // bar doesn't know when the user starts scrolling down.
+    // Override the scrollEdgeAppearance to have an opaque background, so it covers the scroll view
+    // when it's scrolled.
+    UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+    [appearance configureWithOpaqueBackground];
+    self.navigationItem.scrollEdgeAppearance = appearance;
+    self.navigationItem.compactScrollEdgeAppearance = appearance;
+  }
 }
 
 - (void)updateNavigationItem {
