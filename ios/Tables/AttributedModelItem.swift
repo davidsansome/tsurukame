@@ -14,7 +14,7 @@
 
 import Foundation
 
-private let kEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 4, right: 16)
+private let kEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
 private let kMinimumHeight: CGFloat = 44
 
 @objc(TKMAttributedModelItem)
