@@ -15,7 +15,6 @@
 #import "TKMReviewMenuViewController.h"
 
 #import "Tables/TKMCheckmarkModelItem.h"
-#import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
 
 @interface TKMReviewMenuViewController () <UITableViewDelegate>

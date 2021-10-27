@@ -15,7 +15,6 @@
 #import "TKMFontsViewController.h"
 #import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
-#import "Tables/TKMTableModel.h"
 #import "Tsurukame-Swift.h"
 
 static NSString *const kURLPattern = @"https://tsurukame.app/fonts/%@";

@@ -29,7 +29,7 @@ private class UpcomingReviewsDateFormatter: UpcomingReviewsXAxisValueFormatter {
 class UpcomingReviewsViewController: UITableViewController {
   private var services: TKMServices!
   private var date: UpcomingReviewsDateFormatter!
-  private var model: TKMTableModel?
+  private var model: TableModel?
 
   func setup(services: TKMServices) {
     self.services = services
@@ -54,7 +54,7 @@ class UpcomingReviewsViewController: UITableViewController {
   }
 
   private func rerender() {
-    let model = TKMMutableTableModel(tableView: tableView),
+    let model = MutableTableModel(tableView: tableView),
         reviewData = getReviewData()
 
     func formatData(hour: Int) -> String {

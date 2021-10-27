@@ -15,7 +15,7 @@
 import UIKit
 
 class ViewController: UIViewController, TKMDownloadModelDelegate {
-  var tableModel: TKMMutableTableModel?
+  var tableModel: MutableTableModel?
   var tableView: UITableView!
 
   func didTapDownloadItem(_: TKMDownloadModelItem) {}
@@ -27,7 +27,7 @@ class ViewController: UIViewController, TKMDownloadModelDelegate {
     tableView = UITableView()
     view.addSubview(tableView!)
 
-    tableModel = TKMMutableTableModel(tableView: tableView)
+    tableModel = MutableTableModel(tableView: tableView)
 
     let fontLoader = TKMFontLoader()
     for font in fontLoader.allFonts {

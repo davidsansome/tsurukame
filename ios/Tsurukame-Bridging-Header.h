@@ -28,7 +28,6 @@
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
 #import "Tables/TKMSwitchModelItem.h"
-#import "Tables/TKMTableModel.h"
 #import "UIView+SafeAreaInsets.h"
 
 #import <Haneke/Haneke.h>

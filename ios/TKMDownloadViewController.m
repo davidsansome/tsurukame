@@ -13,9 +13,9 @@
 // limitations under the License.
 
 #import "TKMDownloadViewController.h"
+#import "Tsurukame-Swift.h"
 
 #import "Tables/TKMDownloadModelItem.h"
-#import "Tables/TKMTableModel.h"
 
 @interface TKMDownloadViewController () <NSURLSessionDownloadDelegate>
 
@@ -61,7 +61,8 @@
 }
 
 - (void)rerender {
-  TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView];
+  TKMMutableTableModel *model = [[TKMMutableTableModel alloc] initWithTableView:self.tableView
+                                                                       delegate:nil];
   [self populateModel:model];
 
   // Index the items.

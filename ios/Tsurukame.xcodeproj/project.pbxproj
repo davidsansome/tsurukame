@@ -29,6 +29,8 @@
 		633252882727E8A700ABBA04 /* SubjectCatalogueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */; };
 		6332528C2727F29D00ABBA04 /* PillModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6332528B2727F29D00ABBA04 /* PillModelItem.xib */; };
 		6332528E2727F32800ABBA04 /* PillModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6332528D2727F32800ABBA04 /* PillModelItem.swift */; };
+		633252922728131100ABBA04 /* TableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252912728131100ABBA04 /* TableModel.swift */; };
+		633252932728EA1100ABBA04 /* TableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252912728131100ABBA04 /* TableModel.swift */; };
 		6335B46523CF0C820071671E /* AppStoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B46423CF0C820071671E /* AppStoreScreenshots.swift */; };
 		6335B4C823CF0D390071671E /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B48C23CF0D390071671E /* SnapshotHelper.swift */; };
 		6335B4E723CF14280071671E /* Screenshotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335B4E623CF14280071671E /* Screenshotter.swift */; };
@@ -39,14 +41,12 @@
 		633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */; };
 		633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */; };
 		633DE95520C5634A00AC25F4 /* TKMSwitchModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95020C5634A00AC25F4 /* TKMSwitchModelItem.m */; };
-		633DE95620C5634A00AC25F4 /* TKMTableModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95120C5634A00AC25F4 /* TKMTableModel.m */; };
 		633DE95720C5634A00AC25F4 /* TKMBasicModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95220C5634A00AC25F4 /* TKMBasicModelItem.m */; };
 		633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95420C5634A00AC25F4 /* TKMModelItem.m */; };
 		633DE95D20C5635A00AC25F4 /* TKMKanaInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95920C5635900AC25F4 /* TKMKanaInput.m */; };
 		634C9B1423BF687800E4415C /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCAE77237F75CC00DB1418 /* Style.swift */; };
 		634C9B1523BF688D00E4415C /* TKMListSeparatorItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */; };
 		634C9B1623BF689000E4415C /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
-		634EB1A021B6B6D900E1831C /* TKMTableModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95120C5634A00AC25F4 /* TKMTableModel.m */; };
 		634EB1A121B6BBA400E1831C /* FontLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* FontLoader.swift */; };
 		634EB1A221B6BBD600E1831C /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* Settings.swift */; };
 		634EB1A321B6BC7000E1831C /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = BB2909A5217FAF8B00B1816F /* fonts */; };
@@ -244,6 +244,7 @@
 		633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectCatalogueViewController.swift; sourceTree = "<group>"; };
 		6332528B2727F29D00ABBA04 /* PillModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PillModelItem.xib; sourceTree = "<group>"; };
 		6332528D2727F32800ABBA04 /* PillModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillModelItem.swift; sourceTree = "<group>"; };
+		633252912728131100ABBA04 /* TableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableModel.swift; sourceTree = "<group>"; };
 		6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppStoreScreenshots.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6335B46423CF0C820071671E /* AppStoreScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshots.swift; sourceTree = "<group>"; };
 		6335B46623CF0C820071671E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -257,10 +258,8 @@
 		633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewTaskOrderViewController.h; sourceTree = "<group>"; };
 		633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewTaskOrderViewController.m; sourceTree = "<group>"; };
 		633DE94D20C5634900AC25F4 /* TKMBasicModelItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMBasicModelItem.h; sourceTree = "<group>"; };
-		633DE94E20C5634A00AC25F4 /* TKMTableModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMTableModel.h; sourceTree = "<group>"; };
 		633DE94F20C5634A00AC25F4 /* TKMSwitchModelItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMSwitchModelItem.h; sourceTree = "<group>"; };
 		633DE95020C5634A00AC25F4 /* TKMSwitchModelItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMSwitchModelItem.m; sourceTree = "<group>"; };
-		633DE95120C5634A00AC25F4 /* TKMTableModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMTableModel.m; sourceTree = "<group>"; };
 		633DE95220C5634A00AC25F4 /* TKMBasicModelItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMBasicModelItem.m; sourceTree = "<group>"; };
 		633DE95320C5634A00AC25F4 /* TKMModelItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMModelItem.h; sourceTree = "<group>"; };
 		633DE95420C5634A00AC25F4 /* TKMModelItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMModelItem.m; sourceTree = "<group>"; };
@@ -613,6 +612,8 @@
 				63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */,
 				63ED9A0E2725037200937944 /* EditableTextModelItem.swift */,
 				638D197425C6AA4B00B80544 /* MarkupModelItem.swift */,
+				6332528D2727F32800ABBA04 /* PillModelItem.swift */,
+				6332528B2727F29D00ABBA04 /* PillModelItem.xib */,
 				63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */,
 				63C74BD025C82B1D004F6C99 /* SubjectCollectionModelItem.swift */,
 				63C74BC725C822C9004F6C99 /* SubjectModelItem.swift */,
@@ -631,10 +632,7 @@
 				6392DBA320D130FB003019EB /* TKMSubjectModelItem.xib */,
 				633DE94F20C5634A00AC25F4 /* TKMSwitchModelItem.h */,
 				633DE95020C5634A00AC25F4 /* TKMSwitchModelItem.m */,
-				633DE94E20C5634A00AC25F4 /* TKMTableModel.h */,
-				633DE95120C5634A00AC25F4 /* TKMTableModel.m */,
-				6332528B2727F29D00ABBA04 /* PillModelItem.xib */,
-				6332528D2727F32800ABBA04 /* PillModelItem.swift */,
+				633252912728131100ABBA04 /* TableModel.swift */,
 			);
 			path = Tables;
 			sourceTree = "<group>";
@@ -1264,13 +1262,13 @@
 				633252882727E8A700ABBA04 /* SubjectCatalogueViewController.swift in Sources */,
 				63F7F52C23D43DF6006A31FB /* Services.swift in Sources */,
 				63BFA791218EB7AB0058E885 /* TKMDownloadModelItem.m in Sources */,
-				633DE95620C5634A00AC25F4 /* TKMTableModel.m in Sources */,
 				630EB12125C5652400783E54 /* LessonsPageControl.swift in Sources */,
 				633DE95720C5634A00AC25F4 /* TKMBasicModelItem.m in Sources */,
 				63C74C9F25C9858D004F6C99 /* SubjectDetailsViewController.swift in Sources */,
 				63F7F52123D3F36E006A31FB /* AttributedModelItem.swift in Sources */,
 				631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */,
 				633DE95D20C5635A00AC25F4 /* TKMKanaInput.m in Sources */,
+				633252922728131100ABBA04 /* TableModel.swift in Sources */,
 				636502B325D7A39600801C2D /* SubjectsRemainingViewController.swift in Sources */,
 				630EB10A25C561A900783E54 /* NSMutableAttributedString+Replacements.swift in Sources */,
 				635D0079218D94AA006CD711 /* TKMGradientView.m in Sources */,
@@ -1300,7 +1298,7 @@
 				C904455E2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				63C42A2821B6A28D008CA938 /* ViewController.swift in Sources */,
 				634EB1A121B6BBA400E1831C /* FontLoader.swift in Sources */,
-				634EB1A021B6B6D900E1831C /* TKMTableModel.m in Sources */,
+				633252932728EA1100ABBA04 /* TableModel.swift in Sources */,
 				63C42A4521B6AA06008CA938 /* TKMModelItem.m in Sources */,
 				63C42A2621B6A28D008CA938 /* AppDelegate.swift in Sources */,
 				634C9B1523BF688D00E4415C /* TKMListSeparatorItem.m in Sources */,

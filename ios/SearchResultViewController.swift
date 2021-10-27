@@ -59,7 +59,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
   private weak var delegate: SearchResultViewControllerDelegate?
 
   private var allSubjects: [TKMSubject]?
-  private var model: TKMTableModel!
+  private var model: TableModel!
   private var queue: DispatchQueue?
 
   func setup(with services: TKMServices, delegate: SearchResultViewControllerDelegate) {
@@ -153,7 +153,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
           return
         }
 
-        let model = TKMMutableTableModel(tableView: self.tableView)
+        let model = MutableTableModel(tableView: self.tableView)
         model.addSection()
         for subject in results {
           model.add(SubjectModelItem(subject: subject, delegate: self))

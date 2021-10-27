@@ -83,8 +83,8 @@ struct AudioPackage {
     super.init(coder: coder)
   }
 
-  override func populateModel(_ model: TKMMutableTableModel) {
-    model.addSection("", footer: """
+  override func populateModel(_ model: MutableTableModel) {
+    model.add(section: "", footer: """
     Download audio to your \(UIDevice.current.model) so it plays without \
     delay online and it's available when you're not connected to the Internet.
     """)

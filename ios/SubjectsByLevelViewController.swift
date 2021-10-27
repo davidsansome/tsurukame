@@ -19,7 +19,7 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
   private var services: TKMServices!
   private(set) var level: Int!
   private var showAnswers: Bool!
-  private var model: TKMTableModel?
+  private var model: TableModel?
 
   func setup(services: TKMServices, level: Int, showAnswers: Bool) {
     self.services = services
@@ -31,10 +31,10 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
     super.viewDidLoad()
     navigationItem.title = "Level \(level!)"
 
-    let model = TKMMutableTableModel(tableView: tableView)
-    model.addSection("Radicals")
-    model.addSection("Kanji")
-    model.addSection("Vocabulary")
+    let model = MutableTableModel(tableView: tableView)
+    model.add(section: "Radicals")
+    model.add(section: "Kanji")
+    model.add(section: "Vocabulary")
 
     for assignment in services.localCachingClient.getAssignments(level: level) {
       guard let subject = services.localCachingClient.getSubject(id: assignment.subjectID)
@@ -50,31 +50,29 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
       if assignment.isLocked || assignment.isBurned {
         item.gradientColors = TKMStyle.lockedGradient
       }
-      model.add(item, toSection: Int32(section))
+      model.add(item, toSection: section)
     }
 
-    let comparator = { (a: Any, b: Any) -> ComparisonResult in
-      guard let a = a as? SubjectModelItem,
-            let b = b as? SubjectModelItem,
-            let aAssignment = a.assignment,
+    let comparator = { (a: SubjectModelItem, b: SubjectModelItem) -> Bool in
+      guard let aAssignment = a.assignment,
             let bAssignment = b.assignment else {
-        return .orderedSame
+        return false
       }
 
-      if aAssignment.isLocked, !bAssignment.isLocked { return .orderedDescending }
-      if !aAssignment.isLocked, bAssignment.isLocked { return .orderedAscending }
-      if aAssignment.isReviewStage, !bAssignment.isReviewStage { return .orderedAscending }
-      if !aAssignment.isReviewStage, bAssignment.isReviewStage { return .orderedDescending }
-      if aAssignment.isLessonStage, !bAssignment.isLessonStage { return .orderedAscending }
-      if !aAssignment.isLessonStage, bAssignment.isLessonStage { return .orderedDescending }
-      if aAssignment.srsStage < bAssignment.srsStage { return .orderedAscending }
-      if aAssignment.srsStage > bAssignment.srsStage { return .orderedDescending }
-      return .orderedSame
+      if aAssignment.isLocked, !bAssignment.isLocked { return false }
+      if !aAssignment.isLocked, bAssignment.isLocked { return true }
+      if aAssignment.isReviewStage, !bAssignment.isReviewStage { return true }
+      if !aAssignment.isReviewStage, bAssignment.isReviewStage { return false }
+      if aAssignment.isLessonStage, !bAssignment.isLessonStage { return true }
+      if !aAssignment.isLessonStage, bAssignment.isLessonStage { return false }
+      if aAssignment.srsStage < bAssignment.srsStage { return true }
+      if aAssignment.srsStage > bAssignment.srsStage { return false }
+      return false
     }
 
-    model.sortSection(0, usingComparator: comparator)
-    model.sortSection(1, usingComparator: comparator)
-    model.sortSection(2, usingComparator: comparator)
+    model.sort(section: 0, using: comparator)
+    model.sort(section: 1, using: comparator)
+    model.sort(section: 2, using: comparator)
 
     for section in 0 ..< model.sectionCount {
       var lastAssignment: TKMAssignment?
@@ -94,8 +92,7 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
             } else {
               label = assignment.srsStage.description
             }
-            model.insert(TKMListSeparatorItem(label: label), at: Int32(itemIndex),
-                         inSection: section)
+            model.insert(TKMListSeparatorItem(label: label), atIndex: itemIndex, inSection: section)
             itemIndex += 1
           }
           lastAssignment = assignment

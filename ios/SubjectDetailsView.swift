@@ -119,7 +119,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private weak var subjectDelegate: SubjectDelegate!
 
   private var readingItem: ReadingModelItem?
-  private var tableModel: TKMTableModel?
+  private var tableModel: TableModel?
   private var lastSubjectChipTapped: SubjectChip?
 
   private var subject: TKMSubject!
@@ -142,18 +142,18 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   private func addMeanings(_ subject: TKMSubject,
                            studyMaterials: TKMStudyMaterials?,
-                           toModel model: TKMMutableTableModel) {
+                           toModel model: MutableTableModel) {
     let text = renderMeanings(subject: subject, studyMaterials: studyMaterials)
       .string(withFontSize: kFontSize)
     let item = AttributedModelItem(text: text)
 
-    model.addSection("Meaning")
+    model.add(section: "Meaning")
     model.add(item)
   }
 
   private func addReadings(_ subject: TKMSubject,
                            studyMaterials _: TKMStudyMaterials?,
-                           toModel model: TKMMutableTableModel) {
+                           toModel model: MutableTableModel) {
     let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
     let text = renderReadings(readings: subject.readings,
@@ -164,22 +164,22 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     }
 
     readingItem = item
-    model.addSection("Reading")
+    model.add(section: "Reading")
     model.add(item)
   }
 
   private func addComponents(_ subject: TKMSubject,
                              title: String,
-                             toModel model: TKMMutableTableModel) {
+                             toModel model: MutableTableModel) {
     let item = SubjectCollectionModelItem(subjects: subject.componentSubjectIds,
                                           localCachingClient: services.localCachingClient,
                                           delegate: self)
 
-    model.addSection(title)
+    model.add(section: title)
     model.add(item)
   }
 
-  private func addSimilarKanji(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
+  private func addSimilarKanji(_ subject: TKMSubject, toModel model: MutableTableModel) {
     let currentLevel = services.localCachingClient!.getUserInfo()!.level
     var addedSection = false
     for similar in subject.kanji.visuallySimilarKanji {
@@ -190,7 +190,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         continue
       }
       if !addedSection {
-        model.addSection("Visually Similar Kanji")
+        model.add(section: "Visually Similar Kanji")
         addedSection = true
       }
 
@@ -199,7 +199,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     }
   }
 
-  private func addAmalgamationSubjects(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
+  private func addAmalgamationSubjects(_ subject: TKMSubject, toModel model: MutableTableModel) {
     var subjects = [TKMSubject]()
     for subjectID in subject.amalgamationSubjectIds {
       if let subject = services.localCachingClient.getSubject(id: subjectID) {
@@ -215,7 +215,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       a.level < b.level
     }
 
-    model.addSection("Used in")
+    model.add(section: "Used in")
     for subject in subjects {
       model.add(SubjectModelItem(subject: subject, delegate: subjectDelegate))
     }
@@ -223,7 +223,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   private func addFormattedText(_ text: String,
                                 isHint: Bool,
-                                toModel model: TKMMutableTableModel)
+                                toModel model: MutableTableModel)
     -> AttributedModelItem? {
     if text.isEmpty {
       return nil
@@ -242,12 +242,12 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     return item
   }
 
-  private func addContextSentences(_ subject: TKMSubject, toModel model: TKMMutableTableModel) {
+  private func addContextSentences(_ subject: TKMSubject, toModel model: MutableTableModel) {
     if subject.vocabulary.sentences.isEmpty {
       return
     }
 
-    model.addSection("Context Sentences")
+    model.add(section: "Context Sentences")
     for sentence in subject.vocabulary.sentences {
       model.add(ContextSentenceModelItem(sentence, highlightSubject: subject,
                                          defaultAttributes: defaultStringAttrs(),
@@ -255,13 +255,13 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     }
   }
 
-  private func addPartsOfSpeech(_ vocab: TKMVocabulary, toModel model: TKMMutableTableModel) {
+  private func addPartsOfSpeech(_ vocab: TKMVocabulary, toModel model: MutableTableModel) {
     let text = vocab.commaSeparatedPartsOfSpeech
     if text.isEmpty {
       return
     }
 
-    model.addSection("Part of Speech")
+    model.add(section: "Part of Speech")
     let item = TKMBasicModelItem(style: .default, title: text, subtitle: nil)
     item.titleFont = UIFont.systemFont(ofSize: kFontSize)
     model.add(item)
@@ -271,11 +271,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     update(withSubject: subject, studyMaterials: studyMaterials, assignment: assignment, task: nil)
   }
 
-  private func addExplanation(model: TKMMutableTableModel, title: String, text: String,
+  private func addExplanation(model: MutableTableModel, title: String, text: String,
                               hint: String? = nil, note: String? = nil,
                               noteChangedCallback: ((_ text: String) -> Void)? = nil) {
     let hasNote = !(note ?? "").isEmpty
-    model.addSection(title)
+    model.add(section: title)
     let explanationItem = addFormattedText(text, isHint: false,
                                            toModel: model)
     // Add the hint if present.
@@ -304,7 +304,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       explanationItem?.rightButtonCallback = { [weak self] (cell: AttributedModelCell) in
         cell.removeRightButton()
         // Show the note item.
-        self?.tableModel?.setIndexPath(noteIndex, isHidden: false)
+        self?.tableModel?.setIndexPath(noteIndex, hidden: false)
       }
       noteItem.textChangedCallback = noteChangedCallback
     }
@@ -312,7 +312,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
                      assignment: TKMAssignment?, task: ReviewItem?) {
-    let model = TKMMutableTableModel(tableView: self), isReview = task != nil
+    let model = MutableTableModel(tableView: self), isReview = task != nil
     readingItem = nil
     studyMaterialsChanged = false
     self.subject = subject
@@ -414,7 +414,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     // Your progress, SRS level, next review, first started, reached guru
     if let subjectAssignment = assignment, Settings.showStatsSection {
-      model.addSection("Stats")
+      model.add(section: "Stats")
       model.add(TKMBasicModelItem(style: .value1, title: "WaniKani Level",
                                   subtitle: String(subjectAssignment.level)))
 
