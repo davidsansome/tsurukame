@@ -10,31 +10,33 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Xqo-hd-MCj" customClass="PillModelCell" customModule="Tsurukame" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="66" id="Xqo-hd-MCj" customClass="PillModelCell" customModule="Tsurukame" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="66"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Xqo-hd-MCj" id="nk2-z3-hbQ">
-                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                <rect key="frame" x="0.0" y="0.0" width="414" height="66"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="InG-kg-X4B">
-                        <rect key="frame" x="173.5" y="14.5" width="67" height="31"/>
-                        <buttonConfiguration key="configuration" style="gray" title="Button" cornerStyle="capsule">
-                            <color key="baseBackgroundColor" systemColor="systemBackgroundColor"/>
-                        </buttonConfiguration>
+                        <rect key="frame" x="168" y="24" width="78" height="34"/>
+                        <inset key="contentEdgeInsets" minX="12" minY="6" maxX="12" maxY="6"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" title="Button">
+                            <color key="titleColor" systemColor="tintColor"/>
+                        </state>
                         <connections>
                             <action selector="buttonPressed:" destination="Xqo-hd-MCj" eventType="touchUpInside" id="USB-ik-Xzv"/>
                         </connections>
                     </button>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ICt-XG-QJK" userLabel="Left line">
-                        <rect key="frame" x="0.0" y="29.5" width="173.5" height="1"/>
+                        <rect key="frame" x="0.0" y="40.5" width="168" height="1"/>
                         <color key="backgroundColor" systemColor="separatorColor"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="1" id="Rcb-Dx-Mgy"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hQB-vB-8Dx" userLabel="Right line">
-                        <rect key="frame" x="240.5" y="29.5" width="173.5" height="1"/>
+                        <rect key="frame" x="246" y="40.5" width="168" height="1"/>
                         <color key="backgroundColor" systemColor="separatorColor"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="1" id="JTC-pR-Cnn"/>
@@ -58,15 +60,15 @@
                 <outlet property="leftLineHeight" destination="Rcb-Dx-Mgy" id="DoS-eX-5aR"/>
                 <outlet property="rightLineHeight" destination="JTC-pR-Cnn" id="aK6-qO-FTU"/>
             </connections>
-            <point key="canvasLocation" x="118.84057971014494" y="-14.0625"/>
+            <point key="canvasLocation" x="118.84057971014494" y="-7.7008928571428568"/>
         </tableViewCell>
     </objects>
     <resources>
         <systemColor name="separatorColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        <systemColor name="tintColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

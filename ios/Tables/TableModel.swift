@@ -31,7 +31,9 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   private var delegate: UITableViewDelegate?
 
   deinit {
-    NSLog("TKMTableModel deallocated without being used. Did you forget to retain it?")
+    if !isInitialised {
+      NSLog("TKMTableModel deallocated without being used. Did you forget to retain it?")
+    }
   }
 
   init(tableView: UITableView, delegate: UITableViewDelegate?) {

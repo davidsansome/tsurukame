@@ -40,16 +40,18 @@ class PillModelCell: TKMModelCell {
 
     // Set the left line, right line, and button border width to be exactly 1 pixel (scaled by
     // screen scale), to match the default table cell borders.
-    if let scale = window?.screen.scale {
-      let borderWidth = 1.0 / scale
-      leftLineHeight.constant = borderWidth
-      rightLineHeight.constant = borderWidth
+    let borderWidth = 1.0 / UIScreen.main.scale
+    leftLineHeight.constant = borderWidth
+    rightLineHeight.constant = borderWidth
 
-      if let buttonBackground = button.subviews.first?.subviews.first {
-        buttonBackground.layer.borderWidth = borderWidth
-        buttonBackground.layer.borderColor = TKMStyle.Color.separator.cgColor
-      }
-    }
+    button.layer.backgroundColor = TKMStyle.Color.cellBackground.cgColor
+    button.layer.borderWidth = borderWidth
+    button.layer.borderColor = TKMStyle.Color.separator.cgColor
+    button.layer.cornerRadius = button.frame.size.height * 0.5
+    button.clipsToBounds = true
+    button.layer.masksToBounds = true
+    button.layer.rasterizationScale = UIScreen.main.scale
+    button.layer.shouldRasterize = true
   }
 
   override func update(with item: TKMModelItem!) {
@@ -57,7 +59,10 @@ class PillModelCell: TKMModelCell {
     let item = item as! PillModelItem
 
     let font = UIFont.systemFont(ofSize: item.fontSize)
-    let title = NSAttributedString(string: item.text, attributes: [.font: font])
+    let title = NSAttributedString(string: item.text, attributes: [
+      .font: font,
+      .foregroundColor: button.tintColor!,
+    ])
     button.setAttributedTitle(title, for: .normal)
   }
 
