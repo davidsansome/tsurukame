@@ -52,12 +52,6 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
 
   // MARK: - AttributedModelCell
 
-  override func textViewSize(_ availableRect: CGRect) -> CGSize {
-    var size = textView.sizeThatFits(availableRect.size)
-    size.width = availableRect.size.width
-    return size
-  }
-
   override func layoutSubviews() {
     super.layoutSubviews()
 

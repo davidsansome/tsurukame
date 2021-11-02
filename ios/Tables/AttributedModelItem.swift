@@ -58,23 +58,30 @@ class AttributedModelCell: TKMModelCell {
     fatalError("init(coder:) has not been implemented")
   }
 
+  private func rightButtonFrame(_ availableRect: CGRect) -> CGRect? {
+    guard let rightButton = rightButton else {
+      return nil
+    }
+    let buttonSize = rightButton.intrinsicContentSize
+    return CGRect(x: availableRect.maxX - buttonSize.width - kEdgeInsets.right,
+                  y: availableRect.origin.y - kEdgeInsets.top,
+                  width: buttonSize.width + kEdgeInsets.right * 2,
+                  height: buttonSize.height + kEdgeInsets.top + kEdgeInsets
+                    .bottom)
+  }
+
   override func sizeThatFits(_ size: CGSize) -> CGSize {
     var availableRect = CGRect(origin: .zero, size: size).inset(by: kEdgeInsets)
-    let textViewSize = textView.sizeThatFits(availableRect.size)
+    var exclusionPaths = [UIBezierPath]()
+    if let rightButtonFrame = rightButtonFrame(availableRect) {
+      exclusionPaths.append(UIBezierPath(rect: rightButtonFrame))
+    }
+    textView.textContainer.exclusionPaths = exclusionPaths
 
+    let textViewSize = textView.sizeThatFits(availableRect.size)
     availableRect.size.height = max(kMinimumHeight,
                                     textViewSize.height + kEdgeInsets.top + kEdgeInsets.bottom)
     return availableRect.size
-  }
-
-  func textViewSize(_ availableRect: CGRect) -> CGSize {
-    // [UITextView sizeToFit] gives the wrong size for attributed strings that mix bold and normal
-    // weight Japanese text.  We use [NSAttributedString boundingRectWithSize] which gives the correct
-    // size.
-    let text = textView.attributedText!
-    return text.boundingRect(with: availableRect.size,
-                             options: .usesLineFragmentOrigin,
-                             context: nil).size
   }
 
   override func layoutSubviews() {
@@ -82,18 +89,14 @@ class AttributedModelCell: TKMModelCell {
 
     var availableRect = bounds.inset(by: kEdgeInsets)
     var exclusionPaths = [UIBezierPath]()
-
-    if let rightButton = rightButton {
-      let buttonSize = rightButton.intrinsicContentSize
-      rightButton.frame = CGRect(x: availableRect.maxX - buttonSize.width - kEdgeInsets.right,
-                                 y: availableRect.origin.y - kEdgeInsets.top,
-                                 width: buttonSize.width + kEdgeInsets.right * 2,
-                                 height: buttonSize.height + kEdgeInsets.top + kEdgeInsets
-                                   .bottom)
-      exclusionPaths.append(UIBezierPath(rect: rightButton.frame))
+    if let rightButton = rightButton, let rightButtonFrame = rightButtonFrame(availableRect) {
+      rightButton.frame = rightButtonFrame
+      exclusionPaths.append(UIBezierPath(rect: rightButtonFrame))
     }
+    textView.textContainer.exclusionPaths = exclusionPaths
 
-    let textViewSize = self.textViewSize(availableRect)
+    var textViewSize = textView.sizeThatFits(availableRect.size)
+    textViewSize.width = availableRect.size.width
 
     // Center the text vertically.
     if textViewSize.height < availableRect.size.height {
@@ -102,7 +105,6 @@ class AttributedModelCell: TKMModelCell {
     }
 
     textView.frame = availableRect
-    textView.textContainer.exclusionPaths = exclusionPaths
   }
 
   override func update(with baseItem: TKMModelItem!) {
