@@ -46,240 +46,242 @@ class SettingsViewController: UITableViewController {
 
     model.add(section: "App")
     if #available(iOS 13.0, *) {
-      model.add(TKMBasicModelItem(style: .value1,
-                                  title: "UI Appearance",
-                                  subtitle: Settings.interfaceStyle.description,
-                                  accessoryType: .disclosureIndicator,
-                                  target: self,
-                                  action: #selector(didTapInterfaceStyle(_:))))
+      model.add(BasicModelItem(style: .value1,
+                               title: "UI Appearance",
+                               subtitle: Settings.interfaceStyle.description,
+                               accessoryType: .disclosureIndicator,
+                               target: self,
+                               action: #selector(didTapInterfaceStyle(_:))))
     }
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Upcoming type over SRS",
-                                 subtitle: "In the upcoming reviews list, break down item type instead of SRS.",
-                                 on: Settings.upcomingTypeOverSRS,
-                                 target: self,
-                                 action: #selector(upcomingTypeOverSRSChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Upcoming type over SRS",
+                              subtitle: "In the upcoming reviews list, break down item type instead of SRS.",
+                              on: Settings.upcomingTypeOverSRS,
+                              target: self,
+                              action: #selector(upcomingTypeOverSRSChanged(_:))))
 
     model.add(section: "Notifications")
-    model.add(TKMSwitchModelItem(style: .default,
-                                 title: "Notify for all available reviews",
-                                 subtitle: nil,
-                                 on: Settings.notificationsAllReviews,
-                                 target: self,
-                                 action: #selector(allReviewsSwitchChanged(_:))))
-    model.add(TKMSwitchModelItem(style: .default,
-                                 title: "Badge the app icon",
-                                 subtitle: nil,
-                                 on: Settings.notificationsBadging,
-                                 target: self,
-                                 action: #selector(badgingSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .default,
+                              title: "Notify for all available reviews",
+                              subtitle: nil,
+                              on: Settings.notificationsAllReviews,
+                              target: self,
+                              action: #selector(allReviewsSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .default,
+                              title: "Badge the app icon",
+                              subtitle: nil,
+                              on: Settings.notificationsBadging,
+                              target: self,
+                              action: #selector(badgingSwitchChanged(_:))))
 
     model.add(section: "Lessons")
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Prioritize current level",
-                                 subtitle: "Teach items from the current level first",
-                                 on: Settings.prioritizeCurrentLevel,
-                                 target: self,
-                                 action: #selector(prioritizeCurrentLevelChanged(_:))))
-    model.add(TKMBasicModelItem(style: .value1,
-                                title: "Lesson order",
-                                subtitle: lessonOrderValueText,
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(didTapLessonOrder(_:))))
-    model.add(TKMBasicModelItem(style: .value1,
-                                title: "Lesson batch size",
-                                subtitle: lessonBatchSizeText,
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(didTapLessonBatchSize(_:))))
-    model.add(TKMBasicModelItem(style: .value1,
-                                title: "Lesson apprentice limit",
-                                subtitle: apprenticeLessonsLimitText,
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(didTapApprenticeLessonsLimit(_:))))
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Show stats section",
-                                 subtitle: "Show section with level, SRS stage, and more",
-                                 on: Settings.showStatsSection,
-                                 target: self,
-                                 action: #selector(showStatsSectionChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Prioritize current level",
+                              subtitle: "Teach items from the current level first",
+                              on: Settings.prioritizeCurrentLevel,
+                              target: self,
+                              action: #selector(prioritizeCurrentLevelChanged(_:))))
+    model.add(BasicModelItem(style: .value1,
+                             title: "Lesson order",
+                             subtitle: lessonOrderValueText,
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(didTapLessonOrder(_:))))
+    model.add(BasicModelItem(style: .value1,
+                             title: "Lesson batch size",
+                             subtitle: lessonBatchSizeText,
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(didTapLessonBatchSize(_:))))
+    model.add(BasicModelItem(style: .value1,
+                             title: "Lesson apprentice limit",
+                             subtitle: apprenticeLessonsLimitText,
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(didTapApprenticeLessonsLimit(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Show stats section",
+                              subtitle: "Show section with level, SRS stage, and more",
+                              on: Settings.showStatsSection,
+                              target: self,
+                              action: #selector(showStatsSectionChanged(_:))))
 
     model.add(section: "Reviews")
-    model.add(TKMBasicModelItem(style: .value1,
-                                title: "Review order",
-                                subtitle: reviewOrderValueText,
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(didTapReviewOrder(_:))))
-    model.add(TKMBasicModelItem(style: .value1,
-                                title: "Review batch size",
-                                subtitle: "\(Settings.reviewBatchSize.description)",
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(didTapReviewBatchSize(_:))))
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Back-to-back",
-                                 subtitle: "Group Meaning and Reading together",
-                                 on: Settings.groupMeaningReading,
-                                 target: self,
-                                 action: #selector(groupMeaningReadingSwitchChanged(_:))))
-    groupMeaningReadingIndexPath = model.add(TKMBasicModelItem(style: .value1,
-                                                               title: "Back-to-back order",
-                                                               subtitle: taskOrderValueText,
-                                                               accessoryType: .disclosureIndicator,
-                                                               target: self,
-                                                               action: #selector(didTapTaskOrder(_:))),
+    model.add(BasicModelItem(style: .value1,
+                             title: "Review order",
+                             subtitle: reviewOrderValueText,
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(didTapReviewOrder(_:))))
+    model.add(BasicModelItem(style: .value1,
+                             title: "Review batch size",
+                             subtitle: "\(Settings.reviewBatchSize.description)",
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(didTapReviewBatchSize(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Back-to-back",
+                              subtitle: "Group Meaning and Reading together",
+                              on: Settings.groupMeaningReading,
+                              target: self,
+                              action: #selector(groupMeaningReadingSwitchChanged(_:))))
+    groupMeaningReadingIndexPath = model.add(BasicModelItem(style: .value1,
+                                                            title: "Back-to-back order",
+                                                            subtitle: taskOrderValueText,
+                                                            accessoryType: .disclosureIndicator,
+                                                            target: self,
+                                                            action: #selector(didTapTaskOrder(_:))),
                                              hidden:!Settings
                                                .groupMeaningReading)
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Reveal answer automatically",
-                                 subtitle: "In Anki mode, this reveals the mark answer pop-up instead.",
-                                 on: Settings.showAnswerImmediately,
-                                 target: self,
-                                 action: #selector(showAnswerImmediatelySwitchChanged(_:))))
-    model.add(TKMBasicModelItem(style: .default,
-                                title: "Fonts",
-                                subtitle: nil,
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(didTapFonts(_:))))
-    model.add(TKMBasicModelItem(style: .value1,
-                                title: "Font size",
-                                subtitle: fontSizeValueText,
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(fontSizeChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Reveal answer automatically",
+                              subtitle: "In Anki mode, this reveals the mark answer pop-up instead.",
+                              on: Settings.showAnswerImmediately,
+                              target: self,
+                              action: #selector(showAnswerImmediatelySwitchChanged(_:))))
+    model.add(BasicModelItem(style: .default,
+                             title: "Fonts",
+                             subtitle: nil,
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(didTapFonts(_:))))
+    model.add(BasicModelItem(style: .value1,
+                             title: "Font size",
+                             subtitle: fontSizeValueText,
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(fontSizeChanged(_:))))
 
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Exact match",
-                                 subtitle: "Requires typing in answers exactly correct",
-                                 on: Settings.exactMatch,
-                                 target: self,
-                                 action: #selector(exactMatchSwitchChanged(_:))))
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Allow cheating",
-                                 subtitle: "Ignore Typos and Add Synonym",
-                                 on: Settings.enableCheats,
-                                 target: self,
-                                 action: #selector(enableCheatsSwitchChanged(_:))))
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Show old mnemonics",
-                                 subtitle: "Display old mnemonics alongside new ones",
-                                 on: Settings.showOldMnemonic,
-                                 target: self,
-                                 action: #selector(showOldMnemonicSwitchChanged(_:))))
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Use katakana for onyomi readings",
-                                 subtitle: nil,
-                                 on: Settings.useKatakanaForOnyomi,
-                                 target: self,
-                                 action: #selector(useKatakanaForOnyomiSwitchChanged(_:))))
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Show SRS level indicator",
-                                 subtitle: nil,
-                                 on: Settings.showSRSLevelIndicator,
-                                 target: self,
-                                 action: #selector(showSRSLevelIndicatorSwitchChanged(_:))))
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Show all kanji readings",
-                                 subtitle: "Primary reading(s) will be shown in bold",
-                                 on: Settings.showAllReadings,
-                                 target: self,
-                                 action: #selector(showAllReadingsSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Exact match",
+                              subtitle: "Requires typing in answers exactly correct",
+                              on: Settings.exactMatch,
+                              target: self,
+                              action: #selector(exactMatchSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Allow cheating",
+                              subtitle: "Ignore Typos and Add Synonym",
+                              on: Settings.enableCheats,
+                              target: self,
+                              action: #selector(enableCheatsSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Show old mnemonics",
+                              subtitle: "Display old mnemonics alongside new ones",
+                              on: Settings.showOldMnemonic,
+                              target: self,
+                              action: #selector(showOldMnemonicSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Use katakana for onyomi readings",
+                              subtitle: nil,
+                              on: Settings.useKatakanaForOnyomi,
+                              target: self,
+                              action: #selector(useKatakanaForOnyomiSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Show SRS level indicator",
+                              subtitle: nil,
+                              on: Settings.showSRSLevelIndicator,
+                              target: self,
+                              action: #selector(showSRSLevelIndicatorSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Show all kanji readings",
+                              subtitle: "Primary reading(s) will be shown in bold",
+                              on: Settings.showAllReadings,
+                              target: self,
+                              action: #selector(showAllReadingsSwitchChanged(_:))))
 
-    let keyboardSwitchItem = TKMSwitchModelItem(style: .subtitle,
-                                                title: "Switch to Japanese keyboard",
-                                                subtitle: "Automatically switch to a Japanese keyboard to type reading answers",
-                                                on: Settings.autoSwitchKeyboard,
-                                                target: self,
-                                                action: #selector(autoSwitchKeyboardSwitchChanged(_:)))
+    let keyboardSwitchItem = SwitchModelItem(style: .subtitle,
+                                             title: "Switch to Japanese keyboard",
+                                             subtitle: "Automatically switch to a Japanese keyboard to type reading answers",
+                                             on: Settings.autoSwitchKeyboard,
+                                             target: self,
+                                             action: #selector(autoSwitchKeyboardSwitchChanged(_:)))
     keyboardSwitchItem.numberOfSubtitleLines = 0
     model.add(keyboardSwitchItem)
 
-    model.add(TKMSwitchModelItem(style: .default,
-                                 title: "Allow skipping reviews",
-                                 subtitle: nil,
-                                 on: Settings.allowSkippingReviews,
-                                 target: self,
-                                 action: #selector(allowSkippingReviewsSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .default,
+                              title: "Allow skipping reviews",
+                              subtitle: nil,
+                              on: Settings.allowSkippingReviews,
+                              target: self,
+                              action: #selector(allowSkippingReviewsSwitchChanged(_:))))
 
-    let minimizeReviewPenaltyItem = TKMSwitchModelItem(style: .subtitle,
-                                                       title: "Minimize review penalty",
-                                                       subtitle:
-                                                       "Treat reviews answered incorrect multiple times as if answered incorrect once",
-                                                       on: Settings.minimizeReviewPenalty,
-                                                       target: self,
-                                                       action: #selector(minimizeReviewPenaltySwitchChanged(_:)))
+    let minimizeReviewPenaltyItem = SwitchModelItem(style: .subtitle,
+                                                    title: "Minimize review penalty",
+                                                    subtitle:
+                                                    "Treat reviews answered incorrect multiple times as if answered incorrect once",
+                                                    on: Settings.minimizeReviewPenalty,
+                                                    target: self,
+                                                    action: #selector(minimizeReviewPenaltySwitchChanged(_:)))
     minimizeReviewPenaltyItem.numberOfSubtitleLines = 0
     model.add(minimizeReviewPenaltyItem)
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Pause on partially correct answers",
-                                 subtitle: "Allows making sure answer was correct",
-                                 on: Settings.pausePartiallyCorrect,
-                                 target: self,
-                                 action: #selector(partiallyCorrectSwitchChanged(_:))))
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Anki mode",
-                                 subtitle: "Do reviews without typing answers",
-                                 on: Settings.ankiMode,
-                                 target: self,
-                                 action: #selector(ankiModeSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Pause on partially correct answers",
+                              subtitle: "Allows making sure answer was correct",
+                              on: Settings.pausePartiallyCorrect,
+                              target: self,
+                              action: #selector(partiallyCorrectSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Anki mode",
+                              subtitle: "Do reviews without typing answers",
+                              on: Settings.ankiMode,
+                              target: self,
+                              action: #selector(ankiModeSwitchChanged(_:))))
 
     model.add(section: "Audio")
-    model.add(TKMSwitchModelItem(style: .subtitle,
-                                 title: "Play audio automatically",
-                                 subtitle: "When you answer correctly",
-                                 on: Settings.playAudioAutomatically,
-                                 target: self,
-                                 action: #selector(playAudioAutomaticallySwitchChanged(_:))))
-    model.add(TKMBasicModelItem(style: .default,
-                                title: "Offline audio",
-                                subtitle: nil,
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(didTapOfflineAudio(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Play audio automatically",
+                              subtitle: "When you answer correctly",
+                              on: Settings.playAudioAutomatically,
+                              target: self,
+                              action: #selector(playAudioAutomaticallySwitchChanged(_:))))
+    model.add(BasicModelItem(style: .default,
+                             title: "Offline audio",
+                             subtitle: nil,
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(didTapOfflineAudio(_:))))
 
     model.add(section: "Animations", footer: "You can turn off any animations you find distracting")
-    model.add(TKMSwitchModelItem(style: .default,
-                                 title: "Particle explosion",
-                                 subtitle: nil,
-                                 on: Settings.animateParticleExplosion,
-                                 target: self,
-                                 action: #selector(animateParticleExplosionSwitchChanged(_:))))
-    model.add(TKMSwitchModelItem(style: .default,
-                                 title: "Level up popup",
-                                 subtitle: nil,
-                                 on: Settings.animateLevelUpPopup,
-                                 target: self,
-                                 action: #selector(animateLevelUpPopupSwitchChanged(_:))))
-    model.add(TKMSwitchModelItem(style: .default,
-                                 title: "+1",
-                                 subtitle: nil,
-                                 on: Settings.animatePlusOne,
-                                 target: self,
-                                 action: #selector(animatePlusOneSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .default,
+                              title: "Particle explosion",
+                              subtitle: nil,
+                              on: Settings.animateParticleExplosion,
+                              target: self,
+                              action: #selector(animateParticleExplosionSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .default,
+                              title: "Level up popup",
+                              subtitle: nil,
+                              on: Settings.animateLevelUpPopup,
+                              target: self,
+                              action: #selector(animateLevelUpPopupSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .default,
+                              title: "+1",
+                              subtitle: nil,
+                              on: Settings.animatePlusOne,
+                              target: self,
+                              action: #selector(animatePlusOneSwitchChanged(_:))))
 
     model.addSection()
-    model.add(TKMBasicModelItem(style: .subtitle,
-                                title: "Export local database",
-                                subtitle: "To attach to bug reports or email to the developer",
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(didTapSendBugReport(_:))))
+    let exportLocalDatabaseItem = BasicModelItem(style: .subtitle,
+                                                 title: "Export local database",
+                                                 subtitle: "To attach to bug reports or email to the developer",
+                                                 accessoryType: .disclosureIndicator,
+                                                 target: self,
+                                                 action: #selector(didTapSendBugReport(_:)))
+    exportLocalDatabaseItem.numberOfSubtitleLines = 0
+    model.add(exportLocalDatabaseItem)
     if let coreVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
       let version = "\(coreVersion).\(build)"
-      model.add(TKMBasicModelItem(style: .value1, title: "Version", subtitle: version,
-                                  accessoryType: .none))
+      model.add(BasicModelItem(style: .value1, title: "Version", subtitle: version,
+                               accessoryType: .none))
     }
-    let logOutItem = TKMBasicModelItem(style: .default,
-                                       title: "Log out",
-                                       subtitle: nil,
-                                       accessoryType: .none,
-                                       target: self,
-                                       action: #selector(didTapLogOut(_:)))
+    let logOutItem = BasicModelItem(style: .default,
+                                    title: "Log out",
+                                    subtitle: nil,
+                                    accessoryType: .none,
+                                    target: self,
+                                    action: #selector(didTapLogOut(_:)))
     logOutItem.textColor = .systemRed
     model.add(logOutItem)
 
@@ -490,39 +492,39 @@ class SettingsViewController: UITableViewController {
 
   // MARK: - Tap handlers
 
-  @objc private func didTapLessonOrder(_: TKMBasicModelItem) {
+  @objc private func didTapLessonOrder(_: BasicModelItem) {
     performSegue(withIdentifier: "lessonOrder", sender: self)
   }
 
-  @objc private func didTapLessonBatchSize(_: TKMBasicModelItem) {
+  @objc private func didTapLessonBatchSize(_: BasicModelItem) {
     performSegue(withIdentifier: "lessonBatchSize", sender: self)
   }
 
-  @objc private func didTapApprenticeLessonsLimit(_: TKMBasicModelItem) {
+  @objc private func didTapApprenticeLessonsLimit(_: BasicModelItem) {
     performSegue(withIdentifier: "apprenticeLessonsLimit", sender: self)
   }
 
-  @objc private func didTapReviewBatchSize(_: TKMBasicModelItem) {
+  @objc private func didTapReviewBatchSize(_: BasicModelItem) {
     performSegue(withIdentifier: "reviewBatchSize", sender: self)
   }
 
-  @objc private func fontSizeChanged(_: TKMBasicModelItem) {
+  @objc private func fontSizeChanged(_: BasicModelItem) {
     performSegue(withIdentifier: "fontSize", sender: self)
   }
 
-  @objc private func didTapReviewOrder(_: TKMBasicModelItem) {
+  @objc private func didTapReviewOrder(_: BasicModelItem) {
     performSegue(withIdentifier: "reviewOrder", sender: self)
   }
 
-  @objc private func didTapInterfaceStyle(_: TKMBasicModelItem) {
+  @objc private func didTapInterfaceStyle(_: BasicModelItem) {
     performSegue(withIdentifier: "interfaceStyle", sender: self)
   }
 
-  @objc private func didTapFonts(_: TKMBasicModelItem) {
+  @objc private func didTapFonts(_: BasicModelItem) {
     performSegue(withIdentifier: "fonts", sender: self)
   }
 
-  @objc private func didTapTaskOrder(_: TKMBasicModelItem) {
+  @objc private func didTapTaskOrder(_: BasicModelItem) {
     performSegue(withIdentifier: "taskOrder", sender: self)
   }
 

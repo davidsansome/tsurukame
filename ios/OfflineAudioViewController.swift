@@ -107,11 +107,11 @@ struct AudioPackage {
 
     if fileManager.fileExists(atPath: Audio.cacheDirectoryPath) {
       model.addSection()
-      let deleteItem = TKMBasicModelItem(style: .default,
-                                         title: "Delete all offline audio", subtitle: nil,
-                                         accessoryType: UITableViewCell.AccessoryType.none,
-                                         target: self,
-                                         action: #selector(didTapDeleteAllAudio(sender:)))
+      let deleteItem = BasicModelItem(style: .default,
+                                      title: "Delete all offline audio", subtitle: nil,
+                                      accessoryType: UITableViewCell.AccessoryType.none,
+                                      target: self,
+                                      action: #selector(didTapDeleteAllAudio(sender:)))
       deleteItem.textColor = UIColor.systemRed
       model.add(deleteItem)
     }

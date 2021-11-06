@@ -15,7 +15,7 @@
 import Foundation
 import WaniKaniAPI
 
-class SRSStageCategoryItem: TKMBasicModelItem {
+class SRSStageCategoryItem: BasicModelItem {
   let stageCategory: SRSStageCategory
 
   init(stageCategory: SRSStageCategory, count: Int) {

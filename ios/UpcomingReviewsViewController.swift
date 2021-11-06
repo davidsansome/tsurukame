@@ -71,10 +71,10 @@ class UpcomingReviewsViewController: UITableViewController {
     for hour in 0 ..< reviewData.count {
       if hour > 0,
          reviewData[hour].availableReviews == reviewData[hour - 1].availableReviews { continue }
-      model.add(TKMBasicModelItem(style: .value1,
-                                  title: date.string(hour: hour),
-                                  subtitle: formatData(hour: hour),
-                                  accessoryType: .none))
+      model.add(BasicModelItem(style: .value1,
+                               title: date.string(hour: hour),
+                               subtitle: formatData(hour: hour),
+                               accessoryType: .none))
     }
 
     self.model = model

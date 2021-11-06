@@ -262,7 +262,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     }
 
     model.add(section: "Part of Speech")
-    let item = TKMBasicModelItem(style: .default, title: text, subtitle: nil)
+    let item = BasicModelItem(style: .default, title: text, subtitle: nil)
     item.titleFont = UIFont.systemFont(ofSize: kFontSize)
     model.add(item)
   }
@@ -415,31 +415,31 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     // Your progress, SRS level, next review, first started, reached guru
     if let subjectAssignment = assignment, Settings.showStatsSection {
       model.add(section: "Stats")
-      model.add(TKMBasicModelItem(style: .value1, title: "WaniKani Level",
-                                  subtitle: String(subjectAssignment.level)))
+      model.add(BasicModelItem(style: .value1, title: "WaniKani Level",
+                               subtitle: String(subjectAssignment.level)))
 
       if subjectAssignment.hasStartedAt {
         if subjectAssignment.hasSrsStageNumber {
-          model.add(TKMBasicModelItem(style: .value1, title: "SRS Stage",
-                                      subtitle: subjectAssignment.srsStage.description))
+          model.add(BasicModelItem(style: .value1, title: "SRS Stage",
+                                   subtitle: subjectAssignment.srsStage.description))
         }
-        model.add(TKMBasicModelItem(style: .value1, title: "Started",
-                                    subtitle: statsDateFormatter
-                                      .string(from: subjectAssignment.startedAtDate)))
+        model.add(BasicModelItem(style: .value1, title: "Started",
+                                 subtitle: statsDateFormatter
+                                   .string(from: subjectAssignment.startedAtDate)))
         if subjectAssignment.hasAvailableAt {
-          model.add(TKMBasicModelItem(style: .value1, title: "Next Review",
-                                      subtitle: statsDateFormatter
-                                        .string(from: subjectAssignment.availableAtDate)))
+          model.add(BasicModelItem(style: .value1, title: "Next Review",
+                                   subtitle: statsDateFormatter
+                                     .string(from: subjectAssignment.availableAtDate)))
         }
         if subjectAssignment.hasPassedAt {
-          model.add(TKMBasicModelItem(style: .value1, title: "Passed",
-                                      subtitle: statsDateFormatter
-                                        .string(from: subjectAssignment.passedAtDate)))
+          model.add(BasicModelItem(style: .value1, title: "Passed",
+                                   subtitle: statsDateFormatter
+                                     .string(from: subjectAssignment.passedAtDate)))
         }
         if subjectAssignment.hasBurnedAt {
-          model.add(TKMBasicModelItem(style: .value1, title: "Burned",
-                                      subtitle: statsDateFormatter
-                                        .string(from: subjectAssignment.burnedAtDate)))
+          model.add(BasicModelItem(style: .value1, title: "Burned",
+                                   subtitle: statsDateFormatter
+                                     .string(from: subjectAssignment.burnedAtDate)))
         }
       }
 

@@ -30,7 +30,7 @@ func createCurrentLevelReviewTimeItem(services: TKMServices,
     subtitle = intervalString(finish)
   }
 
-  return TKMBasicModelItem(style: .value1, title: title, subtitle: subtitle)
+  return BasicModelItem(style: .value1, title: title, subtitle: subtitle)
 }
 
 private func calculateCurrentLevelReviewTime(services: TKMServices,

@@ -44,7 +44,7 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
         "\(Int(Double(correct) / Double(items.count) * 100.0))% (\(correct)/\(items.count))"
     }
     model.add(section: "Summary")
-    model.add(TKMBasicModelItem(style: .value1, title: "Correct answers", subtitle: summaryText))
+    model.add(BasicModelItem(style: .value1, title: "Correct answers", subtitle: summaryText))
 
     // Add a section for each level.
     let incorrectItemLevels = incorrectItemsByLevel.keys.sorted { (a, b) -> Bool in

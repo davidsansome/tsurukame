@@ -32,16 +32,16 @@ private func userProfileImageURL(emailAddress: String) -> URL {
   return URL(string: "https://www.gravatar.com/avatar/\(hash).jpg?s=\(size)&d=\(kDefaultProfileImageURL)")!
 }
 
-private func setTableViewCellCount(_ item: TKMBasicModelItem, count: Int,
+private func setTableViewCellCount(_ item: BasicModelItem, count: Int,
                                    disabledMessage: String? = nil) -> Bool {
   item.subtitle = count < 0 ? "-" : "\(count)"
-  item.enabled = count > 0 && (disabledMessage == nil)
+  item.isEnabled = count > 0 && (disabledMessage == nil)
 
   if let message = disabledMessage {
     item.title = "\(item.title!) (\(message))"
   }
 
-  return item.enabled
+  return item.isEnabled
 }
 
 @objc
@@ -86,7 +86,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     // Create the search results view controller.
     let searchResultsVC = storyboard?
       .instantiateViewController(withIdentifier: "searchResults") as! SearchResultViewController
-    searchResultsVC.setup(with: services, delegate: self)
+    searchResultsVC.setup(services: services, delegate: self)
     searchResultsViewController = searchResultsVC
 
     // Create the search controller.
@@ -170,12 +170,12 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
     if !user.hasVacationStartedAt {
       model.add(section: "Currently available")
-      let lessonsItem = TKMBasicModelItem(style: .value1,
-                                          title: "Lessons",
-                                          subtitle: "",
-                                          accessoryType: .disclosureIndicator,
-                                          target: self,
-                                          action: #selector(startLessons))
+      let lessonsItem = BasicModelItem(style: .value1,
+                                       title: "Lessons",
+                                       subtitle: "",
+                                       accessoryType: .disclosureIndicator,
+                                       target: self,
+                                       action: #selector(startLessons))
       let apprenticeCount = services.localCachingClient.apprenticeCount
       let limit = Settings.apprenticeLessonsLimit
       let disabledMessage = apprenticeCount >= limit ? "Apprentice limit reached..." : nil
@@ -183,12 +183,12 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
                                          disabledMessage: disabledMessage)
       model.add(lessonsItem)
 
-      let reviewsItem = TKMBasicModelItem(style: .value1,
-                                          title: "Reviews",
-                                          subtitle: "",
-                                          accessoryType: .disclosureIndicator,
-                                          target: self,
-                                          action: #selector(startReviews))
+      let reviewsItem = BasicModelItem(style: .value1,
+                                       title: "Reviews",
+                                       subtitle: "",
+                                       accessoryType: .disclosureIndicator,
+                                       target: self,
+                                       action: #selector(startReviews))
       hasReviews = setTableViewCellCount(reviewsItem, count: reviews)
       model.add(reviewsItem)
 
@@ -208,18 +208,18 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
         .add(createLevelTimeRemainingItem(services: services,
                                           currentLevelAssignments: currentLevelAssignments))
     }
-    model.add(TKMBasicModelItem(style: .default,
-                                title: "Show remaining",
-                                subtitle: nil,
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(showRemaining)))
-    model.add(TKMBasicModelItem(style: .default,
-                                title: "Show all",
-                                subtitle: "",
-                                accessoryType: .disclosureIndicator,
-                                target: self,
-                                action: #selector(showAll)))
+    model.add(BasicModelItem(style: .default,
+                             title: "Show remaining",
+                             subtitle: nil,
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(showRemaining)))
+    model.add(BasicModelItem(style: .default,
+                             title: "Show all",
+                             subtitle: "",
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(showAll)))
 
     model.add(section: "All levels")
     for category in SRSStageCategory.apprentice ... SRSStageCategory.burned {

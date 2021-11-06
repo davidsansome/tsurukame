@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "TKMFontsViewController.h"
-#import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tsurukame-Swift.h"
 

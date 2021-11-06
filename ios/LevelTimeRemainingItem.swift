@@ -22,7 +22,7 @@ func createLevelTimeRemainingItem(services: TKMServices,
 
   let title = isEstimate ? "Time remaining (estimated)" : "Time remaining"
   let subtitle = finish < Date() ? "Now" : intervalString(finish)
-  return TKMBasicModelItem(style: .value1, title: title, subtitle: subtitle)
+  return BasicModelItem(style: .value1, title: title, subtitle: subtitle)
 }
 
 private func calculateLevelTimeRemaining(services: TKMServices,

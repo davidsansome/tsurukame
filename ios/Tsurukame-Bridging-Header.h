@@ -23,11 +23,9 @@
 #import "TKMGradientView.h"
 #import "TKMKanaInput.h"
 #import "TKMReviewContainerViewController.h"
-#import "Tables/TKMBasicModelItem.h"
 #import "Tables/TKMDownloadModelItem.h"
 #import "Tables/TKMListSeparatorItem.h"
 #import "Tables/TKMModelItem.h"
-#import "Tables/TKMSwitchModelItem.h"
 #import "UIView+SafeAreaInsets.h"
 
 #import <Haneke/Haneke.h>

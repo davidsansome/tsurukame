@@ -62,7 +62,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
   private var model: TableModel!
   private var queue: DispatchQueue?
 
-  func setup(with services: TKMServices, delegate: SearchResultViewControllerDelegate) {
+  func setup(services: TKMServices, delegate: SearchResultViewControllerDelegate) {
     self.services = services
     self.delegate = delegate
   }
