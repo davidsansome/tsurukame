@@ -1288,6 +1288,101 @@ public struct TKMDeprecatedMnemonicFile {
   public init() {}
 }
 
+public struct TKMVoiceActor {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var id: Int64 {
+    get {return _id ?? 0}
+    set {_id = newValue}
+  }
+  /// Returns true if `id` has been explicitly set.
+  public var hasID: Bool {return self._id != nil}
+  /// Clears the value of `id`. Subsequent reads from it will return its default value.
+  public mutating func clearID() {self._id = nil}
+
+  public var gender: TKMVoiceActor.Gender {
+    get {return _gender ?? .unknown}
+    set {_gender = newValue}
+  }
+  /// Returns true if `gender` has been explicitly set.
+  public var hasGender: Bool {return self._gender != nil}
+  /// Clears the value of `gender`. Subsequent reads from it will return its default value.
+  public mutating func clearGender() {self._gender = nil}
+
+  public var name: String {
+    get {return _name ?? String()}
+    set {_name = newValue}
+  }
+  /// Returns true if `name` has been explicitly set.
+  public var hasName: Bool {return self._name != nil}
+  /// Clears the value of `name`. Subsequent reads from it will return its default value.
+  public mutating func clearName() {self._name = nil}
+
+  public var description_p: String {
+    get {return _description_p ?? String()}
+    set {_description_p = newValue}
+  }
+  /// Returns true if `description_p` has been explicitly set.
+  public var hasDescription_p: Bool {return self._description_p != nil}
+  /// Clears the value of `description_p`. Subsequent reads from it will return its default value.
+  public mutating func clearDescription_p() {self._description_p = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public enum Gender: SwiftProtobuf.Enum {
+    public typealias RawValue = Int
+    case unknown // = 0
+    case male // = 1
+    case female // = 2
+    case UNRECOGNIZED(Int)
+
+    public init() {
+      self = .unknown
+    }
+
+    public init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .unknown
+      case 1: self = .male
+      case 2: self = .female
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    public var rawValue: Int {
+      switch self {
+      case .unknown: return 0
+      case .male: return 1
+      case .female: return 2
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
+
+  public init() {}
+
+  fileprivate var _id: Int64? = nil
+  fileprivate var _gender: TKMVoiceActor.Gender? = nil
+  fileprivate var _name: String? = nil
+  fileprivate var _description_p: String? = nil
+}
+
+#if swift(>=4.2)
+
+extension TKMVoiceActor.Gender: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  public static var allCases: [TKMVoiceActor.Gender] = [
+    .unknown,
+    .male,
+    .female,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "proto"
@@ -2390,4 +2485,62 @@ extension TKMDeprecatedMnemonicFile.Subject: SwiftProtobuf.Message, SwiftProtobu
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
+}
+
+extension TKMVoiceActor: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".VoiceActor"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "id"),
+    2: .same(proto: "gender"),
+    3: .same(proto: "name"),
+    4: .same(proto: "description"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self._id) }()
+      case 2: try { try decoder.decodeSingularEnumField(value: &self._gender) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self._name) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self._description_p) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if let v = self._id {
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
+    }
+    if let v = self._gender {
+      try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
+    }
+    if let v = self._name {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
+    }
+    if let v = self._description_p {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: TKMVoiceActor, rhs: TKMVoiceActor) -> Bool {
+    if lhs._id != rhs._id {return false}
+    if lhs._gender != rhs._gender {return false}
+    if lhs._name != rhs._name {return false}
+    if lhs._description_p != rhs._description_p {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension TKMVoiceActor.Gender: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "UNKNOWN"),
+    1: .same(proto: "MALE"),
+    2: .same(proto: "FEMALE"),
+  ]
 }

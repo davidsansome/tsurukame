@@ -208,6 +208,35 @@ public class WaniKaniAPIClient: NSObject {
     }
   }
 
+  public typealias VoiceActors = (voiceActors: [TKMVoiceActor], updatedAt: String)
+  /**
+   * Fetches all voice actors. If updatedAfter is empty, all voice actors are returned, otherwise returns
+   * only the ones modified after that date.
+   */
+  public func voiceActors(progress: Progress,
+                          updatedAfter: String = "") -> Promise<VoiceActors> {
+    // Build the URL.
+    var url = URLComponents(string: "\(kBaseUrl)/voice_actors")!
+    if !updatedAfter.isEmpty {
+      url.queryItems = [URLQueryItem(name: "updated_after", value: updatedAfter)]
+    }
+
+    // Fetch the data and convert to protobufs.
+    return firstly {
+      pagedQuery(url: url.url!, progress: progress)
+    }.map { (allData: Response<[Response<VoiceActorData>]>) -> VoiceActors in
+      var ret = [TKMVoiceActor]()
+      for data in allData.data {
+        guard let id = data.id else {
+          continue
+        }
+
+        ret.append(data.data.toProto(id: id))
+      }
+      return (voiceActors: ret, updatedAt: allData.data_updated_at ?? updatedAfter)
+    }
+  }
+
   // MARK: - Sending lesson/review progress
 
   public func sendProgress(_ progress: TKMProgress) -> Promise<TKMAssignment> {
@@ -756,6 +785,28 @@ private struct StudyMaterialRequest: Codable {
   }
 
   var study_material: StudyMaterial
+}
+
+/** Response type for /voice_actors. */
+private struct VoiceActorData: Codable {
+  var description: String
+  var gender: String
+  var name: String
+
+  func toProto(id: Int64?) -> TKMVoiceActor {
+    var ret = TKMVoiceActor()
+    ret.id = id ?? 0
+    ret.description_p = description
+    ret.name = name
+    switch gender {
+    case "male": ret.gender = .male
+    case "female": ret.gender = .female
+    default:
+      break
+    }
+
+    return ret
+  }
 }
 
 /** Error response type. */

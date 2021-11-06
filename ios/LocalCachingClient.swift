@@ -271,13 +271,23 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     """
     UPDATE sync SET subjects_updated_after = "";
     """,
+
+    """
+    CREATE TABLE voice_actors (
+      id INTEGER PRIMARY KEY,
+      pb BLOB
+    );
+    ALTER TABLE sync ADD COLUMN voice_actors_updated_after TEXT;
+    UPDATE sync SET voice_actors_updated_after = "";
+    """,
   ]
 
   private let kClearAllData = """
   UPDATE sync SET
     assignments_updated_after = "",
     study_materials_updated_after = "",
-    subjects_updated_after = ""
+    subjects_updated_after = "",
+    voice_actors_updated_after = ""
   ;
   DELETE FROM assignments;
   DELETE FROM pending_progress;
@@ -288,6 +298,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   DELETE FROM error_log;
   DELETE FROM level_progressions;
   DELETE FROM subjects;
+  DELETE FROM voice_actors;
   """
 
   private func openDatabase() {
@@ -791,6 +802,20 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     _pendingStudyMaterialsCount.invalidate()
   }
 
+  func getVoiceActors() -> [TKMVoiceActor] {
+    db.inDatabase { db in
+      getVoiceActors(transaction: db)
+    }
+  }
+
+  private func getVoiceActors(transaction db: FMDatabase) -> [TKMVoiceActor] {
+    var ret = [TKMVoiceActor]()
+    for cursor in db.query("SELECT pb FROM voice_actors") {
+      ret.append(cursor.proto(forColumnIndex: 0)!)
+    }
+    return ret
+  }
+
   // MARK: - Syncing
 
   private func fetchAssignments(progress: Progress) -> Promise<Void> {
@@ -923,6 +948,35 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
+  private func fetchVoiceActors(progress: Progress) -> Promise<Void> {
+    // Get the last voice actors update time.
+    let updatedAfter: String = db.inDatabase { db in
+      let cursor = db.query("SELECT voice_actors_updated_after FROM sync")
+      if cursor.next() {
+        return cursor.string(forColumnIndex: 0) ?? ""
+      }
+      return ""
+    }
+
+    return firstly { () -> Promise<WaniKaniAPIClient.VoiceActors> in
+      client.voiceActors(progress: progress, updatedAfter: updatedAfter)
+    }.done { voiceActors, updatedAt in
+      NSLog("Updated %d voice actors at %@", voiceActors.count, updatedAt)
+      self.db.inTransaction { db in
+        for voiceActor in voiceActors {
+          db.mustExecuteUpdate("REPLACE INTO voice_actors (id, pb) " +
+            "VALUES (?, ?)",
+            args: [
+              voiceActor.id,
+              try! voiceActor.serializedData(),
+            ])
+        }
+        db.mustExecuteUpdate("UPDATE sync SET voice_actors_updated_after = ?",
+                             args: [updatedAt])
+      }
+    }
+  }
+
   private var busy = false
   func sync(quick: Bool, progress: Progress) -> PMKFinalizer {
     guard !busy else {
@@ -944,10 +998,14 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
         db.mustExecuteStatements("""
         UPDATE sync
           SET assignments_updated_after = \"\",
-              subjects_updated_after = \"\";
+              subjects_updated_after = \"\",
+              voice_actors_updated_after = \"\",
+              study_materials_updated_after = \"\",
         DELETE FROM assignments;
         DELETE FROM subjects;
         DELETE FROM subject_progress;
+        DELETE FROM voice_actors;
+        DELETE FROM study_materials;
         """)
       }
     }
@@ -965,6 +1023,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
         self.fetchStudyMaterials(progress: childProgress(1)),
         self.fetchUserInfo(progress: childProgress(1)),
         self.fetchLevelProgression(progress: childProgress(1)),
+        self.fetchVoiceActors(progress: childProgress(1)),
       ])
     }.ensure {
       self._availableSubjects.invalidate()

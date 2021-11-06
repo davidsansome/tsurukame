@@ -243,3 +243,16 @@ message DeprecatedMnemonicFile {
   }
   repeated Subject subjects = 1;
 }
+
+message VoiceActor {
+  enum Gender {
+    UNKNOWN = 0;
+    MALE = 1;
+    FEMALE = 2;
+  }
+
+  optional int64 id = 1;
+  optional Gender gender = 2;
+  optional string name = 3;
+  optional string description = 4;
+}
