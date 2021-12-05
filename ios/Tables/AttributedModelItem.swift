@@ -58,45 +58,67 @@ class AttributedModelCell: TKMModelCell {
     fatalError("init(coder:) has not been implemented")
   }
 
-  private func rightButtonFrame(_ availableRect: CGRect) -> CGRect? {
-    guard let rightButton = rightButton else {
-      return nil
+  private func caluclateLayouts(_ availableRect: CGRect)
+    -> (rightButtonFrame: CGRect?, exclusionPaths: [UIBezierPath], textHeight: CGFloat) {
+    var rightButtonFrame: CGRect?
+    var exclusionPaths = [UIBezierPath]()
+
+    // If there's a right button, calculate its rectangle and add that as a text exclusion path.
+    if let rightButton = rightButton {
+      let buttonSize = rightButton.intrinsicContentSize
+      rightButtonFrame = CGRect(x: availableRect.maxX - buttonSize.width - kEdgeInsets.left,
+                                y: availableRect.origin.y - kEdgeInsets.top,
+                                width: buttonSize.width + kEdgeInsets.right + kEdgeInsets.left,
+                                height: buttonSize.height + kEdgeInsets.top + kEdgeInsets
+                                  .bottom)
+      exclusionPaths.append(UIBezierPath(rect: rightButtonFrame!))
     }
-    let buttonSize = rightButton.intrinsicContentSize
-    return CGRect(x: availableRect.maxX - buttonSize.width - kEdgeInsets.right,
-                  y: availableRect.origin.y - kEdgeInsets.top,
-                  width: buttonSize.width + kEdgeInsets.right * 2,
-                  height: buttonSize.height + kEdgeInsets.top + kEdgeInsets
-                    .bottom)
+
+    // Calculate the height of the text. We can't just use UITextView.sizeThatFits because it gets
+    // the wrong answer for CJK text. The order here matters, see
+    // https://github.com/facebook/AsyncDisplayKit/issues/2894.
+    let storage = NSTextStorage()
+    let manager = NSLayoutManager()
+    manager.usesFontLeading = false
+    storage.addLayoutManager(manager)
+    storage.setAttributedString(textView.attributedText)
+
+    var size = availableRect.size
+    size.height = CGFloat.greatestFiniteMagnitude
+
+    let container = NSTextContainer(size: size)
+    container.lineFragmentPadding = 0
+    container.exclusionPaths = exclusionPaths
+    manager.addTextContainer(container)
+    manager.ensureLayout(for: container)
+
+    let textHeight = manager.usedRect(for: container).height
+
+    return (rightButtonFrame: rightButtonFrame, exclusionPaths: exclusionPaths,
+            textHeight: textHeight)
   }
 
   override func sizeThatFits(_ size: CGSize) -> CGSize {
-    var availableRect = CGRect(origin: .zero, size: size).inset(by: kEdgeInsets)
-    var exclusionPaths = [UIBezierPath]()
-    if let rightButtonFrame = rightButtonFrame(availableRect) {
-      exclusionPaths.append(UIBezierPath(rect: rightButtonFrame))
-    }
-    textView.textContainer.exclusionPaths = exclusionPaths
+    let availableRect = CGRect(origin: .zero, size: size).inset(by: kEdgeInsets)
+    let layout = caluclateLayouts(availableRect)
 
-    let textViewSize = textView.sizeThatFits(availableRect.size)
-    availableRect.size.height = max(kMinimumHeight,
-                                    textViewSize.height + kEdgeInsets.top + kEdgeInsets.bottom)
-    return availableRect.size
+    return CGSize(width: availableRect.width, height: max(kMinimumHeight,
+                                                          layout.textHeight + kEdgeInsets
+                                                            .top + kEdgeInsets.bottom))
   }
 
   override func layoutSubviews() {
     super.layoutSubviews()
 
     var availableRect = bounds.inset(by: kEdgeInsets)
-    var exclusionPaths = [UIBezierPath]()
-    if let rightButton = rightButton, let rightButtonFrame = rightButtonFrame(availableRect) {
-      rightButton.frame = rightButtonFrame
-      exclusionPaths.append(UIBezierPath(rect: rightButtonFrame))
-    }
-    textView.textContainer.exclusionPaths = exclusionPaths
+    let layout = caluclateLayouts(availableRect)
 
-    var textViewSize = textView.sizeThatFits(availableRect.size)
-    textViewSize.width = availableRect.size.width
+    if let rightButton = rightButton, let rightButtonFrame = layout.rightButtonFrame {
+      rightButton.frame = rightButtonFrame
+    }
+    textView.textContainer.exclusionPaths = layout.exclusionPaths
+
+    let textViewSize = CGSize(width: availableRect.width, height: layout.textHeight)
 
     // Center the text vertically.
     if textViewSize.height < availableRect.size.height {
