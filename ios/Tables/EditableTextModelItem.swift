@@ -17,19 +17,16 @@ import Foundation
 class EditableTextModelItem: AttributedModelItem {
   let placeholderText: String
   let font: UIFont
-  var hasEditButton: Bool
 
   var textChangedCallback: ((_ text: String) -> Void)?
 
-  init(text: NSAttributedString, placeholderText: String, hasEditButton: Bool, font: UIFont) {
+  init(text: NSAttributedString, placeholderText: String, rightButtonImage: UIImage?,
+       font: UIFont) {
     self.placeholderText = placeholderText
-    self.hasEditButton = hasEditButton
     self.font = font
     super.init(text: text)
 
-    if hasEditButton {
-      rightButtonImage = UIImage(named: "baseline_edit_black_24pt")
-    }
+    self.rightButtonImage = rightButtonImage
   }
 
   override func cellClass() -> AnyClass! {
@@ -68,7 +65,7 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
     placeholderLabel.font = item.font
     placeholderLabel.textColor = TKMStyle.Color.placeholderText
 
-    if item.hasEditButton {
+    if item.rightButtonImage != nil {
       textView.isEditable = false
     } else {
       textView.isEditable = true
@@ -80,7 +77,6 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
     removeRightButton()
 
     let item = self.item as! EditableTextModelItem
-    item.hasEditButton = false
     item.rightButtonImage = nil
 
     // Make the text view editable and start editing.

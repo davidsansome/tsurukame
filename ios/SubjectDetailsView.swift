@@ -286,8 +286,9 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     if hasNote, let note = note {
       // If there is a note, add it with its own edit button.
       let attributedNote = NSAttributedString(string: note, attributes: defaultStringAttrs())
-      let noteItem = EditableTextModelItem(text: attributedNote, placeholderText: "Add a note",
-                                           hasEditButton: true,
+      let noteItem = EditableTextModelItem(text: attributedNote,
+                                           placeholderText: "Add a note",
+                                           rightButtonImage: UIImage(named: "baseline_edit_black_24pt"),
                                            font: UIFont.systemFont(ofSize: kFontSize))
       noteItem.textChangedCallback = noteChangedCallback
       model.add(noteItem)
@@ -296,11 +297,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       // button on the explanation.
       let noteItem = EditableTextModelItem(text: NSAttributedString(),
                                            placeholderText: "Add a note",
-                                           hasEditButton: false,
+                                           rightButtonImage: nil,
                                            font: UIFont.systemFont(ofSize: kFontSize))
       let noteIndex = model.add(noteItem, hidden: true)
 
-      explanationItem?.rightButtonImage = UIImage(named: "baseline_edit_black_24pt")
+      explanationItem?.rightButtonImage = UIImage(named: "baseline_note_add_black_24pt")
       explanationItem?.rightButtonCallback = { [weak self] (cell: AttributedModelCell) in
         cell.removeRightButton()
         // Show the note item.
