@@ -63,7 +63,10 @@ class BasicModelItem: NSObject, TKMModelItem {
   }
 
   func cellReuseIdentifier() -> String! {
-    "\(object_getClassName(cellClass()))/\(style)"
+    [
+      String(describing: cellClass()!),
+      String(style.rawValue),
+    ].joined(separator: "/")
   }
 
   func createCell() -> TKMModelCell! {
