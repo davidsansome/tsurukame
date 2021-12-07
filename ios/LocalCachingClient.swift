@@ -321,7 +321,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     SET assignments_updated_after = \"\",
         subjects_updated_after = \"\",
         voice_actors_updated_after = \"\",
-        study_materials_updated_after = \"\"
+        study_materials_updated_after = \"\";
   DELETE FROM assignments;
   DELETE FROM subjects;
   DELETE FROM subject_progress;
