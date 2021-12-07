@@ -107,6 +107,7 @@
 		63CE766321F47100002A417B /* TKMReviewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766221F47100002A417B /* TKMReviewContainerViewController.m */; };
 		63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CE766521F47669002A417B /* TKMReviewMenuViewController.m */; };
 		63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */; };
+		63D2DAEE275C5D4100D5F6FF /* UIControl+addAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D2DAED275C5D4100D5F6FF /* UIControl+addAction.swift */; };
 		63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
 		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
@@ -324,6 +325,7 @@
 		63CE766421F47669002A417B /* TKMReviewMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMReviewMenuViewController.h; sourceTree = "<group>"; };
 		63CE766521F47669002A417B /* TKMReviewMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMReviewMenuViewController.m; sourceTree = "<group>"; };
 		63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+InterfaceStyle.swift"; sourceTree = "<group>"; };
+		63D2DAED275C5D4100D5F6FF /* UIControl+addAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+addAction.swift"; sourceTree = "<group>"; };
 		63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingAppDelegate.swift; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMListSeparatorItem.xib; sourceTree = "<group>"; };
@@ -476,6 +478,7 @@
 				63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */,
 				63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */,
 				63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */,
+				63D2DAED275C5D4100D5F6FF /* UIControl+addAction.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1209,6 +1212,7 @@
 				63ED9A0F2725037200937944 /* EditableTextModelItem.swift in Sources */,
 				BBE4E332217276EC003A200E /* TKMFontsViewController.m in Sources */,
 				C92AB96F237F280300F79904 /* WatchHelper.swift in Sources */,
+				63D2DAEE275C5D4100D5F6FF /* UIControl+addAction.swift in Sources */,
 				63F7F51F23D3F335006A31FB /* ReadingModelItem.swift in Sources */,
 				633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */,
 				633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */,

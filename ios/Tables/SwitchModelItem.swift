@@ -18,12 +18,14 @@ import UIKit
 @objc(TKMSwitchModelItem)
 class SwitchModelItem: BasicModelItem {
   var isOn: Bool
+  var switchHandler: ((Bool) -> Void)?
 
   init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?, on: Bool,
-       target: NSObject?, action: Selector?) {
+       target: NSObject? = nil, action: Selector? = nil, switchHandler: ((Bool) -> Void)? = nil) {
     isOn = on
+    self.switchHandler = switchHandler
     super.init(style: style, title: title, subtitle: subtitle, accessoryType: .none, target: target,
-               action: action)
+               action: action, tapHandler: nil)
   }
 
   override func cellClass() -> AnyClass! {
@@ -56,7 +58,11 @@ class SwitchModelCell: BasicModelCell {
     let item = baseItem as! SwitchModelItem
 
     switchView.isOn = item.isOn
-    if let target = item.target, let action = item.action {
+    if let switchHandler = item.switchHandler {
+      switchView.addAction(for: .valueChanged) { [unowned self] in
+        switchHandler(self.switchView.isOn)
+      }
+    } else if let target = item.target, let action = item.action {
       switchView.addTarget(target, action: action, for: .valueChanged)
     }
   }

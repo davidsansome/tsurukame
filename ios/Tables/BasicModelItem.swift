@@ -35,6 +35,7 @@ class BasicModelItem: NSObject, TKMModelItem {
 
   var target: NSObject?
   var action: Selector?
+  var tapHandler: (() -> Void)?
 
   var textColor: UIColor?
   var imageTintColor: UIColor?
@@ -45,17 +46,26 @@ class BasicModelItem: NSObject, TKMModelItem {
 
   init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?,
        accessoryType: UITableViewCell.AccessoryType = .none, target: NSObject? = nil,
-       action: Selector? = nil) {
+       action: Selector? = nil, tapHandler: (() -> Void)? = nil) {
     self.style = style
     self.title = title
     self.subtitle = subtitle
     self.accessoryType = accessoryType
     self.target = target
     self.action = action
+    self.tapHandler = tapHandler
 
     if style == .subtitle {
       subtitleFont = UIFont.preferredFont(forTextStyle: .caption2)
     }
+  }
+
+  // For objective-C compatibility only.
+  convenience init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?,
+                   accessoryType: UITableViewCell.AccessoryType, target: NSObject?,
+                   action: Selector?) {
+    self.init(style: style, title: title, subtitle: subtitle, accessoryType: accessoryType,
+              target: target, action: action, tapHandler: nil)
   }
 
   func cellClass() -> AnyClass! {
@@ -103,6 +113,10 @@ class BasicModelCell: TKMModelCell {
 
   override func didSelect() {
     let item = self.item as! BasicModelItem
-    TKMSafePerformSelector(item.target, item.action, item)
+    if let tapHandler = item.tapHandler {
+      tapHandler()
+    } else {
+      TKMSafePerformSelector(item.target, item.action, item)
+    }
   }
 }

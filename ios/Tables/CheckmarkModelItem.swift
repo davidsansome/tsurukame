@@ -18,12 +18,21 @@ import Foundation
 @objcMembers
 class CheckmarkModelItem: BasicModelItem {
   @objc(on) var isOn: Bool
+  var switchHandler: ((Bool) -> Void)?
 
   init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?, on: Bool,
-       target: NSObject?, action: Selector?) {
+       target: NSObject?, action: Selector?, switchHandler: ((Bool) -> Void)? = nil) {
     isOn = on
+    self.switchHandler = switchHandler
     super.init(style: style, title: title, subtitle: subtitle, accessoryType: .none, target: target,
-               action: action)
+               action: action, tapHandler: nil)
+  }
+
+  // For objective-C compatibility only.
+  convenience init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?, on: Bool,
+                   target: NSObject?, action: Selector?) {
+    self.init(style: style, title: title, subtitle: subtitle, on: on, target: target,
+              action: action, switchHandler: nil)
   }
 
   override func cellClass() -> AnyClass! {
@@ -50,7 +59,11 @@ class CheckmarkModelCell: BasicModelCell {
     let item = self.item as! CheckmarkModelItem
     item.isOn = !item.isOn
 
-    TKMSafePerformSelector(item.target, item.action, item)
+    if let switchHandler = item.switchHandler {
+      switchHandler(item.isOn)
+    } else {
+      TKMSafePerformSelector(item.target, item.action, item)
+    }
     accessoryType = item.isOn ? .checkmark : .none
 
     backgroundColor = UIColor(white: CheckmarkModelCell.kTapAnimationWhiteness, alpha: 1.0)
