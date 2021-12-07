@@ -293,6 +293,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     """,
   ]
 
+  // Run when the user logs out. Clears everything in the database.
   private let kClearAllData = """
   UPDATE sync SET
     assignments_updated_after = "",
@@ -311,6 +312,21 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   DELETE FROM subjects;
   DELETE FROM voice_actors;
   DELETE FROM audio_urls;
+  """
+
+  // Run when the user pulls down on the main screen. Clears all locally cached data so it can be
+  // re-downloaded, but doesn't log out the user.
+  private let kFullSync = """
+  UPDATE sync
+    SET assignments_updated_after = \"\",
+        subjects_updated_after = \"\",
+        voice_actors_updated_after = \"\",
+        study_materials_updated_after = \"\"
+  DELETE FROM assignments;
+  DELETE FROM subjects;
+  DELETE FROM subject_progress;
+  DELETE FROM voice_actors;
+  DELETE FROM study_materials;
   """
 
   private func openDatabase() {
@@ -1060,18 +1076,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       // Clear the sync table before doing anything else. This forces us to re-download all
       // assignments and subjects.
       db.inTransaction { db in
-        db.mustExecuteStatements("""
-        UPDATE sync
-          SET assignments_updated_after = \"\",
-              subjects_updated_after = \"\",
-              voice_actors_updated_after = \"\",
-              study_materials_updated_after = \"\",
-        DELETE FROM assignments;
-        DELETE FROM subjects;
-        DELETE FROM subject_progress;
-        DELETE FROM voice_actors;
-        DELETE FROM study_materials;
-        """)
+        db.mustExecuteStatements(kFullSync)
       }
     }
 
