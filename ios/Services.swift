@@ -22,6 +22,7 @@ class TKMServices: NSObject {
   let reachability: Reachability
   let fontLoader: FontLoader
 
+  private(set) var offlineAudio: OfflineAudio!
   private(set) var audio: Audio!
   var client: WaniKaniAPIClient!
   var localCachingClient: LocalCachingClient!
@@ -32,6 +33,7 @@ class TKMServices: NSObject {
 
     super.init()
 
+    offlineAudio = OfflineAudio(services: self)
     audio = Audio(services: self)
   }
 }

@@ -181,6 +181,11 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
   @Setting(false, #keyPath(ankiMode)) static var ankiMode: Bool
 
   @Setting(false, #keyPath(playAudioAutomatically)) static var playAudioAutomatically: Bool
+  @Setting(false, #keyPath(offlineAudio)) static var offlineAudio: Bool
+  @Setting(false, #keyPath(offlineAudioCellular)) static var offlineAudioCellular: Bool
+  @Setting([], #keyPath(offlineAudioVoiceActors)) static var offlineAudioVoiceActors: Set<Int64>
+
+  // Deprecated - remove after 1.24.
   @Setting([], #keyPath(installedAudioPackages)) static var installedAudioPackages: Set<String>
 
   @Setting(true, #keyPath(animateParticleExplosion)) static var animateParticleExplosion: Bool

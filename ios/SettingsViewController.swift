@@ -538,6 +538,10 @@ class SettingsViewController: UITableViewController {
       let vc = segue.destination as! TKMFontsViewController
       vc.setup(with: services)
 
+    case "offlineAudio":
+      let vc = segue.destination as! OfflineAudioViewController
+      vc.setup(services: services)
+
     default:
       break
     }

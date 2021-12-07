@@ -12,159 +12,217 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Compression
-import Light_Untar
-typealias TarProgressBlock = (Float) -> Void
+import PromiseKit
+import UIKit
 
-extension FileManager {
-  func untar(at path: String, tarData: Data, progressBlock: @escaping TarProgressBlock) throws {
-    try createFilesAndDirectories(atPath: path, withTarData: tarData, progress: progressBlock)
-  }
-}
+class OfflineAudioViewController: UITableViewController {
+  private var services: TKMServices!
+  private var model: TableModel!
 
-struct AudioPackage {
-  var filename: String
-  var title: String
-  var sizeBytes: Int64
-  init(_ filename: String, _ title: String, _ sizeBytes: Int64) {
-    self.filename = filename
-    self.title = title
-    self.sizeBytes = sizeBytes
-  }
-}
+  private var statusIndex: IndexPath?
+  private var sizeIndex: IndexPath?
 
-@objcMembers class OfflineAudioViewController: TKMDownloadViewController {
-  static let availablePackages: [AudioPackage] = [
-    AudioPackage("a-levels-1-10.tar.lzfse", "Levels 1-10", 20_929_198),
-    AudioPackage("a-levels-11-20.tar.lzfse", "Levels 11-20", 26_205_096),
-    AudioPackage("a-levels-21-30.tar.lzfse", "Levels 21-30", 25_755_242),
-    AudioPackage("a-levels-31-40.tar.lzfse", "Levels 31-40", 23_207_068),
-    AudioPackage("a-levels-41-50.tar.lzfse", "Levels 41-50", 20_776_153),
-    AudioPackage("a-levels-51-60.tar.lzfse", "Levels 51-60", 18_827_575),
-  ]
-
-  static func decompressLZFSE(compressedData: Data) -> Data? {
-    if compressedData.count == 0 { return nil }
-
-    // Assume a compression ratio of 1.25.
-    var bufferSize = Int(Double(compressedData.count) * 1.25)
-
-    func decompress(size bufferSize: inout Int, compressedData: Data) -> Data {
-      NSLog("Decompressing data of size \(compressedData.count) into buffer of size \(bufferSize)")
-
-      let destinationBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
-
-      let decodedData = compressedData.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) -> Data in
-        let unsafePointer = buffer.bindMemory(to: UInt8.self).baseAddress!
-        let decodedSize = compression_decode_buffer(destinationBuffer, bufferSize, unsafePointer,
-                                                    compressedData.count, nil, COMPRESSION_LZFSE)
-
-        if decodedSize == 0 {
-          fatalError("Decoding failed")
-        }
-        if decodedSize == bufferSize {
-          NSLog("Buffer wasn't big enough - trying again")
-          bufferSize = Int(Double(bufferSize) * 1.25)
-          return decompress(size: &bufferSize, compressedData: compressedData)
-        }
-
-        NSLog("Decompressed %lu bytes", decodedSize)
-        return Data(bytes: destinationBuffer, count: decodedSize)
-      }
-      return decodedData
-    }
-    return decompress(size: &bufferSize, compressedData: compressedData)
+  func setup(services: TKMServices) {
+    self.services = services
   }
 
-  let fileManager: FileManager
-
-  required init?(coder: NSCoder) {
-    fileManager = FileManager()
-    super.init(coder: coder)
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    progress = services.offlineAudio.lastProgress
+    rerender()
   }
 
-  override func populateModel(_ model: MutableTableModel) {
+  private func rerender() {
+    let model = MutableTableModel(tableView: tableView, delegate: nil)
+    let enabled = Settings.offlineAudio
+
     model.add(section: "", footer: """
     Download audio to your \(UIDevice.current.model) so it plays without \
     delay online and it's available when you're not connected to the Internet.
     """)
+    model.add(SwitchModelItem(style: .default, title: "Enable offline audio", subtitle: nil,
+                              on: enabled, switchHandler: toggleOfflineAudio))
 
-    for package in OfflineAudioViewController.availablePackages {
-      let item = TKMDownloadModelItem(filename: package.filename, title: package.title,
-                                      delegate: self)
-      item.totalSizeBytes = package.sizeBytes
+    let cellularItem = SwitchModelItem(style: .default, title: "Download over cellular",
+                                       subtitle: nil, on: Settings.offlineAudioCellular,
+                                       switchHandler: toggleCellular)
+    cellularItem.isEnabled = enabled
+    model.add(cellularItem)
 
-      if let download = activeDownload(for: package.filename) {
-        item.downloadingProgressBytes = download.countOfBytesReceived
-        item.state = TKMDownloadModelItemDownloading
-      } else if Settings.installedAudioPackages.contains(package.filename) {
-        item.state = TKMDownloadModelItemInstalledSelected
-      } else {
-        item.state = TKMDownloadModelItemNotInstalled
+    // Create the list of voice actors.
+    model.add(section: "Voice actors")
+    for voiceActor in services.localCachingClient.getVoiceActors() {
+      let title = voiceActor.name
+      var subtitle = voiceActor.description_p
+      switch voiceActor.gender {
+      case .male:
+        subtitle += " - male"
+      case .female:
+        subtitle += " - female"
+      default:
+        break
       }
+
+      let id = voiceActor.id
+      let on = Settings.offlineAudioVoiceActors.contains(id)
+      let item = SwitchModelItem(style: .subtitle,
+                                 title: title,
+                                 subtitle: subtitle,
+                                 on: on) { [unowned self] (on: Bool) in
+        self.toggleVoiceActor(voiceActorId: id, on: on)
+      }
+      item.isEnabled = enabled
       model.add(item)
     }
 
-    if fileManager.fileExists(atPath: Audio.cacheDirectoryPath) {
-      model.addSection()
-      let deleteItem = BasicModelItem(style: .default,
-                                      title: "Delete all offline audio", subtitle: nil,
-                                      accessoryType: UITableViewCell.AccessoryType.none,
-                                      target: self,
-                                      action: #selector(didTapDeleteAllAudio(sender:)))
-      deleteItem.textColor = UIColor.systemRed
-      model.add(deleteItem)
+    model.add(section: "Status", footer: "Downloads will continue in the background")
+    statusIndex = model
+      .add(BasicModelItem(style: .value1, title: statusTitle, subtitle: statusSubtitle))
+    sizeIndex = model.add(BasicModelItem(style: .value1, title: "Cache size",
+                                         subtitle: "..."))
+
+    self.model = model
+    model.reloadTable()
+
+    updateCacheSize()
+  }
+
+  private func toggleOfflineAudio(on: Bool) {
+    Settings.offlineAudio = on
+
+    if on {
+      // Select all voice actors if there are none selected already.
+      if Settings.offlineAudioVoiceActors.isEmpty {
+        for voiceActor in services.localCachingClient.getVoiceActors() {
+          Settings.offlineAudioVoiceActors.insert(voiceActor.id)
+        }
+      }
+    }
+
+    settingsChanged()
+    rerender()
+
+    if !on {
+      // Ask the user if they want to delete audio that's downloaded already.
+      let device = UIDevice.current.model
+      let ac = UIAlertController(title: "Delete offline audio?",
+                                 message: "Free up space on your \(device)? You can download it again later",
+                                 preferredStyle: .alert)
+      ac.addAction(UIAlertAction(title: "Keep", style: .cancel, handler: nil))
+      ac.addAction(UIAlertAction(title: "Delete", style: .destructive) { _ in
+        firstly {
+          self.services.offlineAudio.deleteAll()
+        }.ensure {
+          self.updateCacheSize()
+        }.catch { _ in }
+      })
+      present(ac, animated: true, completion: nil)
     }
   }
 
-  override func url(forFilename filename: String) -> URL {
-    URL(string: "https://tsurukame.app/audio/\(filename)")!
+  private func toggleCellular(on: Bool) {
+    Settings.offlineAudioCellular = on
+    settingsChanged()
   }
 
-  override func didFinishDownload(for filename: String, at location: URL) {
-    guard let data = try? Data(contentsOf: location) else {
-      fatalError("Error reading data: \(url(forFilename: filename).absoluteString)")
+  private func toggleVoiceActor(voiceActorId: Int64, on: Bool) {
+    if on {
+      Settings.offlineAudioVoiceActors.insert(voiceActorId)
+    } else {
+      Settings.offlineAudioVoiceActors.remove(voiceActorId)
     }
-    guard let tarData = OfflineAudioViewController.decompressLZFSE(compressedData: data) else {
-      fatalError("Error decompressing data: \(url(forFilename: filename).absoluteString)")
+    settingsChanged()
+  }
+
+  private func settingsChanged() {
+    progress = services.offlineAudio.queueDownloads()
+  }
+
+  private var progressObservers = [NSKeyValueObservation]()
+  private var progress: Progress? {
+    didSet {
+      // Remove any observers created last time.
+      progressObservers.forEach { $0.invalidate() }
+      progressObservers.removeAll()
+
+      // Update the UI with the current progress.
+      updateProgress()
+
+      // Observe changes to the new progress object.
+      if let progress = progress {
+        func observeProgressValue<Value>(_ kp: KeyPath<Progress, Value>) {
+          progressObservers
+            .append(progress.observe(kp, options: []) { _, _ in self.updateProgress() })
+        }
+        observeProgressValue(\.totalUnitCount)
+        observeProgressValue(\.fractionCompleted)
+      }
     }
-    do {
-      try fileManager.untar(at: Audio.cacheDirectoryPath, tarData: tarData,
-                            progressBlock: { (progress: Float) in
-                              self.updateProgress(onMainThread: filename) {
-                                $0.state = TKMDownloadModelItemInstalling
-                                $0.installingProgress = progress
-                              }
-                            })
-    } catch {
-      fatalError("Error extracting data: \(url(forFilename: filename).absoluteString)")
+  }
+
+  private var isProgressActive: Bool {
+    progress != nil && !progress!.isFinished && progress!.totalUnitCount != 0
+  }
+
+  private func cacheDirectorySize() -> Promise<String> {
+    firstly {
+      services.offlineAudio.cacheDirectorySize()
+    }.map { sizeBytes in
+      ByteCountFormatter.string(fromByteCount: sizeBytes, countStyle: .file)
+    }
+  }
+
+  private var statusTitle: String {
+    if isProgressActive {
+      return "Downloading audio..."
+    }
+    return "Up to date"
+  }
+
+  private var statusSubtitle: String? {
+    if let progress = progress, isProgressActive {
+      return String(Int(progress.fractionCompleted * 100)) + "%"
+    }
+    return nil
+  }
+
+  private func updateProgress() {
+    guard let statusIndex = statusIndex else {
+      return
+    }
+
+    // Calculating the cache directory size is expensive - only do it if we've finished downloading
+    // everything.
+    if !isProgressActive {
+      updateCacheSize()
     }
 
     DispatchQueue.main.async {
-      Settings.installedAudioPackages.insert(filename)
-      self.markDownloadComplete(filename)
+      if let statusCell = self.tableView.cellForRow(at: statusIndex) as? BasicModelCell,
+         let item = statusCell.item as? BasicModelItem {
+        item.title = self.statusTitle
+        item.subtitle = self.statusSubtitle
+        statusCell.textLabel?.text = item.title
+        statusCell.detailTextLabel?.text = item.subtitle
+      }
     }
   }
 
-  override func toggleItem(_: String, selected _: Bool) {}
-
-  func deleteAllAudio() {
-    do {
-      try fileManager.removeItem(atPath: Audio.cacheDirectoryPath)
-      Settings.installedAudioPackages = Set()
-      rerender()
-    } catch {
-      fatalError("Error deleting files: " + error.localizedDescription)
+  private func updateCacheSize() {
+    guard let sizeIndex = sizeIndex else {
+      return
     }
-  }
 
-  func didTapDeleteAllAudio(sender _: Any) {
-    let c = UIAlertController(title: "Delete all offline audio", message: "Are you sure?",
-                              preferredStyle: UIAlertController.Style.alert)
-    c.addAction(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive) { _ in
-      self.deleteAllAudio()
-    })
-    c.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
-    present(c, animated: true, completion: nil)
+    firstly {
+      cacheDirectorySize()
+    }.done { sizeLabel in
+      DispatchQueue.main.async {
+        if let sizeCell = self.tableView.cellForRow(at: sizeIndex) as? BasicModelCell,
+           let item = sizeCell.item as? BasicModelItem {
+          item.subtitle = sizeLabel
+          sizeCell.detailTextLabel?.text = sizeLabel
+        }
+      }
+    }.catch { _ in }
   }
 }

@@ -388,7 +388,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
     let progress = Progress(totalUnitCount: -1)
     headerView.setProgress(progress: progress)
-    services.localCachingClient.sync(quick: quick, progress: progress)
+    _ = services.localCachingClient.sync(quick: quick, progress: progress)
   }
 
   @objc func availableItemsChanged() {

@@ -109,7 +109,7 @@ struct SubjectData: Codable {
       var gender: String?
       var source_id: Int?
       var pronounciation: String?
-      var voice_actor_id: Int?
+      var voice_actor_id: Int64?
       var voice_actor_name: String?
       var voice_description: String?
     }
@@ -211,7 +211,7 @@ struct SubjectData: Codable {
         if audio.content_type == "audio/mpeg" {
           var audioPb = TKMVocabulary.PronunciationAudio()
           audioPb.url = audio.url
-          audioPb.voiceActorID = Int32(audio.metadata.voice_actor_id ?? 0)
+          audioPb.voiceActorID = audio.metadata.voice_actor_id ?? 0
           ret.append(audioPb)
         }
       }

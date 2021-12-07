@@ -22,13 +22,6 @@ protocol AudioDelegate: NSObject {
 @objc(TKMAudio)
 @objcMembers
 class Audio: NSObject {
-  // Returns the local directory that contains cached audio files.
-  static var cacheDirectoryPath: String {
-    "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/audio"
-  }
-
-  private let kOfflineFilePattern = "%@/a%d-%d.mp3"
-
   enum PlaybackState {
     case loading
     case playing
@@ -83,6 +76,7 @@ class Audio: NSObject {
     if !subject.hasVocabulary || subject.vocabulary.audio.isEmpty {
       return
     }
+    let offline = services.offlineAudio!
 
     lastPlayedAudioIndex += 1
     if lastPlayedAudioIndex >= subject.vocabulary.audio.count {
@@ -91,11 +85,20 @@ class Audio: NSObject {
     let audio = subject.vocabulary.audio[lastPlayedAudioIndex]
 
     // Is the audio available offline?
-    let filename = String(format: kOfflineFilePattern, Audio.cacheDirectoryPath, subject.id,
-                          audio.voiceActorID)
-    if FileManager.default.fileExists(atPath: filename) {
-      play(url: URL(fileURLWithPath: filename), delegate: delegate)
+    if offline.isCached(subjectId: subject.id, voiceActorId: audio.voiceActorID) {
+      play(url: offline.cacheUrl(subjectId: subject.id, voiceActorId: audio.voiceActorID),
+           delegate: delegate)
       return
+    }
+
+    // Maybe one of the other voice actors' audio is available offline.
+    for (index, audio) in subject.vocabulary.audio.enumerated() {
+      if offline.isCached(subjectId: subject.id, voiceActorId: audio.voiceActorID) {
+        lastPlayedAudioIndex = index
+        play(url: offline.cacheUrl(subjectId: subject.id, voiceActorId: audio.voiceActorID),
+             delegate: delegate)
+        return
+      }
     }
 
     if !services.reachability.isReachable() {

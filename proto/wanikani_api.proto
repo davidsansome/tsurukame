@@ -113,7 +113,7 @@ message Vocabulary {
 
   message PronunciationAudio {
     optional string url = 1;
-    optional int32 voice_actor_id = 2;
+    optional int64 voice_actor_id = 2;
   }
 
   repeated PronunciationAudio audio = 8;

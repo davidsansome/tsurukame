@@ -280,6 +280,17 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     ALTER TABLE sync ADD COLUMN voice_actors_updated_after TEXT;
     UPDATE sync SET voice_actors_updated_after = "";
     """,
+
+    """
+    CREATE TABLE audio_urls (
+      subject_id INTEGER,
+      voice_actor_id INTEGER,
+      level INTEGER,
+      url STRING,
+      PRIMARY KEY (subject_id, voice_actor_id)
+    );
+    CREATE INDEX idx_audio_url_by_level ON audio_urls (level, voice_actor_id);
+    """,
   ]
 
   private let kClearAllData = """
@@ -299,6 +310,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   DELETE FROM level_progressions;
   DELETE FROM subjects;
   DELETE FROM voice_actors;
+  DELETE FROM audio_urls;
   """
 
   private func openDatabase() {
@@ -314,11 +326,17 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
       // Update the table schema.
       var shouldPopulateSubjectProgress = false
+      var shouldPopulateAudioUrls = false
       for version in currentVersion ..< targetVersion {
         db.mustExecuteStatements(schemas[version])
 
-        if version == 2 {
+        switch version {
+        case 2:
           shouldPopulateSubjectProgress = true
+        case 8:
+          shouldPopulateAudioUrls = true
+        default:
+          break
         }
       }
 
@@ -346,6 +364,13 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
             assignment.srsStage.rawValue,
             assignment.subjectType.rawValue,
           ])
+        }
+      }
+
+      // Populate audio URLs if we need to.
+      if shouldPopulateAudioUrls {
+        for subject in getAllSubjects(transaction: db) {
+          insertAudioUrls(subject: subject, transaction: db)
         }
       }
     }
@@ -492,11 +517,15 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   }
 
   func getAllSubjects() -> [TKMSubject] {
-    var ret = [TKMSubject]()
     db.inDatabase { db in
-      for cursor in db.query("SELECT pb FROM subjects") {
-        ret.append(cursor.proto(forColumnIndex: 0)!)
-      }
+      getAllSubjects(transaction: db)
+    }
+  }
+
+  private func getAllSubjects(transaction db: FMDatabase) -> [TKMSubject] {
+    var ret = [TKMSubject]()
+    for cursor in db.query("SELECT pb FROM subjects") {
+      ret.append(cursor.proto(forColumnIndex: 0)!)
     }
     return ret
   }
@@ -519,6 +548,28 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       }
       return nil
     }
+  }
+
+  typealias AudioUrl = (subjectId: Int64, voiceActorId: Int64, level: Int, url: String)
+
+  func getAudioUrls(levels: [Int], voiceActorIds: [Int64]) -> [AudioUrl] {
+    var ret = [AudioUrl]()
+    db.inDatabase { db in
+      let levelList = levels.map { String($0) }.joined(separator: ",")
+      let voiceActorIdList = voiceActorIds.map { String($0) }.joined(separator: ",")
+
+      let cursor = db.query("SELECT subject_id, voice_actor_id, level, url " +
+        "FROM audio_urls " +
+        "WHERE level IN (\(levelList)) " +
+        "AND voice_actor_id IN (\(voiceActorIdList))")
+      while cursor.next() {
+        ret.append(AudioUrl(subjectId: cursor.longLongInt(forColumnIndex: 0),
+                            voiceActorId: cursor.longLongInt(forColumnIndex: 1),
+                            level: Int(cursor.int(forColumnIndex: 2)),
+                            url: cursor.string(forColumnIndex: 3)!))
+      }
+    }
+    return ret
   }
 
   func isValid(subjectId: Int64) -> Bool {
@@ -941,10 +992,24 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
               subject.subjectType.rawValue,
               try! subject.serializedData(),
             ])
+          self.insertAudioUrls(subject: subject, transaction: db)
         }
         db.mustExecuteUpdate("UPDATE sync SET subjects_updated_after = ?",
                              args: [updatedAt])
       }
+    }
+  }
+
+  private func insertAudioUrls(subject: TKMSubject, transaction db: FMDatabase) {
+    guard subject.hasVocabulary else { return }
+    for audio in subject.vocabulary.audio {
+      db.mustExecuteUpdate("REPLACE INTO audio_urls (subject_id, voice_actor_id, level, url) " +
+        "VALUES (?, ?, ?, ?)", args: [
+          subject.id,
+          audio.voiceActorID,
+          subject.level,
+          audio.url,
+        ])
     }
   }
 

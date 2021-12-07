@@ -487,7 +487,7 @@ public struct TKMVocabulary {
     /// Clears the value of `url`. Subsequent reads from it will return its default value.
     public mutating func clearURL() {self._url = nil}
 
-    public var voiceActorID: Int32 {
+    public var voiceActorID: Int64 {
       get {return _voiceActorID ?? 0}
       set {_voiceActorID = newValue}
     }
@@ -501,7 +501,7 @@ public struct TKMVocabulary {
     public init() {}
 
     fileprivate var _url: String? = nil
-    fileprivate var _voiceActorID: Int32? = nil
+    fileprivate var _voiceActorID: Int64? = nil
   }
 
   public init() {}
@@ -1728,7 +1728,7 @@ extension TKMVocabulary.PronunciationAudio: SwiftProtobuf.Message, SwiftProtobuf
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularStringField(value: &self._url) }()
-      case 2: try { try decoder.decodeSingularInt32Field(value: &self._voiceActorID) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self._voiceActorID) }()
       default: break
       }
     }
@@ -1739,7 +1739,7 @@ extension TKMVocabulary.PronunciationAudio: SwiftProtobuf.Message, SwiftProtobuf
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
     }
     if let v = self._voiceActorID {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }

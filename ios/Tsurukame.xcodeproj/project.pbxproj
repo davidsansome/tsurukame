@@ -30,6 +30,7 @@
 		6332528E2727F32800ABBA04 /* PillModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6332528D2727F32800ABBA04 /* PillModelItem.swift */; };
 		633252922728131100ABBA04 /* TableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252912728131100ABBA04 /* TableModel.swift */; };
 		633252932728EA1100ABBA04 /* TableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252912728131100ABBA04 /* TableModel.swift */; };
+		63358E9A27365FC70013A2AC /* OfflineAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63358E9927365FC70013A2AC /* OfflineAudio.swift */; };
 		63358E9C273664D40013A2AC /* SwitchModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63358E9B273664D40013A2AC /* SwitchModelItem.swift */; };
 		63358E9E273664F50013A2AC /* BasicModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63358E9D273664F50013A2AC /* BasicModelItem.swift */; };
 		63358EA227366D720013A2AC /* CheckmarkModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63358EA127366D720013A2AC /* CheckmarkModelItem.swift */; };
@@ -244,6 +245,7 @@
 		6332528B2727F29D00ABBA04 /* PillModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PillModelItem.xib; sourceTree = "<group>"; };
 		6332528D2727F32800ABBA04 /* PillModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillModelItem.swift; sourceTree = "<group>"; };
 		633252912728131100ABBA04 /* TableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableModel.swift; sourceTree = "<group>"; };
+		63358E9927365FC70013A2AC /* OfflineAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineAudio.swift; sourceTree = "<group>"; };
 		63358E9B273664D40013A2AC /* SwitchModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwitchModelItem.swift; path = Tables/SwitchModelItem.swift; sourceTree = "<group>"; };
 		63358E9D273664F50013A2AC /* BasicModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicModelItem.swift; sourceTree = "<group>"; };
 		63358EA127366D720013A2AC /* CheckmarkModelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckmarkModelItem.swift; sourceTree = "<group>"; };
@@ -541,6 +543,7 @@
 				633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */,
 				633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */,
 				631CAD71234B4A96008CEA73 /* ReviewViewController.swift */,
+				63358E9927365FC70013A2AC /* OfflineAudio.swift */,
 				63BEBF9625C57D4000123147 /* SearchResultViewController.swift */,
 				63F7F52B23D43DF6006A31FB /* Services.swift */,
 				633632EE201F3490006D582B /* Settings.swift */,
@@ -1244,6 +1247,7 @@
 				63358EA227366D720013A2AC /* CheckmarkModelItem.swift in Sources */,
 				63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */,
 				633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */,
+				63358E9A27365FC70013A2AC /* OfflineAudio.swift in Sources */,
 				C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */,
 				63CE766621F47669002A417B /* TKMReviewMenuViewController.m in Sources */,
 				637CA11525D7E48A0082580E /* LessonsViewController.swift in Sources */,
