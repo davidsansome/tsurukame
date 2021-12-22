@@ -14,8 +14,6 @@
 
 import Foundation
 
-@objc(TKMReadingModelItem)
-@objcMembers
 class ReadingModelItem: AttributedModelItem {
   var audio: Audio?
   var audioSubjectID: Int64 = 0

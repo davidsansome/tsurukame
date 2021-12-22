@@ -44,7 +44,6 @@ private func setTableViewCellCount(_ item: BasicModelItem, count: Int,
   return item.isEnabled
 }
 
-@objc
 class MainViewController: UITableViewController, LoginViewControllerDelegate,
   MainHeaderViewDelegate,
   SearchResultViewControllerDelegate, UISearchControllerDelegate {
@@ -59,7 +58,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   var hasReviews = false
   var updatingTableModel = false
 
-  @objc
+  private let nd = NotificationDispatcher()
+
   func setup(services: TKMServices) {
     self.services = services
   }
@@ -81,7 +81,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     refreshControl?.attributedTitle = NSMutableAttributedString(string: "Pull to refresh...",
                                                                 attributes: [.foregroundColor: UIColor
                                                                   .white])
-    refreshControl?.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+    refreshControl?.addAction(for: .valueChanged, didPullToRefresh)
 
     // Create the search results view controller.
     let searchResultsVC = storyboard?
@@ -118,31 +118,18 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     updateHourlyTimer()
     recreateTableModel()
 
-    let nc = NotificationCenter.default
-    nc.addObserver(self,
-                   selector: #selector(availableItemsChanged),
-                   name: NSNotification.Name.lccAvailableItemsChanged,
-                   object: nil)
-    nc.addObserver(self,
-                   selector: #selector(userInfoChanged),
-                   name: NSNotification.Name.lccUserInfoChanged,
-                   object: nil)
-    nc.addObserver(self,
-                   selector: #selector(srsLevelCountsChanged),
-                   name: NSNotification.Name.lccSRSCategoryCountsChanged,
-                   object: nil)
-    nc.addObserver(self,
-                   selector: #selector(clientIsUnauthorized),
-                   name: NSNotification.Name.lccUnauthorized,
-                   object: nil)
-    nc.addObserver(self,
-                   selector: #selector(applicationDidEnterBackground),
-                   name: UIApplication.didEnterBackgroundNotification,
-                   object: nil)
-    nc.addObserver(self,
-                   selector: #selector(applicationWillEnterForeground),
-                   name: UIApplication.willEnterForegroundNotification,
-                   object: nil)
+    nd.add(name: .lccAvailableItemsChanged) { [weak self] _ in self?.availableItemsChanged() }
+    nd.add(name: .lccUserInfoChanged) { [weak self] _ in self?.userInfoChanged() }
+    nd.add(name: .lccSRSCategoryCountsChanged) { [weak self] _ in self?.srsLevelCountsChanged() }
+    nd.add(name: .lccUnauthorized) { [weak self] _ in self?.clientIsUnauthorized() }
+    nd
+      .add(name: UIApplication.didEnterBackgroundNotification) { [weak self] _ in
+        self?.applicationDidEnterBackground()
+      }
+    nd
+      .add(name: UIApplication.willEnterForegroundNotification) { [weak self] _ in
+        self?.applicationWillEnterForeground()
+      }
   }
 
   private func scheduleTableModelUpdate() {
@@ -364,12 +351,10 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     updateHourlyTimer()
   }
 
-  @objc
   func applicationDidEnterBackground() {
     cancelHourlyTimer()
   }
 
-  @objc
   func applicationWillEnterForeground() {
     // Assume the hour changed while the application was in the background. This will invalidate the
     // upcoming review cache which depends on the current time.
@@ -380,7 +365,6 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
   // MARK: - Refreshing contents
 
-  @objc(refreshQuick:)
   func refresh(quick: Bool) {
     updateUserInfo()
     scheduleTableModelUpdate()
@@ -391,13 +375,13 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     _ = services.localCachingClient.sync(quick: quick, progress: progress)
   }
 
-  @objc func availableItemsChanged() {
+  func availableItemsChanged() {
     if (view?.window) != nil {
       scheduleTableModelUpdate()
     }
   }
 
-  @objc func userInfoChanged() {
+  func userInfoChanged() {
     updateUserInfo()
   }
 
@@ -424,14 +408,14 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     headerView.frame = frame
   }
 
-  @objc func srsLevelCountsChanged() {
+  func srsLevelCountsChanged() {
     if (view?.window) != nil {
       updateUserInfo()
       scheduleTableModelUpdate()
     }
   }
 
-  @objc func clientIsUnauthorized() {
+  func clientIsUnauthorized() {
     if isShowingUnauthorizedAlert {
       return
     }
@@ -464,7 +448,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     isShowingUnauthorizedAlert = false
   }
 
-  @objc func didPullToRefresh() {
+  func didPullToRefresh() {
     refreshControl?.endRefreshing()
     refresh(quick: false)
   }

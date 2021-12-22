@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-@objc(TKMAnswerTextField)
 class AnswerTextField: UITextField {
   // Returns a Japanese-language UITextInputMode, if available.
   // If this returns nil the user doesn't have a Japanese keyboard installed.
-  @objc public class var japaneseTextInputMode: UITextInputMode? {
+  public class var japaneseTextInputMode: UITextInputMode? {
     for textInputMode in UITextInputMode.activeInputModes {
       if let primaryLanguage = textInputMode.primaryLanguage,
          primaryLanguage.starts(with: "ja") {

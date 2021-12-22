@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,7 +12,7 @@
         <!--Review Menu View Controller-->
         <scene sceneID="vXK-vc-8c7">
             <objects>
-                <viewController storyboardIdentifier="reviewMenuViewController" id="grn-VZ-wuf" customClass="TKMReviewMenuViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="reviewMenuViewController" id="grn-VZ-wuf" customClass="ReviewMenuViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zGT-Ht-qXT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -33,8 +33,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="rightConstraint" destination="b0x-9z-FQf" id="XfF-ci-DGf"/>
-                        <outlet property="tableView" destination="BPO-IH-trC" id="iBA-jA-7nq"/>
+                        <outlet property="tableView" destination="BPO-IH-trC" id="WCP-Kr-6pe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iNI-Dc-s59" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -44,7 +43,7 @@
         <!--Review Container View Controller-->
         <scene sceneID="8Kn-zD-Fkz">
             <objects>
-                <viewController storyboardIdentifier="reviewContainer" id="CLc-42-KXf" customClass="TKMReviewContainerViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="reviewContainer" id="CLc-42-KXf" customClass="ReviewContainerViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Gug-AB-yRH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -60,7 +59,7 @@
         <!--Review View Controller-->
         <scene sceneID="Raa-L5-aFt">
             <objects>
-                <viewController storyboardIdentifier="reviewViewController" id="Mzz-hx-Bdo" customClass="ReviewViewController" customModule="Tsurukame" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="reviewViewController" id="Mzz-hx-Bdo" customClass="ReviewViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="4jI-do-0VR" customClass="UIControl">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -100,7 +99,7 @@
                                     <constraint firstAttribute="height" constant="16" id="pqx-CS-kAg"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg" customClass="TKMAnswerTextField">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg" customClass="AnswerTextField" customModule="Tsurukame" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="832" width="414" height="64"/>
                                 <accessibility key="accessibilityConfiguration" label="Answer field"/>
                                 <constraints>
@@ -119,7 +118,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctF-hm-AxT">
-                                <rect key="frame" x="361" y="835" width="53" height="58"/>
+                                <rect key="frame" x="357" y="835" width="57" height="58"/>
                                 <accessibility key="accessibilityConfiguration" label="Confirm"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                 <state key="normal" image="checkmark.circle">
@@ -330,7 +329,7 @@
         <!--Review Summary-->
         <scene sceneID="LjW-B3-4SP">
             <objects>
-                <tableViewController storyboardIdentifier="reviewSummary" id="EMo-56-STG" customClass="ReviewSummaryViewController" customModule="Tsurukame" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="reviewSummary" id="EMo-56-STG" customClass="ReviewSummaryViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="n9y-b6-xo4">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -362,7 +361,7 @@
     <resources>
         <image name="add" width="22" height="22"/>
         <image name="baseline_menu_black_24pt" width="24" height="24"/>
-        <image name="checkmark.circle" width="13" height="13"/>
+        <image name="checkmark.circle" width="17" height="17"/>
         <image name="inbox" width="24" height="24"/>
         <image name="thumb" width="24" height="24"/>
         <image name="tick" width="24" height="24"/>

@@ -15,8 +15,8 @@
 import Foundation
 import WaniKaniAPI
 
-@objc class AnswerChecker: NSObject {
-  @objc enum AnswerCheckerResult: Int {
+class AnswerChecker: NSObject {
+  enum AnswerCheckerResult: Int {
     case Precise
     case Imprecise
     case OtherKanjiReading
@@ -24,13 +24,13 @@ import WaniKaniAPI
     case Incorrect
   }
 
-  @objc static let kAsciiCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x00) ..< Unicode
+  static let kAsciiCharacterSet = CharacterSet(charactersIn: Unicode.Scalar(0x00) ..< Unicode
     .Scalar(0x7F)!)
-  @objc static let kHiraganaCharacterSet = CharacterSet(charactersIn: Unicode
+  static let kHiraganaCharacterSet = CharacterSet(charactersIn: Unicode
     .Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x309D))!)
-  @objc static let kAllKanaCharacterSet = CharacterSet(charactersIn: Unicode
+  static let kAllKanaCharacterSet = CharacterSet(charactersIn: Unicode
     .Scalar(UInt32(0x3040))! ..< Unicode.Scalar(UInt32(0x3100))!)
-  @objc static let kJapaneseCharacterSet = kAllKanaCharacterSet
+  static let kJapaneseCharacterSet = kAllKanaCharacterSet
     .union(CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x3400))! ..<
         Unicode.Scalar(UInt32(0x4DC0))!))
     .union(CharacterSet(charactersIn: Unicode.Scalar(UInt32(0x4E00))! ..<

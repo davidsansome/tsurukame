@@ -80,6 +80,7 @@
 		63A16775253AD8AE00B5BCD6 /* FMDatabase+Assert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */; };
 		63A16786253AD8D200B5BCD6 /* LocalCachingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */; };
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
+		63B63FF727733ABC0098DAAD /* NotificationDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B63FF627733ABC0098DAAD /* NotificationDispatcher.swift */; };
 		63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */; };
 		63BDA9A7200E04E500D75DA2 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A6200E04E500D75DA2 /* NavigationController.m */; };
 		63BDA9AA200E12F900D75DA2 /* SuccessAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BDA9A9200E12F900D75DA2 /* SuccessAnimation.m */; };
@@ -292,6 +293,7 @@
 		63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalCachingClient.swift; sourceTree = "<group>"; };
 		63A2375F1FE9264300C48657 /* UIColor+HexString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
 		63A237601FE9264300C48657 /* UIColor+HexString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
+		63B63FF627733ABC0098DAAD /* NotificationDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDispatcher.swift; sourceTree = "<group>"; };
 		63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMLessonBatchSizeViewController.h; sourceTree = "<group>"; };
 		63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMLessonBatchSizeViewController.m; sourceTree = "<group>"; };
 		63BDA9A5200E04E500D75DA2 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
@@ -531,6 +533,7 @@
 				63F7F52223D423E9006A31FB /* MainViewController.swift */,
 				63BDA9A5200E04E500D75DA2 /* NavigationController.h */,
 				63BDA9A6200E04E500D75DA2 /* NavigationController.m */,
+				63B63FF627733ABC0098DAAD /* NotificationDispatcher.swift */,
 				63358E9927365FC70013A2AC /* OfflineAudio.swift */,
 				63BFA78D218EB6890058E885 /* OfflineAudioViewController.swift */,
 				684AE501E6BF8ED5D65DA298 /* Pods */,
@@ -1259,6 +1262,7 @@
 				63F7F52C23D43DF6006A31FB /* Services.swift in Sources */,
 				630EB12125C5652400783E54 /* LessonsPageControl.swift in Sources */,
 				63C74C9F25C9858D004F6C99 /* SubjectDetailsViewController.swift in Sources */,
+				63B63FF727733ABC0098DAAD /* NotificationDispatcher.swift in Sources */,
 				63358E9C273664D40013A2AC /* SwitchModelItem.swift in Sources */,
 				63F7F52123D3F36E006A31FB /* AttributedModelItem.swift in Sources */,
 				631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */,

@@ -19,8 +19,6 @@ protocol AudioDelegate: NSObject {
   func audioPlaybackStateChanged(state: Audio.PlaybackState)
 }
 
-@objc(TKMAudio)
-@objcMembers
 class Audio: NSObject {
   enum PlaybackState {
     case loading
@@ -34,6 +32,8 @@ class Audio: NSObject {
   private var waitingToPlay = false
   private weak var delegate: AudioDelegate?
 
+  private let nd = NotificationDispatcher()
+
   init(services: TKMServices) {
     self.services = services
 
@@ -45,10 +45,7 @@ class Audio: NSObject {
       .setCategory(.playback, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
 
     // Listen for when playback of any item finished.
-    let nc = NotificationCenter.default
-    nc
-      .addObserver(self, selector: #selector(itemFinishedPlaying),
-                   name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+    nd.add(name: .AVPlayerItemDidPlayToEndTime) { [weak self] _ in self?.itemFinishedPlaying() }
   }
 
   private(set) var currentState = PlaybackState.finished {
@@ -178,7 +175,7 @@ class Audio: NSObject {
     vc.present(ac, animated: true, completion: nil)
   }
 
-  @objc private func itemFinishedPlaying() {
+  private func itemFinishedPlaying() {
     currentState = .finished
   }
 }

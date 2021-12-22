@@ -328,6 +328,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   // MARK: - UIViewController
 
+  private let nd = NotificationDispatcher()
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -341,20 +343,18 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     previousSubjectGradient.cornerRadius = 4.0
     previousSubjectButton.layer.addSublayer(previousSubjectGradient)
 
-    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
-                                           name: UIResponder.keyboardWillShowNotification,
-                                           object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
-                                           name: UIResponder.keyboardWillHideNotification,
-                                           object: nil)
+    nd.add(name: UIResponder.keyboardWillShowNotification) { [weak self] notification in
+      self?.keyboardWillShow(notification)
+    }
+    nd.add(name: UIResponder.keyboardWillHideNotification) { [weak self] _ in
+      self?.keyboardWillHide()
+    }
 
     subjectDetailsView.setup(services: services, delegate: self)
 
     answerField.autocapitalizationType = .none
     answerField.delegate = kanaInput
-    answerField
-      .addTarget(self, action: #selector(answerFieldValueDidChange),
-                 for: UIControl.Event.editingChanged)
+    answerField.addAction(for: .editingChanged, answerFieldValueDidChange)
 
     let showSuccessRate = delegate.reviewViewControllerShowsSuccessRate()
     successRateIcon.isHidden = !showSuccessRate
@@ -436,7 +436,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   // MARK: - Event handlers
 
-  @objc private func keyboardWillShow(notification: NSNotification) {
+  @objc private func keyboardWillShow(_ notification: Notification) {
     guard let keyboardFrame = notification
       .userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
       let animationDuration = notification
@@ -452,7 +452,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     resizeKeyboard(toHeight: Double(keyboardFrame.size.height))
   }
 
-  @objc private func keyboardWillHide(notification _: NSNotification) {
+  private func keyboardWillHide() {
     subjectDetailsView.contentInset = .zero
   }
 
@@ -992,7 +992,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   // MARK: - Submitting answers
 
-  @objc func answerFieldValueDidChange() {
+  func answerFieldValueDidChange() {
     let text = answerField.text!.trimmingCharacters(in: .whitespaces)
 
     if Settings.allowSkippingReviews {

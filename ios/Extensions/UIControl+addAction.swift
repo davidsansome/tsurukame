@@ -25,6 +25,7 @@ extension UIControl {
         init(_ closure: @escaping () -> Void) { self.closure = closure }
         @objc func invoke() { closure() }
       }
+
       let wrapper = ClosureWrapper(closure)
       addTarget(wrapper, action: #selector(ClosureWrapper.invoke), for: controlEvents)
       objc_setAssociatedObject(self, "\(UUID())", wrapper,

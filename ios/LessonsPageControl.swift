@@ -15,7 +15,6 @@
 import Foundation
 import WaniKaniAPI
 
-@objc
 class LessonsPageControl: UIControl, SubjectChipDelegate {
   private var chips = [SubjectChip]()
 
@@ -45,7 +44,6 @@ class LessonsPageControl: UIControl, SubjectChipDelegate {
     setNeedsLayout()
   }
 
-  @objc
   var currentPageIndex = 0 {
     didSet { currentPageIndexChanged() }
   }

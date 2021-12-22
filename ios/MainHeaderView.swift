@@ -20,7 +20,7 @@ private let kUserMargin: CGFloat = 8.0
 private let kVacationMargin: CGFloat = 8.0
 private let kProgressBarHeight: CGFloat = 3.0
 
-@objc protocol MainHeaderViewDelegate {
+protocol MainHeaderViewDelegate: AnyObject {
   func searchButtonTapped()
   func settingsButtonTapped()
 }
@@ -41,7 +41,7 @@ class MainHeaderView: UIView {
 
   @IBOutlet var progressView: UIProgressView!
 
-  @objc weak var delegate: MainHeaderViewDelegate?
+  weak var delegate: MainHeaderViewDelegate?
 
   weak var userGradientLayer: CAGradientLayer!
   weak var vacationGradientLayer: CAGradientLayer!
@@ -156,11 +156,11 @@ class MainHeaderView: UIView {
     vacationGradientLayer.frame = vacationContainer.bounds
   }
 
-  @objc func update(username: String,
-                    level: Int,
-                    guruKanji: Int,
-                    imageURL: URL?,
-                    vacationMode: Bool) {
+  func update(username: String,
+              level: Int,
+              guruKanji: Int,
+              imageURL: URL?,
+              vacationMode: Bool) {
     if let imageURL = imageURL {
       imageView.hnk_setImage(from: imageURL)
     }
@@ -174,7 +174,7 @@ class MainHeaderView: UIView {
 
   private var progressKvoToken: NSKeyValueObservation?
 
-  @objc func setProgress(progress: Progress) {
+  func setProgress(progress: Progress) {
     progressKvoToken?.invalidate()
     progressKvoToken = progress.observe(\.isFinished, options: [.new]) { _, change in
       if let isFinished = change.newValue, isFinished {

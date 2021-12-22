@@ -58,7 +58,7 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
     pageController.didMove(toParent: self)
 
     // Hook up the page control.
-    pageControl.addTarget(self, action: #selector(pageChanged), for: .valueChanged)
+    pageControl.addAction(for: .valueChanged, pageChanged)
 
     // Load the first page.
     if let vc = createViewController(index: 0) {
@@ -99,7 +99,7 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
 
   // MARK: - UIPageControl
 
-  @objc func pageChanged() {
+  func pageChanged() {
     let newPageIndex = pageControl.currentPageIndex
     if newPageIndex == currentPageIndex {
       return

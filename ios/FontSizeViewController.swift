@@ -14,7 +14,6 @@
 
 import Foundation
 
-@objc(TKMFontSizeViewController)
 class FontSizeViewController: UITableViewController {
   let fontSizeByRow: [Float] = [
     1.0,

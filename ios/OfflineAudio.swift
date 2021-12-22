@@ -45,6 +45,8 @@ class OfflineAudio {
   // Overall download progress. This Progress object is replaced on each call to queueDownloads.
   private(set) var lastProgress: Progress?
 
+  private let nd = NotificationDispatcher()
+
   init(services: TKMServices) {
     self.services = services
     updateQueue = DispatchQueue(label: "offlineaudio.update", qos: .utility)
@@ -54,11 +56,7 @@ class OfflineAudio {
     try? FileManager.default.createDirectory(at: URL(fileURLWithPath: cacheDirectoryPath),
                                              withIntermediateDirectories: true)
 
-    let nc = NotificationCenter.default
-    nc.addObserver(self,
-                   selector: #selector(userInfoChanged),
-                   name: NSNotification.Name.lccUserInfoChanged,
-                   object: nil)
+    nd.add(name: .lccUserInfoChanged) { [weak self] _ in self?.userInfoChanged() }
   }
 
   // MARK: - URLs and filesystem access
@@ -222,7 +220,7 @@ class OfflineAudio {
   // MARK: - Notification handlers
 
   private var lastLevel: Int32 = 0
-  @objc private func userInfoChanged() {
+  private func userInfoChanged() {
     // Queue any audio downloads when the user's level changes.
     if let level = services.localCachingClient.getUserInfo()?.level, level != lastLevel {
       lastLevel = level
