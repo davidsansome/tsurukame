@@ -1200,7 +1200,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         }
       }
 
-      services.localCachingClient!.sendProgress([activeTask.answer])
+      _ = services.localCachingClient!.sendProgress([activeTask.answer])
 
       reviewsCompleted += 1
       completedReviews.append(activeTask)
@@ -1322,7 +1322,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       activeStudyMaterials!.subjectID = activeSubject.id
     }
     activeStudyMaterials!.meaningSynonyms.append(answerField.text!)
-    services.localCachingClient?.updateStudyMaterial(activeStudyMaterials!)
+    _ = services.localCachingClient?.updateStudyMaterial(activeStudyMaterials!)
     markAnswer(.OverrideAnswerCorrect)
   }
 

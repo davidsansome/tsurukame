@@ -535,8 +535,8 @@ class SettingsViewController: UITableViewController {
   override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
     switch segue.identifier {
     case "fonts":
-      let vc = segue.destination as! TKMFontsViewController
-      vc.setup(with: services)
+      let vc = segue.destination as! FontsViewController
+      vc.setup(services: services)
 
     case "offlineAudio":
       let vc = segue.destination as! OfflineAudioViewController

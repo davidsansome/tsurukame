@@ -28,7 +28,7 @@ struct FontDefinition {
   }
 }
 
-@objc(TKMFont) @objcMembers class Font: NSObject {
+class Font: NSObject {
   static let fontPreviewText = "色は匂へど散りぬるを我が世誰ぞ常ならん有為の奥山今日越えて浅き夢見じ酔ひもせず"
   static let fontDefinitions: [FontDefinition] = [
     FontDefinition("ArmedBanana", "armed-banana.ttf", "Armed Banana", 3_298_116),
@@ -99,12 +99,13 @@ struct FontDefinition {
   func loadScreenshot() -> UIImage! { UIImage(named: fontName) }
 }
 
-@objc(TKMFontLoader) @objcMembers class FontLoader: NSObject {
+class FontLoader: NSObject {
   static var cacheDirectoryPath: String {
     "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/fonts"
   }
 
   let allFonts: [Font]
+
   override init() {
     var allFonts: [Font] = []
     for definition in Font.fontDefinitions {
@@ -114,7 +115,7 @@ struct FontDefinition {
     super.init()
   }
 
-  @objc(fontByName:) func font(fileName: String) -> Font? {
+  func font(fileName: String) -> Font? {
     for font in allFonts {
       if font.fileName == fileName { return font }
     }

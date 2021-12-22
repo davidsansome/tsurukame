@@ -44,7 +44,7 @@ class BasicModelItem: NSObject, TKMModelItem {
 
   weak var cell: BasicModelCell?
 
-  init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?,
+  init(style: UITableViewCell.CellStyle, title: String?, subtitle: String? = nil,
        accessoryType: UITableViewCell.AccessoryType = .none, target: NSObject? = nil,
        action: Selector? = nil, tapHandler: (() -> Void)? = nil) {
     self.style = style
