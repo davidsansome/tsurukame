@@ -141,13 +141,14 @@ private class AnimationContext {
 }
 
 @objc
-protocol ReviewViewControllerDelegate {
-  func reviewViewControllerAllowsCheats(forReviewItem item: ReviewItem) -> Bool
-  func reviewViewControllerAllowsCustomFonts() -> Bool
-  func reviewViewControllerShowsSuccessRate() -> Bool
-  func reviewViewControllerFinishedAllReviewItems(_ reviewViewController: ReviewViewController)
-  @objc optional func reviewViewController(_ reviewViewController: ReviewViewController,
-                                           tappedMenuButton menuButton: UIButton)
+protocol ReviewViewControllerDelegate: AnyObject {
+  func allowsCheats(forReviewItem item: ReviewItem) -> Bool
+  func allowsCustomFonts() -> Bool
+  func showsSuccessRate() -> Bool
+  func finishedAllReviewItems(_ reviewViewController: ReviewViewController)
+
+  @objc optional func tappedMenuButton(reviewViewController: ReviewViewController,
+                                       menuButton: UIButton)
 }
 
 class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelegate {
@@ -228,11 +229,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     kanaInput = TKMKanaInput(delegate: self)
   }
 
-  @objc public func setup(services: TKMServices,
-                          items: [ReviewItem],
-                          showMenuButton: Bool,
-                          showSubjectHistory: Bool,
-                          delegate: ReviewViewControllerDelegate) {
+  @objc
+  public func setup(services: TKMServices,
+                    items: [ReviewItem],
+                    showMenuButton: Bool,
+                    showSubjectHistory: Bool,
+                    delegate: ReviewViewControllerDelegate) {
     self.services = services
     self.showMenuButton = showMenuButton
     self.showSubjectHistory = showSubjectHistory
@@ -356,7 +358,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     answerField.delegate = kanaInput
     answerField.addAction(for: .editingChanged, answerFieldValueDidChange)
 
-    let showSuccessRate = delegate.reviewViewControllerShowsSuccessRate()
+    let showSuccessRate = delegate.showsSuccessRate()
     successRateIcon.isHidden = !showSuccessRate
     successRateLabel.isHidden = !showSuccessRate
 
@@ -520,7 +522,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private func randomTask() {
     TKMStyle.withTraitCollection(traitCollection) {
       if activeQueue.count == 0 {
-        delegate.reviewViewControllerFinishedAllReviewItems(self)
+        delegate.finishedAllReviewItems(self)
         return
       }
 
@@ -741,7 +743,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   func randomFont(thatCanRenderText text: String) -> String {
-    if delegate.reviewViewControllerAllowsCustomFonts() {
+    if delegate.allowsCustomFonts() {
       // Re-set the supported fonts when we pick a random one as that is the first
       // step.
       availableFonts = fontsThatCanRenderText(text, exclude: nil).sorted()
@@ -756,7 +758,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private func animateSubjectDetailsView(shown: Bool,
                                          setupContextFunc: ((AnimationContext) -> Void)?,
                                          partiallyCorrect: Bool = false) {
-    let cheats = delegate.reviewViewControllerAllowsCheats(forReviewItem: activeTask)
+    let cheats = delegate.allowsCheats(forReviewItem: activeTask)
 
     if shown {
       subjectDetailsView.isHidden = false
@@ -973,7 +975,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // MARK: - Menu button
 
   @IBAction func menuButtonPressed(_: Any) {
-    delegate.reviewViewController?(self, tappedMenuButton: menuButton)
+    delegate.tappedMenuButton?(reviewViewController: self, menuButton: menuButton)
   }
 
   // MARK: - Wrapping up

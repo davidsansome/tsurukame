@@ -172,19 +172,19 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
 
   // MARK: - ReviewViewControllerDelegate
 
-  func reviewViewControllerAllowsCheats(forReviewItem _: ReviewItem) -> Bool {
+  func allowsCheats(forReviewItem _: ReviewItem) -> Bool {
     false
   }
 
-  func reviewViewControllerFinishedAllReviewItems(_ reviewViewController: ReviewViewController) {
+  func finishedAllReviewItems(_ reviewViewController: ReviewViewController) {
     reviewViewController.navigationController?.popToRootViewController(animated: true)
   }
 
-  func reviewViewControllerAllowsCustomFonts() -> Bool {
+  func allowsCustomFonts() -> Bool {
     false
   }
 
-  func reviewViewControllerShowsSuccessRate() -> Bool {
+  func showsSuccessRate() -> Bool {
     false
   }
 

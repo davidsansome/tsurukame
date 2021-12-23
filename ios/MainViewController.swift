@@ -261,8 +261,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
         return
       }
 
-      let vc = segue.destination as! TKMReviewContainerViewController
-      vc.setup(with: services, items: items)
+      let vc = segue.destination as! ReviewContainerViewController
+      vc.setup(services: services, items: items)
 
     case "startLessons":
       let assignments = services.localCachingClient.getAllAssignments()

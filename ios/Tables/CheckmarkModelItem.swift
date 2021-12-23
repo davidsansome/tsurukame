@@ -14,25 +14,16 @@
 
 import Foundation
 
-@objc(TKMCheckmarkModelItem)
-@objcMembers
 class CheckmarkModelItem: BasicModelItem {
-  @objc(on) var isOn: Bool
+  var isOn: Bool
   var switchHandler: ((Bool) -> Void)?
 
-  init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?, on: Bool,
-       target: NSObject?, action: Selector?, switchHandler: ((Bool) -> Void)? = nil) {
+  init(style: UITableViewCell.CellStyle, title: String?, subtitle: String? = nil, on: Bool,
+       target: NSObject? = nil, action: Selector? = nil, switchHandler: ((Bool) -> Void)? = nil) {
     isOn = on
     self.switchHandler = switchHandler
     super.init(style: style, title: title, subtitle: subtitle, accessoryType: .none, target: target,
                action: action, tapHandler: nil)
-  }
-
-  // For objective-C compatibility only.
-  convenience init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?, on: Bool,
-                   target: NSObject?, action: Selector?) {
-    self.init(style: style, title: title, subtitle: subtitle, on: on, target: target,
-              action: action, switchHandler: nil)
   }
 
   override func cellClass() -> AnyClass! {
