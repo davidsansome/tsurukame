@@ -459,6 +459,14 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     readingItem?.playAudio()
   }
 
+  override func didMoveToSuperview() {
+    // Break the reference cycle between the table model and the table view (self) when the view
+    // is removed from the hierarcy.
+    if superview == nil {
+      tableModel = nil
+    }
+  }
+
   // MARK: - SubjectChipDelegate
 
   func didTapSubjectChip(_ chip: SubjectChip) {
