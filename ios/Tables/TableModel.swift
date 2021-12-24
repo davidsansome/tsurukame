@@ -28,7 +28,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   var sections = [Section]()
   private var isInitialised = false
   private(set) var tableView: UITableView
-  private var delegate: UITableViewDelegate?
+  private weak var delegate: UITableViewDelegate?
 
   deinit {
     if !isInitialised {

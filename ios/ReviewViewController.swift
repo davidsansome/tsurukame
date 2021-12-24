@@ -356,7 +356,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     answerField.autocapitalizationType = .none
     answerField.delegate = kanaInput
-    answerField.addAction(for: .editingChanged, answerFieldValueDidChange)
+    answerField.addAction(for: .editingChanged) { [weak self] in self?.answerFieldValueDidChange() }
 
     let showSuccessRate = delegate.showsSuccessRate()
     successRateIcon.isHidden = !showSuccessRate

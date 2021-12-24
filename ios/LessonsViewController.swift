@@ -58,7 +58,7 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
     pageController.didMove(toParent: self)
 
     // Hook up the page control.
-    pageControl.addAction(for: .valueChanged, pageChanged)
+    pageControl.addAction(for: .valueChanged) { [weak self] in self?.pageChanged() }
 
     // Load the first page.
     if let vc = createViewController(index: 0) {

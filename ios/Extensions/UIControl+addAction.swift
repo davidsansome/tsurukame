@@ -15,6 +15,7 @@
 import Foundation
 
 extension UIControl {
+  /** You MUST take a weak reference to `self` in the closure. */
   func addAction(for controlEvents: UIControl.Event = .touchUpInside,
                  _ closure: @escaping () -> Void) {
     if #available(iOS 14.0, *) {

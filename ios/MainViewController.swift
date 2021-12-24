@@ -81,7 +81,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     refreshControl?.attributedTitle = NSMutableAttributedString(string: "Pull to refresh...",
                                                                 attributes: [.foregroundColor: UIColor
                                                                   .white])
-    refreshControl?.addAction(for: .valueChanged, didPullToRefresh)
+    refreshControl?.addAction(for: .valueChanged) { [weak self] in self?.didPullToRefresh() }
 
     // Create the search results view controller.
     let searchResultsVC = storyboard?
