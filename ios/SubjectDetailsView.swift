@@ -183,10 +183,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     let currentLevel = services.localCachingClient!.getUserInfo()!.level
     var addedSection = false
     for similar in subject.kanji.visuallySimilarKanji {
-      guard let subject = services.localCachingClient.getSubject(japanese: String(similar)) else {
+      guard let subject = services.localCachingClient.getSubject(japanese: String(similar),
+                                                                 type: .kanji) else {
         continue
       }
-      if subject.level > currentLevel || subject.subjectType != .kanji {
+      if subject.level > currentLevel {
         continue
       }
       if !addedSection {

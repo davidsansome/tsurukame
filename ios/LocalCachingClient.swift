@@ -556,9 +556,11 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
-  func getSubject(japanese: String) -> TKMSubject? {
+  func getSubject(japanese: String, type: TKMSubject.TypeEnum) -> TKMSubject? {
     db.inDatabase { db in
-      let cursor = db.query("SELECT pb FROM subjects WHERE japanese = ?", args: [japanese])
+      let cursor = db.query("SELECT pb FROM subjects WHERE japanese = ? AND type = ?", args: [
+        japanese, type.rawValue,
+      ])
       if cursor.next() {
         return cursor.proto(forColumnIndex: 0)
       }
