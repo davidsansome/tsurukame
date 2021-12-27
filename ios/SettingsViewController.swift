@@ -27,14 +27,6 @@ class SettingsViewController: UITableViewController {
 
   // MARK: - UIView
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(applicationDidBecomeActive(_:)),
-                                           name: UIApplication.didBecomeActiveNotification,
-                                           object: nil)
-  }
-
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     navigationController?.isNavigationBarHidden = false
@@ -44,218 +36,35 @@ class SettingsViewController: UITableViewController {
   private func rerender() {
     let model = MutableTableModel(tableView: tableView)
 
-    model.add(section: "App")
-    if #available(iOS 13.0, *) {
-      model.add(BasicModelItem(style: .value1,
-                               title: "UI Appearance",
-                               subtitle: Settings.interfaceStyle.description,
-                               accessoryType: .disclosureIndicator,
-                               target: self,
-                               action: #selector(didTapInterfaceStyle(_:))))
+    model.add(section: "Settings")
+    model.add(BasicModelItem(style: .default,
+                             title: "Appearance & Notifications",
+                             accessoryType: .disclosureIndicator) { [unowned self] in
+        self.performSegue(withIdentifier: "appSettings", sender: self)
+      })
+    model.add(BasicModelItem(style: .default,
+                             title: "Lessons",
+                             accessoryType: .disclosureIndicator) { [unowned self] in
+        self.performSegue(withIdentifier: "lessonSettings", sender: self)
+      })
+    model.add(BasicModelItem(style: .default,
+                             title: "Reviews",
+                             accessoryType: .disclosureIndicator) { [unowned self] in
+        self.performSegue(withIdentifier: "reviewSettings", sender: self)
+      })
+    model.add(BasicModelItem(style: .default,
+                             title: "Radicals, Kanji & Vocabulary",
+                             accessoryType: .disclosureIndicator) { [unowned self] in
+        self.performSegue(withIdentifier: "subjectDetailsSettings", sender: self)
+      })
+
+    model.add(section: "Diagnostics")
+    if let coreVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
+       let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+      let version = "\(coreVersion).\(build)"
+      model.add(BasicModelItem(style: .value1, title: "Version", subtitle: version,
+                               accessoryType: .none))
     }
-
-    model.add(section: "Notifications")
-    model.add(SwitchModelItem(style: .default,
-                              title: "Notify for all available reviews",
-                              subtitle: nil,
-                              on: Settings.notificationsAllReviews,
-                              target: self,
-                              action: #selector(allReviewsSwitchChanged(_:))))
-    model.add(SwitchModelItem(style: .default,
-                              title: "Badge the app icon",
-                              subtitle: nil,
-                              on: Settings.notificationsBadging,
-                              target: self,
-                              action: #selector(badgingSwitchChanged(_:))))
-
-    model.add(section: "Lessons")
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Prioritize current level",
-                              subtitle: "Teach items from the current level first",
-                              on: Settings.prioritizeCurrentLevel,
-                              target: self,
-                              action: #selector(prioritizeCurrentLevelChanged(_:))))
-    model.add(BasicModelItem(style: .value1,
-                             title: "Lesson order",
-                             subtitle: lessonOrderValueText,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapLessonOrder(_:))))
-    model.add(BasicModelItem(style: .value1,
-                             title: "Lesson batch size",
-                             subtitle: lessonBatchSizeText,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapLessonBatchSize(_:))))
-    model.add(BasicModelItem(style: .value1,
-                             title: "Apprentice limit",
-                             subtitle: apprenticeLessonsLimitText,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapApprenticeLessonsLimit(_:))))
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Show stats section",
-                              subtitle: "Show section with level, SRS stage, and more",
-                              on: Settings.showStatsSection,
-                              target: self,
-                              action: #selector(showStatsSectionChanged(_:))))
-
-    model.add(section: "Reviews")
-    model.add(BasicModelItem(style: .value1,
-                             title: "Review order",
-                             subtitle: reviewOrderValueText,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapReviewOrder(_:))))
-    model.add(BasicModelItem(style: .value1,
-                             title: "Review batch size",
-                             subtitle: "\(Settings.reviewBatchSize.description)",
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapReviewBatchSize(_:))))
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Back-to-back",
-                              subtitle: "Group Meaning and Reading together",
-                              on: Settings.groupMeaningReading,
-                              target: self,
-                              action: #selector(groupMeaningReadingSwitchChanged(_:))))
-    groupMeaningReadingIndexPath = model.add(BasicModelItem(style: .value1,
-                                                            title: "Back-to-back order",
-                                                            subtitle: taskOrderValueText,
-                                                            accessoryType: .disclosureIndicator,
-                                                            target: self,
-                                                            action: #selector(didTapTaskOrder(_:))),
-                                             hidden:!Settings
-                                               .groupMeaningReading)
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Reveal answer automatically",
-                              subtitle: "In Anki mode, this reveals the mark answer pop-up instead.",
-                              on: Settings.showAnswerImmediately,
-                              target: self,
-                              action: #selector(showAnswerImmediatelySwitchChanged(_:))))
-    model.add(BasicModelItem(style: .default,
-                             title: "Fonts",
-                             subtitle: nil,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapFonts(_:))))
-    model.add(BasicModelItem(style: .value1,
-                             title: "Font size",
-                             subtitle: fontSizeValueText,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(fontSizeChanged(_:))))
-
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Exact match",
-                              subtitle: "Requires typing in answers exactly correct",
-                              on: Settings.exactMatch,
-                              target: self,
-                              action: #selector(exactMatchSwitchChanged(_:))))
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Allow cheating",
-                              subtitle: "Ignore Typos and Add Synonym",
-                              on: Settings.enableCheats,
-                              target: self,
-                              action: #selector(enableCheatsSwitchChanged(_:))))
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Show old mnemonics",
-                              subtitle: "Display old mnemonics alongside new ones",
-                              on: Settings.showOldMnemonic,
-                              target: self,
-                              action: #selector(showOldMnemonicSwitchChanged(_:))))
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Use katakana for onyomi readings",
-                              subtitle: nil,
-                              on: Settings.useKatakanaForOnyomi,
-                              target: self,
-                              action: #selector(useKatakanaForOnyomiSwitchChanged(_:))))
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Show SRS level indicator",
-                              subtitle: nil,
-                              on: Settings.showSRSLevelIndicator,
-                              target: self,
-                              action: #selector(showSRSLevelIndicatorSwitchChanged(_:))))
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Show all kanji readings",
-                              subtitle: "Primary reading(s) will be shown in bold",
-                              on: Settings.showAllReadings,
-                              target: self,
-                              action: #selector(showAllReadingsSwitchChanged(_:))))
-
-    let keyboardSwitchItem = SwitchModelItem(style: .subtitle,
-                                             title: "Switch to Japanese keyboard",
-                                             subtitle: "Automatically switch to a Japanese keyboard to type reading answers",
-                                             on: Settings.autoSwitchKeyboard,
-                                             target: self,
-                                             action: #selector(autoSwitchKeyboardSwitchChanged(_:)))
-    keyboardSwitchItem.numberOfSubtitleLines = 0
-    model.add(keyboardSwitchItem)
-
-    model.add(SwitchModelItem(style: .default,
-                              title: "Allow skipping reviews",
-                              subtitle: nil,
-                              on: Settings.allowSkippingReviews,
-                              target: self,
-                              action: #selector(allowSkippingReviewsSwitchChanged(_:))))
-
-    let minimizeReviewPenaltyItem = SwitchModelItem(style: .subtitle,
-                                                    title: "Minimize review penalty",
-                                                    subtitle:
-                                                    "Treat reviews answered incorrect multiple times as if answered incorrect once",
-                                                    on: Settings.minimizeReviewPenalty,
-                                                    target: self,
-                                                    action: #selector(minimizeReviewPenaltySwitchChanged(_:)))
-    minimizeReviewPenaltyItem.numberOfSubtitleLines = 0
-    model.add(minimizeReviewPenaltyItem)
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Pause on partially correct answers",
-                              subtitle: "Allows making sure answer was correct",
-                              on: Settings.pausePartiallyCorrect,
-                              target: self,
-                              action: #selector(partiallyCorrectSwitchChanged(_:))))
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Anki mode",
-                              subtitle: "Do reviews without typing answers",
-                              on: Settings.ankiMode,
-                              target: self,
-                              action: #selector(ankiModeSwitchChanged(_:))))
-
-    model.add(section: "Audio")
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Play audio automatically",
-                              subtitle: "When you answer correctly",
-                              on: Settings.playAudioAutomatically,
-                              target: self,
-                              action: #selector(playAudioAutomaticallySwitchChanged(_:))))
-    model.add(BasicModelItem(style: .default,
-                             title: "Offline audio",
-                             subtitle: nil,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapOfflineAudio(_:))))
-
-    model.add(section: "Animations", footer: "You can turn off any animations you find distracting")
-    model.add(SwitchModelItem(style: .default,
-                              title: "Particle explosion",
-                              subtitle: nil,
-                              on: Settings.animateParticleExplosion,
-                              target: self,
-                              action: #selector(animateParticleExplosionSwitchChanged(_:))))
-    model.add(SwitchModelItem(style: .default,
-                              title: "Level up popup",
-                              subtitle: nil,
-                              on: Settings.animateLevelUpPopup,
-                              target: self,
-                              action: #selector(animateLevelUpPopupSwitchChanged(_:))))
-    model.add(SwitchModelItem(style: .default,
-                              title: "+1",
-                              subtitle: nil,
-                              on: Settings.animatePlusOne,
-                              target: self,
-                              action: #selector(animatePlusOneSwitchChanged(_:))))
-
-    model.addSection()
     let exportLocalDatabaseItem = BasicModelItem(style: .subtitle,
                                                  title: "Export local database",
                                                  subtitle: "To attach to bug reports or email to the developer",
@@ -264,12 +73,8 @@ class SettingsViewController: UITableViewController {
                                                  action: #selector(didTapSendBugReport(_:)))
     exportLocalDatabaseItem.numberOfSubtitleLines = 0
     model.add(exportLocalDatabaseItem)
-    if let coreVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-       let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-      let version = "\(coreVersion).\(build)"
-      model.add(BasicModelItem(style: .value1, title: "Version", subtitle: version,
-                               accessoryType: .none))
-    }
+
+    model.addSection()
     let logOutItem = BasicModelItem(style: .default,
                                     title: "Log out",
                                     subtitle: nil,
@@ -283,259 +88,7 @@ class SettingsViewController: UITableViewController {
     model.reloadTable()
   }
 
-  // MARK: - Text rendering
-
-  private var lessonOrderValueText: String {
-    var parts = [String]()
-    for subjectType in Settings.lessonOrder {
-      parts.append(subjectType.description)
-    }
-    return parts.joined(separator: ", ")
-  }
-
-  private var lessonBatchSizeText: String {
-    "\(Settings.lessonBatchSize)"
-  }
-
-  private var apprenticeLessonsLimitText: String {
-    Settings.apprenticeLessonsLimit != Int.max ?
-      "\(Settings.apprenticeLessonsLimit)" : "None"
-  }
-
-  private var reviewOrderValueText: String {
-    Settings.reviewOrder.description
-  }
-
-  private var taskOrderValueText: String {
-    Settings.meaningFirst ? "Meaning first" : "Reading first"
-  }
-
-  private var fontSizeValueText: String {
-    if Settings.fontSize != 0.0 {
-      return "\(Int(Settings.fontSize * 100))%"
-    }
-    return ""
-  }
-
-  // MARK: - Switch change handlers
-
-  @objc private func animateParticleExplosionSwitchChanged(_ switchView: UISwitch) {
-    Settings.animateParticleExplosion = switchView.isOn
-  }
-
-  @objc private func animateLevelUpPopupSwitchChanged(_ switchView: UISwitch) {
-    Settings.animateLevelUpPopup = switchView.isOn
-  }
-
-  @objc private func animatePlusOneSwitchChanged(_ switchView: UISwitch) {
-    Settings.animatePlusOne = switchView.isOn
-  }
-
-  @objc private func prioritizeCurrentLevelChanged(_ switchView: UISwitch) {
-    Settings.prioritizeCurrentLevel = switchView.isOn
-  }
-
-  @objc private func showStatsSectionChanged(_ switchView: UISwitch) {
-    Settings.showStatsSection = switchView.isOn
-  }
-
-  @objc private func groupMeaningReadingSwitchChanged(_ switchView: UISwitch) {
-    Settings.groupMeaningReading = switchView.isOn
-    if let groupMeaningReadingIndexPath = groupMeaningReadingIndexPath {
-      model?.setIndexPath(groupMeaningReadingIndexPath, hidden: !switchView.isOn)
-    }
-  }
-
-  @objc private func showAnswerImmediatelySwitchChanged(_ switchView: UISwitch) {
-    Settings.showAnswerImmediately = switchView.isOn
-  }
-
-  @objc private func allowSkippingReviewsSwitchChanged(_ switchView: UISwitch) {
-    Settings.allowSkippingReviews = switchView.isOn
-  }
-
-  @objc private func minimizeReviewPenaltySwitchChanged(_ switchView: UISwitch) {
-    Settings.minimizeReviewPenalty = switchView.isOn
-  }
-
-  @objc private func exactMatchSwitchChanged(_ switchView: UISwitch) {
-    Settings.exactMatch = switchView.isOn
-  }
-
-  @objc private func enableCheatsSwitchChanged(_ switchView: UISwitch) {
-    Settings.enableCheats = switchView.isOn
-  }
-
-  @objc private func showOldMnemonicSwitchChanged(_ switchView: UISwitch) {
-    Settings.showOldMnemonic = switchView.isOn
-  }
-
-  @objc private func useKatakanaForOnyomiSwitchChanged(_ switchView: UISwitch) {
-    Settings.useKatakanaForOnyomi = switchView.isOn
-  }
-
-  @objc private func showSRSLevelIndicatorSwitchChanged(_ switchView: UISwitch) {
-    Settings.showSRSLevelIndicator = switchView.isOn
-  }
-
-  @objc private func autoSwitchKeyboardSwitchChanged(_ switchView: UISwitch) {
-    if switchView.isOn, AnswerTextField.japaneseTextInputMode == nil {
-      // The user wants a Japanese keyboard but they don't have one installed.
-      let device = UIDevice.current.model
-      let message = "You must add a Japanese keyboard to your \(device).\nOpen Settings then " +
-        "General ⮕ Keyboard ⮕ Keyboards ⮕ Add New Keyboard."
-      let ac = UIAlertController(title: "No Japanese keyboard", message: message,
-                                 preferredStyle: .alert)
-      ac.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
-      present(ac, animated: true, completion: nil)
-      switchView.isOn = false
-      return
-    }
-    Settings.autoSwitchKeyboard = switchView.isOn
-  }
-
-  @objc private func showAllReadingsSwitchChanged(_ switchView: UISwitch) {
-    Settings.showAllReadings = switchView.isOn
-  }
-
-  @objc private func partiallyCorrectSwitchChanged(_ switchView: UISwitch) {
-    Settings.pausePartiallyCorrect = switchView.isOn
-  }
-
-  @objc private func ankiModeSwitchChanged(_ switchView: UISwitch) {
-    Settings.ankiMode = switchView.isOn
-  }
-
-  @objc private func playAudioAutomaticallySwitchChanged(_ switchView: UISwitch) {
-    Settings.playAudioAutomatically = switchView.isOn
-  }
-
-  @objc private func allReviewsSwitchChanged(_ switchView: UISwitch) {
-    promptForNotifications(switchView: switchView) { granted in
-      Settings.notificationsAllReviews = granted
-    }
-  }
-
-  @objc private func badgingSwitchChanged(_ switchView: UISwitch) {
-    promptForNotifications(switchView: switchView) { granted in
-      Settings.notificationsBadging = granted
-    }
-  }
-
-  private func promptForNotifications(switchView: UISwitch,
-                                      handler: @escaping (Bool) -> Void) {
-    if notificationHandler != nil {
-      return
-    }
-    if !switchView.isOn {
-      handler(false)
-      // Clear any existing badge
-      UIApplication.shared.applicationIconBadgeNumber = 0
-      return
-    }
-
-    switchView.setOn(false, animated: true)
-    switchView.isEnabled = false
-
-    notificationHandler = { granted in
-      DispatchQueue.main.async {
-        switchView.isEnabled = true
-        switchView.setOn(granted, animated: true)
-        handler(granted)
-        self.notificationHandler = nil
-      }
-    }
-
-    let center = UNUserNotificationCenter.current()
-    center.getNotificationSettings { settings in
-      switch settings.authorizationStatus {
-      case .authorized, .provisional, .ephemeral:
-        self.notificationHandler?(true)
-      case .notDetermined:
-        center.requestAuthorization(options: [.badge, .alert]) { granted, _ in
-          self.notificationHandler?(granted)
-        }
-      case .denied:
-        DispatchQueue.main.async {
-          UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:],
-                                    completionHandler: nil)
-        }
-      default:
-        break
-      }
-    }
-  }
-
-  @objc private func applicationDidBecomeActive(_: NSNotification) {
-    if notificationHandler == nil {
-      return
-    }
-    let center = UNUserNotificationCenter.current()
-    center.getNotificationSettings { settings in
-      var granted = settings.authorizationStatus == .authorized
-      if #available(iOS 12.0, *) {
-        granted = granted || settings.authorizationStatus == .provisional
-      }
-      self.notificationHandler?(granted)
-    }
-  }
-
   // MARK: - Tap handlers
-
-  @objc private func didTapLessonOrder(_: BasicModelItem) {
-    performSegue(withIdentifier: "lessonOrder", sender: self)
-  }
-
-  @objc private func didTapLessonBatchSize(_: BasicModelItem) {
-    performSegue(withIdentifier: "lessonBatchSize", sender: self)
-  }
-
-  @objc private func didTapApprenticeLessonsLimit(_: BasicModelItem) {
-    performSegue(withIdentifier: "apprenticeLessonsLimit", sender: self)
-  }
-
-  @objc private func didTapReviewBatchSize(_: BasicModelItem) {
-    performSegue(withIdentifier: "reviewBatchSize", sender: self)
-  }
-
-  @objc private func fontSizeChanged(_: BasicModelItem) {
-    performSegue(withIdentifier: "fontSize", sender: self)
-  }
-
-  @objc private func didTapReviewOrder(_: BasicModelItem) {
-    performSegue(withIdentifier: "reviewOrder", sender: self)
-  }
-
-  @objc private func didTapInterfaceStyle(_: BasicModelItem) {
-    performSegue(withIdentifier: "interfaceStyle", sender: self)
-  }
-
-  @objc private func didTapFonts(_: BasicModelItem) {
-    performSegue(withIdentifier: "fonts", sender: self)
-  }
-
-  @objc private func didTapTaskOrder(_: BasicModelItem) {
-    performSegue(withIdentifier: "taskOrder", sender: self)
-  }
-
-  @objc private func didTapOfflineAudio(_: Any?) {
-    performSegue(withIdentifier: "offlineAudio", sender: self)
-  }
-
-  override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
-    switch segue.identifier {
-    case "fonts":
-      let vc = segue.destination as! FontsViewController
-      vc.setup(services: services)
-
-    case "offlineAudio":
-      let vc = segue.destination as! OfflineAudioViewController
-      vc.setup(services: services)
-
-    default:
-      break
-    }
-  }
 
   @objc private func didTapLogOut(_: Any?) {
     let c = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
@@ -550,5 +103,18 @@ class SettingsViewController: UITableViewController {
     let c = UIActivityViewController(activityItems: [LocalCachingClient.databaseUrl()],
                                      applicationActivities: nil)
     present(c, animated: true, completion: nil)
+  }
+
+  // MARK: - UIViewController
+
+  override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
+    switch segue.identifier {
+    case "reviewSettings":
+      let vc = segue.destination as! ReviewSettingsViewController
+      vc.setup(services: services)
+
+    default:
+      break
+    }
   }
 }

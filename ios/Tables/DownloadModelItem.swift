@@ -100,7 +100,7 @@ class DownloadModelView: TKMModelCell {
       preview.isHidden = false
       preview.text = previewText
       if let previewFontName = item.previewFontName {
-        preview.font = UIFont(name: previewFontName, size: 26.0)
+        preview.font = UIFont(name: previewFontName, size: 24.0)
       } else {
         preview.font = nil
       }
