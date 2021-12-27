@@ -88,7 +88,7 @@ class SettingsViewController: UITableViewController {
                              target: self,
                              action: #selector(didTapLessonBatchSize(_:))))
     model.add(BasicModelItem(style: .value1,
-                             title: "Lesson apprentice limit",
+                             title: "Apprentice limit",
                              subtitle: apprenticeLessonsLimitText,
                              accessoryType: .disclosureIndicator,
                              target: self,

@@ -165,7 +165,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
                                        action: #selector(startLessons))
       let apprenticeCount = services.localCachingClient.apprenticeCount
       let limit = Settings.apprenticeLessonsLimit
-      let disabledMessage = apprenticeCount >= limit ? "Apprentice limit reached..." : nil
+      let disabledMessage = apprenticeCount >= limit ? "apprentice limit reached" : nil
       hasLessons = setTableViewCellCount(lessonsItem, count: lessons,
                                          disabledMessage: disabledMessage)
       model.add(lessonsItem)
