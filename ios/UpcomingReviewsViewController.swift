@@ -14,21 +14,9 @@
 
 import Foundation
 
-private class UpcomingReviewsDateFormatter: UpcomingReviewsXAxisValueFormatter {
-  override init(_ startTime: Date) {
-    super.init(startTime)
-    dateFormatter.setLocalizedDateFormatFromTemplate("d MMM \(hourFormat)")
-  }
-
-  func string(hour: Int) -> String {
-    let date = startTime.addingTimeInterval(TimeInterval(hour * 60 * 60))
-    return dateFormatter.string(from: date)
-  }
-}
-
 class UpcomingReviewsViewController: UITableViewController {
   private var services: TKMServices!
-  private var date: UpcomingReviewsDateFormatter!
+  private var dateFormatter = DateFormatter()
   private var model: TableModel?
 
   func setup(services: TKMServices) {
@@ -40,11 +28,11 @@ class UpcomingReviewsViewController: UITableViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     navigationController?.isNavigationBarHidden = false
-    date = UpcomingReviewsDateFormatter(Date())
+    dateFormatter.setLocalizedDateFormatFromTemplate("d MMM ha")
     rerender()
   }
 
-  private func getReviewData() -> [ReviewComposition] {
+  private func getCumulativeCompositions() -> [ReviewComposition] {
     let subjects = services.localCachingClient.availableSubjects
     var cumulativeData: [ReviewComposition] = []
     for data in subjects.reviewComposition {
@@ -54,26 +42,36 @@ class UpcomingReviewsViewController: UITableViewController {
   }
 
   private func rerender() {
-    let model = MutableTableModel(tableView: tableView),
-        reviewData = getReviewData()
+    let model = MutableTableModel(tableView: tableView)
+    model.add(section: "",
+              footer: "The numbers on the right are: the total number of reviews, new " +
+                "reviews this hour, totals broken down by SRS level: " +
+                "apprentice/guru/master/enlightened")
+    model.addSection()
 
-    func formatData(hour: Int) -> String {
-      let data = reviewData[hour],
-          diff = data.availableReviews - (hour > 0 ? reviewData[hour - 1].availableReviews : 0)
-      return "\(data.availableReviews) (+\(diff)): " + (Settings.upcomingTypeOverSRS ?
-        data.countByType.sorted { $0.key.rawValue < $1.key.rawValue }.reduce("") {
-          $0.isEmpty ? "\($1.value)" : "\($0)/\($1.value)"
-        } : data.countByCategory.sorted { $0.key.rawValue < $1.key.rawValue }.reduce("") {
-          $0.isEmpty ? "\($1.value)" : "\($0)/\($1.value)"
-        })
+    func formatValue(hour: Int) -> String {
+      let thisHour = cumulativeCompositions[hour]
+      let lastHourReviews = (hour > 0 ? cumulativeCompositions[hour - 1].availableReviews : 0)
+      let diff = thisHour.availableReviews - lastHourReviews
+
+      let byCategory = thisHour.countByCategory.sorted {
+        $0.key.rawValue < $1.key.rawValue
+      }.map { String($1) }.joined(separator: "/")
+
+      return "\(thisHour.availableReviews) (+\(diff)): \(byCategory)"
     }
 
-    for hour in 0 ..< reviewData.count {
+    let cumulativeCompositions = getCumulativeCompositions()
+    for hour in 0 ..< cumulativeCompositions.count {
+      // Don't add a row if the number of available reviews was the same as the last hour.
       if hour > 0,
-         reviewData[hour].availableReviews == reviewData[hour - 1].availableReviews { continue }
+         cumulativeCompositions[hour].availableReviews == cumulativeCompositions[hour - 1]
+         .availableReviews { continue }
+
+      let date = Date().addingTimeInterval(TimeInterval(hour * 60 * 60))
       model.add(BasicModelItem(style: .value1,
-                               title: date.string(hour: hour),
-                               subtitle: formatData(hour: hour),
+                               title: dateFormatter.string(from: date),
+                               subtitle: formatValue(hour: hour),
                                accessoryType: .none))
     }
 

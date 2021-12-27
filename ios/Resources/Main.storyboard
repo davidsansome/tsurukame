@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Whd-2S-WNr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Whd-2S-WNr">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -279,7 +279,7 @@
             </objects>
             <point key="canvasLocation" x="-727" y="834"/>
         </scene>
-        <!--Upcoming Reviews View Controller-->
+        <!--Upcoming Reviews-->
         <scene sceneID="4xW-Gu-ryi">
             <objects>
                 <tableViewController storyboardIdentifier="upcomingReviews" id="vBH-2Y-r3P" customClass="UpcomingReviewsViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
@@ -293,7 +293,7 @@
                             <outlet property="delegate" destination="vBH-2Y-r3P" id="vv9-ub-Dbp"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="r5Y-Ak-tJZ"/>
+                    <navigationItem key="navigationItem" title="Upcoming Reviews" id="r5Y-Ak-tJZ"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CGk-60-mVf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
