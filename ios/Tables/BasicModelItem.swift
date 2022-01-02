@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ class BasicModelItem: NSObject, TKMModelItem {
   var subtitle: String?
   var subtitleFont: UIFont?
   var subtitleTextColor: UIColor?
+  var attributedSubtitle: NSAttributedString?
   var numberOfSubtitleLines: Int = 1
 
   var accessoryType: UITableViewCell.AccessoryType = .none
@@ -98,6 +99,7 @@ class BasicModelCell: TKMModelCell {
     detailTextLabel?.text = item.subtitle
     detailTextLabel?.font = item.subtitleFont
     detailTextLabel?.textColor = item.subtitleTextColor
+    detailTextLabel?.attributedText = item.attributedSubtitle
     detailTextLabel?.numberOfLines = item.numberOfSubtitleLines
     accessoryType = item.accessoryType
     textLabel?.textColor = item.textColor

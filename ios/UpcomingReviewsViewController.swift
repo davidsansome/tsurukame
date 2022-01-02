@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,9 @@
 // limitations under the License.
 
 import Foundation
+import WaniKaniAPI
+
+private let nonBreakingSpace = "\u{00a0}"
 
 class UpcomingReviewsViewController: UITableViewController {
   private var services: TKMServices!
@@ -45,20 +48,43 @@ class UpcomingReviewsViewController: UITableViewController {
     let model = MutableTableModel(tableView: tableView)
     model.add(section: "",
               footer: "The numbers on the right are: the total number of reviews, new " +
-                "reviews this hour, totals broken down by SRS level: " +
-                "apprentice/guru/master/enlightened")
+                "reviews this hour, totals broken down by SRS level " +
+                "(apprentice, guru, master, enlightened) " +
+                "and review type (radical, kanji, vocabulary)")
     model.addSection()
 
-    func formatValue(hour: Int) -> String {
+    func formatValue(hour: Int) -> NSAttributedString {
       let thisHour = cumulativeCompositions[hour]
       let lastHourReviews = (hour > 0 ? cumulativeCompositions[hour - 1].availableReviews : 0)
       let diff = thisHour.availableReviews - lastHourReviews
 
+      var parts = [TKMFormattedText]()
+      parts.append(TKMFormattedText("\(thisHour.availableReviews) (+\(diff)): "))
+
       let byCategory = thisHour.countByCategory.sorted {
         $0.key.rawValue < $1.key.rawValue
-      }.map { String($1) }.joined(separator: "/")
+      }.map { nonBreakingSpace + String($1) + nonBreakingSpace }
+      if byCategory.count >= 4 {
+        parts.append(TKMFormattedText(byCategory[0], format: [.apprentice]))
+        parts.append(TKMFormattedText(byCategory[1], format: [.guru]))
+        parts.append(TKMFormattedText(byCategory[2], format: [.master]))
+        parts.append(TKMFormattedText(byCategory[3], format: [.enlightened]))
+      }
 
-      return "\(thisHour.availableReviews) (+\(diff)): \(byCategory)"
+      parts.append(TKMFormattedText(nonBreakingSpace))
+
+      let byType = thisHour.countByType.sorted {
+        $0.key.rawValue < $1.key.rawValue
+      }.map { nonBreakingSpace + String($1) + nonBreakingSpace }
+      if byType.count >= 3 {
+        parts.append(TKMFormattedText(byType[0], format: [.radical]))
+        parts.append(TKMFormattedText(byType[1], format: [.kanji]))
+        parts.append(TKMFormattedText(byType[2], format: [.vocabulary]))
+      }
+
+      return render(formattedText: parts, standardAttributes: [
+        .font: UIFont.systemFont(ofSize: 14),
+      ])
     }
 
     let cumulativeCompositions = getCumulativeCompositions()
@@ -69,10 +95,12 @@ class UpcomingReviewsViewController: UITableViewController {
          .availableReviews { continue }
 
       let date = Date().addingTimeInterval(TimeInterval(hour * 60 * 60))
-      model.add(BasicModelItem(style: .value1,
-                               title: dateFormatter.string(from: date),
-                               subtitle: formatValue(hour: hour),
-                               accessoryType: .none))
+      let item = BasicModelItem(style: .value1,
+                                title: dateFormatter.string(from: date),
+                                accessoryType: .none)
+      item.titleFont = UIFont.systemFont(ofSize: 14)
+      item.attributedSubtitle = formatValue(hour: hour)
+      model.add(item)
     }
 
     self.model = model

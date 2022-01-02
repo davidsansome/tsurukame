@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,6 +47,18 @@ private func render(formattedText: TKMFormattedText,
       attributes[.font] = UIFont.italicSystemFont(ofSize: UIFont.systemFontSize)
     case .link:
       attributes[.link] = formattedText.linkURL
+    case .apprentice:
+      attributes[.foregroundColor] = UIColor.white
+      attributes[.backgroundColor] = TKMStyle.color(forSRSStageCategory: .apprentice)
+    case .guru:
+      attributes[.foregroundColor] = UIColor.white
+      attributes[.backgroundColor] = TKMStyle.color(forSRSStageCategory: .guru)
+    case .master:
+      attributes[.foregroundColor] = UIColor.white
+      attributes[.backgroundColor] = TKMStyle.color(forSRSStageCategory: .master)
+    case .enlightened:
+      attributes[.foregroundColor] = UIColor.white
+      attributes[.backgroundColor] = TKMStyle.color(forSRSStageCategory: .enlightened)
     default:
       break
     }

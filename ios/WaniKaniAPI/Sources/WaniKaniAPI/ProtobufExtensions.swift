@@ -408,3 +408,10 @@ public extension TKMLevel {
     return Date().timeIntervalSince(startDate)
   }
 }
+
+public extension TKMFormattedText {
+  init(_ text: String, format: [TKMFormattedText.Format] = []) {
+    self.text = text
+    self.format = format
+  }
+}

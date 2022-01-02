@@ -198,6 +198,12 @@ message FormattedText {
     ITALIC = 6;
     BOLD = 7;
     LINK = 8;
+
+    // Used internally by Tsurukame.
+    APPRENTICE = 9;
+    GURU = 10;
+    MASTER = 11;
+    ENLIGHTENED = 12;
   }
   repeated Format format = 1;
   optional string text = 2;

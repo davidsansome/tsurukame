@@ -1060,6 +1060,12 @@ public struct TKMFormattedText {
     case italic // = 6
     case bold // = 7
     case link // = 8
+
+    /// Used internally by Tsurukame.
+    case apprentice // = 9
+    case guru // = 10
+    case master // = 11
+    case enlightened // = 12
     case UNRECOGNIZED(Int)
 
     public init() {
@@ -1077,6 +1083,10 @@ public struct TKMFormattedText {
       case 6: self = .italic
       case 7: self = .bold
       case 8: self = .link
+      case 9: self = .apprentice
+      case 10: self = .guru
+      case 11: self = .master
+      case 12: self = .enlightened
       default: self = .UNRECOGNIZED(rawValue)
       }
     }
@@ -1092,6 +1102,10 @@ public struct TKMFormattedText {
       case .italic: return 6
       case .bold: return 7
       case .link: return 8
+      case .apprentice: return 9
+      case .guru: return 10
+      case .master: return 11
+      case .enlightened: return 12
       case .UNRECOGNIZED(let i): return i
       }
     }
@@ -1118,6 +1132,10 @@ extension TKMFormattedText.Format: CaseIterable {
     .italic,
     .bold,
     .link,
+    .apprentice,
+    .guru,
+    .master,
+    .enlightened,
   ]
 }
 
@@ -2246,6 +2264,10 @@ extension TKMFormattedText.Format: SwiftProtobuf._ProtoNameProviding {
     6: .same(proto: "ITALIC"),
     7: .same(proto: "BOLD"),
     8: .same(proto: "LINK"),
+    9: .same(proto: "APPRENTICE"),
+    10: .same(proto: "GURU"),
+    11: .same(proto: "MASTER"),
+    12: .same(proto: "ENLIGHTENED"),
   ]
 }
 
