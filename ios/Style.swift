@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ class TKMStyle: NSObject {
 
   // MARK: - WaniKani colors and gradients
 
-  @objc static let defaultTintColor = UIColor(red: 0.0, green: 122.0 / 255.0, blue: 1.0, alpha: 1.0)
+  static let defaultTintColor = UIColor(red: 0.0, green: 122.0 / 255.0, blue: 1.0, alpha: 1.0)
   static let radicalColor1 = AdaptiveColorHex(light: 0x00AAFF, dark: 0x006090)
   static let radicalColor2 = AdaptiveColorHex(light: 0x0093DD, dark: 0x005080)
   static let kanjiColor1 = AdaptiveColorHex(light: 0xFF00AA, dark: 0x940060)
@@ -72,13 +72,17 @@ class TKMStyle: NSObject {
   static let meaningColor2 = AdaptiveColor(light: UIColor(white: 0.882, alpha: 1),
                                            dark: UIColor(white: 0.682, alpha: 1))
 
-  // The [Any] types force these to be exposed to objective-C as an untyped NSArray*.
-  static var radicalGradient: [Any] { [radicalColor1.cgColor, radicalColor2.cgColor] }
-  static var kanjiGradient: [Any] { [kanjiColor1.cgColor, kanjiColor2.cgColor] }
-  static var vocabularyGradient: [Any] { [vocabularyColor1.cgColor, vocabularyColor2.cgColor] }
-  static var lockedGradient: [Any] { [lockedColor1.cgColor, lockedColor2.cgColor] }
-  static var readingGradient: [Any] { [readingColor1.cgColor, readingColor2.cgColor] }
-  static var meaningGradient: [Any] { [meaningColor1.cgColor, meaningColor2.cgColor] }
+  static let explosionColor1 = UIColor(red: 247.0 / 255, green: 181.0 / 255, blue: 74.0 / 255,
+                                       alpha: 1.0)
+  static let explosionColor2 = UIColor(red: 230.0 / 255, green: 57.0 / 255, blue: 91.0 / 255,
+                                       alpha: 1.0)
+
+  static var radicalGradient: [CGColor] { [radicalColor1.cgColor, radicalColor2.cgColor] }
+  static var kanjiGradient: [CGColor] { [kanjiColor1.cgColor, kanjiColor2.cgColor] }
+  static var vocabularyGradient: [CGColor] { [vocabularyColor1.cgColor, vocabularyColor2.cgColor] }
+  static var lockedGradient: [CGColor] { [lockedColor1.cgColor, lockedColor2.cgColor] }
+  static var readingGradient: [CGColor] { [readingColor1.cgColor, readingColor2.cgColor] }
+  static var meaningGradient: [CGColor] { [meaningColor1.cgColor, meaningColor2.cgColor] }
 
   class func color(forSRSStageCategory srsStageCategory: SRSStageCategory) -> UIColor {
     switch srsStageCategory {
@@ -92,8 +96,6 @@ class TKMStyle: NSObject {
       return UIColor(red: 0.00, green: 0.58, blue: 0.87, alpha: 1.0)
     case .burned:
       return UIColor(red: 0.26, green: 0.26, blue: 0.26, alpha: 1.0)
-    default:
-      return TKMStyle.Color.label
     }
   }
 
@@ -169,9 +171,7 @@ class TKMStyle: NSObject {
 
   // MARK: - Dark mode aware UI colors
 
-  @objc(TKMStyleColor)
-  @objcMembers
-  class Color: NSObject {
+  enum Color {
     static let background = AdaptiveColor(light: UIColor.white, dark: UIColor.black)
     static let cellBackground = AdaptiveColorHex(light: 0xFFFFFF, dark: 0x1C1C1E)
     static let separator = UIColor(red: 0.24, green: 0.24, blue: 0.26, alpha: 0.29)

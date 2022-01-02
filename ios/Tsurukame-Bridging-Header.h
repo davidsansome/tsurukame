@@ -18,7 +18,6 @@
 #import "Extensions/MMDrawerController+setAnimatingDrawer.h"
 #import "Extensions/NSString+LevenshteinDistance.h"
 #import "NavigationController.h"
-#import "SuccessAnimation.h"
 #import "TKMGradientView.h"
 #import "TKMKanaInput.h"
 #import "Tables/TKMListSeparatorItem.h"

@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,23 +15,6 @@
 import Foundation
 import UIKit
 
-@objc(TKMProtobufExtensions)
-@objcMembers
-public class ProtobufExtensionsObjectiveC: NSObject {
-  public static func srsStageCategoryName(_ value: Int) -> String {
-    SRSStageCategory(rawValue: value)!.description
-  }
-
-  public static func srsStageName(_ value: Int) -> String {
-    SRSStage(rawValue: value)!.description
-  }
-
-  public static func subjectTypeName(_ value: Int) -> String {
-    TKMSubject.TypeEnum(rawValue: value)!.description
-  }
-}
-
-@objc(TKMSRSStageCategory)
 public enum SRSStageCategory: Int, CustomStringConvertible, Comparable, Strideable {
   case apprentice = 0
   case guru = 1
@@ -74,7 +57,6 @@ public enum SRSStageCategory: Int, CustomStringConvertible, Comparable, Strideab
   }
 }
 
-@objc(TKMSRSStage)
 public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {
   case unlocking = 0
   case apprentice1 = 1

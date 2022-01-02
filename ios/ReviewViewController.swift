@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -590,7 +590,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       case .meaning:
         kanaInput.enabled = false
         taskTypePrompt = activeTask.assignment.subjectType == .radical ? "Name" : "Meaning"
-        promptGradient = TKMStyle.meaningGradient as! [CGColor]
+        promptGradient = TKMStyle.meaningGradient
         promptTextColor = kMeaningTextColor
         taskTypePlaceholder = "Your Response"
         if Settings.ankiMode {
@@ -599,7 +599,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       case .reading:
         kanaInput.enabled = true
         taskTypePrompt = "Reading"
-        promptGradient = TKMStyle.readingGradient as! [CGColor]
+        promptGradient = TKMStyle.readingGradient
         promptTextColor = kReadingTextColor
         taskTypePlaceholder = "答え"
         if Settings.ankiMode {
@@ -1227,8 +1227,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         // We must start the success animations *after* all the UI elements have been moved to their
         // new locations by randomTask(), so that, for example, the success sparkles animate from
         // the final position of the answerField, not the original position.
-        RunSuccessAnimation(answerField, doneLabel, levelLabel, isSubjectFinished, didLevelUp,
-                            newSrsStage.rawValue)
+        SuccessAnimation.run(answerField: answerField, doneLabel: doneLabel,
+                             srsLevelLabel: levelLabel, isSubjectFinished: isSubjectFinished,
+                             newSrsStage: didLevelUp ? newSrsStage : nil)
       }
 
       if let previousSubjectLabel = previousSubjectLabel {
