@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,11 +15,17 @@
 import Foundation
 import UIKit
 
-class AppSettingsViewController: UITableViewController {
+class AppSettingsViewController: UITableViewController, TKMViewController {
   private var model: TableModel?
   private var notificationHandler: ((Bool) -> Void)?
 
-  // MARK: - UIView
+  // MARK: - TKMViewController
+
+  func canSwipeToGoBack() -> Bool {
+    true
+  }
+
+  // MARK: - UIViewController
 
   override func viewDidLoad() {
     super.viewDidLoad()

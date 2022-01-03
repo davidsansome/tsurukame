@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import Foundation
 import UIKit
 
-class ReviewSettingsViewController: UITableViewController {
+class ReviewSettingsViewController: UITableViewController, TKMViewController {
   private var services: TKMServices!
   private var model: TableModel?
   private var groupMeaningReadingIndexPath: IndexPath?
@@ -24,7 +24,13 @@ class ReviewSettingsViewController: UITableViewController {
     self.services = services
   }
 
-  // MARK: - UIView
+  // MARK: - TKMViewController
+
+  func canSwipeToGoBack() -> Bool {
+    true
+  }
+
+  // MARK: - UIViewController
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -33,12 +39,6 @@ class ReviewSettingsViewController: UITableViewController {
 
   private func rerender() {
     let model = MutableTableModel(tableView: tableView)
-
-    // Question order
-    // Display
-    // Answers & marking
-    // Audio
-    // Animations
 
     model.addSection()
     model.add(BasicModelItem(style: .value1,
@@ -184,6 +184,21 @@ class ReviewSettingsViewController: UITableViewController {
     model.reloadTable()
   }
 
+  override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
+    switch segue.identifier {
+    case "fonts":
+      let vc = segue.destination as! FontsViewController
+      vc.setup(services: services)
+
+    case "offlineAudio":
+      let vc = segue.destination as! OfflineAudioViewController
+      vc.setup(services: services)
+
+    default:
+      break
+    }
+  }
+
   // MARK: - Text rendering
 
   private var reviewOrderValueText: String {
@@ -298,20 +313,5 @@ class ReviewSettingsViewController: UITableViewController {
 
   @objc private func didTapOfflineAudio(_: Any?) {
     performSegue(withIdentifier: "offlineAudio", sender: self)
-  }
-
-  override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
-    switch segue.identifier {
-    case "fonts":
-      let vc = segue.destination as! FontsViewController
-      vc.setup(services: services)
-
-    case "offlineAudio":
-      let vc = segue.destination as! OfflineAudioViewController
-      vc.setup(services: services)
-
-    default:
-      break
-    }
   }
 }

@@ -27,6 +27,10 @@ static const CGFloat kVelocityThreshold = 60.f;
 @property(nonatomic, readonly) id target;
 @end
 
+@interface UINavigationController ()
+- (BOOL)_shouldCrossFadeNavigationBar;
+@end
+
 // An object that looks enough like a UIPanGestureRecognizer to pass to UINavigationController's
 // builtin transition handler.
 @interface FakeGestureRecognizer : UIPanGestureRecognizer
@@ -98,6 +102,7 @@ static const CGFloat kVelocityThreshold = 60.f;
       [newViewController canSwipeToGoBack]) {
     UIPanGestureRecognizer *popGestureRecogniser =
         [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePopRecognizer:)];
+    popGestureRecogniser.delegate = self;
     [viewController.view addGestureRecognizer:popGestureRecogniser];
   }
 }
@@ -127,18 +132,24 @@ static const CGFloat kVelocityThreshold = 60.f;
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-  if (![gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]) {
-    return YES;
-  }
-  if (self.viewControllers.count <= 1 || _isPushingViewController) {
-    return NO;
-  }
+  if ([gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]) {
+    if (self.viewControllers.count <= 1 || _isPushingViewController) {
+      return NO;
+    }
 
-  id<TKMViewController> topViewController = (id<TKMViewController>)self.topViewController;
-  if ([topViewController respondsToSelector:@selector(canSwipeToGoBack)]) {
-    return [topViewController canSwipeToGoBack];
+    id<TKMViewController> topViewController = (id<TKMViewController>)self.topViewController;
+    if ([topViewController respondsToSelector:@selector(canSwipeToGoBack)]) {
+      return [topViewController canSwipeToGoBack];
+    }
+    return NO;
+  } else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+    // Only start when scrolling horizontally. Otherwise it takes priority over vertically scrolling
+    // a UITableView.
+    UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)gestureRecognizer;
+    CGPoint velocity = [pan velocityInView:self.topViewController.view];
+    return velocity.x > velocity.y;
   }
-  return NO;
+  return YES;
 }
 
 #pragma mark - UINavigationControllerDelegate

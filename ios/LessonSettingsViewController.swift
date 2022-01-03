@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,10 +15,16 @@
 import Foundation
 import UIKit
 
-class LessonSettingsViewController: UITableViewController {
+class LessonSettingsViewController: UITableViewController, TKMViewController {
   private var model: TableModel?
 
-  // MARK: - UIView
+  // MARK: - TKMViewController
+
+  func canSwipeToGoBack() -> Bool {
+    true
+  }
+
+  // MARK: - UIViewController
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)

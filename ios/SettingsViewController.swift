@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import Foundation
 import UIKit
 
-class SettingsViewController: UITableViewController {
+class SettingsViewController: UITableViewController, TKMViewController {
   private var services: TKMServices!
   private var model: TableModel?
   private var groupMeaningReadingIndexPath: IndexPath?
@@ -25,7 +25,13 @@ class SettingsViewController: UITableViewController {
     self.services = services
   }
 
-  // MARK: - UIView
+  // MARK: - TKMViewController
+
+  func canSwipeToGoBack() -> Bool {
+    true
+  }
+
+  // MARK: - UIViewController
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -88,6 +94,17 @@ class SettingsViewController: UITableViewController {
     model.reloadTable()
   }
 
+  override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
+    switch segue.identifier {
+    case "reviewSettings":
+      let vc = segue.destination as! ReviewSettingsViewController
+      vc.setup(services: services)
+
+    default:
+      break
+    }
+  }
+
   // MARK: - Tap handlers
 
   @objc private func didTapLogOut(_: Any?) {
@@ -103,18 +120,5 @@ class SettingsViewController: UITableViewController {
     let c = UIActivityViewController(activityItems: [LocalCachingClient.databaseUrl()],
                                      applicationActivities: nil)
     present(c, animated: true, completion: nil)
-  }
-
-  // MARK: - UIViewController
-
-  override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
-    switch segue.identifier {
-    case "reviewSettings":
-      let vc = segue.destination as! ReviewSettingsViewController
-      vc.setup(services: services)
-
-    default:
-      break
-    }
   }
 }
