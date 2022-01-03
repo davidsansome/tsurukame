@@ -1229,7 +1229,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         // the final position of the answerField, not the original position.
         SuccessAnimation.run(answerField: answerField, doneLabel: doneLabel,
                              srsLevelLabel: levelLabel, isSubjectFinished: isSubjectFinished,
-                             newSrsStage: didLevelUp ? newSrsStage : nil)
+                             didLevelUp: didLevelUp, newSrsStage: newSrsStage)
       }
 
       if let previousSubjectLabel = previousSubjectLabel {

@@ -253,34 +253,43 @@ class SuccessAnimation {
                   doneLabel: UIView,
                   srsLevelLabel: UILabel,
                   isSubjectFinished: Bool,
-                  newSrsStage: SRSStage?) {
+                  didLevelUp: Bool,
+                  newSrsStage: SRSStage) {
     if Settings.animateParticleExplosion {
       createExplosion(view: answerField)
     }
 
-    if isSubjectFinished, Settings.animatePlusOne {
-      createPlusOneText(toView: doneLabel,
-                        text: "+1",
-                        font: UIFont.boldSystemFont(ofSize: 20.0),
-                        color: .white,
-                        duration: 1.5)
-    }
+    if isSubjectFinished {
+      if Settings.animatePlusOne {
+        createPlusOneText(toView: doneLabel,
+                          text: "+1",
+                          font: UIFont.boldSystemFont(ofSize: 20.0),
+                          color: .white,
+                          duration: 1.5)
+      }
 
-    if isSubjectFinished, Settings.showSRSLevelIndicator {
-      createDotExplosion(label: srsLevelLabel)
-    }
+      if Settings.showSRSLevelIndicator {
+        createDotExplosion(label: srsLevelLabel)
+      }
 
-    if isSubjectFinished, Settings.animateLevelUpPopup, let newSrsStage = newSrsStage {
-      let srsLevelColor = TKMStyle.color(forSRSStageCategory: newSrsStage.category)
-      let srsLevelString = newSrsStage.category.description
+      if didLevelUp, Settings.animateLevelUpPopup {
+        switch newSrsStage {
+        // Only show the level up popup for the first SRS stage in each category.
+        case .guru1, .master, .enlightened, .burned:
+          let srsLevelColor = TKMStyle.color(forSRSStageCategory: newSrsStage.category)
+          let srsLevelString = newSrsStage.category.description
 
-      createSpringyBillboard(originView: answerField, text: srsLevelString,
-                             font: UIFont.systemFont(ofSize: 16.0),
-                             textColor: .white, backgroundColor: srsLevelColor,
-                             cornerRadius: 5.0,
-                             padding: 6.0,
-                             distance: 100.0,
-                             duration: 3.0)
+          createSpringyBillboard(originView: answerField, text: srsLevelString,
+                                 font: UIFont.systemFont(ofSize: 16.0),
+                                 textColor: .white, backgroundColor: srsLevelColor,
+                                 cornerRadius: 5.0,
+                                 padding: 6.0,
+                                 distance: 100.0,
+                                 duration: 3.0)
+        default:
+          break
+        }
+      }
     }
   }
 }
