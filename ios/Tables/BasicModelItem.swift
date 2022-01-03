@@ -21,7 +21,6 @@ class BasicModelItem: NSObject, TKMModelItem {
 
   var title: String?
   var titleFont: UIFont?
-  var titleTextColor: UIColor?
   var numberOfTitleLines: Int = 1
 
   var subtitle: String?
@@ -94,21 +93,26 @@ class BasicModelCell: TKMModelCell {
 
     textLabel?.text = item.title
     textLabel?.font = item.titleFont
-    textLabel?.textColor = item.titleTextColor
+    textLabel?.textColor = item.textColor
     textLabel?.numberOfLines = item.numberOfTitleLines
-    detailTextLabel?.text = item.subtitle
+
     detailTextLabel?.font = item.subtitleFont
     detailTextLabel?.textColor = item.subtitleTextColor
-    detailTextLabel?.attributedText = item.attributedSubtitle
     detailTextLabel?.numberOfLines = item.numberOfSubtitleLines
+    if let attributedSubtitle = item.attributedSubtitle {
+      detailTextLabel?.attributedText = attributedSubtitle
+    } else {
+      detailTextLabel?.text = item.subtitle
+    }
+
     accessoryType = item.accessoryType
-    textLabel?.textColor = item.textColor
+
     imageView?.image = item.image
+    imageView?.tintColor = item.imageTintColor
 
     isUserInteractionEnabled = item.isEnabled
     textLabel?.isEnabled = item.isEnabled
     detailTextLabel?.isEnabled = item.isEnabled
-    imageView?.tintColor = item.imageTintColor
 
     item.cell = self
   }
