@@ -18,7 +18,7 @@ import UIKit
 class SettingsViewController: UITableViewController, TKMViewController {
   private var services: TKMServices!
   private var model: TableModel?
-  private var groupMeaningReadingIndexPath: IndexPath?
+  private var versionIndexPath: IndexPath?
   private var notificationHandler: ((Bool) -> Void)?
 
   func setup(services: TKMServices) {
@@ -40,7 +40,7 @@ class SettingsViewController: UITableViewController, TKMViewController {
   }
 
   private func rerender() {
-    let model = MutableTableModel(tableView: tableView)
+    let model = MutableTableModel(tableView: tableView, delegate: self)
 
     model.add(section: "Settings")
     model.add(BasicModelItem(style: .default,
@@ -68,8 +68,9 @@ class SettingsViewController: UITableViewController, TKMViewController {
     if let coreVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
       let version = "\(coreVersion).\(build)"
-      model.add(BasicModelItem(style: .value1, title: "Version", subtitle: version,
-                               accessoryType: .none))
+      versionIndexPath = model
+        .add(BasicModelItem(style: .value1, title: "Version", subtitle: version,
+                            accessoryType: .none))
     }
     let exportLocalDatabaseItem = BasicModelItem(style: .subtitle,
                                                  title: "Export local database",
@@ -102,6 +103,25 @@ class SettingsViewController: UITableViewController, TKMViewController {
 
     default:
       break
+    }
+  }
+
+  // MARK: - UITableViewController
+
+  override func tableView(_: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
+    indexPath == versionIndexPath
+  }
+
+  override func tableView(_: UITableView, canPerformAction action: Selector, forRowAt _: IndexPath,
+                          withSender _: Any?) -> Bool {
+    action == #selector(copy(_:))
+  }
+
+  override func tableView(_ tableView: UITableView, performAction action: Selector,
+                          forRowAt indexPath: IndexPath, withSender _: Any?) {
+    if action == #selector(copy(_:)) {
+      let cell = tableView.cellForRow(at: indexPath)
+      UIPasteboard.general.string = cell?.detailTextLabel?.text
     }
   }
 
