@@ -47,6 +47,12 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                              accessoryType: .disclosureIndicator,
                              target: self,
                              action: #selector(didTapReviewOrder(_:))))
+    model.add(BasicModelItem(style: .value1,
+                             title: "Type order",
+                             subtitle: reviewTypeOrderValueText,
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(didTapReviewTypeOrder(_:))))
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Back-to-back",
                               subtitle: "Group Meaning and Reading together",
@@ -205,6 +211,14 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     Settings.reviewOrder.description
   }
 
+  private var reviewTypeOrderValueText: String {
+    var parts = [String]()
+    for subjectType in Settings.reviewTypeOrder {
+      parts.append(subjectType.description)
+    }
+    return parts.joined(separator: ", ")
+  }
+
   private var taskOrderValueText: String {
     Settings.meaningFirst ? "Meaning first" : "Reading first"
   }
@@ -301,6 +315,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
 
   @objc private func didTapReviewOrder(_: BasicModelItem) {
     performSegue(withIdentifier: "reviewOrder", sender: self)
+  }
+
+  @objc private func didTapReviewTypeOrder(_: BasicModelItem) {
+    performSegue(withIdentifier: "reviewTypeOrder", sender: self)
   }
 
   @objc private func didTapFonts(_: BasicModelItem) {

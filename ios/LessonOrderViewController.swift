@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,20 +16,34 @@ import Foundation
 import WaniKaniAPI
 
 class LessonOrderViewController: UITableViewController {
+  var hasLessonOrder: Bool!
+  var typeOrder: [TKMSubject.TypeEnum] {
+    get { hasLessonOrder ? Settings.lessonOrder : Settings.reviewTypeOrder }
+    set {
+      if hasLessonOrder { Settings.lessonOrder = newValue }
+      else { Settings.reviewTypeOrder = newValue }
+    }
+  }
+
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+    hasLessonOrder = true
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     tableView.isEditing = true
   }
 
   override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-    Settings.lessonOrder.count
+    typeOrder.count
   }
 
   override func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = (tableView.dequeueReusableCell(withIdentifier: "cell") as? LessonOrderCell) ??
       LessonOrderCell(style: .default, reuseIdentifier: "cell")
-    cell.subjectType = Settings.lessonOrder[indexPath.row]
+    cell.subjectType = typeOrder[indexPath.row]
     return cell
   }
 
@@ -46,10 +60,10 @@ class LessonOrderViewController: UITableViewController {
                           to destinationIndexPath: IndexPath) {
     let cell = tableView.cellForRow(at: sourceIndexPath) as! LessonOrderCell
 
-    var lessonOrder = Settings.lessonOrder
+    var lessonOrder = typeOrder
     lessonOrder.remove(at: sourceIndexPath.row)
     lessonOrder.insert(cell.subjectType, at: destinationIndexPath.row)
-    Settings.lessonOrder = lessonOrder
+    typeOrder = lessonOrder
   }
 }
 

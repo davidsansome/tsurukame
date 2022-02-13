@@ -160,6 +160,11 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
   @Setting(true, #keyPath(showStatsSection)) static var showStatsSection: Bool
 
   @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
+  @EnumArraySetting([
+    .radical,
+    .kanji,
+    .vocabulary,
+  ], "reviewTypeOrder") static var reviewTypeOrder: [TKMSubject.TypeEnum]
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
   @Setting(Int.max, #keyPath(apprenticeLessonsLimit)) static var apprenticeLessonsLimit: Int
   @Setting(false, #keyPath(groupMeaningReading)) static var groupMeaningReading: Bool

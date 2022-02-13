@@ -254,56 +254,49 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.srsStage < b.assignment.srsStage { return true }
         if a.assignment.srsStage > b.assignment.srsStage { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .descendingSRSStage:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.srsStage < b.assignment.srsStage { return false }
         if a.assignment.srsStage > b.assignment.srsStage { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .currentLevelFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.level < b.assignment.level { return false }
         if a.assignment.level > b.assignment.level { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .lowestLevelFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.level < b.assignment.level { return true }
         if a.assignment.level > b.assignment.level { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .newestAvailableFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.availableAt < b.assignment.availableAt { return false }
         if a.assignment.availableAt > b.assignment.availableAt { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .oldestAvailableFirst:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if a.assignment.availableAt < b.assignment.availableAt { return true }
         if a.assignment.availableAt > b.assignment.availableAt { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .longestRelativeWait:
       reviewQueue.sort { (a, b: ReviewItem) -> Bool in
         if availableRatio(a.assignment) < availableRatio(b.assignment) { return false }
         if availableRatio(a.assignment) > availableRatio(b.assignment) { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        if let sort = sortTypeOrder(a, b) { return sort }
         return false
       }
     case .random:
@@ -314,6 +307,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     refillActiveQueue()
+  }
+
+  private func sortTypeOrder(_ a: ReviewItem, _ b: ReviewItem) -> Bool? {
+    let aIndex = Settings.reviewTypeOrder.firstIndex(of: a.assignment.subjectType)!
+    let bIndex = Settings.reviewTypeOrder.firstIndex(of: b.assignment.subjectType)!
+    if aIndex < bIndex { return true }
+    else if aIndex > bIndex { return false }
+    else { return nil }
   }
 
   private func availableRatio(_ assignment: TKMAssignment) -> TimeInterval {

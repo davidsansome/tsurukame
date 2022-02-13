@@ -13,6 +13,7 @@
 		4820306724D849E100B40FDD /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* Settings.swift */; };
 		482D7C0F261CC29900104F69 /* ApprenticeLimitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D7C0E261CC29900104F69 /* ApprenticeLimitViewController.swift */; };
 		483EBFDC261DD7190043C804 /* FontScreenshotterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4874562D261DD28E00F33AA3 /* FontScreenshotterUITests.swift */; };
+		486823FA27B88EF90035D7AB /* ReviewTypeOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486823F927B88EF90035D7AB /* ReviewTypeOrderViewController.swift */; };
 		48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */; };
 		48F4B1DC268CB9850033860E /* UpcomingReviewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F4B1DB268CB9850033860E /* UpcomingReviewsViewController.swift */; };
 		5C82B2908507339A293B0E59 /* Pods_FontScreenshotter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33812F134DC80E5D981C40E /* Pods_FontScreenshotter.framework */; };
@@ -231,6 +232,7 @@
 		481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLevelReviewTimeItem.swift; sourceTree = "<group>"; };
 		4826740B23ECE46900F704E4 /* TKMReviewBatchSizeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMReviewBatchSizeViewController.h; sourceTree = "<group>"; };
 		482D7C0E261CC29900104F69 /* ApprenticeLimitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApprenticeLimitViewController.swift; sourceTree = "<group>"; };
+		486823F927B88EF90035D7AB /* ReviewTypeOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewTypeOrderViewController.swift; sourceTree = "<group>"; };
 		4874562D261DD28E00F33AA3 /* FontScreenshotterUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontScreenshotterUITests.swift; sourceTree = "<group>"; };
 		4874562E261DD28E00F33AA3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		489894D423670CB000A20AF8 /* Tsurukame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tsurukame.entitlements; sourceTree = "<group>"; };
@@ -556,6 +558,7 @@
 				637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */,
 				633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */,
 				633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */,
+				486823F927B88EF90035D7AB /* ReviewTypeOrderViewController.swift */,
 				631CAD71234B4A96008CEA73 /* ReviewViewController.swift */,
 				63BEBF9625C57D4000123147 /* SearchResultViewController.swift */,
 				63F7F52B23D43DF6006A31FB /* Services.swift */,
@@ -1254,6 +1257,7 @@
 				63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */,
 				48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */,
 				63358EA227366D720013A2AC /* CheckmarkModelItem.swift in Sources */,
+				486823FA27B88EF90035D7AB /* ReviewTypeOrderViewController.swift in Sources */,
 				63391B572779B7FC005CDA72 /* AppSettingsViewController.swift in Sources */,
 				63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */,
 				633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */,
