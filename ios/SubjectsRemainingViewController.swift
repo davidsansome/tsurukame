@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,13 +15,21 @@
 import Foundation
 import WaniKaniAPI
 
-class SubjectsRemainingViewController: UITableViewController, SubjectDelegate {
+class SubjectsRemainingViewController: UITableViewController, SubjectDelegate, TKMViewController {
   var services: TKMServices!
   var model: TableModel?
 
   func setup(services: TKMServices) {
     self.services = services
   }
+
+  // MARK: - TKMViewController
+
+  func canSwipeToGoBack() -> Bool {
+    true
+  }
+
+  // MARK: - UIViewController
 
   override func viewDidLoad() {
     super.viewDidLoad()

@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -230,11 +230,15 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     // review cache which depends on the current time.
     services.localCachingClient.currentHourChanged()
 
-    refresh(quick: true)
     updateHourlyTimer()
 
     super.viewWillAppear(animated)
     navigationController?.isNavigationBarHidden = true
+  }
+
+  override func viewDidAppear(_: Bool) {
+    // Only start refreshing after the user has finished swiping back to this view.
+    refresh(quick: true)
   }
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
