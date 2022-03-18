@@ -66,6 +66,13 @@
       return NO;
     }
 
+    if (gestureRecognizer == _panGestureRecognizer) {
+      CGPoint velocity = [_panGestureRecognizer velocityInView:self.topViewController.view];
+      if (velocity.x < 0 || fabs(velocity.y) > fabs(velocity.x)) {
+        return NO;
+      }
+    }
+
     id<TKMViewController> topViewController = (id<TKMViewController>)self.topViewController;
     if ([topViewController respondsToSelector:@selector(canSwipeToGoBack)]) {
       return [topViewController canSwipeToGoBack];
