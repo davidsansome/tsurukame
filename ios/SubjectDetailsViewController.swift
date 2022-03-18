@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import Foundation
 import WaniKaniAPI
 
-class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewController {
+class SubjectDetailsViewController: UIViewController, SubjectDelegate, SwipeBackFromAnywhere {
   private var services: TKMServices!
   private var showHints: Bool!
   private var hideBackButton: Bool!
@@ -38,9 +38,7 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     self.index = index
   }
 
-  func canSwipeToGoBack() -> Bool {
-    true
-  }
+  var canSwipeToGoBack: Bool { true }
 
   override func viewDidLoad() {
     super.viewDidLoad()

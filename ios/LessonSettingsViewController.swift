@@ -15,14 +15,12 @@
 import Foundation
 import UIKit
 
-class LessonSettingsViewController: UITableViewController, TKMViewController {
+class LessonSettingsViewController: UITableViewController, SwipeBackFromAnywhere {
   private var model: TableModel?
 
-  // MARK: - TKMViewController
+  // MARK: - SwipeBackFromAnywhere
 
-  func canSwipeToGoBack() -> Bool {
-    true
-  }
+  var canSwipeToGoBack: Bool { true }
 
   // MARK: - UIViewController
 

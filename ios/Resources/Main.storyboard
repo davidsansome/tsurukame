@@ -12,7 +12,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Or2-Qd-5D2">
             <objects>
-                <navigationController navigationBarHidden="YES" id="Whd-2S-WNr" customClass="NavigationController" sceneMemberID="viewController">
+                <navigationController navigationBarHidden="YES" id="Whd-2S-WNr" customClass="NavigationController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YMU-8O-uJl">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

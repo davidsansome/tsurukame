@@ -15,7 +15,7 @@
 import Foundation
 import UIKit
 
-class SettingsViewController: UITableViewController, TKMViewController {
+class SettingsViewController: UITableViewController, SwipeBackFromAnywhere {
   private var services: TKMServices!
   private var model: TableModel?
   private var versionIndexPath: IndexPath?
@@ -25,11 +25,9 @@ class SettingsViewController: UITableViewController, TKMViewController {
     self.services = services
   }
 
-  // MARK: - TKMViewController
+  // MARK: - SwipeBackFromAnywhere
 
-  func canSwipeToGoBack() -> Bool {
-    true
-  }
+  var canSwipeToGoBack: Bool { true }
 
   // MARK: - UIViewController
 
