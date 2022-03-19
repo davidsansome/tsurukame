@@ -23,8 +23,7 @@ private let kProfileImageSize: CGFloat = 80
 private let kUpcomingReviewsSection = 1
 
 private func userProfileImageURL(emailAddress: String) -> URL {
-  let address = emailAddress.trimmingCharacters(in: .whitespaces)
-    .lowercased()
+  let address = emailAddress.trimmingCharacters(in: .whitespaces).lowercased()
   let hash = address.MD5()
 
   let size = kProfileImageSize * UIScreen.main.scale
@@ -216,6 +215,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
     self.model = model
     tableView.reloadData()
+
+    updateUserInfo()
   }
 
   // MARK: - UIViewController
@@ -370,7 +371,6 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   // MARK: - Refreshing contents
 
   func refresh(quick: Bool) {
-    updateUserInfo()
     scheduleTableModelUpdate()
     guard let headerView = headerView else { return }
 
