@@ -1,8 +1,17 @@
 New features:
-* Always use the latest WaniKani meanings, mnemonics and levels.
-* Add an option that makes repeated incorrect answers count as multiple SRS-level penalties.
+* Add an Anki mode.
+* Add user-editable notes.
+* Make Offline audio smarter.
+* Split the Settings screen up into different sections.
+* Add the app's version number to the Settings screen.
+* Add a setting to hide the "Stats" section.
+* Include the number of new reviews in notifications, as well as the total number.
 
-Bug fixes and cleanups:
-* Allow hardware keyboard control during wrong answers.
-* Allow trailing n-kana completion in Gboard Godan layout.
-* Many internal changes to convert from Objective-C to Swift.
+Bug fixes:
+* Fix an API bug that prevented reviews from syncing for some users.
+* Fix a keyboard display bug on iPads using iOS 15.
+* Update the lesson and review counts immediately when loading the app.
+* A full refresh (swipe down on the main screen) now completely clears local data before refreshing.
+* Cycle through audio samples in order instead of playing them at random.
+* Fix a few memory leaks.
+* Make the "Upcoming reviews" table easier to understand.
