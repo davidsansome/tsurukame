@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,23 +29,23 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="WYy-wh-oTd">
-                    <rect key="frame" x="66" y="0.0" width="56.5" height="42"/>
+                    <rect key="frame" x="66" y="0.0" width="50" height="42"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KXI-lS-o1L">
-                            <rect key="frame" x="0.0" y="0.0" width="56.5" height="21"/>
+                            <rect key="frame" x="0.0" y="0.0" width="50" height="21"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Level N" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EhI-Kl-sTt">
-                            <rect key="frame" x="0.0" y="21" width="56.5" height="21"/>
+                            <rect key="frame" x="0.0" y="21" width="50" height="21"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                 </stackView>
-                <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aaI-yJ-Bm6">
+                <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aaI-yJ-Bm6">
                     <rect key="frame" x="150" y="0.0" width="42" height="42"/>
                     <accessibility key="accessibilityConfiguration" label="Settings"/>
                     <constraints>
@@ -59,7 +59,7 @@
                         <action selector="didTapSettingsButton:" destination="-1" eventType="touchUpInside" id="4YQ-pD-lpn"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="syo-im-cP3">
+                <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="syo-im-cP3">
                     <rect key="frame" x="108" y="0.0" width="42" height="42"/>
                     <accessibility key="accessibilityConfiguration" label="Search"/>
                     <constraints>
@@ -85,6 +85,7 @@
                     </constraints>
                 </imageView>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="fAL-wR-NHf"/>
             <constraints>
                 <constraint firstItem="kN3-nN-ulo" firstAttribute="top" secondItem="aSa-bp-rpa" secondAttribute="top" id="4Cx-Oi-oPE"/>
                 <constraint firstItem="kN3-nN-ulo" firstAttribute="top" secondItem="tjm-kS-gGV" secondAttribute="top" id="8hV-ds-Dhl"/>
@@ -103,7 +104,6 @@
                 <constraint firstItem="kN3-nN-ulo" firstAttribute="bottom" secondItem="aSa-bp-rpa" secondAttribute="bottom" id="q8c-uC-9aG"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="fAL-wR-NHf"/>
             <point key="canvasLocation" x="-407.24637681159425" y="87.723214285714278"/>
         </view>
         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dX3-G2-Y7n">
@@ -123,6 +123,7 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="TON-jy-kVy"/>
             <constraints>
                 <constraint firstItem="lcz-xr-g1z" firstAttribute="top" secondItem="Ny2-qF-kde" secondAttribute="bottom" constant="6" id="5ph-Ge-dO5"/>
                 <constraint firstItem="TON-jy-kVy" firstAttribute="bottom" secondItem="lcz-xr-g1z" secondAttribute="bottom" constant="8" id="MWC-Rl-htN"/>
@@ -133,11 +134,10 @@
                 <constraint firstItem="Ny2-qF-kde" firstAttribute="leading" secondItem="dX3-G2-Y7n" secondAttribute="leading" constant="8" id="sAD-2H-k8b"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="TON-jy-kVy"/>
             <point key="canvasLocation" x="-407.24637681159425" y="239.0625"/>
         </view>
         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" id="hRr-sG-3Gq">
-            <rect key="frame" x="0.0" y="0.0" width="417" height="2"/>
+            <rect key="frame" x="0.0" y="0.0" width="417" height="4"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <color key="progressTintColor" red="1" green="0.015690961881262622" blue="0.84763675822945139" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <point key="canvasLocation" x="-407.97101449275368" y="359.59821428571428"/>

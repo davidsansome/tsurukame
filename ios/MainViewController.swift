@@ -371,12 +371,22 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   // MARK: - Refreshing contents
 
   func refresh(quick: Bool) {
-    scheduleTableModelUpdate()
     guard let headerView = headerView else { return }
 
     let progress = Progress(totalUnitCount: -1)
     headerView.setProgress(progress: progress)
-    _ = services.localCachingClient.sync(quick: quick, progress: progress)
+    let syncFuture = services.localCachingClient.sync(quick: quick, progress: progress)
+
+    if quick {
+      scheduleTableModelUpdate()
+    } else {
+      if !progress.isFinished,
+         let overlay = FullRefreshOverlayView(window: view.window!) {
+        syncFuture.finally {
+          overlay.hide()
+        }
+      }
+    }
   }
 
   func availableItemsChanged() {
