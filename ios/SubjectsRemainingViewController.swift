@@ -16,7 +16,7 @@ import Foundation
 import WaniKaniAPI
 
 class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
-  SwipeBackFromAnywhere {
+  TKMViewController {
   var services: TKMServices!
   var model: TableModel?
 
@@ -24,7 +24,7 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
     self.services = services
   }
 
-  // MARK: - SwipeBackFromAnywhere
+  // MARK: - TKMViewController
 
   var canSwipeToGoBack: Bool { true }
 

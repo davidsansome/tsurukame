@@ -15,11 +15,11 @@
 import Foundation
 import UIKit
 
-class AppSettingsViewController: UITableViewController, SwipeBackFromAnywhere {
+class AppSettingsViewController: UITableViewController, TKMViewController {
   private var model: TableModel?
   private var notificationHandler: ((Bool) -> Void)?
 
-  // MARK: - SwipeBackFromAnywhere
+  // MARK: - TKMViewController
 
   var canSwipeToGoBack: Bool { true }
 

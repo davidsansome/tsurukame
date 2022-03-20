@@ -17,7 +17,7 @@ import Foundation
 // A view controller that shows a list of possible choices for a single Setting.
 // The current value of the Setting is checked, and the default value is given a "(default)" suffix.
 class SettingChoiceListViewController<T: SettingProtocol>: UITableViewController,
-  SwipeBackFromAnywhere
+  TKMViewController
   where T.ValueType: Equatable {
   private var setting: T
   private var model: MutableTableModel!

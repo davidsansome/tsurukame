@@ -14,7 +14,7 @@
 
 import Foundation
 
-protocol SwipeBackFromAnywhere {
+protocol TKMViewController {
   var canSwipeToGoBack: Bool { get }
 }
 
@@ -68,7 +68,7 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
         }
       }
 
-      if let topVC = topViewController as? SwipeBackFromAnywhere {
+      if let topVC = topViewController as? TKMViewController {
         return topVC.canSwipeToGoBack
       }
       return false

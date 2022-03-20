@@ -15,10 +15,10 @@
 import Foundation
 import UIKit
 
-class SubjectDetailsSettingsViewController: UITableViewController, SwipeBackFromAnywhere {
+class SubjectDetailsSettingsViewController: UITableViewController, TKMViewController {
   private var model: TableModel?
 
-  // MARK: - SwipeBackFromAnywhere
+  // MARK: - TKMViewController
 
   var canSwipeToGoBack: Bool { true }
 

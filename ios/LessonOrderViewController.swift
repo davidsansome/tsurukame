@@ -15,7 +15,7 @@
 import Foundation
 import WaniKaniAPI
 
-class LessonOrderViewController: UITableViewController, SwipeBackFromAnywhere {
+class LessonOrderViewController: UITableViewController, TKMViewController {
   var canSwipeToGoBack: Bool { true }
 
   override func viewDidLoad() {

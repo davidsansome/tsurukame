@@ -15,7 +15,7 @@
 import Foundation
 import UIKit
 
-class ReviewSettingsViewController: UITableViewController, SwipeBackFromAnywhere {
+class ReviewSettingsViewController: UITableViewController, TKMViewController {
   private var services: TKMServices!
   private var model: TableModel?
   private var groupMeaningReadingIndexPath: IndexPath?
@@ -24,7 +24,7 @@ class ReviewSettingsViewController: UITableViewController, SwipeBackFromAnywhere
     self.services = services
   }
 
-  // MARK: - SwipeBackFromAnywhere
+  // MARK: - TKMViewController
 
   var canSwipeToGoBack: Bool { true }
 
