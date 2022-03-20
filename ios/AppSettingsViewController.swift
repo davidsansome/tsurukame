@@ -71,7 +71,11 @@ class AppSettingsViewController: UITableViewController, SwipeBackFromAnywhere {
   }
 
   @objc private func didTapInterfaceStyle(_: BasicModelItem) {
-    performSegue(withIdentifier: "interfaceStyle", sender: self)
+    let vc = SettingChoiceListViewController(setting: Settings.$interfaceStyle,
+                                             title: "Interface Style")
+    vc.addChoicesFromEnum()
+    vc.saveFn = { [unowned vc] in vc.view.window!.setInterfaceStyle($0) }
+    navigationController?.pushViewController(vc, animated: true)
   }
 
   @objc private func allReviewsSwitchChanged(_ switchView: UISwitch) {

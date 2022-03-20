@@ -290,15 +290,26 @@ class ReviewSettingsViewController: UITableViewController, SwipeBackFromAnywhere
   // MARK: - Tap handlers
 
   @objc private func didTapReviewBatchSize(_: BasicModelItem) {
-    performSegue(withIdentifier: "reviewBatchSize", sender: self)
+    let vc = SettingChoiceListViewController(setting: Settings.$reviewBatchSize,
+                                             title: "Review Batch Size",
+                                             helpText: "Set the review queue size.")
+    vc.addChoicesFromRange(3 ... 10, suffix: " reviews")
+    navigationController?.pushViewController(vc, animated: true)
   }
 
   @objc private func fontSizeChanged(_: BasicModelItem) {
-    performSegue(withIdentifier: "fontSize", sender: self)
+    let vc = SettingChoiceListViewController(setting: Settings.$fontSize, title: "Font Size")
+    for size in stride(from: 1.0, through: 2.5, by: 0.25) {
+      let percent = Int((size * 100).rounded())
+      vc.addChoice(name: "\(percent)%", value: Float(size))
+    }
+    navigationController?.pushViewController(vc, animated: true)
   }
 
   @objc private func didTapReviewOrder(_: BasicModelItem) {
-    performSegue(withIdentifier: "reviewOrder", sender: self)
+    let vc = SettingChoiceListViewController(setting: Settings.$reviewOrder, title: "Review Order")
+    vc.addChoicesFromEnum()
+    navigationController?.pushViewController(vc, animated: true)
   }
 
   @objc private func didTapFonts(_: BasicModelItem) {
@@ -306,7 +317,13 @@ class ReviewSettingsViewController: UITableViewController, SwipeBackFromAnywhere
   }
 
   @objc private func didTapTaskOrder(_: BasicModelItem) {
-    performSegue(withIdentifier: "taskOrder", sender: self)
+    let vc = SettingChoiceListViewController(setting: Settings.$meaningFirst,
+                                             title: "Back-to-back Order")
+    vc.addChoices([
+      "Meaning then Reading": true,
+      "Reading then Meaning": false,
+    ])
+    navigationController?.pushViewController(vc, animated: true)
   }
 
   @objc private func didTapOfflineAudio(_: Any?) {

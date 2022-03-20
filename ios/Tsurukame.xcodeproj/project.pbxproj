@@ -11,9 +11,7 @@
 		480B243123D6830300FC2A82 /* Rexy in Frameworks */ = {isa = PBXBuildFile; productRef = 480B243023D6830300FC2A82 /* Rexy */; };
 		481B2FED23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */; };
 		4820306724D849E100B40FDD /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633632EE201F3490006D582B /* Settings.swift */; };
-		482D7C0F261CC29900104F69 /* ApprenticeLimitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482D7C0E261CC29900104F69 /* ApprenticeLimitViewController.swift */; };
 		483EBFDC261DD7190043C804 /* FontScreenshotterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4874562D261DD28E00F33AA3 /* FontScreenshotterUITests.swift */; };
-		48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */; };
 		48F4B1DC268CB9850033860E /* UpcomingReviewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F4B1DB268CB9850033860E /* UpcomingReviewsViewController.swift */; };
 		5C82B2908507339A293B0E59 /* Pods_FontScreenshotter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33812F134DC80E5D981C40E /* Pods_FontScreenshotter.framework */; };
 		630EB10A25C561A900783E54 /* NSMutableAttributedString+Replacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB10925C561A900783E54 /* NSMutableAttributedString+Replacements.swift */; };
@@ -24,7 +22,6 @@
 		631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
 		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
-		632E19C123DCD0D800E5F256 /* FontSizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632E19C023DCD0D800E5F256 /* FontSizeViewController.swift */; };
 		633252882727E8A700ABBA04 /* SubjectCatalogueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */; };
 		6332528C2727F29D00ABBA04 /* PillModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6332528B2727F29D00ABBA04 /* PillModelItem.xib */; };
 		6332528E2727F32800ABBA04 /* PillModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6332528D2727F32800ABBA04 /* PillModelItem.swift */; };
@@ -45,8 +42,6 @@
 		63391B5F2779BF56005CDA72 /* LessonSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63391B5E2779BF56005CDA72 /* LessonSettingsViewController.swift */; };
 		633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE023516BE7004F732F /* SubjectDetailsView.swift */; };
 		633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */; };
-		633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */; };
-		633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */; };
 		633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95420C5634A00AC25F4 /* TKMModelItem.m */; };
 		633DE95D20C5635A00AC25F4 /* TKMKanaInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 633DE95920C5635900AC25F4 /* TKMKanaInput.m */; };
 		634C9B1423BF687800E4415C /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCAE77237F75CC00DB1418 /* Style.swift */; };
@@ -87,7 +82,6 @@
 		63A5598527E433E000E7BBCB /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A5598427E433DF00E7BBCB /* NavigationController.swift */; };
 		63A5598727E5947300E7BBCB /* FullRefreshOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63A5598627E5947300E7BBCB /* FullRefreshOverlayView.xib */; };
 		63B63FF727733ABC0098DAAD /* NotificationDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B63FF627733ABC0098DAAD /* NotificationDispatcher.swift */; };
-		63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */; };
 		63BEBF9725C57D4000123147 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BEBF9625C57D4000123147 /* SearchResultViewController.swift */; };
 		63BFA78B218EB1B30058E885 /* DownloadModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63BFA78A218EB1B30058E885 /* DownloadModelItem.xib */; };
 		63BFA78E218EB6890058E885 /* OfflineAudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA78D218EB6890058E885 /* OfflineAudioViewController.swift */; };
@@ -119,6 +113,7 @@
 		63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */; };
 		63DE410827818A9A002CFB80 /* SuccessAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DE410727818A9A002CFB80 /* SuccessAnimation.swift */; };
 		63E1386827E59F4100AC4706 /* FullRefreshOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E1386727E59F4100AC4706 /* FullRefreshOverlayView.swift */; };
+		63E1386A27E6C12500AC4706 /* SettingChoiceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E1386927E6C12500AC4706 /* SettingChoiceListViewController.swift */; };
 		63E903C61FE643BF00D73C3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E903C51FE643BF00D73C3A /* Main.storyboard */; };
 		63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */; };
 		63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9A8D02110859800418CE1 /* TKMListSeparatorItem.m */; };
@@ -149,7 +144,6 @@
 		C90846C2237F1C790068A272 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90846C1237F1C790068A272 /* ComplicationController.swift */; };
 		C90846C4237F1C790068A272 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C90846C3237F1C790068A272 /* Assets.xcassets */; };
 		C90846C8237F1C790068A272 /* Tsurukame Complication.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C90846AC237F1C770068A272 /* Tsurukame Complication.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C9164D3923D0CFCF00B6D93A /* InterfaceStyleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9164D3823D0CFCF00B6D93A /* InterfaceStyleViewController.swift */; };
 		C92AB96F237F280300F79904 /* WatchHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB96E237F280300F79904 /* WatchHelper.swift */; };
 		C92AB970237F2DB600F79904 /* WatchHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB96E237F280300F79904 /* WatchHelper.swift */; };
 		C92AB972237F2E8200F79904 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92AB971237F2E8200F79904 /* DataManager.swift */; };
@@ -231,12 +225,9 @@
 		34E86AD95515CD815B3086D0 /* Pods-Tsurukame.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame.debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame/Pods-Tsurukame.debug.xcconfig"; sourceTree = "<group>"; };
 		404461BC39B4A19B128F9E69 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter_FontScreenshotterUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		481B2FEC23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLevelReviewTimeItem.swift; sourceTree = "<group>"; };
-		4826740B23ECE46900F704E4 /* TKMReviewBatchSizeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMReviewBatchSizeViewController.h; sourceTree = "<group>"; };
-		482D7C0E261CC29900104F69 /* ApprenticeLimitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApprenticeLimitViewController.swift; sourceTree = "<group>"; };
 		4874562D261DD28E00F33AA3 /* FontScreenshotterUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontScreenshotterUITests.swift; sourceTree = "<group>"; };
 		4874562E261DD28E00F33AA3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		489894D423670CB000A20AF8 /* Tsurukame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tsurukame.entitlements; sourceTree = "<group>"; };
-		48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMReviewBatchSizeViewController.m; sourceTree = "<group>"; };
 		48F4B1DB268CB9850033860E /* UpcomingReviewsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpcomingReviewsViewController.swift; sourceTree = "<group>"; };
 		4B8236EC341CF1BA18D16857 /* Pods-Tsurukame-Tsurukame Complication Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame-Tsurukame Complication Extension.release.xcconfig"; path = "Target Support Files/Pods-Tsurukame-Tsurukame Complication Extension/Pods-Tsurukame-Tsurukame Complication Extension.release.xcconfig"; sourceTree = "<group>"; };
 		630EB10925C561A900783E54 /* NSMutableAttributedString+Replacements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString+Replacements.swift"; sourceTree = "<group>"; };
@@ -247,7 +238,6 @@
 		631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCheckerTest.swift; sourceTree = "<group>"; };
 		631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelTimeRemainingItem.swift; sourceTree = "<group>"; };
 		631CAD71234B4A96008CEA73 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
-		632E19C023DCD0D800E5F256 /* FontSizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSizeViewController.swift; sourceTree = "<group>"; };
 		633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectCatalogueViewController.swift; sourceTree = "<group>"; };
 		6332528B2727F29D00ABBA04 /* PillModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PillModelItem.xib; sourceTree = "<group>"; };
 		6332528D2727F32800ABBA04 /* PillModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillModelItem.swift; sourceTree = "<group>"; };
@@ -268,10 +258,6 @@
 		63391B5E2779BF56005CDA72 /* LessonSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonSettingsViewController.swift; sourceTree = "<group>"; };
 		633AFAE023516BE7004F732F /* SubjectDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsView.swift; sourceTree = "<group>"; };
 		633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyHighlighter.swift; sourceTree = "<group>"; };
-		633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewOrderViewController.h; sourceTree = "<group>"; };
-		633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewOrderViewController.m; sourceTree = "<group>"; };
-		633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewTaskOrderViewController.h; sourceTree = "<group>"; };
-		633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewTaskOrderViewController.m; sourceTree = "<group>"; };
 		633DE95320C5634A00AC25F4 /* TKMModelItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMModelItem.h; sourceTree = "<group>"; };
 		633DE95420C5634A00AC25F4 /* TKMModelItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMModelItem.m; sourceTree = "<group>"; };
 		633DE95920C5635900AC25F4 /* TKMKanaInput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInput.m; sourceTree = "<group>"; };
@@ -309,8 +295,6 @@
 		63B63FF827733DAC0098DAAD /* ReviewContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewContainerViewController.swift; sourceTree = SOURCE_ROOT; };
 		63B63FFA27733E1E0098DAAD /* ReviewMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewMenuViewController.swift; sourceTree = "<group>"; };
 		63B63FFC2773581E0098DAAD /* MMDrawerController+setAnimatingDrawer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MMDrawerController+setAnimatingDrawer.h"; sourceTree = "<group>"; };
-		63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMLessonBatchSizeViewController.h; sourceTree = "<group>"; };
-		63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMLessonBatchSizeViewController.m; sourceTree = "<group>"; };
 		63BEBF9625C57D4000123147 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		63BFA78A218EB1B30058E885 /* DownloadModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadModelItem.xib; sourceTree = "<group>"; };
 		63BFA78D218EB6890058E885 /* OfflineAudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineAudioViewController.swift; sourceTree = "<group>"; };
@@ -341,6 +325,7 @@
 		63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingAppDelegate.swift; sourceTree = "<group>"; };
 		63DE410727818A9A002CFB80 /* SuccessAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessAnimation.swift; sourceTree = "<group>"; };
 		63E1386727E59F4100AC4706 /* FullRefreshOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRefreshOverlayView.swift; sourceTree = "<group>"; };
+		63E1386927E6C12500AC4706 /* SettingChoiceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingChoiceListViewController.swift; sourceTree = "<group>"; };
 		63E903C51FE643BF00D73C3A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63E9A8CD21106E0900418CE1 /* TKMListSeparatorItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKMListSeparatorItem.xib; sourceTree = "<group>"; };
 		63E9A8CF2110859800418CE1 /* TKMListSeparatorItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKMListSeparatorItem.h; sourceTree = "<group>"; };
@@ -382,7 +367,6 @@
 		C90846C1237F1C790068A272 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
 		C90846C3237F1C790068A272 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C90846C5237F1C790068A272 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C9164D3823D0CFCF00B6D93A /* InterfaceStyleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceStyleViewController.swift; sourceTree = "<group>"; };
 		C92AB96E237F280300F79904 /* WatchHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHelper.swift; sourceTree = "<group>"; };
 		C92AB971237F2E8200F79904 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		C943D5AF2380D59A004A7969 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
@@ -506,11 +490,11 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				63E1386927E6C12500AC4706 /* SettingChoiceListViewController.swift */,
 				63DE410727818A9A002CFB80 /* SuccessAnimation.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				638A5C4D25A471F9001A7AEE /* AppDelegate.swift */,
-				482D7C0E261CC29900104F69 /* ApprenticeLimitViewController.swift */,
 				63391B562779B7FC005CDA72 /* AppSettingsViewController.swift */,
 				6335B46323CF0C820071671E /* AppStoreScreenshots */,
 				6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */,
@@ -528,11 +512,9 @@
 				63C42A2321B6A28D008CA938 /* FontScreenshotter.app */,
 				4874562C261DD28E00F33AA3 /* FontScreenshotterUITests */,
 				63C42A3621B6A290008CA938 /* FontScreenshotterUITests.xctest */,
-				632E19C023DCD0D800E5F256 /* FontSizeViewController.swift */,
 				63CBFF28277327920086BA5F /* FontsViewController.swift */,
 				63CAAB0F1FD7FAC500E09DA1 /* Frameworks */,
 				63EEFEC21FC45CB10070C05F /* Info.plist */,
-				C9164D3823D0CFCF00B6D93A /* InterfaceStyleViewController.swift */,
 				639528FC25CC2F4F009845ED /* LessonOrderViewController.swift */,
 				630EB12025C5652400783E54 /* LessonsPageControl.swift */,
 				637CA11425D7E48A0082580E /* LessonsViewController.swift */,
@@ -554,12 +536,8 @@
 				63B63FF827733DAC0098DAAD /* ReviewContainerViewController.swift */,
 				630EB13E25C5713000783E54 /* ReviewItem.swift */,
 				63B63FFA27733E1E0098DAAD /* ReviewMenuViewController.swift */,
-				633DE9302094D22800AC25F4 /* ReviewOrderViewController.h */,
-				633DE9312094D22800AC25F4 /* ReviewOrderViewController.m */,
 				63391B582779B8BF005CDA72 /* ReviewSettingsViewController.swift */,
 				637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */,
-				633DE9332094D80D00AC25F4 /* ReviewTaskOrderViewController.h */,
-				633DE9342094D80D00AC25F4 /* ReviewTaskOrderViewController.m */,
 				631CAD71234B4A96008CEA73 /* ReviewViewController.swift */,
 				63BEBF9625C57D4000123147 /* SearchResultViewController.swift */,
 				63F7F52B23D43DF6006A31FB /* Services.swift */,
@@ -585,10 +563,6 @@
 				633DE95B20C5635900AC25F4 /* TKMKanaInput.h */,
 				633DE95920C5635900AC25F4 /* TKMKanaInput.m */,
 				BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */,
-				63B6F1EB226AF55300E6AA5C /* TKMLessonBatchSizeViewController.h */,
-				63B6F1EC226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m */,
-				4826740B23ECE46900F704E4 /* TKMReviewBatchSizeViewController.h */,
-				48CF714623EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m */,
 				C90846B8237F1C790068A272 /* Tsurukame Complication Extension.appex */,
 				C90846AC237F1C770068A272 /* Tsurukame Complication.app */,
 				63C42A4421B6A703008CA938 /* Tsurukame-Bridging-Header.h */,
@@ -839,8 +813,6 @@
 				63E9A8E821199C8500418CE1 /* PBXTargetDependency */,
 			);
 			name = Tests;
-			packageProductDependencies = (
-			);
 			productName = Tests;
 			productReference = 63E9A8E221199C8500418CE1 /* Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -1214,7 +1186,6 @@
 				63D746E227746C0E00DDC822 /* ReviewMenuViewController.swift in Sources */,
 				63E9A8D12110859800418CE1 /* TKMListSeparatorItem.m in Sources */,
 				63A5598527E433E000E7BBCB /* NavigationController.swift in Sources */,
-				63B6F1ED226AF55300E6AA5C /* TKMLessonBatchSizeViewController.m in Sources */,
 				638A5C4E25A471F9001A7AEE /* AppDelegate.swift in Sources */,
 				633632EF201F3490006D582B /* Settings.swift in Sources */,
 				63A16775253AD8AE00B5BCD6 /* FMDatabase+Assert.swift in Sources */,
@@ -1227,11 +1198,9 @@
 				63D2DAEE275C5D4100D5F6FF /* UIControl+addAction.swift in Sources */,
 				63F7F51F23D3F335006A31FB /* ReadingModelItem.swift in Sources */,
 				63D746E127746C0800DDC822 /* ReviewContainerViewController.swift in Sources */,
-				633DE9322094D22800AC25F4 /* ReviewOrderViewController.m in Sources */,
 				633AFAE62352B6F2004F732F /* VocabularyHighlighter.swift in Sources */,
 				631CAD63234AD5FC008CEA73 /* AnswerChecker.swift in Sources */,
 				63C74C6825C96088004F6C99 /* SubjectChip.swift in Sources */,
-				482D7C0F261CC29900104F69 /* ApprenticeLimitViewController.swift in Sources */,
 				63358E9E273664F50013A2AC /* BasicModelItem.swift in Sources */,
 				6335B4E723CF14280071671E /* Screenshotter.swift in Sources */,
 				63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */,
@@ -1242,10 +1211,9 @@
 				6332528E2727F32800ABBA04 /* PillModelItem.swift in Sources */,
 				630EB13F25C5713000783E54 /* ReviewItem.swift in Sources */,
 				BBE4E32E2172576B003A200E /* FontLoader.swift in Sources */,
-				C9164D3923D0CFCF00B6D93A /* InterfaceStyleViewController.swift in Sources */,
 				63DE410827818A9A002CFB80 /* SuccessAnimation.swift in Sources */,
+				63E1386A27E6C12500AC4706 /* SettingChoiceListViewController.swift in Sources */,
 				63EF5752260617E30038551A /* LoginViewController.swift in Sources */,
-				633DE9352094D80D00AC25F4 /* ReviewTaskOrderViewController.m in Sources */,
 				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
 				636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */,
@@ -1257,7 +1225,6 @@
 				63391B592779B8BF005CDA72 /* ReviewSettingsViewController.swift in Sources */,
 				93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */,
 				63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */,
-				48CF714823EAFA5600A838F4 /* TKMReviewBatchSizeViewController.m in Sources */,
 				63358EA227366D720013A2AC /* CheckmarkModelItem.swift in Sources */,
 				63391B572779B7FC005CDA72 /* AppSettingsViewController.swift in Sources */,
 				63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */,
@@ -1265,7 +1232,6 @@
 				63358E9A27365FC70013A2AC /* OfflineAudio.swift in Sources */,
 				C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */,
 				637CA11525D7E48A0082580E /* LessonsViewController.swift in Sources */,
-				632E19C123DCD0D800E5F256 /* FontSizeViewController.swift in Sources */,
 				639528ED25CC0688009845ED /* SettingsViewController.swift in Sources */,
 				631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */,
 				63C74C8F25C970DA004F6C99 /* SubjectsByLevelViewController.swift in Sources */,
@@ -1384,11 +1350,9 @@
 		};
 		63EF56FD26060BE50038551A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 63EF56FC26060BE50038551A /* WaniKaniAPI */;
 		};
 		63EF57A826061C540038551A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 63EF57A726061C540038551A /* WaniKaniAPI */;
 		};
 		C90846BB237F1C790068A272 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1556,7 +1520,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 810;
+				CURRENT_PROJECT_VERSION = 905;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
@@ -1590,7 +1554,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 810;
+				CURRENT_PROJECT_VERSION = 905;
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
@@ -1603,7 +1567,8 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.davidsansome.wanikani";
+				PROVISIONING_PROFILE = "d5cd9a5d-213c-42f1-b72b-185d1259a0f2";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.davidsansome.wanikani";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Tsurukame-Bridging-Header.h";
@@ -1824,7 +1789,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 810;
+				CURRENT_PROJECT_VERSION = 905;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				IBSC_MODULE = Tsurukame_Complication_Extension;
 				INFOPLIST_FILE = Complication/Info.plist;
@@ -1853,7 +1818,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 810;
+				CURRENT_PROJECT_VERSION = 905;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				IBSC_MODULE = Tsurukame_Complication_Extension;
 				INFOPLIST_FILE = Complication/Info.plist;
@@ -1861,7 +1826,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.watchapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.davidsansome.wanikani.watchapp";
+				PROVISIONING_PROFILE = "df06fa1e-0be6-4ca1-8d8d-352da185fec6";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.davidsansome.wanikani.watchapp";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1879,7 +1845,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 810;
+				CURRENT_PROJECT_VERSION = 905;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = ComplicationExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1911,7 +1877,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 810;
+				CURRENT_PROJECT_VERSION = 905;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = ComplicationExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1923,7 +1889,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.watchapp.c;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.davidsansome.wanikani.watchapp.c";
+				PROVISIONING_PROFILE = "a1f9acf7-3902-4937-a701-fd4e488ec576";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.davidsansome.wanikani.watchapp.c";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -2058,14 +2025,6 @@
 			productName = WaniKaniAPI;
 		};
 		63EF56E126060BA70038551A /* WaniKaniAPI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = WaniKaniAPI;
-		};
-		63EF56FC26060BE50038551A /* WaniKaniAPI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = WaniKaniAPI;
-		};
-		63EF57A726061C540038551A /* WaniKaniAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WaniKaniAPI;
 		};

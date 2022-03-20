@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
 import Foundation
 import WaniKaniAPI
 
-class LessonOrderViewController: UITableViewController {
+class LessonOrderViewController: UITableViewController, SwipeBackFromAnywhere {
+  var canSwipeToGoBack: Bool { true }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     tableView.isEditing = true

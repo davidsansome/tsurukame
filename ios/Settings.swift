@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
 import Foundation
 import WaniKaniAPI
 
-@objc enum ReviewOrder: UInt, Codable, CustomStringConvertible {
+typealias SettingEnum = RawRepresentable & Codable & CaseIterable & CustomStringConvertible
+
+@objc enum ReviewOrder: UInt, SettingEnum {
   case random = 1
   case ascendingSRSStage = 2
   case currentLevelFirst = 3
@@ -39,7 +41,7 @@ import WaniKaniAPI
   }
 }
 
-@objc enum InterfaceStyle: UInt, Codable, CustomStringConvertible {
+@objc enum InterfaceStyle: UInt, SettingEnum {
   case system = 1
   case light = 2
   case dark = 3
@@ -77,9 +79,16 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
   return (try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? T) ?? defaultValue
 }
 
-@propertyWrapper struct Setting<T: Codable> {
-  private let defaultValue: T
-  private let key: String
+protocol SettingProtocol {
+  associatedtype ValueType
+
+  var defaultValue: ValueType { get }
+  var wrappedValue: ValueType { get set }
+}
+
+@propertyWrapper struct Setting<T: Codable>: SettingProtocol {
+  let defaultValue: T
+  let key: String
 
   init(_ defaultValue: T, _ key: String) {
     self.defaultValue = defaultValue
@@ -90,11 +99,16 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
     get { getArchiveData(defaultValue, key: key) }
     set(newValue) { setArchiveData(newValue, key: key) }
   }
+
+  var projectedValue: Setting<T> { self }
 }
 
-@propertyWrapper struct EnumSetting<T: RawRepresentable> where T.RawValue: Codable {
-  private let defaultValue: T
-  private let key: String
+@propertyWrapper struct EnumSetting<T: RawRepresentable>: SettingProtocol
+  where T.RawValue: Codable {
+  typealias ValueType = T
+
+  let defaultValue: T
+  let key: String
 
   init(_ defaultValue: T, _ key: String) {
     self.defaultValue = defaultValue
@@ -105,6 +119,8 @@ private func getArchiveData<T: Codable>(_ defaultValue: T, key: String) -> T {
     get { T(rawValue: getArchiveData(defaultValue.rawValue, key: key))! }
     set(newValue) { setArchiveData(newValue.rawValue, key: key) }
   }
+
+  var projectedValue: EnumSetting<T> { self }
 }
 
 @propertyWrapper struct EnumArraySetting<A: Sequence, T: RawRepresentable> where A.Element == T,

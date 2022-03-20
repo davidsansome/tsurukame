@@ -94,10 +94,22 @@ class LessonSettingsViewController: UITableViewController, SwipeBackFromAnywhere
   }
 
   @objc private func didTapLessonBatchSize(_: BasicModelItem) {
-    performSegue(withIdentifier: "lessonBatchSize", sender: self)
+    let vc = SettingChoiceListViewController(setting: Settings.$lessonBatchSize,
+                                             title: "Lesson Batch Size",
+                                             helpText: "Set the number of new lessons to be " +
+                                               "introduced before the quiz session.")
+    vc.addChoicesFromRange(3 ... 10, suffix: " lessons")
+    navigationController?.pushViewController(vc, animated: true)
   }
 
   @objc private func didTapApprenticeLessonsLimit(_: BasicModelItem) {
-    performSegue(withIdentifier: "apprenticeLessonsLimit", sender: self)
+    let vc = SettingChoiceListViewController(setting: Settings.$apprenticeLessonsLimit,
+                                             title: "Apprentice Lessons Limit",
+                                             helpText: "Stop yourself from starting new lessons " +
+                                               "if you have more than this number of " +
+                                               "Apprentice-level items already")
+    vc.addChoice(name: "No limit", value: Int.max)
+    vc.addChoicesFromRange(stride(from: 25, through: 200, by: 25), suffix: "")
+    navigationController?.pushViewController(vc, animated: true)
   }
 }
