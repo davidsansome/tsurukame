@@ -45,6 +45,10 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
     }
   }
 
+  override var childForStatusBarStyle: UIViewController? {
+    topViewController?.childForStatusBarStyle ?? topViewController
+  }
+
   // MARK: - UIViewController
 
   override func pushViewController(_ viewController: UIViewController, animated: Bool) {

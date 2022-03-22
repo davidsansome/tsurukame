@@ -57,8 +57,8 @@
 		6365042825D7DE3600801C2D /* Subjects.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6365042725D7DE3600801C2D /* Subjects.storyboard */; };
 		636A63DE238A107A00902269 /* CurrentLevelChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */; };
 		636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */; };
-		636A63E4238A5D6B00902269 /* MainHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 636A63E3238A5D6B00902269 /* MainHeaderView.xib */; };
-		636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E6238A607A00902269 /* MainHeaderView.swift */; };
+		636A63E4238A5D6B00902269 /* VacationModeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 636A63E3238A5D6B00902269 /* VacationModeView.xib */; };
+		636A63E7238A607A00902269 /* VacationModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636A63E6238A607A00902269 /* VacationModeView.swift */; };
 		637CA11525D7E48A0082580E /* LessonsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA11425D7E48A0082580E /* LessonsViewController.swift */; };
 		637CA12C25D7EDFF0082580E /* ReviewSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */; };
 		637CA18725D7F5A10082580E /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 637CA18625D7F5A10082580E /* SwiftProtobuf */; };
@@ -67,6 +67,8 @@
 		638A5C6C25ADBB86001A7AEE /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638A5C6B25ADBB86001A7AEE /* main.swift */; };
 		638D197525C6AA4B00B80544 /* MarkupModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638D197425C6AA4B00B80544 /* MarkupModelItem.swift */; };
 		638D198C25C6B5C600B80544 /* ReviewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB13E25C5713000783E54 /* ReviewItem.swift */; };
+		638EFE3627E8892400D693D0 /* MainTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 638EFE3527E8892400D693D0 /* MainTitleView.xib */; };
+		638EFE3827E8898300D693D0 /* MainTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638EFE3727E8898300D693D0 /* MainTitleView.swift */; };
 		6392DBA420D130FB003019EB /* SubjectModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6392DBA320D130FB003019EB /* SubjectModelItem.xib */; };
 		639528ED25CC0688009845ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639528EC25CC0688009845ED /* SettingsViewController.swift */; };
 		639528FD25CC2F4F009845ED /* LessonOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639528FC25CC2F4F009845ED /* LessonOrderViewController.swift */; };
@@ -271,13 +273,15 @@
 		6365042725D7DE3600801C2D /* Subjects.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Subjects.storyboard; sourceTree = "<group>"; };
 		636A63DD238A107A00902269 /* CurrentLevelChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLevelChartItem.swift; sourceTree = "<group>"; };
 		636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRSStageCategoryItem.swift; sourceTree = "<group>"; };
-		636A63E3238A5D6B00902269 /* MainHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainHeaderView.xib; sourceTree = "<group>"; };
-		636A63E6238A607A00902269 /* MainHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHeaderView.swift; sourceTree = "<group>"; };
+		636A63E3238A5D6B00902269 /* VacationModeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VacationModeView.xib; sourceTree = "<group>"; };
+		636A63E6238A607A00902269 /* VacationModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VacationModeView.swift; sourceTree = "<group>"; };
 		637CA11425D7E48A0082580E /* LessonsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsViewController.swift; sourceTree = "<group>"; };
 		637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewSummaryViewController.swift; sourceTree = "<group>"; };
 		638A5C4D25A471F9001A7AEE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		638A5C6B25ADBB86001A7AEE /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		638D197425C6AA4B00B80544 /* MarkupModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkupModelItem.swift; sourceTree = "<group>"; };
+		638EFE3527E8892400D693D0 /* MainTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainTitleView.xib; sourceTree = "<group>"; };
+		638EFE3727E8898300D693D0 /* MainTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTitleView.swift; sourceTree = "<group>"; };
 		6392DBA320D130FB003019EB /* SubjectModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SubjectModelItem.xib; sourceTree = "<group>"; };
 		639528EC25CC0688009845ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		639528FC25CC2F4F009845ED /* LessonOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonOrderViewController.swift; sourceTree = "<group>"; };
@@ -489,9 +493,6 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
-				639E750327E9CFB3006E36EA /* GradientView.swift */,
-				63E1386927E6C12500AC4706 /* SettingChoiceListViewController.swift */,
-				63DE410727818A9A002CFB80 /* SuccessAnimation.swift */,
 				631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */,
 				C904455C2395DBAE001BC48B /* AnswerTextField.swift */,
 				638A5C4D25A471F9001A7AEE /* AppDelegate.swift */,
@@ -514,19 +515,23 @@
 				63C42A3621B6A290008CA938 /* FontScreenshotterUITests.xctest */,
 				63CBFF28277327920086BA5F /* FontsViewController.swift */,
 				63CAAB0F1FD7FAC500E09DA1 /* Frameworks */,
+				63E1386727E59F4100AC4706 /* FullRefreshOverlayView.swift */,
+				63A5598627E5947300E7BBCB /* FullRefreshOverlayView.xib */,
+				639E750327E9CFB3006E36EA /* GradientView.swift */,
 				63EEFEC21FC45CB10070C05F /* Info.plist */,
 				639528FC25CC2F4F009845ED /* LessonOrderViewController.swift */,
+				63391B5E2779BF56005CDA72 /* LessonSettingsViewController.swift */,
 				630EB12025C5652400783E54 /* LessonsPageControl.swift */,
 				637CA11425D7E48A0082580E /* LessonsViewController.swift */,
 				631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */,
 				63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */,
 				63EF5751260617E30038551A /* LoginViewController.swift */,
 				638A5C6B25ADBB86001A7AEE /* main.swift */,
-				636A63E6238A607A00902269 /* MainHeaderView.swift */,
-				636A63E3238A5D6B00902269 /* MainHeaderView.xib */,
+				636A63E6238A607A00902269 /* VacationModeView.swift */,
+				636A63E3238A5D6B00902269 /* VacationModeView.xib */,
+				638EFE3727E8898300D693D0 /* MainTitleView.swift */,
+				638EFE3527E8892400D693D0 /* MainTitleView.xib */,
 				63F7F52223D423E9006A31FB /* MainViewController.swift */,
-				63E1386727E59F4100AC4706 /* FullRefreshOverlayView.swift */,
-				63A5598627E5947300E7BBCB /* FullRefreshOverlayView.xib */,
 				63A5598427E433DF00E7BBCB /* NavigationController.swift */,
 				63B63FF627733ABC0098DAAD /* NotificationDispatcher.swift */,
 				63358E9927365FC70013A2AC /* OfflineAudio.swift */,
@@ -541,9 +546,9 @@
 				631CAD71234B4A96008CEA73 /* ReviewViewController.swift */,
 				63BEBF9625C57D4000123147 /* SearchResultViewController.swift */,
 				63F7F52B23D43DF6006A31FB /* Services.swift */,
+				63E1386927E6C12500AC4706 /* SettingChoiceListViewController.swift */,
 				633632EE201F3490006D582B /* Settings.swift */,
 				639528EC25CC0688009845ED /* SettingsViewController.swift */,
-				63391B5E2779BF56005CDA72 /* LessonSettingsViewController.swift */,
 				C970BC0223D262CE001F3735 /* SiriShortcutHelper.swift */,
 				636A63E0238A2B8200902269 /* SRSStageCategoryItem.swift */,
 				63FCAE77237F75CC00DB1418 /* Style.swift */,
@@ -555,6 +560,7 @@
 				63C74C9E25C9858D004F6C99 /* SubjectDetailsViewController.swift */,
 				63C74C8E25C970DA004F6C99 /* SubjectsByLevelViewController.swift */,
 				636502B225D7A39600801C2D /* SubjectsRemainingViewController.swift */,
+				63DE410727818A9A002CFB80 /* SuccessAnimation.swift */,
 				633DE93C20C2CA0600AC25F4 /* Tables */,
 				63E9A8DB21199C2600418CE1 /* Tests */,
 				63E9A8E221199C8500418CE1 /* Tests.xctest */,
@@ -931,7 +937,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				636A63E4238A5D6B00902269 /* MainHeaderView.xib in Resources */,
+				636A63E4238A5D6B00902269 /* VacationModeView.xib in Resources */,
 				63A5598727E5947300E7BBCB /* FullRefreshOverlayView.xib in Resources */,
 				6392DBA420D130FB003019EB /* SubjectModelItem.xib in Resources */,
 				63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */,
@@ -943,6 +949,7 @@
 				6365041F25D7DE0900801C2D /* Lessons.storyboard in Resources */,
 				63BFA78B218EB1B30058E885 /* DownloadModelItem.xib in Resources */,
 				6365042825D7DE3600801C2D /* Subjects.storyboard in Resources */,
+				638EFE3627E8892400D693D0 /* MainTitleView.xib in Resources */,
 				6365040D25D7DC8000801C2D /* Settings.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1215,8 +1222,9 @@
 				63EF5752260617E30038551A /* LoginViewController.swift in Sources */,
 				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
-				636A63E7238A607A00902269 /* MainHeaderView.swift in Sources */,
+				636A63E7238A607A00902269 /* VacationModeView.swift in Sources */,
 				63391B5D2779BECB005CDA72 /* SubjectDetailsSettingsViewController.swift in Sources */,
+				638EFE3827E8898300D693D0 /* MainTitleView.swift in Sources */,
 				63BFA78E218EB6890058E885 /* OfflineAudioViewController.swift in Sources */,
 				63CBFF2627731B8B0086BA5F /* DownloadViewController.swift in Sources */,
 				63A16786253AD8D200B5BCD6 /* LocalCachingClient.swift in Sources */,
@@ -1440,7 +1448,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = .;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lcompression";
@@ -1498,7 +1506,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = .;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-lcompression";
 				SDKROOT = iphoneos;

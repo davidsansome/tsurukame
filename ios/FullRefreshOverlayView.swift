@@ -26,6 +26,12 @@ class FullRefreshOverlayView: UIView {
     // Add the container to ourself and add ourself to the window.
     addSubview(containerView)
     window.addSubview(self)
+
+    // Fade in.
+    alpha = 0.0
+    UIView.animate(withDuration: 0.3) {
+      self.alpha = 1.0
+    }
   }
 
   override func layoutSubviews() {

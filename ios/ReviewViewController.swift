@@ -875,7 +875,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     var newGradient: [CGColor]!
     TKMStyle.withTraitCollection(traitCollection) {
-      newGradient = (TKMStyle.gradient(forSubject: previousSubject) as! [CGColor])
+      newGradient = TKMStyle.gradient(forSubject: previousSubject)
     }
 
     view.layoutIfNeeded()

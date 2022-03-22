@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -1063,6 +1063,9 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   private var busy = false
   func sync(quick: Bool, progress: Progress) -> PMKFinalizer {
     guard !busy else {
+      // Set isFinished to true so the caller knows we didn't do any work.
+      progress.totalUnitCount = 1
+      progress.completedUnitCount = 1
       return Promise.value(()).cauterize()
     }
     busy = true

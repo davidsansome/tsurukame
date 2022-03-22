@@ -144,25 +144,75 @@
         <!--Main View Controller-->
         <scene sceneID="ydl-qq-SrR">
             <objects>
-                <tableViewController storyboardIdentifier="main" id="ByY-Kf-IzJ" customClass="MainViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" contentMode="scaleToFill" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="f6b-3A-D9O">
+                <viewController storyboardIdentifier="main" extendedLayoutIncludesOpaqueBars="YES" id="ByY-Kf-IzJ" customClass="MainViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="f6b-3A-D9O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="nBY-fs-bqI" customClass="MainHeaderView" customModule="Tsurukame" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        </view>
-                        <sections/>
-                        <connections>
-                            <outlet property="dataSource" destination="ByY-Kf-IzJ" id="ara-CS-qMB"/>
-                            <outlet property="delegate" destination="ByY-Kf-IzJ" id="JPr-5f-GRh"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="49W-hQ-Zo2"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Hq-bM-Oba" customClass="GradientView" customModule="Tsurukame" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="I7j-0Z-n8n">
+                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <sections/>
+                            </tableView>
+                            <view alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uiT-6O-5H9" customClass="VacationModeView" customModule="Tsurukame" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="44" width="375" height="100"/>
+                                <viewLayoutGuide key="safeArea" id="YkG-WD-iga"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" priority="1" constant="100" id="GB5-xp-8BQ"/>
+                                </constraints>
+                            </view>
+                            <progressView opaque="NO" alpha="0.0" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xYm-HJ-awB">
+                                <rect key="frame" x="0.0" y="44" width="375" height="4"/>
+                            </progressView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ge9-QL-YFj"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="I7j-0Z-n8n" firstAttribute="leading" secondItem="ge9-QL-YFj" secondAttribute="leading" id="00M-LD-oaf"/>
+                            <constraint firstItem="uiT-6O-5H9" firstAttribute="leading" secondItem="ge9-QL-YFj" secondAttribute="leading" id="2Y7-2r-WNS"/>
+                            <constraint firstItem="ge9-QL-YFj" firstAttribute="top" secondItem="9Hq-bM-Oba" secondAttribute="bottom" id="9wP-Kd-L2b"/>
+                            <constraint firstItem="I7j-0Z-n8n" firstAttribute="trailing" secondItem="ge9-QL-YFj" secondAttribute="trailing" id="KuV-J8-jge"/>
+                            <constraint firstItem="9Hq-bM-Oba" firstAttribute="top" secondItem="f6b-3A-D9O" secondAttribute="top" id="Lar-94-88K"/>
+                            <constraint firstItem="uiT-6O-5H9" firstAttribute="top" secondItem="ge9-QL-YFj" secondAttribute="top" id="SGU-3j-hW7"/>
+                            <constraint firstItem="ge9-QL-YFj" firstAttribute="trailing" secondItem="uiT-6O-5H9" secondAttribute="trailing" id="Upr-a1-K3d"/>
+                            <constraint firstItem="ge9-QL-YFj" firstAttribute="trailing" secondItem="xYm-HJ-awB" secondAttribute="trailing" id="VZD-Da-GgU"/>
+                            <constraint firstItem="I7j-0Z-n8n" firstAttribute="bottom" secondItem="f6b-3A-D9O" secondAttribute="bottom" id="ZZc-v3-97D"/>
+                            <constraint firstItem="xYm-HJ-awB" firstAttribute="top" secondItem="ge9-QL-YFj" secondAttribute="top" id="b3n-bM-i9q"/>
+                            <constraint firstItem="I7j-0Z-n8n" firstAttribute="top" secondItem="ge9-QL-YFj" secondAttribute="top" id="jfM-wt-jFb"/>
+                            <constraint firstAttribute="trailing" secondItem="9Hq-bM-Oba" secondAttribute="trailing" id="wVV-i2-f4N"/>
+                            <constraint firstItem="9Hq-bM-Oba" firstAttribute="leading" secondItem="f6b-3A-D9O" secondAttribute="leading" id="xvJ-Ni-OQ0"/>
+                            <constraint firstItem="xYm-HJ-awB" firstAttribute="leading" secondItem="ge9-QL-YFj" secondAttribute="leading" id="yEI-hf-KDT"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="49W-hQ-Zo2">
+                        <nil key="title"/>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Settings" image="ic_settings_white" id="c36-SP-DdH">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="settingsButtonTapped" destination="ByY-Kf-IzJ" id="0kq-gC-gZt"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Search" image="ic_search_white" id="6Rf-U3-95g">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="searchButtonTapped" destination="ByY-Kf-IzJ" id="Wjz-45-GXw"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="headerView" destination="nBY-fs-bqI" id="isP-S5-Ljw"/>
+                        <outlet property="headerGradient" destination="9Hq-bM-Oba" id="abG-OW-Hrw"/>
+                        <outlet property="progressView" destination="xYm-HJ-awB" id="xCf-8z-rdr"/>
+                        <outlet property="tableView" destination="I7j-0Z-n8n" id="g7a-pJ-DAf"/>
+                        <outlet property="titleView" destination="c7o-N7-LTQ" id="gOV-WB-WAk"/>
+                        <outlet property="vacationView" destination="uiT-6O-5H9" id="GbY-WN-hOb"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startReviews" id="YrX-ku-fpv"/>
                         <segue destination="mNH-9F-QWo" kind="show" identifier="startLessons" id="Ljs-AO-WnW"/>
                         <segue destination="Qs4-9j-s1J" kind="show" identifier="showRemaining" id="9oa-Qm-fW5"/>
@@ -170,10 +220,16 @@
                         <segue destination="HVF-EF-j9e" kind="show" identifier="settings" id="XTh-OI-gtz"/>
                         <segue destination="vBH-2Y-r3P" kind="show" identifier="tableForecast" id="XTh-OP-gtz"/>
                     </connections>
-                </tableViewController>
+                </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dob-5V-x24" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="c7o-N7-LTQ" customClass="MainTitleView" customModule="Tsurukame" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <viewLayoutGuide key="safeArea" id="dMr-xv-SYT"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </view>
             </objects>
-            <point key="canvasLocation" x="-92" y="176"/>
+            <point key="canvasLocation" x="-92" y="175.86206896551727"/>
         </scene>
         <!--Search Result View Controller-->
         <scene sceneID="HnA-CW-WKB">
@@ -284,7 +340,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="upcomingReviews" id="vBH-2Y-r3P" customClass="UpcomingReviewsViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" contentMode="scaleToFill" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="1YJ-wh-YRi">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                         <sections/>
@@ -301,6 +357,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="ic_search_white" width="24" height="24"/>
+        <image name="ic_settings_white" width="24" height="24"/>
         <image name="launch_screen" width="1126" height="2436"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

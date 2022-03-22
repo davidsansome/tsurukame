@@ -43,12 +43,16 @@ private func setTableViewCellCount(_ item: BasicModelItem, count: Int,
   return item.isEnabled
 }
 
-class MainViewController: UITableViewController, LoginViewControllerDelegate,
-  MainHeaderViewDelegate,
-  SearchResultViewControllerDelegate, UISearchControllerDelegate {
+class MainViewController: UIViewController, LoginViewControllerDelegate,
+  SearchResultViewControllerDelegate, UISearchControllerDelegate, UITableViewDelegate {
   var services: TKMServices!
   var model: TableModel!
-  @IBOutlet var headerView: MainHeaderView!
+  @IBOutlet var titleView: MainTitleView!
+  @IBOutlet var vacationView: VacationModeView!
+  @IBOutlet var progressView: UIProgressView!
+  @IBOutlet var tableView: UITableView!
+  @IBOutlet var headerGradient: GradientView!
+
   var searchController: UISearchController!
   weak var searchResultsViewController: SearchResultViewController!
   var hourlyRefreshTimer = Timer()
@@ -66,7 +70,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    headerView.delegate = self
+    tableView.delegate = self
 
     // Show a background image.
     let backgroundView = UIImageView(image: UIImage(named: "launch_screen"))
@@ -74,13 +78,12 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     tableView.backgroundView = backgroundView
 
     // Add a refresh control for when the user pulls down.
-    refreshControl = UIRefreshControl()
-    refreshControl?.tintColor = .white
-    refreshControl?.backgroundColor = nil
-    refreshControl?.attributedTitle = NSMutableAttributedString(string: "Pull to refresh...",
-                                                                attributes: [.foregroundColor: UIColor
-                                                                  .white])
-    refreshControl?.addAction(for: .valueChanged) { [weak self] in self?.didPullToRefresh() }
+    let refreshControl = UIRefreshControl()
+    refreshControl.tintColor = TKMStyle.Color.label
+    refreshControl.backgroundColor = nil
+    refreshControl.attributedTitle = NSMutableAttributedString(string: "Pull to refresh...")
+    refreshControl.addAction(for: .valueChanged) { [weak self] in self?.didPullToRefresh() }
+    tableView.refreshControl = refreshControl
 
     // Create the search results view controller.
     let searchResultsVC = storyboard?
@@ -114,6 +117,10 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
       }
     }
 
+    // Configure the navigation item.
+    navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleView)
+
+    updateGradientColors()
     updateHourlyTimer()
     recreateTableModel()
 
@@ -129,6 +136,10 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
       .add(name: UIApplication.willEnterForegroundNotification) { [weak self] _ in
         self?.applicationWillEnterForeground()
       }
+  }
+
+  private func updateGradientColors() {
+    headerGradient.colors = TKMStyle.radicalGradient
   }
 
   private func scheduleTableModelUpdate() {
@@ -233,8 +244,8 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
     updateHourlyTimer()
 
+    navigationController?.isNavigationBarHidden = false
     super.viewWillAppear(animated)
-    navigationController?.isNavigationBarHidden = true
   }
 
   override func viewDidAppear(_: Bool) {
@@ -242,18 +253,12 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     refresh(quick: true)
   }
 
-  override var preferredStatusBarStyle: UIStatusBarStyle {
-    .lightContent
+  override func viewDidLayoutSubviews() {
+    updateTableContentInset()
   }
 
-  override func viewWillLayoutSubviews() {
-    super.viewWillLayoutSubviews()
-
-    // Bring the refresh control above the gradient.
-    refreshControl?.superview?.bringSubviewToFront(refreshControl!)
-
-    let headerSize = headerView.sizeThatFits(CGSize(width: view.bounds.size.width, height: 0))
-    headerView.frame = CGRect(origin: headerView.frame.origin, size: headerSize)
+  override var preferredStatusBarStyle: UIStatusBarStyle {
+    .lightContent
   }
 
   override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
@@ -307,24 +312,26 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
     }
   }
 
-  // MARK: - UITableViewController
+  override func traitCollectionDidChange(_: UITraitCollection?) {
+    updateGradientColors()
+  }
 
-  override func tableView(_ tableView: UITableView,
-                          heightForRowAt indexPath: IndexPath) -> CGFloat {
+  // MARK: - UITableViewDelegate
+
+  func tableView(_: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
     if indexPath.section == kUpcomingReviewsSection {
       return UIDevice.current.userInterfaceIdiom == .pad ? 360 : 120
     }
-
-    return super.tableView(tableView, heightForRowAt: indexPath)
+    return UITableView.automaticDimension
   }
 
-  // MARK: - MainHeaderViewDelegate
+  // MARK: - Navigation bar buttons
 
-  func searchButtonTapped() {
+  @IBAction func searchButtonTapped() {
     present(searchController, animated: true, completion: nil)
   }
 
-  func settingsButtonTapped() {
+  @IBAction func settingsButtonTapped() {
     performSegue(withIdentifier: "settings", sender: self)
   }
 
@@ -371,11 +378,10 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   // MARK: - Refreshing contents
 
   func refresh(quick: Bool) {
-    guard let headerView = headerView else { return }
-
-    let progress = Progress(totalUnitCount: -1)
-    headerView.setProgress(progress: progress)
+    let progress = Progress(totalUnitCount: 0)
     let syncFuture = services.localCachingClient.sync(quick: quick, progress: progress)
+
+    setProgress(progress)
 
     if quick {
       scheduleTableModelUpdate()
@@ -384,6 +390,31 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
          let overlay = FullRefreshOverlayView(window: view.window!) {
         syncFuture.finally {
           overlay.hide()
+        }
+      }
+    }
+  }
+
+  var progressKvoToken: NSKeyValueObservation?
+  func setProgress(_ progress: Progress) {
+    if progress.isFinished {
+      return
+    }
+
+    // Set the progress on the progress view and fade it in.
+    progressView.observedProgress = progress
+    UIView.animate(withDuration: 0.2) {
+      self.progressView.alpha = 1.0
+    }
+
+    // Wait for the progress to finish.
+    progressKvoToken?.invalidate()
+    progressKvoToken = progress.observe(\.isFinished, options: [.new]) { _, change in
+      if let isFinished = change.newValue, isFinished {
+        self.progressKvoToken?.invalidate()
+
+        UIView.animate(withDuration: 0.6) {
+          self.progressView.alpha = 0.0
         }
       }
     }
@@ -401,25 +432,34 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
 
   func updateUserInfo() {
     guard let user = services.localCachingClient.getUserInfo(),
-          let headerView = headerView,
           Settings.userEmailAddress != "" else { return }
     let email = Settings.userEmailAddress
     let guruKanji = services.localCachingClient.guruKanjiCount
     let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)
       : userProfileImageURL(emailAddress: email)
 
-    headerView.update(username: user.username,
-                      level: Int(user.level),
-                      guruKanji: Int(guruKanji),
-                      imageURL: imageURL,
-                      vacationMode: user.hasVacationStartedAt)
-    headerView.layoutIfNeeded()
+    titleView.update(username: user.username,
+                     level: Int(user.level),
+                     guruKanji: Int(guruKanji),
+                     imageURL: imageURL)
 
-    // Make the header view as short as possible.
-    let height = headerView.sizeThatFits(CGSize(width: view.bounds.size.width, height: 0)).height
-    var frame = headerView.frame
-    frame.size.height = height
-    headerView.frame = frame
+    updateTableContentInset()
+  }
+
+  func updateTableContentInset() {
+    guard let user = services.localCachingClient.getUserInfo() else { return }
+
+    var top: CGFloat = 20.0
+    var vacationAlpha: CGFloat = 0.0
+    if user.hasVacationStartedAt {
+      top += vacationView.frame.height
+      vacationAlpha = 1.0
+    }
+
+    UIView.animate(withDuration: 0.3) {
+      self.tableView.contentInset = UIEdgeInsets(top: top, left: 0, bottom: 0, right: 0)
+      self.vacationView.alpha = vacationAlpha
+    }
   }
 
   func srsLevelCountsChanged() {
@@ -463,7 +503,7 @@ class MainViewController: UITableViewController, LoginViewControllerDelegate,
   }
 
   func didPullToRefresh() {
-    refreshControl?.endRefreshing()
+    tableView.refreshControl?.endRefreshing()
     refresh(quick: false)
   }
 
