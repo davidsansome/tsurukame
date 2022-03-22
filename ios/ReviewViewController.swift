@@ -197,8 +197,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var defaultFontSize: Double!
 
   @IBOutlet private var menuButton: UIButton!
-  @IBOutlet private var questionBackground: TKMGradientView!
-  @IBOutlet private var promptBackground: TKMGradientView!
+  @IBOutlet private var questionBackground: GradientView!
+  @IBOutlet private var promptBackground: GradientView!
   @IBOutlet private var questionLabel: UILabel!
   @IBOutlet private var promptLabel: UILabel!
   @IBOutlet private var answerField: AnswerTextField!

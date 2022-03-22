@@ -112,7 +112,7 @@ class TKMStyle: NSObject {
     }
   }
 
-  class func gradient(forAssignment assignment: TKMAssignment) -> [Any] {
+  class func gradient(forAssignment assignment: TKMAssignment) -> [CGColor] {
     switch assignment.subjectType {
     case .radical:
       return radicalGradient
@@ -125,7 +125,7 @@ class TKMStyle: NSObject {
     }
   }
 
-  class func gradient(forSubject subject: TKMSubject) -> [Any] {
+  class func gradient(forSubject subject: TKMSubject) -> [CGColor] {
     if subject.hasRadical {
       return radicalGradient
     } else if subject.hasKanji {
