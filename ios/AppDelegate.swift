@@ -16,6 +16,10 @@ import Foundation
 import UIKit
 import WaniKaniAPI
 
+// The maximum number of local notifications you can add to a NotificationCenter before it starts
+// removing old ones.
+private let kMaxLocalNotifications = 64
+
 class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelegate {
   var window: UIWindow?
 
@@ -202,6 +206,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
                                                     matchingPolicy: .nextTime)!
         let startInterval = startDate.timeIntervalSinceNow
         var cumulativeReviews = reviewCount
+        var notificationsAdded = 0
         for hour in 0 ..< upcomingReviews.count {
           let reviews = upcomingReviews[hour]
           if reviews == 0 {
@@ -227,7 +232,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
                                                           repeats: false)
           let request = UNNotificationRequest(identifier: identifier, content: content,
                                               trigger: trigger)
+
           nc.add(request, withCompletionHandler: nil)
+          notificationsAdded += 1
+          if notificationsAdded >= kMaxLocalNotifications {
+            break
+          }
         }
       }
     }
