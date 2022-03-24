@@ -148,5 +148,5 @@ end
 
 after_all do
   clean_build_artifacts
-  reset_git_repo
+  reset_git_repo(disregard_gitignore: false)
 end
