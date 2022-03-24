@@ -36,6 +36,7 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
     leftDrawerViewController = menuVC
     shouldStretchDrawer = false
     closeDrawerGestureModeMask = .all
+    openDrawerGestureModeMask = .bezelPanningCenterView
     centerHiddenInteractionMode = .none
     setDrawerVisualStateBlock(MMDrawerVisualState.parallaxVisualStateBlock(withParallaxFactor: 1.0))
   }
