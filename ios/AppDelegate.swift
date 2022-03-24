@@ -185,7 +185,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
 
     let nc = UNUserNotificationCenter.current()
     nc.getNotificationSettings { settings in
-      if settings.badgeSetting != .enabled {
+      // Don't do anything unless the user has granted some notification permission.
+      switch settings.authorizationStatus {
+      case .authorized, .ephemeral, .provisional:
+        break
+      default:
         return
       }
 
@@ -212,11 +216,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
           }
           let identifier = "badge-\(hour)"
           let content = UNMutableNotificationContent()
-          if Settings.notificationsAllReviews {
+          if settings.alertSetting == .enabled, Settings.notificationsAllReviews {
             content.body = "\(cumulativeReviews) review\(cumulativeReviews == 1 ? "" : "s") " +
               "available (\(upcomingReviews[hour]) new)"
           }
-          if Settings.notificationsBadging {
+          if settings.badgeSetting == .enabled, Settings.notificationsBadging {
             content.badge = NSNumber(value: cumulativeReviews)
           }
           let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerTimeInterval,
