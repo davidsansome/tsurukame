@@ -103,6 +103,13 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                            action: #selector(showAnswerImmediatelySwitchChanged(_:)))
     revealAnswerItem.numberOfSubtitleLines = 0
     model.add(revealAnswerItem)
+    let fullAnswerItem = SwitchModelItem(style: .subtitle,
+                                         title: "Reveal full answer",
+                                         subtitle: "Instead of hiding behind a 'Show more information' button",
+                                         on: Settings.showFullAnswer, target: self,
+                                         action: #selector(showFullAnswerSwitchChanged(_:)))
+    fullAnswerItem.numberOfSubtitleLines = 0
+    model.add(fullAnswerItem)
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Exact match",
                               subtitle: "Requires typing in answers exactly correct",
@@ -237,6 +244,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
 
   @objc private func showAnswerImmediatelySwitchChanged(_ switchView: UISwitch) {
     Settings.showAnswerImmediately = switchView.isOn
+  }
+
+  @objc private func showFullAnswerSwitchChanged(_ switchView: UISwitch) {
+    Settings.showFullAnswer = switchView.isOn
   }
 
   @objc private func allowSkippingReviewsSwitchChanged(_ switchView: UISwitch) {

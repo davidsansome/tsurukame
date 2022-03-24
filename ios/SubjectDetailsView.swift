@@ -268,8 +268,29 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     model.add(item)
   }
 
+  static var showAllFieldsCount = 0
+
   @objc private func showAllFields() {
     update(withSubject: subject, studyMaterials: studyMaterials, assignment: assignment, task: nil)
+
+    // If the user keeps pressing the button, prompt them once to enable the showFullAnswer setting.
+    if !Settings.seenFullAnswerPrompt {
+      SubjectDetailsView.showAllFieldsCount += 1
+      if SubjectDetailsView.showAllFieldsCount >= 10 {
+        Settings.seenFullAnswerPrompt = true
+        let ac = UIAlertController(title: "Always show the full answer?",
+                                   message: "If you prefer, Tsurukame can always show the " +
+                                     "full answer instead of hiding the part you haven't " +
+                                     "answered yet.\n" +
+                                     "You can change this in Settings at any time.",
+                                   preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "Always show", style: .default, handler: { _ in
+          Settings.showFullAnswer = true
+        }))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        window?.rootViewController?.present(ac, animated: true)
+      }
+    }
   }
 
   private func addExplanation(model: MutableTableModel, title: String, text: String,

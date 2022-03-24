@@ -70,7 +70,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xDV-IB-csT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2120" y="-648"/>
+            <point key="canvasLocation" x="-294" y="-654"/>
         </scene>
         <!--Select Fonts-->
         <scene sceneID="Edv-Yt-Zoe">
@@ -84,7 +84,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BnI-lh-nSF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2916" y="-648"/>
+            <point key="canvasLocation" x="503" y="-654"/>
         </scene>
         <!--Lesson order-->
         <scene sceneID="BjM-im-n92">

@@ -181,6 +181,7 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(groupMeaningReading)) static var groupMeaningReading: Bool
   @Setting(true, #keyPath(meaningFirst)) static var meaningFirst: Bool
   @Setting(true, #keyPath(showAnswerImmediately)) static var showAnswerImmediately: Bool
+  @Setting(false, #keyPath(showFullAnswer)) static var showFullAnswer: Bool
   @Setting([], #keyPath(selectedFonts)) static var selectedFonts: Set<String>
   @Setting(1.0, #keyPath(fontSize)) static var fontSize: Float
   @Setting(false, #keyPath(exactMatch)) static var exactMatch: Bool
@@ -194,6 +195,8 @@ protocol SettingProtocol {
   @Setting(true, #keyPath(minimizeReviewPenalty)) static var minimizeReviewPenalty: Bool
   @Setting(false, #keyPath(pausePartiallyCorrect)) static var pausePartiallyCorrect: Bool
   @Setting(false, #keyPath(ankiMode)) static var ankiMode: Bool
+
+  @Setting(false, #keyPath(seenFullAnswerPrompt)) static var seenFullAnswerPrompt: Bool
 
   @Setting(false, #keyPath(playAudioAutomatically)) static var playAudioAutomatically: Bool
   @Setting(false, #keyPath(offlineAudio)) static var offlineAudio: Bool

@@ -1258,8 +1258,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   func revealAnswerButtonPressed(_: Any, partiallyCorrect: Bool = false) {
+    let task = Settings.showFullAnswer ? nil : activeTask
     subjectDetailsView.update(withSubject: activeSubject, studyMaterials: activeStudyMaterials,
-                              assignment: activeAssignment, task: activeTask)
+                              assignment: activeAssignment, task: task)
 
     let setupContextFunc = { (ctx: AnimationContext) in
       if self.questionLabel.font.familyName != self.normalFontName {
