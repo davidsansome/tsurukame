@@ -14,8 +14,6 @@
 
 import Foundation
 
-@objc(TKMBasicModelItem)
-@objcMembers
 class BasicModelItem: NSObject, TKMModelItem {
   let style: UITableViewCell.CellStyle
 

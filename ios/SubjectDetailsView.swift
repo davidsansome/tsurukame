@@ -103,7 +103,6 @@ private func dateFormatter(dateStyle: DateFormatter.Style,
   return ret
 }
 
-@objc(TKMSubjectDetailsView)
 class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private let statsDateFormatter = dateFormatter(dateStyle: .medium, timeStyle: .short)
 

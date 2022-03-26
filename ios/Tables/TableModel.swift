@@ -15,8 +15,6 @@
 import AudioToolbox
 import Foundation
 
-@objc(TKMTableModel)
-@objcMembers
 class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   struct Section {
     var headerTitle: String?
@@ -186,8 +184,6 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   }
 }
 
-@objc(TKMMutableTableModel)
-@objcMembers
 class MutableTableModel: TableModel {
   @objc(addSection:footer:)
   @discardableResult func add(section: String?, footer: String? = nil) -> Int {

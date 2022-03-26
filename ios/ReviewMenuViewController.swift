@@ -14,15 +14,12 @@
 
 import Foundation
 
-@objc(TKMReviewMenuDelegate)
 protocol ReviewMenuDelegate: AnyObject {
   func endReviewSession(button: UIView)
   func wrapUp()
   func wrapUpCount() -> Int
 }
 
-@objc(TKMReviewMenuViewController)
-@objcMembers
 class ReviewMenuViewController: UIViewController, UITableViewDelegate {
   weak var delegate: ReviewMenuDelegate?
   private var model: TableModel!

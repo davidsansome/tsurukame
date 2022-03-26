@@ -15,8 +15,6 @@
 import Foundation
 import WaniKaniAPI
 
-@objc(TKMSubjectModelItem)
-@objcMembers
 class SubjectModelItem: NSObject, TKMModelItem {
   let subject: TKMSubject
   let readingWrong: Bool
@@ -46,7 +44,6 @@ class SubjectModelItem: NSObject, TKMModelItem {
 private let kJapaneseTextImageSize: CGFloat = 26.0
 private let kFontSize: CGFloat = 14.0
 
-@objc(TKMSubjectModelView)
 class SubjectModelView: TKMModelCell {
   private weak var gradient: CAGradientLayer?
 
