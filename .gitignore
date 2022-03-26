@@ -10,6 +10,7 @@
 **/xcuserdata/
 **/xcshareddata/
 !/ios/Tsurukame.xcodeproj/xcshareddata/
+!/ios/Tsurukame.xcworkspace/xcshareddata/
 /ios/*.ipa
 /ios/*.dSYM.zip
 /workspace
