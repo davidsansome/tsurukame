@@ -15,3 +15,6 @@ Bug fixes:
 * Cycle through audio samples in order instead of playing them at random.
 * Fix a few memory leaks.
 * Make the "Upcoming reviews" table easier to understand.
+* [1.24] Fix a bug where notifications and badge counts wouldn't be updated.
+* [1.25] Fix an iPad-only crash when starting lessons or reviews.
+* [1.25] Fix the header colours on iOS versions before 15.
