@@ -956,7 +956,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   func questionLabelFontSize() -> CGFloat {
-    if UI_USER_INTERFACE_IDIOM() == .pad {
+    if UIDevice.current.userInterfaceIdiom == .pad {
       return CGFloat(defaultFontSize * 2.5 * Double(Settings.fontSize))
     } else {
       return CGFloat(defaultFontSize * Double(Settings.fontSize))
