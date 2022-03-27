@@ -16,10 +16,14 @@ import Foundation
 
 class MainTitleView: UIView {
   @IBOutlet var container: UIView!
+  @IBOutlet var stackView: UIStackView!
   @IBOutlet var usernameLabel: UILabel!
   @IBOutlet var levelLabel: UILabel!
   @IBOutlet var imageContainer: UIView!
   @IBOutlet var imageView: UIImageView!
+  @IBOutlet var imageUsernameSpacer: NSLayoutConstraint!
+  @IBOutlet var centerStackViewConstraint: NSLayoutConstraint!
+  @IBOutlet var topStackViewConstraint: NSLayoutConstraint!
 
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -28,6 +32,12 @@ class MainTitleView: UIView {
     nib.instantiate(withOwner: self, options: nil)
 
     addSubview(container)
+    addConstraints([
+      container.leftAnchor.constraint(equalTo: leftAnchor),
+      container.rightAnchor.constraint(equalTo: rightAnchor),
+      container.bottomAnchor.constraint(equalTo: bottomAnchor),
+      container.topAnchor.constraint(equalTo: topAnchor),
+    ])
   }
 
   override func didMoveToSuperview() {
@@ -44,6 +54,16 @@ class MainTitleView: UIView {
     imageView.layer.cornerRadius = cornerRadius
 
     backgroundColor = .clear
+
+    // Make the layout fit better on iPad.
+    if UIDevice.current.userInterfaceIdiom == .pad {
+      stackView.axis = .horizontal
+      stackView.spacing = 12
+      imageUsernameSpacer.constant = 12
+      topStackViewConstraint.isActive = false
+      centerStackViewConstraint.isActive = true
+      container.setNeedsLayout()
+    }
   }
 
   func update(username: String,

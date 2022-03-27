@@ -520,7 +520,6 @@
 				639E750327E9CFB3006E36EA /* GradientView.swift */,
 				63EEFEC21FC45CB10070C05F /* Info.plist */,
 				639528FC25CC2F4F009845ED /* LessonOrderViewController.swift */,
-				63391B5E2779BF56005CDA72 /* LessonSettingsViewController.swift */,
 				630EB12025C5652400783E54 /* LessonsPageControl.swift */,
 				637CA11425D7E48A0082580E /* LessonsViewController.swift */,
 				631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */,
@@ -638,6 +637,7 @@
 		63CAAB0F1FD7FAC500E09DA1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				63391B5E2779BF56005CDA72 /* LessonSettingsViewController.swift */,
 				6364A10A242DFB6F000ABF32 /* Intents.framework */,
 				6356E7821FDFF0E3009CE7C1 /* WebKit.framework */,
 				63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */,

@@ -232,11 +232,6 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   // MARK: - UIViewController
 
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    cancelHourlyTimer()
-  }
-
   override func viewWillAppear(_ animated: Bool) {
     // Assume the hour changed while the view was invisible. This will invalidate the upcoming
     // review cache which depends on the current time.
@@ -245,6 +240,15 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     updateHourlyTimer()
 
     navigationController?.isNavigationBarHidden = false
+
+    if #available(iOS 15.0, *) {} else {
+      if let bar = navigationController?.navigationBar {
+        bar.setBackgroundImage(UIImage(), for: .default)
+        bar.shadowImage = UIImage()
+        bar.isTranslucent = true
+      }
+    }
+
     super.viewWillAppear(animated)
   }
 
@@ -253,8 +257,23 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     refresh(quick: true)
   }
 
+  override func viewWillDisappear(_ animated: Bool) {
+    if #available(iOS 15.0, *) {} else {
+      if let bar = navigationController?.navigationBar {
+        bar.setBackgroundImage(nil, for: .default)
+        bar.shadowImage = nil
+        bar.isTranslucent = false
+      }
+    }
+
+    super.viewWillDisappear(animated)
+    cancelHourlyTimer()
+  }
+
   override func viewDidLayoutSubviews() {
-    updateTableContentInset()
+    updateTableContentInset(animated: false)
+    // Scroll to the very top, including the inset.
+    tableView.contentOffset = CGPoint(x: 0, y: -tableView.contentInset.top)
   }
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -397,9 +416,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   var progressKvoToken: NSKeyValueObservation?
   func setProgress(_ progress: Progress) {
-    if progress.isFinished {
-      return
-    }
+    guard progressView != nil, !progress.isFinished else { return }
 
     // Set the progress on the progress view and fade it in.
     progressView.observedProgress = progress
@@ -443,10 +460,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
                      guruKanji: Int(guruKanji),
                      imageURL: imageURL)
 
-    updateTableContentInset()
+    updateTableContentInset(animated: true)
   }
 
-  func updateTableContentInset() {
+  func updateTableContentInset(animated: Bool) {
     guard let user = services.localCachingClient.getUserInfo() else { return }
 
     var top: CGFloat = 20.0
@@ -456,9 +473,14 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       vacationAlpha = 1.0
     }
 
-    UIView.animate(withDuration: 0.3) {
+    let animations = {
       self.tableView.contentInset = UIEdgeInsets(top: top, left: 0, bottom: 0, right: 0)
       self.vacationView.alpha = vacationAlpha
+    }
+    if animated {
+      UIView.animate(withDuration: 0.3, animations: animations)
+    } else {
+      animations()
     }
   }
 
