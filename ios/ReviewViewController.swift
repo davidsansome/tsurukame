@@ -756,8 +756,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // MARK: - Animation
 
   private func animateSubjectDetailsView(shown: Bool,
-                                         setupContextFunc: ((AnimationContext) -> Void)?,
-                                         partiallyCorrect: Bool = false) {
+                                         setupContextFunc: ((AnimationContext) -> Void)?) {
     let cheats = delegate.allowsCheats(forReviewItem: activeTask)
 
     if shown {
@@ -828,8 +827,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     previousSubjectButton.alpha = shown ? 0.0 : 1.0
 
     // Change the foreground color of the answer field.
-    answerField.textColor = shown ? (partiallyCorrect ? .systemYellow : .systemRed) : TKMStyle.Color
-      .label
+    answerField.textColor = shown ? .systemRed : TKMStyle.Color.label
 
     // Scroll to the top.
     subjectDetailsView
@@ -1043,9 +1041,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       markAnswer(.AskAgainLater)
       return
     }
-    if !answerField.isEnabled, Settings.pausePartiallyCorrect {
-      markCorrect()
-    } else if !answerField.isEnabled, !Settings.ankiMode {
+    if !answerField.isEnabled, !Settings.ankiMode {
       if !subjectDetailsView.isHidden {
         subjectDetailsView.saveStudyMaterials()
       }
@@ -1086,7 +1082,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       markAnswer(.Correct)
     case .Imprecise:
       if Settings.exactMatch { shakeView(answerField) }
-      else if Settings.pausePartiallyCorrect { markAnswer(.Incorrect, partially: true) }
       else { markAnswer(.Correct) }
     case .Incorrect:
       markAnswer(.Incorrect)
@@ -1108,7 +1103,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     view.layer.add(animation, forKey: nil)
   }
 
-  private func markAnswer(_ result: AnswerResult, partially: Bool = false) {
+  private func markAnswer(_ result: AnswerResult) {
     if result == .AskAgainLater {
       // Take the task out of the queue so it comes back later.
       activeQueue.remove(at: activeTaskIndex)
@@ -1243,7 +1238,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       revealAnswerButton.isHidden = false
       UIView.animate(withDuration: animationDuration,
                      animations: {
-                       self.answerField.textColor = partially ? .systemYellow : .systemRed
+                       self.answerField.textColor = .systemRed
                        self.answerField.isEnabled = false
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)
@@ -1254,10 +1249,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   @IBAction func revealAnswerButtonPressed(_: Any) {
-    revealAnswerButtonPressed(true, partiallyCorrect: false)
-  }
-
-  func revealAnswerButtonPressed(_: Any, partiallyCorrect: Bool = false) {
     let task = Settings.showFullAnswer ? nil : activeTask
     subjectDetailsView.update(withSubject: activeSubject, studyMaterials: activeStudyMaterials,
                               assignment: activeAssignment, task: task)
@@ -1269,8 +1260,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
           .font = UIFont(name: self.normalFontName, size: self.questionLabelFontSize())
       }
     }
-    animateSubjectDetailsView(shown: true, setupContextFunc: setupContextFunc,
-                              partiallyCorrect: partiallyCorrect)
+    animateSubjectDetailsView(shown: true, setupContextFunc: setupContextFunc)
   }
 
   // MARK: - Ignoring incorrect answers
@@ -1284,12 +1274,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     c.popoverPresentationController?.sourceView = addSynonymButton
     c.popoverPresentationController?.sourceRect = addSynonymButton.bounds
 
-    if !Settings.pausePartiallyCorrect || Settings.ankiMode {
-      c.addAction(UIAlertAction(title: "My answer was correct",
-                                style: .default,
-                                handler: { _ in self.markCorrect() }))
-    }
-    if Settings.pausePartiallyCorrect || Settings.ankiMode {
+    c.addAction(UIAlertAction(title: "My answer was correct",
+                              style: .default,
+                              handler: { _ in self.markCorrect() }))
+    if Settings.ankiMode {
       c.addAction(UIAlertAction(title: "My answer was incorrect",
                                 style: .default,
                                 handler: { _ in self.markIncorrect() }))

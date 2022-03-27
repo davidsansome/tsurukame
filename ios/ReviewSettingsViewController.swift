@@ -139,12 +139,6 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     minimizeReviewPenaltyItem.numberOfSubtitleLines = 0
     model.add(minimizeReviewPenaltyItem)
     model.add(SwitchModelItem(style: .subtitle,
-                              title: "Pause when partially correct",
-                              subtitle: "Lets you double check your answer",
-                              on: Settings.pausePartiallyCorrect,
-                              target: self,
-                              action: #selector(partiallyCorrectSwitchChanged(_:))))
-    model.add(SwitchModelItem(style: .subtitle,
                               title: "Anki mode",
                               subtitle: "Do reviews without typing answers",
                               on: Settings.ankiMode,
@@ -284,10 +278,6 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
       return
     }
     Settings.autoSwitchKeyboard = switchView.isOn
-  }
-
-  @objc private func partiallyCorrectSwitchChanged(_ switchView: UISwitch) {
-    Settings.pausePartiallyCorrect = switchView.isOn
   }
 
   @objc private func ankiModeSwitchChanged(_ switchView: UISwitch) {
