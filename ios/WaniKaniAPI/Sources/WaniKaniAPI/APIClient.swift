@@ -31,6 +31,7 @@ public class WaniKaniAPIClient: NSObject {
 
   private var apiToken: String
   private let session: URLSession
+  private let httpDateFormatter: DateFormatter
 
   @objc
   public init(apiToken: String) {
@@ -40,11 +41,79 @@ public class WaniKaniAPIClient: NSObject {
     sessionConfig.requestCachePolicy = .reloadIgnoringLocalCacheData
     session = URLSession(configuration: sessionConfig)
 
+    httpDateFormatter = DateFormatter()
+    httpDateFormatter.locale = Locale(identifier: "en_US_POSIX")
+    httpDateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss zzz"
+
     super.init()
   }
 
   public func updateApiToken(_ apiToken: String) {
     self.apiToken = apiToken
+  }
+
+  // MARK: - Rate limiting
+
+  // Number of requests allowed per server clock minute.
+  public let kRateLimit = 60
+
+  // Amount of time to add to the client's clock to get the server's clock.
+  public private(set) var estimatedClockSkew: TimeInterval = 0
+
+  // Time of the last request on the server's clock.
+  private var lastRequestServerDate: Date?
+
+  // Number of requests made in the last minute on the server's clock. When this reaches kRateLimit
+  // every request will return a 429 error.
+  public private(set) var requestsInLastInterval: Int = 0
+
+  public var requestsRemainingInInterval: Int {
+    if rateLimitResetTime <= 0 {
+      return kRateLimit
+    }
+    return kRateLimit - requestsInLastInterval
+  }
+
+  // Time left on the client's clock before the server's rate limit resets.
+  public var rateLimitResetTime: TimeInterval {
+    guard let lastRequestServerDate = lastRequestServerDate else {
+      return 0
+    }
+
+    let serverNow = Date().addingTimeInterval(estimatedClockSkew)
+
+    let calendar = Calendar(identifier: .gregorian)
+    switch calendar.compare(lastRequestServerDate, to: serverNow, toGranularity: .minute) {
+    case .orderedAscending:
+      // Current server minute is after the last server minute, so the rate limit has reset.
+      return 0
+    case .orderedDescending:
+      // The local time should never be less than the last request time after account for clock
+      // skew, so assume the worst.
+      return TimeInterval(kRateLimit)
+    case .orderedSame:
+      guard let nextServerMinute = calendar.nextDate(after: serverNow,
+                                                     matching: DateComponents(second: 0),
+                                                     matchingPolicy: .nextTime)
+      else { return TimeInterval(kRateLimit) }
+      return nextServerMinute.addingTimeInterval(-estimatedClockSkew).timeIntervalSince(Date())
+    }
+  }
+
+  private func updateRateLimit(from response: HTTPURLResponse, roundTripTime: TimeInterval) {
+    guard let serverDateStr = response.valueForHeaderField("Date"),
+          let serverDate = httpDateFormatter.date(from: serverDateStr) else { return }
+
+    let calendar = Calendar(identifier: .gregorian)
+    if let lastRequestServerDate = lastRequestServerDate,
+       calendar
+       .compare(lastRequestServerDate, to: serverDate, toGranularity: .minute) != .orderedSame {
+      requestsInLastInterval = 0
+    }
+    requestsInLastInterval += 1
+
+    lastRequestServerDate = serverDate
+    estimatedClockSkew = serverDate.addingTimeInterval(roundTripTime / 2).timeIntervalSince(Date())
   }
 
   // MARK: - Retrieving data
@@ -438,11 +507,17 @@ public class WaniKaniAPIClient: NSObject {
 
   /** Fetches a single URL from the WaniKani API and returns its data. */
   private func query<Type: Codable>(_ req: URLRequest) -> Promise<Type> {
-    firstly { () -> DataTaskPromise in
+    let startTime = Date()
+    return firstly { () -> DataTaskPromise in
       NSLog("%@ %@", req.httpMethod!, req.url!.absoluteString)
       return session.dataTask(.promise, with: req)
     }.map { (data, response) -> Type in
       let response = response as! HTTPURLResponse
+      let endTime = Date()
+
+      // Process the rate limit headers
+      self.updateRateLimit(from: response, roundTripTime: endTime.timeIntervalSince(startTime))
+
       switch response.statusCode {
       case 200, 201:
         // Decode the API response.

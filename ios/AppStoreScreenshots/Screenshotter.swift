@@ -1291,7 +1291,7 @@ import WaniKaniAPI
       return user
     }
 
-    override func getAllPendingProgress() -> [TKMProgress] {
+    override func getAllPendingProgress(limit _: Int?) -> [TKMProgress] {
       []
     }
 

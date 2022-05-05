@@ -406,15 +406,24 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     return ret
   }
 
-  func getAllPendingProgress() -> [TKMProgress] {
+  func getAllPendingProgress(limit: Int? = nil) -> [TKMProgress] {
     db.inDatabase { db in
-      getAllPendingProgress(transaction: db)
+      getAllPendingProgress(transaction: db, limit: limit)
     }
   }
 
-  private func getAllPendingProgress(transaction db: FMDatabase) -> [TKMProgress] {
+  private func getAllPendingProgress(transaction db: FMDatabase,
+                                     limit: Int? = nil) -> [TKMProgress] {
+    if let limit = limit, limit <= 0 {
+      return [TKMProgress]()
+    }
+
     var ret = [TKMProgress]()
-    for cursor in db.query("SELECT pb FROM pending_progress") {
+    var query = "SELECT pb FROM pending_progress"
+    if let limit = limit {
+      query += " LIMIT \(limit)"
+    }
+    for cursor in db.query(query) {
       ret.append(cursor.proto(forColumnIndex: 0)!)
     }
     return ret
@@ -674,10 +683,6 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     return sendPendingProgress(progress, progress: Progress(totalUnitCount: -1))
   }
 
-  private func sendAllPendingProgress(progress: Progress) -> Promise<Void> {
-    sendPendingProgress(getAllPendingProgress(), progress: progress)
-  }
-
   private func clearPendingProgress(_ progress: TKMProgress) {
     db.inTransaction { db in
       db.mustExecuteUpdate("DELETE FROM pending_progress WHERE id = ?",
@@ -732,19 +737,24 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     return sendPendingStudyMaterials([material], progress: Progress(totalUnitCount: 1))
   }
 
-  private func getAllPendingStudyMaterials() -> [TKMStudyMaterials] {
-    db.inDatabase { db in
+  private func getAllPendingStudyMaterials(limit: Int) -> [TKMStudyMaterials] {
+    if limit <= 0 {
+      return [TKMStudyMaterials]()
+    }
+
+    return db.inDatabase { db in
       var ret = [TKMStudyMaterials]()
-      for cursor in db
-        .query("SELECT s.pb FROM study_materials AS s, pending_study_materials AS p ON s.id = p.id") {
+      let query = """
+        SELECT s.pb
+        FROM study_materials AS s,
+             pending_study_materials AS p ON s.id = p.id
+        LIMIT \(limit)
+      """
+      for cursor in db.query(query) {
         ret.append(cursor.proto(forColumnIndex: 0)!)
       }
       return ret
     }
-  }
-
-  private func sendAllPendingStudyMaterials(progress: Progress) -> Promise<Void> {
-    sendPendingStudyMaterials(getAllPendingStudyMaterials(), progress: progress)
   }
 
   private func sendPendingStudyMaterials(_ materials: [TKMStudyMaterials],
@@ -1072,7 +1082,21 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
     let assignmentProgressUnits: Int64 = quick ? 1 : 8
     let subjectProgressUnits: Int64 = quick ? 1 : 20
-    progress.totalUnitCount = 5 + assignmentProgressUnits + subjectProgressUnits
+
+    // Limit how many progress to send from the remaining rate limit quota.
+    var requestsAvailable = client
+      .requestsRemainingInInterval - Int(assignmentProgressUnits + subjectProgressUnits + 4 + 2)
+    let pendingProgress = getAllPendingProgress(limit: requestsAvailable)
+    requestsAvailable -= pendingProgress.count
+    let pendingStudyMaterials = getAllPendingStudyMaterials(limit: requestsAvailable)
+
+    progress.totalUnitCount =
+      Int64(pendingProgress.count) +
+      Int64(pendingStudyMaterials.count) +
+      subjectProgressUnits +
+      assignmentProgressUnits +
+      4
+
     let childProgress = { (units: Int64) in
       Progress(totalUnitCount: -1, parent: progress, pendingUnitCount: units)
     }
@@ -1086,8 +1110,9 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
 
     return when(fulfilled: [
-      sendAllPendingProgress(progress: childProgress(1)),
-      sendAllPendingStudyMaterials(progress: childProgress(1)),
+      sendPendingProgress(pendingProgress, progress: childProgress(Int64(pendingProgress.count))),
+      sendPendingStudyMaterials(pendingStudyMaterials,
+                                progress: childProgress(Int64(pendingStudyMaterials.count))),
 
       // Fetch subjects before fetching anything else - we need to know subject levels to use them
       // in assignment protos.
