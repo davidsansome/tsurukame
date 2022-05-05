@@ -394,9 +394,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
 
-    // Fix the extra inset at the top of the subject details view.
-    subjectDetailsView
-      .contentInset = UIEdgeInsets(top: -view.tkm_safeAreaInsets.top, left: 0, bottom: 0, right: 0)
+    // Fix the extra inset at the top of the subject details view. This isn't necessary after iOS
+    // 15.
+    if #available(iOS 15.0, *) {} else {
+      subjectDetailsView
+        .contentInset = UIEdgeInsets(top: -view.tkm_safeAreaInsets.top, left: 0, bottom: 0,
+                                     right: 0)
+    }
   }
 
   override func viewWillAppear(_ animated: Bool) {
