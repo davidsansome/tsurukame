@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -118,7 +118,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctF-hm-AxT">
-                                <rect key="frame" x="357" y="835" width="57" height="58"/>
+                                <rect key="frame" x="361" y="835" width="53" height="58"/>
                                 <accessibility key="accessibilityConfiguration" label="Confirm"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                 <state key="normal" image="checkmark.circle">
@@ -361,7 +361,7 @@
     <resources>
         <image name="add" width="22" height="22"/>
         <image name="baseline_menu_black_24pt" width="24" height="24"/>
-        <image name="checkmark.circle" width="17" height="17"/>
+        <image name="checkmark.circle" width="13" height="13"/>
         <image name="inbox" width="24" height="24"/>
         <image name="thumb" width="24" height="24"/>
         <image name="tick" width="24" height="24"/>

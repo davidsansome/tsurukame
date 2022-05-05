@@ -83,6 +83,7 @@
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63A5598527E433E000E7BBCB /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A5598427E433DF00E7BBCB /* NavigationController.swift */; };
 		63A5598727E5947300E7BBCB /* FullRefreshOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63A5598627E5947300E7BBCB /* FullRefreshOverlayView.xib */; };
+		63A9A55D282389C900602D09 /* ReviewSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A9A55C282389C800602D09 /* ReviewSession.swift */; };
 		63B63FF727733ABC0098DAAD /* NotificationDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B63FF627733ABC0098DAAD /* NotificationDispatcher.swift */; };
 		63BEBF9725C57D4000123147 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BEBF9625C57D4000123147 /* SearchResultViewController.swift */; };
 		63BFA78B218EB1B30058E885 /* DownloadModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63BFA78A218EB1B30058E885 /* DownloadModelItem.xib */; };
@@ -294,6 +295,7 @@
 		63A237601FE9264300C48657 /* UIColor+HexString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
 		63A5598427E433DF00E7BBCB /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		63A5598627E5947300E7BBCB /* FullRefreshOverlayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRefreshOverlayView.xib; sourceTree = "<group>"; };
+		63A9A55C282389C800602D09 /* ReviewSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewSession.swift; sourceTree = "<group>"; };
 		63B63FF627733ABC0098DAAD /* NotificationDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDispatcher.swift; sourceTree = "<group>"; };
 		63B63FF827733DAC0098DAAD /* ReviewContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewContainerViewController.swift; sourceTree = SOURCE_ROOT; };
 		63B63FFA27733E1E0098DAAD /* ReviewMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewMenuViewController.swift; sourceTree = "<group>"; };
@@ -526,8 +528,6 @@
 				63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */,
 				63EF5751260617E30038551A /* LoginViewController.swift */,
 				638A5C6B25ADBB86001A7AEE /* main.swift */,
-				636A63E6238A607A00902269 /* VacationModeView.swift */,
-				636A63E3238A5D6B00902269 /* VacationModeView.xib */,
 				638EFE3727E8898300D693D0 /* MainTitleView.swift */,
 				638EFE3527E8892400D693D0 /* MainTitleView.xib */,
 				63F7F52223D423E9006A31FB /* MainViewController.swift */,
@@ -540,6 +540,7 @@
 				63B63FF827733DAC0098DAAD /* ReviewContainerViewController.swift */,
 				630EB13E25C5713000783E54 /* ReviewItem.swift */,
 				63B63FFA27733E1E0098DAAD /* ReviewMenuViewController.swift */,
+				63A9A55C282389C800602D09 /* ReviewSession.swift */,
 				63391B582779B8BF005CDA72 /* ReviewSettingsViewController.swift */,
 				637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */,
 				631CAD71234B4A96008CEA73 /* ReviewViewController.swift */,
@@ -572,6 +573,8 @@
 				6319C9B520441DE200C31F87 /* Tsurukame.app */,
 				93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */,
 				48F4B1DB268CB9850033860E /* UpcomingReviewsViewController.swift */,
+				636A63E6238A607A00902269 /* VacationModeView.swift */,
+				636A63E3238A5D6B00902269 /* VacationModeView.xib */,
 				633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */,
 				63CAB4F72605F9AF0057E1C2 /* WaniKaniAPI */,
 				C92AB96E237F280300F79904 /* WatchHelper.swift */,
@@ -1220,6 +1223,7 @@
 				63DE410827818A9A002CFB80 /* SuccessAnimation.swift in Sources */,
 				63E1386A27E6C12500AC4706 /* SettingChoiceListViewController.swift in Sources */,
 				63EF5752260617E30038551A /* LoginViewController.swift in Sources */,
+				63A9A55D282389C900602D09 /* ReviewSession.swift in Sources */,
 				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				633DE95820C5634A00AC25F4 /* TKMModelItem.m in Sources */,
 				636A63E7238A607A00902269 /* VacationModeView.swift in Sources */,

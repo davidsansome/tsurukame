@@ -27,11 +27,15 @@ private let kReadingTextColor = UIColor.white
 private let kMeaningTextColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0)
 private let kDefaultButtonTintColor = UIButton().tintColor
 
-private enum AnswerResult {
+enum AnswerResult {
   case Correct
   case Incorrect
   case OverrideAnswerCorrect
   case AskAgainLater
+
+  var correct: Bool {
+    self == .Correct || self == .OverrideAnswerCorrect
+  }
 }
 
 private func copyLabel(_ original: UILabel) -> UILabel {
@@ -164,21 +168,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var showSubjectHistory: Bool!
   private weak var delegate: ReviewViewControllerDelegate!
 
-  private var activeQueue = [ReviewItem]()
-  private var reviewQueue = [ReviewItem]()
-  private var completedReviews = [ReviewItem]()
-  private var activeQueueSize = 1
-
-  private var activeTaskIndex = 0 // An index into activeQueue.
-  private var activeTaskType: TaskType!
-  private var activeTask: ReviewItem!
-  private var activeSubject: TKMSubject!
-  private var activeStudyMaterials: TKMStudyMaterials?
-  private var activeAssignment: TKMAssignment?
-
-  @objc public private(set) var tasksAnsweredCorrectly = 0
-  private var tasksAnswered = 0
-  private var reviewsCompleted = 0
+  private var session: ReviewSession!
 
   private var lastMarkAnswerWasFirstTime = false
 
@@ -240,92 +230,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     self.showSubjectHistory = showSubjectHistory
     self.delegate = delegate
 
-    reviewQueue = items
-
-    if Settings.groupMeaningReading {
-      activeQueueSize = 1
-    } else {
-      activeQueueSize = Int(Settings.reviewBatchSize)
-    }
-
-    reviewQueue.shuffle()
-    switch Settings.reviewOrder {
-    case .ascendingSRSStage:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.srsStage < b.assignment.srsStage { return true }
-        if a.assignment.srsStage > b.assignment.srsStage { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .descendingSRSStage:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.srsStage < b.assignment.srsStage { return false }
-        if a.assignment.srsStage > b.assignment.srsStage { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .currentLevelFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.level < b.assignment.level { return false }
-        if a.assignment.level > b.assignment.level { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .lowestLevelFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.level < b.assignment.level { return true }
-        if a.assignment.level > b.assignment.level { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .newestAvailableFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.availableAt < b.assignment.availableAt { return false }
-        if a.assignment.availableAt > b.assignment.availableAt { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .oldestAvailableFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.availableAt < b.assignment.availableAt { return true }
-        if a.assignment.availableAt > b.assignment.availableAt { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .longestRelativeWait:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if availableRatio(a.assignment) < availableRatio(b.assignment) { return false }
-        if availableRatio(a.assignment) > availableRatio(b.assignment) { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .random:
-      break
-
-    @unknown default:
-      fatalError()
-    }
-
-    refillActiveQueue()
+    session = ReviewSession(services: services, items: items)
   }
 
-  private func availableRatio(_ assignment: TKMAssignment) -> TimeInterval {
-    let truncatedDate =
-      Date(timeIntervalSince1970: Double((Int(Date().timeIntervalSince1970) / 3600) * 3600))
-    let subject = services.localCachingClient.getSubject(id: assignment.subjectID)!
-    return truncatedDate.timeIntervalSince(assignment.availableAtDate) / assignment.srsStage
-      .duration(subject)
+  public var activeQueueLength: Int {
+    session.activeQueueLength
   }
 
-  @objc public var activeQueueLength: Int {
-    activeQueue.count
+  public var tasksAnsweredCorrectly: Int {
+    session.tasksAnsweredCorrectly
   }
 
   // MARK: - UIViewController
@@ -404,7 +317,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   override func viewWillAppear(_ animated: Bool) {
-    if activeTask == nil {
+    if !session.hasStarted {
       // This must be done for the first time after the view has been added
       // to the window, since the window may override the userInterfaceStyle.
       randomTask()
@@ -496,7 +409,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     switch segue.identifier {
     case "reviewSummary":
       let vc = segue.destination as! ReviewSummaryViewController
-      vc.setup(services: services, items: completedReviews)
+      vc.setup(services: services, items: session.completedReviews)
     case "subjectDetails":
       let vc = segue.destination as! SubjectDetailsViewController
       vc.setup(services: services, subject: sender as! TKMSubject)
@@ -511,67 +424,30 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   // MARK: - Setup
 
-  private func refillActiveQueue() {
-    if wrappingUp {
-      return
-    }
-
-    while activeQueue.count < activeQueueSize, reviewQueue.count != 0 {
-      let item = reviewQueue.first!
-      reviewQueue.removeFirst()
-      activeQueue.append(item)
-    }
-  }
-
   private func randomTask() {
     TKMStyle.withTraitCollection(traitCollection) {
-      if activeQueue.count == 0 {
+      if session.activeQueueLength == 0 {
         delegate.finishedAllReviewItems(self)
         return
       }
 
       // Update the progress labels.
-      var successRateText: String
-      if tasksAnswered == 0 {
-        successRateText = "100%"
-      } else {
-        successRateText =
-          String(Int(Double(tasksAnsweredCorrectly) / Double(tasksAnswered) * 100)) +
-          "%"
-      }
-      let queueLength = Int(activeQueue.count + reviewQueue.count)
-      let doneText = String(reviewsCompleted)
+      let queueLength = Int(session.activeQueueLength + session.reviewQueueLength)
+      let doneText = String(session.reviewsCompleted)
       let queueText = String(queueLength)
-      let wrapUpText = String(activeQueue.count)
+      let wrapUpText = String(session.activeQueueLength)
 
       // Update the progress bar.
-      let totalLength = queueLength + reviewsCompleted
+      let totalLength = queueLength + session.reviewsCompleted
       if totalLength == 0 {
         progressBar.setProgress(0.0, animated: true)
       } else {
-        progressBar.setProgress(Float(reviewsCompleted) / Float(totalLength), animated: true)
+        progressBar.setProgress(Float(session.reviewsCompleted) / Float(totalLength),
+                                animated: true)
       }
 
       // Choose a random task from the active queue.
-      activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
-      activeTask = activeQueue[activeTaskIndex]
-      activeSubject = services.localCachingClient.getSubject(id: activeTask.assignment.subjectID)!
-      activeStudyMaterials =
-        services.localCachingClient
-          .getStudyMaterial(subjectId: activeTask.assignment.subjectID)
-      activeAssignment =
-        services.localCachingClient.getAssignment(subjectId: activeTask.assignment.subjectID)
-
-      // Choose whether to ask the meaning or the reading.
-      if activeTask.answeredMeaning {
-        activeTaskType = .reading
-      } else if activeTask.answeredReading || activeSubject.hasRadical {
-        activeTaskType = .meaning
-      } else if Settings.groupMeaningReading {
-        activeTaskType = Settings.meaningFirst ? .meaning : .reading
-      } else {
-        activeTaskType = TaskType.random()
-      }
+      session.nextTask()
 
       // Fill the question labels.
       var subjectTypePrompt: String
@@ -580,7 +456,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       var promptTextColor: UIColor
       var taskTypePlaceholder: String
 
-      switch activeTask.assignment.subjectType {
+      switch session.activeAssignment.subjectType {
       case .kanji:
         subjectTypePrompt = "Kanji"
       case .radical:
@@ -590,10 +466,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       default:
         fatalError()
       }
-      switch activeTaskType! {
+      switch session.activeTaskType! {
       case .meaning:
         kanaInput.enabled = false
-        taskTypePrompt = activeTask.assignment.subjectType == .radical ? "Name" : "Meaning"
+        taskTypePrompt = session.activeAssignment.subjectType == .radical ? "Name" : "Meaning"
         promptGradient = TKMStyle.meaningGradient
         promptTextColor = kMeaningTextColor
         taskTypePlaceholder = "Your Response"
@@ -612,7 +488,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       }
 
       // Choose a random font.
-      currentFontName = randomFont(thatCanRenderText: activeSubject.japanese)
+      currentFontName = randomFont(thatCanRenderText: session.activeSubject.japanese)
 
       let boldFont = UIFont.boldSystemFont(ofSize: promptLabel!.font.pointSize)
       let prompt = NSMutableAttributedString(string: subjectTypePrompt + " " + taskTypePrompt)
@@ -637,22 +513,22 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
       // Background gradients.
       questionBackground
-        .animateColors(to: TKMStyle.gradient(forAssignment: activeTask.assignment),
+        .animateColors(to: TKMStyle.gradient(forAssignment: session.activeAssignment),
                        duration: animationDuration)
       promptBackground.animateColors(to: promptGradient, duration: animationDuration)
 
       // Accessibility.
-      successRateLabel.accessibilityLabel = successRateText + " correct so far"
+      successRateLabel.accessibilityLabel = session.successRateText + " correct so far"
       doneLabel.accessibilityLabel = doneText + " done"
       queueLabel.accessibilityLabel = queueText + " remaining"
       questionLabel.accessibilityLabel = "Japanese " + subjectTypePrompt + ". Question"
-      levelLabel.accessibilityLabel = "srs level \(activeTask.assignment.srsStage)"
+      levelLabel.accessibilityLabel = "srs level \(session.activeAssignment.srsStage)"
 
       answerField.text = nil
       answerField.textColor = TKMStyle.Color.label
       answerField.backgroundColor = TKMStyle.Color.background
       answerField.placeholder = taskTypePlaceholder
-      if let firstReading = activeSubject.primaryReadings.first {
+      if let firstReading = session.activeSubject.primaryReadings.first {
         kanaInput.alphabet = (firstReading.hasType && firstReading.type == .onyomi &&
           Settings.useKatakanaForOnyomi) ? .katakana : .hiragana
       } else {
@@ -660,10 +536,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       }
 
       answerField.useJapaneseKeyboard = Settings
-        .autoSwitchKeyboard && activeTaskType == .reading
+        .autoSwitchKeyboard && session.activeTaskType == .reading
 
       if Settings.showSRSLevelIndicator {
-        levelLabel.attributedText = getDots(stage: activeTask.assignment.srsStage)
+        levelLabel.attributedText = getDots(stage: session.activeAssignment.srsStage)
       } else {
         levelLabel.attributedText = nil
       }
@@ -671,20 +547,20 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       let setupContextFunc = {
         (ctx: AnimationContext) in
         if !(self.questionLabel.attributedText?
-          .isEqual(to: self.activeSubject.japaneseText) ?? false) ||
+          .isEqual(to: self.session.activeSubject.japaneseText) ?? false) ||
           self.questionLabel.font.familyName != self.currentFontName {
           ctx.addFadingLabel(original: self.questionLabel!)
           self.questionLabel
             .font = UIFont(name: self.currentFontName, size: self.questionLabelFontSize())
-          self.questionLabel.attributedText = self.activeSubject.japaneseText
+          self.questionLabel.attributedText = self.session.activeSubject.japaneseText
         }
         if self.wrapUpLabel.text != wrapUpText {
           ctx.addFadingLabel(original: self.wrapUpLabel!)
           self.wrapUpLabel.text = wrapUpText
         }
-        if self.successRateLabel.text != successRateText {
+        if self.successRateLabel.text != self.session.successRateText {
           ctx.addFadingLabel(original: self.successRateLabel!)
-          self.successRateLabel.text = successRateText
+          self.successRateLabel.text = self.session.successRateText
         }
         if self.doneLabel.text != doneText {
           ctx.addFadingLabel(original: self.doneLabel!)
@@ -761,7 +637,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   private func animateSubjectDetailsView(shown: Bool,
                                          setupContextFunc: ((AnimationContext) -> Void)?) {
-    let cheats = delegate.allowsCheats(forReviewItem: activeTask)
+    let cheats = delegate.allowsCheats(forReviewItem: session.activeTask)
 
     if shown {
       subjectDetailsView.isHidden = false
@@ -949,12 +825,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   @objc func showNextCustomFont() {
-    currentFontName = nextCustomFont(thatCanRenderText: activeSubject.japanese) ?? normalFontName
+    currentFontName = nextCustomFont(thatCanRenderText: session.activeSubject.japanese) ??
+      normalFontName
     setCustomQuestionLabelFont(useCustomFont: true)
   }
 
   @objc func showPreviousCustomFont() {
-    currentFontName = previousCustomFont(thatCanRenderText: activeSubject.japanese) ??
+    currentFontName = previousCustomFont(thatCanRenderText: session.activeSubject.japanese) ??
       normalFontName
     setCustomQuestionLabelFont(useCustomFont: true)
   }
@@ -982,15 +859,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   // MARK: - Wrapping up
 
-  private var _isWrappingUp = false
   @objc public var wrappingUp: Bool {
     get {
-      _isWrappingUp
+      session.wrappingUp
     }
     set {
-      _isWrappingUp = newValue
-      wrapUpIcon.isHidden = !_isWrappingUp
-      wrapUpLabel.isHidden = !_isWrappingUp
+      session.wrappingUp = newValue
+      wrapUpIcon.isHidden = !newValue
+      wrapUpLabel.isHidden = !newValue
     }
   }
 
@@ -1029,7 +905,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Keep the cursor in the text field on OtherKanjiReading or ContainsInvalidCharacters
     // AnswerCheckerResult cases except when subject details are displayed.
     if subjectDetailsView.isHidden,
-       activeTask.answer.hasMeaningWrong || activeTask.answer.hasReadingWrong {
+       session.activeTask.answer.hasMeaningWrong || session.activeTask.answer.hasReadingWrong {
       return false
     }
 
@@ -1073,12 +949,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     answerField.text = AnswerChecker.normalizedString(answerField.text ?? "",
-                                                      taskType: activeTaskType,
+                                                      taskType: session.activeTaskType,
                                                       alphabet: kanaInput.alphabet)
     let result = AnswerChecker.checkAnswer(answerField.text!,
-                                           subject: activeSubject,
-                                           studyMaterials: activeStudyMaterials,
-                                           taskType: activeTaskType,
+                                           subject: session.activeSubject,
+                                           studyMaterials: session.activeStudyMaterials,
+                                           taskType: session.activeTaskType,
                                            localCachingClient: services.localCachingClient)
 
     switch result {
@@ -1110,125 +986,40 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private func markAnswer(_ result: AnswerResult) {
     if result == .AskAgainLater {
       // Take the task out of the queue so it comes back later.
-      activeQueue.remove(at: activeTaskIndex)
-      activeTask.reset()
-      reviewQueue.append(activeTask)
-      refillActiveQueue()
+      session.moveActiveTaskToEnd()
       randomTask()
       return
     }
 
-    let correct = result == .Correct || result == .OverrideAnswerCorrect
-
-    if correct {
+    if result.correct {
       hapticGenerator.impactOccurred()
       hapticGenerator.prepare()
     }
 
     // Mark the task.
-    var firstTimeAnswered = false
-    switch activeTaskType {
-    case .meaning:
-      firstTimeAnswered = !activeTask.answer.hasMeaningWrong
-      if firstTimeAnswered ||
-        (lastMarkAnswerWasFirstTime && result == .OverrideAnswerCorrect) {
-        activeTask.answer.meaningWrong = !correct
-        if result == .OverrideAnswerCorrect {
-          activeTask.answer.meaningWrongCount -= 1
-        }
-      }
-      activeTask.answeredMeaning = correct
-
-      if !correct {
-        activeTask.answer.meaningWrongCount += 1
-      }
-
-    case .reading:
-      firstTimeAnswered = !activeTask.answer.hasReadingWrong
-      if firstTimeAnswered ||
-        (lastMarkAnswerWasFirstTime && result == .OverrideAnswerCorrect) {
-        activeTask.answer.readingWrong = !correct
-        if result == .OverrideAnswerCorrect {
-          activeTask.answer.readingWrongCount -= 1
-        }
-      }
-      activeTask.answeredReading = correct
-
-      if !correct {
-        activeTask.answer.readingWrongCount += 1
-      }
-
-    default:
-      fatalError()
-    }
-    lastMarkAnswerWasFirstTime = firstTimeAnswered
-
-    // Update stats.
-    switch result {
-    case .Correct:
-      tasksAnswered += 1
-      tasksAnsweredCorrectly += 1
-
-    case .Incorrect:
-      tasksAnswered += 1
-
-    case .OverrideAnswerCorrect:
-      tasksAnsweredCorrectly += 1
-
-    case .AskAgainLater:
-      // Handled above.
-      fatalError()
-    }
-
-    // Remove it from the active queue if that was the last part.
-    let isSubjectFinished =
-      activeTask.answeredMeaning && (activeSubject.hasRadical || activeTask.answeredReading)
-    let didLevelUp = (!activeTask.answer.readingWrong && !activeTask.answer.meaningWrong)
-    let newSrsStage =
-      didLevelUp ? activeTask.assignment.srsStage.next : activeTask.assignment.srsStage.previous
-    if isSubjectFinished {
-      let date = Int32(Date().timeIntervalSince1970)
-      if date > activeTask.assignment.availableAt {
-        activeTask.answer.createdAt = date
-      }
-
-      if Settings.minimizeReviewPenalty {
-        if activeTask.answer.meaningWrong {
-          activeTask.answer.meaningWrongCount = 1
-        }
-        if activeTask.answer.readingWrong {
-          activeTask.answer.readingWrongCount = 1
-        }
-      }
-
-      _ = services.localCachingClient!.sendProgress([activeTask.answer])
-
-      reviewsCompleted += 1
-      completedReviews.append(activeTask)
-      activeQueue.remove(at: activeTaskIndex)
-      refillActiveQueue()
-    }
+    let marked = session.markAnswer(result)
 
     // Show a new task if it was correct.
     if result != .Incorrect {
-      if Settings.playAudioAutomatically, activeTaskType == .reading,
-         activeSubject.hasVocabulary, !activeSubject.vocabulary.audio.isEmpty {
-        services.audio.play(subjectID: activeSubject!.id, delegate: nil)
+      if Settings.playAudioAutomatically, session.activeTaskType == .reading,
+         let subject = session.activeSubject,
+         subject.hasVocabulary, !subject.vocabulary.audio.isEmpty {
+        services.audio.play(subjectID: subject.id, delegate: nil)
       }
 
       var previousSubjectLabel: UILabel?
-      if isSubjectFinished, showSubjectHistory {
+      if marked.subjectFinished, showSubjectHistory {
         previousSubjectLabel = copyLabel(questionLabel)
-        previousSubject = activeSubject
+        previousSubject = session.activeSubject
       }
       randomTask()
-      if correct {
+      if result.correct {
         // We must start the success animations *after* all the UI elements have been moved to their
         // new locations by randomTask(), so that, for example, the success sparkles animate from
         // the final position of the answerField, not the original position.
         SuccessAnimation.run(answerField: answerField, doneLabel: doneLabel,
-                             srsLevelLabel: levelLabel, isSubjectFinished: isSubjectFinished,
-                             didLevelUp: didLevelUp, newSrsStage: newSrsStage)
+                             srsLevelLabel: levelLabel, isSubjectFinished: marked.subjectFinished,
+                             didLevelUp: marked.didLevelUp, newSrsStage: marked.newSrsStage)
       }
 
       if let previousSubjectLabel = previousSubjectLabel {
@@ -1253,9 +1044,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   @IBAction func revealAnswerButtonPressed(_: Any) {
-    let task = Settings.showFullAnswer ? nil : activeTask
-    subjectDetailsView.update(withSubject: activeSubject, studyMaterials: activeStudyMaterials,
-                              assignment: activeAssignment, task: task)
+    let task = Settings.showFullAnswer ? nil : session.activeTask
+    subjectDetailsView.update(withSubject: session.activeSubject,
+                              studyMaterials: session.activeStudyMaterials,
+                              assignment: session.activeAssignment, task: task)
 
     let setupContextFunc = { (ctx: AnimationContext) in
       if self.questionLabel.font.familyName != self.normalFontName {
@@ -1290,7 +1082,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                               style: .default,
                               handler: { _ in self.askAgain() }))
 
-    if activeTaskType == .meaning {
+    if session.activeTaskType == .meaning {
       c.addAction(UIAlertAction(title: "Add synonym",
                                 style: .default,
                                 handler: { _ in self.addSynonym() }))
@@ -1313,12 +1105,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   @objc func addSynonym() {
-    if activeStudyMaterials == nil {
-      activeStudyMaterials = TKMStudyMaterials()
-      activeStudyMaterials!.subjectID = activeSubject.id
+    if let text = answerField.text {
+      session.addSynonym(text)
     }
-    activeStudyMaterials!.meaningSynonyms.append(answerField.text!)
-    _ = services.localCachingClient?.updateStudyMaterial(activeStudyMaterials!)
     markAnswer(.OverrideAnswerCorrect)
   }
 
