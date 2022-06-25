@@ -35,7 +35,6 @@ class ReviewItem: NSObject {
 
     for assignment in assignments {
       if !localCachingClient.isValid(subjectId: assignment.subjectID) ||
-        (userInfo.hasLevel && userInfo.level < assignment.level) ||
         !isIncluded(assignment) {
         continue
       }

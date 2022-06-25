@@ -159,13 +159,6 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
         continue
       }
 
-      // Skip assignments that are a higher level than the user's current level. Wanikani items that
-      // have moved to later levels can end up in this state and reviews will not be saved by the WK
-      // API so they end up perpetually reviewed.
-      if user.hasLevel, user.level < assignment.level {
-        continue
-      }
-
       if assignment.isLessonStage {
         lessonCount += 1
       } else if assignment.isReviewStage {
