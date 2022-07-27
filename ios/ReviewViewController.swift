@@ -902,14 +902,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   func textFieldShouldReturn(_: UITextField) -> Bool {
     enterKeyPressed()
 
-    // Keep the cursor in the text field on OtherKanjiReading or ContainsInvalidCharacters
-    // AnswerCheckerResult cases except when subject details are displayed.
-    if subjectDetailsView.isHidden,
-       session.activeTask.answer.hasMeaningWrong || session.activeTask.answer.hasReadingWrong {
-      return false
-    }
-
-    return true
+    // Keep the cursor in the text field except when subject details are displayed.
+    return !subjectDetailsView.isHidden
   }
 
   @objc func enterKeyPressed() {
