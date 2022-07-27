@@ -40,6 +40,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     super.init()
     tableView.dataSource = self
     tableView.delegate = self
+    fixHeadersOnMac()
   }
 
   convenience init(tableView: UITableView) {
@@ -53,6 +54,16 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   @objc(itemsInSection:)
   func items(inSection section: Int) -> [TKMModelItem] {
     sections[section].items
+  }
+
+  private func fixHeadersOnMac() {
+    // Ensure macOS can see section header text
+    #if targetEnvironment(macCatalyst)
+      tableView.sectionHeaderHeight = 28
+    #endif
+    if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
+      self.tableView.sectionHeaderHeight = 28
+    }
   }
 
   // MARK: - Hiding items
