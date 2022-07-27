@@ -77,6 +77,19 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
     navigationController?.popToRootViewController(animated: true)
   }
 
+  override var canBecomeFirstResponder: Bool {
+    true
+  }
+
+  override var keyCommands: [UIKeyCommand]? {
+    [
+      UIKeyCommand(input: "\r",
+                   modifierFlags: [],
+                   action: #selector(doneClicked),
+                   discoverabilityTitle: "Dismiss review session results"),
+    ]
+  }
+
   // MARK: - SubjectDelegate
 
   func didTapSubject(_ subject: TKMSubject) {
