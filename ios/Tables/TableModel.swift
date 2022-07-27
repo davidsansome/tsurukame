@@ -40,6 +40,8 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     super.init()
     tableView.dataSource = self
     tableView.delegate = self
+
+    tableView.sectionHeaderHeight = 35
   }
 
   convenience init(tableView: UITableView) {
