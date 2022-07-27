@@ -13,7 +13,7 @@ jobs:
 
   test-ios:
     macos:
-      xcode: 13.1.0
+      xcode: 14.0.0
     environment:
       FL_OUTPUT_DIR: output
     steps:
@@ -40,7 +40,7 @@ jobs:
 
   release-testflight:
     macos:
-      xcode: 13.1.0
+      xcode: 14.0.0
     steps:
       - checkout
       - run: sudo defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
