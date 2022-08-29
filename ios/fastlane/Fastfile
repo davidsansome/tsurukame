@@ -29,7 +29,6 @@ end
 
 lane :test do
   run_tests(
-    derived_data_path: "~/Library/Developer/Xcode/DerivedData",
     scheme: "Tsurukame",
     include_simulator_logs: true,
   )
