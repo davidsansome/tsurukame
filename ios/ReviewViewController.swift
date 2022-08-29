@@ -27,6 +27,9 @@ private let kReadingTextColor = UIColor.white
 private let kMeaningTextColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0)
 private let kDefaultButtonTintColor = UIButton().tintColor
 
+// If the keyboard height changes by less than this amount, the question label will stay where it is.
+private let kSmallKeyboardHeightChange: CGFloat = 50.0
+
 enum AnswerResult {
   case Correct
   case Incorrect
@@ -180,6 +183,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // These are set to match the keyboard animation.
   private var animationDuration: Double = kDefaultAnimationDuration
   private var animationCurve: UIView.AnimationCurve = kDefaultAnimationCurve
+  private var previousKeyboardInsetHeight: CGFloat?
 
   private var currentFontName: String!
   private var normalFontName: String!
@@ -213,6 +217,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   @IBOutlet private var answerFieldToSubjectDetailsViewConstraint: NSLayoutConstraint!
   @IBOutlet private var previousSubjectButtonWidthConstraint: NSLayoutConstraint!
   @IBOutlet private var previousSubjectButtonHeightConstraint: NSLayoutConstraint!
+  @IBOutlet private var questionLabelBottomConstraint: NSLayoutConstraint!
 
   required init?(coder: NSCoder) {
     super.init(coder: coder)
@@ -390,6 +395,17 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     let insetHeight = max(0, CGFloat(height) - distanceFromViewBottomToWindowBottom)
 
     answerFieldToBottomConstraint.constant = insetHeight
+
+    // When the keyboard changes size by a small amount (the autocorrect bar is shown/hidden) try
+    // to avoid moving the question label by offsetting its bottom constraint by the same amount the
+    // keyboard moved.
+    if let previousKeyboardInsetHeight = previousKeyboardInsetHeight,
+       abs(insetHeight - previousKeyboardInsetHeight) <= kSmallKeyboardHeightChange {
+      questionLabelBottomConstraint.constant = previousKeyboardInsetHeight - insetHeight
+    } else {
+      questionLabelBottomConstraint.constant = 0
+      previousKeyboardInsetHeight = insetHeight
+    }
 
     var subjectDetailsViewInset = subjectDetailsView.contentInset
     subjectDetailsViewInset.bottom = insetHeight
@@ -678,6 +694,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     // Constraints.
     answerFieldToBottomConstraint.isActive = !shown
+    questionLabelBottomConstraint.constant = 0
 
     // Enable/disable the answer field, and set its first responder status.
     // This makes the keyboard appear or disappear immediately.  We need this animation to happen

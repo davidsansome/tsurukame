@@ -308,6 +308,7 @@
                         <outlet property="promptLabel" destination="lqe-Ns-DBU" id="GFV-8A-R0R"/>
                         <outlet property="questionBackground" destination="TY8-JV-WfA" id="LLo-NL-b0u"/>
                         <outlet property="questionLabel" destination="Nab-RQ-m49" id="Q7Z-qe-FGQ"/>
+                        <outlet property="questionLabelBottomConstraint" destination="LYD-kF-MuB" id="20B-bu-dja"/>
                         <outlet property="queueIcon" destination="TgI-GY-kYL" id="bQh-Zu-fUi"/>
                         <outlet property="queueLabel" destination="WG4-t0-dUV" id="UZV-i3-In8"/>
                         <outlet property="revealAnswerButton" destination="Zyq-WW-fbd" id="5WQ-60-SBe"/>
