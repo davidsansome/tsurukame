@@ -109,7 +109,18 @@ private class AnimationContext {
   let cheats: Bool
   let subjectDetailsViewShown: Bool
 
-  private var fadingLabels = [(UILabel, UILabel)]()
+  private struct FadingLabel {
+    let original: UILabel
+    let copy: UILabel
+
+    // Make copies of the original dimensions in case they're modified between when they're added
+    // and when they're animated.
+    let originalFrame: CGRect
+    let originalBounds: CGRect
+    let originalCenter: CGPoint
+  }
+
+  private var fadingLabels = [FadingLabel]()
 
   init(cheats: Bool, subjectDetailsViewShown: Bool) {
     self.cheats = cheats
@@ -119,30 +130,32 @@ private class AnimationContext {
   func addFadingLabel(original: UILabel) {
     let copy = copyLabel(original)
     original.alpha = 0.0
-    fadingLabels.append((original, copy))
+    fadingLabels.append(FadingLabel(original: original, copy: copy, originalFrame: original.frame,
+                                    originalBounds: original.bounds,
+                                    originalCenter: original.center))
   }
 
   func animateFadingLabels() {
-    for (original, copy) in fadingLabels {
-      original.alpha = 1.0
-      switch original.textAlignment {
+    for l in fadingLabels {
+      l.original.alpha = 1.0
+      switch l.original.textAlignment {
       case NSTextAlignment.natural:
         fallthrough
       case NSTextAlignment.left:
-        copy.center = CGPoint(x: original.frame.minX + copy.frame.size.width / 2,
-                              y: original.frame.minY + copy.frame.size.height / 2)
+        l.copy.center = CGPoint(x: l.originalFrame.minX + l.copy.frame.size.width / 2,
+                                y: l.originalFrame.minY + l.copy.frame.size.height / 2)
       default:
-        copy.center = original.center
-        copy.bounds = original.bounds
+        l.copy.center = l.originalCenter
+        l.copy.bounds = l.originalBounds
       }
-      copy.transform = original.transform
-      copy.alpha = 0.0
+      l.copy.transform = l.original.transform
+      l.copy.alpha = 0.0
     }
   }
 
   deinit {
-    for (_, copy) in fadingLabels {
-      copy.removeFromSuperview()
+    for l in fadingLabels {
+      l.copy.removeFromSuperview()
     }
   }
 }
@@ -400,7 +413,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // to avoid moving the question label by offsetting its bottom constraint by the same amount the
     // keyboard moved.
     if let previousKeyboardInsetHeight = previousKeyboardInsetHeight,
-       abs(insetHeight - previousKeyboardInsetHeight) <= kSmallKeyboardHeightChange {
+       abs(previousKeyboardInsetHeight - insetHeight) <= kSmallKeyboardHeightChange {
       questionLabelBottomConstraint.constant = previousKeyboardInsetHeight - insetHeight
     } else {
       questionLabelBottomConstraint.constant = 0
