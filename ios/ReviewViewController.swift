@@ -694,7 +694,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     // Constraints.
     answerFieldToBottomConstraint.isActive = !shown
-    questionLabelBottomConstraint.constant = 0
+    if shown {
+      questionLabelBottomConstraint.constant = 0
+    }
 
     // Enable/disable the answer field, and set its first responder status.
     // This makes the keyboard appear or disappear immediately.  We need this animation to happen
