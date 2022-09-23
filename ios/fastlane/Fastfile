@@ -81,7 +81,6 @@ lane :beta do
   build_app(
     scheme: "Tsurukame",
     include_bitcode: true,
-    codesigning_identity: "Apple Distribution: David Sansome (7B2GP77Y4A)",
   )
 
   # Generate the changelog from git commits since the last tag.
@@ -130,7 +129,6 @@ lane :release do
   build_app(
     scheme: "Tsurukame",
     include_bitcode: true,
-    codesigning_identity: "Apple Distribution: David Sansome (7B2GP77Y4A)",
   )
 
   upload_to_app_store(
