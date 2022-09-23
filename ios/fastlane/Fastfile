@@ -53,6 +53,10 @@ lane :beta do
     api_key_path: "fastlane/app_store_api_key.json",
   )
 
+  update_code_signing_settings(
+    code_sign_identity: "iPhone Distribution",
+  )
+
   update_project_provisioning(
     xcodeproj: "Tsurukame.xcodeproj",
     target_filter: "^Tsurukame$",
@@ -96,6 +100,10 @@ lane :release do
   match(
     type: "appstore",
     api_key_path: "fastlane/app_store_api_key.json",
+  )
+
+  update_code_signing_settings(
+    code_sign_identity: "iPhone Distribution",
   )
 
   update_project_provisioning(
