@@ -15,7 +15,7 @@
 import Charts
 import Foundation
 
-class UpcomingReviewsXAxisValueFormatter: IAxisValueFormatter {
+class UpcomingReviewsXAxisValueFormatter: AxisValueFormatter {
   let startTime: Date
   let dateFormatter: DateFormatter
   let hourFormat: String = "ha"
@@ -85,7 +85,6 @@ class UpcomingReviewsChartCell: TKMModelCell {
     view.rightAxis.drawGridLinesEnabled = false
     view.rightAxis.drawLabelsEnabled = false
     view.legend.enabled = false
-    view.chartDescription = nil
     view.isUserInteractionEnabled = false
     view.xAxis.labelTextColor = TKMStyle.Color.label
     view.leftAxis.labelTextColor = TKMStyle.Color.label

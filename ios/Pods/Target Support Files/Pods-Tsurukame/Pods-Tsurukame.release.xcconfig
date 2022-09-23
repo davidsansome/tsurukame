@@ -1,11 +1,9 @@
-ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Charts" "${PODS_CONFIGURATION_BUILD_DIR}/FMDB" "${PODS_CONFIGURATION_BUILD_DIR}/Haneke" "${PODS_CONFIGURATION_BUILD_DIR}/Light-Untar" "${PODS_CONFIGURATION_BUILD_DIR}/MMDrawerController" "${PODS_CONFIGURATION_BUILD_DIR}/Reachability"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FMDB" "${PODS_CONFIGURATION_BUILD_DIR}/Haneke" "${PODS_CONFIGURATION_BUILD_DIR}/MMDrawerController" "${PODS_CONFIGURATION_BUILD_DIR}/Reachability"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Charts/Charts.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/FMDB/FMDB.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Haneke/Haneke.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Light-Untar/Light_Untar.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/MMDrawerController/MMDrawerController.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Reachability/Reachability.framework/Headers"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FMDB/FMDB.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Haneke/Haneke.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/MMDrawerController/MMDrawerController.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Reachability/Reachability.framework/Headers"
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_CONFIGURATION_BUILD_DIR}/Haneke/Haneke.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/Charts/Charts.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/Light-Untar/Light_Untar.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/MMDrawerController/MMDrawerController.framework/Headers" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/Haneke" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/Charts" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/Light-Untar" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/MMDrawerController"
-OTHER_LDFLAGS = $(inherited) -l"sqlite3" -framework "Charts" -framework "FMDB" -framework "Haneke" -framework "ImageIO" -framework "Light_Untar" -framework "MMDrawerController" -framework "QuartzCore" -framework "Reachability" -framework "SystemConfiguration"
-OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_CONFIGURATION_BUILD_DIR}/Haneke/Haneke.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/MMDrawerController/MMDrawerController.framework/Headers" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/Haneke" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/MMDrawerController"
+OTHER_LDFLAGS = $(inherited) -l"sqlite3" -framework "FMDB" -framework "Haneke" -framework "ImageIO" -framework "MMDrawerController" -framework "QuartzCore" -framework "Reachability" -framework "SystemConfiguration"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.

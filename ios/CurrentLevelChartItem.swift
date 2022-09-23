@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2022 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -133,7 +133,6 @@ class CurrentLevelChartCell: TKMModelCell {
 
   private func createChartView() -> PieChartView {
     let view = PieChartView()
-    view.chartDescription = nil
     view.legend.enabled = false
     view.holeRadiusPercent = 0.2
     view.delegate = strongDelegate
@@ -206,8 +205,11 @@ class CurrentLevelChartCell: TKMModelCell {
     dataSet.sliceSpace = 1.0 // Space between slices
     dataSet.selectionShift = 10.0 // Amount to grow when tapped
     dataSet.valueLineColor = nil
-    dataSet.valueFormatter = DefaultValueFormatter(decimals: 0)
 
     chart.data = PieChartData(dataSet: dataSet)
+
+    // valueFormatter must be set after chart.data - see
+    // https://github.com/danielgindi/Charts/issues/4690
+    dataSet.valueFormatter = DefaultValueFormatter(decimals: 0)
   }
 }

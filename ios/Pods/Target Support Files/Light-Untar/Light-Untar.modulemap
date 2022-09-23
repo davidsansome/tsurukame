@@ -1,6 +1,0 @@
-framework module Light_Untar {
-  umbrella header "Light-Untar-umbrella.h"
-
-  export *
-  module * { export * }
-}
