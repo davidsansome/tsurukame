@@ -109,12 +109,16 @@ public class WaniKaniWebClient: NSObject {
       req.httpShouldHandleCookies = true
       try req.setFormBody(method: "POST", queryItems: queryItems)
       return request(req, session: session)
-    }.map {
+    }.map { arg in
       secondCookie = try self.getSessionCookie(session)
       if firstCookie == secondCookie {
         throw WaniKaniWebClientError.badCredentials
       }
-      if $0.response.url! != kDashboardUrl {
+      if arg.response.url! == kLoginUrl,
+         arg.data.range(of: "Invalid login or password".data(using: .utf8)!) != nil {
+        throw WaniKaniWebClientError.badCredentials
+      }
+      if arg.response.url! != kDashboardUrl {
         throw WaniKaniWebClientError.unknown
       }
       return secondCookie!
