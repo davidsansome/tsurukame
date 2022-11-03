@@ -121,15 +121,20 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
   override var canBecomeFirstResponder: Bool { true }
   override var keyCommands: [UIKeyCommand]? {
     [
-      UIKeyCommand(input: " ",
-                   modifierFlags: [],
-                   action: #selector(playAudio),
+      UIKeyCommand(action: #selector(showAllInformation),
+                   input: " ",
+                   discoverabilityTitle: "Show all information"),
+      UIKeyCommand(action: #selector(playAudio),
+                   input: "j",
                    discoverabilityTitle: "Play reading"),
-      UIKeyCommand(input: UIKeyCommand.inputLeftArrow,
-                   modifierFlags: [],
-                   action: #selector(backButtonPressed),
+      UIKeyCommand(action: #selector(backButtonPressed),
+                   input: UIKeyCommand.inputLeftArrow,
                    discoverabilityTitle: "Back"),
     ]
+  }
+
+  @objc func showAllInformation() {
+    subjectDetailsView.showAllFields()
   }
 
   @objc func playAudio() {
