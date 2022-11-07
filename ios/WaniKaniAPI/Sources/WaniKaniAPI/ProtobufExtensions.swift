@@ -398,7 +398,7 @@ public extension TKMLevel {
   var createdAtDate: Date { Date(timeIntervalSince1970: TimeInterval(createdAt)) }
 
   var timeSpentCurrent: TimeInterval {
-    if !hasUnlockedAt {
+    if !hasUnlockedAt || hasAbandonedAt {
       return 0
     }
     let startDate = hasStartedAt ? startedAtDate : unlockedAtDate

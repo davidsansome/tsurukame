@@ -88,7 +88,9 @@ private func calculateLevelTimeRemaining(services: TKMServices,
 private func averageRemainingLevelTime(_ lcc: LocalCachingClient) -> TimeInterval {
   var timeSpentAtEachLevel = [TimeInterval]()
   for level in lcc.getAllLevelProgressions() {
-    timeSpentAtEachLevel.append(level.timeSpentCurrent)
+    if level.timeSpentCurrent > 0 {
+      timeSpentAtEachLevel.append(level.timeSpentCurrent)
+    }
   }
   if timeSpentAtEachLevel.isEmpty {
     return 0
