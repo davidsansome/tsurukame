@@ -1198,8 +1198,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                       numericKeyPadEnter])
     } else {
       if !revealAnswerButton.isHidden {
-        keyCommands.append(UIKeyCommand(action: #selector(revealAnswerButtonPressed),
-                                        input: "f",
+        keyCommands.append(UIKeyCommand(input: "f",
+                                        modifierFlags: [],
+                                        action: #selector(revealAnswerButtonPressed),
                                         discoverabilityTitle: "Reveal answer"))
       }
     }
