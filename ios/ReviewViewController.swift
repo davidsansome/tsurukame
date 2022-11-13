@@ -1168,8 +1168,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       // Key commands when showing the detail view
       keyCommands.append(contentsOf: [UIKeyCommand(input: " ",
                                                    modifierFlags: [],
-                                                   action: #selector(playAudio),
-                                                   discoverabilityTitle: "Play reading"),
+                                                   action: #selector(showAllInformation),
+                                                   discoverabilityTitle: "Show all information"),
                                       UIKeyCommand(input: "j", modifierFlags: [],
                                                    action: #selector(playAudio)),
                                       UIKeyCommand(input: "a",
@@ -1196,6 +1196,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                                    discoverabilityTitle: "Add as synonym"),
                                       keyboardEnter,
                                       numericKeyPadEnter])
+    } else {
+      if !revealAnswerButton.isHidden {
+        keyCommands.append(UIKeyCommand(input: "f",
+                                        modifierFlags: [],
+                                        action: #selector(revealAnswerButtonPressed),
+                                        discoverabilityTitle: "Reveal answer"))
+      }
     }
 
     if Settings.selectedFonts.count > 0 {
@@ -1219,6 +1226,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                       discoverabilityTitle: "Previous subject"))
     }
     return keyCommands
+  }
+
+  @objc func showAllInformation() {
+    if !subjectDetailsView.isHidden {
+      subjectDetailsView.showAllFields()
+    }
   }
 
   @objc func playAudio() {

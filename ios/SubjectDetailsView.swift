@@ -269,7 +269,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   static var showAllFieldsCount = 0
 
-  @objc private func showAllFields() {
+  @objc func showAllFields() {
     update(withSubject: subject, studyMaterials: studyMaterials, assignment: assignment, task: nil)
 
     // If the user keeps pressing the button, prompt them once to enable the showFullAnswer setting.

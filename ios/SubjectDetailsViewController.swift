@@ -123,6 +123,10 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     [
       UIKeyCommand(input: " ",
                    modifierFlags: [],
+                   action: #selector(showAllInformation),
+                   discoverabilityTitle: "Show all information"),
+      UIKeyCommand(input: "j",
+                   modifierFlags: [],
                    action: #selector(playAudio),
                    discoverabilityTitle: "Play reading"),
       UIKeyCommand(input: UIKeyCommand.inputLeftArrow,
@@ -130,6 +134,10 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
                    action: #selector(backButtonPressed),
                    discoverabilityTitle: "Back"),
     ]
+  }
+
+  @objc func showAllInformation() {
+    subjectDetailsView.showAllFields()
   }
 
   @objc func playAudio() {
