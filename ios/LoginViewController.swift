@@ -34,6 +34,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
   @IBOutlet private var usernameField: UITextField!
   @IBOutlet private var passwordField: UITextField!
   @IBOutlet private var signInButton: UIButton!
+  @IBOutlet private var apiKeyField: UITextField!
+  @IBOutlet private var signInWithAPIKeyButton: UIButton!
   @IBOutlet private var privacyPolicyLabel: UILabel!
   @IBOutlet private var privacyPolicyButton: UIButton!
   @IBOutlet private var activityIndicatorOverlay: UIView!
@@ -53,9 +55,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     usernameField.delegate = self
     passwordField.delegate = self
+    apiKeyField.delegate = self
 
     usernameField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     passwordField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+    apiKeyField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     textFieldDidChange(usernameField)
   }
 
@@ -71,6 +75,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       passwordField.becomeFirstResponder()
     } else if textField == passwordField {
       didTapSignInButton()
+    } else if textField == apiKeyField {
+      didTapSignInWithAPIButton()
     }
     return true
   }
@@ -79,6 +85,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     let enabled = !(usernameField.text?.isEmpty ?? false) && !(passwordField.text?.isEmpty ?? false)
     signInButton.isEnabled = enabled
     signInButton.backgroundColor = enabled ? TKMStyle.radicalColor2 : TKMStyle.Color.grey33
+
+    let apiKeyEnabled = !(apiKeyField.text?.isEmpty ?? false)
+    signInWithAPIKeyButton.isEnabled = apiKeyEnabled
+    signInWithAPIKeyButton.backgroundColor = apiKeyEnabled ? TKMStyle.radicalColor2 : TKMStyle.Color
+      .grey33
   }
 
   // MARK: - Sign In flow
@@ -100,6 +111,27 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       self.delegate?.loginComplete()
     }.catch { error in
       self.showLoginError(error.localizedDescription)
+    }
+  }
+
+  @IBAction func didTapSignInWithAPIButton() {
+    if !signInWithAPIKeyButton.isEnabled {
+      return
+    }
+    showActivityIndicatorOverlay(true)
+
+    let token = apiKeyField.text!
+    let apiClient = WaniKaniAPIClient(apiToken: token)
+    let progress = Progress()
+    let promise = apiClient.user(progress: progress)
+    promise.done { user in
+      NSLog("Login success! User is at level: \(user.currentLevel)")
+      Settings.userCookie = "apiFieldCookie" // dummy cookie since we use the API
+      Settings.userApiToken = token
+      Settings.userEmailAddress = ""
+      self.delegate?.loginComplete()
+    }.catch { _ in
+      self.showLoginError("Invalid API token!")
     }
   }
 

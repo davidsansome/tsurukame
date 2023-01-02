@@ -448,8 +448,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   }
 
   func updateUserInfo() {
-    guard let user = services.localCachingClient.getUserInfo(),
-          Settings.userEmailAddress != "" else { return }
+    guard let user = services.localCachingClient.getUserInfo() else { return }
     let email = Settings.userEmailAddress
     let guruKanji = services.localCachingClient.guruKanjiCount
     let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)

@@ -33,7 +33,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JYP-De-NXS">
-                                <rect key="frame" x="75" y="272" width="225" height="35"/>
+                                <rect key="frame" x="75" y="207.5" width="225" height="35"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="e0w-XM-Y3b"/>
@@ -42,15 +42,23 @@
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="O4b-JI-G3n">
-                                <rect key="frame" x="75" y="315" width="225" height="35"/>
+                                <rect key="frame" x="75" y="250.5" width="225" height="35"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go" secureTextEntry="YES"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="API Key" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ARP-3W-feH" userLabel="API Key">
+                                <rect key="frame" x="75" y="345" width="225" height="34"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RbB-6e-QL5">
-                                <rect key="frame" x="131.5" y="366" width="112.5" height="35"/>
-                                <state key="normal" title="Sign in">
+                                <rect key="frame" x="73.5" y="293" width="228" height="35"/>
+                                <size key="titleShadowOffset" width="1" height="1"/>
+                                <state key="normal" title="Sign in with Username/Password">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" systemColor="labelColor"/>
                                 </state>
                                 <state key="disabled">
                                     <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -59,14 +67,28 @@
                                     <action selector="didTapSignInButton" destination="RE3-Ck-N2j" eventType="touchUpInside" id="ZUH-s5-wJR"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YBG-Q3-yv4">
+                                <rect key="frame" x="73.5" y="388" width="228" height="35"/>
+                                <size key="titleShadowOffset" width="1" height="1"/>
+                                <state key="normal" title="Sign in with API Key">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" systemColor="labelColor"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTapSignInWithAPIButton" destination="RE3-Ck-N2j" eventType="touchUpInside" id="Zm4-BN-OZE"/>
+                                </connections>
+                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This app uses your WaniKani credentials to synchronise your progress with the WaniKani website." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XQW-gv-i5e">
-                                <rect key="frame" x="16" y="593.5" width="343" height="30.5"/>
+                                <rect key="frame" x="16" y="589" width="343" height="34"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nzq-PL-tt3">
-                                <rect key="frame" x="148" y="624" width="79" height="27"/>
+                                <rect key="frame" x="145.5" y="623" width="84" height="28"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                 <state key="normal" title="Privacy policy">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -76,10 +98,12 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in to your WaniKani account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d7n-s4-OyH">
-                                <rect key="frame" x="77.5" y="225" width="220.5" height="17"/>
+                                <rect key="frame" x="57.5" y="156" width="260.5" height="21.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
+                                <color key="shadowColor" systemColor="labelColor"/>
+                                <size key="shadowOffset" width="1" height="1"/>
                             </label>
                             <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5XY-Jr-SQY">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -106,6 +130,7 @@
                             <constraint firstItem="JYP-De-NXS" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="GIk-Xp-Hma"/>
                             <constraint firstItem="JYP-De-NXS" firstAttribute="top" secondItem="d7n-s4-OyH" secondAttribute="bottom" constant="30" id="Hle-lx-E9S"/>
                             <constraint firstItem="d7n-s4-OyH" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="HzV-nI-Nph"/>
+                            <constraint firstItem="YBG-Q3-yv4" firstAttribute="height" secondItem="RbB-6e-QL5" secondAttribute="height" id="I2F-St-NsZ"/>
                             <constraint firstItem="2nw-3e-CvJ" firstAttribute="bottom" secondItem="dX7-mn-Kqu" secondAttribute="bottom" id="I35-jy-ixE"/>
                             <constraint firstItem="2nw-3e-CvJ" firstAttribute="trailing" secondItem="dX7-mn-Kqu" secondAttribute="trailing" id="Ia3-tL-OIZ"/>
                             <constraint firstItem="O4b-JI-G3n" firstAttribute="width" secondItem="JYP-De-NXS" secondAttribute="width" id="M12-e9-WNL"/>
@@ -113,27 +138,35 @@
                             <constraint firstItem="5XY-Jr-SQY" firstAttribute="bottom" secondItem="dX7-mn-Kqu" secondAttribute="bottom" id="RrX-4Y-sRH"/>
                             <constraint firstItem="O4b-JI-G3n" firstAttribute="height" secondItem="JYP-De-NXS" secondAttribute="height" id="Ryk-Jx-yOp"/>
                             <constraint firstItem="Rp7-Cm-oWw" firstAttribute="bottom" secondItem="Nzq-PL-tt3" secondAttribute="bottom" constant="16" id="SXf-im-eLH"/>
+                            <constraint firstItem="YBG-Q3-yv4" firstAttribute="top" secondItem="ARP-3W-feH" secondAttribute="bottom" constant="9" id="THP-n4-vva"/>
                             <constraint firstItem="2nw-3e-CvJ" firstAttribute="top" secondItem="dX7-mn-Kqu" secondAttribute="top" id="Tos-NO-hAY"/>
-                            <constraint firstItem="RbB-6e-QL5" firstAttribute="top" secondItem="O4b-JI-G3n" secondAttribute="bottom" constant="16" id="d8D-xV-bAU"/>
+                            <constraint firstItem="YBG-Q3-yv4" firstAttribute="width" secondItem="RbB-6e-QL5" secondAttribute="width" id="XXI-3S-ZQB"/>
+                            <constraint firstItem="RbB-6e-QL5" firstAttribute="top" secondItem="O4b-JI-G3n" secondAttribute="bottom" constant="7.5" id="d8D-xV-bAU"/>
                             <constraint firstItem="RbB-6e-QL5" firstAttribute="height" secondItem="JYP-De-NXS" secondAttribute="height" id="eey-xG-b8n"/>
                             <constraint firstItem="XQW-gv-i5e" firstAttribute="leading" secondItem="Rp7-Cm-oWw" secondAttribute="leading" constant="16" id="fPH-ty-5QI"/>
                             <constraint firstItem="5XY-Jr-SQY" firstAttribute="trailing" secondItem="dX7-mn-Kqu" secondAttribute="trailing" id="few-EA-9bH"/>
-                            <constraint firstItem="d7n-s4-OyH" firstAttribute="centerY" secondItem="dX7-mn-Kqu" secondAttribute="centerY" multiplier="0.7" id="hjD-kw-ruH"/>
+                            <constraint firstItem="YBG-Q3-yv4" firstAttribute="centerX" secondItem="ARP-3W-feH" secondAttribute="centerX" id="hCf-CZ-nLE"/>
+                            <constraint firstItem="d7n-s4-OyH" firstAttribute="centerY" secondItem="dX7-mn-Kqu" secondAttribute="centerY" multiplier="0.5" id="hjD-kw-ruH"/>
                             <constraint firstItem="Nzq-PL-tt3" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="j30-z5-gLN"/>
                             <constraint firstItem="Rp7-Cm-oWw" firstAttribute="trailing" secondItem="XQW-gv-i5e" secondAttribute="trailing" constant="16" id="jwX-SG-i0P"/>
-                            <constraint firstItem="RbB-6e-QL5" firstAttribute="width" secondItem="O4b-JI-G3n" secondAttribute="width" multiplier="0.5" id="o5b-zD-haD"/>
+                            <constraint firstItem="ARP-3W-feH" firstAttribute="centerX" secondItem="O4b-JI-G3n" secondAttribute="centerX" id="mb5-Zh-L2T"/>
+                            <constraint firstItem="ARP-3W-feH" firstAttribute="width" secondItem="O4b-JI-G3n" secondAttribute="width" id="neP-fR-puR"/>
+                            <constraint firstItem="RbB-6e-QL5" firstAttribute="width" secondItem="O4b-JI-G3n" secondAttribute="width" multiplier="0.5" constant="115.5" id="o5b-zD-haD"/>
                             <constraint firstItem="RbB-6e-QL5" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="rgV-fX-6q1"/>
                             <constraint firstItem="2nw-3e-CvJ" firstAttribute="leading" secondItem="dX7-mn-Kqu" secondAttribute="leading" id="tMJ-Kr-V7q"/>
+                            <constraint firstItem="ARP-3W-feH" firstAttribute="top" secondItem="RbB-6e-QL5" secondAttribute="bottom" constant="17" id="xST-Q2-p0X"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="bBo-Lb-7ZM" id="gRx-Lk-YKh"/>
                         <outlet property="activityIndicatorOverlay" destination="5XY-Jr-SQY" id="KpA-tS-WEt"/>
+                        <outlet property="apiKeyField" destination="ARP-3W-feH" id="W49-ov-L3a"/>
                         <outlet property="passwordField" destination="O4b-JI-G3n" id="DCL-CC-ZsO"/>
                         <outlet property="privacyPolicyButton" destination="Nzq-PL-tt3" id="umc-nD-OrM"/>
                         <outlet property="privacyPolicyLabel" destination="XQW-gv-i5e" id="Aj6-Po-mXd"/>
                         <outlet property="signInButton" destination="RbB-6e-QL5" id="Oz7-Zv-7CC"/>
                         <outlet property="signInLabel" destination="d7n-s4-OyH" id="oRS-l3-TQp"/>
+                        <outlet property="signInWithAPIKeyButton" destination="YBG-Q3-yv4" id="Oy3-wv-p15"/>
                         <outlet property="usernameField" destination="JYP-De-NXS" id="fgx-Nt-xpx"/>
                     </connections>
                 </viewController>
@@ -362,6 +395,9 @@
         <image name="launch_screen" width="1126" height="2436"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
