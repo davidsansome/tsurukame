@@ -59,6 +59,14 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
                               on: Settings.showOldMnemonic,
                               target: self,
                               action: #selector(showOldMnemonicSwitchChanged(_:))))
+    let currentLevelGraphItem = SwitchModelItem(style: .subtitle,
+                                                title: "Keep current level graph",
+                                                subtitle: "Instead of showing the next level's graph when you finish the kanji for a given level, keep showing the same level completion graph until all radicals, kanji, and vocabulary have gotten to Guru or higher",
+                                                on: Settings.showPreviousLevelGraph,
+                                                target: self,
+                                                action: #selector(levelGraphSwitchChanged(_:)))
+    currentLevelGraphItem.numberOfSubtitleLines = 0
+    model.add(currentLevelGraphItem)
 
     self.model = model
     model.reloadTable()
@@ -80,5 +88,9 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
 
   @objc private func showAllReadingsSwitchChanged(_ switchView: UISwitch) {
     Settings.showAllReadings = switchView.isOn
+  }
+
+  @objc private func levelGraphSwitchChanged(_ switchView: UISwitch) {
+    Settings.showPreviousLevelGraph = switchView.isOn
   }
 }

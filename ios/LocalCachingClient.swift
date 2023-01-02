@@ -489,6 +489,34 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     return getAssignments(level: Int(userInfo.level))
   }
 
+  func hasCompletedPreviousLevel() -> Bool {
+    guard let userInfo = getUserInfo() else {
+      return false
+    }
+    var level = Int(userInfo.level)
+    if level > 1 {
+      level = level - 1
+    }
+    let assignments = getAssignments(level: level)
+    var isDoneWithPreviousLevel = true
+    for assignment in assignments {
+      if assignment.srsStageNumber == level, !assignment.hasPassedAt {
+        isDoneWithPreviousLevel = false
+      }
+    }
+    return isDoneWithPreviousLevel
+  }
+
+  func getAssignmentsAtUsersCurrentGraphLevel() -> [TKMAssignment] {
+    guard let userInfo = getUserInfo() else {
+      return []
+    }
+    if Settings.showPreviousLevelGraph, !hasCompletedPreviousLevel() {
+      return getAssignments(level: Int(userInfo.level) - 1)
+    }
+    return getAssignments(level: Int(userInfo.level))
+  }
+
   private func getAssignments(level: Int, transaction db: FMDatabase) -> [TKMAssignment] {
     var ret = [TKMAssignment]()
     var subjectIds = Set<Int>()
