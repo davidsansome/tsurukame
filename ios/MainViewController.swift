@@ -341,9 +341,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
     case "showRemaining":
       let vc = segue.destination as! SubjectsRemainingViewController
-      guard var level = services.localCachingClient.getUserInfo()?.level else {
-        return
-      }
+      var level = services.localCachingClient.getUserInfo()!.level
       if self.isShowingPriorUserLevel, self.model.tableView.indexPathForSelectedRow!.section == self.currLevelSectionIndex {
         level = level - 1
       }
