@@ -35,12 +35,12 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    navigationItem.title = "Remaining in Level \(self.level!)"
+    navigationItem.title = "Remaining in Level \(level!)"
 
     var radicals = [SubjectModelItem]()
     var kanji = [SubjectModelItem]()
     var vocabulary = [SubjectModelItem]()
-    for assignment in services.localCachingClient.getAssignments(level: self.level) {
+    for assignment in services.localCachingClient.getAssignments(level: level) {
       if assignment.srsStage > .apprentice4 {
         continue
       }
