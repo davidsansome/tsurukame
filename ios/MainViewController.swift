@@ -201,7 +201,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       model.add(section: "Current level (\(user.currentLevel > 1 ? user.currentLevel - 1 : 1))")
       let currentGraphLevelAssignments = services.localCachingClient.getAssignments(level: Int(user.currentLevel) - 1)
       model.add(CurrentLevelChartItem(currentLevelAssignments: currentGraphLevelAssignments))
-      model.add(section: "Next level")
+      model.add(section: "Next level (\(user.currentLevel))")
     } else {
       model.add(section: "Current level")
     }
