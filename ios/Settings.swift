@@ -194,7 +194,7 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(allowSkippingReviews)) static var allowSkippingReviews: Bool
   @Setting(true, #keyPath(minimizeReviewPenalty)) static var minimizeReviewPenalty: Bool
   @Setting(false, #keyPath(ankiMode)) static var ankiMode: Bool
-  @Setting(false, #keyPath(showPreviousLevelGraph)) static var showPreviousLevelGraph: Bool
+  @Setting(true, #keyPath(showPreviousLevelGraph)) static var showPreviousLevelGraph: Bool
 
   @Setting(false, #keyPath(seenFullAnswerPrompt)) static var seenFullAnswerPrompt: Bool
 
