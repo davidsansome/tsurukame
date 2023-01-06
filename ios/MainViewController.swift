@@ -341,7 +341,13 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
     case "showRemaining":
       let vc = segue.destination as! SubjectsRemainingViewController
-      vc.setup(services: services)
+      guard var level = services.localCachingClient.getUserInfo()?.level else {
+        return
+      }
+      if self.isShowingPriorUserLevel, self.model.tableView.indexPathForSelectedRow!.section == self.currLevelSectionIndex {
+        level = level - 1
+      }
+      vc.setup(services: services, level: Int(level))
 
     case "settings":
       let vc = segue.destination as! SettingsViewController

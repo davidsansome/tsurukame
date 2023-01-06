@@ -19,9 +19,11 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
   TKMViewController {
   var services: TKMServices!
   var model: TableModel?
+  private var level: Int!
 
-  func setup(services: TKMServices) {
+  func setup(services: TKMServices, level: Int) {
     self.services = services
+    self.level = level
   }
 
   // MARK: - TKMViewController
@@ -33,14 +35,12 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    guard let level = services.localCachingClient.getUserInfo()?.level else {
-      return
-    }
-    navigationItem.title = "Remaining in Level \(level)"
+    navigationItem.title = "Remaining in Level \(self.level!)"
 
     var radicals = [SubjectModelItem]()
     var kanji = [SubjectModelItem]()
-    for assignment in services.localCachingClient.getAssignmentsAtUsersCurrentLevel() {
+    var vocabulary = [SubjectModelItem]()
+    for assignment in services.localCachingClient.getAssignments(level: self.level) {
       if assignment.srsStage > .apprentice4 {
         continue
       }
@@ -48,7 +48,7 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
       else {
         continue
       }
-      if subject.subjectType == .vocabulary {
+      if !Settings.showPreviousLevelGraph, subject.subjectType == .vocabulary {
         continue
       }
 
@@ -65,6 +65,8 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
         radicals.append(item)
       case .kanji:
         kanji.append(item)
+      case .vocabulary:
+        vocabulary.append(item)
       default:
         break
       }
@@ -80,6 +82,12 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
     if !kanji.isEmpty {
       model.add(section: "Kanji")
       for item in kanji {
+        model.add(item)
+      }
+    }
+    if !vocabulary.isEmpty {
+      model.add(section: "Vocabulary")
+      for item in vocabulary {
         model.add(item)
       }
     }
