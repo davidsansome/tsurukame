@@ -498,13 +498,8 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       level = level - 1
     }
     let assignments = getAssignments(level: level)
-    var isDoneWithPreviousLevel = true
-    for assignment in assignments {
-      if assignment.srsStageNumber == level, !assignment.hasPassedAt {
-        isDoneWithPreviousLevel = false
-      }
-    }
-    return isDoneWithPreviousLevel
+    // if any assignment has not been passed, they have not passed the prior level
+    return !assignments.contains { !$0.hasPassedAt }
   }
 
   func getAssignmentsAtUsersCurrentGraphLevel() -> [TKMAssignment] {
