@@ -197,10 +197,9 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
                                               currentLevelAssignments: currentLevelAssignments))
     }
 
-    if Settings.showPreviousLevelGraph, !services.localCachingClient.hasCompletedPreviousLevel() {
+    if Settings.showPreviousLevelGraph, user.currentLevel > 1, !services.localCachingClient.hasCompletedPreviousLevel() {
       model.add(section: "Current level (\(user.currentLevel > 1 ? user.currentLevel - 1 : 1))")
-      let currentGraphLevelAssignments = services.localCachingClient
-        .getAssignmentsAtUsersCurrentGraphLevel()
+      let currentGraphLevelAssignments = services.localCachingClient.getAssignments(level: Int(user.currentLevel) - 1)
       model.add(CurrentLevelChartItem(currentLevelAssignments: currentGraphLevelAssignments))
       model.add(section: "Next level")
     } else {

@@ -502,16 +502,6 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     return !assignments.contains { !$0.hasPassedAt }
   }
 
-  func getAssignmentsAtUsersCurrentGraphLevel() -> [TKMAssignment] {
-    guard let userInfo = getUserInfo() else {
-      return []
-    }
-    if Settings.showPreviousLevelGraph, !hasCompletedPreviousLevel() {
-      return getAssignments(level: Int(userInfo.level) - 1)
-    }
-    return getAssignments(level: Int(userInfo.level))
-  }
-
   private func getAssignments(level: Int, transaction db: FMDatabase) -> [TKMAssignment] {
     var ret = [TKMAssignment]()
     var subjectIds = Set<Int>()
