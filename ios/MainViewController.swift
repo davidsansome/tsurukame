@@ -60,6 +60,9 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   var hasLessons = false
   var hasReviews = false
   var updatingTableModel = false
+  
+  var isShowingPriorUserLevel = false
+  var currLevelSectionIndex = -1
 
   private let nd = NotificationDispatcher()
 
@@ -157,6 +160,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   private func recreateTableModel() {
     guard let user = services.localCachingClient.getUserInfo() else { return }
+    
+    // make sure that section indices are reset each time table is loaded in case things change
+    self.isShowingPriorUserLevel = false
+    self.currLevelSectionIndex = -1
 
     let lessons = services.localCachingClient.availableLessonCount
     let reviews = services.localCachingClient.availableReviewCount
@@ -198,12 +205,15 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     }
 
     if Settings.showPreviousLevelGraph, user.currentLevel > 1, !services.localCachingClient.hasCompletedPreviousLevel() {
-      model.add(section: "Current level (\(user.currentLevel > 1 ? user.currentLevel - 1 : 1))")
+      self.isShowingPriorUserLevel = true
+      self.currLevelSectionIndex = model.add(section: "Current level (\(user.currentLevel > 1 ? user.currentLevel - 1 : 1))")
       let currentGraphLevelAssignments = services.localCachingClient.getAssignments(level: Int(user.currentLevel) - 1)
       model.add(CurrentLevelChartItem(currentLevelAssignments: currentGraphLevelAssignments))
+      self.addShowRemainingAllItems(model: model)
+      // add header for next section; graph and other items will be added after this if/else block
       model.add(section: "Next level (\(user.currentLevel))")
     } else {
-      model.add(section: "Current level")
+      self.currLevelSectionIndex = model.add(section: "Current level")
     }
 
     model.add(CurrentLevelChartItem(currentLevelAssignments: currentLevelAssignments))
@@ -213,6 +223,21 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
         .add(createLevelTimeRemainingItem(services: services,
                                           currentLevelAssignments: currentLevelAssignments))
     }
+    self.addShowRemainingAllItems(model: model)
+
+    model.add(section: "All levels")
+    for category in SRSStageCategory.apprentice ... SRSStageCategory.burned {
+      let count = services.localCachingClient.srsCategoryCounts[category.rawValue]
+      model.add(SRSStageCategoryItem(stageCategory: category, count: Int(count)))
+    }
+
+    self.model = model
+    tableView.reloadData()
+
+    updateUserInfo()
+  }
+  
+  private func addShowRemainingAllItems(model :MutableTableModel) {
     model.add(BasicModelItem(style: .default,
                              title: "Show remaining",
                              subtitle: nil,
@@ -225,17 +250,6 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
                              accessoryType: .disclosureIndicator,
                              target: self,
                              action: #selector(showAll)))
-
-    model.add(section: "All levels")
-    for category in SRSStageCategory.apprentice ... SRSStageCategory.burned {
-      let count = services.localCachingClient.srsCategoryCounts[category.rawValue]
-      model.add(SRSStageCategoryItem(stageCategory: category, count: Int(count)))
-    }
-
-    self.model = model
-    tableView.reloadData()
-
-    updateUserInfo()
   }
 
   // MARK: - UIViewController
@@ -319,7 +333,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
     case "showAll":
       let vc = segue.destination as! SubjectCatalogueViewController
-      let level = services.localCachingClient.getUserInfo()!.level
+      var level = services.localCachingClient.getUserInfo()!.level
+      if self.isShowingPriorUserLevel, self.model.tableView.indexPathForSelectedRow!.section == self.currLevelSectionIndex {
+        level = level - 1
+      }
       vc.setup(services: services, level: Int(level))
 
     case "showRemaining":
