@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
     let nc = NotificationCenter.default
     nc.addObserver(self, selector: #selector(logout), name: .logout, object: nil)
 
-    if !Settings.userApiToken.isEmpty, !Settings.userCookie.isEmpty {
+    if !Settings.userApiToken.isEmpty {
       setMainViewControllerAnimated(animated: false, clearUserData: false)
     } else {
       pushLoginViewController()
@@ -132,7 +132,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
 
   @objc
   private func logout(_: Notification?) {
-    Settings.userCookie = ""
     Settings.userApiToken = ""
     Settings.userEmailAddress = ""
     services.localCachingClient.clearAllDataAndClose()
