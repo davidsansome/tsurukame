@@ -47,7 +47,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go" secureTextEntry="YES"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="API Key" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ARP-3W-feH" userLabel="API Key">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="API Token" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ARP-3W-feH" userLabel="API Token">
                                 <rect key="frame" x="75" y="345" width="225" height="34"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -70,7 +70,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YBG-Q3-yv4">
                                 <rect key="frame" x="73.5" y="388" width="228" height="35"/>
                                 <size key="titleShadowOffset" width="1" height="1"/>
-                                <state key="normal" title="Sign in with API Key">
+                                <state key="normal" title="Sign in with API Token">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" systemColor="labelColor"/>
                                 </state>
@@ -160,13 +160,13 @@
                     <connections>
                         <outlet property="activityIndicator" destination="bBo-Lb-7ZM" id="gRx-Lk-YKh"/>
                         <outlet property="activityIndicatorOverlay" destination="5XY-Jr-SQY" id="KpA-tS-WEt"/>
-                        <outlet property="apiKeyField" destination="ARP-3W-feH" id="W49-ov-L3a"/>
+                        <outlet property="apiTokenField" destination="ARP-3W-feH" id="W49-ov-L3a"/>
                         <outlet property="passwordField" destination="O4b-JI-G3n" id="DCL-CC-ZsO"/>
                         <outlet property="privacyPolicyButton" destination="Nzq-PL-tt3" id="umc-nD-OrM"/>
                         <outlet property="privacyPolicyLabel" destination="XQW-gv-i5e" id="Aj6-Po-mXd"/>
                         <outlet property="signInButton" destination="RbB-6e-QL5" id="Oz7-Zv-7CC"/>
                         <outlet property="signInLabel" destination="d7n-s4-OyH" id="oRS-l3-TQp"/>
-                        <outlet property="signInWithAPIKeyButton" destination="YBG-Q3-yv4" id="Oy3-wv-p15"/>
+                        <outlet property="signInWithAPITokenButton" destination="YBG-Q3-yv4" id="Oy3-wv-p15"/>
                         <outlet property="usernameField" destination="JYP-De-NXS" id="fgx-Nt-xpx"/>
                     </connections>
                 </viewController>

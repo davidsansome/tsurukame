@@ -34,8 +34,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
   @IBOutlet private var usernameField: UITextField!
   @IBOutlet private var passwordField: UITextField!
   @IBOutlet private var signInButton: UIButton!
-  @IBOutlet private var apiKeyField: UITextField!
-  @IBOutlet private var signInWithAPIKeyButton: UIButton!
+  @IBOutlet private var apiTokenField: UITextField!
+  @IBOutlet private var signInWithAPITokenButton: UIButton!
   @IBOutlet private var privacyPolicyLabel: UILabel!
   @IBOutlet private var privacyPolicyButton: UIButton!
   @IBOutlet private var activityIndicatorOverlay: UIView!
@@ -55,11 +55,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     usernameField.delegate = self
     passwordField.delegate = self
-    apiKeyField.delegate = self
+    apiTokenField.delegate = self
 
     usernameField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     passwordField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-    apiKeyField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+    apiTokenField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     textFieldDidChange(usernameField)
   }
 
@@ -75,7 +75,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       passwordField.becomeFirstResponder()
     } else if textField == passwordField {
       didTapSignInButton()
-    } else if textField == apiKeyField {
+    } else if textField == apiTokenField {
       didTapSignInWithAPIButton()
     }
     return true
@@ -86,9 +86,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     signInButton.isEnabled = enabled
     signInButton.backgroundColor = enabled ? TKMStyle.radicalColor2 : TKMStyle.Color.grey33
 
-    let apiKeyEnabled = !(apiKeyField.text?.isEmpty ?? false)
-    signInWithAPIKeyButton.isEnabled = apiKeyEnabled
-    signInWithAPIKeyButton.backgroundColor = apiKeyEnabled ? TKMStyle.radicalColor2 : TKMStyle.Color
+    let apiTokenEnabled = !(apiTokenField.text?.isEmpty ?? false)
+    signInWithAPITokenButton.isEnabled = apiTokenEnabled
+    signInWithAPITokenButton.backgroundColor = apiTokenEnabled ? TKMStyle.radicalColor2 : TKMStyle.Color
       .grey33
   }
 
@@ -115,12 +115,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
   }
 
   @IBAction func didTapSignInWithAPIButton() {
-    if !signInWithAPIKeyButton.isEnabled {
+    if !signInWithAPITokenButton.isEnabled {
       return
     }
     showActivityIndicatorOverlay(true)
 
-    let token = apiKeyField.text!
+    let token = apiTokenField.text!
     let apiClient = WaniKaniAPIClient(apiToken: token)
     let progress = Progress()
     let promise = apiClient.user(progress: progress)
