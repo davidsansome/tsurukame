@@ -574,14 +574,6 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     performSegue(withIdentifier: "startLessons", sender: self)
   }
 
-  @objc func showRemaining() {
-    performSegue(withIdentifier: "showRemaining", sender: self)
-  }
-
-  @objc func showAll() {
-    performSegue(withIdentifier: "showAll", sender: self)
-  }
-
   @objc func showTableForecast() {
     performSegue(withIdentifier: "tableForecast", sender: self)
   }
