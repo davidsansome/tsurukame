@@ -36,6 +36,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
   @IBOutlet private var signInButton: UIButton!
   @IBOutlet private var apiTokenField: UITextField!
   @IBOutlet private var signInWithAPITokenButton: UIButton!
+  @IBOutlet private var swapLoginMethodsButton: UIButton!
   @IBOutlet private var privacyPolicyLabel: UILabel!
   @IBOutlet private var privacyPolicyButton: UIButton!
   @IBOutlet private var activityIndicatorOverlay: UIView!
@@ -47,6 +48,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     TKMStyle.addShadowToView(signInLabel, offset: 0, opacity: 1, radius: 5)
     TKMStyle.addShadowToView(privacyPolicyLabel, offset: 0, opacity: 1, radius: 2)
     TKMStyle.addShadowToView(privacyPolicyButton, offset: 0, opacity: 1, radius: 2)
+    TKMStyle.addShadowToView(swapLoginMethodsButton, offset: 0, opacity: 1, radius: 2)
 
     if let forcedUsername = forcedUsername {
       usernameField.text = forcedUsername
@@ -130,6 +132,30 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       self.delegate?.loginComplete()
     }.catch { _ in
       self.showLoginError("Invalid API token!")
+    }
+  }
+
+  @IBAction func didTapSwapLoginMethods() {
+    UIView.animate(withDuration: 0.1,
+                   delay: 0.0,
+                   options: [.curveLinear],
+                   animations: {
+                     let animatingInUserPass = self.usernameField.isHidden
+                     self.usernameField.isHidden = !animatingInUserPass
+                     self.passwordField.isHidden = !animatingInUserPass
+                     self.signInButton.isHidden = !animatingInUserPass
+
+                     self.apiTokenField.isHidden = animatingInUserPass
+                     self.signInWithAPITokenButton.isHidden = animatingInUserPass
+
+                     self.usernameField.alpha = animatingInUserPass ? 1 : 0
+                     self.passwordField.alpha = animatingInUserPass ? 1 : 0
+                     self.signInButton.alpha = animatingInUserPass ? 1 : 0
+                     self.apiTokenField.alpha = animatingInUserPass ? 0 : 1
+                     self.signInWithAPITokenButton.alpha = animatingInUserPass ? 0 : 1
+                   }) { _ in
+      let title = self.usernameField.isHidden ? "Use username and password" : "Use API token"
+      self.swapLoginMethodsButton.setTitle(title, for: .normal)
     }
   }
 
