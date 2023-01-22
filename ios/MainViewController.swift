@@ -61,8 +61,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   var hasReviews = false
   var updatingTableModel = false
 
-  var isShowingPriorUserLevel = false
-  var currLevelSectionIndex = -1
+  var selectedSubjectCatalogLevel = -1
 
   private let nd = NotificationDispatcher()
 
@@ -161,9 +160,8 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   private func recreateTableModel() {
     guard let user = services.localCachingClient.getUserInfo() else { return }
 
-    // make sure that section indices are reset each time table is loaded in case things change
-    isShowingPriorUserLevel = false
-    currLevelSectionIndex = -1
+    // make sure that the selected subject level is reset each time table is loaded in case things change
+    selectedSubjectCatalogLevel = -1
 
     let lessons = services.localCachingClient.availableLessonCount
     let reviews = services.localCachingClient.availableReviewCount
@@ -206,17 +204,17 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
     if Settings.showPreviousLevelGraph, user.currentLevel > 1,
        !services.localCachingClient.hasCompletedPreviousLevel() {
-      isShowingPriorUserLevel = true
-      currLevelSectionIndex = model
-        .add(section: "Current level (\(user.currentLevel > 1 ? user.currentLevel - 1 : 1))")
+      let previousLevel = Int(user.currentLevel) - 1
+      model
+        .add(section: "Current level (\(user.currentLevel - 1))")
       let currentGraphLevelAssignments = services.localCachingClient
-        .getAssignments(level: Int(user.currentLevel) - 1)
+        .getAssignments(level: previousLevel)
       model.add(CurrentLevelChartItem(currentLevelAssignments: currentGraphLevelAssignments))
-      addShowRemainingAllItems(model: model)
+      addShowRemainingAllItems(model: model, level: previousLevel)
       // add header for next section; graph and other items will be added after this if/else block
       model.add(section: "Next level (\(user.currentLevel))")
     } else {
-      currLevelSectionIndex = model.add(section: "Current level")
+      model.add(section: "Current level")
     }
 
     model.add(CurrentLevelChartItem(currentLevelAssignments: currentLevelAssignments))
@@ -226,7 +224,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
         .add(createLevelTimeRemainingItem(services: services,
                                           currentLevelAssignments: currentLevelAssignments))
     }
-    addShowRemainingAllItems(model: model)
+    addShowRemainingAllItems(model: model, level: Int(user.currentLevel))
 
     model.add(section: "All levels")
     for category in SRSStageCategory.apprentice ... SRSStageCategory.burned {
@@ -240,19 +238,21 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     updateUserInfo()
   }
 
-  private func addShowRemainingAllItems(model: MutableTableModel) {
+  private func addShowRemainingAllItems(model: MutableTableModel, level: Int) {
     model.add(BasicModelItem(style: .default,
                              title: "Show remaining",
                              subtitle: nil,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(showRemaining)))
+                             accessoryType: .disclosureIndicator) {
+        self.selectedSubjectCatalogLevel = level
+        self.performSegue(withIdentifier: "showRemaining", sender: self)
+      })
     model.add(BasicModelItem(style: .default,
                              title: "Show all",
                              subtitle: "",
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(showAll)))
+                             accessoryType: .disclosureIndicator) {
+        self.selectedSubjectCatalogLevel = level
+        self.performSegue(withIdentifier: "showAll", sender: self)
+      })
   }
 
   // MARK: - UIViewController
@@ -336,21 +336,11 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
     case "showAll":
       let vc = segue.destination as! SubjectCatalogueViewController
-      var level = services.localCachingClient.getUserInfo()!.level
-      if isShowingPriorUserLevel,
-         model.tableView.indexPathForSelectedRow!.section == currLevelSectionIndex {
-        level = level - 1
-      }
-      vc.setup(services: services, level: Int(level))
+      vc.setup(services: services, level: selectedSubjectCatalogLevel)
 
     case "showRemaining":
       let vc = segue.destination as! SubjectsRemainingViewController
-      var level = services.localCachingClient.getUserInfo()!.level
-      if isShowingPriorUserLevel,
-         model.tableView.indexPathForSelectedRow!.section == currLevelSectionIndex {
-        level = level - 1
-      }
-      vc.setup(services: services, level: Int(level))
+      vc.setup(services: services, level: selectedSubjectCatalogLevel)
 
     case "settings":
       let vc = segue.destination as! SettingsViewController
