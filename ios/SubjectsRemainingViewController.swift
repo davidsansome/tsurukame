@@ -19,7 +19,7 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
   TKMViewController {
   var services: TKMServices!
   var model: TableModel?
-  private var level: Int!
+  private var level: Int = 0
 
   func setup(services: TKMServices, level: Int) {
     self.services = services
@@ -35,7 +35,7 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    navigationItem.title = "Remaining in Level \(level!)"
+    navigationItem.title = "Remaining in Level \(level)"
 
     var radicals = [SubjectModelItem]()
     var kanji = [SubjectModelItem]()
