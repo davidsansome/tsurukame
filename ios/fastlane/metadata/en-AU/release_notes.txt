@@ -1,20 +1,11 @@
 New features:
-* Add an Anki mode.
-* Add user-editable notes.
-* Make Offline audio smarter.
-* Split the Settings screen up into different sections.
-* Add the app's version number to the Settings screen.
-* Add a setting to hide the "Stats" section.
-* Include the number of new reviews in notifications, as well as the total number.
+* Support signing in with an API token as an alternative to username/password.
+* Show stats for the previous level while finishing vocabulary.
 
 Bug fixes:
-* Fix an API bug that prevented reviews from syncing for some users.
-* Fix a keyboard display bug on iPads using iOS 15.
-* Update the lesson and review counts immediately when loading the app.
-* A full refresh (swipe down on the main screen) now completely clears local data before refreshing.
-* Cycle through audio samples in order instead of playing them at random.
-* Fix a few memory leaks.
-* Make the "Upcoming reviews" table easier to understand.
-* [1.24] Fix a bug where notifications and badge counts wouldn't be updated.
-* [1.25] Fix an iPad-only crash when starting lessons or reviews.
-* [1.25] Fix the header colours on iOS versions before 15.
+* Fix a bug that caused reviews to not appear for kanji whose levels had changed.
+* Fix some layout issues on iOS 15
+* Attempt to rate-limit progress uploads after coming back from being offline.
+* Keep the question label in the same place when the keyboard changes size.
+* Show a better error message when the user enters a wrong password.
+* Fix some keyboard shortcuts.
