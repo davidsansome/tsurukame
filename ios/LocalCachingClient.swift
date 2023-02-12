@@ -489,6 +489,19 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     return getAssignments(level: Int(userInfo.level))
   }
 
+  func hasCompletedPreviousLevel() -> Bool {
+    guard let userInfo = getUserInfo() else {
+      return false
+    }
+    var level = Int(userInfo.level)
+    if level > 1 {
+      level = level - 1
+    }
+    let assignments = getAssignments(level: level)
+    // if any assignment has not been passed, they have not passed the prior level
+    return !assignments.contains { !$0.hasPassedAt }
+  }
+
   private func getAssignments(level: Int, transaction db: FMDatabase) -> [TKMAssignment] {
     var ret = [TKMAssignment]()
     var subjectIds = Set<Int>()
