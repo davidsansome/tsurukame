@@ -448,8 +448,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   }
 
   func updateUserInfo() {
-    guard let user = services.localCachingClient.getUserInfo(),
-          Settings.userEmailAddress != "" else { return }
+    guard let user = services.localCachingClient.getUserInfo() else { return }
     let email = Settings.userEmailAddress
     let guruKanji = services.localCachingClient.guruKanjiCount
     let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)
@@ -498,9 +497,21 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     isShowingUnauthorizedAlert = true
 
     let ac = UIAlertController(title: "Logged out",
-                               message: "Your API Token expired - please log in again. You won't lose your review progress",
+                               message: "Your API token expired, is invalid, or does not have the proper permissions. Please log in again. You won't lose your review progress.\n\nAPI tokens for the Tsurukame app cannot be expired and require all of the following permissions: assignments:start, reviews:create, study_materials:create, study_materials:update.",
                                preferredStyle: .alert)
 
+    if Settings.userApiToken != "" {
+      ac.addAction(UIAlertAction(title: "Manage tokens on WaniKani", style: .default,
+                                 handler: { _ in
+                                   self.loginAgain()
+                                   if let link =
+                                     URL(string: "https://www.wanikani.com/settings/personal_access_tokens#" +
+                                       Settings
+                                       .userApiToken) {
+                                     UIApplication.shared.open(link)
+                                   }
+                                 }))
+    }
     ac.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
       self.loginAgain()
     }))

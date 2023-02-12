@@ -47,12 +47,10 @@ import WaniKaniAPI
       if isActive {
         if ProcessInfo.processInfo.arguments.contains("ResetUserDefaults") {
           // We're run again after testing finishes to remove the dummy user.
-          Settings.userCookie = ""
           Settings.userApiToken = ""
           Settings.userEmailAddress = ""
         } else {
           // Pretend there's a logged in user.
-          Settings.userCookie = "dummy"
           Settings.userApiToken = "dummy"
           Settings.userEmailAddress = "dummy"
           Settings.showSRSLevelIndicator = true

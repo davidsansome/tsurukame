@@ -34,6 +34,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
   @IBOutlet private var usernameField: UITextField!
   @IBOutlet private var passwordField: UITextField!
   @IBOutlet private var signInButton: UIButton!
+  @IBOutlet private var apiTokenStack: UIStackView!
+  @IBOutlet private var apiTokenField: UITextField!
+  @IBOutlet private var pasteButton: UIButton!
+  @IBOutlet private var swapLoginMethodsButton: UIButton!
   @IBOutlet private var privacyPolicyLabel: UILabel!
   @IBOutlet private var privacyPolicyButton: UIButton!
   @IBOutlet private var activityIndicatorOverlay: UIView!
@@ -45,6 +49,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     TKMStyle.addShadowToView(signInLabel, offset: 0, opacity: 1, radius: 5)
     TKMStyle.addShadowToView(privacyPolicyLabel, offset: 0, opacity: 1, radius: 2)
     TKMStyle.addShadowToView(privacyPolicyButton, offset: 0, opacity: 1, radius: 2)
+    TKMStyle.addShadowToView(swapLoginMethodsButton, offset: 0, opacity: 1, radius: 2)
+    TKMStyle.addShadowToView(pasteButton, offset: 0, opacity: 1, radius: 5)
 
     if let forcedUsername = forcedUsername {
       usernameField.text = forcedUsername
@@ -53,9 +59,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     usernameField.delegate = self
     passwordField.delegate = self
+    apiTokenField.delegate = self
 
     usernameField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     passwordField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+    apiTokenField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     textFieldDidChange(usernameField)
   }
 
@@ -69,14 +77,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     if textField == usernameField {
       passwordField.becomeFirstResponder()
-    } else if textField == passwordField {
+    } else if textField == passwordField || textField == apiTokenField {
       didTapSignInButton()
     }
     return true
   }
 
   @objc func textFieldDidChange(_: UITextField) {
-    let enabled = !(usernameField.text?.isEmpty ?? false) && !(passwordField.text?.isEmpty ?? false)
+    updateSignInButtonState()
+  }
+
+  private func updateSignInButtonState() {
+    var enabled = false
+    if usernameField.isHidden {
+      enabled = !(apiTokenField.text?.isEmpty ?? true)
+    } else {
+      enabled = !(usernameField.text?.isEmpty ?? true) && !(passwordField.text?.isEmpty ?? true)
+    }
     signInButton.isEnabled = enabled
     signInButton.backgroundColor = enabled ? TKMStyle.radicalColor2 : TKMStyle.Color.grey33
   }
@@ -89,17 +106,58 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     showActivityIndicatorOverlay(true)
 
-    let client = WaniKaniWebClient()
-    let promise = client.login(username: usernameField.text!, password: passwordField.text!)
-    promise.done { result in
-      NSLog("Login success!")
-      Settings.userCookie = result.cookie
-      Settings.userApiToken = result.apiToken
-      Settings.userEmailAddress = result.emailAddress
+    if !usernameField.isHidden {
+      let client = WaniKaniWebClient()
+      let promise = client.login(username: usernameField.text!, password: passwordField.text!)
+      promise.done { result in
+        NSLog("Login success!")
+        Settings.userApiToken = result.apiToken
+        Settings.userEmailAddress = result.emailAddress
 
-      self.delegate?.loginComplete()
-    }.catch { error in
-      self.showLoginError(error.localizedDescription)
+        self.delegate?.loginComplete()
+      }.catch { error in
+        self.showLoginError(error.localizedDescription)
+      }
+    } else {
+      let token = apiTokenField.text!
+      let apiClient = WaniKaniAPIClient(apiToken: token)
+      let promise = apiClient.user(progress: Progress())
+      promise.done { user in
+        NSLog("Login success! User is at level: \(user.currentLevel)")
+        Settings.userApiToken = token
+        Settings.userEmailAddress = ""
+        self.delegate?.loginComplete()
+      }.catch { _ in
+        self.showLoginError("Invalid API token!")
+      }
+    }
+  }
+
+  @IBAction func didTapSwapLoginMethods() {
+    UIView.animate(withDuration: 0.1,
+                   delay: 0.0,
+                   options: [.curveLinear],
+                   animations: {
+                     let animatingInUserPass = self.usernameField.isHidden
+                     self.usernameField.isHidden = !animatingInUserPass
+                     self.passwordField.isHidden = !animatingInUserPass
+
+                     self.apiTokenStack.isHidden = animatingInUserPass
+
+                     self.usernameField.alpha = animatingInUserPass ? 1 : 0
+                     self.passwordField.alpha = animatingInUserPass ? 1 : 0
+                     self.apiTokenStack.alpha = animatingInUserPass ? 0 : 1
+                   }) { _ in
+      let title = self.usernameField.isHidden ? "Use username and password" : "Use API token"
+      self.swapLoginMethodsButton.setTitle(title, for: .normal)
+      self.updateSignInButtonState()
+    }
+  }
+
+  @IBAction func didTapPasteButton(_: Any) {
+    if let text = UIPasteboard.general.string {
+      apiTokenField.text = text
+      updateSignInButtonState()
     }
   }
 
