@@ -406,6 +406,8 @@ NSString *TKMConvertKanaText(NSString *input) {
       textField.text =
           [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
                                                   withString:replacementString];
+      [textField setTextAlignment:NSTextAlignmentCenter];
+
       return YES;
     }
 
@@ -417,6 +419,8 @@ NSString *TKMConvertKanaText(NSString *input) {
       textField.text =
           [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
                                                   withString:replacementString];
+      [textField setTextAlignment:NSTextAlignmentCenter];
+
       return YES;
     }
   }
@@ -442,6 +446,8 @@ NSString *TKMConvertKanaText(NSString *input) {
       }
       textField.text = [textField.text stringByReplacingCharactersInRange:replacementRange
                                                                withString:replacement];
+      [textField setTextAlignment:NSTextAlignmentCenter];
+
       return NO;
     }
   }
