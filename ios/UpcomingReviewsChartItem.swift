@@ -1,4 +1,4 @@
-// Copyright 2022 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -134,7 +134,6 @@ class UpcomingReviewsChartCell: TKMModelCell {
     let barDataSet = BarChartDataSet(hourlyData)
     barDataSet.axisDependency = YAxis.AxisDependency.right
     barDataSet.colors = [TKMStyle.radicalColor2]
-    barDataSet.valueFormatter = DefaultValueFormatter(decimals: 0)
 
     lineDataSet.valueTextColor = TKMStyle.Color.label
     barDataSet.valueTextColor = TKMStyle.Color.label
@@ -145,6 +144,10 @@ class UpcomingReviewsChartCell: TKMModelCell {
 
     view.data = data
     view.xAxis.valueFormatter = UpcomingReviewsXAxisValueFormatter(item.date)
+
+    // valueFormatter must be set after chart.data - see
+    // https://github.com/danielgindi/Charts/issues/4690
+    barDataSet.valueFormatter = DefaultValueFormatter(decimals: 0)
   }
 
   override func didSelect() {
