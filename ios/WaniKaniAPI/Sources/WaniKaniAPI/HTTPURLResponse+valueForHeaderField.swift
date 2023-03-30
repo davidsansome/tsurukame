@@ -22,7 +22,7 @@ public extension HTTPURLResponse {
       let lowerHeaderField = headerField.lowercased()
       return allHeaderFields.first { key, _ in
         (key as! String).lowercased() == lowerHeaderField
-      } as! String?
+      }?.value as? String
     }
   }
 }
