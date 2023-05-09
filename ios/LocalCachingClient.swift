@@ -136,7 +136,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   }
 
   func updateAvailableSubjects() -> (Int, [ReviewComposition]) {
-    guard let user = getUserInfo() else {
+    guard getUserInfo() != nil else {
       return (0, [])
     }
 
