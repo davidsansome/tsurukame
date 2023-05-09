@@ -142,6 +142,9 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private func addMeanings(_ subject: TKMSubject,
                            studyMaterials: TKMStudyMaterials?,
                            toModel model: MutableTableModel) {
+    if subject.meanings.isEmpty {
+      return
+    }
     let text = renderMeanings(subject: subject, studyMaterials: studyMaterials)
       .string(withFontSize: kFontSize)
     let item = AttributedModelItem(text: text)
@@ -153,6 +156,9 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private func addReadings(_ subject: TKMSubject,
                            studyMaterials _: TKMStudyMaterials?,
                            toModel model: MutableTableModel) {
+    if subject.readings.isEmpty {
+      return
+    }
     let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
     let text = renderReadings(readings: subject.readings,
@@ -170,6 +176,9 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private func addComponents(_ subject: TKMSubject,
                              title: String,
                              toModel model: MutableTableModel) {
+    if subject.componentSubjectIds.isEmpty {
+      return
+    }
     let item = SubjectCollectionModelItem(subjects: subject.componentSubjectIds,
                                           localCachingClient: services.localCachingClient,
                                           delegate: self)
@@ -295,6 +304,9 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private func addExplanation(model: MutableTableModel, title: String, text: String,
                               hint: String? = nil, note: String? = nil,
                               noteChangedCallback: ((_ text: String) -> Void)? = nil) {
+    if text.isEmpty {
+      return
+    }
     let hasNote = !(note ?? "").isEmpty
     model.add(section: title)
     let explanationItem = addFormattedText(text, isHint: false,

@@ -171,7 +171,7 @@ struct SubjectData: Codable {
         ret.kanji.visuallySimilarKanji = visuallySimilarKanji
       }
 
-    case "vocabulary":
+    case "vocabulary", "kana_vocabulary":
       ret.vocabulary = TKMVocabulary()
       if let meaning_mnemonic = meaning_mnemonic {
         ret.vocabulary.meaningExplanation = meaning_mnemonic

@@ -761,7 +761,7 @@ private struct AssignmentData: Codable {
       ret.subjectType = .radical
     case "kanji":
       ret.subjectType = .kanji
-    case "vocabulary":
+    case "vocabulary", "kana_vocabulary":
       ret.subjectType = .vocabulary
     default:
       NSLog("Unknown assignment subject type: %@", subject_type)

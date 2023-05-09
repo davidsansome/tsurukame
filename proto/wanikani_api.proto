@@ -126,10 +126,10 @@ message Subject {
   optional string document_url = 4;
 
   optional string japanese = 5;
-  repeated Reading readings = 6;  // Does not apply to radicals.
+  repeated Reading readings = 6;  // Does not apply to radicals or kana vocabulary.
   repeated Meaning meanings = 7;
   repeated int64 component_subject_ids = 8;  // Does not apply to radicals.
-  repeated int64 amalgamation_subject_ids = 12;  // Does not apply to vocabulary.
+  repeated int64 amalgamation_subject_ids = 12;  // Does not apply to vocabulary or kana vocabulary.
 
   optional Radical radical = 9;
   optional Kanji kanji = 10;

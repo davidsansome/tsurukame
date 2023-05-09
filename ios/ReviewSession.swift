@@ -83,7 +83,7 @@ class ReviewSession {
     // Choose whether to ask the meaning or the reading.
     if activeTask.answeredMeaning {
       activeTaskType = .reading
-    } else if activeTask.answeredReading || activeSubject.hasRadical {
+    } else if activeTask.answeredReading || activeSubject.readings.isEmpty {
       activeTaskType = .meaning
     } else if Settings.groupMeaningReading {
       activeTaskType = Settings.meaningFirst ? .meaning : .reading
@@ -163,7 +163,7 @@ class ReviewSession {
 
     // Remove it from the active queue if that was the last part.
     let isSubjectFinished =
-      activeTask.answeredMeaning && (activeSubject.hasRadical || activeTask.answeredReading)
+      activeTask.answeredMeaning && (activeTask.answeredReading || activeSubject.readings.isEmpty)
     let didLevelUp = (!activeTask.answer.readingWrong && !activeTask.answer.meaningWrong)
     let newSrsStage =
       didLevelUp ? activeAssignment.srsStage.next : activeAssignment.srsStage
