@@ -1,11 +1,1 @@
-New features:
-* Support signing in with an API token as an alternative to username/password.
-* Show stats for the previous level while finishing vocabulary.
-
-Bug fixes:
-* Fix a bug that caused reviews to not appear for kanji whose levels had changed.
-* Fix some layout issues on iOS 15
-* Attempt to rate-limit progress uploads after coming back from being offline.
-* Keep the question label in the same place when the keyboard changes size.
-* Show a better error message when the user enters a wrong password.
-* Fix some keyboard shortcuts.
+Compatibility with the upcoming Wanikani kana-only vocab feature.
