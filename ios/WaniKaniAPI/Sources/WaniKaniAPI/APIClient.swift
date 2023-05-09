@@ -1,4 +1,4 @@
-// Copyright 2022 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -153,7 +153,10 @@ public class WaniKaniAPIClient: NSObject {
     }.map { (allData: Response<[Response<AssignmentData>]>) -> Assignments in
       var ret = [TKMAssignment]()
       for data in allData.data {
-        ret.append(data.data.toProto(id: data.id, subjectLevelGetter: self.subjectLevelGetter))
+        if let assignment = data.data.toProto(id: data.id,
+                                              subjectLevelGetter: self.subjectLevelGetter) {
+          ret.append(assignment)
+        }
       }
       return (assignments: ret, updatedAt: allData.data_updated_at ?? updatedAfter)
     }
@@ -308,14 +311,14 @@ public class WaniKaniAPIClient: NSObject {
 
   // MARK: - Sending lesson/review progress
 
-  public func sendProgress(_ progress: TKMProgress) -> Promise<TKMAssignment> {
+  public func sendProgress(_ progress: TKMProgress) -> Promise<Void> {
     if progress.isLesson {
       return startAssignment(progress)
     }
     return createReview(progress)
   }
 
-  private func startAssignment(_ progress: TKMProgress) -> Promise<TKMAssignment> {
+  private func startAssignment(_ progress: TKMProgress) -> Promise<Void> {
     let url = URL(string: "\(kBaseUrl)/assignments/\(progress.assignment.id)/start")!
     let body = StartAssignmentRequest(started_at: WaniKaniDate(date: progress.createdAtDate))
 
@@ -324,12 +327,12 @@ public class WaniKaniAPIClient: NSObject {
       try request.setJSONBody(method: "PUT", body: body)
 
       return query(request)
-    }.map { (data: Response<AssignmentData>) -> TKMAssignment in
-      data.data.toProto(id: data.id, subjectLevelGetter: self.subjectLevelGetter)
+    }.map { _ in
+      // Ignore the response content.
     }
   }
 
-  private func createReview(_ progress: TKMProgress) -> Promise<TKMAssignment> {
+  private func createReview(_ progress: TKMProgress) -> Promise<Void> {
     let url = URL(string: "\(kBaseUrl)/reviews")!
     var body = CreateReviewRequest(review: CreateReviewRequest
       .Review(assignment_id: progress.assignment.id,
@@ -346,12 +349,8 @@ public class WaniKaniAPIClient: NSObject {
       try request.setJSONBody(method: "POST", body: body)
 
       return query(request)
-    }.map { (data: MultiResourceResponse<ReviewData>) -> TKMAssignment in
-      if let assignment = data.resources_updated?.assignment {
-        return assignment.data.toProto(id: assignment.id,
-                                       subjectLevelGetter: self.subjectLevelGetter)
-      }
-      return TKMAssignment()
+    }.map { _ in
+      // Ignore the response content.
     }
   }
 
@@ -746,7 +745,7 @@ private struct AssignmentData: Codable {
   var burned_at: WaniKaniDate?
   var available_at: WaniKaniDate?
 
-  func toProto(id: Int64?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment {
+  func toProto(id: Int64?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment? {
     var ret = TKMAssignment()
     ret.id = id ?? 0
     ret.subjectID = Int64(subject_id)
@@ -765,7 +764,8 @@ private struct AssignmentData: Codable {
     case "vocabulary":
       ret.subjectType = .vocabulary
     default:
-      fatalError("Unknown subject type \(subject_type)")
+      NSLog("Unknown assignment subject type: %@", subject_type)
+      return nil
     }
     return ret
   }
