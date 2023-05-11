@@ -1,4 +1,4 @@
-// Copyright 2022 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public enum WaniKaniWebClientError: Int, LocalizedError {
     case .sessionCookieNotSet:
       return "Session cookie not set"
     case .badCredentials:
-      return "Incorrect username or password"
+      return "Incorrect email or password"
     default:
       return "Unknown error"
     }
@@ -49,12 +49,10 @@ public enum WaniKaniWebClientError: Int, LocalizedError {
 public class LoginResult: NSObject {
   public var cookie: String!
   public var apiToken: String!
-  public var emailAddress: String!
 
-  init(cookie: String, apiToken: String, emailAddress: String) {
+  init(cookie: String, apiToken: String) {
     self.cookie = cookie
     self.apiToken = apiToken
-    self.emailAddress = emailAddress
   }
 }
 
@@ -63,24 +61,21 @@ public class WaniKaniWebClient: NSObject {
   // MARK: - Login
 
   /**
-   * Login to WaniKani using the username and password, then fetch the user's
+   * Login to WaniKani using the email and password, then fetch the user's
    * API token (creating a new one if it didn't exist) and email address.
    */
-  public func login(username: String, password: String) -> Promise<LoginResult> {
-    let cookie = getCookie(username: username, password: password)
+  public func login(email: String, password: String) -> Promise<LoginResult> {
+    let cookie = getCookie(email: email, password: password)
     let token = cookie.then { cookie in
       self.getApiToken(cookie: cookie)
     }
-    let email = cookie.then { cookie in
-      self.getEmailAddress(cookie: cookie)
-    }
 
-    return when(fulfilled: [cookie, token, email]).map { arg in
-      LoginResult(cookie: arg[0], apiToken: arg[1], emailAddress: arg[2])
+    return when(fulfilled: [cookie, token]).map { arg in
+      LoginResult(cookie: arg[0], apiToken: arg[1])
     }
   }
 
-  private func getCookie(username: String, password: String) -> Promise<String> {
+  private func getCookie(email: String, password: String) -> Promise<String> {
     let session = URLSession(configuration: .ephemeral)
     var firstCookie: String?
     var secondCookie: String?
@@ -98,11 +93,10 @@ public class WaniKaniWebClient: NSObject {
 
       // Build the login request.
       let queryItems = [
-        URLQueryItem(name: "user[login]", value: username),
+        URLQueryItem(name: "user[email]", value: email),
         URLQueryItem(name: "user[password]", value: password),
         URLQueryItem(name: "user[remember_me]", value: "0"),
         URLQueryItem(name: "authenticity_token", value: csrfToken),
-        URLQueryItem(name: "utf8", value: "✓"),
       ]
 
       var req = URLRequest(url: kLoginUrl)
@@ -167,15 +161,6 @@ public class WaniKaniWebClient: NSObject {
         return apiToken
       }
       throw WaniKaniWebClientError.apiTokenNotFound
-    }
-  }
-
-  private func getEmailAddress(cookie: String) -> Promise<String> {
-    firstly { () -> DataTaskPromise in
-      let req = authorize(kAccountUrl, cookie: cookie)
-      return request(req, session: URLSession.shared)
-    }.map { (arg) -> String in
-      try self.extractEmail(arg.data)
     }
   }
 

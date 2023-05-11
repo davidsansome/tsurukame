@@ -43,7 +43,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ALW-Xn-F7M">
                                 <rect key="frame" x="67.5" y="274" width="240" height="119"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JYP-De-NXS">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JYP-De-NXS">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="35"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
@@ -174,6 +174,7 @@
                         <outlet property="activityIndicatorOverlay" destination="5XY-Jr-SQY" id="KpA-tS-WEt"/>
                         <outlet property="apiTokenField" destination="ARP-3W-feH" id="W49-ov-L3a"/>
                         <outlet property="apiTokenStack" destination="viB-vI-7dJ" id="YCj-j3-cRj"/>
+                        <outlet property="emailField" destination="JYP-De-NXS" id="4KD-VC-9ES"/>
                         <outlet property="passwordField" destination="O4b-JI-G3n" id="DCL-CC-ZsO"/>
                         <outlet property="pasteButton" destination="VHN-DS-c9m" id="mPu-cc-qsm"/>
                         <outlet property="privacyPolicyButton" destination="Nzq-PL-tt3" id="umc-nD-OrM"/>
@@ -181,7 +182,6 @@
                         <outlet property="signInButton" destination="RbB-6e-QL5" id="Oz7-Zv-7CC"/>
                         <outlet property="signInLabel" destination="d7n-s4-OyH" id="oRS-l3-TQp"/>
                         <outlet property="swapLoginMethodsButton" destination="ZdY-Fw-RIo" id="APk-UH-F4g"/>
-                        <outlet property="usernameField" destination="JYP-De-NXS" id="fgx-Nt-xpx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qOk-0M-4VM" userLabel="First Responder" sceneMemberID="firstResponder"/>

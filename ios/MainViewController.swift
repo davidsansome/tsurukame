@@ -543,13 +543,17 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   }
 
   func loginAgain() {
-    guard let user = services.localCachingClient.getUserInfo() else {
+    guard services.localCachingClient.getUserInfo() != nil else {
       return
     }
 
     let vc = storyboard?.instantiateViewController(withIdentifier: "login") as! LoginViewController
     vc.delegate = self
-    vc.forcedUsername = user.username
+    if !Settings.userEmailAddress.isEmpty {
+      vc.forcedEmail = Settings.userEmailAddress
+    } else {
+      vc.forcedEmail = nil
+    }
     navigationController?.pushViewController(vc, animated: true)
   }
 

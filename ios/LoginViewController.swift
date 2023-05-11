@@ -28,10 +28,10 @@ protocol LoginViewControllerDelegate: AnyObject {
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
   weak var delegate: LoginViewControllerDelegate?
-  var forcedUsername: String?
+  var forcedEmail: String?
 
   @IBOutlet private var signInLabel: UILabel!
-  @IBOutlet private var usernameField: UITextField!
+  @IBOutlet private var emailField: UITextField!
   @IBOutlet private var passwordField: UITextField!
   @IBOutlet private var signInButton: UIButton!
   @IBOutlet private var apiTokenStack: UIStackView!
@@ -52,19 +52,19 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     TKMStyle.addShadowToView(swapLoginMethodsButton, offset: 0, opacity: 1, radius: 2)
     TKMStyle.addShadowToView(pasteButton, offset: 0, opacity: 1, radius: 5)
 
-    if let forcedUsername = forcedUsername {
-      usernameField.text = forcedUsername
-      usernameField.isEnabled = false
+    if let forcedEmail = forcedEmail {
+      emailField.text = forcedEmail
+      emailField.isEnabled = false
     }
 
-    usernameField.delegate = self
+    emailField.delegate = self
     passwordField.delegate = self
     apiTokenField.delegate = self
 
-    usernameField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+    emailField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     passwordField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     apiTokenField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-    textFieldDidChange(usernameField)
+    textFieldDidChange(emailField)
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -75,7 +75,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
   // MARK: - UITextFieldDelegate
 
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    if textField == usernameField {
+    if textField == emailField {
       passwordField.becomeFirstResponder()
     } else if textField == passwordField || textField == apiTokenField {
       didTapSignInButton()
@@ -89,10 +89,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
   private func updateSignInButtonState() {
     var enabled = false
-    if usernameField.isHidden {
+    if emailField.isHidden {
       enabled = !(apiTokenField.text?.isEmpty ?? true)
     } else {
-      enabled = !(usernameField.text?.isEmpty ?? true) && !(passwordField.text?.isEmpty ?? true)
+      enabled = !(emailField.text?.isEmpty ?? true) && !(passwordField.text?.isEmpty ?? true)
     }
     signInButton.isEnabled = enabled
     signInButton.backgroundColor = enabled ? TKMStyle.radicalColor2 : TKMStyle.Color.grey33
@@ -106,13 +106,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     showActivityIndicatorOverlay(true)
 
-    if !usernameField.isHidden {
+    if !emailField.isHidden {
       let client = WaniKaniWebClient()
-      let promise = client.login(username: usernameField.text!, password: passwordField.text!)
+      let promise = client.login(email: emailField.text!, password: passwordField.text!)
       promise.done { result in
         NSLog("Login success!")
         Settings.userApiToken = result.apiToken
-        Settings.userEmailAddress = result.emailAddress
+        Settings.userEmailAddress = self.emailField.text!
 
         self.delegate?.loginComplete()
       }.catch { error in
@@ -138,17 +138,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                    delay: 0.0,
                    options: [.curveLinear],
                    animations: {
-                     let animatingInUserPass = self.usernameField.isHidden
-                     self.usernameField.isHidden = !animatingInUserPass
+                     let animatingInUserPass = self.emailField.isHidden
+                     self.emailField.isHidden = !animatingInUserPass
                      self.passwordField.isHidden = !animatingInUserPass
 
                      self.apiTokenStack.isHidden = animatingInUserPass
 
-                     self.usernameField.alpha = animatingInUserPass ? 1 : 0
+                     self.emailField.alpha = animatingInUserPass ? 1 : 0
                      self.passwordField.alpha = animatingInUserPass ? 1 : 0
                      self.apiTokenStack.alpha = animatingInUserPass ? 0 : 1
                    }) { _ in
-      let title = self.usernameField.isHidden ? "Use username and password" : "Use API token"
+      let title = self.emailField.isHidden ? "Use email and password" : "Use API token"
       self.swapLoginMethodsButton.setTitle(title, for: .normal)
       self.updateSignInButtonState()
     }
