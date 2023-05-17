@@ -152,10 +152,16 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       reviewComposition[hours].countByCategory[stage.category, default: 0] += 1
     }
 
+    let showKanaOnlyVocab = Settings.showKanaOnlyVocab
     for assignment in getAllAssignments() {
       // Don't count assignments with invalid subjects.  This includes assignments for levels higher
       // than the user's max subscription level.
       if !isValid(subjectId: assignment.subjectID) {
+        continue
+      }
+
+      // Don't count assignments for kana-only vocabs if the user has disabled those.
+      if !showKanaOnlyVocab, assignment.isKanaOnlyVocab {
         continue
       }
 
@@ -177,6 +183,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   }
 
   private let schemas = [
+    // Version 9.
     """
     CREATE TABLE sync (
       assignments_updated_after TEXT,
@@ -257,10 +264,13 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     CREATE INDEX idx_level ON subjects (level);
     CREATE INDEX idx_audio_url_by_level ON audio_urls (level, voice_actor_id);
     """,
+
+    // Version 10. Only added to set the assignment is_kana_only_vocab field.
+    "",
   ]
 
   private let kInitialSchemaVersion = 8
-  private let kSchemaVersion = 9
+  private let kSchemaVersion = 10
 
   // Run when the user logs out. Clears everything in the database.
   private let kClearAllData = """
@@ -326,6 +336,21 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       // Update the table schema.
       for version in currentVersion ..< targetVersion {
         db.mustExecuteStatements(schemas[version - kInitialSchemaVersion])
+
+        // Set the is_kana_only_vocab field.
+        if version == 9 {
+          for cursor in db.query("SELECT a.pb, s.pb FROM assignments AS a " +
+            "JOIN subjects AS s ON a.subject_id = s.id") {
+            var assignment: TKMAssignment = cursor.proto(forColumnIndex: 0)!
+            let subject: TKMSubject = cursor.proto(forColumnIndex: 1)!
+            if subject.hasVocabulary, subject.readings.isEmpty {
+              assignment.isKanaOnlyVocab = true
+              db.mustExecuteUpdate("UPDATE assignments SET pb = ? WHERE id = ?", args: [
+                try! assignment.serializedData(), assignment.id,
+              ])
+            }
+          }
+        }
       }
 
       // Set the new schema version

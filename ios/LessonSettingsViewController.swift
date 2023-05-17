@@ -57,6 +57,15 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
                              accessoryType: .disclosureIndicator,
                              target: self,
                              action: #selector(didTapApprenticeLessonsLimit(_:))))
+    let kanaOnlyVocabSwitch = SwitchModelItem(style: .subtitle,
+                                              title: "Show kana-only vocabulary",
+                                              subtitle: "Include lessons for kana-only vocabulary" +
+                                                " that were added in May 2023",
+                                              on: Settings.showKanaOnlyVocab,
+                                              target: self,
+                                              action: #selector(showKanaOnlyVocabChanged(_:)))
+    kanaOnlyVocabSwitch.numberOfSubtitleLines = 0
+    model.add(kanaOnlyVocabSwitch)
 
     self.model = model
     model.reloadTable()
@@ -85,6 +94,10 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
 
   @objc private func prioritizeCurrentLevelChanged(_ switchView: UISwitch) {
     Settings.prioritizeCurrentLevel = switchView.isOn
+  }
+
+  @objc private func showKanaOnlyVocabChanged(_ switchView: UISwitch) {
+    Settings.showKanaOnlyVocab = switchView.isOn
   }
 
   // MARK: - Tap handlers

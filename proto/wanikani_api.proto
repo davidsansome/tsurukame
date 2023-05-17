@@ -154,6 +154,10 @@ message Assignment {
   optional int32 srs_stage_number = 7;
   optional int32 passed_at = 8;
   optional int32 burned_at = 9;
+
+  // Kana-only vocab shares the VOCABULARY subject_type, but we still want to be
+  // able to filter them out if the user wants to.
+  optional bool is_kana_only_vocab = 10;
 }
 
 message Progress {

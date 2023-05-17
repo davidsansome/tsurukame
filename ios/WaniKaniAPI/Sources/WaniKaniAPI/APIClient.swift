@@ -755,6 +755,9 @@ private struct AssignmentData: Codable {
     toProtoDate(started_at) { ret.startedAt = $0 }
     toProtoDate(passed_at) { ret.passedAt = $0 }
     toProtoDate(burned_at) { ret.burnedAt = $0 }
+    if subject_type == "kana_vocabulary" {
+      ret.isKanaOnlyVocab = true
+    }
 
     switch subject_type {
     case "radical":

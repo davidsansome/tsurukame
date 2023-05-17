@@ -33,9 +33,15 @@ class ReviewItem: NSObject {
       return ret
     }
 
+    let showKanaOnlyVocab = Settings.showKanaOnlyVocab
     for assignment in assignments {
-      if !localCachingClient.isValid(subjectId: assignment.subjectID) ||
-        !isIncluded(assignment) {
+      if !localCachingClient.isValid(subjectId: assignment.subjectID) {
+        continue
+      }
+      if !showKanaOnlyVocab, assignment.isKanaOnlyVocab {
+        continue
+      }
+      if !isIncluded(assignment) {
         continue
       }
       ret.append(ReviewItem(assignment: assignment))

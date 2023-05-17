@@ -591,7 +591,7 @@ public struct TKMSubject {
   /// Clears the value of `japanese`. Subsequent reads from it will return its default value.
   public mutating func clearJapanese() {_uniqueStorage()._japanese = nil}
 
-  /// Does not apply to radicals.
+  /// Does not apply to radicals or kana vocabulary.
   public var readings: [TKMReading] {
     get {return _storage._readings}
     set {_uniqueStorage()._readings = newValue}
@@ -608,7 +608,7 @@ public struct TKMSubject {
     set {_uniqueStorage()._componentSubjectIds = newValue}
   }
 
-  /// Does not apply to vocabulary.
+  /// Does not apply to vocabulary or kana vocabulary.
   public var amalgamationSubjectIds: [Int64] {
     get {return _storage._amalgamationSubjectIds}
     set {_uniqueStorage()._amalgamationSubjectIds = newValue}
@@ -782,6 +782,17 @@ public struct TKMAssignment {
   /// Clears the value of `burnedAt`. Subsequent reads from it will return its default value.
   public mutating func clearBurnedAt() {self._burnedAt = nil}
 
+  /// Kana-only vocab shares the VOCABULARY subject_type, but we still want to be
+  /// able to filter them out if the user wants to.
+  public var isKanaOnlyVocab: Bool {
+    get {return _isKanaOnlyVocab ?? false}
+    set {_isKanaOnlyVocab = newValue}
+  }
+  /// Returns true if `isKanaOnlyVocab` has been explicitly set.
+  public var hasIsKanaOnlyVocab: Bool {return self._isKanaOnlyVocab != nil}
+  /// Clears the value of `isKanaOnlyVocab`. Subsequent reads from it will return its default value.
+  public mutating func clearIsKanaOnlyVocab() {self._isKanaOnlyVocab = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -795,6 +806,7 @@ public struct TKMAssignment {
   fileprivate var _srsStageNumber: Int32? = nil
   fileprivate var _passedAt: Int32? = nil
   fileprivate var _burnedAt: Int32? = nil
+  fileprivate var _isKanaOnlyVocab: Bool? = nil
 }
 
 public struct TKMProgress {
@@ -1943,6 +1955,7 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     7: .standard(proto: "srs_stage_number"),
     8: .standard(proto: "passed_at"),
     9: .standard(proto: "burned_at"),
+    10: .standard(proto: "is_kana_only_vocab"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1960,6 +1973,7 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
       case 7: try { try decoder.decodeSingularInt32Field(value: &self._srsStageNumber) }()
       case 8: try { try decoder.decodeSingularInt32Field(value: &self._passedAt) }()
       case 9: try { try decoder.decodeSingularInt32Field(value: &self._burnedAt) }()
+      case 10: try { try decoder.decodeSingularBoolField(value: &self._isKanaOnlyVocab) }()
       default: break
       }
     }
@@ -1993,6 +2007,9 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     if let v = self._burnedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 9)
     }
+    if let v = self._isKanaOnlyVocab {
+      try visitor.visitSingularBoolField(value: v, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2006,6 +2023,7 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     if lhs._srsStageNumber != rhs._srsStageNumber {return false}
     if lhs._passedAt != rhs._passedAt {return false}
     if lhs._burnedAt != rhs._burnedAt {return false}
+    if lhs._isKanaOnlyVocab != rhs._isKanaOnlyVocab {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

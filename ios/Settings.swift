@@ -195,6 +195,7 @@ protocol SettingProtocol {
   @Setting(true, #keyPath(minimizeReviewPenalty)) static var minimizeReviewPenalty: Bool
   @Setting(false, #keyPath(ankiMode)) static var ankiMode: Bool
   @Setting(true, #keyPath(showPreviousLevelGraph)) static var showPreviousLevelGraph: Bool
+  @Setting(true, #keyPath(showKanaOnlyVocab)) static var showKanaOnlyVocab: Bool
 
   @Setting(false, #keyPath(seenFullAnswerPrompt)) static var seenFullAnswerPrompt: Bool
 
