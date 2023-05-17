@@ -180,14 +180,19 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     """
     CREATE TABLE sync (
       assignments_updated_after TEXT,
-      study_materials_updated_after TEXT
+      study_materials_updated_after TEXT,
+      subjects_updated_after TEXT,
+      voice_actors_updated_after TEXT
     );
     INSERT INTO sync (
       assignments_updated_after,
-      study_materials_updated_after
-    ) VALUES (\"\", \"\");
+      study_materials_updated_after,
+      subjects_updated_after,
+      voice_actors_updated_after
+    ) VALUES (\"\", \"\", \"\", \"\");
     CREATE TABLE assignments (
       id INTEGER PRIMARY KEY,
+      subject_id INTEGER,
       pb BLOB
     );
     CREATE TABLE pending_progress (
@@ -205,25 +210,19 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     CREATE TABLE pending_study_materials (
       id INTEGER PRIMARY KEY
     );
-    """,
-
-    """
-    DELETE FROM assignments;
-    UPDATE sync SET assignments_updated_after = \"\";
-    ALTER TABLE assignments ADD COLUMN subject_id;
-    CREATE INDEX idx_subject_id ON assignments (subject_id);
-    """,
-
-    """
     CREATE TABLE subject_progress (
       id INTEGER PRIMARY KEY,
       level INTEGER,
       srs_stage INTEGER,
       subject_type INTEGER
     );
-    """,
-
-    """
+    CREATE TABLE subjects (
+      id INTEGER PRIMARY KEY,
+      japanese TEXT,
+      level INTEGER,
+      type INTEGER,
+      pb BLOB
+    );
     CREATE TABLE error_log (
       date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       stack TEXT,
@@ -236,45 +235,15 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       response_headers TEXT,
       response_data TEXT
     );
-    """,
-
-    """
     CREATE TABLE level_progressions (
       id INTEGER PRIMARY KEY,
       level INTEGER,
       pb BLOB
     );
-    """,
-
-    """
-    CREATE TABLE subjects (
-      id INTEGER PRIMARY KEY,
-      japanese TEXT,
-      level INTEGER,
-      type INTEGER,
-      pb BLOB
-    );
-    CREATE INDEX idx_japanese ON subjects (japanese);
-    CREATE INDEX idx_level ON subjects (level);
-    ALTER TABLE sync ADD COLUMN subjects_updated_after TEXT;
-    UPDATE sync SET subjects_updated_after = "";
-    """,
-
-    // Re-download all subjects after the audio URL parsing was fixed.
-    """
-    UPDATE sync SET subjects_updated_after = "";
-    """,
-
-    """
     CREATE TABLE voice_actors (
       id INTEGER PRIMARY KEY,
       pb BLOB
     );
-    ALTER TABLE sync ADD COLUMN voice_actors_updated_after TEXT;
-    UPDATE sync SET voice_actors_updated_after = "";
-    """,
-
-    """
     CREATE TABLE audio_urls (
       subject_id INTEGER,
       voice_actor_id INTEGER,
@@ -282,9 +251,16 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       url STRING,
       PRIMARY KEY (subject_id, voice_actor_id)
     );
+
+    CREATE INDEX idx_subject_id ON assignments (subject_id);
+    CREATE INDEX idx_japanese ON subjects (japanese);
+    CREATE INDEX idx_level ON subjects (level);
     CREATE INDEX idx_audio_url_by_level ON audio_urls (level, voice_actor_id);
     """,
   ]
+
+  private let kInitialSchemaVersion = 8
+  private let kSchemaVersion = 9
 
   // Run when the user logs out. Clears everything in the database.
   private let kClearAllData = """
@@ -325,63 +301,36 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   private func openDatabase() {
     db = FMDatabaseQueue(url: LocalCachingClient.databaseUrl())!
     db.inTransaction { db, _ in
+      NSLog("Database URL: %@", LocalCachingClient.databaseUrl().absoluteString)
       // Get the current version.
-      let targetVersion = schemas.count
-      let currentVersion = Int(db.userVersion)
+      let targetVersion = kSchemaVersion
+      var currentVersion = Int(db.userVersion)
       if currentVersion >= targetVersion {
         NSLog("Database up to date (version \(currentVersion))")
         return
       }
 
-      // Update the table schema.
-      var shouldPopulateSubjectProgress = false
-      var shouldPopulateAudioUrls = false
-      for version in currentVersion ..< targetVersion {
-        db.mustExecuteStatements(schemas[version])
+      // If the database doesn't exist yet its version will be 0. Jump to the last version the
+      // schema was squashed.
+      if currentVersion == 0 {
+        currentVersion = kInitialSchemaVersion
+      }
 
-        switch version {
-        case 2:
-          shouldPopulateSubjectProgress = true
-        case 8:
-          shouldPopulateAudioUrls = true
-        default:
-          break
-        }
+      // If the user is at a version before the schema was squashed, we can't upgrade, so delete the
+      // database and crash so we can start over.
+      if currentVersion < kInitialSchemaVersion {
+        try! FileManager.default.removeItem(at: LocalCachingClient.databaseUrl())
+        fatalError("Database version \(currentVersion) is too old")
+      }
+
+      // Update the table schema.
+      for version in currentVersion ..< targetVersion {
+        db.mustExecuteStatements(schemas[version - kInitialSchemaVersion])
       }
 
       // Set the new schema version
       db.mustExecuteUpdate("PRAGMA user_version = \(targetVersion)")
       NSLog("Database updated to schema version \(targetVersion)")
-
-      // Populate subject progress if we need to.
-      if shouldPopulateSubjectProgress {
-        let sql = "REPLACE INTO subject_progress (id, level, srs_stage, subject_type) " +
-          "VALUES (?, ?, ?, ?)"
-        for assignment in getAllAssignments(transaction: db) {
-          db.mustExecuteUpdate(sql, args: [
-            assignment.subjectID,
-            assignment.level,
-            assignment.srsStage.rawValue,
-            assignment.subjectType.rawValue,
-          ])
-        }
-        for progress in getAllPendingProgress(transaction: db) {
-          let assignment = progress.assignment
-          db.mustExecuteUpdate(sql, args: [
-            assignment.subjectID,
-            assignment.level,
-            assignment.srsStage.rawValue,
-            assignment.subjectType.rawValue,
-          ])
-        }
-      }
-
-      // Populate audio URLs if we need to.
-      if shouldPopulateAudioUrls {
-        for subject in getAllSubjects(transaction: db) {
-          insertAudioUrls(subject: subject, transaction: db)
-        }
-      }
     }
   }
 
