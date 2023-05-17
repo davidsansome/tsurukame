@@ -156,12 +156,18 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private func addReadings(_ subject: TKMSubject,
                            studyMaterials _: TKMStudyMaterials?,
                            toModel model: MutableTableModel) {
-    if subject.readings.isEmpty {
-      return
-    }
     let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
-    let text = renderReadings(readings: subject.readings,
+    // Use the readings if there are any, otherwise, for kana-only vocabs, use the Japanese.
+    var readings = subject.readings
+    if readings.isEmpty {
+      var reading = TKMReading()
+      reading.isPrimary = true
+      reading.reading = subject.japanese
+      readings.append(reading)
+    }
+
+    let text = renderReadings(readings: readings,
                               primaryOnly: primaryOnly).string(withFontSize: kFontSize)
     let item = ReadingModelItem(text: text)
     if subject.hasVocabulary, !subject.vocabulary.audio.isEmpty {
