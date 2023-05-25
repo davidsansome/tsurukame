@@ -1,1 +1,1 @@
-Compatibility with the upcoming Wanikani kana-only vocab feature.
+Fix a bug that would cause the app to freeze on the する vocabulary item.
