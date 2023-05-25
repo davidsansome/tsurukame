@@ -237,7 +237,7 @@ private class ConjugationGroup {
     case .ichidanVerb:
       return ichidanVerb
     case .suruVerb:
-      return ichidanVerb //suruVerb
+      return suruVerb
     case .iAdjective:
       return iAdjective
     case .naAdjective:
@@ -264,7 +264,9 @@ func patternToHighlight(for subject: TKMSubject) -> String {
         japanese = String(japanese.dropFirst(conjugationGroup.prefix.count))
       }
       if japanese.hasSuffix(conjugationGroup.suffix) {
-        japanese = String(japanese.dropLast(conjugationGroup.suffix.count))
+        if japanese != "する" {
+          japanese = String(japanese.dropLast(conjugationGroup.suffix.count))
+        }
       }
 
       patterns.append(japanese + conjugationGroup.pattern)
