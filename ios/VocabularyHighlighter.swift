@@ -237,7 +237,7 @@ private class ConjugationGroup {
     case .ichidanVerb:
       return ichidanVerb
     case .suruVerb:
-      return suruVerb
+      return ichidanVerb //suruVerb
     case .iAdjective:
       return iAdjective
     case .naAdjective:
