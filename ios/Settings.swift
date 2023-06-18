@@ -41,6 +41,28 @@ typealias SettingEnum = RawRepresentable & Codable & CaseIterable & CustomString
   }
 }
 
+@objc enum SecondaryReviewOrder: UInt, SettingEnum {
+  case unsorted = 1
+  case radicalKanjiVocabulary = 2 // (rkv)
+  case radicalVocabularyKanji = 3 // (rvk)
+  case kanjiRadicalVocabulary = 4 // (krv)
+  case kanjiVocabularyRadical = 5 // (kvr)
+  case vocabularyRadicalKanji = 6 // (vrk)
+  case vocabularyKanjiRadical = 7 // (vkr)
+
+  var description: String {
+    switch self {
+    case .unsorted: return "Unsorted"
+    case .radicalKanjiVocabulary: return "Radical, Kanji, Vocabulary"
+    case .radicalVocabularyKanji: return "Radical, Vocabulary, Kanji"
+    case .kanjiRadicalVocabulary: return "Kanji, Radical, Vocabulary"
+    case .kanjiVocabularyRadical: return "Kanji, Vocabulary, Radical"
+    case .vocabularyRadicalKanji: return "Vocabulary, Radical, Kanji"
+    case .vocabularyKanjiRadical: return "Vocabulary, Kanji, Radical"
+    }
+  }
+}
+
 @objc enum InterfaceStyle: UInt, SettingEnum {
   case system = 1
   case light = 2
@@ -176,6 +198,8 @@ protocol SettingProtocol {
   @Setting(true, #keyPath(showStatsSection)) static var showStatsSection: Bool
 
   @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
+  @EnumSetting(SecondaryReviewOrder.unsorted,
+               #keyPath(secondaryReviewOrder)) static var secondaryReviewOrder: SecondaryReviewOrder
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
   @Setting(Int.max, #keyPath(apprenticeLessonsLimit)) static var apprenticeLessonsLimit: Int
   @Setting(false, #keyPath(groupMeaningReading)) static var groupMeaningReading: Bool

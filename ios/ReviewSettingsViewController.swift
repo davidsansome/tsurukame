@@ -1,4 +1,4 @@
-// Copyright 2022 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,6 +45,12 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                              accessoryType: .disclosureIndicator,
                              target: self,
                              action: #selector(didTapReviewOrder(_:))))
+    model.add(BasicModelItem(style: .value1,
+                             title: "Subject Order",
+                             subtitle: secondaryReviewOrderValueText,
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(didTapSecondaryReviewOrder(_:))))
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Back-to-back",
                               subtitle: "Group Meaning and Reading together",
@@ -204,6 +210,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     Settings.reviewOrder.description
   }
 
+  private var secondaryReviewOrderValueText: String {
+    Settings.secondaryReviewOrder.description
+  }
+
   private var taskOrderValueText: String {
     Settings.meaningFirst ? "Meaning first" : "Reading first"
   }
@@ -311,6 +321,13 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     let vc = SettingChoiceListViewController(setting: Settings.$reviewOrder, title: "Review Order")
     vc.addChoicesFromEnum()
     navigationController?.pushViewController(vc, animated: true)
+  }
+
+  @objc private func didTapSecondaryReviewOrder(_: BasicModelItem) {
+    let vs = SettingChoiceListViewController(setting: Settings.$secondaryReviewOrder,
+                                             title: "Review Subject Order")
+    vs.addChoicesFromEnum()
+    navigationController?.pushViewController(vs, animated: true)
   }
 
   @objc private func didTapFonts(_: BasicModelItem) {

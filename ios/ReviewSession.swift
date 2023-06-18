@@ -204,6 +204,46 @@ class ReviewSession {
     _ = services.localCachingClient?.updateStudyMaterial(activeStudyMaterials!)
   }
 
+  private func sortReviewType() {
+    // Settings.secondaryReviewOrder -> (radical, kanji, vocab) order ranks
+    var subjectOrder = [UInt: (Int, Int, Int)]()
+    // Instead of more complex logic, let's have structed data and few sorting cases
+    subjectOrder[SecondaryReviewOrder.unsorted.rawValue] = (0, 0, 0) // Default, no sort
+    subjectOrder[SecondaryReviewOrder.radicalKanjiVocabulary.rawValue] = (1, 2, 3)
+    subjectOrder[SecondaryReviewOrder.radicalVocabularyKanji.rawValue] = (1, 3, 2)
+    subjectOrder[SecondaryReviewOrder.kanjiRadicalVocabulary.rawValue] = (2, 1, 3)
+    subjectOrder[SecondaryReviewOrder.kanjiVocabularyRadical.rawValue] = (3, 1, 2)
+    subjectOrder[SecondaryReviewOrder.vocabularyRadicalKanji.rawValue] = (2, 3, 1)
+    subjectOrder[SecondaryReviewOrder.vocabularyKanjiRadical.rawValue] = (3, 2, 1)
+
+    let (radicalRank, kanjiRank, vocabRank) = subjectOrder[Settings.secondaryReviewOrder.rawValue]!
+
+    let subjectRank = [TKMSubject.TypeEnum.radical.rawValue: radicalRank,
+                       TKMSubject.TypeEnum.kanji.rawValue: kanjiRank,
+                       TKMSubject.TypeEnum.vocabulary.rawValue: vocabRank]
+
+    switch Settings.secondaryReviewOrder {
+    case .radicalKanjiVocabulary: fallthrough
+    case .radicalVocabularyKanji: fallthrough
+    case .kanjiRadicalVocabulary: fallthrough
+    case .kanjiVocabularyRadical: fallthrough
+    case .vocabularyRadicalKanji: fallthrough
+    case .vocabularyKanjiRadical:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if subjectRank[a.assignment.subjectType.rawValue]! <
+          subjectRank[b.assignment.subjectType.rawValue]! { return true }
+        if subjectRank[a.assignment.subjectType.rawValue]! >
+          subjectRank[b.assignment.subjectType.rawValue]! { return false }
+        return false
+      }
+    case .unsorted:
+      break
+
+    @unknown default:
+      fatalError()
+    }
+  }
+
   private func sortReviewQueue() {
     reviewQueue.shuffle()
     switch Settings.reviewOrder {
@@ -269,6 +309,8 @@ class ReviewSession {
     @unknown default:
       fatalError()
     }
+    // Apply (secondary) review type sort, if applicable.
+    sortReviewType()
   }
 
   private func availableRatio(_ assignment: TKMAssignment) -> TimeInterval {
