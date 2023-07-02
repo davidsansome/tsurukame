@@ -87,9 +87,11 @@ private func intervalString(_ date: Date) -> String {
                                 Calendar.Component.minute]
   var components = Calendar.current.dateComponents(componentsBitMask, from: Date(), to: date)
 
-  // Only show minutes after there are no hours left.
-  if let hour = components.hour, hour > 0 {
-    components.minute = 0
+  if !Settings.showMinutesForNextLevelUpReview {
+    // Only show minutes after there are no hours left.
+    if let hour = components.hour, hour > 0 {
+      components.minute = 0
+    }
   }
 
   return formatter.string(from: components)!

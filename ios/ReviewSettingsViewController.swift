@@ -85,6 +85,12 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                              accessoryType: .disclosureIndicator,
                              target: self,
                              action: #selector(fontSizeChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Show minutes for next level-up review",
+                              subtitle: nil,
+                              on: Settings.showMinutesForNextLevelUpReview,
+                              target: self,
+                              action: #selector(showMinutesForNextLevelUpReview(_:))))
 
     model.add(section: "Answers & marking")
     let keyboardSwitchItem = SwitchModelItem(style: .subtitle,
@@ -262,6 +268,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
 
   @objc private func showSRSLevelIndicatorSwitchChanged(_ switchView: UISwitch) {
     Settings.showSRSLevelIndicator = switchView.isOn
+  }
+
+  @objc private func showMinutesForNextLevelUpReview(_ switchView: UISwitch) {
+    Settings.showMinutesForNextLevelUpReview = switchView.isOn
   }
 
   @objc private func autoSwitchKeyboardSwitchChanged(_ switchView: UISwitch) {

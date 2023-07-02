@@ -189,6 +189,7 @@ protocol SettingProtocol {
   @Setting(true, #keyPath(showOldMnemonic)) static var showOldMnemonic: Bool
   @Setting(false, #keyPath(useKatakanaForOnyomi)) static var useKatakanaForOnyomi: Bool
   @Setting(false, #keyPath(showSRSLevelIndicator)) static var showSRSLevelIndicator: Bool
+  @Setting(false, #keyPath(showMinutesForNextLevelUpReview)) static var showMinutesForNextLevelUpReview: Bool
   @Setting(false, #keyPath(showAllReadings)) static var showAllReadings: Bool
   @Setting(false, #keyPath(autoSwitchKeyboard)) static var autoSwitchKeyboard: Bool
   @Setting(false, #keyPath(allowSkippingReviews)) static var allowSkippingReviews: Bool
