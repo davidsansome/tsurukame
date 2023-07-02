@@ -17,7 +17,11 @@ import WaniKaniAPI
 
 private let kSectionHeaderHeight: CGFloat = 38.0
 private let kSectionFooterHeight: CGFloat = 0.0
-private let kFontSize: CGFloat = 14.0
+
+private let kFontSize: CGFloat = {
+  let bodyFontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+  return bodyFontDescriptor.pointSize
+}()
 
 private let kMeaningSynonymColor = UIColor(red: 0.231, green: 0.6, blue: 0.988, alpha: 1)
 private let kFont = TKMStyle.japaneseFont(size: kFontSize)
