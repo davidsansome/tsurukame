@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class SubjectChip: UIView {
   init(subject: TKMSubject?, chipText: NSAttributedString, sideText: NSAttributedString?,
        chipTextColor: UIColor,
        chipGradient: [Any], delegate: SubjectChipDelegate) {
-    let chipFont = TKMStyle.japaneseFont(size: kLabelHeight)
+    let chipFont = UIFont(name: TKMStyle.japaneseFontName, size: kLabelHeight)!
     let chipLabelFrame = CGRect(x: kLabelInset, y: kLabelInset,
                                 width: textWidth(text: chipText, font: chipFont),
                                 height: kLabelHeight)

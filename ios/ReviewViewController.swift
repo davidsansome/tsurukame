@@ -186,7 +186,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var previousKeyboardInsetHeight: CGFloat?
 
   private var currentFontName: String!
-  private var normalFontName: String!
   private var availableFonts: [String]?
   private var defaultFontSize: Double!
 
@@ -284,8 +283,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       menuButton.isHidden = true
     }
 
-    normalFontName = TKMStyle.japaneseFontName
-    currentFontName = normalFontName
+    currentFontName = TKMStyle.japaneseFontName
     defaultFontSize = Double(questionLabel.font.pointSize)
 
     questionLabel.isUserInteractionEnabled = false
@@ -564,7 +562,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         (ctx: AnimationContext) in
         if !(self.questionLabel.attributedText?
           .isEqual(to: self.session.activeSubject.japaneseText) ?? false) ||
-          self.questionLabel.font.familyName != self.currentFontName {
+          self.questionLabel.font.fontName != self.currentFontName {
           ctx.addFadingLabel(original: self.questionLabel!)
           self.questionLabel
             .font = UIFont(name: self.currentFontName, size: self.questionLabelFontSize())
@@ -643,9 +641,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       // Re-set the supported fonts when we pick a random one as that is the first
       // step.
       availableFonts = fontsThatCanRenderText(text, exclude: nil).sorted()
-      return availableFonts?.randomElement() ?? normalFontName
+      return availableFonts?.randomElement() ?? TKMStyle.japaneseFontName
     } else {
-      return normalFontName
+      return TKMStyle.japaneseFontName
     }
   }
 
@@ -826,7 +824,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // MARK: - Question label fonts
 
   func setCustomQuestionLabelFont(useCustomFont: Bool) {
-    let fontName = useCustomFont ? currentFontName! : normalFontName!
+    let fontName = useCustomFont ? currentFontName! : TKMStyle.japaneseFontName
     questionLabel.font = UIFont(name: fontName, size: questionLabelFontSize())
   }
 
@@ -845,13 +843,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   @objc func showNextCustomFont() {
     currentFontName = nextCustomFont(thatCanRenderText: session.activeSubject.japanese) ??
-      normalFontName
+      TKMStyle.japaneseFontName
     setCustomQuestionLabelFont(useCustomFont: true)
   }
 
   @objc func showPreviousCustomFont() {
     currentFontName = previousCustomFont(thatCanRenderText: session.activeSubject.japanese) ??
-      normalFontName
+      TKMStyle.japaneseFontName
     setCustomQuestionLabelFont(useCustomFont: true)
   }
 
@@ -864,9 +862,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   @objc func toggleFont() {
-    let useCustomFont =
-      questionLabel.font.familyName == TKMStyle
-        .japaneseFontLight(size: questionLabel.font.pointSize).familyName
+    let useCustomFont = questionLabel.font.fontName == TKMStyle.japaneseFontName
     setCustomQuestionLabelFont(useCustomFont: useCustomFont)
   }
 
@@ -1063,10 +1059,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                               assignment: session.activeAssignment, task: task)
 
     let setupContextFunc = { (ctx: AnimationContext) in
-      if self.questionLabel.font.familyName != self.normalFontName {
+      if self.questionLabel.font.fontName != TKMStyle.japaneseFontName {
         ctx.addFadingLabel(original: self.questionLabel)
-        self.questionLabel
-          .font = UIFont(name: self.normalFontName, size: self.questionLabelFontSize())
+        self.questionLabel.font = UIFont(name: TKMStyle.japaneseFontName,
+                                         size: self.questionLabelFontSize())
       }
     }
     animateSubjectDetailsView(shown: true, setupContextFunc: setupContextFunc)

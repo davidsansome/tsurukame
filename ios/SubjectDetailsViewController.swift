@@ -49,7 +49,7 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     subjectDetailsView.update(withSubject: subject, studyMaterials: studyMaterials,
                               assignment: assignment, task: nil)
 
-    subjectTitle.font = TKMStyle.japaneseFont(size: subjectTitle.font.pointSize)
+    subjectTitle.font = UIFont(name: TKMStyle.japaneseFontName, size: subjectTitle.font.pointSize)
     subjectTitle.attributedText = subject.japaneseText(imageSize: 40.0)
     gradientLayer = CAGradientLayer()
     gradientLayer!.colors = TKMStyle.gradient(forSubject: subject)

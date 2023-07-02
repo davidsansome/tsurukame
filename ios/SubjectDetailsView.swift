@@ -24,7 +24,6 @@ private let kFontSize: CGFloat = {
 }()
 
 private let kMeaningSynonymColor = UIColor(red: 0.231, green: 0.6, blue: 0.988, alpha: 1)
-private let kFont = TKMStyle.japaneseFont(size: kFontSize)
 
 private func join(_ arr: [NSAttributedString], with joinString: String) -> NSAttributedString {
   let ret = NSMutableAttributedString()
@@ -65,9 +64,9 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
   var strings = [NSAttributedString]()
   for reading in readings {
     if reading.isPrimary {
-      var font = TKMStyle.japaneseFontLight(size: kFontSize)
+      var font = UIFont(name: TKMStyle.japaneseFontName, size: kFontSize)
       if !primaryOnly, readings.count > 1 {
-        font = TKMStyle.japaneseFontBold(size: kFontSize)
+        font = UIFont(name: TKMStyle.japaneseFontNameBold, size: kFontSize)
       }
       strings
         .append(attrString(reading.displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi),
@@ -75,7 +74,7 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
     }
   }
   if !primaryOnly {
-    let font = TKMStyle.japaneseFontLight(size: kFontSize)
+    let font = UIFont(name: TKMStyle.japaneseFontName, size: kFontSize)
     for reading in readings {
       if !reading.isPrimary {
         strings

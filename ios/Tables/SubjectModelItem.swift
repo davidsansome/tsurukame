@@ -80,7 +80,7 @@ class SubjectModelView: TKMModelCell {
     }
     updateGradient()
 
-    subjectLabel.font = TKMStyle.japaneseFont(size: subjectLabel.font.pointSize)
+    subjectLabel.font = UIFont(name: TKMStyle.japaneseFontName, size: subjectLabel.font.pointSize)
     subjectLabel.attributedText = item.subject.japaneseText(imageSize: kJapaneseTextImageSize)
 
     if item.showRemaining {
@@ -124,8 +124,9 @@ class SubjectModelView: TKMModelCell {
       }
     }
 
-    readingLabel.font = item.readingWrong ? TKMStyle.japaneseFontBold(size: kFontSize)
-      : TKMStyle.japaneseFont(size: kFontSize)
+    readingLabel.font = item.readingWrong ? UIFont(name: TKMStyle.japaneseFontNameBold,
+                                                   size: kFontSize)
+      : UIFont(name: TKMStyle.japaneseFontName, size: kFontSize)
     meaningLabel.font = item.meaningWrong ? UIFont.systemFont(ofSize: kFontSize, weight: .bold)
       : UIFont.systemFont(ofSize: kFontSize)
   }

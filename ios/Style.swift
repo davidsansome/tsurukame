@@ -138,36 +138,8 @@ class TKMStyle: NSObject {
 
   // MARK: - Japanese fonts
 
-  static let japaneseFontName = "Hiragino Sans"
-
-  // Tries to load fonts from the list of font names, in order, until one is found.
-  private class func loadFont(_ names: [String], size: CGFloat) -> UIFont {
-    for name in names {
-      if let font = UIFont(name: name, size: size) {
-        return font
-      }
-    }
-    return UIFont.systemFont(ofSize: size)
-  }
-
-  class func japaneseFont(size: CGFloat) -> UIFont {
-    UIFont(name: japaneseFontName, size: size)!
-  }
-
-  class func japaneseFontLight(size: CGFloat) -> UIFont {
-    loadFont(["HiraginoSans-W3",
-              "HiraginoSans-W2",
-              "HiraginoSans-W1",
-              "HiraginoSans-W4",
-              "HiraginoSans-W5"], size: size)
-  }
-
-  class func japaneseFontBold(size: CGFloat) -> UIFont {
-    loadFont(["HiraginoSans-W8",
-              "HiraginoSans-W7",
-              "HiraginoSans-W6",
-              "HiraginoSans-W5"], size: size)
-  }
+  static let japaneseFontName = "HiraginoSans-W3"
+  static let japaneseFontNameBold = "HiraginoSans-W6"
 
   // MARK: - Dark mode aware UI colors
 
