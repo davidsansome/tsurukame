@@ -165,6 +165,7 @@ protocol SettingProtocol {
 
   @Setting(false, #keyPath(notificationsAllReviews)) static var notificationsAllReviews: Bool
   @Setting(true, #keyPath(notificationsBadging)) static var notificationsBadging: Bool
+  @Setting(true, #keyPath(notificationSounds)) static var notificationSounds: Bool
 
   @Setting(false, #keyPath(prioritizeCurrentLevel)) static var prioritizeCurrentLevel: Bool
   @EnumArraySetting([
@@ -189,7 +190,8 @@ protocol SettingProtocol {
   @Setting(true, #keyPath(showOldMnemonic)) static var showOldMnemonic: Bool
   @Setting(false, #keyPath(useKatakanaForOnyomi)) static var useKatakanaForOnyomi: Bool
   @Setting(false, #keyPath(showSRSLevelIndicator)) static var showSRSLevelIndicator: Bool
-  @Setting(false, #keyPath(showMinutesForNextLevelUpReview)) static var showMinutesForNextLevelUpReview: Bool
+  @Setting(false,
+           #keyPath(showMinutesForNextLevelUpReview)) static var showMinutesForNextLevelUpReview: Bool
   @Setting(false, #keyPath(showAllReadings)) static var showAllReadings: Bool
   @Setting(false, #keyPath(autoSwitchKeyboard)) static var autoSwitchKeyboard: Bool
   @Setting(false, #keyPath(allowSkippingReviews)) static var allowSkippingReviews: Bool
