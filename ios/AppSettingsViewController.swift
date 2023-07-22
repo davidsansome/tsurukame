@@ -15,6 +15,10 @@
 import Foundation
 import UIKit
 
+extension Notification.Name {
+  static let reviewsCompleted = Notification.Name("reviewsCompleted")
+}
+
 class AppSettingsViewController: UITableViewController, TKMViewController {
   private var model: TableModel?
   private var notificationHandler: ((Bool) -> Void)?
@@ -30,6 +34,10 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
     NotificationCenter.default.addObserver(self,
                                            selector: #selector(applicationDidBecomeActive(_:)),
                                            name: UIApplication.didBecomeActiveNotification,
+                                           object: nil)
+    NotificationCenter.default.addObserver(self,
+                                           selector: #selector(handleReviewCompletion),
+                                           name: .reviewsCompleted,
                                            object: nil)
   }
 
@@ -72,6 +80,19 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
                               on: Settings.notificationSounds,
                               target: self,
                               action: #selector(soundSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .default,
+                              title: "Critical Alerts",
+                              subtitle: "Alert even if phone is muted or on Do Not Disturb",
+                              on: Settings.criticalAlerts,
+                              target: self,
+                              action: #selector(criticalAlertsSwitchChanged(_:))))
+
+    model.add(SwitchModelItem(style: .default,
+                              title: "Time Sensitive Notifications",
+                              subtitle: "Alert if reviews are not done within half an hour",
+                              on: Settings.timeSensitiveNotifications,
+                              target: self,
+                              action: #selector(timeSensitiveSwitchChanged(_:))))
 
     self.model = model
     model.reloadTable()
@@ -101,6 +122,58 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
     promptForNotifications(switchView: switchView) { granted in
       Settings.notificationSounds = granted
     }
+  }
+
+  @objc private func criticalAlertsSwitchChanged(_ switchView: UISwitch) {
+    promptForNotifications(switchView: switchView) { granted in
+      Settings.criticalAlerts = granted
+    }
+  }
+
+  @objc private func timeSensitiveSwitchChanged(_ switchView: UISwitch) {
+    promptForNotifications(switchView: switchView) { granted in
+      Settings.timeSensitiveNotifications = granted
+      // If granted, schedule a notification to be triggered in 30 minutes if reviews are not done
+      if granted {
+        self.scheduleTimeSensitiveNotification()
+      }
+    }
+  }
+
+  @objc private func handleReviewCompletion() {
+    reviewCompleted()
+  }
+
+  private func scheduleTimeSensitiveNotification() {
+    let center = UNUserNotificationCenter.current()
+    let content = UNMutableNotificationContent()
+    content.title = "Time Sensitive Alert!"
+    content.body = "You haven't done your reviews within the last half an hour!"
+    content.sound = UNNotificationSound.default
+    content.categoryIdentifier = "timeSensitiveNotification"
+
+    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1800, repeats: false)
+    let request = UNNotificationRequest(identifier: "timeSensitiveNotificationId",
+                                        content: content, trigger: trigger)
+
+    center.add(request) { error in
+      if let error = error {
+        print("Error scheduling time sensitive notification: \(error)")
+      }
+    }
+  }
+
+  func reviewCompleted() {
+    // Assuming `Settings.timeSensitiveNotifications` is a boolean that indicates whether Time Sensitive Notifications are enabled
+    if Settings.timeSensitiveNotifications {
+      cancelTimeSensitiveNotification()
+    }
+  }
+
+  // This function will cancel the time-sensitive notification
+  func cancelTimeSensitiveNotification() {
+    let center = UNUserNotificationCenter.current()
+    center.removePendingNotificationRequests(withIdentifiers: ["timeSensitiveNotificationId"])
   }
 
   private func promptForNotifications(switchView: UISwitch,
@@ -133,8 +206,20 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
       case .authorized, .provisional, .ephemeral:
         self.notificationHandler?(true)
       case .notDetermined:
-        center.requestAuthorization(options: [.badge, .alert, .sound]) { granted, _ in
-          self.notificationHandler?(granted)
+        if #available(iOS 15.0, *) {
+          center
+            .requestAuthorization(options: [.badge, .alert, .sound, .criticalAlert,
+                                            .provisional,
+                                            .timeSensitive]) { granted, _ in
+              self.notificationHandler?(granted)
+            }
+        } else {
+          // Fallback on earlier versions
+          center
+            .requestAuthorization(options: [.badge, .alert, .sound, .criticalAlert,
+                                            .provisional]) { granted, _ in
+              self.notificationHandler?(granted)
+            }
         }
       case .denied:
         DispatchQueue.main.async {
@@ -159,5 +244,9 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
       }
       self.notificationHandler?(granted)
     }
+  }
+
+  deinit {
+    NotificationCenter.default.removeObserver(self, name: .reviewsCompleted, object: nil)
   }
 }

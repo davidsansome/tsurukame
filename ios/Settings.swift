@@ -15,6 +15,9 @@
 import Foundation
 import WaniKaniAPI
 
+// Consts
+private let HALF_AN_HOUR_IN_SECONDS: Int = 1800
+
 typealias SettingEnum = RawRepresentable & Codable & CaseIterable & CustomStringConvertible
 
 @objc enum ReviewOrder: UInt, SettingEnum {
@@ -166,6 +169,14 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(notificationsAllReviews)) static var notificationsAllReviews: Bool
   @Setting(true, #keyPath(notificationsBadging)) static var notificationsBadging: Bool
   @Setting(true, #keyPath(notificationSounds)) static var notificationSounds: Bool
+
+  // Critical Alerts setting - triggers an alert if reviews aren't done within the specified time frame, even if the phone is muted.
+  @Setting(true, #keyPath(criticalAlerts)) static var criticalAlerts: Bool
+  // Time Sensitive Notifications setting - triggers a notification if reviews aren't done within the specified time frame, even if Do Not Disturb is on.
+  @Setting(true,
+           #keyPath(timeSensitiveNotifications)) static var timeSensitiveNotifications: Bool
+  // Delay after which critical alerts and time-sensitive notifications are triggered.
+  @Setting(HALF_AN_HOUR_IN_SECONDS, #keyPath(notificationDelay)) static var notificationDelay: Int
 
   @Setting(false, #keyPath(prioritizeCurrentLevel)) static var prioritizeCurrentLevel: Bool
   @EnumArraySetting([
