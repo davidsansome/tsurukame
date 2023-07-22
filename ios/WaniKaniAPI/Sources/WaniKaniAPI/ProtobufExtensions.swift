@@ -369,7 +369,7 @@ public extension TKMAssignment {
   }
 
   func guruDate(subject: TKMSubject) -> Date? {
-    if hasPassedAt, srsStage > .guru1 {
+    if hasPassedAt {
       return passedAtDate
     } else if srsStage >= .guru1 {
       return Date.distantPast
