@@ -100,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
     if !Screenshotter.isActive {
       // Ask for notification permissions.
       let unc = UNUserNotificationCenter.current()
-      unc.requestAuthorization(options: [.badge, .alert]) { _, _ in }
+      unc.requestAuthorization(options: [.badge, .alert, .sound]) { _, _ in }
     }
 
     let pushMainViewController = { () in
@@ -227,6 +227,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
           if settings.badgeSetting == .enabled, Settings.notificationsBadging {
             content.badge = NSNumber(value: cumulativeReviews)
           }
+          if settings.soundSetting == .enabled, Settings.notificationSounds {
+            content.sound = UNNotificationSound.default
+          }
+
           let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerTimeInterval,
                                                           repeats: false)
           let request = UNNotificationRequest(identifier: identifier, content: content,

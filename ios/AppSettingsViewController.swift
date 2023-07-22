@@ -1,4 +1,4 @@
-// Copyright 2022 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,6 +66,13 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
                               target: self,
                               action: #selector(badgingSwitchChanged(_:))))
 
+    model.add(SwitchModelItem(style: .default,
+                              title: "Play sound with notifications",
+                              subtitle: nil,
+                              on: Settings.notificationSounds,
+                              target: self,
+                              action: #selector(soundSwitchChanged(_:))))
+
     self.model = model
     model.reloadTable()
   }
@@ -87,6 +94,12 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
   @objc private func badgingSwitchChanged(_ switchView: UISwitch) {
     promptForNotifications(switchView: switchView) { granted in
       Settings.notificationsBadging = granted
+    }
+  }
+
+  @objc private func soundSwitchChanged(_ switchView: UISwitch) {
+    promptForNotifications(switchView: switchView) { granted in
+      Settings.notificationSounds = granted
     }
   }
 
@@ -120,7 +133,7 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
       case .authorized, .provisional, .ephemeral:
         self.notificationHandler?(true)
       case .notDetermined:
-        center.requestAuthorization(options: [.badge, .alert]) { granted, _ in
+        center.requestAuthorization(options: [.badge, .alert, .sound]) { granted, _ in
           self.notificationHandler?(granted)
         }
       case .denied:
