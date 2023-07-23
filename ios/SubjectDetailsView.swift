@@ -490,11 +490,10 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     }
 
     // Add the artwork section.
-    if #available(iOS 15.0, *), ArtworkManager.contains(subjectID: subject.id) {
+    if #available(iOS 15.0, *), Settings.showArtWork,
+       ArtworkManager.contains(subjectID: subject.id) {
       model.add(section: "ArtWork by @AmandaBear")
       model.add(ArtworkModelItem(subjectID: subject.id))
-    } else {
-      // Fallback on earlier versions
     }
 
     tableModel = model

@@ -11,11 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// Feel free to do whatever you want with my images. I only made them for fun and to help others learn the mnemonics.
-// Go right ahead. I give my full permission to use my images.
-// I waive all rights to all my WaniKani radical and kanji drawings, including all those posted and linked at WK Mnemonic "Art" for Kanji Levels 1-7 (Radical Levels 1-10) , under the CC0 public domain dedication (Creative Commons — CC0 1.0 Universal).
-
-
 
 import Foundation
 
