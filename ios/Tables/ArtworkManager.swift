@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import Network
 
 struct ArtworkManager {
   static let artworkExt = ".png"
@@ -27,6 +28,11 @@ struct ArtworkManager {
 
   static func contains(subjectID: Int64) -> Bool {
     artworkURLs.keys.contains(subjectID)
+  }
+
+  static func isConnectedToInternet() -> Bool {
+    let monitor = NWPathMonitor()
+    return monitor.currentPath.status == .satisfied
   }
 
   // https://community.wanikani.com/t/wk-mnemonic-art-for-kanji-levels-1-7-radical-levels-1-10/47656
