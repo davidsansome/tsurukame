@@ -174,6 +174,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var session: ReviewSession!
 
   private var lastMarkAnswerWasFirstTime = false
+  private var ankiModeCachedSubmit = false
+  private var isAnimatingSubjectDetailsView = false
 
   private var previousSubjectGradient: CAGradientLayer!
 
@@ -683,6 +685,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       setupContextFunc(context)
     }
 
+    isAnimatingSubjectDetailsView = true
+
     UIView.beginAnimations(nil, context: Unmanaged.passRetained(context).toOpaque())
     UIView.setAnimationDelegate(self)
     UIView.setAnimationDidStop(#selector(animationDidStop(animationID:finished:context:)))
@@ -738,6 +742,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                               context: UnsafeMutableRawPointer) {
     let ctx = Unmanaged<AnimationContext>.fromOpaque(context).takeRetainedValue()
 
+    isAnimatingSubjectDetailsView = false
+
     revealAnswerButton.isHidden = true
     if ctx.subjectDetailsViewShown {
       previousSubjectLabel?.isHidden = true
@@ -749,6 +755,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       }
       answerField.becomeFirstResponder()
     }
+
+    // This makes sure taps are still processed and not ignored, even when the closing animation after a button press was not completed
+    if Settings.ankiMode, ankiModeCachedSubmit { submit() }
   }
 
   // MARK: - Previous subject button
@@ -830,7 +839,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   @objc func didShortPressQuestionLabel(_: UITapGestureRecognizer) {
     toggleFont()
-    if Settings.ankiMode { submit() }
+    if Settings.ankiMode {
+      if !isAnimatingSubjectDetailsView { submit() }
+      else { ankiModeCachedSubmit = true }
+    }
   }
 
   @objc func didSwipeQuestionLabel(_ sender: UISwipeGestureRecognizer) {
@@ -950,6 +962,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   func submit() {
     if Settings.ankiMode {
+      ankiModeCachedSubmit = false
       // Mark the answer incorrect to show the details. This can still be overriden.
       let answersRevealed = !subjectDetailsView.isHidden
       if !answersRevealed { markAnswer(.Incorrect) }
