@@ -187,7 +187,7 @@ public extension TKMSubject {
 
     var size = imageSize
     if size == 0 {
-      size = imageAttachment.image!.size.width
+      size = imageAttachment.image?.size.width ?? 0
     }
     imageAttachment.bounds = CGRect(x: 0, y: 0, width: size, height: size)
     return NSAttributedString(attachment: imageAttachment)
