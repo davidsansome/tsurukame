@@ -19,6 +19,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
   private var services: TKMServices!
   private var model: TableModel?
   private var groupMeaningReadingIndexPath: IndexPath?
+  private var ankiModeCombineReadingMeaningIndexPath: IndexPath?
 
   func setup(services: TKMServices) {
     self.services = services
@@ -150,6 +151,17 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                               on: Settings.ankiMode,
                               target: self,
                               action: #selector(ankiModeSwitchChanged(_:))))
+
+    let ankiModeCombineReadingMeaning = SwitchModelItem(style: .subtitle,
+                                                        title: "Combine Reading + Meaning",
+                                                        subtitle: "Only one review for reading and meaning with Anki Mode activated",
+                                                        on: Settings.ankiModeCombineReadingMeaning,
+                                                        target: self,
+                                                        action: #selector(ankiModeCombineReadingMeaningSwitchChanged(_:)))
+
+    ankiModeCombineReadingMeaning.numberOfSubtitleLines = 0
+    ankiModeCombineReadingMeaningIndexPath = model.add(ankiModeCombineReadingMeaning,
+                                                       hidden:!Settings.ankiMode)
 
     model.add(section: "Audio")
     model.add(SwitchModelItem(style: .subtitle,
@@ -292,6 +304,14 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
 
   @objc private func ankiModeSwitchChanged(_ switchView: UISwitch) {
     Settings.ankiMode = switchView.isOn
+    Settings.ankiModeCombineReadingMeaning = false
+    if let indexPath = ankiModeCombineReadingMeaningIndexPath {
+      model?.setIndexPath(indexPath, hidden: !switchView.isOn)
+    }
+  }
+
+  @objc private func ankiModeCombineReadingMeaningSwitchChanged(_ switchView: UISwitch) {
+    Settings.ankiModeCombineReadingMeaning = switchView.isOn
   }
 
   @objc private func playAudioAutomaticallySwitchChanged(_ switchView: UISwitch) {
