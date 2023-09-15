@@ -154,7 +154,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
 
     let ankiModeCombineReadingMeaning = SwitchModelItem(style: .subtitle,
                                                         title: "Combine Reading + Meaning",
-                                                        subtitle: "Only one review for reading and meaning with Anki Mode activated",
+                                                        subtitle: "Only one review for reading and meaning with Anki mode enabled",
                                                         on: Settings.ankiModeCombineReadingMeaning,
                                                         target: self,
                                                         action: #selector(ankiModeCombineReadingMeaningSwitchChanged(_:)))
