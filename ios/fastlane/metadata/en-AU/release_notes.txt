@@ -1,1 +1,3 @@
-Fix a bug that would cause the app to freeze on the する vocabulary item.
+Fix a bug that would cause the app to crash on the saw radical.
+Add a setting for notification sounds.
+Fix a bug in Anki Mode where answers would be marked wrongly when tapping the screen while an animation is in progress.

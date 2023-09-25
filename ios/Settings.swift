@@ -165,7 +165,7 @@ protocol SettingProtocol {
 
   @Setting(false, #keyPath(notificationsAllReviews)) static var notificationsAllReviews: Bool
   @Setting(true, #keyPath(notificationsBadging)) static var notificationsBadging: Bool
-  @Setting(true, #keyPath(notificationSounds)) static var notificationSounds: Bool
+  @Setting(false, #keyPath(notificationSounds)) static var notificationSounds: Bool
 
   @Setting(false, #keyPath(prioritizeCurrentLevel)) static var prioritizeCurrentLevel: Bool
   @EnumArraySetting([
