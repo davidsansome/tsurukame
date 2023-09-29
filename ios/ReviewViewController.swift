@@ -503,6 +503,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         }
       }
 
+      if session.activeAssignment.subjectType != .radical,
+         Settings.ankiMode,
+         Settings.ankiModeCombineReadingMeaning {
+        taskTypePrompt = Settings.meaningFirst ? "Meaning + Reading" : "Reading + Meaning"
+      }
+
       // Choose a random font.
       currentFontName = randomFont(thatCanRenderText: session.activeSubject.japanese)
 
@@ -1019,10 +1025,17 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     // Mark the task.
-    let marked = session.markAnswer(result)
+    var marked = session.markAnswer(result)
 
     // Show a new task if it was correct.
     if result != .Incorrect {
+      if session.activeAssignment.subjectType != .radical, // or kana mode?
+         Settings.ankiMode,
+         Settings.ankiModeCombineReadingMeaning {
+        session.nextTask()
+        marked = session.markAnswer(.Correct)
+      }
+
       if Settings.playAudioAutomatically, session.activeTaskType == .reading,
          let subject = session.activeSubject,
          subject.hasVocabulary, !subject.vocabulary.audio.isEmpty {

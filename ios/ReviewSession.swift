@@ -39,7 +39,8 @@ class ReviewSession {
     self.services = services
     reviewQueue = items
 
-    if Settings.groupMeaningReading {
+    if Settings.groupMeaningReading || (Settings.ankiMode &&
+      Settings.ankiModeCombineReadingMeaning) {
       activeQueueSize = 1
     } else {
       activeQueueSize = Int(Settings.reviewBatchSize)
@@ -85,7 +86,8 @@ class ReviewSession {
       activeTaskType = .reading
     } else if activeTask.answeredReading || activeSubject.readings.isEmpty {
       activeTaskType = .meaning
-    } else if Settings.groupMeaningReading {
+    } else if Settings.groupMeaningReading || (Settings.ankiMode &&
+      Settings.ankiModeCombineReadingMeaning) {
       activeTaskType = Settings.meaningFirst ? .meaning : .reading
     } else {
       activeTaskType = TaskType.random()
