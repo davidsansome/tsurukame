@@ -1,3 +1,1 @@
-Fix a bug that would cause the app to crash on the saw radical.
-Add a setting for notification sounds.
-Fix a bug in Anki Mode where answers would be marked wrongly when tapping the screen while an animation is in progress.
+Fixed an "Unknown error" during login.
