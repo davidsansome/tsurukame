@@ -112,9 +112,6 @@ public class WaniKaniWebClient: NSObject {
          arg.data.range(of: "Invalid login or password".data(using: .utf8)!) != nil {
         throw WaniKaniWebClientError.badCredentials
       }
-      if arg.response.url! != kDashboardUrl {
-        throw WaniKaniWebClientError.unknown
-      }
       return secondCookie!
     }
   }
