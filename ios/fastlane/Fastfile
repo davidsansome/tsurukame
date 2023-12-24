@@ -80,7 +80,6 @@ lane :beta do
 
   build_app(
     scheme: "Tsurukame",
-    include_bitcode: true,
   )
 
   # Generate the changelog from git commits since the last tag.
@@ -128,7 +127,6 @@ lane :release do
 
   build_app(
     scheme: "Tsurukame",
-    include_bitcode: true,
   )
 
   upload_to_app_store(
