@@ -721,7 +721,8 @@
 			buildConfigurationList = 630FD6291FC45BDF00D21C1F /* Build configuration list for PBXNativeTarget "Tsurukame" */;
 			buildPhases = (
 				C82AD48FFC87D1809C22F3AD /* [CP] Check Pods Manifest.lock */,
-				631CAD61234ACF69008CEA73 /* ShellScript */,
+				631CAD61234ACF69008CEA73 /* Run Swift Format */,
+				63A1133A2B37CECC00968FDC /* Run Clang Format */,
 				630FD60F1FC45BDF00D21C1F /* Sources */,
 				630FD6101FC45BDF00D21C1F /* Frameworks */,
 				630FD6111FC45BDF00D21C1F /* Resources */,
@@ -1078,7 +1079,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		631CAD61234ACF69008CEA73 /* ShellScript */ = {
+		631CAD61234ACF69008CEA73 /* Run Swift Format */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1087,13 +1088,32 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Swift Format";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd SwiftFormatTools\nSDKROOT=macosx #Swift Format itself always runs on Mac\nswift run -c release swiftformat \"$SRCROOT\"\n\nset -e\ncd ../ # Back to previous directory\n\n# Run clang-format on all .h, .m or .mm files.\nfind . -not '(' \\\n       -path '*/Pods/*' -or \\\n       -name 'Reachability.*' -or \\\n       -name '*.pbobjc.*' \\\n     ')' -and '(' \\\n       -name '*.h' -or \\\n       -name '*.m' -or \\\n       -name '*.mm' \\\n     ')' \\\n     -exec ../utils/clang-format -style=file -i {} '+'\n";
+			shellScript = "cd SwiftFormatTools\nSDKROOT=(xcrun --sdk macosx --show-sdk-path)\nswift run -c release swiftformat \"$SRCROOT\"\n";
+		};
+		63A1133A2B37CECC00968FDC /* Run Clang Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Clang Format";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\n# Run clang-format on all .h, .m or .mm files.\nfind . -not '(' \\\n       -path '*/Pods/*' -or \\\n       -name 'Reachability.*' -or \\\n       -name '*.pbobjc.*' \\\n     ')' -and '(' \\\n       -name '*.h' -or \\\n       -name '*.m' -or \\\n       -name '*.mm' \\\n     ')' \\\n     -exec ../utils/clang-format -style=file -i {} '+'\n";
 		};
 		7FE9DC587EA0191626D4E150 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
