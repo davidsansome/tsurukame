@@ -51,7 +51,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
       pushLoginViewController()
     }
 
+    setupNotificationCategories()
+
     return true
+  }
+
+  private func setupNotificationCategories() {
+    let criticalAction = UNNotificationAction(identifier: "criticalAction", title: "Review Now",
+                                              options: .foreground)
+
+    let criticalCategory = UNNotificationCategory(identifier: "criticalAlert",
+                                                  actions: [criticalAction],
+                                                  intentIdentifiers: [],
+                                                  hiddenPreviewsBodyPlaceholder: "",
+                                                  options: [])
+
+    UNUserNotificationCenter.current().setNotificationCategories([criticalCategory])
   }
 
   func application(_: UIApplication,
@@ -100,7 +115,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
     if !Screenshotter.isActive {
       // Ask for notification permissions.
       let unc = UNUserNotificationCenter.current()
-      unc.requestAuthorization(options: [.badge, .alert, .sound]) { _, _ in }
+      if #available(iOS 15.0, *) {
+        unc
+          .requestAuthorization(options: [.badge, .alert, .sound, .criticalAlert, .provisional,
+                                          .timeSensitive]) { _, _ in }
+      } else {
+        // Fallback on earlier versions
+        unc
+          .requestAuthorization(options: [.badge, .alert, .sound, .criticalAlert,
+                                          .provisional]) { _, _ in }
+      }
     }
 
     let pushMainViewController = { () in
@@ -231,15 +255,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
             content.sound = UNNotificationSound.default
           }
 
-          let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerTimeInterval,
-                                                          repeats: false)
-          let request = UNNotificationRequest(identifier: identifier, content: content,
-                                              trigger: trigger)
+          // Check if it's been 30 minutes since last review and set up critical alert
+          if triggerTimeInterval >= 30 * 60 {
+            let criticalContent = UNMutableNotificationContent()
+            criticalContent.body = "You have pending reviews. Please complete them."
+            criticalContent.badge = NSNumber(value: cumulativeReviews)
+            criticalContent.sound = UNNotificationSound
+              .defaultCritical // Use the critical sound
+            criticalContent
+              .categoryIdentifier = "criticalAlert" // Link to the critical alert category
 
-          nc.add(request, withCompletionHandler: nil)
-          notificationsAdded += 1
-          if notificationsAdded >= kMaxLocalNotifications {
-            break
+            let criticalTrigger =
+              UNTimeIntervalNotificationTrigger(timeInterval: triggerTimeInterval,
+                                                repeats: false)
+            let criticalRequest =
+              UNNotificationRequest(identifier: "criticalOrTimeSensitive-\(hour)",
+                                    content: criticalContent,
+                                    trigger: criticalTrigger)
+            nc.add(criticalRequest, withCompletionHandler: nil)
+            notificationsAdded += 1
+            if notificationsAdded >= kMaxLocalNotifications {
+              break
+            }
           }
         }
       }

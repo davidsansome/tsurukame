@@ -1,4 +1,4 @@
-// Copyright 2022 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,6 +65,8 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
 
   func finishedAllReviewItems(_ reviewViewController: ReviewViewController) {
     reviewViewController.performSegue(withIdentifier: "reviewSummary", sender: reviewViewController)
+    // Post a notification indicating that all reviews are complete
+    NotificationCenter.default.post(name: .reviewsCompleted, object: nil)
   }
 
   func allowsCustomFonts() -> Bool {
