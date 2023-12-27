@@ -65,6 +65,14 @@ class ReviewItem: NSObject {
     }
   }
 
+  class func readyForRecentLessonReview(assignments: [TKMAssignment],
+                                        localCachingClient: LocalCachingClient) -> [ReviewItem] {
+    filterReadyItems(assignments: assignments,
+                     localCachingClient: localCachingClient) { (assignment) -> Bool in
+      assignment.isReviewStage
+    }
+  }
+
   class func readyForBurnedReview(assignments: [TKMAssignment],
                                   localCachingClient: LocalCachingClient) -> [ReviewItem] {
     filterReadyItems(assignments: assignments,

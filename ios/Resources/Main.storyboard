@@ -268,6 +268,7 @@
                         <segue destination="vBH-2Y-r3P" kind="show" identifier="tableForecast" id="XTh-OP-gtz"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startRecentMistakeReviews" id="R3n-Ac-API"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startBurnedItemReviews" id="kKg-5Q-7Ga"/>
+                        <segue destination="pOc-Ig-wgQ" kind="show" identifier="startRecentLessonReviews" id="Whr-8i-Twv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dob-5V-x24" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -406,7 +407,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="kKg-5Q-7Ga"/>
+        <segue reference="Whr-8i-Twv"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="doc.on.clipboard" catalog="system" width="116" height="128"/>

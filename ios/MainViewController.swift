@@ -167,6 +167,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     let lessons = services.localCachingClient.availableLessonCount
     let reviews = services.localCachingClient.availableReviewCount
     let recentMistakes = services.localCachingClient.getRecentMistakesCount()
+    let recentLessons = services.localCachingClient.getAllRecentLessonAssignments()
     let upcomingReviews = services.localCachingClient.upcomingReviews
     let currentLevelAssignments = services.localCachingClient.getAssignmentsAtUsersCurrentLevel()
 
@@ -203,6 +204,17 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
         .add(createCurrentLevelReviewTimeItem(services: services,
                                               currentLevelAssignments: currentLevelAssignments))
 
+      if recentLessons.count > 0 {
+        let recentLessonsItem = BasicModelItem(style: .value1,
+                                               title: "Review recent lessons",
+                                               subtitle: "",
+                                               accessoryType: .disclosureIndicator,
+                                               target: self,
+                                               action: #selector(startRecentLessonReviews))
+        _ = setTableViewCellCount(recentLessonsItem, count: recentLessons.count)
+        model.add(recentLessonsItem)
+      }
+
       if recentMistakes > 0 {
         let recentMistakesItem = BasicModelItem(style: .value1,
                                                 title: "Review recent mistakes",
@@ -210,7 +222,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
                                                 accessoryType: .disclosureIndicator,
                                                 target: self,
                                                 action: #selector(startRecentMistakeReviews))
-        hasReviews = setTableViewCellCount(recentMistakesItem, count: recentMistakes)
+        _ = setTableViewCellCount(recentMistakesItem, count: recentMistakes)
         model.add(recentMistakesItem)
       }
     }
@@ -345,6 +357,18 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       let items = ReviewItem.readyForRecentMistakesReview(assignments: assignments,
                                                           localCachingClient: services
                                                             .localCachingClient)
+      if items.count == 0 {
+        return
+      }
+
+      let vc = segue.destination as! ReviewContainerViewController
+      vc.setup(services: services, items: items, isPracticeSession: true)
+
+    case "startRecentLessonReviews":
+      let assignments = services.localCachingClient.getAllRecentLessonAssignments()
+      let items = ReviewItem.readyForRecentLessonReview(assignments: assignments,
+                                                        localCachingClient: services
+                                                          .localCachingClient)
       if items.count == 0 {
         return
       }
@@ -633,6 +657,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   @objc func startRecentMistakeReviews() {
     performSegue(withIdentifier: "startRecentMistakeReviews", sender: self)
+  }
+
+  @objc func startRecentLessonReviews() {
+    performSegue(withIdentifier: "startRecentLessonReviews", sender: self)
   }
 
   @objc func startBurnedItemReviews() {

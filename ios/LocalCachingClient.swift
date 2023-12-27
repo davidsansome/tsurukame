@@ -376,6 +376,12 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
+  func getAllRecentLessonAssignments() -> [TKMAssignment] {
+    db.inDatabase { db in
+      getAllRecentLessonAssignments(transaction: db)
+    }
+  }
+
   private func getAllAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
     var ret = [TKMAssignment]()
     for cursor in db.query("SELECT pb FROM assignments") {
@@ -407,6 +413,25 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       "ON p.id = a.subject_id " +
       "WHERE srs_stage >= \(SRSStage.burned.rawValue)") {
       ret.append(cursor.proto(forColumnIndex: 0)!)
+    }
+    return ret
+  }
+
+  private func getAllRecentLessonAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
+    // Any item you’ve learned in lessons and haven’t Guru’d in your reviews
+    // will be part of Recent Lessons mode. Once you complete your reviews
+    // and the item moves to the Guru stage, this will no longer remain in Recent Lessons.
+    // https://knowledge.wanikani.com/getting-started/extra-study/
+    var ret = [TKMAssignment]()
+    for cursor in db.query("SELECT a.pb " +
+      "FROM subject_progress AS p " +
+      "LEFT JOIN assignments AS a " +
+      "ON p.id = a.subject_id " +
+      "WHERE srs_stage >= \(SRSStage.apprentice1.rawValue) AND srs_stage <= \(SRSStage.apprentice4.rawValue)") {
+      let assignment = cursor.proto(forColumnIndex: 0) as TKMAssignment?
+      if assignment!.hasPassedAt == false {
+        ret.append(assignment!)
+      }
     }
     return ret
   }
