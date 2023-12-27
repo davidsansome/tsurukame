@@ -243,6 +243,15 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     for category in SRSStageCategory.apprentice ... SRSStageCategory.burned {
       let count = services.localCachingClient.srsCategoryCounts[category.rawValue]
       model.add(SRSStageCategoryItem(stageCategory: category, count: Int(count)))
+      if category == SRSStageCategory.burned, count > 0 {
+        let reviewBurnedItem = BasicModelItem(style: .value1,
+                                              title: "Review burned items",
+                                              subtitle: "",
+                                              accessoryType: .disclosureIndicator,
+                                              target: self,
+                                              action: #selector(startBurnedItemReviews))
+        model.add(reviewBurnedItem)
+      }
     }
 
     self.model = model
@@ -341,7 +350,19 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       }
 
       let vc = segue.destination as! ReviewContainerViewController
-      vc.setup(services: services, items: items, skipSendingProgress: true)
+      vc.setup(services: services, items: items, isPracticeSession: true)
+
+    case "startBurnedItemReviews":
+      let assignments = services.localCachingClient.getAllBurnedAssignments()
+      let items = ReviewItem.readyForBurnedReview(assignments: assignments,
+                                                  localCachingClient: services
+                                                    .localCachingClient)
+      if items.count == 0 {
+        return
+      }
+
+      let vc = segue.destination as! ReviewContainerViewController
+      vc.setup(services: services, items: items, isPracticeSession: true)
 
     case "startLessons":
       let assignments = services.localCachingClient.getAllAssignments()
@@ -612,6 +633,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   @objc func startRecentMistakeReviews() {
     performSegue(withIdentifier: "startRecentMistakeReviews", sender: self)
+  }
+
+  @objc func startBurnedItemReviews() {
+    performSegue(withIdentifier: "startBurnedItemReviews", sender: self)
   }
 
   @objc func startLessons() {

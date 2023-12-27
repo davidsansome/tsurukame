@@ -370,6 +370,12 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
+  func getAllBurnedAssignments() -> [TKMAssignment] {
+    db.inDatabase { db in
+      getAllBurnedAssignments(transaction: db)
+    }
+  }
+
   private func getAllAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
     var ret = [TKMAssignment]()
     for cursor in db.query("SELECT pb FROM assignments") {
@@ -388,6 +394,18 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       "LEFT JOIN assignments AS a " +
       "ON p.id = a.subject_id " +
       "WHERE last_mistake_time >= \"\(formatter.string(from: dayAgo))\"") {
+      ret.append(cursor.proto(forColumnIndex: 0)!)
+    }
+    return ret
+  }
+
+  private func getAllBurnedAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
+    var ret = [TKMAssignment]()
+    for cursor in db.query("SELECT a.pb " +
+      "FROM subject_progress AS p " +
+      "LEFT JOIN assignments AS a " +
+      "ON p.id = a.subject_id " +
+      "WHERE srs_stage >= \(SRSStage.burned.rawValue)") {
       ret.append(cursor.proto(forColumnIndex: 0)!)
     }
     return ret

@@ -183,7 +183,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var previousSubject: TKMSubject?
   private var previousSubjectLabel: UILabel?
 
-  private var skipSendingProgress = false
+  private var isPracticeSession = false
 
   // These are set to match the keyboard animation.
   private var animationDuration: Double = kDefaultAnimationDuration
@@ -234,15 +234,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                     showMenuButton: Bool,
                     showSubjectHistory: Bool,
                     delegate: ReviewViewControllerDelegate,
-                    skipSendingProgress: Bool = false) {
+                    isPracticeSession: Bool = false) {
     self.services = services
     self.showMenuButton = showMenuButton
     self.showSubjectHistory = showSubjectHistory
     self.delegate = delegate
-    self.skipSendingProgress = skipSendingProgress
+    self.isPracticeSession = isPracticeSession
 
     session = ReviewSession(services: services, items: items,
-                            forceGroupMeaningReading: skipSendingProgress)
+                            isPracticeSession: isPracticeSession)
   }
 
   public var activeQueueLength: Int {
@@ -1033,7 +1033,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     // Mark the task.
-    var marked = session.markAnswer(result, skipSendingProgress: skipSendingProgress)
+    var marked = session.markAnswer(result, isPracticeSession: isPracticeSession)
 
     // Show a new task if it was correct.
     if result != .Incorrect {
