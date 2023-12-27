@@ -264,10 +264,12 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
     // Version 10. Only added to set the assignment is_kana_only_vocab field.
     "",
+    // Version 11. Added most_recent_mistake_time to allow for recent mistake reviews
+    "ALTER TABLE subject_progress ADD COLUMN last_mistake_time TIMESTAMP;",
   ]
 
   private let kInitialSchemaVersion = 8
-  private let kSchemaVersion = 10
+  private let kSchemaVersion = 11
 
   // Run when the user logs out. Clears everything in the database.
   private let kClearAllData = """
@@ -362,9 +364,30 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
+  func getAllRecentMistakeAssignments() -> [TKMAssignment] {
+    db.inDatabase { db in
+      getAllRecentMistakeAssignments(transaction: db)
+    }
+  }
+
   private func getAllAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
     var ret = [TKMAssignment]()
     for cursor in db.query("SELECT pb FROM assignments") {
+      ret.append(cursor.proto(forColumnIndex: 0)!)
+    }
+    return ret
+  }
+
+  private func getAllRecentMistakeAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
+    var ret = [TKMAssignment]()
+    let dayAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    for cursor in db.query("SELECT a.pb " +
+      "FROM subject_progress AS p " +
+      "LEFT JOIN assignments AS a " +
+      "ON p.id = a.subject_id " +
+      "WHERE last_mistake_time >= \"\(formatter.string(from: dayAgo))\"") {
       ret.append(cursor.proto(forColumnIndex: 0)!)
     }
     return ret
@@ -625,8 +648,24 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
+  func getRecentMistakesCount() -> Int {
+    let dayAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    return db.inDatabase { db in
+      let cursor = db.query("SELECT COUNT(*) FROM subject_progress " +
+        "WHERE srs_stage >= 1 AND last_mistake_time >= \"\(formatter.string(from: dayAgo))\"")
+      if cursor.next() {
+        return Int(cursor.int(forColumnIndex: 0))
+      }
+      return 0
+    }
+  }
+
   func sendProgress(_ progress: [TKMProgress]) -> Promise<Void> {
     db.inTransaction { db in
+      let formatter = DateFormatter()
+      formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
       for p in progress {
         // Delete the assignment.
         db.mustExecuteUpdate("DELETE FROM assignments WHERE id = ?", args: [p.assignment.id])
@@ -641,14 +680,16 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
         } else if p.meaningWrong || p.readingWrong {
           newSrsStage = newSrsStage.previous
         }
-        db.mustExecuteUpdate("REPLACE INTO subject_progress (id, level, srs_stage, subject_type) " +
-          "VALUES (?, ?, ?, ?)",
-          args: [
-            p.assignment.subjectID,
-            p.assignment.level,
-            newSrsStage.rawValue,
-            p.assignment.subjectType.rawValue,
-          ])
+        db
+          .mustExecuteUpdate("REPLACE INTO subject_progress (id, level, srs_stage, subject_type, last_mistake_time) " +
+            "VALUES (?, ?, ?, ?, ?)",
+            args: [
+              p.assignment.subjectID,
+              p.assignment.level,
+              newSrsStage.rawValue,
+              p.assignment.subjectType.rawValue,
+              p.meaningWrong || p.readingWrong ? formatter.string(from: Date()) : "",
+            ])
       }
     }
 

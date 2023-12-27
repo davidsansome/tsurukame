@@ -166,6 +166,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
     let lessons = services.localCachingClient.availableLessonCount
     let reviews = services.localCachingClient.availableReviewCount
+    let recentMistakes = services.localCachingClient.getRecentMistakesCount()
     let upcomingReviews = services.localCachingClient.upcomingReviews
     let currentLevelAssignments = services.localCachingClient.getAssignmentsAtUsersCurrentLevel()
 
@@ -201,6 +202,17 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       model
         .add(createCurrentLevelReviewTimeItem(services: services,
                                               currentLevelAssignments: currentLevelAssignments))
+
+      if recentMistakes > 0 {
+        let recentMistakesItem = BasicModelItem(style: .value1,
+                                                title: "Review recent mistakes",
+                                                subtitle: "",
+                                                accessoryType: .disclosureIndicator,
+                                                target: self,
+                                                action: #selector(startRecentMistakeReviews))
+        hasReviews = setTableViewCellCount(recentMistakesItem, count: recentMistakes)
+        model.add(recentMistakesItem)
+      }
     }
 
     if Settings.showPreviousLevelGraph, user.currentLevel > 1,
@@ -318,6 +330,18 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
       let vc = segue.destination as! ReviewContainerViewController
       vc.setup(services: services, items: items)
+
+    case "startRecentMistakeReviews":
+      let assignments = services.localCachingClient.getAllRecentMistakeAssignments()
+      let items = ReviewItem.readyForRecentMistakesReview(assignments: assignments,
+                                                          localCachingClient: services
+                                                            .localCachingClient)
+      if items.count == 0 {
+        return
+      }
+
+      let vc = segue.destination as! ReviewContainerViewController
+      vc.setup(services: services, items: items, skipSendingProgress: true)
 
     case "startLessons":
       let assignments = services.localCachingClient.getAllAssignments()
@@ -584,6 +608,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   @objc func startReviews() {
     performSegue(withIdentifier: "startReviews", sender: self)
+  }
+
+  @objc func startRecentMistakeReviews() {
+    performSegue(withIdentifier: "startRecentMistakeReviews", sender: self)
   }
 
   @objc func startLessons() {

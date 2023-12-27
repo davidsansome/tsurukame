@@ -23,6 +23,8 @@ class ReviewSession {
   public private(set) var completedReviews = [ReviewItem]()
   private var activeQueueSize = 1
 
+  private var forceGroupMeaningReading = false
+
   private var activeTaskIndex = 0 // An index into activeQueue.
   public private(set) var activeTaskType: TaskType!
   public private(set) var activeTask: ReviewItem!
@@ -35,12 +37,13 @@ class ReviewSession {
 
   public var wrappingUp: Bool = false
 
-  init(services: TKMServices, items: [ReviewItem]) {
+  init(services: TKMServices, items: [ReviewItem], forceGroupMeaningReading: Bool = false) {
     self.services = services
     reviewQueue = items
+    self.forceGroupMeaningReading = forceGroupMeaningReading
 
     if Settings.groupMeaningReading || (Settings.ankiMode &&
-      Settings.ankiModeCombineReadingMeaning) {
+      Settings.ankiModeCombineReadingMeaning) || self.forceGroupMeaningReading {
       activeQueueSize = 1
     } else {
       activeQueueSize = Int(Settings.reviewBatchSize)
@@ -87,7 +90,7 @@ class ReviewSession {
     } else if activeTask.answeredReading || activeSubject.readings.isEmpty {
       activeTaskType = .meaning
     } else if Settings.groupMeaningReading || (Settings.ankiMode &&
-      Settings.ankiModeCombineReadingMeaning) {
+      Settings.ankiModeCombineReadingMeaning) || forceGroupMeaningReading {
       activeTaskType = Settings.meaningFirst ? .meaning : .reading
     } else {
       activeTaskType = TaskType.random()
@@ -108,7 +111,8 @@ class ReviewSession {
   }
 
   private var lastMarkAnswerWasFirstTime = false
-  public func markAnswer(_ result: AnswerResult) -> MarkResult {
+  public func markAnswer(_ result: AnswerResult,
+                         skipSendingProgress: Bool = false) -> MarkResult {
     var firstTimeAnswered = false
     switch activeTaskType {
     case .meaning:
@@ -185,7 +189,9 @@ class ReviewSession {
         }
       }
 
-      _ = services.localCachingClient!.sendProgress([activeTask.answer])
+      if !skipSendingProgress {
+        _ = services.localCachingClient!.sendProgress([activeTask.answer])
+      }
 
       reviewsCompleted += 1
       completedReviews.append(activeTask)

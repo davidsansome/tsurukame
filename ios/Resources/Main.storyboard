@@ -266,6 +266,7 @@
                         <segue destination="MHj-tV-Wy7" kind="show" identifier="showAll" id="Gsa-0g-2hk"/>
                         <segue destination="HVF-EF-j9e" kind="show" identifier="settings" id="XTh-OI-gtz"/>
                         <segue destination="vBH-2Y-r3P" kind="show" identifier="tableForecast" id="XTh-OP-gtz"/>
+                        <segue destination="pOc-Ig-wgQ" kind="show" identifier="startRecentMistakeReviews" id="R3n-Ac-API"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dob-5V-x24" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -403,6 +404,9 @@
             <point key="canvasLocation" x="-1362" y="-493"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="R3n-Ac-API"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="doc.on.clipboard" catalog="system" width="116" height="128"/>
         <image name="ic_search_white" width="24" height="24"/>
