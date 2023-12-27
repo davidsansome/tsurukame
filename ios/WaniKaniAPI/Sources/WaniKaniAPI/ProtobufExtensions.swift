@@ -55,6 +55,16 @@ public enum SRSStageCategory: Int, CustomStringConvertible, Comparable, Strideab
     case .burned: return .burned
     }
   }
+
+  public var lastSrsStage: SRSStage {
+    switch self {
+    case .apprentice: return .apprentice4
+    case .guru: return .guru2
+    case .master: return .master
+    case .enlightened: return .enlightened
+    case .burned: return .burned
+    }
+  }
 }
 
 public enum SRSStage: Int, CustomStringConvertible, Comparable, Strideable {

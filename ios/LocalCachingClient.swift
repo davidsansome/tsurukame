@@ -446,6 +446,12 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
+  func getAssignmentsInCategory(category: SRSStageCategory) -> [TKMAssignment] {
+    db.inDatabase { db in
+      getAssignmentsInCategory(category: category, transaction: db)
+    }
+  }
+
   func getAssignmentsAtUsersCurrentLevel() -> [TKMAssignment] {
     guard let userInfo = getUserInfo() else {
       return []
@@ -499,6 +505,19 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.vocabulary, type: .vocabulary,
                        level: level, excludeSubjectIds: subjectIds)
 
+    return ret
+  }
+
+  private func getAssignmentsInCategory(category: SRSStageCategory,
+                                        transaction db: FMDatabase) -> [TKMAssignment] {
+    var ret = [TKMAssignment]()
+    for cursor in db.query("SELECT a.pb " +
+      "FROM subject_progress AS p " +
+      "LEFT JOIN assignments AS a " +
+      "ON p.id = a.subject_id " +
+      "WHERE srs_stage >= \(category.firstSrsStage.rawValue) AND srs_stage <= \(category.lastSrsStage.rawValue)") {
+      ret.append(cursor.proto(forColumnIndex: 0)!)
+    }
     return ret
   }
 

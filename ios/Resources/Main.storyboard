@@ -266,6 +266,7 @@
                         <segue destination="MHj-tV-Wy7" kind="show" identifier="showAll" id="Gsa-0g-2hk"/>
                         <segue destination="HVF-EF-j9e" kind="show" identifier="settings" id="XTh-OI-gtz"/>
                         <segue destination="vBH-2Y-r3P" kind="show" identifier="tableForecast" id="XTh-OP-gtz"/>
+                        <segue destination="lvd-2l-9te" kind="show" identifier="viewItemsInSrsCategory" id="h28-1t-bnp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dob-5V-x24" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -311,6 +312,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mNp-nc-5rI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="545" y="943"/>
+        </scene>
+        <!--subjectsByCategory-->
+        <scene sceneID="n7M-yI-UPs">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Subjects" referencedIdentifier="subjectsByCategory" id="lvd-2l-9te" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="EFj-aJ-fUq"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NbY-WF-HHV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-412" y="833"/>
         </scene>
         <!--reviewMenuViewController-->
         <scene sceneID="ktc-IM-NgC">
@@ -377,7 +388,9 @@
         <!--subjectsByLevel-->
         <scene sceneID="fbJ-hj-7XL">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="subjectsByLevel" storyboardName="Subjects" referencedIdentifier="subjectsByLevel" id="Z0N-39-WcZ" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardIdentifier="subjectsByLevel" storyboardName="Subjects" referencedIdentifier="subjectsByLevel" id="Z0N-39-WcZ" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="T0f-eq-rOy"/>
+                </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pib-TB-EmN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-727" y="834"/>
