@@ -215,7 +215,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
 
           let triggerTimeInterval = startInterval + (Double(hour) * 60 * 60)
           if triggerTimeInterval <= 0 {
-            // UNTimeIntervalNotificationTrigger sometimes crashes with a negative triggerTimeInterval.
+            // UNTimeIntervalNotificationTrigger sometimes crashes with a negative
+            // triggerTimeInterval.
             continue
           }
           let identifier = "badge-\(hour)"

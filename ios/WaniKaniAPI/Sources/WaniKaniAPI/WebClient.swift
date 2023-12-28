@@ -85,7 +85,7 @@ public class WaniKaniWebClient: NSObject {
       var req = URLRequest(url: kLoginUrl)
       req.httpShouldHandleCookies = true
       return request(req, session: session)
-    }.then { (arg) -> DataTaskPromise in
+    }.then { arg -> DataTaskPromise in
       // Extract the CSRF token and session cookie from the response.
 
       let csrfToken = try self.extractCSRFToken(arg.data)
@@ -120,7 +120,7 @@ public class WaniKaniWebClient: NSObject {
     firstly { () -> DataTaskPromise in
       let req = authorize(kAccessTokenUrl, cookie: cookie)
       return request(req, session: URLSession.shared)
-    }.then { (arg) -> Promise<String> in
+    }.then { arg -> Promise<String> in
       if let apiToken = self.extractApiToken(arg.data) {
         return Promise.value(apiToken)
       }
@@ -134,7 +134,7 @@ public class WaniKaniWebClient: NSObject {
     firstly { () -> DataTaskPromise in
       let req = authorize(kAccessTokenUrl, cookie: cookie)
       return request(req)
-    }.then { (arg) -> DataTaskPromise in
+    }.then { arg -> DataTaskPromise in
       let csrfToken = try self.extractCSRFToken(arg.data)
 
       let queryItems = [
@@ -153,7 +153,7 @@ public class WaniKaniWebClient: NSObject {
       var req = self.authorize(kAccessTokenUrl, cookie: cookie)
       try req.setFormBody(method: "POST", queryItems: queryItems)
       return request(req)
-    }.map { (arg) throws -> String in
+    }.map { arg throws -> String in
       if let apiToken = self.extractApiToken(arg.data) {
         return apiToken
       }

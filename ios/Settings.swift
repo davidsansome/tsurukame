@@ -15,7 +15,7 @@
 import Foundation
 import WaniKaniAPI
 
-typealias SettingEnum = RawRepresentable & Codable & CaseIterable & CustomStringConvertible
+typealias SettingEnum = CaseIterable & Codable & CustomStringConvertible & RawRepresentable
 
 @objc enum ReviewOrder: UInt, SettingEnum {
   case random = 1
@@ -197,7 +197,8 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(allowSkippingReviews)) static var allowSkippingReviews: Bool
   @Setting(true, #keyPath(minimizeReviewPenalty)) static var minimizeReviewPenalty: Bool
   @Setting(false, #keyPath(ankiMode)) static var ankiMode: Bool
-  @Setting(false, #keyPath(ankiModeCombineReadingMeaning)) static var ankiModeCombineReadingMeaning: Bool
+  @Setting(false,
+           #keyPath(ankiModeCombineReadingMeaning)) static var ankiModeCombineReadingMeaning: Bool
   @Setting(true, #keyPath(showPreviousLevelGraph)) static var showPreviousLevelGraph: Bool
   @Setting(true, #keyPath(showKanaOnlyVocab)) static var showKanaOnlyVocab: Bool
 

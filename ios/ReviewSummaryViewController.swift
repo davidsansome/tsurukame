@@ -1,4 +1,4 @@
-// Copyright 2022 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
     model.add(BasicModelItem(style: .value1, title: "Correct answers", subtitle: summaryText))
 
     // Add a section for each level.
-    let incorrectItemLevels = incorrectItemsByLevel.keys.sorted { (a, b) -> Bool in
+    let incorrectItemLevels = incorrectItemsByLevel.keys.sorted { a, b -> Bool in
       b < a
     }
     for level in incorrectItemLevels {

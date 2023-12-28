@@ -27,7 +27,8 @@ private let kReadingTextColor = UIColor.white
 private let kMeaningTextColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0)
 private let kDefaultButtonTintColor = UIButton().tintColor
 
-// If the keyboard height changes by less than this amount, the question label will stay where it is.
+// If the keyboard height changes by less than this amount, the question label will stay where it
+// is.
 private let kSmallKeyboardHeightChange: CGFloat = 50.0
 
 enum AnswerResult {
@@ -621,7 +622,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   func nextCustomFont(thatCanRenderText _: String) -> String? {
-    if let availableFonts = self.availableFonts,
+    if let availableFonts = availableFonts,
        let index = availableFonts.firstIndex(of: currentFontName) {
       if index + 1 >= availableFonts.count {
         return availableFonts.first
@@ -633,7 +634,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   func previousCustomFont(thatCanRenderText _: String) -> String? {
-    if let availableFonts = self.availableFonts,
+    if let availableFonts = availableFonts,
        let index = availableFonts.firstIndex(of: currentFontName) {
       if index == 0 {
         return availableFonts.last
@@ -684,7 +685,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       (Settings.allowSkippingReviews ? skipImage : tickImage)
     submitButton.setImage(submitButtonImage, for: .normal)
 
-    // We have to do the UIView animation this way (rather than using the block syntax) so we can set
+    // We have to do the UIView animation this way (rather than using the block syntax) so we can
+    // set
     // UIViewAnimationCurve.  Create a context to pass to the stop selector.
     let context = AnimationContext(cheats: cheats, subjectDetailsViewShown: shown)
     if let setupContextFunc = setupContextFunc {
@@ -762,7 +764,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       answerField.becomeFirstResponder()
     }
 
-    // This makes sure taps are still processed and not ignored, even when the closing animation after a button press was not completed
+    // This makes sure taps are still processed and not ignored, even when the closing animation
+    // after a button press was not completed
     if Settings.ankiMode, ankiModeCachedSubmit { submit() }
   }
 

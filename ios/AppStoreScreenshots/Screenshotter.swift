@@ -39,9 +39,7 @@ import WaniKaniAPI
   @objc(TKMScreenshotter)
   @objcMembers
   class Screenshotter: NSObject {
-    static let isActive: Bool = {
-      UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT")
-    }()
+    static let isActive: Bool = UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT")
 
     class func setUp() {
       if isActive {
@@ -1248,8 +1246,8 @@ import WaniKaniAPI
     }
 
     override func updateAvailableSubjects() -> (Int, [ReviewComposition]) {
-      return (10, createComposition(4, 14, 8, 2, 1, 12, 42, 17, 9, 2, 0, 2, 17, 0, 0, 6, 0, 0, 0, 0,
-                                    4, 11, 0, 8, 6))
+      (10, createComposition(4, 14, 8, 2, 1, 12, 42, 17, 9, 2, 0, 2, 17, 0, 0, 6, 0, 0, 0, 0,
+                             4, 11, 0, 8, 6))
     }
 
     override func updateGuruKanjiCount() -> Int {

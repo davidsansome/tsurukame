@@ -229,7 +229,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       return
     }
 
-    subjects.sort { (a, b) -> Bool in
+    subjects.sort { a, b -> Bool in
       a.level < b.level
     }
 

@@ -160,7 +160,8 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   private func recreateTableModel() {
     guard let user = services.localCachingClient.getUserInfo() else { return }
 
-    // make sure that the selected subject level is reset each time table is loaded in case things change
+    // make sure that the selected subject level is reset each time table is loaded in case things
+    // change
     selectedSubjectCatalogLevel = -1
 
     let lessons = services.localCachingClient.availableLessonCount

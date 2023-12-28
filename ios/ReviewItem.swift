@@ -52,7 +52,7 @@ class ReviewItem: NSObject {
   class func readyForReview(assignments: [TKMAssignment],
                             localCachingClient: LocalCachingClient) -> [ReviewItem] {
     filterReadyItems(assignments: assignments,
-                     localCachingClient: localCachingClient) { (assignment) -> Bool in
+                     localCachingClient: localCachingClient) { assignment -> Bool in
       assignment.isReviewStage && assignment.availableAtDate.timeIntervalSinceNow < 0
     }
   }
@@ -60,7 +60,7 @@ class ReviewItem: NSObject {
   class func readyForLessons(assignments: [TKMAssignment],
                              localCachingClient: LocalCachingClient) -> [ReviewItem] {
     filterReadyItems(assignments: assignments,
-                     localCachingClient: localCachingClient) { (assignment) -> Bool in
+                     localCachingClient: localCachingClient) { assignment -> Bool in
       assignment.isLessonStage
     }
   }

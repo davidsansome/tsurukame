@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import WatchConnectivity
   import ClockKit
 #endif
 
-typealias ClientDelegateCallback = (([String: Any]) -> Void)
+typealias ClientDelegateCallback = ([String: Any]) -> Void
 typealias EpochTimeInt = Int64
 
 class WatchConnectionServerDelegate: NSObject, WCSessionDelegate {
@@ -101,7 +101,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
     @objc func updatedData(client: LocalCachingClient) {
       var halfLevel = false
       var assignmentsAtCurrentLevel = client.getAssignmentsAtUsersCurrentLevel()
-      var learnedCount = assignmentsAtCurrentLevel.filter { (assignment) -> Bool in
+      var learnedCount = assignmentsAtCurrentLevel.filter { assignment -> Bool in
         assignment.srsStage >= .guru1
       }.count
 
@@ -112,7 +112,7 @@ class WatchConnectionClientDelegate: NSObject, WCSessionDelegate {
          assignment.level > 0 {
         halfLevel = true
         assignmentsAtCurrentLevel = client.getAssignments(level: Int(assignment.level) - 1)
-        learnedCount = assignmentsAtCurrentLevel.filter { (assignment) -> Bool in
+        learnedCount = assignmentsAtCurrentLevel.filter { assignment -> Bool in
           assignment.srsStage >= .guru1
         }.count
       }

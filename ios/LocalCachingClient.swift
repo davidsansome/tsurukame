@@ -54,13 +54,10 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
   @Cached(notificationName: .lccPendingItemsChanged) var pendingProgressCount: Int
   @Cached(notificationName: .lccPendingItemsChanged) var pendingStudyMaterialsCount: Int
-
-  // swiftformat:disable all
-  @Cached(notificationName: .lccAvailableItemsChanged) var availableSubjects: (
-    lessonCount: Int,
-    reviewComposition: [ReviewComposition]
-  )
-  // swiftformat:enable all
+  @Cached(notificationName: .lccAvailableItemsChanged) var availableSubjects: (lessonCount: Int,
+                                                                               reviewComposition: [
+                                                                                 ReviewComposition
+                                                                               ])
 
   @Cached var guruKanjiCount: Int
   @Cached var apprenticeCount: Int
@@ -491,7 +488,8 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       subjectIds.insert(Int(assignment!.subjectID))
     }
 
-    // Add fake assignments for any other subjects at this level that don't have assignments yet (the
+    // Add fake assignments for any other subjects at this level that don't have assignments yet
+    // (the
     // user hasn't unlocked the prerequisite radicals/kanji).
     let subjectsByLevel = getSubjects(byLevel: level, transaction: db)
     addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.radicals, type: .radical,

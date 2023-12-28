@@ -1,4 +1,4 @@
-// Copyright 2022 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -238,7 +238,7 @@ class MutableTableModel: TableModel {
   }
 
   func sort<T>(section: Int, using fn: (T, T) -> Bool) {
-    sections[section].items.sort(by: { (a, b) -> Bool in
+    sections[section].items.sort(by: { a, b -> Bool in
       fn(a as! T, b as! T)
     })
   }

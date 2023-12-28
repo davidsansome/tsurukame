@@ -16,9 +16,9 @@ import Foundation
 import WaniKaniAPI
 
 private func UIColorFromHex(_ hexColor: Int32) -> UIColor {
-  let red = (CGFloat)((hexColor & 0xFF0000) >> 16) / 255
-  let green = (CGFloat)((hexColor & 0x00FF00) >> 8) / 255
-  let blue = (CGFloat)(hexColor & 0x0000FF) / 255
+  let red = CGFloat((hexColor & 0xFF0000) >> 16) / 255
+  let green = CGFloat((hexColor & 0x00FF00) >> 8) / 255
+  let blue = CGFloat(hexColor & 0x0000FF) / 255
   return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
 }
 

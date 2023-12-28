@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,7 +39,8 @@ func snapshot(_ name: String, waitForLoadingIndicator: Bool) {
 
 /// - Parameters:
 ///   - name: The name of the snapshot
-///   - timeout: Amount of seconds to wait until the network loading indicator disappears. Pass `0` if you don't want to wait.
+///   - timeout: Amount of seconds to wait until the network loading indicator disappears. Pass `0`
+/// if you don't want to wait.
 func snapshot(_ name: String, timeWaitingForIdle timeout: TimeInterval = 20) {
   Snapshot.snapshot(name, timeWaitingForIdle: timeout)
 }
@@ -92,7 +93,7 @@ open class Snapshot: NSObject {
   }
 
   class func setLanguage(_ app: XCUIApplication) {
-    guard let cacheDirectory = self.cacheDirectory else {
+    guard let cacheDirectory = cacheDirectory else {
       NSLog("CacheDirectory is not set - probably running on a physical device?")
       return
     }
@@ -110,7 +111,7 @@ open class Snapshot: NSObject {
   }
 
   class func setLocale(_ app: XCUIApplication) {
-    guard let cacheDirectory = self.cacheDirectory else {
+    guard let cacheDirectory = cacheDirectory else {
       NSLog("CacheDirectory is not set - probably running on a physical device?")
       return
     }
@@ -135,7 +136,7 @@ open class Snapshot: NSObject {
   }
 
   class func setLaunchArguments(_ app: XCUIApplication) {
-    guard let cacheDirectory = self.cacheDirectory else {
+    guard let cacheDirectory = cacheDirectory else {
       NSLog("CacheDirectory is not set - probably running on a physical device?")
       return
     }
@@ -163,14 +164,15 @@ open class Snapshot: NSObject {
       waitForLoadingIndicatorToDisappear(within: timeout)
     }
 
-    NSLog("snapshot: \(name)") // more information about this, check out https://docs.fastlane.tools/actions/snapshot/#how-does-it-work
+    NSLog("snapshot: \(name)") // more information about this, check out
+    // https://docs.fastlane.tools/actions/snapshot/#how-does-it-work
 
     if Snapshot.waitForAnimations {
       sleep(1) // Waiting for the animation to be finished (kind of)
     }
 
     #if os(OSX)
-      guard let app = self.app else {
+      guard let app = app else {
         NSLog("XCUIApplication is not set. Please call setupSnapshot(app) before snapshot().")
         return
       }
@@ -188,7 +190,8 @@ open class Snapshot: NSObject {
             let screenshotsDir = screenshotsDirectory else { return }
 
       do {
-        // The simulator name contains "Clone X of " inside the screenshot file when running parallelized UI Tests on concurrent devices
+        // The simulator name contains "Clone X of " inside the screenshot file when running
+        // parallelized UI Tests on concurrent devices
         let regex = try NSRegularExpression(pattern: "Clone [0-9]+ of ")
         let range = NSRange(location: 0, length: simulator.count)
         simulator = regex.stringByReplacingMatches(in: simulator, range: range, withTemplate: "")
@@ -207,7 +210,7 @@ open class Snapshot: NSObject {
       return
     #endif
 
-    guard let app = self.app else {
+    guard let app = app else {
       NSLog("XCUIApplication is not set. Please call setupSnapshot(app) before snapshot().")
       return
     }

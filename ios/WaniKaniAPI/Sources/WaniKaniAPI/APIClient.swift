@@ -481,7 +481,7 @@ public class WaniKaniAPIClient: NSObject {
         // Fetch the first N-1 pages as one-off queries for individual URLs.
         promises.append(firstly {
           query(authorize(pageUrl.url!))
-        }.map { (response: PaginatedResponse<[DataType]>) -> Void in
+        }.map { (response: PaginatedResponse<[DataType]>) in
           // Add these results to the previous ones.
           results.data_updated_at = response.data_updated_at
           results.data.append(contentsOf: response.data)
@@ -510,7 +510,7 @@ public class WaniKaniAPIClient: NSObject {
     return firstly { () -> DataTaskPromise in
       NSLog("%@ %@", req.httpMethod!, req.url!.absoluteString)
       return session.dataTask(.promise, with: req)
-    }.map { (data, response) -> Type in
+    }.map { data, response -> Type in
       let response = response as! HTTPURLResponse
       let endTime = Date()
 

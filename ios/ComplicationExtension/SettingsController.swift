@@ -1,4 +1,4 @@
-// Copyright 2021 David Sansome
+// Copyright 2023 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class SettingsController: WKInterfaceController, DataManagerDelegate {
   override func awake(withContext context: Any?) {
     super.awake(withContext: context)
 
-    let pickerOptions = dataSourceOptions.map { (_, title) -> WKPickerItem in
+    let pickerOptions = dataSourceOptions.map { _, title -> WKPickerItem in
       let pickerItem = WKPickerItem()
       pickerItem.caption = title
       pickerItem.title = title
