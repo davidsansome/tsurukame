@@ -23,7 +23,7 @@ class SRSStageCategoryItem: BasicModelItem {
     super.init(style: .value1,
                title: stageCategory.description,
                subtitle: String(count),
-               accessoryType: .none)
+               accessoryType: count > 0 ? .disclosureIndicator : .none)
 
     var color = TKMStyle.color(forSRSStageCategory: stageCategory)
 
