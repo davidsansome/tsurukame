@@ -421,7 +421,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       "FROM subject_progress AS p " +
       "LEFT JOIN assignments AS a " +
       "ON p.id = a.subject_id " +
-      "WHERE srs_stage >= \(SRSStage.burned.rawValue)") {
+      "WHERE srs_stage = \(SRSStage.burned.rawValue)") {
       ret.append(cursor.proto(forColumnIndex: 0)!)
     }
     return ret
