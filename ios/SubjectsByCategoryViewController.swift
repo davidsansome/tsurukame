@@ -36,14 +36,15 @@ class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate {
     navigationItem.title = category.description
 
     let model = MutableTableModel(tableView: tableView)
-    model.add(section: "Radicals")
-    model.add(section: "Kanji")
-    model.add(section: "Vocabulary")
 
     answerSwitch = UISwitch()
     answerSwitch.isOn = showAnswers
     answerSwitch.addTarget(self, action: #selector(answerSwitchChanged), for: .valueChanged)
     navigationItem.rightBarButtonItem = UIBarButtonItem(customView: answerSwitch)
+
+    var radicals = [SubjectModelItem]()
+    var kanji = [SubjectModelItem]()
+    var vocabulary = [SubjectModelItem]()
 
     for assignment in services.localCachingClient.getAssignmentsInCategory(category: category) {
       guard let subject = services.localCachingClient.getSubject(id: assignment.subjectID)
@@ -54,7 +55,6 @@ class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate {
         continue
       }
 
-      let section = subject.subjectType.rawValue - 1
       let item = SubjectModelItem(subject: subject, delegate: self, assignment: assignment,
                                   readingWrong: false, meaningWrong: false)
       item.showLevelNumber = true
@@ -62,7 +62,35 @@ class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate {
       if assignment.isBurned {
         item.gradientColors = TKMStyle.lockedGradient
       }
-      model.add(item, toSection: section)
+      switch subject.subjectType {
+      case .radical:
+        radicals.append(item)
+      case .kanji:
+        kanji.append(item)
+      case .vocabulary:
+        vocabulary.append(item)
+      default:
+        break
+      }
+    }
+
+    if !radicals.isEmpty {
+      model.add(section: "Radicals")
+      for item in radicals {
+        model.add(item)
+      }
+    }
+    if !kanji.isEmpty {
+      model.add(section: "Kanji")
+      for item in kanji {
+        model.add(item)
+      }
+    }
+    if !vocabulary.isEmpty {
+      model.add(section: "Vocabulary")
+      for item in vocabulary {
+        model.add(item)
+      }
     }
 
     let comparator = { (a: SubjectModelItem, b: SubjectModelItem) -> Bool in
@@ -78,12 +106,9 @@ class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate {
       return false
     }
 
-    model.sort(section: 0, using: comparator)
-    model.sort(section: 1, using: comparator)
-    model.sort(section: 2, using: comparator)
-
     if category == SRSStageCategory.apprentice || category == SRSStageCategory.guru {
       for section in 0 ..< model.sectionCount {
+        model.sort(section: section, using: comparator)
         var lastAssignment: TKMAssignment?
 
         var itemIndex = 0
