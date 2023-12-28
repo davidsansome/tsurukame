@@ -51,6 +51,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   let reachability: Reachability
 
   private var db: FMDatabaseQueue!
+  private var dateFormatter: DateFormatter
 
   @Cached(notificationName: .lccPendingItemsChanged) var pendingProgressCount: Int
   @Cached(notificationName: .lccPendingItemsChanged) var pendingStudyMaterialsCount: Int
@@ -61,12 +62,16 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
   @Cached var guruKanjiCount: Int
   @Cached var apprenticeCount: Int
+  @Cached var recentLessonCount: Int
   @Cached(notificationName: .lccSRSCategoryCountsChanged) var srsCategoryCounts: [Int]
   @objc @Cached var maxLevelGrantedBySubscription: Int
 
   init(client: WaniKaniAPIClient, reachability: Reachability) {
     self.client = client
     self.reachability = reachability
+
+    dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
     super.init()
     openDatabase()
@@ -85,6 +90,9 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
     _apprenticeCount.updateBlock = {
       self.updateApprenticeCount()
+    }
+    _recentLessonCount.updateBlock = {
+      self.updateRecentLessonCount()
     }
     _srsCategoryCounts.updateBlock = {
       self.updateSrsCategoryCounts()
@@ -114,6 +122,10 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       }
       return 0
     }
+  }
+
+  func updateRecentLessonCount() -> Int {
+    getAllRecentLessonAssignments().count
   }
 
   func updateSrsCategoryCounts() -> [Int] {
@@ -393,13 +405,11 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   private func getAllRecentMistakeAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
     var ret = [TKMAssignment]()
     let dayAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     for cursor in db.query("SELECT a.pb " +
       "FROM subject_progress AS p " +
       "LEFT JOIN assignments AS a " +
       "ON p.id = a.subject_id " +
-      "WHERE last_mistake_time >= \"\(formatter.string(from: dayAgo))\"") {
+      "WHERE last_mistake_time >= \"\(dateFormatter.string(from: dayAgo))\"") {
       ret.append(cursor.proto(forColumnIndex: 0)!)
     }
     return ret
@@ -429,8 +439,8 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       "ON p.id = a.subject_id " +
       "WHERE srs_stage >= \(SRSStage.apprentice1.rawValue) AND srs_stage <= \(SRSStage.apprentice4.rawValue)") {
       let assignment = cursor.proto(forColumnIndex: 0) as TKMAssignment?
-      if assignment!.hasPassedAt == false {
-        ret.append(assignment!)
+      if let assignment = assignment, assignment.hasPassedAt == false {
+        ret.append(assignment)
       }
     }
     return ret
@@ -693,11 +703,9 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
   func getRecentMistakesCount() -> Int {
     let dayAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     return db.inDatabase { db in
       let cursor = db.query("SELECT COUNT(*) FROM subject_progress " +
-        "WHERE srs_stage >= 1 AND last_mistake_time >= \"\(formatter.string(from: dayAgo))\"")
+        "WHERE srs_stage >= \(SRSStage.apprentice1.rawValue) AND last_mistake_time >= \"\(dateFormatter.string(from: dayAgo))\"")
       if cursor.next() {
         return Int(cursor.int(forColumnIndex: 0))
       }
@@ -707,8 +715,6 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
   func sendProgress(_ progress: [TKMProgress]) -> Promise<Void> {
     db.inTransaction { db in
-      let formatter = DateFormatter()
-      formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
       for p in progress {
         // Delete the assignment.
         db.mustExecuteUpdate("DELETE FROM assignments WHERE id = ?", args: [p.assignment.id])
@@ -731,7 +737,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
               p.assignment.level,
               newSrsStage.rawValue,
               p.assignment.subjectType.rawValue,
-              p.meaningWrong || p.readingWrong ? formatter.string(from: Date()) : "",
+              p.meaningWrong || p.readingWrong ? dateFormatter.string(from: Date()) : "",
             ])
       }
     }
@@ -741,6 +747,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     _srsCategoryCounts.invalidate()
     _guruKanjiCount.invalidate()
     _apprenticeCount.invalidate()
+    _recentLessonCount.invalidate()
 
     return sendPendingProgress(progress, progress: Progress(totalUnitCount: -1))
   }
