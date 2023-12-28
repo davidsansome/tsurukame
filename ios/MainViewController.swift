@@ -232,7 +232,8 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     model.add(section: "All levels")
     for category in SRSStageCategory.apprentice ... SRSStageCategory.burned {
       let count = services.localCachingClient.srsCategoryCounts[category.rawValue]
-      let item = SRSStageCategoryItem(stageCategory: category, count: Int(count))
+      let item = SRSStageCategoryItem(stageCategory: category, count: Int(count),
+                                      accessoryType: count > 0 ? .disclosureIndicator : .none)
       if count > 0 {
         item.tapHandler = {
           self.selectedSrsStageCategory = category
