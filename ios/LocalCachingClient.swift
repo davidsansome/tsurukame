@@ -51,6 +51,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   let reachability: Reachability
 
   private var db: FMDatabaseQueue!
+  private var dateFormatter: DateFormatter
 
   @Cached(notificationName: .lccPendingItemsChanged) var pendingProgressCount: Int
   @Cached(notificationName: .lccPendingItemsChanged) var pendingStudyMaterialsCount: Int
@@ -61,12 +62,16 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
   @Cached var guruKanjiCount: Int
   @Cached var apprenticeCount: Int
+  @Cached var recentLessonCount: Int
   @Cached(notificationName: .lccSRSCategoryCountsChanged) var srsCategoryCounts: [Int]
   @objc @Cached var maxLevelGrantedBySubscription: Int
 
   init(client: WaniKaniAPIClient, reachability: Reachability) {
     self.client = client
     self.reachability = reachability
+
+    dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
     super.init()
     openDatabase()
@@ -85,6 +90,9 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
     _apprenticeCount.updateBlock = {
       self.updateApprenticeCount()
+    }
+    _recentLessonCount.updateBlock = {
+      self.updateRecentLessonCount()
     }
     _srsCategoryCounts.updateBlock = {
       self.updateSrsCategoryCounts()
@@ -114,6 +122,10 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       }
       return 0
     }
+  }
+
+  func updateRecentLessonCount() -> Int {
+    getAllRecentLessonAssignments().count
   }
 
   func updateSrsCategoryCounts() -> [Int] {
@@ -264,10 +276,12 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
     // Version 10. Only added to set the assignment is_kana_only_vocab field.
     "",
+    // Version 11. Added most_recent_mistake_time to allow for recent mistake reviews
+    "ALTER TABLE subject_progress ADD COLUMN last_mistake_time TIMESTAMP;",
   ]
 
   private let kInitialSchemaVersion = 8
-  private let kSchemaVersion = 10
+  private let kSchemaVersion = 11
 
   // Run when the user logs out. Clears everything in the database.
   private let kClearAllData = """
@@ -362,10 +376,72 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
+  func getAllRecentMistakeAssignments() -> [TKMAssignment] {
+    db.inDatabase { db in
+      getAllRecentMistakeAssignments(transaction: db)
+    }
+  }
+
+  func getAllBurnedAssignments() -> [TKMAssignment] {
+    db.inDatabase { db in
+      getAllBurnedAssignments(transaction: db)
+    }
+  }
+
+  func getAllRecentLessonAssignments() -> [TKMAssignment] {
+    db.inDatabase { db in
+      getAllRecentLessonAssignments(transaction: db)
+    }
+  }
+
   private func getAllAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
     var ret = [TKMAssignment]()
     for cursor in db.query("SELECT pb FROM assignments") {
       ret.append(cursor.proto(forColumnIndex: 0)!)
+    }
+    return ret
+  }
+
+  private func getAllRecentMistakeAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
+    var ret = [TKMAssignment]()
+    let dayAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
+    for cursor in db.query("SELECT a.pb " +
+      "FROM subject_progress AS p " +
+      "LEFT JOIN assignments AS a " +
+      "ON p.id = a.subject_id " +
+      "WHERE last_mistake_time >= \"\(dateFormatter.string(from: dayAgo))\"") {
+      ret.append(cursor.proto(forColumnIndex: 0)!)
+    }
+    return ret
+  }
+
+  private func getAllBurnedAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
+    var ret = [TKMAssignment]()
+    for cursor in db.query("SELECT a.pb " +
+      "FROM subject_progress AS p " +
+      "LEFT JOIN assignments AS a " +
+      "ON p.id = a.subject_id " +
+      "WHERE srs_stage = \(SRSStage.burned.rawValue)") {
+      ret.append(cursor.proto(forColumnIndex: 0)!)
+    }
+    return ret
+  }
+
+  private func getAllRecentLessonAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
+    // Any item you’ve learned in lessons and haven’t Guru’d in your reviews
+    // will be part of Recent Lessons mode. Once you complete your reviews
+    // and the item moves to the Guru stage, this will no longer remain in Recent Lessons.
+    // https://knowledge.wanikani.com/getting-started/extra-study/
+    var ret = [TKMAssignment]()
+    for cursor in db.query("SELECT a.pb " +
+      "FROM subject_progress AS p " +
+      "LEFT JOIN assignments AS a " +
+      "ON p.id = a.subject_id " +
+      "WHERE srs_stage >= \(SRSStage.apprentice1.rawValue) AND srs_stage <= \(SRSStage.apprentice4.rawValue)") {
+      let assignment = cursor.proto(forColumnIndex: 0) as TKMAssignment?
+      if let assignment = assignment, assignment.hasPassedAt == false {
+        ret.append(assignment)
+      }
     }
     return ret
   }
@@ -625,6 +701,18 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
+  func getRecentMistakesCount() -> Int {
+    let dayAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
+    return db.inDatabase { db in
+      let cursor = db.query("SELECT COUNT(*) FROM subject_progress " +
+        "WHERE srs_stage >= \(SRSStage.apprentice1.rawValue) AND last_mistake_time >= \"\(dateFormatter.string(from: dayAgo))\"")
+      if cursor.next() {
+        return Int(cursor.int(forColumnIndex: 0))
+      }
+      return 0
+    }
+  }
+
   func sendProgress(_ progress: [TKMProgress]) -> Promise<Void> {
     db.inTransaction { db in
       for p in progress {
@@ -641,14 +729,16 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
         } else if p.meaningWrong || p.readingWrong {
           newSrsStage = newSrsStage.previous
         }
-        db.mustExecuteUpdate("REPLACE INTO subject_progress (id, level, srs_stage, subject_type) " +
-          "VALUES (?, ?, ?, ?)",
-          args: [
-            p.assignment.subjectID,
-            p.assignment.level,
-            newSrsStage.rawValue,
-            p.assignment.subjectType.rawValue,
-          ])
+        db
+          .mustExecuteUpdate("REPLACE INTO subject_progress (id, level, srs_stage, subject_type, last_mistake_time) " +
+            "VALUES (?, ?, ?, ?, ?)",
+            args: [
+              p.assignment.subjectID,
+              p.assignment.level,
+              newSrsStage.rawValue,
+              p.assignment.subjectType.rawValue,
+              p.meaningWrong || p.readingWrong ? dateFormatter.string(from: Date()) : "",
+            ])
       }
     }
 
@@ -657,6 +747,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     _srsCategoryCounts.invalidate()
     _guruKanjiCount.invalidate()
     _apprenticeCount.invalidate()
+    _recentLessonCount.invalidate()
 
     return sendPendingProgress(progress, progress: Progress(totalUnitCount: -1))
   }
