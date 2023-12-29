@@ -20,13 +20,13 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
   var services: TKMServices!
   var reviewVC: ReviewViewController!
 
-  func setup(services: TKMServices, items: [ReviewItem]) {
+  func setup(services: TKMServices, items: [ReviewItem], isPracticeSession: Bool = false) {
     self.services = services
 
     reviewVC = (storyboard!
       .instantiateViewController(withIdentifier: "reviewViewController") as! ReviewViewController)
     reviewVC.setup(services: services, items: items, showMenuButton: true, showSubjectHistory: true,
-                   delegate: self)
+                   delegate: self, isPracticeSession: isPracticeSession)
 
     let menuVC = storyboard!
       .instantiateViewController(withIdentifier: "reviewMenuViewController") as! ReviewMenuViewController
