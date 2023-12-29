@@ -18,12 +18,13 @@ import WaniKaniAPI
 class SRSStageCategoryItem: BasicModelItem {
   let stageCategory: SRSStageCategory
 
-  init(stageCategory: SRSStageCategory, count: Int) {
+  init(stageCategory: SRSStageCategory, count: Int,
+       accessoryType: UITableViewCell.AccessoryType = .none) {
     self.stageCategory = stageCategory
     super.init(style: .value1,
                title: stageCategory.description,
                subtitle: String(count),
-               accessoryType: .none)
+               accessoryType: accessoryType)
 
     var color = TKMStyle.color(forSRSStageCategory: stageCategory)
 

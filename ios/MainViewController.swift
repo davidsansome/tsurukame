@@ -62,6 +62,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   var updatingTableModel = false
 
   var selectedSubjectCatalogLevel = -1
+  var selectedSrsStageCategory = SRSStageCategory.apprentice
 
   private let nd = NotificationDispatcher()
 
@@ -163,6 +164,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     // make sure that the selected subject level is reset each time table is loaded in case things
     // change
     selectedSubjectCatalogLevel = -1
+    selectedSrsStageCategory = SRSStageCategory.apprentice
 
     let lessons = services.localCachingClient.availableLessonCount
     let reviews = services.localCachingClient.availableReviewCount
@@ -254,7 +256,15 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     model.add(section: "All levels")
     for category in SRSStageCategory.apprentice ... SRSStageCategory.burned {
       let count = services.localCachingClient.srsCategoryCounts[category.rawValue]
-      model.add(SRSStageCategoryItem(stageCategory: category, count: Int(count)))
+      let item = SRSStageCategoryItem(stageCategory: category, count: Int(count),
+                                      accessoryType: count > 0 ? .disclosureIndicator : .none)
+      if count > 0 {
+        item.tapHandler = {
+          self.selectedSrsStageCategory = category
+          self.performSegue(withIdentifier: "viewItemsInSrsCategory", sender: self)
+        }
+      }
+      model.add(item)
       if category == SRSStageCategory.burned, count > 0 {
         let reviewBurnedItem = BasicModelItem(style: .value1,
                                               title: "Review burned items",
@@ -419,6 +429,11 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     case "tableForecast":
       let vc = segue.destination as! UpcomingReviewsViewController
       vc.setup(services: services)
+
+    case "viewItemsInSrsCategory":
+      let vc = segue.destination as! SubjectsByCategoryViewController
+      vc.setup(services: services, category: selectedSrsStageCategory,
+               showAnswers: Settings.subjectCatalogueViewShowAnswers)
 
     default:
       break
