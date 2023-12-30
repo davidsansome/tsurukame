@@ -1008,11 +1008,24 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
               try! assignment.serializedData(),
               assignment.subjectID,
             ])
-          db.mustExecuteUpdate("REPLACE INTO subject_progress (id, level, " +
-            "srs_stage, subject_type) VALUES (?, ?, ?, ?)",
-            args: [assignment.subjectID, assignment.level,
+          // REPLACE INTO will set any non-specified column to NULL. This causes
+          // subject_progress.last_mistake_time to be cleared.
+          // In order to avoid deleting that data (and avoid reloading it just to
+          // use REPLACE INTO), perform an UPDATE first -- if a row was
+          // updated, all is well. If no update performed, we can perform an INSERT.
+          db.mustExecuteUpdate("UPDATE subject_progress SET level = ?, " +
+            "srs_stage = ?, subject_type = ? WHERE id = ?",
+            args: [assignment.level,
                    assignment.srsStage.rawValue,
-                   assignment.subjectType.rawValue])
+                   assignment.subjectType.rawValue,
+                   assignment.subjectID])
+          if db.changes == 0 {
+            db.mustExecuteUpdate("INSERT INTO subject_progress (id, level, " +
+              "srs_stage, subject_type, last_mistake_time) VALUES (?, ?, ?, ?, ?)",
+              args: [assignment.subjectID, assignment.level,
+                     assignment.srsStage.rawValue,
+                     assignment.subjectType.rawValue, ""])
+          }
         }
         db.mustExecuteUpdate("UPDATE sync SET assignments_updated_after = ?",
                              args: [updatedAt])
