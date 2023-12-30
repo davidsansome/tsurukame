@@ -1229,6 +1229,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }.ensure {
       self._availableSubjects.invalidate()
       self._srsCategoryCounts.invalidate()
+      self._recentLessonCount.invalidate()
       postNotificationOnMainQueue(.lccUserInfoChanged)
 
       self.busy = false
@@ -1241,6 +1242,12 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       db.mustExecuteStatements(kClearAllData)
     }
     _maxLevelGrantedBySubscription.invalidate()
+    _pendingProgressCount.invalidate()
+    _availableSubjects.invalidate()
+    _srsCategoryCounts.invalidate()
+    _guruKanjiCount.invalidate()
+    _apprenticeCount.invalidate()
+    _recentLessonCount.invalidate()
   }
 
   func clearAllDataAndClose() {
