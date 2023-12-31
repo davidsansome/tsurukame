@@ -64,6 +64,9 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
 
     textView.font = item.font
     textView.autocapitalizationType = item.autoCapitalizationType
+    if #available(iOS 13.0, *) {
+      textView.textColor = UIColor.label
+    }
     placeholderLabel.text = item.placeholderText
     placeholderLabel.font = item.font
     placeholderLabel.textColor = TKMStyle.Color.placeholderText
