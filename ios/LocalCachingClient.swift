@@ -1008,24 +1008,17 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
               try! assignment.serializedData(),
               assignment.subjectID,
             ])
-          // REPLACE INTO will set any non-specified column to NULL. This causes
-          // subject_progress.last_mistake_time to be cleared.
-          // In order to avoid deleting that data (and avoid reloading it just to
-          // use REPLACE INTO), perform an UPDATE first -- if a row was
-          // updated, all is well. If no update performed, we can perform an INSERT.
-          db.mustExecuteUpdate("UPDATE subject_progress SET level = ?, " +
-            "srs_stage = ?, subject_type = ? WHERE id = ?",
-            args: [assignment.level,
+          // perform an upsert since we don't want to lose any existing last_mistake_time
+          // data via REPLACE INTO.
+          db.mustExecuteUpdate("INSERT INTO subject_progress (id, level, " +
+            "srs_stage, subject_type, last_mistake_time) VALUES (?, ?, ?, ?, ?) " +
+            "ON CONFLICT (id) DO UPDATE SET level = excluded.level, " +
+            "srs_stage = excluded.srs_stage, subject_type = excluded.subject_type",
+            args: [assignment.subjectID, assignment.level,
                    assignment.srsStage.rawValue,
-                   assignment.subjectType.rawValue,
-                   assignment.subjectID])
-          if db.changes == 0 {
-            db.mustExecuteUpdate("INSERT INTO subject_progress (id, level, " +
-              "srs_stage, subject_type, last_mistake_time) VALUES (?, ?, ?, ?, ?)",
-              args: [assignment.subjectID, assignment.level,
-                     assignment.srsStage.rawValue,
-                     assignment.subjectType.rawValue, ""])
-          }
+                   assignment.subjectType.rawValue, "",
+                   assignment.level, assignment.srsStage.rawValue,
+                   assignment.subjectType.rawValue])
         }
         db.mustExecuteUpdate("UPDATE sync SET assignments_updated_after = ?",
                              args: [updatedAt])
