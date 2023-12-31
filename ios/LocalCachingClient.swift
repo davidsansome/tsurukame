@@ -1008,10 +1008,16 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
               try! assignment.serializedData(),
               assignment.subjectID,
             ])
-          db.mustExecuteUpdate("REPLACE INTO subject_progress (id, level, " +
-            "srs_stage, subject_type) VALUES (?, ?, ?, ?)",
+          // perform an upsert since we don't want to lose any existing last_mistake_time
+          // data via REPLACE INTO.
+          db.mustExecuteUpdate("INSERT INTO subject_progress (id, level, " +
+            "srs_stage, subject_type, last_mistake_time) VALUES (?, ?, ?, ?, ?) " +
+            "ON CONFLICT (id) DO UPDATE SET level = excluded.level, " +
+            "srs_stage = excluded.srs_stage, subject_type = excluded.subject_type",
             args: [assignment.subjectID, assignment.level,
                    assignment.srsStage.rawValue,
+                   assignment.subjectType.rawValue, "",
+                   assignment.level, assignment.srsStage.rawValue,
                    assignment.subjectType.rawValue])
         }
         db.mustExecuteUpdate("UPDATE sync SET assignments_updated_after = ?",
@@ -1216,6 +1222,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }.ensure {
       self._availableSubjects.invalidate()
       self._srsCategoryCounts.invalidate()
+      self._recentLessonCount.invalidate()
       postNotificationOnMainQueue(.lccUserInfoChanged)
 
       self.busy = false
@@ -1228,6 +1235,13 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       db.mustExecuteStatements(kClearAllData)
     }
     _maxLevelGrantedBySubscription.invalidate()
+    _pendingProgressCount.invalidate()
+    _pendingStudyMaterialsCount.invalidate()
+    _availableSubjects.invalidate()
+    _srsCategoryCounts.invalidate()
+    _guruKanjiCount.invalidate()
+    _apprenticeCount.invalidate()
+    _recentLessonCount.invalidate()
   }
 
   func clearAllDataAndClose() {
