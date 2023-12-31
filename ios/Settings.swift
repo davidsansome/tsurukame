@@ -209,6 +209,8 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(offlineAudioCellular)) static var offlineAudioCellular: Bool
   @Setting([], #keyPath(offlineAudioVoiceActors)) static var offlineAudioVoiceActors: Set<Int64>
 
+  @Setting("", #keyPath(gravatarCustomEmail)) static var gravatarCustomEmail: String
+
   // Deprecated - remove after 1.24.
   @Setting([], #keyPath(installedAudioPackages)) static var installedAudioPackages: Set<String>
 
