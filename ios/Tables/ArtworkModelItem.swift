@@ -44,16 +44,11 @@ class ArtworkModelCell: TKMModelCell {
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
-    setupUI()
   }
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
-  }
-
-  private func setupUI() {
-    // No titleLabel to add or setup anymore
   }
 
   private func updateHostingController(with subjectID: Int64) {

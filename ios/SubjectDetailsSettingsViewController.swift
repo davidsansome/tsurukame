@@ -61,11 +61,11 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
                               action: #selector(showOldMnemonicSwitchChanged(_:))))
     if #available(iOS 15.0, *) {
       model.add(SwitchModelItem(style: .subtitle,
-                                title: "Show ArtWork by @AmandaBear",
-                                subtitle: "Mnemonic ArtWork for Radical Levels 1-10 and Kanji Levels 1-7",
-                                on: Settings.showArtWork,
+                                title: "Show Artwork by @AmandaBear",
+                                subtitle: "Mnemonic Artwork for Radical Levels 1-10 and Kanji Levels 1-7",
+                                on: Settings.showArtwork,
                                 target: self,
-                                action: #selector(showArtWorkChanged(_:))))
+                                action: #selector(showArtworkChanged(_:))))
     }
 
     let currentLevelGraphItem = SwitchModelItem(style: .subtitle,
@@ -87,8 +87,8 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
     Settings.showStatsSection = switchView.isOn
   }
 
-  @objc private func showArtWorkChanged(_ switchView: UISwitch) {
-    Settings.showArtWork = switchView.isOn
+  @objc private func showArtworkChanged(_ switchView: UISwitch) {
+    Settings.showArtwork = switchView.isOn
   }
 
   @objc private func showOldMnemonicSwitchChanged(_ switchView: UISwitch) {

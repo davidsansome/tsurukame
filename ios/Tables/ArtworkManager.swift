@@ -510,3 +510,52 @@ struct ArtworkManager {
     240: "c/7/d/c7d387bdbc6142d8c7bcd8059bb6c76e32812364",
   ]
 }
+
+// To generate "artworkURLs" dict, run the following script in the root of the repo:
+/*
+import Foundation
+
+// Function to fetch and print artwork URLs
+func fetchAndPrintArtworkURLs() {
+    print("Fetching JavaScript file...")
+    guard let url = URL(string: "https://update.greasyfork.org/scripts/418774/WaniKani%20Mnemonic%20Artwork.user.js") else { 
+        print("Invalid URL.")
+        return 
+    }
+
+    URLSession.shared.dataTask(with: url) { data, response, error in
+        guard let data = data, error == nil else {
+            print("Failed to fetch data: \(error?.localizedDescription ?? "Unknown error")")
+            return
+        }
+
+        print("Processing data...")
+        if let scriptContent = String(data: data, encoding: .utf8) {
+            let artworkURLsPattern = "\\s+(\\d+): `\\$\\{COMMON_URL\\}([a-f0-9/]+)\\.png`,?"
+            let artworkURLsRegex = try? NSRegularExpression(pattern: artworkURLsPattern, options: [])
+            let nsRange = NSRange(scriptContent.startIndex..<scriptContent.endIndex, in: scriptContent)
+            let matches = artworkURLsRegex?.matches(in: scriptContent, options: [], range: nsRange) ?? []
+
+            print("static let artworkURLs: [Int64: String] = [")
+            print("    // Wanikani Subject ID -> AWS Artwork location.")
+            for match in matches {
+                if let idRange = Range(match.range(at: 1), in: scriptContent),
+                   let urlRange = Range(match.range(at: 2), in: scriptContent) {
+                    let id = scriptContent[idRange]
+                    let url = scriptContent[urlRange]
+                    print("    \(id): \"\(url)\",")
+                }
+            }
+            print("]")
+        } else {
+            print("Failed to process script content.")
+        }
+    }.resume()
+}
+
+// Main execution
+fetchAndPrintArtworkURLs()
+
+// Keep the script running until the async task is done
+RunLoop.main.run()
+*/
