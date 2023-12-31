@@ -19,6 +19,11 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
   private var model: TableModel?
   private var notificationHandler: ((Bool) -> Void)?
 
+  private let kFontSize: CGFloat = {
+    let bodyFontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
+    return bodyFontDescriptor.pointSize
+  }()
+
   // MARK: - TKMViewController
 
   var canSwipeToGoBack: Bool { true }
@@ -51,6 +56,18 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
                                target: self,
                                action: #selector(didTapInterfaceStyle(_:))))
     }
+
+    model.add(section: "User Data")
+    let gravatarItem =
+      EditableTextModelItem(text: NSAttributedString(string: Settings.gravatarCustomEmail),
+                            placeholderText: "Custom Gravatar email address",
+                            rightButtonImage: UIImage(named: "baseline_edit_black_24pt"),
+                            font: UIFont.systemFont(ofSize: kFontSize),
+                            autoCapitalizationType: .none)
+    gravatarItem.textChangedCallback = { (text: String) in
+      Settings.gravatarCustomEmail = text
+    }
+    model.add(gravatarItem)
 
     model.add(section: "Notifications")
     model.add(SwitchModelItem(style: .default,

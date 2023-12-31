@@ -17,13 +17,15 @@ import Foundation
 class EditableTextModelItem: AttributedModelItem {
   let placeholderText: String
   let font: UIFont
+  let autoCapitalizationType: UITextAutocapitalizationType
 
   var textChangedCallback: ((_ text: String) -> Void)?
 
   init(text: NSAttributedString, placeholderText: String, rightButtonImage: UIImage?,
-       font: UIFont) {
+       font: UIFont, autoCapitalizationType: UITextAutocapitalizationType = .sentences) {
     self.placeholderText = placeholderText
     self.font = font
+    self.autoCapitalizationType = autoCapitalizationType
     super.init(text: text)
 
     self.rightButtonImage = rightButtonImage
@@ -61,6 +63,7 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
     let item = baseItem as! EditableTextModelItem
 
     textView.font = item.font
+    textView.autocapitalizationType = item.autoCapitalizationType
     placeholderLabel.text = item.placeholderText
     placeholderLabel.font = item.font
     placeholderLabel.textColor = TKMStyle.Color.placeholderText
