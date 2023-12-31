@@ -1236,6 +1236,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
     _maxLevelGrantedBySubscription.invalidate()
     _pendingProgressCount.invalidate()
+    _pendingStudyMaterialsCount.invalidate()
     _availableSubjects.invalidate()
     _srsCategoryCounts.invalidate()
     _guruKanjiCount.invalidate()
