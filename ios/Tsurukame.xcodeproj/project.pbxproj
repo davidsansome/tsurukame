@@ -73,7 +73,6 @@
 		639528ED25CC0688009845ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639528EC25CC0688009845ED /* SettingsViewController.swift */; };
 		639528FD25CC2F4F009845ED /* LessonOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639528FC25CC2F4F009845ED /* LessonOrderViewController.swift */; };
 		6398480E23D699E70077EB6B /* ContextSentenceModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */; };
-		63996B15259435DF00149414 /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52423D429A4006A31FB /* String+MD5.swift */; };
 		63996B3C2594389500149414 /* LocalCachingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */; };
 		63996B44259438C400149414 /* FMDatabase+Assert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */; };
 		639E750427E9CFB3006E36EA /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639E750327E9CFB3006E36EA /* GradientView.swift */; };
@@ -129,8 +128,6 @@
 		63EF5752260617E30038551A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EF5751260617E30038551A /* LoginViewController.swift */; };
 		63F7F51F23D3F335006A31FB /* ReadingModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */; };
 		63F7F52123D3F36E006A31FB /* AttributedModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */; };
-		63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52423D429A4006A31FB /* String+MD5.swift */; };
-		63F7F52823D42BDD006A31FB /* String+MD5Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52623D42BC1006A31FB /* String+MD5Test.swift */; };
 		63F7F52923D42C6E006A31FB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52223D423E9006A31FB /* MainViewController.swift */; };
 		63F7F52C23D43DF6006A31FB /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52B23D43DF6006A31FB /* Services.swift */; };
 		63F7F52E23D4C2CA006A31FB /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52D23D4C2CA006A31FB /* Audio.swift */; };
@@ -353,8 +350,6 @@
 		63F7F51E23D3F335006A31FB /* ReadingModelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadingModelItem.swift; sourceTree = "<group>"; };
 		63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedModelItem.swift; sourceTree = "<group>"; };
 		63F7F52223D423E9006A31FB /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		63F7F52423D429A4006A31FB /* String+MD5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+MD5.swift"; sourceTree = "<group>"; };
-		63F7F52623D42BC1006A31FB /* String+MD5Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+MD5Test.swift"; sourceTree = "<group>"; };
 		63F7F52B23D43DF6006A31FB /* Services.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services.swift; sourceTree = "<group>"; };
 		63F7F52D23D4C2CA006A31FB /* Audio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
 		63FCAE77237F75CC00DB1418 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
@@ -485,7 +480,6 @@
 				630EB10925C561A900783E54 /* NSMutableAttributedString+Replacements.swift */,
 				63CAAB071FD2C66100E09DA1 /* NSString+LevenshteinDistance.h */,
 				63CAAB081FD2C66100E09DA1 /* NSString+LevenshteinDistance.m */,
-				63F7F52423D429A4006A31FB /* String+MD5.swift */,
 				63A2375F1FE9264300C48657 /* UIColor+HexString.h */,
 				63A237601FE9264300C48657 /* UIColor+HexString.m */,
 				63D2DAED275C5D4100D5F6FF /* UIControl+addAction.swift */,
@@ -676,7 +670,6 @@
 			children = (
 				631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */,
 				63E9A8E621199C8500418CE1 /* Info.plist */,
-				63F7F52623D42BC1006A31FB /* String+MD5Test.swift */,
 				63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */,
 				BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */,
 				63CAB3FA2604A1450057E1C2 /* URLRequest+SetBodyTest.swift */,
@@ -1292,7 +1285,6 @@
 				63F7F52E23D4C2CA006A31FB /* Audio.swift in Sources */,
 				63391B592779B8BF005CDA72 /* ReviewSettingsViewController.swift in Sources */,
 				93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */,
-				63F7F52523D429A4006A31FB /* String+MD5.swift in Sources */,
 				63358EA227366D720013A2AC /* CheckmarkModelItem.swift in Sources */,
 				63391B572779B7FC005CDA72 /* AppSettingsViewController.swift in Sources */,
 				63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */,
@@ -1375,7 +1367,6 @@
 			files = (
 				79D887482B419672003D8F99 /* String+SHA256.swift in Sources */,
 				63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */,
-				63F7F52823D42BDD006A31FB /* String+MD5Test.swift in Sources */,
 				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
 				79D887472B419609003D8F99 /* String+SHA256Test.swift in Sources */,
 				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
@@ -1384,7 +1375,6 @@
 				63CAB3FB2604A1450057E1C2 /* URLRequest+SetBodyTest.swift in Sources */,
 				633611DF2352B93900DD72A3 /* VocabularyHighlighter.swift in Sources */,
 				4820306724D849E100B40FDD /* Settings.swift in Sources */,
-				63996B15259435DF00149414 /* String+MD5.swift in Sources */,
 				631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */,
 				63996B44259438C400149414 /* FMDatabase+Assert.swift in Sources */,
 			);
