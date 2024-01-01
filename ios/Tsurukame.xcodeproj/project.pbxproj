@@ -137,6 +137,9 @@
 		63FCAE78237F75CC00DB1418 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCAE77237F75CC00DB1418 /* Style.swift */; };
 		6F5E95176B5DCA719A6EED55 /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10E5709643045C62AD6AC427 /* Pods_Tests.framework */; };
 		796706282B3BE71000CAF09B /* SubjectsByCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796706272B3BE71000CAF09B /* SubjectsByCategoryViewController.swift */; };
+		79D887452B41949F003D8F99 /* String+SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D887442B41949F003D8F99 /* String+SHA256.swift */; };
+		79D887472B419609003D8F99 /* String+SHA256Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D887462B419609003D8F99 /* String+SHA256Test.swift */; };
+		79D887482B419672003D8F99 /* String+SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D887442B41949F003D8F99 /* String+SHA256.swift */; };
 		93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* FontLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* FontLoader.swift */; };
@@ -358,6 +361,8 @@
 		68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame__App_Store_screenshots_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		796706272B3BE71000CAF09B /* SubjectsByCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectsByCategoryViewController.swift; sourceTree = "<group>"; };
+		79D887442B41949F003D8F99 /* String+SHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SHA256.swift"; sourceTree = "<group>"; };
+		79D887462B419609003D8F99 /* String+SHA256Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SHA256Test.swift"; sourceTree = "<group>"; };
 		7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).debug.xcconfig"; sourceTree = "<group>"; };
 		82721E7B5A9C5562CC8D3B9B /* Pods-FontScreenshotter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.release.xcconfig"; sourceTree = "<group>"; };
 		93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingReviewsChartItem.swift; sourceTree = "<group>"; };
@@ -487,6 +492,7 @@
 				63E9A8D221108FB400418CE1 /* UIView+SafeAreaInsets.h */,
 				63E9A8D321108FB400418CE1 /* UIView+SafeAreaInsets.m */,
 				63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */,
+				79D887442B41949F003D8F99 /* String+SHA256.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -674,6 +680,7 @@
 				63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */,
 				BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */,
 				63CAB3FA2604A1450057E1C2 /* URLRequest+SetBodyTest.swift */,
+				79D887462B419609003D8F99 /* String+SHA256Test.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1289,6 +1296,7 @@
 				63358EA227366D720013A2AC /* CheckmarkModelItem.swift in Sources */,
 				63391B572779B7FC005CDA72 /* AppSettingsViewController.swift in Sources */,
 				63E9A8D421108FB400418CE1 /* UIView+SafeAreaInsets.m in Sources */,
+				79D887452B41949F003D8F99 /* String+SHA256.swift in Sources */,
 				633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */,
 				63358E9A27365FC70013A2AC /* OfflineAudio.swift in Sources */,
 				C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */,
@@ -1365,9 +1373,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79D887482B419672003D8F99 /* String+SHA256.swift in Sources */,
 				63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */,
 				63F7F52823D42BDD006A31FB /* String+MD5Test.swift in Sources */,
 				BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */,
+				79D887472B419609003D8F99 /* String+SHA256Test.swift in Sources */,
 				631CAD67234AF962008CEA73 /* AnswerCheckerTest.swift in Sources */,
 				638D198C25C6B5C600B80544 /* ReviewItem.swift in Sources */,
 				63996B3C2594389500149414 /* LocalCachingClient.swift in Sources */,
