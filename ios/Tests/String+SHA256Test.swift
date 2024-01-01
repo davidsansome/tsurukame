@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
 
 import XCTest
 
-class StringMD5Test: XCTestCase {
+class StringSHA256Test: XCTestCase {
   func testEmptyString() {
-    XCTAssertEqual(String().MD5(), "d41d8cd98f00b204e9800998ecf8427e")
+    XCTAssertEqual(String().sha256(),
+                   "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
   }
 
   func testNonEmptyString() {
-    XCTAssertEqual("foo".MD5(), "acbd18db4cc2f85cedef654fccc4a4d8")
+    XCTAssertEqual("foo".sha256(),
+                   "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae")
   }
 }

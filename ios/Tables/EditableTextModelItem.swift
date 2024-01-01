@@ -18,14 +18,17 @@ class EditableTextModelItem: AttributedModelItem {
   let placeholderText: String
   let font: UIFont
   let autoCapitalizationType: UITextAutocapitalizationType
+  let maximumNumberOfLines: Int
 
   var textChangedCallback: ((_ text: String) -> Void)?
 
   init(text: NSAttributedString, placeholderText: String, rightButtonImage: UIImage?,
-       font: UIFont, autoCapitalizationType: UITextAutocapitalizationType = .sentences) {
+       font: UIFont, autoCapitalizationType: UITextAutocapitalizationType = .sentences,
+       maximumNumberOfLines: Int = 0) {
     self.placeholderText = placeholderText
     self.font = font
     self.autoCapitalizationType = autoCapitalizationType
+    self.maximumNumberOfLines = maximumNumberOfLines
     super.init(text: text)
 
     self.rightButtonImage = rightButtonImage
@@ -63,7 +66,9 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
     let item = baseItem as! EditableTextModelItem
 
     textView.font = item.font
+    textView.textColor = TKMStyle.Color.label
     textView.autocapitalizationType = item.autoCapitalizationType
+    textView.textContainer.maximumNumberOfLines = item.maximumNumberOfLines
     placeholderLabel.text = item.placeholderText
     placeholderLabel.font = item.font
     placeholderLabel.textColor = TKMStyle.Color.placeholderText
@@ -105,5 +110,18 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
     let item = self.item as! EditableTextModelItem
     item.text = textView.attributedText
     item.textChangedCallback?(textView.text)
+  }
+
+  func textView(_ textView: UITextView, shouldChangeTextIn _: NSRange,
+                replacementText text: String) -> Bool {
+    // don't allow more lines of text than wanted
+    // code edited from https://stackoverflow.com/a/54924572/3938401
+    if textView.textContainer.maximumNumberOfLines == 0 {
+      return true
+    }
+    let existingLines = textView.text.components(separatedBy: CharacterSet.newlines)
+    let newLines = text.components(separatedBy: CharacterSet.newlines)
+    let linesAfterChange = existingLines.count + newLines.count - 1
+    return linesAfterChange <= textView.textContainer.maximumNumberOfLines
   }
 }

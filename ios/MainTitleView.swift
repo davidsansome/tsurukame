@@ -71,6 +71,7 @@ class MainTitleView: UIView {
               guruKanji: Int,
               imageURL: URL?) {
     if let imageURL = imageURL {
+      NSLog("Loading Gravatar at URL: \(imageURL)")
       imageView.hnk_setImage(from: imageURL)
     }
 

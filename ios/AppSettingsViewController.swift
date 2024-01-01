@@ -63,7 +63,8 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
                             placeholderText: "Custom Gravatar email address",
                             rightButtonImage: UIImage(named: "baseline_edit_black_24pt"),
                             font: UIFont.systemFont(ofSize: kFontSize),
-                            autoCapitalizationType: .none)
+                            autoCapitalizationType: .none,
+                            maximumNumberOfLines: 1)
     gravatarItem.textChangedCallback = { (text: String) in
       Settings.gravatarCustomEmail = text
     }

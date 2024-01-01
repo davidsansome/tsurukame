@@ -79,6 +79,15 @@ class SettingsViewController: UITableViewController, TKMViewController {
     exportLocalDatabaseItem.numberOfSubtitleLines = 0
     model.add(exportLocalDatabaseItem)
 
+    let clearImageCacheItem = BasicModelItem(style: .subtitle,
+                                             title: "Clear avatar image cache",
+                                             subtitle: "If you are having issues with your avatar not loading, try clearing the image cache.",
+                                             accessoryType: .none,
+                                             target: self,
+                                             action: #selector(didTapClearImageCache(_:)))
+    clearImageCacheItem.numberOfSubtitleLines = 0
+    model.add(clearImageCacheItem)
+
     model.addSection()
     let logOutItem = BasicModelItem(style: .default,
                                     title: "Log out",
@@ -137,6 +146,13 @@ class SettingsViewController: UITableViewController, TKMViewController {
   @objc private func didTapSendBugReport(_: Any?) {
     let c = UIActivityViewController(activityItems: [LocalCachingClient.databaseUrl()],
                                      applicationActivities: nil)
+    present(c, animated: true, completion: nil)
+  }
+
+  @objc private func didTapClearImageCache(_: Any?) {
+    HNKCache.shared().removeAllImages()
+    let c = UIAlertController(title: "Image cache cleared", message: nil, preferredStyle: .alert)
+    c.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
     present(c, animated: true, completion: nil)
   }
 }

@@ -24,7 +24,8 @@ private let kUpcomingReviewsSection = 1
 
 private func userProfileImageURL(emailAddress: String) -> URL {
   let address = emailAddress.trimmingCharacters(in: .whitespaces).lowercased()
-  let hash = address.MD5()
+  // Gravatar asks for an SHA-256 hash: https://docs.gravatar.com/general/hash/
+  let hash = address.sha256()
 
   let size = kProfileImageSize * UIScreen.main.scale
 
