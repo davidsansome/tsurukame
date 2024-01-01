@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ class ReviewItem: NSObject {
   class func readyForRecentMistakesReview(assignments: [TKMAssignment],
                                           localCachingClient: LocalCachingClient) -> [ReviewItem] {
     filterReadyItems(assignments: assignments,
-                     localCachingClient: localCachingClient) { (assignment) -> Bool in
+                     localCachingClient: localCachingClient) { assignment -> Bool in
       assignment.isReviewStage && assignment.availableAtDate.timeIntervalSinceNow > 0
     }
   }
@@ -68,7 +68,7 @@ class ReviewItem: NSObject {
   class func readyForRecentLessonReview(assignments: [TKMAssignment],
                                         localCachingClient: LocalCachingClient) -> [ReviewItem] {
     filterReadyItems(assignments: assignments,
-                     localCachingClient: localCachingClient) { (assignment) -> Bool in
+                     localCachingClient: localCachingClient) { assignment -> Bool in
       assignment.isReviewStage
     }
   }
@@ -76,7 +76,7 @@ class ReviewItem: NSObject {
   class func readyForBurnedReview(assignments: [TKMAssignment],
                                   localCachingClient: LocalCachingClient) -> [ReviewItem] {
     filterReadyItems(assignments: assignments,
-                     localCachingClient: localCachingClient) { (assignment) -> Bool in
+                     localCachingClient: localCachingClient) { assignment -> Bool in
       assignment.isBurned
     }
   }
