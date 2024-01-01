@@ -259,9 +259,11 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       let item = SRSStageCategoryItem(stageCategory: category, count: Int(count),
                                       accessoryType: count > 0 ? .disclosureIndicator : .none)
       if count > 0 {
-        item.tapHandler = {
-          self.selectedSrsStageCategory = category
-          self.performSegue(withIdentifier: "viewItemsInSrsCategory", sender: self)
+        item.tapHandler = { [weak self] in
+          if let self = self {
+            self.selectedSrsStageCategory = category
+            self.performSegue(withIdentifier: "viewItemsInSrsCategory", sender: self)
+          }
         }
       }
       model.add(item)
@@ -286,16 +288,20 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     model.add(BasicModelItem(style: .default,
                              title: "Show remaining",
                              subtitle: nil,
-                             accessoryType: .disclosureIndicator) {
-        self.selectedSubjectCatalogLevel = level
-        self.performSegue(withIdentifier: "showRemaining", sender: self)
+                             accessoryType: .disclosureIndicator) { [weak self] in
+        if let self = self {
+          self.selectedSubjectCatalogLevel = level
+          self.performSegue(withIdentifier: "showRemaining", sender: self)
+        }
       })
     model.add(BasicModelItem(style: .default,
                              title: "Show all",
                              subtitle: "",
-                             accessoryType: .disclosureIndicator) {
-        self.selectedSubjectCatalogLevel = level
-        self.performSegue(withIdentifier: "showAll", sender: self)
+                             accessoryType: .disclosureIndicator) { [weak self] in
+        if let self = self {
+          self.selectedSubjectCatalogLevel = level
+          self.performSegue(withIdentifier: "showAll", sender: self)
+        }
       })
   }
 

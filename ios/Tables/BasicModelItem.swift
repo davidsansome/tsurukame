@@ -31,7 +31,7 @@ class BasicModelItem: NSObject, TKMModelItem {
 
   var image: UIImage?
 
-  var target: NSObject?
+  weak var target: NSObject?
   var action: Selector?
   var tapHandler: (() -> Void)?
 

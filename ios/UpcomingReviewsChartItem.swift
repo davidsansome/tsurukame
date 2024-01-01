@@ -40,7 +40,7 @@ class UpcomingReviewsXAxisValueFormatter: AxisValueFormatter {
 class UpcomingReviewsChartItem: NSObject, TKMModelItem {
   let upcomingReviews: [Int]
   let currentReviewCount: Int
-  let target: NSObject
+  weak var target: NSObject?
   let action: Selector
   let date: Date
 
@@ -64,7 +64,7 @@ class UpcomingReviewsChartItem: NSObject, TKMModelItem {
 
 class UpcomingReviewsChartCell: TKMModelCell {
   private let view: CombinedChartView
-  private var targetController: NSObject!
+  private weak var targetController: NSObject?
   private var action: Selector!
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -151,6 +151,6 @@ class UpcomingReviewsChartCell: TKMModelCell {
   }
 
   override func didSelect() {
-    targetController.perform(action)
+    targetController?.perform(action)
   }
 }
