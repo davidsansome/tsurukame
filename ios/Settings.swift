@@ -175,6 +175,7 @@ protocol SettingProtocol {
   ], "lessonOrder") static var lessonOrder: [TKMSubject.TypeEnum]
   @Setting(5, #keyPath(lessonBatchSize)) static var lessonBatchSize: Int
   @Setting(true, #keyPath(showStatsSection)) static var showStatsSection: Bool
+  @Setting(false, #keyPath(showArtwork)) static var showArtwork: Bool
 
   @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int

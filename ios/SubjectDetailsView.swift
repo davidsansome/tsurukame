@@ -489,6 +489,14 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       // TODO: When possible in the API, add a resurrect button.
     }
 
+    // Add the Artwork section.
+    if #available(iOS 15.0, *), Settings.showArtwork,
+       ArtworkManager.isConnectedToInternet(),
+       ArtworkManager.contains(subjectID: subject.id) {
+      model.add(section: "Artwork by @AmandaBear")
+      model.add(ArtworkModelItem(subjectID: subject.id))
+    }
+
     tableModel = model
     model.reloadTable()
   }

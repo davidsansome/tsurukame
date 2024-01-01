@@ -98,7 +98,7 @@ class Audio: NSObject {
       }
     }
 
-    if !services.reachability.isReachable() {
+    if !ArtworkManager.isConnectedToInternet() {
       showOfflineDialog()
       return
     }
