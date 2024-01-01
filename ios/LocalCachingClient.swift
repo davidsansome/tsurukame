@@ -756,7 +756,8 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
               p.assignment.level,
               newSrsStage.rawValue,
               p.assignment.subjectType.rawValue,
-              p.meaningWrong || p.readingWrong ? dateFormatter.string(from: Date()) : "",
+              !p.isLesson && (p.meaningWrong || p.readingWrong)
+                ? dateFormatter.string(from: Date()) : "",
             ])
       }
     }
