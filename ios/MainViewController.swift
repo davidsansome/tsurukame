@@ -565,10 +565,8 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   func updateUserInfo() {
     guard let user = services.localCachingClient.getUserInfo() else { return }
-    var email = Settings.userEmailAddress
-    if email.isEmpty {
-      email = Settings.gravatarCustomEmail
-    }
+    let email = Settings.gravatarCustomEmail.isEmpty
+      ? Settings.userEmailAddress : Settings.gravatarCustomEmail
     let guruKanji = services.localCachingClient.guruKanjiCount
     let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)
       : userProfileImageURL(emailAddress: email)
