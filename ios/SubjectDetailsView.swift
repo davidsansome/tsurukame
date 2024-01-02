@@ -491,7 +491,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     // Add the Artwork section.
     if #available(iOS 15.0, *), Settings.showArtwork,
-       ArtworkManager.isConnectedToInternet(),
+       services.reachability.isReachable(),
        ArtworkManager.contains(subjectID: subject.id) {
       model.add(section: "Artwork by @AmandaBear")
       model.add(ArtworkModelItem(subjectID: subject.id))

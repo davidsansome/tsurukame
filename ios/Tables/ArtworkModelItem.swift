@@ -52,8 +52,25 @@ class ArtworkModelCell: TKMModelCell {
   }
 
   private func updateHostingController(with subjectID: Int64) {
-    let screenHeight = UIScreen.main.bounds.height
-    let desiredHeight = screenHeight * 0.34
+    var windowHeight: CGFloat
+    var windowWidth: CGFloat
+
+    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+       let window = windowScene.windows.first {
+      // If we have a window, we're guaranteed to have valid height and width
+      windowHeight = window.bounds.height
+      windowWidth = window.bounds.width
+    } else {
+      // Fallback to main screen's dimensions if the window scene or the window itself is not
+      // available
+      windowHeight = UIScreen.main.bounds.height
+      windowWidth = UIScreen.main.bounds.width
+    }
+
+    // Use desiredHeight and desiredWidth as needed
+    let desiredHeight = windowHeight * 0.34
+    let desiredWidth = windowWidth * 1.00
+    // Use finalHeight and finalWidth as needed
 
     let artworkView: some View = VStack(alignment: .center, spacing: 20) {
       if let artworkURLString = ArtworkManager.artworkFullURL(subjectID: subjectID),
@@ -74,7 +91,7 @@ class ArtworkModelCell: TKMModelCell {
             }
           }
         }
-        .frame(height: desiredHeight)
+        .frame(width: desiredWidth, height: desiredHeight)
       } else {
         Text("Artwork not available for this subject ID.")
       }
@@ -83,7 +100,7 @@ class ArtworkModelCell: TKMModelCell {
     .background(Color.white)
     .cornerRadius(10)
     .shadow(radius: 5)
-    .frame(height: desiredHeight)
+    .frame(width: desiredWidth, height: desiredHeight)
 
     if hostingController == nil {
       hostingController = UIHostingController(rootView: AnyView(artworkView))
