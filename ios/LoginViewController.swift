@@ -127,8 +127,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         Settings.userApiToken = token
         Settings.userEmailAddress = ""
         self.delegate?.loginComplete()
-      }.catch { _ in
-        self.showLoginError("Invalid API token!")
+      }.catch { err in
+        self.showLoginError("Unable to login with API token! (\(err.localizedDescription))")
       }
     }
   }
