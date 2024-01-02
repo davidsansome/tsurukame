@@ -46,6 +46,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    if #available(iOS 13.0, *) {
+      overrideUserInterfaceStyle = .light
+    }
+
     TKMStyle.addShadowToView(signInLabel, offset: 0, opacity: 1, radius: 5)
     TKMStyle.addShadowToView(privacyPolicyLabel, offset: 0, opacity: 1, radius: 2)
     TKMStyle.addShadowToView(privacyPolicyButton, offset: 0, opacity: 1, radius: 2)
