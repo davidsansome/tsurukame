@@ -70,7 +70,6 @@ class ArtworkModelCell: TKMModelCell {
     // Use desiredHeight and desiredWidth as needed
     let desiredHeight = windowHeight * 0.34
     let desiredWidth = windowWidth * 1.00
-    // Use finalHeight and finalWidth as needed
 
     let artworkView: some View = VStack(alignment: .center, spacing: 20) {
       if let artworkURLString = ArtworkManager.artworkFullURL(subjectID: subjectID),
