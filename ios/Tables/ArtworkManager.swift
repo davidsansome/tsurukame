@@ -30,11 +30,6 @@ enum ArtworkManager {
     artworkURLs.keys.contains(subjectID)
   }
 
-  static func isConnectedToInternet() -> Bool {
-    let monitor = NWPathMonitor()
-    return monitor.currentPath.status == .satisfied
-  }
-
   // https://community.wanikani.com/t/wk-mnemonic-art-for-kanji-levels-1-7-radical-levels-1-10/47656
   // https://greasyfork.org/en/scripts/418774-wanikani-mnemonic-artwork
   static let artworkURLs: [Int64: String] = [
