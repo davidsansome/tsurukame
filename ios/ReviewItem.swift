@@ -61,7 +61,7 @@ class ReviewItem: NSObject {
                                           localCachingClient: LocalCachingClient) -> [ReviewItem] {
     filterReadyItems(assignments: assignments,
                      localCachingClient: localCachingClient) { assignment -> Bool in
-      assignment.isReviewStage && assignment.availableAtDate.timeIntervalSinceNow > 0
+      assignment.isReviewStage
     }
   }
 
