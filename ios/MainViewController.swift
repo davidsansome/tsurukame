@@ -191,6 +191,16 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
                                          disabledMessage: disabledMessage)
       model.add(lessonsItem)
 
+      if lessons > 0 && apprenticeCount < limit {
+        let lessonPickerItem = BasicModelItem(style: .value1,
+                                              title: "Lesson Picker",
+                                              subtitle: "",
+                                              accessoryType: .disclosureIndicator,
+                                              target: self,
+                                              action: #selector(showLessonPicker))
+        model.add(lessonPickerItem)
+      }
+
       let reviewsItem = BasicModelItem(style: .value1,
                                        title: "Reviews",
                                        subtitle: "",
@@ -420,6 +430,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
       let vc = segue.destination as! LessonsViewController
       vc.setup(services: services, items: items)
+
+    case "showLessonPicker":
+      let vc = segue.destination as! LessonPickerViewController
+      vc.setup(services: services)
 
     case "showAll":
       let vc = segue.destination as! SubjectCatalogueViewController
@@ -692,6 +706,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   @objc func startLessons() {
     performSegue(withIdentifier: "startLessons", sender: self)
+  }
+
+  @objc func showLessonPicker() {
+    performSegue(withIdentifier: "showLessonPicker", sender: self)
   }
 
   @objc func showTableForecast() {

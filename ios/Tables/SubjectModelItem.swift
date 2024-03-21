@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ class SubjectModelItem: NSObject, TKMModelItem {
   var showAnswers = true
   var showRemaining = false
   var gradientColors: [Any]?
+  var canShowCheckmark = false
+  var isChecked = false
 
   init(subject: TKMSubject, delegate: SubjectDelegate, assignment: TKMAssignment? = nil,
        readingWrong: Bool = false, meaningWrong: Bool = false) {
@@ -57,12 +59,12 @@ class SubjectModelView: TKMModelCell {
     super.init(coder: coder)
     let gradientLayer = CAGradientLayer()
     gradient = gradientLayer
-    contentView.layer.insertSublayer(gradientLayer, at: 0)
+    layer.insertSublayer(gradientLayer, at: 0)
   }
 
   override func layoutSubviews() {
     super.layoutSubviews()
-    gradient?.frame = contentView.bounds
+    gradient?.frame = bounds
   }
 
   // MARK: - TKMModelCell
@@ -79,6 +81,12 @@ class SubjectModelView: TKMModelCell {
       levelLabel.text = "\(item.subject.level)"
     }
     updateGradient()
+    if item.canShowCheckmark && item.isChecked {
+      accessoryType = .checkmark
+    } else {
+      accessoryType = .none
+    }
+    tintColor = .white // for the checkmark
 
     subjectLabel.font = UIFont(name: TKMStyle.japaneseFontName, size: subjectLabel.font.pointSize)
     subjectLabel.attributedText = item.subject.japaneseText(imageSize: kJapaneseTextImageSize)
@@ -181,6 +189,12 @@ class SubjectModelView: TKMModelCell {
 
   override func didSelect() {
     if let item = item as? SubjectModelItem {
+      item.isChecked = !item.isChecked
+      if item.canShowCheckmark && item.isChecked {
+        accessoryType = .checkmark
+      } else {
+        accessoryType = .none
+      }
       item.delegate?.didTapSubject(item.subject)
     }
   }
