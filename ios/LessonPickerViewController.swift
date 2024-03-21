@@ -59,7 +59,7 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
     items.sort { a, b in
       a.assignment.level < b.assignment.level
     }
-    var levels = [Int32: ReviewsForLevel]() // TODO: store arrays of radical/kanji/vocab
+    var levels = [Int32: ReviewsForLevel]()
     for reviewItem in items {
       let assignment = reviewItem.assignment
       guard let subject = services.localCachingClient.getSubject(id: assignment.subjectID)
