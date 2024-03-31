@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@ import Foundation
 
 class SubjectCollectionModelItem: NSObject, TKMModelItem {
   let subjects: [Int64]
+  let fontSize: CGFloat
   let localCachingClient: LocalCachingClient
   weak var delegate: SubjectChipDelegate?
 
-  init(subjects: [Int64], localCachingClient: LocalCachingClient,
+  init(subjects: [Int64], fontSize: CGFloat, localCachingClient: LocalCachingClient,
        delegate: SubjectChipDelegate) {
     self.subjects = subjects
+    self.fontSize = fontSize
     self.localCachingClient = localCachingClient
     self.delegate = delegate
   }
@@ -52,7 +54,8 @@ private class SubjectCollectionModelView: TKMModelCell {
     for subjectId in item.subjects {
       if let subject = item.localCachingClient.getSubject(id: subjectId),
          let delegate = item.delegate {
-        let chip = SubjectChip(subject: subject, showMeaning: true, delegate: delegate)
+        let chip = SubjectChip(subject: subject, showMeaning: true, meaningFontSize: item.fontSize,
+                               delegate: delegate)
         contentView.addSubview(chip)
         chips.append(chip)
       }

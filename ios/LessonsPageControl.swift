@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ class LessonsPageControl: UIControl, SubjectChipDelegate {
 
     // Create a chip for each subject.
     for subject in subjects {
-      let chip = SubjectChip(subject: subject, showMeaning: false, delegate: self)
+      let chip = SubjectChip(subject: subject, showMeaning: false, meaningFontSize: nil,
+                             delegate: self)
       addSubview(chip)
       chips.append(chip)
     }
@@ -36,6 +37,7 @@ class LessonsPageControl: UIControl, SubjectChipDelegate {
     let quizText = NSAttributedString(string: "Quiz")
     let gradient: [Any] = [TKMStyle.Color.grey80.cgColor, TKMStyle.Color.grey80.cgColor]
     let quizChip = SubjectChip(subject: nil, chipText: quizText, sideText: nil,
+                               sideTextFontSize: nil,
                                chipTextColor: .white, chipGradient: gradient, delegate: self)
     addSubview(quizChip)
     chips.append(quizChip)

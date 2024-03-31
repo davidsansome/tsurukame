@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,14 +35,17 @@ class SubjectChip: UIView {
   private weak var gradientView: UIView?
   private weak var gradientLayer: CAGradientLayer?
 
-  convenience init(subject: TKMSubject, showMeaning: Bool, delegate: SubjectChipDelegate) {
+  convenience init(subject: TKMSubject, showMeaning: Bool, meaningFontSize: CGFloat?,
+                   delegate: SubjectChipDelegate) {
     let japaneseText = subject.japaneseText(imageSize: kLabelHeight)
     let sideText = showMeaning ? NSAttributedString(string: subject.primaryMeaning) : nil
-    self.init(subject: subject, chipText: japaneseText, sideText: sideText, chipTextColor: .white,
+    self.init(subject: subject, chipText: japaneseText, sideText: sideText,
+              sideTextFontSize: meaningFontSize, chipTextColor: .white,
               chipGradient: TKMStyle.gradient(forSubject: subject), delegate: delegate)
   }
 
   init(subject: TKMSubject?, chipText: NSAttributedString, sideText: NSAttributedString?,
+       sideTextFontSize: CGFloat?,
        chipTextColor: UIColor,
        chipGradient: [Any], delegate: SubjectChipDelegate) {
     let chipFont = UIFont(name: TKMStyle.japaneseFontName, size: kLabelHeight)!
@@ -73,8 +76,8 @@ class SubjectChip: UIView {
     var totalFrame = chipGradientFrame
 
     var sideTextLabel: UILabel?
-    if let sideText = sideText {
-      let sideTextFont = UIFont.systemFont(ofSize: 14.0)
+    if let sideText = sideText, let sideTextFontSize = sideTextFontSize {
+      let sideTextFont = UIFont.systemFont(ofSize: sideTextFontSize)
       let sideTextFrame = CGRect(x: chipGradientFrame.maxX + kChipHorizontalSpacing, y: 0,
                                  width: textWidth(text: sideText, font: sideTextFont) +
                                    kChipHorizontalSpacing,

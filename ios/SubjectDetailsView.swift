@@ -189,6 +189,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       return
     }
     let item = SubjectCollectionModelItem(subjects: subject.componentSubjectIds,
+                                          fontSize: kFontSize,
                                           localCachingClient: services.localCachingClient,
                                           delegate: self)
 
