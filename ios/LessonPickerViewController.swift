@@ -139,6 +139,8 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
     } else {
       selectedItems[subject.id] = reviewsBySubjectId[subject.id]
     }
+    navigationItem.rightBarButtonItem?.title = selectedItems
+      .count > 0 ? "Begin (\(selectedItems.count))" : "Begin"
     navigationItem.rightBarButtonItem?.isEnabled = selectedItems.count > 0
   }
 }
