@@ -28,14 +28,9 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
   }
 
   struct ReviewsForLevel {
-    var radicals: [SubjectModelItem]
-    var kanji: [SubjectModelItem]
-    var vocabulary: [SubjectModelItem]
-    init() {
-      radicals = []
-      kanji = []
-      vocabulary = []
-    }
+    var radicals: [SubjectModelItem] = []
+    var kanji: [SubjectModelItem] = []
+    var vocabulary: [SubjectModelItem] = []
   }
 
   override func viewDidLoad() {
