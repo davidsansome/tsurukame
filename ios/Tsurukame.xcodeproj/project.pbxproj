@@ -82,6 +82,8 @@
 		63A237611FE9264300C48657 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A237601FE9264300C48657 /* UIColor+HexString.m */; };
 		63A5598527E433E000E7BBCB /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A5598427E433DF00E7BBCB /* NavigationController.swift */; };
 		63A5598727E5947300E7BBCB /* FullRefreshOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63A5598627E5947300E7BBCB /* FullRefreshOverlayView.xib */; };
+		63A711E42BBBF6C40047436A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 63A711E32BBBF6C40047436A /* PrivacyInfo.xcprivacy */; };
+		63A711E72BBBF87B0047436A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 63A711E52BBBF8190047436A /* PrivacyInfo.xcprivacy */; };
 		63A9A55D282389C900602D09 /* ReviewSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A9A55C282389C800602D09 /* ReviewSession.swift */; };
 		63B63FF727733ABC0098DAAD /* NotificationDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B63FF627733ABC0098DAAD /* NotificationDispatcher.swift */; };
 		63BEBF9725C57D4000123147 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BEBF9625C57D4000123147 /* SearchResultViewController.swift */; };
@@ -300,6 +302,8 @@
 		63A237601FE9264300C48657 /* UIColor+HexString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
 		63A5598427E433DF00E7BBCB /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		63A5598627E5947300E7BBCB /* FullRefreshOverlayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRefreshOverlayView.xib; sourceTree = "<group>"; };
+		63A711E32BBBF6C40047436A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		63A711E52BBBF8190047436A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		63A9A55C282389C800602D09 /* ReviewSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewSession.swift; sourceTree = "<group>"; };
 		63B63FF627733ABC0098DAAD /* NotificationDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDispatcher.swift; sourceTree = "<group>"; };
 		63B63FF827733DAC0098DAAD /* ReviewContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewContainerViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -469,6 +473,7 @@
 				6365041525D7DDB700801C2D /* Reviews.storyboard */,
 				6365040C25D7DC8000801C2D /* Settings.storyboard */,
 				489894D423670CB000A20AF8 /* Tsurukame.entitlements */,
+				63A711E32BBBF6C40047436A /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -705,6 +710,7 @@
 		C90846AD237F1C770068A272 /* Complication */ = {
 			isa = PBXGroup;
 			children = (
+				63A711E52BBBF8190047436A /* PrivacyInfo.xcprivacy */,
 				C90846AE237F1C770068A272 /* Interface.storyboard */,
 				C90846B1237F1C780068A272 /* Assets.xcassets */,
 				C90846B3237F1C780068A272 /* Info.plist */,
@@ -960,6 +966,7 @@
 				636A63E4238A5D6B00902269 /* VacationModeView.xib in Resources */,
 				63A5598727E5947300E7BBCB /* FullRefreshOverlayView.xib in Resources */,
 				6392DBA420D130FB003019EB /* SubjectModelItem.xib in Resources */,
+				63A711E42BBBF6C40047436A /* PrivacyInfo.xcprivacy in Resources */,
 				63CAAB0B1FD2CBD900E09DA1 /* LaunchScreen.storyboard in Resources */,
 				63E9A8CE21106E0900418CE1 /* TKMListSeparatorItem.xib in Resources */,
 				6365041625D7DDB700801C2D /* Reviews.storyboard in Resources */,
@@ -1020,6 +1027,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63A711E72BBBF87B0047436A /* PrivacyInfo.xcprivacy in Resources */,
 				C90846C4237F1C790068A272 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
