@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -1002,6 +1002,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     case .Incorrect:
       markAnswer(.Incorrect)
     case .OtherKanjiReading:
+      shakeView(answerField)
+    case let .MismatchingOkurigana(ranges):
+      // Highlight the parts that were incorrect.
+      var text = NSMutableAttributedString(string: answerField.text!)
+      for range in ranges {
+        text.addAttribute(.foregroundColor, value: UIColor.systemRed, range: range)
+      }
+      answerField.attributedText = text
+
       shakeView(answerField)
     case .ContainsInvalidCharacters:
       shakeView(answerField)

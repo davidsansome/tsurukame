@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@ import Foundation
 import WaniKaniAPI
 
 class AnswerChecker: NSObject {
-  enum AnswerCheckerResult: Int {
+  enum AnswerCheckerResult: Equatable {
     case Precise
     case Imprecise
     case OtherKanjiReading
+    case MismatchingOkurigana([NSRange])
     case ContainsInvalidCharacters
     case Incorrect
   }
@@ -65,32 +66,47 @@ class AnswerChecker: NSObject {
     return Int(2 + 1 * floor(Double(answer.count) / 7))
   }
 
-  private class func mismatchingOkurigana(answer: String, japanese: String) -> Bool {
+  private class func mismatchingOkurigana(answer: String, japanese: String) -> [NSRange] {
     if answer.unicodeScalars.count < japanese.unicodeScalars.count {
-      return false
+      return []
     }
 
-    for (japaneseChar, answerChar) in zip(japanese.unicodeScalars,
-                                          answer.unicodeScalars) {
+    var ret = [NSRange]()
+
+    if let prefixRange = mismatchingOkurigana(answer: answer.unicodeScalars,
+                                              japanese: japanese.unicodeScalars) {
+      ret.append(prefixRange)
+    }
+
+    if let suffixRange = mismatchingOkurigana(answer: answer.unicodeScalars.reversed(),
+                                              japanese: japanese.unicodeScalars.reversed()) {
+      // Reverse the range again to match the original string.
+      ret.append(NSMakeRange(answer.count - suffixRange.lowerBound - suffixRange.length,
+                             suffixRange.length))
+    }
+
+    return ret
+  }
+
+  private class func mismatchingOkurigana<T: Collection<Unicode.Scalar>>(answer: T,
+                                                                         japanese: T) -> NSRange? {
+    var mismatchingRangeBegin: Int?
+    var mismatchingRangeEnd: Int?
+
+    for (index, (japaneseChar, answerChar)) in zip(japanese, answer).enumerated() {
       if !kHiraganaCharacterSet.contains(japaneseChar) {
         break
       }
       if japaneseChar != answerChar {
-        return true
+        mismatchingRangeBegin = min(index, mismatchingRangeBegin ?? index)
+        mismatchingRangeEnd = max(index, mismatchingRangeEnd ?? index)
       }
     }
 
-    for (japaneseChar, answerChar) in zip(japanese.unicodeScalars.reversed(),
-                                          answer.unicodeScalars.reversed()) {
-      if !kHiraganaCharacterSet.contains(japaneseChar) {
-        break
-      }
-      if japaneseChar != answerChar {
-        return true
-      }
+    if let begin = mismatchingRangeBegin, let end = mismatchingRangeEnd {
+      return NSMakeRange(begin, end - begin + 1)
     }
-
-    return false
+    return nil
   }
 
   public class func convertKatakanaToHiragana(_ text: String) -> String {
@@ -161,8 +177,12 @@ class AnswerChecker: NSObject {
           }
         }
       }
-      if subject.hasVocabulary, mismatchingOkurigana(answer: answer, japanese: subject.japanese) {
-        return .OtherKanjiReading
+      if subject.hasVocabulary {
+        let ranges = mismatchingOkurigana(answer: answer,
+                                          japanese: subject.japanese)
+        if !ranges.isEmpty {
+          return .MismatchingOkurigana(ranges)
+        }
       }
 
     case .meaning:
