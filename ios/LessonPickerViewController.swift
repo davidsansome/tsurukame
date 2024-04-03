@@ -51,9 +51,6 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
     let assignments = services.localCachingClient.getAllAssignments()
     var items = ReviewItem.readyForLessons(assignments: assignments,
                                            localCachingClient: services.localCachingClient)
-    items.sort { a, b in
-      a.assignment.level < b.assignment.level
-    }
     var levels = [Int32: ReviewsForLevel]()
     for reviewItem in items {
       let assignment = reviewItem.assignment
@@ -84,7 +81,7 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
       }
     }
 
-    for (level, data) in levels {
+    for (level, data) in levels.sorted(by: { $0.key < $1.key }) {
       model.add(section: "Level \(level)")
       if !data.radicals.isEmpty {
         model.add(TKMListSeparatorItem(label: "Radicals"))
