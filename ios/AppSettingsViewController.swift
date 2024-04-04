@@ -57,11 +57,11 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
                                action: #selector(didTapInterfaceStyle(_:))))
     }
 
-    model.add(section: "User Data")
+    model.add(section: "Custom Gravatar email address")
     let gravatarItem =
       EditableTextModelItem(text: NSAttributedString(string: Settings.gravatarCustomEmail),
-                            placeholderText: "Custom Gravatar email address",
-                            rightButtonImage: UIImage(named: "baseline_edit_black_24pt"),
+                            placeholderText: "Email address",
+                            rightButtonImage: nil,
                             font: UIFont.systemFont(ofSize: kFontSize),
                             autoCapitalizationType: .none,
                             maximumNumberOfLines: 1)
