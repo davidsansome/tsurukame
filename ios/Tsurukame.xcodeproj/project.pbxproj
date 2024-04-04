@@ -147,7 +147,7 @@
 		C904455E2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
 		C90846B0237F1C770068A272 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C90846AE237F1C770068A272 /* Interface.storyboard */; };
 		C90846B2237F1C780068A272 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C90846B1237F1C780068A272 /* Assets.xcassets */; };
-		C90846B9237F1C790068A272 /* Tsurukame Complication Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C90846B8237F1C790068A272 /* Tsurukame Complication Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C90846B9237F1C790068A272 /* Tsurukame Complication Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C90846B8237F1C790068A272 /* Tsurukame Complication Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C90846C0237F1C790068A272 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90846BF237F1C790068A272 /* ExtensionDelegate.swift */; };
 		C90846C2237F1C790068A272 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90846C1237F1C790068A272 /* ComplicationController.swift */; };
 		C90846C4237F1C790068A272 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C90846C3237F1C790068A272 /* Assets.xcassets */; };
@@ -212,15 +212,15 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C90846CC237F1C790068A272 /* Embed App Extensions */ = {
+		C90846CC237F1C790068A272 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C90846B9237F1C790068A272 /* Tsurukame Complication Extension.appex in Embed App Extensions */,
+				C90846B9237F1C790068A272 /* Tsurukame Complication Extension.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -851,7 +851,7 @@
 			buildConfigurationList = C90846D0237F1C790068A272 /* Build configuration list for PBXNativeTarget "Tsurukame Complication" */;
 			buildPhases = (
 				C90846AA237F1C770068A272 /* Resources */,
-				C90846CC237F1C790068A272 /* Embed App Extensions */,
+				C90846CC237F1C790068A272 /* Embed Foundation Extensions */,
 				8F3DEAB308F195FC9FA151DD /* Frameworks */,
 			);
 			buildRules = (
@@ -887,8 +887,9 @@
 		630FD60B1FC45BDF00D21C1F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1530;
 				ORGANIZATIONNAME = "David Sansome";
 				TargetAttributes = {
 					630FD6121FC45BDF00D21C1F = {
@@ -1280,7 +1281,6 @@
 				63CBFF2227730ED10086BA5F /* DownloadModelItem.swift in Sources */,
 				6332528E2727F32800ABBA04 /* PillModelItem.swift in Sources */,
 				630EB13F25C5713000783E54 /* ReviewItem.swift in Sources */,
-				BBE4E32E2172576B003A200E /* FontLoader.swift in Sources */,
 				63DE410827818A9A002CFB80 /* SuccessAnimation.swift in Sources */,
 				63E1386A27E6C12500AC4706 /* SettingChoiceListViewController.swift in Sources */,
 				63EF5752260617E30038551A /* LoginViewController.swift in Sources */,
@@ -1499,8 +1499,10 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
+				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1517,6 +1519,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = .;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lcompression";
@@ -1563,8 +1566,10 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1575,6 +1580,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = .;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-lcompression";
 				SDKROOT = iphoneos;
@@ -1597,6 +1603,8 @@
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
+				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1604,6 +1612,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.17;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
@@ -1630,6 +1639,8 @@
 				DEFINES_MODULE = YES;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
+				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1637,6 +1648,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.17;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1657,7 +1669,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = AppStoreScreenshots/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1683,7 +1695,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7B2GP77Y4A;
 				INFOPLIST_FILE = AppStoreScreenshots/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
