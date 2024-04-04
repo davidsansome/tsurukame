@@ -410,7 +410,9 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       "LEFT JOIN assignments AS a " +
       "ON p.id = a.subject_id " +
       "WHERE last_mistake_time >= \"\(dateFormatter.string(from: dayAgo))\"") {
-      ret.append(cursor.proto(forColumnIndex: 0)!)
+      if let pb: TKMAssignment = cursor.proto(forColumnIndex: 0) {
+        ret.append(pb)
+      }
     }
     return ret
   }
