@@ -124,11 +124,14 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private var tableModel: TableModel?
   private var lastSubjectChipTapped: SubjectChip?
 
-  private var subject: TKMSubject!
   private var studyMaterials: TKMStudyMaterials!
   private var studyMaterialsChanged = false
-  private var assignment: TKMAssignment?
-  private var task: ReviewItem?
+
+  // Items that are hidden, and will be shown when the Show All button is pressed.
+  private var hiddenIndexPaths = [IndexPath]()
+
+  // Button that shows all the hiddenIndexPaths.
+  private var showAllButton: IndexPath?
 
   public func setup(services: TKMServices, delegate: SubjectDelegate) {
     self.services = services
@@ -144,21 +147,22 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   private func addMeanings(_ subject: TKMSubject,
                            studyMaterials: TKMStudyMaterials?,
-                           toModel model: MutableTableModel) {
+                           toModel model: MutableTableModel) -> IndexPath? {
     if subject.meanings.isEmpty {
-      return
+      return nil
     }
     let text = renderMeanings(subject: subject, studyMaterials: studyMaterials)
       .string(withFontSize: kFontSize)
     let item = AttributedModelItem(text: text)
 
-    model.add(section: "Meaning")
+    let indexPath = model.add(section: "Meaning")
     model.add(item)
+    return indexPath
   }
 
   private func addReadings(_ subject: TKMSubject,
                            studyMaterials _: TKMStudyMaterials?,
-                           toModel model: MutableTableModel) {
+                           toModel model: MutableTableModel) -> IndexPath {
     let primaryOnly = subject.hasKanji && !Settings.showAllReadings
 
     // Use the readings if there are any, otherwise, for kana-only vocabs, use the Japanese.
@@ -178,8 +182,9 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     }
 
     readingItem = item
-    model.add(section: "Reading")
+    let indexPath = model.add(section: "Reading")
     model.add(item)
+    return indexPath
   }
 
   private func addComponents(_ subject: TKMSubject,
@@ -261,17 +266,19 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     return item
   }
 
-  private func addContextSentences(_ subject: TKMSubject, toModel model: MutableTableModel) {
+  private func addContextSentences(_ subject: TKMSubject,
+                                   toModel model: MutableTableModel) -> IndexPath? {
     if subject.vocabulary.sentences.isEmpty {
-      return
+      return nil
     }
 
-    model.add(section: "Context Sentences")
+    let indexPath = model.add(section: "Context Sentences")
     for sentence in subject.vocabulary.sentences {
       model.add(ContextSentenceModelItem(sentence, highlightSubject: subject,
                                          defaultAttributes: defaultStringAttrs(),
                                          fontSize: kFontSize))
     }
+    return indexPath
   }
 
   private func addPartsOfSpeech(_ vocab: TKMVocabulary, toModel model: MutableTableModel) {
@@ -289,7 +296,22 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   static var showAllFieldsCount = 0
 
   @objc func showAllFields() {
-    update(withSubject: subject, studyMaterials: studyMaterials, assignment: assignment, task: nil)
+    if hiddenIndexPaths.isEmpty {
+      return
+    }
+
+    // Deletes need to happen before insertions.
+    performBatchUpdates {
+      // Hide the show all button.
+      if let showAllButton = showAllButton {
+        tableModel?.setIndexPath(showAllButton, hidden: true)
+      }
+
+      // Show all the hidden rows.
+      for indexPath in hiddenIndexPaths {
+        tableModel?.setIndexPath(indexPath, hidden: false)
+      }
+    }
 
     // If the user keeps pressing the button, prompt them once to enable the showFullAnswer setting.
     if !Settings.seenFullAnswerPrompt {
@@ -313,12 +335,13 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   private func addExplanation(model: MutableTableModel, title: String, text: String,
                               hint: String? = nil, note: String? = nil,
-                              noteChangedCallback: ((_ text: String) -> Void)? = nil) {
+                              noteChangedCallback: ((_ text: String) -> Void)? = nil)
+    -> IndexPath? {
     if text.isEmpty {
-      return
+      return nil
     }
     let hasNote = !(note ?? "").isEmpty
-    model.add(section: title)
+    let indexPath = model.add(section: title)
     let explanationItem = addFormattedText(text, isHint: false,
                                            toModel: model)
     // Add the hint if present.
@@ -352,6 +375,23 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       }
       noteItem.textChangedCallback = noteChangedCallback
     }
+    return indexPath
+  }
+
+  private func addShowAllButton(hiddenIndexPaths: [IndexPath?],
+                                model: MutableTableModel) {
+    self.hiddenIndexPaths = hiddenIndexPaths.filter {
+      $0 != nil
+    } as! [IndexPath]
+    for indexPath in self.hiddenIndexPaths {
+      model.setIndexPath(indexPath, hidden: true)
+    }
+
+    showAllButton = model.addSection()
+    model.add(PillModelItem(text: "Show all information",
+                            fontSize: kFontSize) { [weak self] in
+        self?.showAllFields()
+      })
   }
 
   public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
@@ -359,21 +399,17 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     let model = MutableTableModel(tableView: self), isReview = task != nil
     readingItem = nil
     studyMaterialsChanged = false
-    self.subject = subject
-    self.studyMaterials = studyMaterials
-    if self.studyMaterials == nil {
+    if studyMaterials == nil {
       self.studyMaterials = TKMStudyMaterials()
       self.studyMaterials.subjectID = subject.id
     }
-    self.assignment = assignment
-    self.task = task
 
     let setMeaningNote = { [weak self] (_ text: String) in
-      self?.studyMaterials?.meaningNote = text
+      self?.studyMaterials.meaningNote = text
       self?.studyMaterialsChanged = true
     }
     let setReadingNote = { [weak self] (_ text: String) in
-      self?.studyMaterials?.readingNote = text
+      self?.studyMaterials.readingNote = text
       self?.studyMaterialsChanged = true
     }
 
@@ -381,79 +417,94 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     let readingAttempted = task?.answeredReading == true || task?.answer.readingWrong == true
     let meaningShown = !isReview || meaningAttempted
     let readingShown = !isReview || readingAttempted
-    let showAllItem = PillModelItem(text: "Show all information",
-                                    fontSize: kFontSize) { [weak self] in
-      self?.showAllFields()
-    }
 
     if subject.hasRadical {
-      if meaningShown {
-        addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
+      let meanings = addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
 
-        addExplanation(model: model, title: "Mnemonic", text: subject.radical.mnemonic,
-                       note: studyMaterials?.meaningNote, noteChangedCallback: setMeaningNote)
+      let mnemonic = addExplanation(model: model, title: "Mnemonic", text: subject.radical.mnemonic,
+                                    note: studyMaterials?.meaningNote,
+                                    noteChangedCallback: setMeaningNote)
 
-        if Settings.showOldMnemonic, !subject.radical.deprecatedMnemonic.isEmpty {
-          addExplanation(model: model, title: "Old Mnemonic",
-                         text: subject.radical.deprecatedMnemonic)
-        }
-      } else {
-        model.add(showAllItem)
+      var oldMnemonic: IndexPath?
+      if Settings.showOldMnemonic, !subject.radical.deprecatedMnemonic.isEmpty {
+        oldMnemonic = addExplanation(model: model, title: "Old Mnemonic",
+                                     text: subject.radical.deprecatedMnemonic)
+      }
+
+      if !meaningShown {
+        addShowAllButton(hiddenIndexPaths: [meanings, mnemonic, oldMnemonic], model: model)
       }
       addAmalgamationSubjects(subject, toModel: model)
     }
+
     if subject.hasKanji {
-      if meaningShown {
-        addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
-      }
-      if readingShown {
-        addReadings(subject, studyMaterials: studyMaterials, toModel: model)
-      }
+      let meanings = addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
+      let readings = addReadings(subject, studyMaterials: studyMaterials, toModel: model)
+
       addComponents(subject, title: "Radicals", toModel: model)
 
-      if meaningShown {
-        addExplanation(model: model, title: "Meaning Explanation",
-                       text: subject.kanji.meaningMnemonic, hint: subject.kanji.meaningHint,
-                       note: studyMaterials?.meaningNote, noteChangedCallback: setMeaningNote)
+      let meaningExplanation = addExplanation(model: model, title: "Meaning Explanation",
+                                              text: subject.kanji.meaningMnemonic,
+                                              hint: subject.kanji.meaningHint,
+                                              note: studyMaterials?.meaningNote,
+                                              noteChangedCallback: setMeaningNote)
+      let readingExplanation = addExplanation(model: model, title: "Reading Explanation",
+                                              text: subject.kanji.readingMnemonic,
+                                              hint: subject.kanji.readingHint,
+                                              note: studyMaterials?.readingNote,
+                                              noteChangedCallback: setReadingNote)
+
+      if !meaningShown, !readingShown {
+        addShowAllButton(hiddenIndexPaths: [meanings, readings, meaningExplanation,
+                                            readingExplanation],
+                         model: model)
+      } else if !meaningShown {
+        // Reading explanations often contain the meaning, so hide it as well.
+        addShowAllButton(hiddenIndexPaths: [meanings, meaningExplanation, readingExplanation],
+                         model: model)
+      } else if !readingShown {
+        addShowAllButton(hiddenIndexPaths: [readings, readingExplanation], model: model)
       }
-      if meaningShown, readingShown {
-        addExplanation(model: model, title: "Reading Explanation",
-                       text: subject.kanji.readingMnemonic, hint: subject.kanji.readingHint,
-                       note: studyMaterials?.readingNote, noteChangedCallback: setReadingNote)
-      }
-      if !meaningShown || !readingShown {
-        model.add(showAllItem)
-      }
+
       addSimilarKanji(subject, toModel: model)
       addAmalgamationSubjects(subject, toModel: model)
     }
+
     if subject.hasVocabulary {
-      if meaningShown {
-        addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
-      }
-      if readingShown {
-        addReadings(subject, studyMaterials: studyMaterials, toModel: model)
-      }
+      let meanings = addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
+      let readings = addReadings(subject, studyMaterials: studyMaterials, toModel: model)
+
       addComponents(subject, title: "Kanji", toModel: model)
 
-      if meaningShown {
-        addExplanation(model: model, title: "Meaning Explanation",
-                       text: subject.vocabulary.meaningExplanation,
-                       note: studyMaterials?.meaningNote, noteChangedCallback: setMeaningNote)
+      let meaningExplanation = addExplanation(model: model, title: "Meaning Explanation",
+                                              text: subject.vocabulary.meaningExplanation,
+                                              note: studyMaterials?.meaningNote,
+                                              noteChangedCallback: setMeaningNote)
+      let readingExplanation = addExplanation(model: model, title: "Reading Explanation",
+                                              text: subject.vocabulary.readingExplanation,
+                                              note: studyMaterials?.readingNote,
+                                              noteChangedCallback: setReadingNote)
+
+      if !meaningShown, !readingShown {
+        addShowAllButton(hiddenIndexPaths: [meanings, readings, meaningExplanation,
+                                            readingExplanation],
+                         model: model)
+      } else if !meaningShown {
+        // Reading explanations often contain the meaning, so hide it as well.
+        addShowAllButton(hiddenIndexPaths: [meanings, meaningExplanation, readingExplanation],
+                         model: model)
+      } else if !readingShown {
+        addShowAllButton(hiddenIndexPaths: [readings, readingExplanation], model: model)
       }
-      // Reading explanations often contain the meaning, so require it as well
-      if meaningShown, readingShown {
-        addExplanation(model: model, title: "Reading Explanation",
-                       text: subject.vocabulary.readingExplanation,
-                       note: studyMaterials?.readingNote, noteChangedCallback: setReadingNote)
+
+      // Add context sentences after the Show All button, since they're quite big.
+      let contextSentences = addContextSentences(subject, toModel: model)
+      if !meaningShown, let contextSentences = contextSentences {
+        model.setIndexPath(contextSentences, hidden: true)
+        hiddenIndexPaths.append(contextSentences)
       }
-      if !meaningShown || !readingShown {
-        model.add(showAllItem)
-      }
+
       addPartsOfSpeech(subject.vocabulary, toModel: model)
-      if meaningShown {
-        addContextSentences(subject, toModel: model)
-      }
     }
 
     // Your progress, SRS level, next review, first started, reached guru

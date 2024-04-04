@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,8 +15,11 @@
 import AudioToolbox
 import Foundation
 
+private let kHideShowAnimation: UITableView.RowAnimation = .fade
+
 class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   struct Section {
+    var hidden: Bool = false
     var headerTitle: String?
     var headerFooter: String?
     var items = [TKMModelItem]()
@@ -50,49 +53,123 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     sections.count
   }
 
-  @objc(itemsInSection:)
   func items(inSection section: Int) -> [TKMModelItem] {
     sections[section].items
   }
 
   // MARK: - Hiding items
 
+  // Adds `delta` to the section index for each hidden section above this section.
+  private func translateSectionIndex(_ section: Int, delta: Int) -> Int {
+    var ret = section
+    for (i, s) in sections.enumerated() {
+      if i > max(section, ret) {
+        break
+      }
+      if s.hidden {
+        ret += delta
+      }
+    }
+    return ret
+  }
+
+  // Adds `delta` to the row index for each hidden row above this row.
+  private func translateRowIndex(_ row: Int, section: Section, delta: Int) -> Int {
+    var ret = row
+    section.hiddenItems.enumerate { i, _ in
+      if i <= row {
+        ret += delta
+      }
+    }
+    return ret
+  }
+
+  // Translates a UITableView index path to one that can access sections[x].items[y].
+  private func modelIndexPathToViewIndexPath(_ indexPath: IndexPath) -> IndexPath {
+    let section = translateSectionIndex(indexPath.section, delta: -1)
+    if indexPath.count == 1 {
+      return IndexPath(index: section)
+    }
+    return IndexPath(row: translateRowIndex(indexPath.row, section: sections[indexPath.section],
+                                            delta: -1),
+                     section: section)
+  }
+
+  // Translates a path in sections[x].items[y] to a UITableView index path,
+  private func viewIndexPathToModelIndexPath(_ indexPath: IndexPath) -> IndexPath {
+    let section = viewSectionToModelSection(indexPath.section)
+    if indexPath.count == 1 {
+      return IndexPath(index: section)
+    }
+    return IndexPath(row: translateRowIndex(indexPath.row, section: sections[section], delta: +1),
+                     section: section)
+  }
+
+  // Translates a UITableView section number to one that can access sections[x].
+  private func viewSectionToModelSection(_ section: Int) -> Int {
+    translateSectionIndex(section, delta: +1)
+  }
+
+  // Hides or shows an item or a section.
   func setIndexPath(_ index: IndexPath, hidden: Bool) {
     if hidden == isIndexPathHidden(index) {
       return
     }
 
-    let set = sections[index.section].hiddenItems
-    if hidden {
-      set.add(index.row)
+    // We need the view index path of the item in its "shown" state, which is either before hiding
+    // it, or after showing it.
+    let viewIndexPathBefore = modelIndexPathToViewIndexPath(index)
+    
+    // Update the state of the item in our model.
+    if index.count == 1 {
+      // The index refers to a section.
+      sections[index.section].hidden = hidden
     } else {
-      set.remove(index.row)
+      // The index refers to an item in a section.
+      if hidden {
+        sections[index.section].hiddenItems.add(index.row)
+      } else {
+        sections[index.section].hiddenItems.remove(index.row)
+      }
     }
 
-    if isInitialised {
+    // Get the view index path again.
+    let viewIndexPathAfter = modelIndexPathToViewIndexPath(index)
+
+    if !isInitialised {
+      return
+    }
+
+    if index.count == 1 {
+      // The index refers to a section.
       if hidden {
-        tableView.deleteRows(at: [index], with: .automatic)
+        tableView.deleteSections([viewIndexPathBefore.section], with: kHideShowAnimation)
       } else {
-        tableView.insertRows(at: [index], with: .automatic)
+        tableView.insertSections([viewIndexPathAfter.section], with: kHideShowAnimation)
+      }
+    } else {
+      // The index refers to an item in a section.
+      if hidden {
+        tableView.deleteRows(at: [viewIndexPathBefore], with: kHideShowAnimation)
+      } else {
+        tableView.insertRows(at: [viewIndexPathAfter], with: kHideShowAnimation)
       }
     }
   }
 
   func isIndexPathHidden(_ index: IndexPath) -> Bool {
-    sections[index.section].hiddenItems.contains(index.row)
+    if index.count == 1 {
+      return sections[index.section].hidden
+    }
+    return sections[index.section].hiddenItems.contains(index.row)
   }
 
   // MARK: - UITableViewDataSource
 
   func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let section = sections[indexPath.section]
-    var row = indexPath.row
-    section.hiddenItems.enumerate { i, _ in
-      if i <= row {
-        row += 1
-      }
-    }
-    return cell(item: section.items[row])
+    let modelIndexPath = viewIndexPathToModelIndexPath(indexPath)
+    let section = sections[modelIndexPath.section]
+    return cell(item: section.items[modelIndexPath.row])
   }
 
   private func cell(item: TKMModelItem) -> UITableViewCell {
@@ -129,20 +206,22 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   }
 
   func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
-    sections[section].headerTitle
+    sections[viewSectionToModelSection(section)].headerTitle
   }
 
   func tableView(_: UITableView, titleForFooterInSection section: Int) -> String? {
-    sections[section].headerFooter
+    sections[viewSectionToModelSection(section)].headerFooter
   }
 
   func numberOfSections(in _: UITableView) -> Int {
     isInitialised = true
-    return sections.count
+    return sections.reduce(0) { count, section in
+      count + (section.hidden ? 0 : 1)
+    }
   }
 
   func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-    let s = sections[section]
+    let s = sections[viewSectionToModelSection(section)]
     return s.items.count - s.hiddenItems.count
   }
 
@@ -162,11 +241,20 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    let item = sections[indexPath.section].items[indexPath.item]
+    let modelIndexPath = viewIndexPathToModelIndexPath(indexPath)
+    let item = sections[modelIndexPath.section].items[modelIndexPath.item]
     if item.responds(to: #selector(TKMModelItem.rowHeight)) {
       return item.rowHeight!()
     }
     return tableView.rowHeight
+  }
+
+  func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    let section = sections[viewSectionToModelSection(section)]
+    if (section.headerTitle ?? "").isEmpty {
+      return 12
+    }
+    return tableView.sectionHeaderHeight
   }
 
   override func responds(to aSelector: Selector!) -> Bool {
@@ -185,28 +273,20 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
 }
 
 class MutableTableModel: TableModel {
-  @objc(addSection:footer:)
-  @discardableResult func add(section: String?, footer: String? = nil) -> Int {
+  @discardableResult func add(section: String?, footer: String? = nil) -> IndexPath {
     var s = Section()
     s.headerTitle = section
     s.headerFooter = footer
 
     let index = sections.count
     sections.append(s)
-    return index
+    return IndexPath(index: index)
   }
 
-  // For objective-c only.
-  @objc(addSection:)
-  @discardableResult func _add(section: String?) -> Int {
-    add(section: section)
-  }
-
-  @discardableResult func addSection() -> Int {
+  @discardableResult func addSection() -> IndexPath {
     add(section: nil, footer: nil)
   }
 
-  @objc(addItem:to:isHidden:)
   @discardableResult func add(_ item: TKMModelItem, toSection sectionIndex: Int,
                               hidden: Bool = false) -> IndexPath {
     sections[sectionIndex].items.append(item)
@@ -223,12 +303,6 @@ class MutableTableModel: TableModel {
       _ = addSection()
     }
     return add(item, toSection: sections.count - 1, hidden: hidden)
-  }
-
-  // For objective-c only.
-  @objc(addItem:)
-  @discardableResult func _add(item: TKMModelItem) -> IndexPath {
-    add(item, hidden: false)
   }
 
   @discardableResult func insert(_ item: TKMModelItem, atIndex index: Int,
