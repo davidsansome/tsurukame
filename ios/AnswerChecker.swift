@@ -21,7 +21,7 @@ class AnswerChecker: NSObject {
     case Imprecise
     case OtherKanjiReading
     case MismatchingOkurigana([NSRange])
-    case ContainsInvalidCharacters
+    case ContainsInvalidCharacters([NSRange])
     case Incorrect
   }
 
@@ -45,12 +45,39 @@ class AnswerChecker: NSObject {
     s.rangeOfCharacter(from: kAsciiCharacterSet) != nil
   }
 
-  private class func isKana(_ s: String) -> Bool {
-    s.rangeOfCharacter(from: kAllKanaCharacterSet.inverted) == nil
+  private class func findNonKanaRanges(_ s: String) -> [NSRange] {
+    findCharacterRanges(in: s, from: kAllKanaCharacterSet.inverted)
   }
 
-  private class func isJapanese(_ s: String) -> Bool {
-    s.rangeOfCharacter(from: kJapaneseCharacterSet.inverted) == nil
+  private class func findJapaneseRanges(_ s: String) -> [NSRange] {
+    findCharacterRanges(in: s, from: kJapaneseCharacterSet)
+  }
+
+  private class func findCharacterRanges(in s: String, from: CharacterSet) -> [NSRange] {
+    var ret = [NSRange]()
+
+    var start: Int?
+    var length = 0
+
+    for (index, c) in s.unicodeScalars.enumerated() {
+      if from.contains(c) {
+        if start == nil {
+          start = index
+        }
+        length += 1
+      } else {
+        if start != nil {
+          ret.append(NSMakeRange(start!, length))
+          start = nil
+        }
+      }
+    }
+
+    if let start = start {
+      ret.append(NSMakeRange(start, length))
+    }
+
+    return ret
   }
 
   private class func distanceTolerance(_ answer: String) -> Int {
@@ -150,8 +177,9 @@ class AnswerChecker: NSObject {
     case .reading:
       let hiraganaText = convertKatakanaToHiragana(answer)
 
-      if !isKana(answer) {
-        return .ContainsInvalidCharacters
+      let nonKanaRanges = findNonKanaRanges(answer)
+      if !nonKanaRanges.isEmpty {
+        return .ContainsInvalidCharacters(nonKanaRanges)
       }
 
       for reading in subject.primaryReadings {
@@ -186,8 +214,9 @@ class AnswerChecker: NSObject {
       }
 
     case .meaning:
-      if isJapanese(answer) {
-        return .ContainsInvalidCharacters
+      let japaneseRanges = findJapaneseRanges(answer)
+      if !japaneseRanges.isEmpty {
+        return .ContainsInvalidCharacters(japaneseRanges)
       }
 
       // Check blacklisted meanings first.  If the answer matches one exactly, it's incorrect.

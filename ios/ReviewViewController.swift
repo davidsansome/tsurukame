@@ -1004,17 +1004,20 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     case .OtherKanjiReading:
       shakeView(answerField)
     case let .MismatchingOkurigana(ranges):
-      // Highlight the parts that were incorrect.
-      var text = NSMutableAttributedString(string: answerField.text!)
-      for range in ranges {
-        text.addAttribute(.foregroundColor, value: UIColor.systemRed, range: range)
-      }
-      answerField.attributedText = text
-
-      shakeView(answerField)
-    case .ContainsInvalidCharacters:
-      shakeView(answerField)
+      highlightAndShakeAnswer(ranges: ranges)
+    case let .ContainsInvalidCharacters(ranges):
+      highlightAndShakeAnswer(ranges: ranges)
     }
+  }
+
+  func highlightAndShakeAnswer(ranges: [NSRange]) {
+    let text = NSMutableAttributedString(string: answerField.text!)
+    for range in ranges {
+      text.addAttribute(.foregroundColor, value: UIColor.systemRed, range: range)
+    }
+    answerField.attributedText = text
+
+    shakeView(answerField)
   }
 
   func shakeView(_ view: UIView) {
