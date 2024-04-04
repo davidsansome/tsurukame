@@ -49,7 +49,7 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
     model.addSection()
 
     let assignments = services.localCachingClient.getAllAssignments()
-    var items = ReviewItem.readyForLessons(assignments: assignments,
+    let items = ReviewItem.readyForLessons(assignments: assignments,
                                            localCachingClient: services.localCachingClient)
     var levels = [Int32: ReviewsForLevel]()
     for reviewItem in items {

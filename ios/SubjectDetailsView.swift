@@ -70,7 +70,7 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
       }
       strings
         .append(attrString(reading.displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi),
-                           attrs: [.font: font]))
+                           attrs: [.font: font as Any]))
     }
   }
   if !primaryOnly {
@@ -80,7 +80,7 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
         strings
           .append(attrString(reading
               .displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi),
-            attrs: [.font: font]))
+            attrs: [.font: font as Any]))
       }
     }
   }

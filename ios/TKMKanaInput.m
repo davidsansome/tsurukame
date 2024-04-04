@@ -18,7 +18,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-void EnsureInitialised() {
+void EnsureInitialised(void) {
   dispatch_once(&sOnceToken, ^{
     kReplacements = @{
       @"a" : @"\u3042",
