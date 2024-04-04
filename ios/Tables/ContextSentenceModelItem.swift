@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ private let kRevealDuration: TimeInterval = 0.2
 class ContextSentenceModelItem: AttributedModelItem {
   let japaneseText: NSAttributedString
   let englishText: NSAttributedString
+  var blurred = true
 
   init(_ sentence: TKMVocabulary.Sentence,
        highlightSubject: TKMSubject,
@@ -73,7 +74,9 @@ private class ContextSentenceModelCell: AttributedModelCell {
 
   override func update(with baseItem: TKMModelItem!) {
     super.update(with: baseItem)
-    blurredOverlay.alpha = 1
+
+    let item = self.item as! ContextSentenceModelItem
+    blurredOverlay.alpha = item.blurred ? 1 : 0
   }
 
   override func layoutSubviews() {
@@ -108,6 +111,7 @@ private class ContextSentenceModelCell: AttributedModelCell {
   }
 
   override func didSelect() {
+    (item as! ContextSentenceModelItem).blurred = false
     UIView.animate(withDuration: kRevealDuration) {
       self.blurredOverlay.alpha = 0
     }
