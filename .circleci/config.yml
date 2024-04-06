@@ -67,10 +67,3 @@ workflows:
     jobs:
       - test-golang
       - test-ios
-      - release-testflight:
-          context: appstore_credentials
-          requires:
-            - test-ios
-          filters:
-            branches:
-              only: master
