@@ -76,11 +76,6 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
     tableView.delegate = self
 
-    // Show a background image.
-    let backgroundView = UIImageView(image: UIImage(named: "launch_screen"))
-    backgroundView.alpha = 0.25
-    tableView.backgroundView = backgroundView
-
     // Add a refresh control for when the user pulls down.
     let refreshControl = UIRefreshControl()
     refreshControl.tintColor = TKMStyle.Color.label
