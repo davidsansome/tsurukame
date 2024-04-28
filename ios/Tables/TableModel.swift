@@ -258,7 +258,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     if (section.headerTitle ?? "").isEmpty {
       return 12
     }
-    return tableView.sectionHeaderHeight
+    return UITableView.automaticDimension
   }
 
   override func responds(to aSelector: Selector!) -> Bool {

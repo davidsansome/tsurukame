@@ -591,7 +591,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   func updateTableContentInset(animated: Bool) {
     guard let user = services.localCachingClient.getUserInfo() else { return }
 
-    var top: CGFloat = 20.0
+    var top: CGFloat = 0.0
     var vacationAlpha: CGFloat = 0.0
     if user.hasVacationStartedAt {
       top += vacationView.frame.height
