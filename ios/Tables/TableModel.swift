@@ -27,7 +27,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   }
 
   var sections = [Section]()
-  private var isInitialised = false
+  private(set) var isInitialised = false
   private(set) var tableView: UITableView
   private weak var delegate: UITableViewDelegate?
 
@@ -55,6 +55,10 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
 
   func items(inSection section: Int) -> [TKMModelItem] {
     sections[section].items
+  }
+
+  func item(inSection section: Int, atRow row: Int) -> TKMModelItem {
+    sections[section].items[row]
   }
 
   // MARK: - Hiding items
@@ -85,7 +89,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   }
 
   // Translates a UITableView index path to one that can access sections[x].items[y].
-  private func modelIndexPathToViewIndexPath(_ indexPath: IndexPath) -> IndexPath {
+  func modelIndexPathToViewIndexPath(_ indexPath: IndexPath) -> IndexPath {
     let section = translateSectionIndex(indexPath.section, delta: -1)
     if indexPath.count == 1 {
       return IndexPath(index: section)
@@ -96,7 +100,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   }
 
   // Translates a path in sections[x].items[y] to a UITableView index path,
-  private func viewIndexPathToModelIndexPath(_ indexPath: IndexPath) -> IndexPath {
+  func viewIndexPathToModelIndexPath(_ indexPath: IndexPath) -> IndexPath {
     let section = viewSectionToModelSection(indexPath.section)
     if indexPath.count == 1 {
       return IndexPath(index: section)
@@ -106,7 +110,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   }
 
   // Translates a UITableView section number to one that can access sections[x].
-  private func viewSectionToModelSection(_ section: Int) -> Int {
+  func viewSectionToModelSection(_ section: Int) -> Int {
     translateSectionIndex(section, delta: +1)
   }
 
@@ -119,7 +123,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     // We need the view index path of the item in its "shown" state, which is either before hiding
     // it, or after showing it.
     let viewIndexPathBefore = modelIndexPathToViewIndexPath(index)
-    
+
     // Update the state of the item in our model.
     if index.count == 1 {
       // The index refers to a section.
@@ -280,6 +284,11 @@ class MutableTableModel: TableModel {
 
     let index = sections.count
     sections.append(s)
+
+    if isInitialised {
+      tableView.insertSections([index], with: kHideShowAnimation)
+    }
+
     return IndexPath(index: index)
   }
 
@@ -293,7 +302,9 @@ class MutableTableModel: TableModel {
 
     let path = IndexPath(row: sections[sectionIndex].items.count - 1, section: sectionIndex)
     if hidden {
-      setIndexPath(path, hidden: true)
+      sections[sectionIndex].hiddenItems.add(path.row)
+    } else if isInitialised {
+      tableView.insertRows(at: [modelIndexPathToViewIndexPath(path)], with: kHideShowAnimation)
     }
     return path
   }
@@ -308,13 +319,23 @@ class MutableTableModel: TableModel {
   @discardableResult func insert(_ item: TKMModelItem, atIndex index: Int,
                                  inSection section: Int) -> IndexPath {
     sections[section].items.insert(item, at: index)
-    return IndexPath(row: index, section: section)
+    let path = IndexPath(row: index, section: section)
+
+    if isInitialised {
+      tableView.insertRows(at: [modelIndexPathToViewIndexPath(path)], with: kHideShowAnimation)
+    }
+
+    return path
   }
 
   func sort<T>(section: Int, using fn: (T, T) -> Bool) {
     sections[section].items.sort(by: { a, b -> Bool in
       fn(a as! T, b as! T)
     })
+
+    if isInitialised {
+      tableView.reloadSections([section], with: kHideShowAnimation)
+    }
   }
 
   func reloadTable() {

@@ -21,6 +21,7 @@ class EditableTextModelItem: AttributedModelItem {
   let maximumNumberOfLines: Int
 
   var textChangedCallback: ((_ text: String) -> Void)?
+  var becomeFirstResponderImmediately = true
 
   init(text: NSAttributedString, placeholderText: String, rightButtonImage: UIImage?,
        font: UIFont, autoCapitalizationType: UITextAutocapitalizationType = .sentences,
@@ -77,14 +78,22 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
       textView.isEditable = false
     } else {
       textView.isEditable = true
-      textView.becomeFirstResponder()
+      if item.becomeFirstResponderImmediately {
+        textView.becomeFirstResponder()
+      }
     }
   }
 
   override func didTapRightButton() {
+    let item = self.item as! EditableTextModelItem
+
+    if let rightButtonCallback = item.rightButtonCallback {
+      rightButtonCallback(self)
+      return
+    }
+
     removeRightButton()
 
-    let item = self.item as! EditableTextModelItem
     item.rightButtonImage = nil
 
     // Make the text view editable and start editing.

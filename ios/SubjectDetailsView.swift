@@ -121,11 +121,12 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private weak var subjectDelegate: SubjectDelegate!
 
   private var readingItem: ReadingModelItem?
-  private var tableModel: TableModel?
+  private var tableModel: MutableTableModel?
   private var lastSubjectChipTapped: SubjectChip?
 
   private var studyMaterials: TKMStudyMaterials!
   private var studyMaterialsChanged = false
+  private var synonymSection: Int?
 
   // Items that are hidden, and will be shown when the Show All button is pressed.
   private var hiddenIndexPaths = [IndexPath]()
@@ -139,10 +140,34 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   }
 
   public func saveStudyMaterials() {
-    if studyMaterialsChanged {
-      _ = services.localCachingClient.updateStudyMaterial(studyMaterials)
-      studyMaterialsChanged = false
+    if !studyMaterialsChanged {
+      return
     }
+
+    if let synonymSection = synonymSection {
+      // Each synonym will have an EditableTextModelItem in this section.
+      var synonyms = [String]()
+      let rows = tableModel!.tableView(tableModel!.tableView,
+                                       numberOfRowsInSection: synonymSection)
+      for row in 0 ..< rows {
+        let item = tableModel?.item(inSection: synonymSection, atRow: row)
+        guard let item = item as? EditableTextModelItem else { continue }
+
+        // Don't count hidden items - they were old synonyms that were deleted.
+        if tableModel!.isIndexPathHidden(IndexPath(row: row, section: synonymSection)) {
+          continue
+        }
+
+        let text = item.text.string.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        if !text.isEmpty {
+          synonyms.append(text)
+        }
+      }
+      studyMaterials.meaningSynonyms = synonyms
+    }
+
+    _ = services.localCachingClient.updateStudyMaterial(studyMaterials)
+    studyMaterialsChanged = false
   }
 
   private func addMeanings(_ subject: TKMSubject,
@@ -155,9 +180,65 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       .string(withFontSize: kFontSize)
     let item = AttributedModelItem(text: text)
 
-    let indexPath = model.add(section: "Meaning")
-    model.add(item)
-    return indexPath
+    let sectionIndexPath = model.add(section: "Meaning")
+    let itemIndexPath = model.add(item)
+
+    item.rightButtonImage = UIImage(named: "baseline_edit_black_24pt")
+    item.rightButtonCallback = { [weak self] cell in
+      self?.performBatchUpdates {
+        self?.editMeaningSynonyms(item: item, itemIndexPath: itemIndexPath, cell: cell,
+                                  subject: subject,
+                                  studyMaterials: studyMaterials, toModel: model)
+      }
+    }
+
+    return sectionIndexPath
+  }
+
+  private func editMeaningSynonyms(item: AttributedModelItem, itemIndexPath: IndexPath,
+                                   cell: AttributedModelCell,
+                                   subject: TKMSubject,
+                                   studyMaterials: TKMStudyMaterials?,
+                                   toModel model: MutableTableModel) {
+    // Remove the synonyms from the text.
+    item.rightButtonImage = nil
+    item.text = renderMeanings(subject: subject, studyMaterials: nil)
+    cell.update(with: item)
+    reloadRows(at: [itemIndexPath], with: .fade)
+
+    // Add rows for each of the synonyms.
+    if let studyMaterials = studyMaterials {
+      for synonym in studyMaterials.meaningSynonyms {
+        let synonymItem = EditableTextModelItem(text: NSAttributedString(string: synonym),
+                                                placeholderText: "",
+                                                rightButtonImage: UIImage(named: "baseline_cancel_black_24pt"),
+                                                font: UIFont.systemFont(ofSize: kFontSize))
+        let indexPath = model.add(synonymItem, toSection: itemIndexPath.section)
+        synonymItem.rightButtonCallback = { _ in
+          model.setIndexPath(indexPath, hidden: true)
+        }
+      }
+    }
+
+    // Add an empty row for a new synonym.
+    addNewSynonymItem(model: model, itemIndexPath: itemIndexPath)
+
+    // We're editing the synonyms. Save the section index so we can get all the edited items later.
+    synonymSection = itemIndexPath.section
+    studyMaterialsChanged = true
+  }
+
+  private func addNewSynonymItem(model: MutableTableModel, itemIndexPath: IndexPath) {
+    let item = EditableTextModelItem(text: NSAttributedString(),
+                                     placeholderText: "Add synonym...",
+                                     rightButtonImage: nil,
+                                     font: UIFont.systemFont(ofSize: kFontSize))
+    item.becomeFirstResponderImmediately = false
+    item.textChangedCallback = { [weak self] _ in
+      self?.addNewSynonymItem(model: model, itemIndexPath: itemIndexPath)
+      item.textChangedCallback = nil
+    }
+    model.add(item, toSection: itemIndexPath.section)
   }
 
   private func addReadings(_ subject: TKMSubject,
@@ -399,7 +480,9 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     let model = MutableTableModel(tableView: self), isReview = task != nil
     readingItem = nil
     studyMaterialsChanged = false
-    if studyMaterials == nil {
+    if studyMaterials != nil {
+      self.studyMaterials = studyMaterials
+    } else {
       self.studyMaterials = TKMStudyMaterials()
       self.studyMaterials.subjectID = subject.id
     }

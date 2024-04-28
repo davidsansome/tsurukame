@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ class AttributedModelCell: TKMModelCell {
     fatalError("init(coder:) has not been implemented")
   }
 
-  private func caluclateLayouts(_ availableRect: CGRect)
+  private func calculateLayouts(_ availableRect: CGRect)
     -> (rightButtonFrame: CGRect?, exclusionPaths: [UIBezierPath], textHeight: CGFloat) {
     var rightButtonFrame: CGRect?
     var exclusionPaths = [UIBezierPath]()
@@ -99,7 +99,7 @@ class AttributedModelCell: TKMModelCell {
 
   override func sizeThatFits(_ size: CGSize) -> CGSize {
     let availableRect = CGRect(origin: .zero, size: size).inset(by: kEdgeInsets)
-    let layout = caluclateLayouts(availableRect)
+    let layout = calculateLayouts(availableRect)
 
     return CGSize(width: availableRect.width, height: max(kMinimumHeight,
                                                           layout.textHeight + kEdgeInsets
@@ -110,7 +110,7 @@ class AttributedModelCell: TKMModelCell {
     super.layoutSubviews()
 
     var availableRect = bounds.inset(by: kEdgeInsets)
-    let layout = caluclateLayouts(availableRect)
+    let layout = calculateLayouts(availableRect)
 
     if let rightButton = rightButton, let rightButtonFrame = layout.rightButtonFrame {
       rightButton.frame = rightButtonFrame
@@ -133,6 +133,7 @@ class AttributedModelCell: TKMModelCell {
     let item = baseItem as! AttributedModelItem
 
     textView.attributedText = item.text
+    textView.font = .systemFont(ofSize: UIFont.labelFontSize)
 
     if let rightButtonImage = item.rightButtonImage {
       if rightButton == nil {
