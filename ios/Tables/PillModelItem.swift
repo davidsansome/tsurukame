@@ -1,4 +1,4 @@
-// Copyright 2023 David Sansome
+// Copyright 2024 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,6 +67,10 @@ class PillModelCell: TKMModelCell {
   }
 
   @IBAction func buttonPressed(_: Any) {
+    didSelect()
+  }
+
+  override func didSelect() {
     let item = self.item as! PillModelItem
     item.callback()
   }
