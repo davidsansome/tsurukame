@@ -766,7 +766,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       if ctx.cheats {
         addSynonymButton.isHidden = true
       }
-      answerField.becomeFirstResponder()
     }
 
     // This makes sure taps are still processed and not ignored, even when the closing animation
