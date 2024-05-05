@@ -46,7 +46,6 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
               footer: "Select items below to queue them up for lessons. " +
                 "When you've finished selecting items, tap \"Begin\" " +
                 "in the top right to start.")
-    model.addSection()
 
     let assignments = services.localCachingClient.getAllAssignments()
     let items = ReviewItem.readyForLessons(assignments: assignments,
