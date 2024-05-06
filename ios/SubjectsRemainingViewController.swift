@@ -74,19 +74,19 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
 
     let model = MutableTableModel(tableView: tableView)
     if !radicals.isEmpty {
-      model.add(section: "Radicals")
+      model.add(section: "Radicals (\(radicals.count))")
       for item in radicals {
         model.add(item)
       }
     }
     if !kanji.isEmpty {
-      model.add(section: "Kanji")
+      model.add(section: "Kanji (\(kanji.count))")
       for item in kanji {
         model.add(item)
       }
     }
     if !vocabulary.isEmpty {
-      model.add(section: "Vocabulary")
+      model.add(section: "Vocabulary (\(vocabulary.count))")
       for item in vocabulary {
         model.add(item)
       }

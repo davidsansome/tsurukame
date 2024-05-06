@@ -52,6 +52,9 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
       }
       model.add(item, toSection: section)
     }
+    model.sections[0].headerTitle! += " (\(model.sections[0].items.count))"
+    model.sections[1].headerTitle! += " (\(model.sections[1].items.count))"
+    model.sections[2].headerTitle! += " (\(model.sections[2].items.count))"
 
     let comparator = { (a: SubjectModelItem, b: SubjectModelItem) -> Bool in
       guard let aAssignment = a.assignment,
