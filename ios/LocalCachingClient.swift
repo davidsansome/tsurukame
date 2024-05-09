@@ -734,6 +734,24 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
     }
   }
 
+  /**
+      Return array of subject/assignment ID (which is the same as subject_progress.id) to last_mistake_time
+   */
+  func getRecentMistakeTimes() -> [Int32: String] {
+    let dayAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
+    var mistakeTimes = [Int32: String]()
+    db.inDatabase { db in
+      for cursor in db.query("SELECT id, last_mistake_time " +
+        "FROM subject_progress " +
+        "WHERE last_mistake_time >= \"\(dateFormatter.string(from: dayAgo))\"") {
+        let subjectId = cursor.int(forColumnIndex: 0)
+        let lastMistakeTime = cursor.string(forColumnIndex: 1)
+        mistakeTimes[subjectId] = lastMistakeTime
+      }
+    }
+    return mistakeTimes
+  }
+
   func sendProgress(_ progress: [TKMProgress]) -> Promise<Void> {
     db.inTransaction { db in
       for p in progress {
@@ -1198,6 +1216,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
       Progress(totalUnitCount: -1, parent: progress, pendingUnitCount: units)
     }
 
+    let recentMistakes = quick ? [:] : getRecentMistakeTimes()
     if !quick {
       // Clear the sync table before doing anything else. This forces us to re-download all
       // assignments and subjects.
@@ -1223,6 +1242,20 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
         self.fetchVoiceActors(progress: childProgress(1)),
       ])
     }.ensure {
+      if !quick && recentMistakes.count != 0 {
+        // re-insert recent mistakes into database
+        self.db.inDatabase { db in
+          recentMistakes.forEach { item in
+            db
+              .mustExecuteUpdate("UPDATE subject_progress SET last_mistake_time = ? WHERE id = ?",
+                                 args: [
+                                   item.value,
+                                   item.key,
+                                 ])
+          }
+        }
+      }
+
       self._availableSubjects.invalidate()
       self._srsCategoryCounts.invalidate()
       self._recentLessonCount.invalidate()
