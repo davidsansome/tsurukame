@@ -42,19 +42,21 @@ private func renderMeanings(subject: TKMSubject,
   var strings = [NSAttributedString]()
   for meaning in subject.meanings {
     if meaning.type == .primary {
-      strings.append(attrString(meaning.meaning))
+      strings.append(attrString(meaning.meaning.trimmingCharacters(in: .whitespacesAndNewlines)))
     }
   }
   if let studyMaterials = studyMaterials {
     for meaning in studyMaterials.meaningSynonyms {
-      strings.append(attrString(meaning, attrs: [.foregroundColor: kMeaningSynonymColor]))
+      strings.append(attrString(meaning.trimmingCharacters(in: .whitespacesAndNewlines),
+                                attrs: [.foregroundColor: kMeaningSynonymColor]))
     }
   }
   for meaning in subject.meanings {
     if meaning.type != .primary, meaning.type != .blacklist,
        meaning.type != .auxiliaryWhitelist || !subject.hasRadical || Settings.showOldMnemonic {
       let font = UIFont.systemFont(ofSize: kFontSize, weight: .light)
-      strings.append(attrString(meaning.meaning, attrs: [.font: font]))
+      strings.append(attrString(meaning.meaning.trimmingCharacters(in: .whitespacesAndNewlines),
+                                attrs: [.font: font]))
     }
   }
   return join(strings, with: ", ")
