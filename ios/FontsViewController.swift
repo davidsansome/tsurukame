@@ -23,6 +23,11 @@ class FontsViewController: DownloadViewController {
     self.services = services
   }
 
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    navigationController?.isNavigationBarHidden = false
+  }
+
   func populateModel(_ model: MutableTableModel) {
     model.add(section: "",
               footer: "Choose the fonts you want to use while doing reviews. " +

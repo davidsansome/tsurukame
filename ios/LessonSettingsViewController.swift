@@ -107,22 +107,31 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
   }
 
   @objc private func didTapLessonBatchSize(_: BasicModelItem) {
-    let vc = SettingChoiceListViewController(setting: Settings.$lessonBatchSize,
-                                             title: "Lesson Batch Size",
-                                             helpText: "Set the number of new lessons to be " +
-                                               "introduced before the quiz session.")
-    vc.addChoicesFromRange(3 ... 10, suffix: " lessons")
-    navigationController?.pushViewController(vc, animated: true)
+    navigationController?.pushViewController(makeLessonBatchSizeViewController(), animated: true)
   }
 
   @objc private func didTapApprenticeLessonsLimit(_: BasicModelItem) {
-    let vc = SettingChoiceListViewController(setting: Settings.$apprenticeLessonsLimit,
-                                             title: "Apprentice Lessons Limit",
-                                             helpText: "Stop yourself from starting new lessons " +
-                                               "if you have more than this number of " +
-                                               "Apprentice-level items already")
-    vc.addChoice(name: "No limit", value: Int.max)
-    vc.addChoicesFromRange(stride(from: 25, through: 200, by: 25), suffix: "")
-    navigationController?.pushViewController(vc, animated: true)
+    navigationController?.pushViewController(makeApprenticeLessonLimitViewController(),
+                                             animated: true)
   }
+}
+
+func makeLessonBatchSizeViewController() -> UIViewController {
+  let vc = SettingChoiceListViewController(setting: Settings.$lessonBatchSize,
+                                           title: "Lesson Batch Size",
+                                           helpText: "Set the number of new lessons to be " +
+                                             "introduced before the quiz session.")
+  vc.addChoicesFromRange(3 ... 10, suffix: " lessons")
+  return vc
+}
+
+func makeApprenticeLessonLimitViewController() -> UIViewController {
+  let vc = SettingChoiceListViewController(setting: Settings.$apprenticeLessonsLimit,
+                                           title: "Apprentice Lessons Limit",
+                                           helpText: "Stop yourself from starting new lessons " +
+                                             "if you have more than this number of " +
+                                             "Apprentice-level items already")
+  vc.addChoice(name: "No limit", value: Int.max)
+  vc.addChoicesFromRange(stride(from: 25, through: 200, by: 25), suffix: "")
+  return vc
 }

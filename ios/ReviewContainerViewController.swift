@@ -30,7 +30,7 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
 
     let menuVC = storyboard!
       .instantiateViewController(withIdentifier: "reviewMenuViewController") as! ReviewMenuViewController
-    menuVC.delegate = self
+    menuVC.setup(services: services, delegate: self)
 
     centerViewController = reviewVC
     leftDrawerViewController = menuVC
@@ -76,6 +76,14 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
   }
 
   // MARK: - ReviewMenuDelegate
+
+  func quickSettingsChanged(closeDrawer shouldCloseDrawer: Bool) {
+    reviewVC.quickSettingsChanged()
+
+    if shouldCloseDrawer {
+      closeDrawer(animated: false, completion: nil)
+    }
+  }
 
   func endReviewSession(button: UIView) {
     if reviewVC.tasksAnsweredCorrectly == 0 {

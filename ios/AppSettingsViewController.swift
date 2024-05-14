@@ -96,11 +96,7 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
   }
 
   @objc private func didTapInterfaceStyle(_: BasicModelItem) {
-    let vc = SettingChoiceListViewController(setting: Settings.$interfaceStyle,
-                                             title: "Interface Style")
-    vc.addChoicesFromEnum()
-    vc.saveFn = { [unowned vc] in vc.view.window!.setInterfaceStyle($0) }
-    navigationController?.pushViewController(vc, animated: true)
+    navigationController?.pushViewController(makeInterfaceStyleViewController(), animated: true)
   }
 
   @objc private func allReviewsSwitchChanged(_ switchView: UISwitch) {
@@ -178,4 +174,12 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
       self.notificationHandler?(granted)
     }
   }
+}
+
+func makeInterfaceStyleViewController() -> UIViewController {
+  let vc = SettingChoiceListViewController(setting: Settings.$interfaceStyle,
+                                           title: "Interface Style")
+  vc.addChoicesFromEnum()
+  vc.saveFn = { [unowned vc] in vc.view.window!.setInterfaceStyle($0) }
+  return vc
 }

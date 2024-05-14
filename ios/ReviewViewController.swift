@@ -447,12 +447,19 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // MARK: - Setup
 
   private func randomTask() {
-    TKMStyle.withTraitCollection(traitCollection) {
-      if session.activeQueueLength == 0 {
-        delegate.finishedAllReviewItems(self)
-        return
-      }
+    if session.activeQueueLength == 0 {
+      delegate.finishedAllReviewItems(self)
+      return
+    }
 
+    // Choose a random task from the active queue.
+    session.nextTask()
+
+    updateViewForCurrentTask()
+  }
+
+  private func updateViewForCurrentTask() {
+    TKMStyle.withTraitCollection(traitCollection) {
       // Update the progress labels.
       let queueLength = Int(session.activeQueueLength + session.reviewQueueLength)
       let doneText = String(session.reviewsCompleted)
@@ -467,9 +474,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         progressBar.setProgress(Float(session.reviewsCompleted) / Float(totalLength),
                                 animated: true)
       }
-
-      // Choose a random task from the active queue.
-      session.nextTask()
 
       // Fill the question labels.
       var subjectTypePrompt: String
@@ -528,7 +532,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       promptLabel!.textColor = promptTextColor
 
       // Submit button.
-
       if Settings.allowSkippingReviews {
         // Change the skip button icon.
         submitButton.setImage(skipImage, for: .normal)
@@ -576,7 +579,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         (ctx: AnimationContext) in
         if !(self.questionLabel.attributedText?
           .isEqual(to: self.session.activeSubject.japaneseText) ?? false) ||
-          self.questionLabel.font.fontName != self.currentFontName {
+          self.questionLabel.font.fontName != self.currentFontName ||
+          self.questionLabel.font.pointSize != self.questionLabelFontSize() {
           ctx.addFadingLabel(original: self.questionLabel!)
           self.questionLabel
             .font = UIFont(name: self.currentFontName, size: self.questionLabelFontSize())
@@ -897,6 +901,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     delegate.tappedMenuButton?(reviewViewController: self, menuButton: menuButton)
   }
 
+  func quickSettingsChanged() {
+    if subjectDetailsView.isHidden {
+      updateViewForCurrentTask()
+    }
+  }
+
   // MARK: - Wrapping up
 
   @objc public var wrappingUp: Bool {
@@ -922,9 +932,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                     options: .transitionCrossDissolve, animations: {
                       self.submitButton.setImage(newImage, for: .normal)
                     }, completion: nil)
-    } else {
-      submitButton.isEnabled = Settings.ankiMode || !text.isEmpty
     }
+    submitButton.isEnabled = Settings.allowSkippingReviews || Settings.ankiMode || !text.isEmpty
   }
 
   func textField(_: UITextField, shouldChangeCharactersIn _: NSRange,
