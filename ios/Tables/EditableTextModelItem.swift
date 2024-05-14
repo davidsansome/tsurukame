@@ -59,7 +59,11 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
     super.layoutSubviews()
 
     placeholderLabel.isHidden = !textView.text.isEmpty
-    placeholderLabel.frame = textView.frame
+
+    // Make the placeholder overlap the textView, but use the full height of the cell so it's not
+    // clipped.
+    placeholderLabel.frame = CGRect(x: textView.frame.minX, y: bounds.minY,
+                                    width: textView.frame.width, height: bounds.height)
   }
 
   override func update(with baseItem: TKMModelItem!) {
