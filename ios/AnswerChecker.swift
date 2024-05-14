@@ -22,6 +22,7 @@ class AnswerChecker: NSObject {
     case OtherKanjiReading
     case MismatchingOkurigana([NSRange])
     case ContainsInvalidCharacters([NSRange])
+    case IsReadingButWantMeaning
     case Incorrect
   }
 
@@ -240,11 +241,14 @@ class AnswerChecker: NSObject {
         }
       }
 
+      // Check if the answer matches a meaning exactly.
       for meaning in meaningTexts {
         if normalizedString(meaning, taskType: taskType) == answer {
           return .Precise
         }
       }
+
+      // Check if the answer *almost* matches a meaning.
       for meaning in meaningTexts {
         let meaningText = normalizedString(meaning, taskType: taskType)
         let distance = meaningText.levenshteinDistance(to: answer)
@@ -252,6 +256,16 @@ class AnswerChecker: NSObject {
         if Int(distance) <= tolerance {
           return .Imprecise
         }
+      }
+
+      // Check if the answer would match one of the readings if converted to hiragana.
+      let kanaText = TKMConvertKanaText(answer)
+      switch checkAnswer(kanaText, subject: subject, studyMaterials: studyMaterials,
+                         taskType: .reading, localCachingClient: localCachingClient) {
+      case .Precise, .Imprecise, .OtherKanjiReading:
+        return .IsReadingButWantMeaning
+      default:
+        break
       }
     }
 

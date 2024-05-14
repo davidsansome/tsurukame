@@ -1006,6 +1006,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       highlightAndShakeAnswer(ranges: ranges)
     case let .ContainsInvalidCharacters(ranges):
       highlightAndShakeAnswer(ranges: ranges)
+    case .IsReadingButWantMeaning:
+      shakeView(answerField)
     }
   }
 
