@@ -98,8 +98,7 @@ class ReviewMenuViewController: UIViewController, UITableViewDelegate {
       })
 
     model.add(section: "End review session")
-    endItem = BasicModelItem(style: .default, title: "End review session",
-                             accessoryType: .disclosureIndicator) { [weak self] in self?
+    endItem = BasicModelItem(style: .default, title: "End review session") { [weak self] in self?
       .endReviewSession()
     }
     endItem!.image = UIImage(named: "baseline_cancel_black_24pt")
@@ -110,8 +109,7 @@ class ReviewMenuViewController: UIViewController, UITableViewDelegate {
       wrapUpText = "Wrap up (\(wrapUpCount) to go)"
     }
 
-    let wrapUp = BasicModelItem(style: .default, title: wrapUpText,
-                                accessoryType: .disclosureIndicator) { [weak self] in
+    let wrapUp = BasicModelItem(style: .default, title: wrapUpText) { [weak self] in
       self?.delegate?.wrapUp()
     }
     wrapUp.image = UIImage(named: "baseline_access_time_black_24pt")
