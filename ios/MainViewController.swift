@@ -74,8 +74,6 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    tableView.delegate = self
-
     // Add a refresh control for when the user pulls down.
     let refreshControl = UIRefreshControl()
     refreshControl.tintColor = TKMStyle.Color.label
@@ -458,15 +456,6 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   override func traitCollectionDidChange(_: UITraitCollection?) {
     updateGradientColors()
-  }
-
-  // MARK: - UITableViewDelegate
-
-  func tableView(_: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-    if indexPath.section == kUpcomingReviewsSection {
-      return UIDevice.current.userInterfaceIdiom == .pad ? 360 : 120
-    }
-    return UITableView.automaticDimension
   }
 
   // MARK: - Navigation bar buttons
