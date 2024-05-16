@@ -70,6 +70,7 @@ class AnswerChecker: NSObject {
         if start != nil {
           ret.append(NSMakeRange(start!, length))
           start = nil
+          length = 0
         }
       }
     }
