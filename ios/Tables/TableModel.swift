@@ -31,6 +31,10 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   private(set) var tableView: UITableView
   private weak var delegate: UITableViewDelegate?
 
+  // If set to true, the table will use the sectionHeaderHeight
+  // from the UITableView instead of the UITableView.automaticDimension.
+  var useSectionHeaderHeightFromView = false
+
   deinit {
     if !isInitialised {
       NSLog("TKMTableModel deallocated without being used. Did you forget to retain it?")
@@ -257,6 +261,9 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     let section = sections[viewSectionToModelSection(section)]
     if (section.headerTitle ?? "").isEmpty {
       return 12
+    }
+    if useSectionHeaderHeightFromView {
+      return tableView.sectionHeaderHeight
     }
     return UITableView.automaticDimension
   }

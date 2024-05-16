@@ -480,6 +480,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
                      assignment: TKMAssignment?, task: ReviewItem?) {
     let model = MutableTableModel(tableView: self), isReview = task != nil
+    model.useSectionHeaderHeightFromView = true
+
     readingItem = nil
     studyMaterialsChanged = false
     if studyMaterials != nil {
