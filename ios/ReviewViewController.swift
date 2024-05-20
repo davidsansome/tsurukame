@@ -458,7 +458,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     updateViewForCurrentTask()
   }
 
-  private func updateViewForCurrentTask() {
+  private func updateViewForCurrentTask(updateFirstResponder: Bool = true) {
     TKMStyle.withTraitCollection(traitCollection) {
       // Update the progress labels.
       let queueLength = Int(session.activeQueueLength + session.reviewQueueLength)
@@ -607,7 +607,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
           self.promptLabel.attributedText = prompt
         }
       }
-      animateSubjectDetailsView(shown: false, setupContextFunc: setupContextFunc)
+      animateSubjectDetailsView(shown: false, setupContextFunc: setupContextFunc,
+                                updateFirstResponder: updateFirstResponder)
     }
   }
 
@@ -668,7 +669,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // MARK: - Animation
 
   private func animateSubjectDetailsView(shown: Bool,
-                                         setupContextFunc: ((AnimationContext) -> Void)?) {
+                                         setupContextFunc: ((AnimationContext) -> Void)?,
+                                         updateFirstResponder: Bool) {
     let cheats = delegate.allowsCheats(forReviewItem: session.activeTask)
 
     if shown {
@@ -721,10 +723,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // This makes the keyboard appear or disappear immediately.  We need this animation to happen
     // here so it's in sync with the others.
     answerField.isEnabled = !shown && !Settings.ankiMode
-    if !shown {
-      answerField.becomeFirstResponder()
-    } else {
-      answerField.resignFirstResponder()
+    if updateFirstResponder {
+      if !shown {
+        answerField.becomeFirstResponder()
+      } else {
+        answerField.resignFirstResponder()
+      }
     }
 
     // Scale the text in the question label.
@@ -903,7 +907,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   func quickSettingsChanged() {
     if subjectDetailsView.isHidden {
-      updateViewForCurrentTask()
+      updateViewForCurrentTask(updateFirstResponder: false)
     }
   }
 
@@ -1121,7 +1125,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                          size: self.questionLabelFontSize())
       }
     }
-    animateSubjectDetailsView(shown: true, setupContextFunc: setupContextFunc)
+    animateSubjectDetailsView(shown: true, setupContextFunc: setupContextFunc,
+                              updateFirstResponder: true)
   }
 
   // MARK: - Ignoring incorrect answers
