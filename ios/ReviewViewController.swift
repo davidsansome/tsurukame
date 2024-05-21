@@ -315,6 +315,17 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     viewDidLayoutSubviews()
   }
 
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    // Redraw the background gradients if dark/light mode changed.
+    if let previousTraitCollection = previousTraitCollection,
+       previousTraitCollection.userInterfaceStyle != traitCollection.userInterfaceStyle {
+      questionBackground
+        .colors = TKMStyle.gradient(forAssignment: session.activeAssignment)
+      promptBackground.colors = session.activeTaskType == .meaning ? TKMStyle
+        .meaningGradient : TKMStyle.readingGradient
+    }
+  }
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
 
