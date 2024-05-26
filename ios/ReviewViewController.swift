@@ -1032,6 +1032,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       highlightAndShakeAnswer(ranges: ranges)
     case .IsReadingButWantMeaning:
       shakeView(answerField)
+
+      // The user knows the reading so mark it correct if they haven't done it yet.
+      session.activeTask.answeredReading = true
     }
   }
 
