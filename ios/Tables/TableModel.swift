@@ -21,7 +21,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   struct Section {
     var hidden: Bool = false
     var headerTitle: String?
-    var headerFooter: String?
+    var footerTitle: String?
     var items = [TKMModelItem]()
     var hiddenItems = NSMutableIndexSet()
   }
@@ -218,7 +218,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   }
 
   func tableView(_: UITableView, titleForFooterInSection section: Int) -> String? {
-    sections[viewSectionToModelSection(section)].headerFooter
+    sections[viewSectionToModelSection(section)].footerTitle
   }
 
   func numberOfSections(in _: UITableView) -> Int {
@@ -287,7 +287,7 @@ class MutableTableModel: TableModel {
   @discardableResult func add(section: String?, footer: String? = nil) -> IndexPath {
     var s = Section()
     s.headerTitle = section
-    s.headerFooter = footer
+    s.footerTitle = footer
 
     let index = sections.count
     sections.append(s)
