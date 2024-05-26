@@ -85,7 +85,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   private func translateRowIndex(_ row: Int, section: Section, delta: Int) -> Int {
     var ret = row
     section.hiddenItems.enumerate { i, _ in
-      if i <= row {
+      if (delta < 0 && i <= row) || (delta > 0 && i <= ret) {
         ret += delta
       }
     }
