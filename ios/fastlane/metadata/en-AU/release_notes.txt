@@ -1,1 +1,16 @@
-Fixed an "Unknown error" during login.
+Features
+- Add extra practice methods: recent mistakes, recent lessons, burned items
+- Add ability to view list of items by SRS category
+- Add the option to use a custom Gravatar image when logging in with API key
+- Add optional Kanji artwork
+- Add a lesson picker to let users choose which lessons they want to do next
+- Highlight invalid characters when shaking an incorrect answer
+- Shake the answer if the user entered a reading when asked for the meaning
+- Add the ability to edit synonyms from the subject details view
+- Add more quick settings
+
+Bugfixes:
+- Fix an issue where recent mistakes would be lost after a sync
+- Use the system font size in the smaller subject chips
+- Fixed an issue where context sentences would be blurred again when scrolling up and down.
+- Animate new rows when tapping "Show all information"
