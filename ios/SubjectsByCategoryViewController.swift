@@ -17,7 +17,7 @@ import Foundation
 import Foundation
 import WaniKaniAPI
 
-class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate {
+class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate, TKMViewController {
   private var services: TKMServices!
   private(set) var category: SRSStageCategory!
   private var showAnswers: Bool!
@@ -30,6 +30,12 @@ class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate {
     self.showAnswers = showAnswers
     setShowAnswers(showAnswers, animated: false)
   }
+
+  // MARK: - TKMViewController
+
+  var canSwipeToGoBack: Bool { true }
+
+  // MARK: - UIViewController
 
   override func viewDidLoad() {
     super.viewDidLoad()
