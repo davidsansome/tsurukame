@@ -16,7 +16,7 @@ import Accelerate
 import Foundation
 import WaniKaniAPI
 
-private let kBlurKernelSize: UInt32 = 19
+private let kBlurKernelSize: CGFloat = 19
 private let kBlurAlpha: CGFloat = 0.75
 private let kRevealDuration: TimeInterval = 0.2
 
@@ -98,7 +98,8 @@ private class ContextSentenceModelCell: AttributedModelCell {
 
     // Blur the english text.
     let blurredCtx = CGContext.screenBitmap(size: size, screen: window!.screen)
-    englishCtx.blur(to: blurredCtx, kernelSize: kBlurKernelSize)
+    englishCtx.blur(to: blurredCtx,
+                    kernelSize: UInt32(UIFontMetrics.default.scaledValue(for: kBlurKernelSize)))
 
     // Render the Japanese text on top of the result.
     blurredCtx.with {

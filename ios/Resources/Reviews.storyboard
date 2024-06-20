@@ -97,7 +97,7 @@
                                 <rect key="frame" x="312" y="65" width="16" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="16" id="G25-7k-Q2z"/>
-                                    <constraint firstAttribute="height" constant="16" id="pqx-CS-kAg"/>
+                                    <constraint firstAttribute="width" secondItem="9gS-sh-cYw" secondAttribute="height" multiplier="1:1" id="bMk-45-Paf"/>
                                 </constraints>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M27-Di-5Wg" customClass="AnswerTextField" customModule="Tsurukame" customModuleProvider="target">
@@ -106,7 +106,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="64" id="bHy-2g-dyk"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lqe-Ns-DBU">
@@ -114,7 +114,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="qnv-nj-ch0"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -144,26 +144,26 @@
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="16" id="Bjm-ai-836"/>
-                                    <constraint firstAttribute="height" constant="16" id="YfC-eN-APN"/>
+                                    <constraint firstAttribute="width" secondItem="q5T-jg-CA5" secondAttribute="height" multiplier="1:1" id="TVT-jA-4Yk"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S3x-ei-BlA">
                                 <rect key="frame" x="334" y="65" width="0.0" height="0.0"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="0.0" height="1"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sr9-jm-3e3">
                                 <rect key="frame" x="368" y="65" width="0.0" height="0.0"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="0.0" height="1"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WG4-t0-dUV">
                                 <rect key="frame" x="402" y="65" width="0.0" height="0.0"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="0.0" height="1"/>
@@ -172,11 +172,12 @@
                                 <rect key="frame" x="380" y="65" width="16" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="16" id="2YE-ib-lH1"/>
-                                    <constraint firstAttribute="height" constant="16" id="cQ1-SQ-yZA"/>
+                                    <constraint firstAttribute="width" secondItem="TgI-GY-kYL" secondAttribute="height" multiplier="1:1" id="TyH-Bz-enO"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hl2-BP-AQQ">
                                 <rect key="frame" x="0.0" y="53" width="56" height="56"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="contentEdgeInsets" minX="16" minY="16" maxX="16" maxY="16"/>
                                 <state key="normal" image="baseline_menu_black_24pt">
@@ -217,7 +218,7 @@
                             </button>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gcI-ex-zA1">
                                 <rect key="frame" x="300" y="65" width="0.0" height="0.0"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -225,8 +226,8 @@
                                 <rect key="frame" x="278" y="65" width="16" height="16"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" secondItem="lSQ-lD-Xmj" secondAttribute="height" multiplier="1:1" id="GmB-py-z6r"/>
                                     <constraint firstAttribute="width" constant="16" id="QzF-E3-VsO"/>
-                                    <constraint firstAttribute="height" constant="16" id="sXp-p0-shp"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -295,9 +296,11 @@
                     <connections>
                         <outlet property="addSynonymButton" destination="Fq3-oe-fWe" id="xLK-Ez-kg3"/>
                         <outlet property="answerField" destination="M27-Di-5Wg" id="tGd-Sg-Pxy"/>
+                        <outlet property="answerFieldHeightConstraint" destination="bHy-2g-dyk" id="Q6j-9j-Ic2"/>
                         <outlet property="answerFieldToBottomConstraint" destination="y4K-ca-rw0" id="k5q-kB-zrB"/>
                         <outlet property="answerFieldToSubjectDetailsViewConstraint" destination="AzB-Jc-8ht" id="avk-hp-la4"/>
                         <outlet property="doneIcon" destination="q5T-jg-CA5" id="1t5-oj-UVA"/>
+                        <outlet property="doneIconWidthConstraint" destination="Bjm-ai-836" id="qAY-rQ-azD"/>
                         <outlet property="doneLabel" destination="sr9-jm-3e3" id="goZ-ah-xxh"/>
                         <outlet property="levelLabel" destination="kc6-Lm-8sK" id="NSc-tq-Ds6"/>
                         <outlet property="menuButton" destination="Hl2-BP-AQQ" id="UGi-eS-eOH"/>
@@ -307,17 +310,21 @@
                         <outlet property="progressBar" destination="Jee-0P-imk" id="jnu-m8-srf"/>
                         <outlet property="promptBackground" destination="gdi-7v-770" id="FBU-j9-wcR"/>
                         <outlet property="promptLabel" destination="lqe-Ns-DBU" id="GFV-8A-R0R"/>
+                        <outlet property="promptLabelHeightConstraint" destination="qnv-nj-ch0" id="GqF-ks-3hx"/>
                         <outlet property="questionBackground" destination="TY8-JV-WfA" id="LLo-NL-b0u"/>
                         <outlet property="questionLabel" destination="Nab-RQ-m49" id="Q7Z-qe-FGQ"/>
                         <outlet property="questionLabelBottomConstraint" destination="LYD-kF-MuB" id="20B-bu-dja"/>
                         <outlet property="queueIcon" destination="TgI-GY-kYL" id="bQh-Zu-fUi"/>
+                        <outlet property="queueIconWidthConstraint" destination="2YE-ib-lH1" id="DZR-Wi-awg"/>
                         <outlet property="queueLabel" destination="WG4-t0-dUV" id="UZV-i3-In8"/>
                         <outlet property="revealAnswerButton" destination="Zyq-WW-fbd" id="5WQ-60-SBe"/>
                         <outlet property="subjectDetailsView" destination="wFr-RK-iSqq" id="o6J-AO-Aii"/>
                         <outlet property="submitButton" destination="ctF-hm-AxT" id="x0c-jE-ztx"/>
                         <outlet property="successRateIcon" destination="9gS-sh-cYw" id="GEi-xa-MAB"/>
+                        <outlet property="successRateIconWidthConstraint" destination="G25-7k-Q2z" id="gQC-pI-AKg"/>
                         <outlet property="successRateLabel" destination="S3x-ei-BlA" id="3gf-jQ-C32"/>
                         <outlet property="wrapUpIcon" destination="lSQ-lD-Xmj" id="dxo-60-WNd"/>
+                        <outlet property="wrapUpIconWidthConstraint" destination="QzF-E3-VsO" id="IG7-a9-NSl"/>
                         <outlet property="wrapUpLabel" destination="gcI-ex-zA1" id="66j-eq-PwY"/>
                         <segue destination="EMo-56-STG" kind="show" identifier="reviewSummary" id="nNz-lB-472"/>
                         <segue destination="K53-ny-wyx" kind="show" identifier="subjectDetails" id="ONv-x4-Pkd"/>

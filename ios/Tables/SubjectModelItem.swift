@@ -44,7 +44,7 @@ class SubjectModelItem: NSObject, TKMModelItem {
 }
 
 private let kJapaneseTextImageSize: CGFloat = 26.0
-private let kFontSize: CGFloat = 14.0
+private let kFontSize: CGFloat = UIFontMetrics.default.scaledValue(for: 14.0)
 
 class SubjectModelView: TKMModelCell {
   private weak var gradient: CAGradientLayer?
@@ -54,6 +54,8 @@ class SubjectModelView: TKMModelCell {
   @IBOutlet var readingLabel: UILabel!
   @IBOutlet var meaningLabel: UILabel!
   @IBOutlet var answerStack: UIStackView!
+
+  @IBOutlet var levelLabelWidthConstraint: NSLayoutConstraint!
 
   required init?(coder: NSCoder) {
     super.init(coder: coder)
@@ -65,6 +67,12 @@ class SubjectModelView: TKMModelCell {
   override func layoutSubviews() {
     super.layoutSubviews()
     gradient?.frame = bounds
+
+    // Make sure the level label is wide enough for two digits, even when the system
+    // font is larger than normal.
+    let minLevelLabelWidth = UIFontMetrics.default.scaledValue(for: 24.0)
+    levelLabelWidthConstraint.constant = max(levelLabelWidthConstraint.constant,
+                                             minLevelLabelWidth)
   }
 
   // MARK: - TKMModelCell
@@ -108,9 +116,6 @@ class SubjectModelView: TKMModelCell {
         readingLabel.isHidden = true
         meaningLabel.isHidden = true
       }
-
-      readingLabel.font = UIFont.systemFont(ofSize: kFontSize)
-      meaningLabel.font = UIFont.systemFont(ofSize: kFontSize)
     } else {
       switch item.subject.subjectType {
       case .radical:

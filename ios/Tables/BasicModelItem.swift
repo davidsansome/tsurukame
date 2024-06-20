@@ -19,13 +19,13 @@ class BasicModelItem: NSObject, TKMModelItem {
 
   var title: String?
   var titleFont: UIFont?
-  var numberOfTitleLines: Int = 1
+  var numberOfTitleLines: Int = 0
 
   var subtitle: String?
   var subtitleFont: UIFont?
   var subtitleTextColor: UIColor?
   var attributedSubtitle: NSAttributedString?
-  var numberOfSubtitleLines: Int = 1
+  var numberOfSubtitleLines: Int = 0
 
   var accessoryType: UITableViewCell.AccessoryType = .none
 
@@ -53,9 +53,8 @@ class BasicModelItem: NSObject, TKMModelItem {
     self.action = action
     self.tapHandler = tapHandler
 
-    if style == .subtitle {
-      subtitleFont = UIFont.preferredFont(forTextStyle: .caption2)
-    }
+    titleFont = UIFont.preferredFont(forTextStyle: .body)
+    subtitleFont = UIFont.preferredFont(forTextStyle: .subheadline)
   }
 
   // For objective-C compatibility only.

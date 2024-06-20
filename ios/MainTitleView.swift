@@ -15,21 +15,19 @@
 import Foundation
 
 class MainTitleView: UIView {
-  @IBOutlet var container: UIView!
   @IBOutlet var stackView: UIStackView!
   @IBOutlet var usernameLabel: UILabel!
   @IBOutlet var levelLabel: UILabel!
   @IBOutlet var imageContainer: UIView!
   @IBOutlet var imageView: UIImageView!
-  @IBOutlet var imageUsernameSpacer: NSLayoutConstraint!
-  @IBOutlet var centerStackViewConstraint: NSLayoutConstraint!
-  @IBOutlet var topStackViewConstraint: NSLayoutConstraint!
 
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
+  @IBOutlet var bottomConstraint: NSLayoutConstraint!
+
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
 
     let nib = UINib(nibName: "MainTitleView", bundle: Bundle(for: type(of: self)))
-    nib.instantiate(withOwner: self, options: nil)
+    let container = nib.instantiate(withOwner: self, options: nil).first as! UIView
 
     addSubview(container)
     addConstraints([
@@ -49,7 +47,7 @@ class MainTitleView: UIView {
     imageView.layer.masksToBounds = true
 
     // Set rounded corners on the user image.
-    let cornerRadius = imageView.bounds.size.height / 2
+    let cornerRadius = imageView.bounds.size.width / 2
     imageContainer.layer.cornerRadius = cornerRadius
     imageView.layer.cornerRadius = cornerRadius
 
@@ -59,10 +57,9 @@ class MainTitleView: UIView {
     if UIDevice.current.userInterfaceIdiom == .pad {
       stackView.axis = .horizontal
       stackView.spacing = 12
-      imageUsernameSpacer.constant = 12
-      topStackViewConstraint.isActive = false
-      centerStackViewConstraint.isActive = true
-      container.setNeedsLayout()
+      stackView.distribution = .fill
+      bottomConstraint.constant = 6
+      setNeedsLayout()
     }
   }
 

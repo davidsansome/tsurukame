@@ -114,9 +114,6 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       }
     }
 
-    // Configure the navigation item.
-    navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleView)
-
     updateGradientColors()
     updateHourlyTimer()
     recreateTableModel()

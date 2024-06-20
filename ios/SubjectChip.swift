@@ -122,16 +122,16 @@ class SubjectChip: UIView {
   }
 }
 
-private let kChipHeight: CGFloat = 28.0
+private let kChipHeight: CGFloat = UIFontMetrics.default.scaledValue(for: 28.0)
 private let kLabelInset: CGFloat = 6.0
 private let kLabelHeight: CGFloat = kChipHeight - kLabelInset * 2.0
 private let kChipCornerRadius: CGFloat = 6.0
 
-private let kChipHorizontalSpacing: CGFloat = 8.0
+private let kChipHorizontalSpacing: CGFloat = UIFontMetrics.default.scaledValue(for: 8.0)
 
 let kSubjectChipCollectionEdgeInsets = UIEdgeInsets(top: 8.0, left: 16.0, bottom: 8.0,
                                                     right: 16.0)
-private let kChipVerticalSpacing: CGFloat = 3.0
+private let kChipVerticalSpacing: CGFloat = UIFontMetrics.default.scaledValue(for: 3.0)
 
 private func textWidth(text: NSAttributedString, font: UIFont) -> CGFloat {
   let str = NSMutableAttributedString(attributedString: text)

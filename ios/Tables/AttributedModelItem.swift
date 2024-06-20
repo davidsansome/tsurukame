@@ -133,7 +133,6 @@ class AttributedModelCell: TKMModelCell {
     let item = baseItem as! AttributedModelItem
 
     textView.attributedText = item.text
-    textView.font = .systemFont(ofSize: UIFont.labelFontSize)
 
     if let rightButtonImage = item.rightButtonImage {
       if rightButton == nil {

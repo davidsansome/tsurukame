@@ -31,7 +31,7 @@
 }
 
 - (CGFloat)rowHeight {
-  return 22.f;
+  return [[UIFontMetrics defaultMetrics] scaledValueForValue:22.f];
 }
 
 @end
@@ -40,6 +40,10 @@
 
 - (void)updateWithItem:(TKMListSeparatorItem *)item {
   _label.text = item.label;
+
+  UIFont *boldFont = [UIFont boldSystemFontOfSize:14.0];
+  _label.font =
+      [[UIFontMetrics metricsForTextStyle:UIFontTextStyleFootnote] scaledFontForFont:boldFont];
 }
 
 - (void)didMoveToSuperview {

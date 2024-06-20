@@ -223,6 +223,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   @IBOutlet private var previousSubjectButtonHeightConstraint: NSLayoutConstraint!
   @IBOutlet private var questionLabelBottomConstraint: NSLayoutConstraint!
 
+  @IBOutlet private var successRateIconWidthConstraint: NSLayoutConstraint!
+  @IBOutlet private var doneIconWidthConstraint: NSLayoutConstraint!
+  @IBOutlet private var queueIconWidthConstraint: NSLayoutConstraint!
+  @IBOutlet private var wrapUpIconWidthConstraint: NSLayoutConstraint!
+  @IBOutlet private var promptLabelHeightConstraint: NSLayoutConstraint!
+  @IBOutlet private var answerFieldHeightConstraint: NSLayoutConstraint!
+
   required init?(coder: NSCoder) {
     super.init(coder: coder)
     kanaInput = TKMKanaInput(delegate: self)
@@ -312,18 +319,39 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     leftSwipeRecognizer.require(toFail: shortPressRecognizer)
     rightSwipeRecognizer.require(toFail: shortPressRecognizer)
 
+    resizeViewsForFontSize()
     viewDidLayoutSubviews()
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     // Redraw the background gradients if dark/light mode changed.
-    if let previousTraitCollection = previousTraitCollection,
-       previousTraitCollection.userInterfaceStyle != traitCollection.userInterfaceStyle {
-      questionBackground
-        .colors = TKMStyle.gradient(forAssignment: session.activeAssignment)
-      promptBackground.colors = session.activeTaskType == .meaning ? TKMStyle
-        .meaningGradient : TKMStyle.readingGradient
+    if let previousTraitCollection = previousTraitCollection {
+      if previousTraitCollection.userInterfaceStyle != traitCollection.userInterfaceStyle {
+        questionBackground
+          .colors = TKMStyle.gradient(forAssignment: session.activeAssignment)
+        promptBackground.colors = session.activeTaskType == .meaning ? TKMStyle
+          .meaningGradient : TKMStyle.readingGradient
+      }
+      if previousTraitCollection.preferredContentSizeCategory != traitCollection
+        .preferredContentSizeCategory {
+        resizeViewsForFontSize()
+      }
     }
+  }
+
+  func resizeViewsForFontSize() {
+    // Scale the icons based on the system font size.
+    let iconSize = UIFontMetrics(forTextStyle: .caption1).scaledValue(for: 16.0)
+    successRateIconWidthConstraint.constant = iconSize
+    doneIconWidthConstraint.constant = iconSize
+    queueIconWidthConstraint.constant = iconSize
+    wrapUpIconWidthConstraint.constant = iconSize
+
+    // Scale the prompt and answer field heights.
+    promptLabelHeightConstraint.constant = UIFontMetrics(forTextStyle: .subheadline)
+      .scaledValue(for: 40.0)
+    answerFieldHeightConstraint.constant =
+      UIFontMetrics(forTextStyle: .title2).scaledValue(for: 64.0)
   }
 
   override func viewDidLayoutSubviews() {

@@ -113,8 +113,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   required init?(coder: NSCoder) {
     super.init(coder: coder)
-    sectionHeaderHeight = kSectionHeaderHeight
-    estimatedSectionHeaderHeight = kSectionHeaderHeight
+
+    let scaledSectionHeaderHeight = UIFontMetrics.default.scaledValue(for: kSectionHeaderHeight)
+
+    sectionHeaderHeight = scaledSectionHeaderHeight
+    estimatedSectionHeaderHeight = scaledSectionHeaderHeight
     sectionFooterHeight = kSectionFooterHeight
     estimatedSectionFooterHeight = kSectionFooterHeight
   }
@@ -205,6 +208,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     // Remove the synonyms from the text.
     item.rightButtonImage = nil
     item.text = renderMeanings(subject: subject, studyMaterials: nil)
+      .string(withFontSize: kFontSize)
     cell.update(with: item)
     reloadRows(at: [itemIndexPath], with: .fade)
 
