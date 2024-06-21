@@ -1,0 +1,155 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+before_all do
+  setup_circle_ci
+  ensure_git_status_clean
+
+  version_number = get_version_number(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target: "Tsurukame",
+  )
+  build_number = number_of_commits()
+  increment_build_number(build_number: build_number)
+end
+
+lane :test do
+  run_tests(
+    scheme: "Tsurukame",
+    include_simulator_logs: true,
+  )
+end
+
+lane :new_version do
+  increment_version_number(
+    bump_type: "minor",
+    xcodeproj: "Tsurukame.xcodeproj"
+  )
+  version_number = lane_context[SharedValues::VERSION_NUMBER]
+  build_number = lane_context[SharedValues::BUILD_NUMBER]
+  commit_version_bump(
+    xcodeproj: "Tsurukame.xcodeproj",
+    message: "Version bump to #{version_number}-#{build_number}",
+  )
+end
+
+lane :beta do
+  match(
+    type: "appstore",
+    api_key_path: "fastlane/app_store_api_key.json",
+  )
+
+  update_code_signing_settings(
+    code_sign_identity: "iPhone Distribution",
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame$",
+    profile:ENV["sigh_com.davidsansome.wanikani_appstore_profile-path"],
+    build_configuration: "Release",
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame Complication$",
+    profile:ENV["sigh_com.davidsansome.wanikani.watchapp_appstore_profile-path"],
+    build_configuration: "Release",
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame Complication Extension$",
+    profile:ENV["sigh_com.davidsansome.wanikani.watchapp.c_appstore_profile-path"],
+    build_configuration: "Release",
+  )
+
+  build_app(
+    scheme: "Tsurukame",
+  )
+
+  # Generate the changelog from git commits since the last tag.
+  changelog = changelog_from_git_commits(pretty: "format:%s")
+  upload_to_testflight(
+    changelog: changelog,
+    distribute_external: true,
+    groups: "Testers",
+    demo_account_required: true,
+    reject_build_waiting_for_review: true,
+    api_key_path: "fastlane/app_store_api_key.json",
+  )
+end
+
+lane :release do
+  match(
+    type: "appstore",
+    api_key_path: "fastlane/app_store_api_key.json",
+  )
+
+  update_code_signing_settings(
+    code_sign_identity: "iPhone Distribution",
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame$",
+    profile:ENV["sigh_com.davidsansome.wanikani_appstore_profile-path"],
+    build_configuration: "Release",
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame Complication$",
+    profile:ENV["sigh_com.davidsansome.wanikani.watchapp_appstore_profile-path"],
+    build_configuration: "Release",
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^Tsurukame Complication Extension$",
+    profile:ENV["sigh_com.davidsansome.wanikani.watchapp.c_appstore_profile-path"],
+    build_configuration: "Release",
+  )
+
+  build_app(
+    scheme: "Tsurukame",
+  )
+
+  upload_to_app_store(
+    app_icon: "Resources/appicon1024.png",
+    submit_for_review: true,
+    automatic_release: true,
+    phased_release: true,
+    api_key_path: "fastlane/app_store_api_key.json",
+    precheck_include_in_app_purchases: false,
+    submission_information: {
+      add_id_info_uses_idfa: false
+    }
+  )
+  tag_release
+end
+
+lane :tag_release do
+  version_number = lane_context[SharedValues::VERSION_NUMBER]
+  build_number = lane_context[SharedValues::BUILD_NUMBER]
+  add_git_tag(tag: "#{version_number}-#{build_number}")
+end
+
+after_all do
+  clean_build_artifacts
+  reset_git_repo(disregard_gitignore: false)
+end

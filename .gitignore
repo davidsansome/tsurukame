@@ -1,0 +1,17 @@
+/data
+/data.bin
+.DS_Store
+/ios/build/
+/ios/SwiftFormatTools/*
+!/ios/SwiftFormatTools/*.swift
+/sqlite3-extension/proto.dylib
+/sqlite3-extension/proto.so
+/sqlite3-extension/wanikani.pb.*
+**/xcuserdata/
+**/xcshareddata/
+!/ios/Tsurukame.xcodeproj/xcshareddata/
+!/ios/Tsurukame.xcworkspace/xcshareddata/
+/ios/*.ipa
+/ios/*.dSYM.zip
+/workspace
+/ios/gc_keys.json

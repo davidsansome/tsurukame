@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dLz-hZ-OJ5">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Lessons View Controller-->
+        <scene sceneID="7xY-aI-FVw">
+            <objects>
+                <viewController id="dLz-hZ-OJ5" customClass="LessonsViewController" customModule="Tsurukame" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="o3G-Oa-y1B">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view verifyAmbiguity="ignoreSizes" contentMode="scaleToFill" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lL1-qw-PnD" customClass="LessonsPageControl" customModule="Tsurukame">
+                                <rect key="frame" x="0.0" y="519" width="414" height="128"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tcr-27-sa4">
+                                <rect key="frame" x="0.0" y="44" width="70" height="56"/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <inset key="contentEdgeInsets" minX="6" minY="16" maxX="6" maxY="16"/>
+                                <state key="normal" title="Back" image="back">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTapBackButtonWithSender:" destination="dLz-hZ-OJ5" eventType="touchUpInside" id="UI3-wj-Ic0"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="J2G-4f-QDb"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="lL1-qw-PnD" firstAttribute="trailing" secondItem="J2G-4f-QDb" secondAttribute="trailing" id="T2M-mm-pM2"/>
+                            <constraint firstItem="Tcr-27-sa4" firstAttribute="leading" secondItem="J2G-4f-QDb" secondAttribute="leading" id="Xau-aQ-Qhp"/>
+                            <constraint firstItem="lL1-qw-PnD" firstAttribute="leading" secondItem="J2G-4f-QDb" secondAttribute="leading" id="b9j-Y4-uXi"/>
+                            <constraint firstItem="Tcr-27-sa4" firstAttribute="top" secondItem="J2G-4f-QDb" secondAttribute="top" id="dRH-IA-nOk"/>
+                            <constraint firstItem="J2G-4f-QDb" firstAttribute="bottom" secondItem="lL1-qw-PnD" secondAttribute="bottom" id="tTJ-Wg-wub"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="PDT-ge-hmH"/>
+                    <connections>
+                        <outlet property="backButton" destination="Tcr-27-sa4" id="gta-G2-R6W"/>
+                        <outlet property="pageControl" destination="lL1-qw-PnD" id="MLC-d1-PGx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="K9R-0v-BC7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="546" y="176"/>
+        </scene>
+        <!--reviewViewController-->
+        <scene sceneID="4TC-lk-Va4">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="reviewViewController" storyboardName="Reviews" referencedIdentifier="reviewViewController" id="aGY-c3-LWF" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ygp-nc-GWZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="331" y="-186"/>
+        </scene>
+        <!--subjectDetailsViewController-->
+        <scene sceneID="gE3-MY-hQr">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="subjectDetailsViewController" storyboardName="Subjects" referencedIdentifier="subjectDetailsViewController" id="CRe-mi-g80" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jXJ-2K-5gJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="73" y="186"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="back" width="24" height="24"/>
+    </resources>
+</document>

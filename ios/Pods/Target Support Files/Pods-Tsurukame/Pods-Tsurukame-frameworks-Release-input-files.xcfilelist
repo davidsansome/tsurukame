@@ -1,0 +1,5 @@
+${PODS_ROOT}/Target Support Files/Pods-Tsurukame/Pods-Tsurukame-frameworks.sh
+${BUILT_PRODUCTS_DIR}/Haneke/Haneke.framework
+${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework
+${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework
+${BUILT_PRODUCTS_DIR}/MMDrawerController/MMDrawerController.framework

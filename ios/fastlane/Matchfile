@@ -1,0 +1,13 @@
+google_cloud_bucket_name("tsurukame-certificates")
+google_cloud_project_id("tsurukame-wk")
+
+storage_mode("google_cloud")
+
+type("development") # The default type, can be: appstore, adhoc, enterprise or development
+
+app_identifier([
+  CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier),
+  "com.davidsansome.wanikani.watchapp",
+  "com.davidsansome.wanikani.watchapp.c",
+])
+username(CredentialsManager::AppfileConfig.try_fetch_value(:apple_id))

@@ -1,0 +1,69 @@
+version: 2.1
+orbs:
+  gcp-cli: circleci/gcp-cli@1.8.4
+
+jobs:
+  test-golang:
+    docker:
+      - image: cimg/go:1.22.1
+    steps:
+      - checkout
+      - run: go build ./...
+      - run: go test ./...
+
+  test-ios:
+    macos:
+      xcode: 15.3.0
+    environment:
+      FL_OUTPUT_DIR: output
+    steps:
+      - checkout
+      - run: sudo defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
+      - run: rm ~/.ssh/id_rsa || true
+      - run: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
+      - attach_workspace:
+          at: workspace
+      - run:
+          command: bundle install
+          working_directory: ios
+      - run:
+          command: bundle exec fastlane test
+          working_directory: ios
+      # Upload iOS simulator crash reports.
+      - store_artifacts:
+          path: ~/Library/Logs/DiagnosticReports
+      # Upload fastlane test logs.
+      - store_artifacts:
+          path: ios/output
+      - store_test_results:
+          path: ios/output/scan
+
+  release-testflight:
+    macos:
+      xcode: 15.3.0
+    steps:
+      - checkout
+      - run: sudo defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
+      - run: rm ~/.ssh/id_rsa || true
+      - run: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Install certificate service account
+          command: echo $CERTIFICATE_SERVICE_ACCOUNT > ios/fastlane/gc_keys.json
+      - run:
+          name: Install App Store API key
+          command: echo $APP_STORE_API_KEY_JSON > ios/fastlane/app_store_api_key.json
+      - run:
+          command: bundle install
+          working_directory: ios
+      - run:
+          command: bundle exec fastlane beta
+          working_directory: ios
+
+workflows:
+  version: 2
+  all:
+    jobs:
+      - test-golang
+      - test-ios
