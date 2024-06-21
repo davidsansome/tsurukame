@@ -1,6 +1,0 @@
-framework module Pods_FontScreenshotter_FontScreenshotterUITests {
-  umbrella header "Pods-FontScreenshotter-FontScreenshotterUITests-umbrella.h"
-
-  export *
-  module * { export * }
-}

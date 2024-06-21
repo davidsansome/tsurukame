@@ -1,9 +1,0 @@
-Learn Japanese Kanji and Vocabulary using WaniKani's Spaced Repetition System.
-This is a native iOS app.
-
-* It's super-fast.  All the mnemonics are pre-loaded on your device so there's no waiting.
-* Do reviews and lessons offline.  Your progress will be sync'd when you're online again.
-* Graph showing your upcoming reviews.
-* Graphs showing your progress on current level radicals, kanji and vocabulary.
-* Options to ignore typos and add synonyms during reviews.
-* Options to sort reviews by SRS level and Wanikani level.
