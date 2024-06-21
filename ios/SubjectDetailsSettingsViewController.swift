@@ -33,14 +33,12 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
   private func rerender() {
     let model = MutableTableModel(tableView: tableView)
 
-    let katakanaItem = SwitchModelItem(style: .subtitle,
-                                       title: "Use Katakana for Onyomi",
-                                       subtitle: "Show Onyomi kanji readings in Katakana instead of Hiragana",
-                                       on: Settings.useKatakanaForOnyomi,
-                                       target: self,
-                                       action: #selector(useKatakanaForOnyomiSwitchChanged(_:)))
-    katakanaItem.numberOfSubtitleLines = 0
-    model.add(katakanaItem)
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Use Katakana for Onyomi",
+                              subtitle: "Show Onyomi kanji readings in Katakana instead of Hiragana",
+                              on: Settings.useKatakanaForOnyomi,
+                              target: self,
+                              action: #selector(useKatakanaForOnyomiSwitchChanged(_:))))
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Show all kanji readings",
                               subtitle: "Primary reading(s) will be shown in bold",
@@ -68,14 +66,12 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
                                 action: #selector(showArtworkChanged(_:))))
     }
 
-    let currentLevelGraphItem = SwitchModelItem(style: .subtitle,
-                                                title: "Keep current level graph",
-                                                subtitle: "Instead of showing the next level's graph when you finish the kanji for a given level, keep showing the same level completion graph until all radicals, kanji, and vocabulary have gotten to Guru or higher",
-                                                on: Settings.showPreviousLevelGraph,
-                                                target: self,
-                                                action: #selector(levelGraphSwitchChanged(_:)))
-    currentLevelGraphItem.numberOfSubtitleLines = 0
-    model.add(currentLevelGraphItem)
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Keep current level graph",
+                              subtitle: "Instead of showing the next level's graph when you finish the kanji for a given level, keep showing the same level completion graph until all radicals, kanji, and vocabulary have gotten to Guru or higher",
+                              on: Settings.showPreviousLevelGraph,
+                              target: self,
+                              action: #selector(levelGraphSwitchChanged(_:))))
 
     self.model = model
     model.reloadTable()

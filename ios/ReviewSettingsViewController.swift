@@ -94,29 +94,23 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                               action: #selector(showMinutesForNextLevelUpReview(_:))))
 
     model.add(section: "Answers & marking")
-    let keyboardSwitchItem = SwitchModelItem(style: .subtitle,
-                                             title: "Switch to Japanese keyboard",
-                                             subtitle: "Automatically switch to a Japanese keyboard to type reading answers",
-                                             on: Settings.autoSwitchKeyboard,
-                                             target: self,
-                                             action: #selector(autoSwitchKeyboardSwitchChanged(_:)))
-    keyboardSwitchItem.numberOfSubtitleLines = 0
-    model.add(keyboardSwitchItem)
-    let revealAnswerItem = SwitchModelItem(style: .subtitle,
-                                           title: "Reveal answer automatically",
-                                           subtitle: nil,
-                                           on: Settings.showAnswerImmediately,
-                                           target: self,
-                                           action: #selector(showAnswerImmediatelySwitchChanged(_:)))
-    revealAnswerItem.numberOfSubtitleLines = 0
-    model.add(revealAnswerItem)
-    let fullAnswerItem = SwitchModelItem(style: .subtitle,
-                                         title: "Reveal full answer",
-                                         subtitle: "Instead of hiding behind a 'Show more information' button",
-                                         on: Settings.showFullAnswer, target: self,
-                                         action: #selector(showFullAnswerSwitchChanged(_:)))
-    fullAnswerItem.numberOfSubtitleLines = 0
-    model.add(fullAnswerItem)
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Switch to Japanese keyboard",
+                              subtitle: "Automatically switch to a Japanese keyboard to type reading answers",
+                              on: Settings.autoSwitchKeyboard,
+                              target: self,
+                              action: #selector(autoSwitchKeyboardSwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Reveal answer automatically",
+                              subtitle: nil,
+                              on: Settings.showAnswerImmediately,
+                              target: self,
+                              action: #selector(showAnswerImmediatelySwitchChanged(_:))))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Reveal full answer",
+                              subtitle: "Instead of hiding behind a 'Show more information' button",
+                              on: Settings.showFullAnswer, target: self,
+                              action: #selector(showFullAnswerSwitchChanged(_:))))
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Exact match",
                               subtitle: "Requires typing in answers exactly correct",
@@ -136,15 +130,13 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                               target: self,
                               action: #selector(allowSkippingReviewsSwitchChanged(_:))))
 
-    let minimizeReviewPenaltyItem = SwitchModelItem(style: .subtitle,
-                                                    title: "Minimize review penalty",
-                                                    subtitle:
-                                                    "Treat reviews answered incorrect multiple times as if answered incorrect once",
-                                                    on: Settings.minimizeReviewPenalty,
-                                                    target: self,
-                                                    action: #selector(minimizeReviewPenaltySwitchChanged(_:)))
-    minimizeReviewPenaltyItem.numberOfSubtitleLines = 0
-    model.add(minimizeReviewPenaltyItem)
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Minimize review penalty",
+                              subtitle:
+                              "Treat reviews answered incorrect multiple times as if answered incorrect once",
+                              on: Settings.minimizeReviewPenalty,
+                              target: self,
+                              action: #selector(minimizeReviewPenaltySwitchChanged(_:))))
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Anki mode",
                               subtitle: "Do reviews without typing answers",
@@ -158,8 +150,6 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                                         on: Settings.ankiModeCombineReadingMeaning,
                                                         target: self,
                                                         action: #selector(ankiModeCombineReadingMeaningSwitchChanged(_:)))
-
-    ankiModeCombineReadingMeaning.numberOfSubtitleLines = 0
     ankiModeCombineReadingMeaningIndexPath = model.add(ankiModeCombineReadingMeaning,
                                                        hidden:!Settings.ankiMode)
 

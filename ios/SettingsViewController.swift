@@ -70,23 +70,18 @@ class SettingsViewController: UITableViewController, TKMViewController {
         .add(BasicModelItem(style: .value1, title: "Version", subtitle: version,
                             accessoryType: .none))
     }
-    let exportLocalDatabaseItem = BasicModelItem(style: .subtitle,
-                                                 title: "Export local database",
-                                                 subtitle: "To attach to bug reports or email to the developer",
-                                                 accessoryType: .disclosureIndicator,
-                                                 target: self,
-                                                 action: #selector(didTapSendBugReport(_:)))
-    exportLocalDatabaseItem.numberOfSubtitleLines = 0
-    model.add(exportLocalDatabaseItem)
-
-    let clearImageCacheItem = BasicModelItem(style: .subtitle,
-                                             title: "Clear avatar image cache",
-                                             subtitle: "If you are having issues with your avatar not loading, try clearing the image cache.",
-                                             accessoryType: .none,
-                                             target: self,
-                                             action: #selector(didTapClearImageCache(_:)))
-    clearImageCacheItem.numberOfSubtitleLines = 0
-    model.add(clearImageCacheItem)
+    model.add(BasicModelItem(style: .subtitle,
+                             title: "Export local database",
+                             subtitle: "To attach to bug reports or email to the developer",
+                             accessoryType: .disclosureIndicator,
+                             target: self,
+                             action: #selector(didTapSendBugReport(_:))))
+    model.add(BasicModelItem(style: .subtitle,
+                             title: "Clear avatar image cache",
+                             subtitle: "If you are having issues with your avatar not loading, try clearing the image cache.",
+                             accessoryType: .none,
+                             target: self,
+                             action: #selector(didTapClearImageCache(_:))))
 
     model.addSection()
     let logOutItem = BasicModelItem(style: .default,

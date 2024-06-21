@@ -57,15 +57,13 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
                              accessoryType: .disclosureIndicator,
                              target: self,
                              action: #selector(didTapApprenticeLessonsLimit(_:))))
-    let kanaOnlyVocabSwitch = SwitchModelItem(style: .subtitle,
-                                              title: "Show kana-only vocabulary",
-                                              subtitle: "Include lessons for kana-only vocabulary" +
-                                                " that were added in May 2023",
-                                              on: Settings.showKanaOnlyVocab,
-                                              target: self,
-                                              action: #selector(showKanaOnlyVocabChanged(_:)))
-    kanaOnlyVocabSwitch.numberOfSubtitleLines = 0
-    model.add(kanaOnlyVocabSwitch)
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Show kana-only vocabulary",
+                              subtitle: "Include lessons for kana-only vocabulary" +
+                                " that were added in May 2023",
+                              on: Settings.showKanaOnlyVocab,
+                              target: self,
+                              action: #selector(showKanaOnlyVocabChanged(_:))))
 
     self.model = model
     model.reloadTable()
