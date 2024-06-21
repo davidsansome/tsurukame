@@ -467,11 +467,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    switch segue.identifier {
-    case "reviewSummary":
+    switch StoryboardSegue.Review(segue) {
+    case .reviewSummary:
       let vc = segue.destination as! ReviewSummaryViewController
       vc.setup(services: services, items: session.completedReviews)
-    case "subjectDetails":
+    case .subjectDetails:
       let vc = segue.destination as! SubjectDetailsViewController
       vc.setup(services: services, subject: sender as! TKMSubject)
     default:
@@ -480,7 +480,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   @objc public func endReviewSession() {
-    performSegue(withIdentifier: "reviewSummary", sender: self)
+    perform(segue: StoryboardSegue.Review.reviewSummary, sender: self)
   }
 
   // MARK: - Setup
@@ -887,7 +887,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   @IBAction func previousSubjectButtonPressed(_: Any) {
-    performSegue(withIdentifier: "subjectDetails", sender: previousSubject)
+    perform(segue: StoryboardSegue.Review.subjectDetails, sender: previousSubject)
   }
 
   // MARK: - Question label fonts
@@ -1233,7 +1233,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // MARK: - SubjectDelegate
 
   func didTapSubject(_ subject: TKMSubject) {
-    performSegue(withIdentifier: "subjectDetails", sender: subject)
+    perform(segue: StoryboardSegue.Review.subjectDetails, sender: subject)
   }
 
   // MARK: - Keyboard navigation

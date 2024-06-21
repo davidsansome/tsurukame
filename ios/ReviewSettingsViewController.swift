@@ -192,12 +192,12 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
   }
 
   override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
-    switch segue.identifier {
-    case "fonts":
+    switch StoryboardSegue.ReviewSettings(segue) {
+    case .fonts:
       let vc = segue.destination as! FontsViewController
       vc.setup(services: services)
 
-    case "offlineAudio":
+    case .offlineAudio:
       let vc = segue.destination as! OfflineAudioViewController
       vc.setup(services: services)
 
@@ -323,7 +323,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
   }
 
   @objc private func didTapFonts(_: BasicModelItem) {
-    performSegue(withIdentifier: "fonts", sender: self)
+    perform(segue: StoryboardSegue.ReviewSettings.fonts, sender: self)
   }
 
   @objc private func didTapTaskOrder(_: BasicModelItem) {
@@ -331,7 +331,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
   }
 
   @objc private func didTapOfflineAudio(_: Any?) {
-    performSegue(withIdentifier: "offlineAudio", sender: self)
+    perform(segue: StoryboardSegue.ReviewSettings.offlineAudio, sender: self)
   }
 }
 

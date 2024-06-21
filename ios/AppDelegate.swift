@@ -63,13 +63,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
       if services.localCachingClient.availableReviewCount > 0 {
         // If the user has 0 reviews proceed to the main view controller. If they have
         // 1+ reviews then launch directly into reviews.
-        mainVC.performSegue(withIdentifier: "startReviews", sender: nil)
+        mainVC.perform(segue: StoryboardSegue.Main.startReviews)
       }
     } else if userActivityType == SiriShortcutHelper.ShortcutType.lessons.rawValue {
       if services.localCachingClient.availableLessonCount > 0 {
         // If the user has 0 lessons proceed to the main view controller. If they have
         // 1+ lessons pending then launch directly into lessons.
-        mainVC.performSegue(withIdentifier: "startLessons", sender: nil)
+        mainVC.perform(segue: StoryboardSegue.Main.startLessons)
       }
     }
     return true
@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
   }
 
   private func pushLoginViewController() {
-    let vc = storyboard.instantiateViewController(withIdentifier: "login") as! LoginViewController
+    let vc = StoryboardScene.Login.initialScene.instantiate()
     vc.delegate = self
     navigationController.setViewControllers([vc], animated: false)
   }
@@ -104,8 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
     }
 
     let pushMainViewController = { () in
-      let vc = self.storyboard
-        .instantiateViewController(withIdentifier: "main") as! MainViewController
+      let vc = StoryboardScene.Main.initialScene.instantiate()
       vc.setup(services: self.services)
       self.navigationController.setViewControllers([vc], animated: animated)
     }

@@ -44,22 +44,22 @@ class SettingsViewController: UITableViewController, TKMViewController {
     model.add(BasicModelItem(style: .default,
                              title: "Appearance & Notifications",
                              accessoryType: .disclosureIndicator) { [unowned self] in
-        self.performSegue(withIdentifier: "appSettings", sender: self)
+        self.perform(segue: StoryboardSegue.Settings.appSettings, sender: self)
       })
     model.add(BasicModelItem(style: .default,
                              title: "Lessons",
                              accessoryType: .disclosureIndicator) { [unowned self] in
-        self.performSegue(withIdentifier: "lessonSettings", sender: self)
+        self.perform(segue: StoryboardSegue.Settings.lessonSettings, sender: self)
       })
     model.add(BasicModelItem(style: .default,
                              title: "Reviews",
                              accessoryType: .disclosureIndicator) { [unowned self] in
-        self.performSegue(withIdentifier: "reviewSettings", sender: self)
+        self.perform(segue: StoryboardSegue.Settings.reviewSettings, sender: self)
       })
     model.add(BasicModelItem(style: .default,
                              title: "Radicals, Kanji & Vocabulary",
                              accessoryType: .disclosureIndicator) { [unowned self] in
-        self.performSegue(withIdentifier: "subjectDetailsSettings", sender: self)
+        self.perform(segue: StoryboardSegue.Settings.subjectDetailsSettings, sender: self)
       })
 
     model.add(section: "Diagnostics")
@@ -98,8 +98,8 @@ class SettingsViewController: UITableViewController, TKMViewController {
   }
 
   override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
-    switch segue.identifier {
-    case "reviewSettings":
+    switch StoryboardSegue.Settings(segue) {
+    case .reviewSettings:
       let vc = segue.destination as! ReviewSettingsViewController
       vc.setup(services: services)
 

@@ -83,8 +83,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     tableView.refreshControl = refreshControl
 
     // Create the search results view controller.
-    let searchResultsVC = storyboard?
-      .instantiateViewController(withIdentifier: "searchResults") as! SearchResultViewController
+    let searchResultsVC = StoryboardScene.SearchResult.initialScene.instantiate()
     searchResultsVC.setup(services: services, delegate: self)
     searchResultsViewController = searchResultsVC
 
@@ -264,7 +263,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
         item.tapHandler = { [weak self] in
           if let self = self {
             self.selectedSrsStageCategory = category
-            self.performSegue(withIdentifier: "viewItemsInSrsCategory", sender: self)
+            self.perform(segue: StoryboardSegue.Main.viewItemsInSrsCategory, sender: self)
           }
         }
       }
@@ -293,7 +292,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
                              accessoryType: .disclosureIndicator) { [weak self] in
         if let self = self {
           self.selectedSubjectCatalogLevel = level
-          self.performSegue(withIdentifier: "showRemaining", sender: self)
+          self.perform(segue: StoryboardSegue.Main.showRemaining, sender: self)
         }
       })
     model.add(BasicModelItem(style: .default,
@@ -302,7 +301,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
                              accessoryType: .disclosureIndicator) { [weak self] in
         if let self = self {
           self.selectedSubjectCatalogLevel = level
-          self.performSegue(withIdentifier: "showAll", sender: self)
+          self.perform(segue: StoryboardSegue.Main.showAll, sender: self)
         }
       })
   }
@@ -358,8 +357,8 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   }
 
   override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
-    switch segue.identifier {
-    case "startReviews":
+    switch StoryboardSegue.Main(segue) {
+    case .startReviews:
       let assignments = services.localCachingClient.getAllAssignments()
       let items = ReviewItem.readyForReview(assignments: assignments,
                                             localCachingClient: services.localCachingClient)
@@ -370,7 +369,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       let vc = segue.destination as! ReviewContainerViewController
       vc.setup(services: services, items: items)
 
-    case "startRecentMistakeReviews":
+    case .startRecentMistakeReviews:
       let assignments = services.localCachingClient.getAllRecentMistakeAssignments()
       let items = ReviewItem.readyForRecentMistakesReview(assignments: assignments,
                                                           localCachingClient: services
@@ -382,7 +381,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       let vc = segue.destination as! ReviewContainerViewController
       vc.setup(services: services, items: items, isPracticeSession: true)
 
-    case "startRecentLessonReviews":
+    case .startRecentLessonReviews:
       let assignments = services.localCachingClient.getAllRecentLessonAssignments()
       let items = ReviewItem.readyForRecentLessonReview(assignments: assignments,
                                                         localCachingClient: services
@@ -394,7 +393,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       let vc = segue.destination as! ReviewContainerViewController
       vc.setup(services: services, items: items, isPracticeSession: true)
 
-    case "startBurnedItemReviews":
+    case .startBurnedItemReviews:
       let assignments = services.localCachingClient.getAllBurnedAssignments()
       let items = ReviewItem.readyForBurnedReview(assignments: assignments,
                                                   localCachingClient: services
@@ -406,7 +405,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       let vc = segue.destination as! ReviewContainerViewController
       vc.setup(services: services, items: items, isPracticeSession: true)
 
-    case "startLessons":
+    case .startLessons:
       let assignments = services.localCachingClient.getAllAssignments()
       var items = ReviewItem.readyForLessons(assignments: assignments,
                                              localCachingClient: services.localCachingClient)
@@ -422,27 +421,27 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       let vc = segue.destination as! LessonsViewController
       vc.setup(services: services, items: items)
 
-    case "showLessonPicker":
+    case .showLessonPicker:
       let vc = segue.destination as! LessonPickerViewController
       vc.setup(services: services)
 
-    case "showAll":
+    case .showAll:
       let vc = segue.destination as! SubjectCatalogueViewController
       vc.setup(services: services, level: selectedSubjectCatalogLevel)
 
-    case "showRemaining":
+    case .showRemaining:
       let vc = segue.destination as! SubjectsRemainingViewController
       vc.setup(services: services, level: selectedSubjectCatalogLevel)
 
-    case "settings":
+    case .settings:
       let vc = segue.destination as! SettingsViewController
       vc.setup(services: services)
 
-    case "tableForecast":
+    case .tableForecast:
       let vc = segue.destination as! UpcomingReviewsViewController
       vc.setup(services: services)
 
-    case "viewItemsInSrsCategory":
+    case .viewItemsInSrsCategory:
       let vc = segue.destination as! SubjectsByCategoryViewController
       vc.setup(services: services, category: selectedSrsStageCategory,
                showAnswers: Settings.subjectCatalogueViewShowAnswers)
@@ -463,7 +462,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   }
 
   @IBAction func settingsButtonTapped() {
-    performSegue(withIdentifier: "settings", sender: self)
+    perform(segue: StoryboardSegue.Main.settings, sender: self)
   }
 
   // MARK: - Refresh on the hour in the foreground
@@ -636,7 +635,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       return
     }
 
-    let vc = storyboard?.instantiateViewController(withIdentifier: "login") as! LoginViewController
+    let vc = StoryboardScene.Login.initialScene.instantiate()
     vc.delegate = self
     if !Settings.userEmailAddress.isEmpty {
       vc.forcedEmail = Settings.userEmailAddress
@@ -660,8 +659,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   // MARK: - Search
 
   func searchResultSelected(subject: TKMSubject) {
-    let vc = storyboard?
-      .instantiateViewController(withIdentifier: "subjectDetailsViewController") as! SubjectDetailsViewController
+    let vc = StoryboardScene.SubjectDetails.initialScene.instantiate()
     vc.setup(services: services, subject: subject, showHints: true, hideBackButton: false, index: 0)
     searchController.dismiss(animated: true) {
       self.navigationController?.pushViewController(vc, animated: true)
@@ -671,31 +669,31 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   // MARK: - Keyboard navigation
 
   @objc func startReviews() {
-    performSegue(withIdentifier: "startReviews", sender: self)
+    perform(segue: StoryboardSegue.Main.startReviews, sender: self)
   }
 
   @objc func startRecentMistakeReviews() {
-    performSegue(withIdentifier: "startRecentMistakeReviews", sender: self)
+    perform(segue: StoryboardSegue.Main.startRecentMistakeReviews, sender: self)
   }
 
   @objc func startRecentLessonReviews() {
-    performSegue(withIdentifier: "startRecentLessonReviews", sender: self)
+    perform(segue: StoryboardSegue.Main.startRecentLessonReviews, sender: self)
   }
 
   @objc func startBurnedItemReviews() {
-    performSegue(withIdentifier: "startBurnedItemReviews", sender: self)
+    perform(segue: StoryboardSegue.Main.startBurnedItemReviews, sender: self)
   }
 
   @objc func startLessons() {
-    performSegue(withIdentifier: "startLessons", sender: self)
+    perform(segue: StoryboardSegue.Main.startLessons, sender: self)
   }
 
   @objc func showLessonPicker() {
-    performSegue(withIdentifier: "showLessonPicker", sender: self)
+    perform(segue: StoryboardSegue.Main.showLessonPicker, sender: self)
   }
 
   @objc func showTableForecast() {
-    performSegue(withIdentifier: "tableForecast", sender: self)
+    perform(segue: StoryboardSegue.Main.tableForecast, sender: self)
   }
 
   override var keyCommands: [UIKeyCommand]? {

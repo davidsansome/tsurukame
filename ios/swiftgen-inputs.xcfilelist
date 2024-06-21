@@ -1,0 +1,14 @@
+# ib
+$(SRCROOT)/Resources/LaunchScreen.storyboard
+$(SRCROOT)/Resources/Lessons.storyboard
+$(SRCROOT)/Resources/Login.storyboard
+$(SRCROOT)/Resources/Main.storyboard
+$(SRCROOT)/Resources/Navigation.storyboard
+$(SRCROOT)/Resources/Reviews.storyboard
+$(SRCROOT)/Resources/SearchResult.storyboard
+$(SRCROOT)/Resources/Settings.storyboard
+$(SRCROOT)/Resources/SubjectCatalogue.storyboard
+$(SRCROOT)/Resources/SubjectDetails.storyboard
+$(SRCROOT)/Resources/SubjectsByCategory.storyboard
+$(SRCROOT)/Resources/SubjectsByLevel.storyboard
+$(SRCROOT)/Resources/SubjectsRemaining.storyboard

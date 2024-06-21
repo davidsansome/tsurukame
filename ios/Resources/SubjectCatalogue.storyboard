@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="XWq-bF-0D1">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+    </dependencies>
+    <scenes>
+        <!--Subject Catalogue View Controller-->
+        <scene sceneID="diY-fN-oc5">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="XWq-bF-0D1" customClass="SubjectCatalogueViewController" customModule="Tsurukame" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Sdh-8L-T4k"/>
+                </pageViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0ft-nE-WU4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1362" y="834"/>
+        </scene>
+    </scenes>
+</document>

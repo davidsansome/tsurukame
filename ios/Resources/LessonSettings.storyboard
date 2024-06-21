@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="LBi-sQ-h7o">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Lessons-->
+        <scene sceneID="3UZ-NE-o8y">
+            <objects>
+                <tableViewController id="LBi-sQ-h7o" customClass="LessonSettingsViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="WCj-iQ-xsl">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="LBi-sQ-h7o" id="4zG-US-lAh"/>
+                            <outlet property="delegate" destination="LBi-sQ-h7o" id="Gr0-Kb-wcK"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Lessons" id="lEF-Wy-dmt"/>
+                    <connections>
+                        <segue destination="eWn-Wm-Qij" kind="show" identifier="lessonOrder" id="983-QJ-K2w"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="K2F-bW-QtS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1113" y="45"/>
+        </scene>
+        <!--LessonOrder-->
+        <scene sceneID="ybc-Tq-Ael">
+            <objects>
+                <viewControllerPlaceholder storyboardName="LessonOrder" id="eWn-Wm-Qij" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zIF-Qt-Gaa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-294" y="45"/>
+        </scene>
+    </scenes>
+</document>

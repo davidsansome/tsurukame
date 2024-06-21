@@ -23,13 +23,11 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
   func setup(services: TKMServices, items: [ReviewItem], isPracticeSession: Bool = false) {
     self.services = services
 
-    reviewVC = (storyboard!
-      .instantiateViewController(withIdentifier: "reviewViewController") as! ReviewViewController)
+    reviewVC = StoryboardScene.Review.initialScene.instantiate()
     reviewVC.setup(services: services, items: items, showMenuButton: true, showSubjectHistory: true,
                    delegate: self, isPracticeSession: isPracticeSession)
 
-    let menuVC = storyboard!
-      .instantiateViewController(withIdentifier: "reviewMenuViewController") as! ReviewMenuViewController
+    let menuVC = StoryboardScene.ReviewMenu.initialScene.instantiate()
     menuVC.setup(services: services, delegate: self)
 
     centerViewController = reviewVC
@@ -64,7 +62,8 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
   }
 
   func finishedAllReviewItems(_ reviewViewController: ReviewViewController) {
-    reviewViewController.performSegue(withIdentifier: "reviewSummary", sender: reviewViewController)
+    reviewViewController.perform(segue: StoryboardSegue.Review.reviewSummary,
+                                 sender: reviewViewController)
   }
 
   func allowsCustomFonts() -> Bool {

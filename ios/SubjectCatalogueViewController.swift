@@ -80,8 +80,7 @@ class SubjectCatalogueViewController: UIPageViewController, UIPageViewController
       return nil
     }
 
-    let vc = storyboard?
-      .instantiateViewController(withIdentifier: "subjectsByLevel") as! SubjectsByLevelViewController
+    let vc = StoryboardScene.SubjectsByLevel.initialScene.instantiate()
     vc.setup(services: services, level: level, showAnswers: showAnswers)
     return vc
   }

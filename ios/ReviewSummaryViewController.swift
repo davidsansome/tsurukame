@@ -93,11 +93,9 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
   // MARK: - SubjectDelegate
 
   func didTapSubject(_ subject: TKMSubject) {
-    if let vc = storyboard?
-      .instantiateViewController(withIdentifier: "subjectDetailsViewController") as? SubjectDetailsViewController {
-      vc.setup(services: services, subject: subject, showHints: false, hideBackButton: false,
-               index: 0)
-      navigationController?.pushViewController(vc, animated: true)
-    }
+    let vc = StoryboardScene.SubjectDetails.initialScene.instantiate()
+    vc.setup(services: services, subject: subject, showHints: false, hideBackButton: false,
+             index: 0)
+    navigationController?.pushViewController(vc, animated: true)
   }
 }

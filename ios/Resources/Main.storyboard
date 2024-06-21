@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Whd-2S-WNr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ByY-Kf-IzJ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -9,189 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
-        <scene sceneID="Or2-Qd-5D2">
-            <objects>
-                <navigationController navigationBarHidden="YES" id="Whd-2S-WNr" customClass="NavigationController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YMU-8O-uJl">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AUY-rd-Kw3" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1362" y="176"/>
-        </scene>
-        <!--Login View Controller-->
-        <scene sceneID="WF6-O5-sla">
-            <objects>
-                <viewController storyboardIdentifier="login" id="RE3-Ck-N2j" customClass="LoginViewController" customModule="Tsurukame" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="dX7-mn-Kqu">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_screen" translatesAutoresizingMaskIntoConstraints="NO" id="2nw-3e-CvJ">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in to your WaniKani account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d7n-s4-OyH">
-                                <rect key="frame" x="57.5" y="233" width="260.5" height="21.5"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                                <color key="shadowColor" systemColor="labelColor"/>
-                                <size key="shadowOffset" width="1" height="1"/>
-                            </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ALW-Xn-F7M">
-                                <rect key="frame" x="67.5" y="284" width="240" height="119"/>
-                                <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JYP-De-NXS">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="35"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="35" id="e0w-XM-Y3b"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
-                                    </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="O4b-JI-G3n">
-                                        <rect key="frame" x="0.0" y="43" width="240" height="34"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go" secureTextEntry="YES"/>
-                                    </textField>
-                                    <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="viB-vI-7dJ">
-                                        <rect key="frame" x="0.0" y="81" width="240" height="0.0"/>
-                                        <subviews>
-                                            <textField opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="API Token" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ARP-3W-feH" userLabel="API Token">
-                                                <rect key="frame" x="0.0" y="0.0" width="195.5" height="0.0"/>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go"/>
-                                            </textField>
-                                            <button opaque="NO" contentMode="center" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VHN-DS-c9m">
-                                                <rect key="frame" x="195.5" y="0.0" width="44.5" height="0.0"/>
-                                                <color key="tintColor" systemColor="systemBackgroundColor"/>
-                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
-                                                <state key="normal" image="doc.on.clipboard" catalog="system"/>
-                                                <buttonConfiguration key="configuration" style="plain" image="doc.on.clipboard" catalog="system" imagePadding="10" buttonSize="small"/>
-                                                <connections>
-                                                    <action selector="didTapPasteButton:" destination="RE3-Ck-N2j" eventType="touchUpInside" id="CnR-4r-G7P"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                    </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RbB-6e-QL5">
-                                        <rect key="frame" x="0.0" y="85" width="240" height="34"/>
-                                        <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
-                                        <size key="titleShadowOffset" width="1" height="1"/>
-                                        <state key="normal" title="Sign in">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" systemColor="labelColor"/>
-                                        </state>
-                                        <state key="disabled">
-                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="4"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="didTapSignInButton" destination="RE3-Ck-N2j" eventType="touchUpInside" id="ZUH-s5-wJR"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="240" id="alm-4Y-yRu"/>
-                                </constraints>
-                            </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZdY-Fw-RIo">
-                                <rect key="frame" x="139.5" y="428.5" width="96" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <state key="normal" title="Use API token">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" systemColor="labelColor"/>
-                                </state>
-                                <connections>
-                                    <action selector="didTapSwapLoginMethods" destination="RE3-Ck-N2j" eventType="touchUpInside" id="zOl-5j-AS0"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nzq-PL-tt3">
-                                <rect key="frame" x="145.5" y="623" width="84" height="28"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                <state key="normal" title="Privacy policy">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="didTapPrivacyPolicyButton" destination="RE3-Ck-N2j" eventType="touchDragInside" id="15x-gX-AOL"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This app uses your WaniKani credentials to synchronise your progress with the WaniKani website." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XQW-gv-i5e">
-                                <rect key="frame" x="16" y="589" width="343" height="34"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5XY-Jr-SQY">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="bBo-Lb-7ZM">
-                                        <rect key="frame" x="169" y="315" width="37" height="37"/>
-                                    </activityIndicatorView>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="bBo-Lb-7ZM" firstAttribute="centerY" secondItem="5XY-Jr-SQY" secondAttribute="centerY" id="GQY-l5-ae3"/>
-                                    <constraint firstItem="bBo-Lb-7ZM" firstAttribute="centerX" secondItem="5XY-Jr-SQY" secondAttribute="centerX" id="gV4-Ll-Tbx"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="Rp7-Cm-oWw"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="Nzq-PL-tt3" firstAttribute="top" secondItem="XQW-gv-i5e" secondAttribute="bottom" id="CFp-Ks-pDH"/>
-                            <constraint firstItem="5XY-Jr-SQY" firstAttribute="leading" secondItem="dX7-mn-Kqu" secondAttribute="leading" id="EP2-Ed-FHs"/>
-                            <constraint firstItem="5XY-Jr-SQY" firstAttribute="top" secondItem="dX7-mn-Kqu" secondAttribute="top" id="GAv-il-7KY"/>
-                            <constraint firstItem="d7n-s4-OyH" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="HzV-nI-Nph"/>
-                            <constraint firstItem="2nw-3e-CvJ" firstAttribute="bottom" secondItem="dX7-mn-Kqu" secondAttribute="bottom" id="I35-jy-ixE"/>
-                            <constraint firstItem="2nw-3e-CvJ" firstAttribute="trailing" secondItem="dX7-mn-Kqu" secondAttribute="trailing" id="Ia3-tL-OIZ"/>
-                            <constraint firstItem="ALW-Xn-F7M" firstAttribute="centerY" secondItem="Rp7-Cm-oWw" secondAttribute="centerY" id="Oih-nr-rVO"/>
-                            <constraint firstItem="5XY-Jr-SQY" firstAttribute="bottom" secondItem="dX7-mn-Kqu" secondAttribute="bottom" id="RrX-4Y-sRH"/>
-                            <constraint firstItem="ALW-Xn-F7M" firstAttribute="centerX" secondItem="Rp7-Cm-oWw" secondAttribute="centerX" id="S46-jY-dQh"/>
-                            <constraint firstItem="Rp7-Cm-oWw" firstAttribute="bottom" secondItem="Nzq-PL-tt3" secondAttribute="bottom" constant="16" id="SXf-im-eLH"/>
-                            <constraint firstItem="2nw-3e-CvJ" firstAttribute="top" secondItem="dX7-mn-Kqu" secondAttribute="top" id="Tos-NO-hAY"/>
-                            <constraint firstItem="XQW-gv-i5e" firstAttribute="leading" secondItem="Rp7-Cm-oWw" secondAttribute="leading" constant="16" id="fPH-ty-5QI"/>
-                            <constraint firstItem="5XY-Jr-SQY" firstAttribute="trailing" secondItem="dX7-mn-Kqu" secondAttribute="trailing" id="few-EA-9bH"/>
-                            <constraint firstItem="d7n-s4-OyH" firstAttribute="centerY" secondItem="dX7-mn-Kqu" secondAttribute="centerY" constant="-90" id="hjD-kw-ruH"/>
-                            <constraint firstItem="Nzq-PL-tt3" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="j30-z5-gLN"/>
-                            <constraint firstItem="Rp7-Cm-oWw" firstAttribute="trailing" secondItem="XQW-gv-i5e" secondAttribute="trailing" constant="16" id="jwX-SG-i0P"/>
-                            <constraint firstItem="ZdY-Fw-RIo" firstAttribute="centerY" secondItem="Rp7-Cm-oWw" secondAttribute="centerY" constant="100" id="si1-qd-eM8"/>
-                            <constraint firstItem="2nw-3e-CvJ" firstAttribute="leading" secondItem="dX7-mn-Kqu" secondAttribute="leading" id="tMJ-Kr-V7q"/>
-                            <constraint firstItem="ZdY-Fw-RIo" firstAttribute="centerX" secondItem="ALW-Xn-F7M" secondAttribute="centerX" id="vZn-4k-6Fq"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="activityIndicator" destination="bBo-Lb-7ZM" id="gRx-Lk-YKh"/>
-                        <outlet property="activityIndicatorOverlay" destination="5XY-Jr-SQY" id="KpA-tS-WEt"/>
-                        <outlet property="apiTokenField" destination="ARP-3W-feH" id="W49-ov-L3a"/>
-                        <outlet property="apiTokenStack" destination="viB-vI-7dJ" id="YCj-j3-cRj"/>
-                        <outlet property="emailField" destination="JYP-De-NXS" id="4KD-VC-9ES"/>
-                        <outlet property="passwordField" destination="O4b-JI-G3n" id="DCL-CC-ZsO"/>
-                        <outlet property="pasteButton" destination="VHN-DS-c9m" id="mPu-cc-qsm"/>
-                        <outlet property="privacyPolicyButton" destination="Nzq-PL-tt3" id="umc-nD-OrM"/>
-                        <outlet property="privacyPolicyLabel" destination="XQW-gv-i5e" id="Aj6-Po-mXd"/>
-                        <outlet property="signInButton" destination="RbB-6e-QL5" id="Oz7-Zv-7CC"/>
-                        <outlet property="signInLabel" destination="d7n-s4-OyH" id="oRS-l3-TQp"/>
-                        <outlet property="swapLoginMethodsButton" destination="ZdY-Fw-RIo" id="APk-UH-F4g"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="qOk-0M-4VM" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-726" y="176"/>
-        </scene>
         <!--Main View Controller-->
         <scene sceneID="ydl-qq-SrR">
             <objects>
-                <viewController storyboardIdentifier="main" extendedLayoutIncludesOpaqueBars="YES" id="ByY-Kf-IzJ" customClass="MainViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="ByY-Kf-IzJ" customClass="MainViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="f6b-3A-D9O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -280,31 +101,17 @@
                         <segue destination="Qs4-9j-s1J" kind="show" identifier="showRemaining" id="9oa-Qm-fW5"/>
                         <segue destination="MHj-tV-Wy7" kind="show" identifier="showAll" id="Gsa-0g-2hk"/>
                         <segue destination="HVF-EF-j9e" kind="show" identifier="settings" id="XTh-OI-gtz"/>
-                        <segue destination="vBH-2Y-r3P" kind="show" identifier="tableForecast" id="XTh-OP-gtz"/>
+                        <segue destination="pw5-ds-CeL" kind="show" identifier="tableForecast" id="XTh-OP-gtz"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startRecentMistakeReviews" id="R3n-Ac-API"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startBurnedItemReviews" id="kKg-5Q-7Ga"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startRecentLessonReviews" id="Whr-8i-Twv"/>
                         <segue destination="lvd-2l-9te" kind="show" identifier="viewItemsInSrsCategory" id="h28-1t-bnp"/>
-                        <segue destination="dSL-HU-ltD" kind="show" identifier="showLessonPicker" id="CtZ-5U-qBu"/>
+                        <segue destination="VqN-Fx-mI6" kind="show" identifier="showLessonPicker" id="CtZ-5U-qBu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dob-5V-x24" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-92" y="175.86206896551727"/>
-        </scene>
-        <!--Search Result View Controller-->
-        <scene sceneID="HnA-CW-WKB">
-            <objects>
-                <tableViewController storyboardIdentifier="searchResults" id="Gnt-eM-FLK" customClass="SearchResultViewController" customModule="Tsurukame" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="rFV-0b-36v">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="h0z-Sh-kwr" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-727" y="-492"/>
         </scene>
         <!--Settings-->
         <scene sceneID="pOb-qE-8rP">
@@ -314,51 +121,27 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wTr-je-UTo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-92" y="-494"/>
+            <point key="canvasLocation" x="641" y="-101"/>
         </scene>
-        <!--reviewContainer-->
+        <!--ReviewContainer-->
         <scene sceneID="hLm-eY-ILU">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="reviewContainer" storyboardName="Reviews" referencedIdentifier="reviewContainer" id="pOc-Ig-wgQ" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardIdentifier="reviewContainer" storyboardName="ReviewContainer" id="pOc-Ig-wgQ" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="Z1t-fO-aMr"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mNp-nc-5rI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="545" y="943"/>
+            <point key="canvasLocation" x="658" y="-1"/>
         </scene>
-        <!--subjectsByCategory-->
+        <!--SubjectsByCategory-->
         <scene sceneID="n7M-yI-UPs">
             <objects>
-                <viewControllerPlaceholder storyboardName="Subjects" referencedIdentifier="subjectsByCategory" id="lvd-2l-9te" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardName="SubjectsByCategory" id="lvd-2l-9te" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="EFj-aJ-fUq"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NbY-WF-HHV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-412" y="833"/>
-        </scene>
-        <!--reviewMenuViewController-->
-        <scene sceneID="ktc-IM-NgC">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="reviewMenuViewController" storyboardName="Reviews" referencedIdentifier="reviewMenuViewController" id="IG5-CW-HeS" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AXI-1K-5GY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-92" y="942"/>
-        </scene>
-        <!--reviewSummary-->
-        <scene sceneID="cMI-VW-qiM">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="reviewSummary" storyboardName="Reviews" referencedIdentifier="reviewSummary" id="TeF-yU-IH9" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Jsj-lj-3U3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2450" y="943"/>
-        </scene>
-        <!--reviewViewController-->
-        <scene sceneID="HJc-pB-1Gi">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="reviewViewController" storyboardName="Reviews" referencedIdentifier="reviewViewController" id="OJF-Mb-Kt7" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xvY-H6-GH6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1182" y="944"/>
+            <point key="canvasLocation" x="676" y="228"/>
         </scene>
         <!--Lessons-->
         <scene sceneID="z1E-IC-jbQ">
@@ -368,114 +151,56 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9LG-MC-TeT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="504" y="108"/>
+            <point key="canvasLocation" x="618" y="41"/>
         </scene>
-        <!--Lesson Picker View Controller-->
-        <scene sceneID="wa2-Sb-bdJ">
-            <objects>
-                <tableViewController id="dSL-HU-ltD" customClass="LessonPickerViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Yw9-FI-HLy">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <connections>
-                            <outlet property="dataSource" destination="dSL-HU-ltD" id="lUK-aG-fps"/>
-                            <outlet property="delegate" destination="dSL-HU-ltD" id="Tuy-qz-8un"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="rL4-Vu-YuP"/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <connections>
-                        <segue destination="cAb-cO-8UZ" kind="show" identifier="startCustomLessons" id="qUH-XI-g4x"/>
-                    </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="88N-Oi-2D0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="910" y="361"/>
-        </scene>
-        <!--Lessons-->
-        <scene sceneID="Xg8-tU-lWu">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Lessons" id="cAb-cO-8UZ" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="FAz-2E-jQr"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="a6m-JG-BPx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1507" y="309"/>
-        </scene>
-        <!--subjectsRemaining-->
+        <!--SubjectsRemaining-->
         <scene sceneID="kfs-vn-0Rb">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="subjectsRemaining" storyboardName="Subjects" referencedIdentifier="subjectsRemaining" id="Qs4-9j-s1J" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardIdentifier="subjectsRemaining" storyboardName="SubjectsRemaining" id="Qs4-9j-s1J" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="pe4-Lb-LMO"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IjS-jp-gV8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2012" y="833"/>
+            <point key="canvasLocation" x="670" y="323"/>
         </scene>
-        <!--subjectCatalogue-->
+        <!--SubjectCatalogue-->
         <scene sceneID="cQS-Qo-ms0">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="subjectCatalogue" storyboardName="Subjects" referencedIdentifier="subjectCatalogue" id="MHj-tV-Wy7" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardIdentifier="subjectCatalogue" storyboardName="SubjectCatalogue" id="MHj-tV-Wy7" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="sxF-g3-Ohw"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XvO-ji-lJR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1362" y="834"/>
+            <point key="canvasLocation" x="662" y="276"/>
         </scene>
-        <!--subjectDetailsViewController-->
-        <scene sceneID="zYc-V0-fp4">
+        <!--UpcomingReviews-->
+        <scene sceneID="h2m-R6-kxV">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="subjectDetailsViewController" storyboardName="Subjects" referencedIdentifier="subjectDetailsViewController" id="1m0-I8-lNm" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="7Rc-g3-xrR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1818" y="944"/>
-        </scene>
-        <!--subjectsByLevel-->
-        <scene sceneID="fbJ-hj-7XL">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="subjectsByLevel" storyboardName="Subjects" referencedIdentifier="subjectsByLevel" id="Z0N-39-WcZ" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="T0f-eq-rOy"/>
+                <viewControllerPlaceholder storyboardIdentifier="upcomingReviews" storyboardName="UpcomingReviews" id="pw5-ds-CeL" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="xg2-g8-ioc"/>
                 </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pib-TB-EmN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="olz-go-JVn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-727" y="834"/>
+            <point key="canvasLocation" x="666" y="164"/>
         </scene>
-        <!--Upcoming Reviews-->
-        <scene sceneID="4xW-Gu-ryi">
+        <!--LessonPicker-->
+        <scene sceneID="oVj-v8-v8a">
             <objects>
-                <tableViewController storyboardIdentifier="upcomingReviews" id="vBH-2Y-r3P" customClass="UpcomingReviewsViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" contentMode="scaleToFill" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="1YJ-wh-YRi">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
-                        <sections/>
-                        <connections>
-                            <outlet property="dataSource" destination="vBH-2Y-r3P" id="SNd-1o-sx1"/>
-                            <outlet property="delegate" destination="vBH-2Y-r3P" id="vv9-ub-Dbp"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Upcoming Reviews" id="r5Y-Ak-tJZ"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CGk-60-mVf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="LessonPicker" id="VqN-Fx-mI6" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="3co-kd-r35"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UAj-ZT-6TK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1362" y="-493"/>
+            <point key="canvasLocation" x="642" y="85"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Whr-8i-Twv"/>
+        <segue reference="YrX-ku-fpv"/>
     </inferredMetricsTieBreakers>
     <resources>
-        <image name="doc.on.clipboard" catalog="system" width="116" height="128"/>
         <image name="ic_search_white" width="24" height="24"/>
         <image name="ic_settings_white" width="24" height="24"/>
         <image name="launch_screen" width="1126" height="2436"/>
-        <systemColor name="groupTableViewBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

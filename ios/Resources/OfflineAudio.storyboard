@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="AG2-Tf-RDu">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Offline audio-->
+        <scene sceneID="0DM-pt-FJt">
+            <objects>
+                <tableViewController title="Offline audio" id="AG2-Tf-RDu" customClass="OfflineAudioViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="OTo-Re-Ito">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <connections>
+                            <outlet property="dataSource" destination="AG2-Tf-RDu" id="rcb-mk-GeS"/>
+                            <outlet property="delegate" destination="AG2-Tf-RDu" id="NLr-zf-GB9"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Offline Audio" id="nun-U5-lfk"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xDV-IB-csT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-294" y="-654"/>
+        </scene>
+    </scenes>
+</document>

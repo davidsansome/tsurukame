@@ -59,7 +59,7 @@ class ReviewMenuViewController: UIViewController, UITableViewDelegate {
     model.add(BasicModelItem(style: .default, title: "Fonts",
                              subtitle: nil, accessoryType: .disclosureIndicator) {
         [weak self] in
-        self?.performSegue(withIdentifier: "fonts", sender: self)
+        self?.perform(segue: StoryboardSegue.ReviewMenu.fonts, sender: self)
       })
     model.add(BasicModelItem(style: .default, title: "Font size",
                              subtitle: nil, accessoryType: .disclosureIndicator) {
@@ -120,8 +120,8 @@ class ReviewMenuViewController: UIViewController, UITableViewDelegate {
   }
 
   override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
-    switch segue.identifier {
-    case "fonts":
+    switch StoryboardSegue.ReviewMenu(segue) {
+    case .fonts:
       let vc = segue.destination as! FontsViewController
       vc.setup(services: services)
       isInSettingsVc = true

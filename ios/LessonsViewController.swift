@@ -128,8 +128,7 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
   private func createViewController(index: Int) -> UIViewController? {
     if index == items.count {
       if reviewViewController == nil {
-        reviewViewController = storyboard!
-          .instantiateViewController(withIdentifier: "reviewViewController") as? ReviewViewController
+        reviewViewController = StoryboardScene.Review.initialScene.instantiate()
         reviewViewController?.setup(services: services, items: items, showMenuButton: false,
                                     showSubjectHistory: false, delegate: self)
       }
@@ -140,8 +139,7 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
 
     let item = items[index]
     if let subject = services.localCachingClient.getSubject(id: item.assignment.subjectID) {
-      let vc = storyboard?
-        .instantiateViewController(withIdentifier: "subjectDetailsViewController") as! SubjectDetailsViewController
+      let vc = StoryboardScene.SubjectDetails.initialScene.instantiate()
       vc.setup(services: services, subject: subject, showHints: true, hideBackButton: true,
                index: index)
       return vc

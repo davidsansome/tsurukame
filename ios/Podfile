@@ -26,6 +26,7 @@ target 'Tsurukame' do
   pod 'Haneke', '~> 1.0.2', :inhibit_warnings => true
   pod 'MMDrawerController', '~> 0.6.0', :inhibit_warnings => true
   pod 'Reachability', '~> 3.2'
+  pod 'SwiftGen', '~> 6.0'
 
   target 'Tests' do
     inherit! :search_paths

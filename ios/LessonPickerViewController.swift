@@ -105,7 +105,7 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
   }
 
   @objc func startLessons() {
-    performSegue(withIdentifier: "startCustomLessons", sender: self)
+    perform(segue: StoryboardSegue.LessonPicker.startCustomLessons, sender: self)
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -114,8 +114,8 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
   }
 
   override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
-    switch segue.identifier {
-    case "startCustomLessons":
+    switch StoryboardSegue.LessonPicker(segue) {
+    case .startCustomLessons:
       if selectedItems.count == 0 {
         return
       }

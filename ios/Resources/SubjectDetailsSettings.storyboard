@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QyJ-xg-22C">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Radicals, Kanji & Vocabulary-->
+        <scene sceneID="g8h-MQ-ovB">
+            <objects>
+                <tableViewController id="QyJ-xg-22C" customClass="SubjectDetailsSettingsViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="6My-xN-Bho">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="QyJ-xg-22C" id="Icf-YC-tfc"/>
+                            <outlet property="delegate" destination="QyJ-xg-22C" id="nlP-P9-YiR"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Radicals, Kanji &amp; Vocabulary" id="c7X-17-Ybs"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yiz-GX-A7J" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1113" y="772"/>
+        </scene>
+    </scenes>
+</document>

@@ -101,7 +101,7 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
   // MARK: - Tap handlers
 
   @objc private func didTapLessonOrder(_: BasicModelItem) {
-    performSegue(withIdentifier: "lessonOrder", sender: self)
+    perform(segue: StoryboardSegue.LessonSettings.lessonOrder, sender: self)
   }
 
   @objc private func didTapLessonBatchSize(_: BasicModelItem) {

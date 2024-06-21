@@ -53,22 +53,6 @@
             </objects>
             <point key="canvasLocation" x="546" y="176"/>
         </scene>
-        <!--reviewViewController-->
-        <scene sceneID="4TC-lk-Va4">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="reviewViewController" storyboardName="Reviews" referencedIdentifier="reviewViewController" id="aGY-c3-LWF" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ygp-nc-GWZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="331" y="-186"/>
-        </scene>
-        <!--subjectDetailsViewController-->
-        <scene sceneID="gE3-MY-hQr">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="subjectDetailsViewController" storyboardName="Subjects" referencedIdentifier="subjectDetailsViewController" id="CRe-mi-g80" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jXJ-2K-5gJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="73" y="186"/>
-        </scene>
     </scenes>
     <resources>
         <image name="back" width="24" height="24"/>
