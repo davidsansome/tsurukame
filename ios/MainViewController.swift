@@ -234,16 +234,17 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     }
 
     if Settings.showPreviousLevelGraph, user.currentLevel > 1,
+       user.level <= user.maxLevelGrantedBySubscription,
        !services.localCachingClient.hasCompletedPreviousLevel() {
-      let previousLevel = Int(user.currentLevel) - 1
+      let previousLevel = Int(user.level) - 1
       model
-        .add(section: "Current level (\(user.currentLevel - 1))")
+        .add(section: "Current level (\(user.level - 1))")
       let currentGraphLevelAssignments = services.localCachingClient
         .getAssignments(level: previousLevel)
       model.add(CurrentLevelChartItem(currentLevelAssignments: currentGraphLevelAssignments))
       addShowRemainingAllItems(model: model, level: previousLevel)
       // add header for next section; graph and other items will be added after this if/else block
-      model.add(section: "Next level (\(user.currentLevel))")
+      model.add(section: "Next level (\(user.level))")
     } else {
       model.add(section: "Current level")
     }
