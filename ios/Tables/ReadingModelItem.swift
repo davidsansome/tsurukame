@@ -27,7 +27,7 @@ class ReadingModelItem: AttributedModelItem {
   func setAudio(_ audio: Audio, subjectID: Int64) {
     self.audio = audio
     audioSubjectID = subjectID
-    rightButtonImage = UIImage(named: "baseline_volume_up_black_24pt")
+    rightButtonImage = Asset.baselineVolumeUpBlack24pt.image
     rightButtonCallback = { [unowned self] (_: AttributedModelCell) in
       self.playAudio()
     }
@@ -66,10 +66,10 @@ class ReadingModelCell: AttributedModelCell, AudioDelegate {
       rightButton?.isEnabled = false
     case .playing:
       rightButton?.isEnabled = true
-      rightButton?.setImage(UIImage(named: "baseline_stop_black_24pt"), for: .normal)
+      rightButton?.setImage(Asset.baselineStopBlack24pt.image, for: .normal)
     case .finished:
       rightButton?.isEnabled = true
-      rightButton?.setImage(UIImage(named: "baseline_volume_up_black_24pt"), for: .normal)
+      rightButton?.setImage(Asset.baselineVolumeUpBlack24pt.image, for: .normal)
     }
   }
 }

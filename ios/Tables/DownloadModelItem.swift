@@ -78,19 +78,19 @@ class DownloadModelView: TKMModelCell {
     switch item.state {
     case .notInstalled:
       subtitle.text = "not installed - \(friendlySize(bytes: item.totalSizeBytes))"
-      icon.image = UIImage(named: "baseline_cloud_download_black_24pt")
+      icon.image = Asset.baselineCloudDownloadBlack24pt.image
       icon.tintColor = TKMStyle.defaultTintColor
     case .downloading, .installing:
       updateProgress()
-      icon.image = UIImage(named: "baseline_cancel_black_24pt")
+      icon.image = Asset.baselineCancelBlack24pt.image
       icon.tintColor = TKMStyle.Color.grey66
     case .installedSelected:
       subtitle.text = nil
-      icon.image = UIImage(named: "tick")
+      icon.image = Asset.tick.image
       icon.tintColor = TKMStyle.defaultTintColor
     case .installedNotSelected:
       subtitle.text = nil
-      icon.image = UIImage(named: "tick")
+      icon.image = Asset.tick.image
       icon.tintColor = TKMStyle.Color.grey66
     }
 

@@ -163,9 +163,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var kanaInput: TKMKanaInput!
   private let hapticGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator
     .FeedbackStyle.light)
-  private let tickImage = UIImage(named: "checkmark.circle")
-  private let forwardArrowImage = UIImage(named: "ic_arrow_forward_white")
-  private let skipImage = UIImage(named: "goforward.plus")
+  private let tickImage = Asset.checkmarkCircle.image
+  private let forwardArrowImage = Asset.icArrowForwardWhite.image
+  private let skipImage = Asset.goforwardPlus.image
 
   private var services: TKMServices!
   private var showMenuButton: Bool!
@@ -270,7 +270,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     TKMStyle.addShadowToView(questionLabel, offset: 1, opacity: 0.2, radius: 4)
     TKMStyle.addShadowToView(previousSubjectButton, offset: 0, opacity: 0.7, radius: 4)
 
-    wrapUpIcon.image = UIImage(named: "baseline_access_time_black_24pt")?
+    wrapUpIcon.image = Asset.baselineAccessTimeBlack24pt.image
       .withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
 
     previousSubjectGradient = CAGradientLayer()

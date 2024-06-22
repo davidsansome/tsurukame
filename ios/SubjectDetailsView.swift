@@ -188,7 +188,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     let sectionIndexPath = model.add(section: "Meaning")
     let itemIndexPath = model.add(item)
 
-    item.rightButtonImage = UIImage(named: "baseline_edit_black_24pt")
+    item.rightButtonImage = Asset.baselineEditBlack24pt.image
     item.rightButtonCallback = { [weak self] cell in
       self?.performBatchUpdates {
         self?.editMeaningSynonyms(item: item, itemIndexPath: itemIndexPath, cell: cell,
@@ -217,7 +217,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       for synonym in studyMaterials.meaningSynonyms {
         let synonymItem = EditableTextModelItem(text: NSAttributedString(string: synonym),
                                                 placeholderText: "",
-                                                rightButtonImage: UIImage(named: "baseline_cancel_black_24pt"),
+                                                rightButtonImage: Asset.baselineCancelBlack24pt
+                                                  .image,
                                                 font: UIFont.systemFont(ofSize: kFontSize))
         let indexPath = model.add(synonymItem, toSection: itemIndexPath.section)
         synonymItem.rightButtonCallback = { _ in
@@ -441,7 +442,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       let attributedNote = NSAttributedString(string: note, attributes: defaultStringAttrs())
       let noteItem = EditableTextModelItem(text: attributedNote,
                                            placeholderText: "Add a note",
-                                           rightButtonImage: UIImage(named: "baseline_edit_black_24pt"),
+                                           rightButtonImage: Asset.baselineEditBlack24pt.image,
                                            font: UIFont.systemFont(ofSize: kFontSize))
       noteItem.textChangedCallback = noteChangedCallback
       model.add(noteItem)
@@ -454,7 +455,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                                            font: UIFont.systemFont(ofSize: kFontSize))
       let noteIndex = model.add(noteItem, hidden: true)
 
-      explanationItem?.rightButtonImage = UIImage(named: "baseline_note_add_black_24pt")
+      explanationItem?.rightButtonImage = Asset.baselineNoteAddBlack24pt.image
       explanationItem?.rightButtonCallback = { [weak self] (cell: AttributedModelCell) in
         cell.removeRightButton()
         // Show the note item.

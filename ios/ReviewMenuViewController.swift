@@ -101,7 +101,7 @@ class ReviewMenuViewController: UIViewController, UITableViewDelegate {
     endItem = BasicModelItem(style: .default, title: "End review session") { [weak self] in self?
       .endReviewSession()
     }
-    endItem!.image = UIImage(named: "baseline_cancel_black_24pt")
+    endItem!.image = Asset.baselineCancelBlack24pt.image
     model.add(endItem!)
 
     var wrapUpText = "Wrap up"
@@ -112,7 +112,7 @@ class ReviewMenuViewController: UIViewController, UITableViewDelegate {
     let wrapUp = BasicModelItem(style: .default, title: wrapUpText) { [weak self] in
       self?.delegate?.wrapUp()
     }
-    wrapUp.image = UIImage(named: "baseline_access_time_black_24pt")
+    wrapUp.image = Asset.baselineAccessTimeBlack24pt.image
     model.add(wrapUp)
 
     self.model = model
