@@ -95,7 +95,7 @@ class SubjectsByLevelViewController: UITableViewController, SubjectDelegate {
             } else {
               label = assignment.srsStage.description
             }
-            model.insert(TKMListSeparatorItem(label: label), atIndex: itemIndex, inSection: section)
+            model.insert(ListSeparatorItem(label: label), atIndex: itemIndex, inSection: section)
             itemIndex += 1
           }
           lastAssignment = assignment

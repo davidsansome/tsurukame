@@ -236,7 +236,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   // MARK: - UITableViewDelegate
 
   func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-    if (tableView.cellForRow(at: indexPath) as? TKMListSeparatorCell) != nil {
+    if (tableView.cellForRow(at: indexPath) as? ListSeparatorCell) != nil {
       return nil
     }
     return indexPath

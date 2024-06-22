@@ -123,7 +123,7 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
           } else {
             label = assignment.srsStage.description
           }
-          model.insert(TKMListSeparatorItem(label: label), atIndex: index, inSection: section)
+          model.insert(ListSeparatorItem(label: label), atIndex: index, inSection: section)
           index += 1
         }
         lastAssignment = assignment

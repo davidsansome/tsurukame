@@ -125,7 +125,7 @@ class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate, 
               lastAssignment!.isReviewStage != assignment.isReviewStage ||
               lastAssignment!.isLessonStage != assignment.isLessonStage {
               let label = assignment.srsStage.description
-              model.insert(TKMListSeparatorItem(label: label), atIndex: itemIndex,
+              model.insert(ListSeparatorItem(label: label), atIndex: itemIndex,
                            inSection: section)
               itemIndex += 1
             }

@@ -83,19 +83,19 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
     for (level, data) in levels.sorted(by: { $0.key < $1.key }) {
       model.add(section: "Level \(level)")
       if !data.radicals.isEmpty {
-        model.add(TKMListSeparatorItem(label: "Radicals (\(data.radicals.count))"))
+        model.add(ListSeparatorItem(label: "Radicals (\(data.radicals.count))"))
       }
       for item in data.radicals {
         model.add(item)
       }
       if !data.kanji.isEmpty {
-        model.add(TKMListSeparatorItem(label: "Kanji (\(data.kanji.count))"))
+        model.add(ListSeparatorItem(label: "Kanji (\(data.kanji.count))"))
       }
       for item in data.kanji {
         model.add(item)
       }
       if !data.vocabulary.isEmpty {
-        model.add(TKMListSeparatorItem(label: "Vocabulary (\(data.vocabulary.count))"))
+        model.add(ListSeparatorItem(label: "Vocabulary (\(data.vocabulary.count))"))
       }
       for item in data.vocabulary {
         model.add(item)
