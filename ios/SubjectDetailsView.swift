@@ -189,11 +189,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     let itemIndexPath = model.add(item)
 
     item.rightButtonImage = Asset.baselineEditBlack24pt.image
-    item.rightButtonCallback = { [weak self] cell in
-      self?.performBatchUpdates {
-        self?.editMeaningSynonyms(item: item, itemIndexPath: itemIndexPath, cell: cell,
-                                  subject: subject,
-                                  studyMaterials: studyMaterials, toModel: model)
+    item.rightButtonCallback = { [unowned self, unowned model, unowned item] cell in
+      self.performBatchUpdates { [unowned self, unowned model, unowned item] in
+        self.editMeaningSynonyms(item: item, itemIndexPath: itemIndexPath, cell: cell,
+                                 subject: subject,
+                                 studyMaterials: studyMaterials, toModel: model)
       }
     }
 
@@ -209,7 +209,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     item.rightButtonImage = nil
     item.text = renderMeanings(subject: subject, studyMaterials: nil)
       .string(withFontSize: kFontSize)
-    cell.update(with: item)
+    cell.update()
     reloadRows(at: [itemIndexPath], with: .fade)
 
     // Add rows for each of the synonyms.
@@ -221,8 +221,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                                                   .image,
                                                 font: UIFont.systemFont(ofSize: kFontSize))
         let indexPath = model.add(synonymItem, toSection: itemIndexPath.section)
-        synonymItem.rightButtonCallback = { _ in
-          model.setIndexPath(indexPath, hidden: true)
+        synonymItem.rightButtonCallback = { [unowned self] _ in
+          self.tableModel?.setIndexPath(indexPath, hidden: true)
         }
       }
     }
@@ -456,10 +456,10 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       let noteIndex = model.add(noteItem, hidden: true)
 
       explanationItem?.rightButtonImage = Asset.baselineNoteAddBlack24pt.image
-      explanationItem?.rightButtonCallback = { [weak self] (cell: AttributedModelCell) in
+      explanationItem?.rightButtonCallback = { [unowned self] (cell: AttributedModelCell) in
         cell.removeRightButton()
         // Show the note item.
-        self?.tableModel?.setIndexPath(noteIndex, hidden: false)
+        self.tableModel?.setIndexPath(noteIndex, hidden: false)
       }
       noteItem.textChangedCallback = noteChangedCallback
     }

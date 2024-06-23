@@ -52,9 +52,10 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
       model.add(BasicModelItem(style: .value1,
                                title: "UI Appearance",
                                subtitle: Settings.interfaceStyle.description,
-                               accessoryType: .disclosureIndicator,
-                               target: self,
-                               action: #selector(didTapInterfaceStyle(_:))))
+                               accessoryType: .disclosureIndicator) {
+          [unowned self] in
+          self.didTapInterfaceStyle()
+        })
     }
 
     model.add(section: "Custom Gravatar email address")
@@ -75,43 +76,40 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
                               title: "Notify for all available reviews",
                               subtitle: nil,
                               on: Settings.notificationsAllReviews,
-                              target: self,
-                              action: #selector(allReviewsSwitchChanged(_:))))
+                              switchHandler: allReviewsSwitchChanged))
     model.add(SwitchModelItem(style: .default,
                               title: "Badge the app icon",
                               subtitle: nil,
                               on: Settings.notificationsBadging,
-                              target: self,
-                              action: #selector(badgingSwitchChanged(_:))))
+                              switchHandler: badgingSwitchChanged))
 
     model.add(SwitchModelItem(style: .default,
                               title: "Play sound with notifications",
                               subtitle: nil,
                               on: Settings.notificationSounds,
-                              target: self,
-                              action: #selector(soundSwitchChanged(_:))))
+                              switchHandler: soundSwitchChanged))
 
     self.model = model
     model.reloadTable()
   }
 
-  @objc private func didTapInterfaceStyle(_: BasicModelItem) {
+  private func didTapInterfaceStyle() {
     navigationController?.pushViewController(makeInterfaceStyleViewController(), animated: true)
   }
 
-  @objc private func allReviewsSwitchChanged(_ switchView: UISwitch) {
+  private func allReviewsSwitchChanged(_ switchView: UISwitch) {
     promptForNotifications(switchView: switchView) { granted in
       Settings.notificationsAllReviews = granted
     }
   }
 
-  @objc private func badgingSwitchChanged(_ switchView: UISwitch) {
+  private func badgingSwitchChanged(_ switchView: UISwitch) {
     promptForNotifications(switchView: switchView) { granted in
       Settings.notificationsBadging = granted
     }
   }
 
-  @objc private func soundSwitchChanged(_ switchView: UISwitch) {
+  private func soundSwitchChanged(_ switchView: UISwitch) {
     promptForNotifications(switchView: switchView) { granted in
       Settings.notificationSounds = granted
     }

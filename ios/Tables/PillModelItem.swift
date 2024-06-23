@@ -14,7 +14,7 @@
 
 import Foundation
 
-class PillModelItem: NSObject, TKMModelItem {
+class PillModelItem: TableModelItem {
   let text: String
   let fontSize: CGFloat
   let callback: () -> Void
@@ -25,12 +25,14 @@ class PillModelItem: NSObject, TKMModelItem {
     self.callback = callback
   }
 
-  func cellNibName() -> String! {
-    "PillModelItem"
+  var cellFactory: TableModelCellFactory {
+    .fromInterfaceBuilder(nibName: "PillModelItem")
   }
 }
 
-class PillModelCell: TKMModelCell {
+class PillModelCell: TableModelCell {
+  @TypedModelItem var item: PillModelItem
+
   @IBOutlet var button: UIButton!
   @IBOutlet var leftLineHeight: NSLayoutConstraint!
   @IBOutlet var rightLineHeight: NSLayoutConstraint!
@@ -54,10 +56,7 @@ class PillModelCell: TKMModelCell {
     button.layer.shouldRasterize = true
   }
 
-  override func update(with item: TKMModelItem!) {
-    super.update(with: item)
-    let item = item as! PillModelItem
-
+  override func update() {
     let font = UIFont.systemFont(ofSize: item.fontSize)
     let title = NSAttributedString(string: item.text, attributes: [
       .font: font,
@@ -71,7 +70,6 @@ class PillModelCell: TKMModelCell {
   }
 
   override func didSelect() {
-    let item = self.item as! PillModelItem
     item.callback()
   }
 

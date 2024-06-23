@@ -22,13 +22,13 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     var hidden: Bool = false
     var headerTitle: String?
     var footerTitle: String?
-    var items = [TKMModelItem]()
+    var items = [any TableModelItem]()
     var hiddenItems = NSMutableIndexSet()
   }
 
   var sections = [Section]()
   private(set) var isInitialised = false
-  private(set) var tableView: UITableView
+  private(set) unowned var tableView: UITableView
   private weak var delegate: UITableViewDelegate?
 
   // If set to true, the table will use the sectionHeaderHeight
@@ -37,7 +37,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
 
   deinit {
     if !isInitialised {
-      NSLog("TKMTableModel deallocated without being used. Did you forget to retain it?")
+      NSLog("TableModel deallocated without being used. Did you forget to retain it?")
     }
   }
 
@@ -57,11 +57,11 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     sections.count
   }
 
-  func items(inSection section: Int) -> [TKMModelItem] {
+  func items(inSection section: Int) -> [any TableModelItem] {
     sections[section].items
   }
 
-  func item(inSection section: Int, atRow row: Int) -> TKMModelItem {
+  func item(inSection section: Int, atRow row: Int) -> any TableModelItem {
     sections[section].items[row]
   }
 
@@ -180,35 +180,32 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     return cell(item: section.items[modelIndexPath.row])
   }
 
-  private func cell(item: TKMModelItem) -> UITableViewCell {
-    var reuseId: String
-    if item.responds(to: #selector(TKMModelItem.cellReuseIdentifier)) {
-      reuseId = item.cellReuseIdentifier!()
-    } else {
-      reuseId = String(describing: item.self)
-    }
+  private func cell(item: any TableModelItem) -> UITableViewCell {
+    let reuseId = item.cellReuseIdentifier
 
-    var cell = tableView.dequeueReusableCell(withIdentifier: reuseId) as? TKMModelCell
+    var cell = tableView.dequeueReusableCell(withIdentifier: reuseId) as? TableModelCell
     if cell == nil {
-      if item.responds(to: #selector(TKMModelItem.createCell)) {
-        cell = item.createCell!()
-      } else if item.responds(to: #selector(TKMModelItem.cellNibName)) {
-        let nib = UINib(nibName: item.cellNibName!(), bundle: nil)
+      switch item.cellFactory {
+      case let .fromInterfaceBuilder(nibName):
+        let nib = UINib(nibName: nibName, bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: reuseId)
-        cell = tableView.dequeueReusableCell(withIdentifier: reuseId) as? TKMModelCell
-      } else if item.responds(to: #selector(TKMModelItem.cellClass)) {
-        let cellClass = item.cellClass!() as! UITableViewCell.Type
-        cell = cellClass.init(style: .default, reuseIdentifier: reuseId) as? TKMModelCell
+        cell = tableView.dequeueReusableCell(withIdentifier: reuseId) as? TableModelCell
+      case let .fromFunction(function):
+        cell = function()
+      case let .fromDefaultConstructor(cellClass):
+        cell = cellClass.init(style: .default, reuseIdentifier: reuseId) as? TableModelCell
       }
     }
     guard let cell = cell else {
-      fatalError("Item class \(reuseId) should respond to either createCell, cellNibName or cellClass")
+      fatalError("Item class \(reuseId)'s cellFactory returned nil")
     }
 
     // Disable animations when reusing a cell.
     CATransaction.begin()
     CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-    cell.update(with: item, tableView: tableView)
+    cell.baseItem = item
+    cell.tableView = tableView
+    cell.update()
     CATransaction.commit()
     return cell
   }
@@ -243,7 +240,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    if let cell = tableView.cellForRow(at: indexPath) as? TKMModelCell {
+    if let cell = tableView.cellForRow(at: indexPath) as? TableModelCell {
       cell.didSelect()
     }
   }
@@ -251,8 +248,8 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     let modelIndexPath = viewIndexPathToModelIndexPath(indexPath)
     let item = sections[modelIndexPath.section].items[modelIndexPath.item]
-    if item.responds(to: #selector(TKMModelItem.rowHeight)) {
-      return item.rowHeight!()
+    if let rowHeight = item.rowHeight {
+      return rowHeight
     }
     return tableView.rowHeight
   }
@@ -303,7 +300,7 @@ class MutableTableModel: TableModel {
     add(section: nil, footer: nil)
   }
 
-  @discardableResult func add(_ item: TKMModelItem, toSection sectionIndex: Int,
+  @discardableResult func add(_ item: any TableModelItem, toSection sectionIndex: Int,
                               hidden: Bool = false) -> IndexPath {
     sections[sectionIndex].items.append(item)
 
@@ -316,14 +313,14 @@ class MutableTableModel: TableModel {
     return path
   }
 
-  @discardableResult func add(_ item: TKMModelItem, hidden: Bool = false) -> IndexPath {
+  @discardableResult func add(_ item: any TableModelItem, hidden: Bool = false) -> IndexPath {
     if sections.isEmpty {
       _ = addSection()
     }
     return add(item, toSection: sections.count - 1, hidden: hidden)
   }
 
-  @discardableResult func insert(_ item: TKMModelItem, atIndex index: Int,
+  @discardableResult func insert(_ item: any TableModelItem, atIndex index: Int,
                                  inSection section: Int) -> IndexPath {
     sections[section].items.insert(item, at: index)
     let path = IndexPath(row: index, section: section)

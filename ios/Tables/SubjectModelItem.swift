@@ -15,7 +15,7 @@
 import Foundation
 import WaniKaniAPI
 
-class SubjectModelItem: NSObject, TKMModelItem {
+class SubjectModelItem: TableModelItem {
   let subject: TKMSubject
   let readingWrong: Bool
   let meaningWrong: Bool
@@ -38,15 +38,17 @@ class SubjectModelItem: NSObject, TKMModelItem {
     self.meaningWrong = meaningWrong
   }
 
-  func cellNibName() -> String! {
-    "SubjectModelItem"
+  var cellFactory: TableModelCellFactory {
+    .fromInterfaceBuilder(nibName: "SubjectModelItem")
   }
 }
 
 private let kJapaneseTextImageSize: CGFloat = 26.0
 private let kFontSize: CGFloat = UIFontMetrics.default.scaledValue(for: 14.0)
 
-class SubjectModelView: TKMModelCell {
+class SubjectModelView: TableModelCell {
+  @TypedModelItem var item: SubjectModelItem
+
   private weak var gradient: CAGradientLayer?
 
   @IBOutlet var levelLabel: UILabel!
@@ -77,11 +79,7 @@ class SubjectModelView: TKMModelCell {
 
   // MARK: - TKMModelCell
 
-  override func update(with item: TKMModelItem!) {
-    super.update(with: item)
-    guard let item = item as? SubjectModelItem else {
-      return
-    }
+  override func update() {
     setShowAnswers(item.showAnswers, animated: false)
 
     levelLabel.isHidden = !item.showLevelNumber
@@ -164,7 +162,6 @@ class SubjectModelView: TKMModelCell {
     return "\(label) in \(interval)"
   }
 
-  @objc
   func setShowAnswers(_ value: Bool, animated: Bool) {
     if !animated {
       answerStack.isHidden = !value
@@ -193,15 +190,13 @@ class SubjectModelView: TKMModelCell {
   }
 
   override func didSelect() {
-    if let item = item as? SubjectModelItem {
-      item.isChecked = !item.isChecked
-      if item.canShowCheckmark && item.isChecked {
-        accessoryType = .checkmark
-      } else {
-        accessoryType = .none
-      }
-      item.delegate?.didTapSubject(item.subject)
+    item.isChecked = !item.isChecked
+    if item.canShowCheckmark && item.isChecked {
+      accessoryType = .checkmark
+    } else {
+      accessoryType = .none
     }
+    item.delegate?.didTapSubject(item.subject)
   }
 
   // MARK: - UITraitEnvironment
@@ -211,12 +206,10 @@ class SubjectModelView: TKMModelCell {
   }
 
   private func updateGradient() {
-    if let item = item as? SubjectModelItem {
-      if let itemGradientColors = item.gradientColors {
-        gradient?.colors = itemGradientColors
-      } else {
-        gradient?.colors = TKMStyle.gradient(forSubject: item.subject)
-      }
+    if let itemGradientColors = item.gradientColors {
+      gradient?.colors = itemGradientColors
+    } else {
+      gradient?.colors = TKMStyle.gradient(forSubject: item.subject)
     }
   }
 }

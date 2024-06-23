@@ -43,113 +43,123 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     model.add(BasicModelItem(style: .value1,
                              title: "Order",
                              subtitle: reviewOrderValueText,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapReviewOrder(_:))))
+                             accessoryType: .disclosureIndicator) { [unowned self] in self
+        .didTapReviewOrder()
+      })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Back-to-back",
                               subtitle: "Group Meaning and Reading together",
-                              on: Settings.groupMeaningReading,
-                              target: self,
-                              action: #selector(groupMeaningReadingSwitchChanged(_:))))
+                              on: Settings
+                                .groupMeaningReading) { [unowned self] in
+        groupMeaningReadingSwitchChanged($0)
+      })
     groupMeaningReadingIndexPath = model.add(BasicModelItem(style: .value1,
                                                             title: "Back-to-back order",
                                                             subtitle: taskOrderValueText,
-                                                            accessoryType: .disclosureIndicator,
-                                                            target: self,
-                                                            action: #selector(didTapTaskOrder(_:))),
+                                                            accessoryType: .disclosureIndicator) { [
+                                               unowned self
+                                             ] in
+                                               self.didTapTaskOrder()
+                                             },
                                              hidden:!Settings
                                                .groupMeaningReading)
     model.add(BasicModelItem(style: .value1,
                              title: "Batch size",
                              subtitle: "\(Settings.reviewBatchSize.description)",
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapReviewBatchSize(_:))))
+                             accessoryType: .disclosureIndicator) { [unowned self] in self
+        .didTapReviewBatchSize()
+      })
 
     model.add(section: "Display")
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Show SRS level indicator",
                               subtitle: nil,
-                              on: Settings.showSRSLevelIndicator,
-                              target: self,
-                              action: #selector(showSRSLevelIndicatorSwitchChanged(_:))))
+                              on: Settings
+                                .showSRSLevelIndicator) { [unowned self] in
+        showSRSLevelIndicatorSwitchChanged($0)
+      })
     model.add(BasicModelItem(style: .default,
                              title: "Fonts",
                              subtitle: nil,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapFonts(_:))))
+                             accessoryType: .disclosureIndicator) { [unowned self] in self
+        .didTapFonts()
+      })
     model.add(BasicModelItem(style: .value1,
                              title: "Font size",
                              subtitle: fontSizeValueText,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(fontSizeChanged(_:))))
+                             accessoryType: .disclosureIndicator) { [unowned self] in self
+        .fontSizeChanged()
+      })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Show minutes for next level-up review",
                               subtitle: nil,
-                              on: Settings.showMinutesForNextLevelUpReview,
-                              target: self,
-                              action: #selector(showMinutesForNextLevelUpReview(_:))))
+                              on: Settings
+                                .showMinutesForNextLevelUpReview) { [unowned self] in
+        showMinutesForNextLevelUpReview($0)
+      })
 
     model.add(section: "Answers & marking")
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Switch to Japanese keyboard",
                               subtitle: "Automatically switch to a Japanese keyboard to type reading answers",
-                              on: Settings.autoSwitchKeyboard,
-                              target: self,
-                              action: #selector(autoSwitchKeyboardSwitchChanged(_:))))
+                              on: Settings
+                                .autoSwitchKeyboard) { [unowned self] in
+        autoSwitchKeyboardSwitchChanged($0)
+      })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Reveal answer automatically",
                               subtitle: nil,
-                              on: Settings.showAnswerImmediately,
-                              target: self,
-                              action: #selector(showAnswerImmediatelySwitchChanged(_:))))
+                              on: Settings
+                                .showAnswerImmediately) { [unowned self] in
+        showAnswerImmediatelySwitchChanged($0)
+      })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Reveal full answer",
                               subtitle: "Instead of hiding behind a 'Show more information' button",
-                              on: Settings.showFullAnswer, target: self,
-                              action: #selector(showFullAnswerSwitchChanged(_:))))
+                              on: Settings
+                                .showFullAnswer) { [unowned self] in showFullAnswerSwitchChanged($0)
+      })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Exact match",
                               subtitle: "Requires typing in answers exactly correct",
-                              on: Settings.exactMatch,
-                              target: self,
-                              action: #selector(exactMatchSwitchChanged(_:))))
+                              on: Settings
+                                .exactMatch) { [unowned self] in exactMatchSwitchChanged($0) })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Allow cheating",
                               subtitle: "Ignore Typos and Add Synonym",
-                              on: Settings.enableCheats,
-                              target: self,
-                              action: #selector(enableCheatsSwitchChanged(_:))))
+                              on: Settings
+                                .enableCheats) { [unowned self] in enableCheatsSwitchChanged($0) })
     model.add(SwitchModelItem(style: .default,
                               title: "Allow skipping",
                               subtitle: nil,
-                              on: Settings.allowSkippingReviews,
-                              target: self,
-                              action: #selector(allowSkippingReviewsSwitchChanged(_:))))
+                              on: Settings
+                                .allowSkippingReviews) { [unowned self] in
+        allowSkippingReviewsSwitchChanged($0)
+      })
 
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Minimize review penalty",
                               subtitle:
                               "Treat reviews answered incorrect multiple times as if answered incorrect once",
-                              on: Settings.minimizeReviewPenalty,
-                              target: self,
-                              action: #selector(minimizeReviewPenaltySwitchChanged(_:))))
+                              on: Settings
+                                .minimizeReviewPenalty) { [unowned self] in
+        minimizeReviewPenaltySwitchChanged($0)
+      })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Anki mode",
                               subtitle: "Do reviews without typing answers",
-                              on: Settings.ankiMode,
-                              target: self,
-                              action: #selector(ankiModeSwitchChanged(_:))))
+                              on: Settings.ankiMode) { [unowned self] in ankiModeSwitchChanged($0)
+      })
 
     let ankiModeCombineReadingMeaning = SwitchModelItem(style: .subtitle,
                                                         title: "Combine Reading + Meaning",
                                                         subtitle: "Only one review for reading and meaning with Anki mode enabled",
-                                                        on: Settings.ankiModeCombineReadingMeaning,
-                                                        target: self,
-                                                        action: #selector(ankiModeCombineReadingMeaningSwitchChanged(_:)))
+                                                        on: Settings
+                                                          .ankiModeCombineReadingMeaning) { [
+      unowned self
+    ] in
+      ankiModeCombineReadingMeaningSwitchChanged($0)
+    }
     ankiModeCombineReadingMeaningIndexPath = model.add(ankiModeCombineReadingMeaning,
                                                        hidden:!Settings.ankiMode)
 
@@ -157,35 +167,38 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Play audio automatically",
                               subtitle: "When you answer correctly",
-                              on: Settings.playAudioAutomatically,
-                              target: self,
-                              action: #selector(playAudioAutomaticallySwitchChanged(_:))))
+                              on: Settings
+                                .playAudioAutomatically) { [unowned self] in
+        playAudioAutomaticallySwitchChanged($0)
+      })
     model.add(BasicModelItem(style: .default,
                              title: "Offline audio",
                              subtitle: nil,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapOfflineAudio(_:))))
+                             accessoryType: .disclosureIndicator) { [unowned self] in self
+        .didTapOfflineAudio()
+      })
 
     model.add(section: "Animations")
     model.add(SwitchModelItem(style: .default,
                               title: "Particle explosion",
                               subtitle: nil,
-                              on: Settings.animateParticleExplosion,
-                              target: self,
-                              action: #selector(animateParticleExplosionSwitchChanged(_:))))
+                              on: Settings
+                                .animateParticleExplosion) { [unowned self] in
+        animateParticleExplosionSwitchChanged($0)
+      })
     model.add(SwitchModelItem(style: .default,
                               title: "Level up popup",
                               subtitle: nil,
-                              on: Settings.animateLevelUpPopup,
-                              target: self,
-                              action: #selector(animateLevelUpPopupSwitchChanged(_:))))
+                              on: Settings
+                                .animateLevelUpPopup) { [unowned self] in
+        animateLevelUpPopupSwitchChanged($0)
+      })
     model.add(SwitchModelItem(style: .default,
                               title: "+1",
                               subtitle: nil,
-                              on: Settings.animatePlusOne,
-                              target: self,
-                              action: #selector(animatePlusOneSwitchChanged(_:))))
+                              on: Settings
+                                .animatePlusOne) { [unowned self] in animatePlusOneSwitchChanged($0)
+      })
 
     self.model = model
     model.reloadTable()
@@ -225,58 +238,58 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
 
   // MARK: - Switch change handlers
 
-  @objc private func animateParticleExplosionSwitchChanged(_ switchView: UISwitch) {
+  private func animateParticleExplosionSwitchChanged(_ switchView: UISwitch) {
     Settings.animateParticleExplosion = switchView.isOn
   }
 
-  @objc private func animateLevelUpPopupSwitchChanged(_ switchView: UISwitch) {
+  private func animateLevelUpPopupSwitchChanged(_ switchView: UISwitch) {
     Settings.animateLevelUpPopup = switchView.isOn
   }
 
-  @objc private func animatePlusOneSwitchChanged(_ switchView: UISwitch) {
+  private func animatePlusOneSwitchChanged(_ switchView: UISwitch) {
     Settings.animatePlusOne = switchView.isOn
   }
 
-  @objc private func groupMeaningReadingSwitchChanged(_ switchView: UISwitch) {
+  private func groupMeaningReadingSwitchChanged(_ switchView: UISwitch) {
     Settings.groupMeaningReading = switchView.isOn
     if let groupMeaningReadingIndexPath = groupMeaningReadingIndexPath {
       model?.setIndexPath(groupMeaningReadingIndexPath, hidden: !switchView.isOn)
     }
   }
 
-  @objc private func showAnswerImmediatelySwitchChanged(_ switchView: UISwitch) {
+  private func showAnswerImmediatelySwitchChanged(_ switchView: UISwitch) {
     Settings.showAnswerImmediately = switchView.isOn
   }
 
-  @objc private func showFullAnswerSwitchChanged(_ switchView: UISwitch) {
+  private func showFullAnswerSwitchChanged(_ switchView: UISwitch) {
     Settings.showFullAnswer = switchView.isOn
   }
 
-  @objc private func allowSkippingReviewsSwitchChanged(_ switchView: UISwitch) {
+  private func allowSkippingReviewsSwitchChanged(_ switchView: UISwitch) {
     Settings.allowSkippingReviews = switchView.isOn
   }
 
-  @objc private func minimizeReviewPenaltySwitchChanged(_ switchView: UISwitch) {
+  private func minimizeReviewPenaltySwitchChanged(_ switchView: UISwitch) {
     Settings.minimizeReviewPenalty = switchView.isOn
   }
 
-  @objc private func exactMatchSwitchChanged(_ switchView: UISwitch) {
+  private func exactMatchSwitchChanged(_ switchView: UISwitch) {
     Settings.exactMatch = switchView.isOn
   }
 
-  @objc private func enableCheatsSwitchChanged(_ switchView: UISwitch) {
+  private func enableCheatsSwitchChanged(_ switchView: UISwitch) {
     Settings.enableCheats = switchView.isOn
   }
 
-  @objc private func showSRSLevelIndicatorSwitchChanged(_ switchView: UISwitch) {
+  private func showSRSLevelIndicatorSwitchChanged(_ switchView: UISwitch) {
     Settings.showSRSLevelIndicator = switchView.isOn
   }
 
-  @objc private func showMinutesForNextLevelUpReview(_ switchView: UISwitch) {
+  private func showMinutesForNextLevelUpReview(_ switchView: UISwitch) {
     Settings.showMinutesForNextLevelUpReview = switchView.isOn
   }
 
-  @objc private func autoSwitchKeyboardSwitchChanged(_ switchView: UISwitch) {
+  private func autoSwitchKeyboardSwitchChanged(_ switchView: UISwitch) {
     if switchView.isOn, AnswerTextField.japaneseTextInputMode == nil {
       // The user wants a Japanese keyboard but they don't have one installed.
       let device = UIDevice.current.model
@@ -292,7 +305,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     Settings.autoSwitchKeyboard = switchView.isOn
   }
 
-  @objc private func ankiModeSwitchChanged(_ switchView: UISwitch) {
+  private func ankiModeSwitchChanged(_ switchView: UISwitch) {
     Settings.ankiMode = switchView.isOn
     Settings.ankiModeCombineReadingMeaning = false
     if let indexPath = ankiModeCombineReadingMeaningIndexPath {
@@ -300,37 +313,37 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     }
   }
 
-  @objc private func ankiModeCombineReadingMeaningSwitchChanged(_ switchView: UISwitch) {
+  private func ankiModeCombineReadingMeaningSwitchChanged(_ switchView: UISwitch) {
     Settings.ankiModeCombineReadingMeaning = switchView.isOn
   }
 
-  @objc private func playAudioAutomaticallySwitchChanged(_ switchView: UISwitch) {
+  private func playAudioAutomaticallySwitchChanged(_ switchView: UISwitch) {
     Settings.playAudioAutomatically = switchView.isOn
   }
 
   // MARK: - Tap handlers
 
-  @objc private func didTapReviewBatchSize(_: BasicModelItem) {
+  private func didTapReviewBatchSize() {
     navigationController?.pushViewController(makeReviewBatchSizeViewController(), animated: true)
   }
 
-  @objc private func fontSizeChanged(_: BasicModelItem) {
+  private func fontSizeChanged() {
     navigationController?.pushViewController(makeFontSizeViewController(), animated: true)
   }
 
-  @objc private func didTapReviewOrder(_: BasicModelItem) {
+  private func didTapReviewOrder() {
     navigationController?.pushViewController(makeReviewOrderViewController(), animated: true)
   }
 
-  @objc private func didTapFonts(_: BasicModelItem) {
+  private func didTapFonts() {
     perform(segue: StoryboardSegue.ReviewSettings.fonts, sender: self)
   }
 
-  @objc private func didTapTaskOrder(_: BasicModelItem) {
+  private func didTapTaskOrder() {
     navigationController?.pushViewController(makeTaskOrderViewController(), animated: true)
   }
 
-  @objc private func didTapOfflineAudio(_: Any?) {
+  private func didTapOfflineAudio() {
     perform(segue: StoryboardSegue.ReviewSettings.offlineAudio, sender: self)
   }
 }

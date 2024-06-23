@@ -73,23 +73,19 @@ class SettingsViewController: UITableViewController, TKMViewController {
     model.add(BasicModelItem(style: .subtitle,
                              title: "Export local database",
                              subtitle: "To attach to bug reports or email to the developer",
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapSendBugReport(_:))))
+                             accessoryType: .disclosureIndicator) { [unowned self] in
+        didTapSendBugReport()
+      })
     model.add(BasicModelItem(style: .subtitle,
                              title: "Clear avatar image cache",
                              subtitle: "If you are having issues with your avatar not loading, try clearing the image cache.",
-                             accessoryType: .none,
-                             target: self,
-                             action: #selector(didTapClearImageCache(_:))))
+                             accessoryType: .none) { [unowned self] in didTapClearImageCache() })
 
     model.addSection()
     let logOutItem = BasicModelItem(style: .default,
                                     title: "Log out",
                                     subtitle: nil,
-                                    accessoryType: .none,
-                                    target: self,
-                                    action: #selector(didTapLogOut(_:)))
+                                    accessoryType: .none) { [unowned self] in didTapLogOut() }
     logOutItem.textColor = .systemRed
     model.add(logOutItem)
 
@@ -129,7 +125,7 @@ class SettingsViewController: UITableViewController, TKMViewController {
 
   // MARK: - Tap handlers
 
-  @objc private func didTapLogOut(_: Any?) {
+  private func didTapLogOut() {
     let c = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
     c.addAction(UIAlertAction(title: "Log out", style: .destructive, handler: { _ in
       NotificationCenter.default.post(name: .logout, object: self)
@@ -138,13 +134,13 @@ class SettingsViewController: UITableViewController, TKMViewController {
     present(c, animated: true, completion: nil)
   }
 
-  @objc private func didTapSendBugReport(_: Any?) {
+  private func didTapSendBugReport() {
     let c = UIActivityViewController(activityItems: [LocalCachingClient.databaseUrl()],
                                      applicationActivities: nil)
     present(c, animated: true, completion: nil)
   }
 
-  @objc private func didTapClearImageCache(_: Any?) {
+  private func didTapClearImageCache() {
     HNKCache.shared().removeAllImages()
     let c = UIAlertController(title: "Image cache cleared", message: nil, preferredStyle: .alert)
     c.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))

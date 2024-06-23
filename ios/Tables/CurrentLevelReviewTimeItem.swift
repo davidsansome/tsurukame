@@ -16,7 +16,7 @@ import Foundation
 import WaniKaniAPI
 
 func createCurrentLevelReviewTimeItem(services: TKMServices,
-                                      currentLevelAssignments: [TKMAssignment]) -> TKMModelItem {
+                                      currentLevelAssignments: [TKMAssignment]) -> TableModelItem {
   let finish = calculateCurrentLevelReviewTime(services: services,
                                                currentLevelAssignments: currentLevelAssignments)
 

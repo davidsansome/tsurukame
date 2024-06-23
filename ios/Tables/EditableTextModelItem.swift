@@ -35,12 +35,14 @@ class EditableTextModelItem: AttributedModelItem {
     self.rightButtonImage = rightButtonImage
   }
 
-  override func cellClass() -> AnyClass! {
-    EditableTextModelCell.self
+  override var cellFactory: TableModelCellFactory {
+    .fromDefaultConstructor(cellClass: EditableTextModelCell.self)
   }
 }
 
 class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
+  @TypedModelItem var editableItem: EditableTextModelItem
+
   var placeholderLabel: UILabel!
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -66,23 +68,22 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
                                     width: textView.frame.width, height: bounds.height)
   }
 
-  override func update(with baseItem: TKMModelItem!) {
-    super.update(with: baseItem)
-    let item = baseItem as! EditableTextModelItem
+  override func update() {
+    super.update()
 
-    textView.font = item.font
+    textView.font = editableItem.font
     textView.textColor = TKMStyle.Color.label
-    textView.autocapitalizationType = item.autoCapitalizationType
-    textView.textContainer.maximumNumberOfLines = item.maximumNumberOfLines
-    placeholderLabel.text = item.placeholderText
-    placeholderLabel.font = item.font
+    textView.autocapitalizationType = editableItem.autoCapitalizationType
+    textView.textContainer.maximumNumberOfLines = editableItem.maximumNumberOfLines
+    placeholderLabel.text = editableItem.placeholderText
+    placeholderLabel.font = editableItem.font
     placeholderLabel.textColor = TKMStyle.Color.placeholderText
 
     if item.rightButtonImage != nil {
       textView.isEditable = false
     } else {
       textView.isEditable = true
-      if item.becomeFirstResponderImmediately {
+      if editableItem.becomeFirstResponderImmediately {
         textView.becomeFirstResponder()
       }
     }

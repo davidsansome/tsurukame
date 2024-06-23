@@ -33,8 +33,8 @@ class ReadingModelItem: AttributedModelItem {
     }
   }
 
-  override func cellClass() -> AnyClass! {
-    ReadingModelCell.self
+  override var cellFactory: TableModelCellFactory {
+    .fromDefaultConstructor(cellClass: ReadingModelCell.self)
   }
 
   func playAudio() {
@@ -49,14 +49,14 @@ class ReadingModelItem: AttributedModelItem {
 }
 
 class ReadingModelCell: AttributedModelCell, AudioDelegate {
-  override func update(with baseItem: TKMModelItem!) {
-    super.update(with: baseItem)
-    let item = baseItem as! ReadingModelItem
+  @TypedModelItem var readingItem: ReadingModelItem
 
-    if item.audioSubjectID != 0 {
-      item.audioDelegate = self
+  override func update() {
+    super.update()
+    if readingItem.audioSubjectID != 0 {
+      readingItem.audioDelegate = self
     } else {
-      item.audioDelegate = nil
+      readingItem.audioDelegate = nil
     }
   }
 

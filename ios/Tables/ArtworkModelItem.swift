@@ -17,29 +17,23 @@ import SwiftUI
 import UIKit
 
 @available(iOS 15.0, *)
-class ArtworkModelItem: NSObject, TKMModelItem {
+class ArtworkModelItem: TableModelItem {
   let subjectID: Int64
 
   init(subjectID: Int64) {
     self.subjectID = subjectID
   }
 
-  func cellClass() -> AnyClass {
-    ArtworkModelCell.self
-  }
-
-  func cellReuseIdentifier() -> String {
-    String(describing: cellClass())
-  }
-
-  @MainActor func createCell() -> TKMModelCell? {
-    ArtworkModelCell(style: .default, reuseIdentifier: cellReuseIdentifier())
+  var cellFactory: TableModelCellFactory {
+    .fromDefaultConstructor(cellClass: ArtworkModelCell.self)
   }
 }
 
 @available(iOS 15.0, *)
 @MainActor
-class ArtworkModelCell: TKMModelCell {
+class ArtworkModelCell: TableModelCell {
+  @TypedModelItem var item: ArtworkModelItem
+
   private var hostingController: UIHostingController<AnyView>?
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -120,9 +114,7 @@ class ArtworkModelCell: TKMModelCell {
     }
   }
 
-  override func update(with baseItem: TKMModelItem) {
-    super.update(with: baseItem)
-    guard let item = baseItem as? ArtworkModelItem else { return }
+  override func update() {
     updateHostingController(with: item.subjectID)
   }
 }

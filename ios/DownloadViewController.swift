@@ -132,9 +132,8 @@ class DownloadViewControllerClass: UITableViewController,
       // Try to update the visible cell without reloading the whole table.  This is a bit of a hack.
       if let indexPath = self.indexPaths[filename],
          let cell = self.tableView.cellForRow(at: indexPath),
-         let view = cell as? DownloadModelView,
-         let item = view.item as? DownloadModelItem {
-        fn(item)
+         let view = cell as? DownloadModelView {
+        fn(view.item)
         view.updateProgress()
       }
     }

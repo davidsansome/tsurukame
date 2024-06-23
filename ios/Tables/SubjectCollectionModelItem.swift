@@ -14,34 +14,31 @@
 
 import Foundation
 
-class SubjectCollectionModelItem: NSObject, TKMModelItem {
+class SubjectCollectionModelItem: TableModelItem {
   let subjects: [Int64]
   let fontSize: CGFloat
   let localCachingClient: LocalCachingClient
   weak var delegate: SubjectChipDelegate?
 
   init(subjects: [Int64], fontSize: CGFloat, localCachingClient: LocalCachingClient,
-       delegate: SubjectChipDelegate) {
+       delegate: SubjectChipDelegate? = nil) {
     self.subjects = subjects
     self.fontSize = fontSize
     self.localCachingClient = localCachingClient
     self.delegate = delegate
   }
 
-  func cellClass() -> AnyClass! {
-    SubjectCollectionModelView.self
+  var cellFactory: TableModelCellFactory {
+    .fromDefaultConstructor(cellClass: SubjectCollectionModelView.self)
   }
 }
 
-private class SubjectCollectionModelView: TKMModelCell {
+private class SubjectCollectionModelView: TableModelCell {
+  @TypedModelItem var item: SubjectCollectionModelItem
+
   var chips = [SubjectChip]()
 
-  override func update(with item: TKMModelItem!) {
-    super.update(with: item)
-    guard let item = item as? SubjectCollectionModelItem else {
-      return
-    }
-
+  override func update() {
     selectionStyle = .none
 
     // Remove all existing chips.

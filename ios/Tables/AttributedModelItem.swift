@@ -17,7 +17,7 @@ import Foundation
 private let kEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
 private let kMinimumHeight: CGFloat = 44
 
-class AttributedModelItem: NSObject, TKMModelItem {
+class AttributedModelItem: TableModelItem {
   var text: NSAttributedString
 
   var rightButtonImage: UIImage?
@@ -25,15 +25,16 @@ class AttributedModelItem: NSObject, TKMModelItem {
 
   init(text: NSAttributedString) {
     self.text = text
-    super.init()
   }
 
-  func cellClass() -> AnyClass! {
-    AttributedModelCell.self
+  var cellFactory: TableModelCellFactory {
+    .fromDefaultConstructor(cellClass: AttributedModelCell.self)
   }
 }
 
-class AttributedModelCell: TKMModelCell {
+class AttributedModelCell: TableModelCell {
+  @TypedModelItem var item: AttributedModelItem
+
   var textView: UITextView!
   var rightButton: UIButton?
 
@@ -128,10 +129,7 @@ class AttributedModelCell: TKMModelCell {
     textView.frame = availableRect
   }
 
-  override func update(with baseItem: TKMModelItem!) {
-    super.update(with: baseItem)
-    let item = baseItem as! AttributedModelItem
-
+  override func update() {
     textView.attributedText = item.text
 
     if let rightButtonImage = item.rightButtonImage {
@@ -149,7 +147,6 @@ class AttributedModelCell: TKMModelCell {
   }
 
   func removeRightButton() {
-    let item = self.item as! AttributedModelItem
     item.rightButtonImage = nil
 
     rightButton?.removeFromSuperview()
@@ -158,7 +155,6 @@ class AttributedModelCell: TKMModelCell {
   }
 
   @objc func didTapRightButton() {
-    let item = self.item as! AttributedModelItem
     item.rightButtonCallback?(self)
   }
 }

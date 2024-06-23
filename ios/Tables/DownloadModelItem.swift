@@ -19,7 +19,7 @@ protocol DownloadModelDelegate: AnyObject {
   func didTap(downloadItem: DownloadModelItem)
 }
 
-class DownloadModelItem: NSObject, TKMModelItem {
+class DownloadModelItem: TableModelItem {
   enum State {
     case notInstalled
     case downloading
@@ -50,12 +50,14 @@ class DownloadModelItem: NSObject, TKMModelItem {
     self.delegate = delegate
   }
 
-  func cellNibName() -> String! {
-    "DownloadModelItem"
+  var cellFactory: TableModelCellFactory {
+    .fromInterfaceBuilder(nibName: "DownloadModelItem")
   }
 }
 
-class DownloadModelView: TKMModelCell {
+class DownloadModelView: TableModelCell {
+  @TypedModelItem var item: DownloadModelItem
+
   @IBOutlet var previewContainer: UIView!
   @IBOutlet var preview: UILabel!
   @IBOutlet var previewImageView: UIImageView!
@@ -63,10 +65,7 @@ class DownloadModelView: TKMModelCell {
   @IBOutlet var title: UILabel!
   @IBOutlet var icon: UIImageView!
 
-  override func update(with item: TKMModelItem!) {
-    super.update(with: item)
-    let item = item as! DownloadModelItem
-
+  override func update() {
     if item.transparentBackground {
       backgroundColor = .clear
     } else {
@@ -118,8 +117,6 @@ class DownloadModelView: TKMModelCell {
   }
 
   func updateProgress() {
-    let item = self.item as! DownloadModelItem
-
     switch item.state {
     case .downloading:
       let percent = item.downloadingProgressBytes * 100 / item.totalSizeBytes
@@ -134,7 +131,6 @@ class DownloadModelView: TKMModelCell {
   }
 
   override func didSelect() {
-    let item = self.item as! DownloadModelItem
     if let delegate = item.delegate {
       delegate.didTap(downloadItem: item)
     }

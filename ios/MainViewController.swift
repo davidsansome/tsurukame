@@ -170,9 +170,9 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       let lessonsItem = BasicModelItem(style: .value1,
                                        title: "Lessons",
                                        subtitle: "",
-                                       accessoryType: .disclosureIndicator,
-                                       target: self,
-                                       action: #selector(startLessons))
+                                       accessoryType: .disclosureIndicator) { [unowned self] in self
+        .startLessons()
+      }
       let apprenticeCount = services.localCachingClient.apprenticeCount
       let limit = Settings.apprenticeLessonsLimit
       let disabledMessage = apprenticeCount >= limit ? "apprentice limit reached" : nil
@@ -181,27 +181,28 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       model.add(lessonsItem)
 
       if lessons > 0 && apprenticeCount < limit {
-        let lessonPickerItem = BasicModelItem(style: .value1,
-                                              title: "Lesson Picker",
-                                              subtitle: "",
-                                              accessoryType: .disclosureIndicator,
-                                              target: self,
-                                              action: #selector(showLessonPicker))
-        model.add(lessonPickerItem)
+        model.add(BasicModelItem(style: .value1,
+                                 title: "Lesson Picker",
+                                 subtitle: "",
+                                 accessoryType: .disclosureIndicator) { [unowned self] in
+            self.showLessonPicker()
+          })
       }
 
       let reviewsItem = BasicModelItem(style: .value1,
                                        title: "Reviews",
                                        subtitle: "",
-                                       accessoryType: .disclosureIndicator,
-                                       target: self,
-                                       action: #selector(startReviews))
+                                       accessoryType: .disclosureIndicator) { [unowned self] in self
+        .startReviews()
+      }
       hasReviews = setTableViewCellCount(reviewsItem, count: reviews)
       model.add(reviewsItem)
 
       model.add(section: "Upcoming reviews")
-      model.add(UpcomingReviewsChartItem(upcomingReviews, currentReviewCount: reviews, at: Date(),
-                                         target: self, action: #selector(showTableForecast)))
+      model.add(UpcomingReviewsChartItem(upcomingReviews: upcomingReviews,
+                                         currentReviewCount: reviews,
+                                         date: Date()) { [unowned self] in self.showTableForecast()
+        })
       model
         .add(createCurrentLevelReviewTimeItem(services: services,
                                               currentLevelAssignments: currentLevelAssignments))
@@ -210,9 +211,11 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
         let recentLessonsItem = BasicModelItem(style: .value1,
                                                title: "Review recent lessons",
                                                subtitle: "",
-                                               accessoryType: .disclosureIndicator,
-                                               target: self,
-                                               action: #selector(startRecentLessonReviews))
+                                               accessoryType: .disclosureIndicator) { [
+          unowned self
+        ] in
+          self.startRecentLessonReviews()
+        }
         _ = setTableViewCellCount(recentLessonsItem, count: recentLessonCount)
         model.add(recentLessonsItem)
       }
@@ -221,9 +224,11 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
         let recentMistakesItem = BasicModelItem(style: .value1,
                                                 title: "Review recent mistakes",
                                                 subtitle: "",
-                                                accessoryType: .disclosureIndicator,
-                                                target: self,
-                                                action: #selector(startRecentMistakeReviews))
+                                                accessoryType: .disclosureIndicator) { [
+          unowned self
+        ] in
+          self.startRecentMistakeReviews()
+        }
         _ = setTableViewCellCount(recentMistakesItem, count: recentMistakes)
         model.add(recentMistakesItem)
       }
@@ -269,13 +274,12 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
       }
       model.add(item)
       if category == SRSStageCategory.burned, count > 0 {
-        let reviewBurnedItem = BasicModelItem(style: .value1,
-                                              title: "Review burned items",
-                                              subtitle: "",
-                                              accessoryType: .disclosureIndicator,
-                                              target: self,
-                                              action: #selector(startBurnedItemReviews))
-        model.add(reviewBurnedItem)
+        model.add(BasicModelItem(style: .value1,
+                                 title: "Review burned items",
+                                 subtitle: "",
+                                 accessoryType: .disclosureIndicator) { [unowned self] in
+            self.startBurnedItemReviews()
+          })
       }
     }
 

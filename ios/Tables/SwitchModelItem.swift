@@ -15,29 +15,28 @@
 import Foundation
 import UIKit
 
-@objc(TKMSwitchModelItem)
 class SwitchModelItem: BasicModelItem {
   var isOn: Bool
-  var switchHandler: ((Bool) -> Void)?
+  var switchHandler: ((UISwitch) -> Void)?
 
   init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?, on: Bool,
-       target: NSObject? = nil, action: Selector? = nil, switchHandler: ((Bool) -> Void)? = nil) {
+       switchHandler: ((UISwitch) -> Void)? = nil) {
     isOn = on
     self.switchHandler = switchHandler
-    super.init(style: style, title: title, subtitle: subtitle, accessoryType: .none, target: target,
-               action: action, tapHandler: nil)
+    super.init(style: style, title: title, subtitle: subtitle, accessoryType: .none,
+               tapHandler: nil)
   }
 
-  override func cellClass() -> AnyClass! {
-    SwitchModelCell.self
-  }
-
-  override func createCell() -> TKMModelCell! {
-    SwitchModelCell(style: style, reuseIdentifier: cellReuseIdentifier())
+  override var cellFactory: TableModelCellFactory {
+    .fromFunction {
+      SwitchModelCell(style: self.style, reuseIdentifier: self.cellReuseIdentifier)
+    }
   }
 }
 
 class SwitchModelCell: BasicModelCell {
+  @TypedModelItem var switchItem: SwitchModelItem
+
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     accessoryView = UISwitch(frame: .zero)
@@ -51,25 +50,21 @@ class SwitchModelCell: BasicModelCell {
     accessoryView as! UISwitch
   }
 
-  override func update(with baseItem: TKMModelItem) {
+  override func update() {
     switchView.removeTarget(nil, action: nil, for: .valueChanged)
 
-    super.update(with: baseItem)
-    let item = baseItem as! SwitchModelItem
+    super.update()
 
-    switchView.isOn = item.isOn
-    if let switchHandler = item.switchHandler {
+    switchView.isOn = switchItem.isOn
+    if let switchHandler = switchItem.switchHandler {
       switchView.addAction(for: .valueChanged) { [unowned self] in
-        switchHandler(self.switchView.isOn)
+        switchHandler(self.switchView)
       }
-    } else if let target = item.target, let action = item.action {
-      switchView.addTarget(target, action: action, for: .valueChanged)
     }
   }
 
   override func didSelect() {
-    let item = self.item as! SwitchModelItem
-    item.isOn = !item.isOn
+    switchItem.isOn = !switchItem.isOn
 
     switchView.setOn(!switchView.isOn, animated: true)
     switchView.sendActions(for: .valueChanged)

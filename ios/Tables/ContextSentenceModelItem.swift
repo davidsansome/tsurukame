@@ -57,12 +57,14 @@ class ContextSentenceModelItem: AttributedModelItem {
     super.init(text: text)
   }
 
-  override func cellClass() -> AnyClass! {
-    ContextSentenceModelCell.self
+  override var cellFactory: TableModelCellFactory {
+    .fromDefaultConstructor(cellClass: ContextSentenceModelCell.self)
   }
 }
 
 private class ContextSentenceModelCell: AttributedModelCell {
+  @TypedModelItem var contextSentenceItem: ContextSentenceModelItem
+
   var blurredOverlay: UIView!
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -72,17 +74,15 @@ private class ContextSentenceModelCell: AttributedModelCell {
     contentView.addSubview(blurredOverlay)
   }
 
-  override func update(with baseItem: TKMModelItem!) {
-    super.update(with: baseItem)
+  override func update() {
+    super.update()
 
-    let item = self.item as! ContextSentenceModelItem
-    blurredOverlay.alpha = item.blurred ? 1 : 0
+    blurredOverlay.alpha = contextSentenceItem.blurred ? 1 : 0
   }
 
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    let item = self.item as! ContextSentenceModelItem
     let rect = contentView.bounds
     let size = rect.size
 
@@ -93,7 +93,8 @@ private class ContextSentenceModelCell: AttributedModelCell {
       TKMStyle.Color.cellBackground.setFill()
       UIRectFill(rect)
       englishCtx.setAlpha(kBlurAlpha)
-      item.englishText.draw(with: textView.frame, options: .usesLineFragmentOrigin, context: nil)
+      contextSentenceItem.englishText.draw(with: textView.frame, options: .usesLineFragmentOrigin,
+                                           context: nil)
     }
 
     // Blur the english text.
@@ -103,7 +104,8 @@ private class ContextSentenceModelCell: AttributedModelCell {
 
     // Render the Japanese text on top of the result.
     blurredCtx.with {
-      item.japaneseText.draw(with: textView.frame, options: .usesLineFragmentOrigin, context: nil)
+      contextSentenceItem.japaneseText.draw(with: textView.frame, options: .usesLineFragmentOrigin,
+                                            context: nil)
     }
 
     // Position the overlay and set its contents to the image we just rendered.
@@ -112,7 +114,7 @@ private class ContextSentenceModelCell: AttributedModelCell {
   }
 
   override func didSelect() {
-    (item as! ContextSentenceModelItem).blurred = false
+    contextSentenceItem.blurred = false
     UIView.animate(withDuration: kRevealDuration) {
       self.blurredOverlay.alpha = 0
     }

@@ -14,30 +14,28 @@
 
 import Foundation
 
-class ListSeparatorItem: NSObject, TKMModelItem {
+class ListSeparatorItem: TableModelItem {
   var label: String
 
   init(label: String) {
     self.label = label
-    super.init()
   }
 
-  func cellNibName() -> String! {
-    "ListSeparatorItem"
+  var cellFactory: TableModelCellFactory {
+    .fromInterfaceBuilder(nibName: "ListSeparatorItem")
   }
 
-  func rowHeight() -> CGFloat {
+  var rowHeight: CGFloat? {
     UIFontMetrics.default.scaledValue(for: 22.0)
   }
 }
 
-class ListSeparatorCell: TKMModelCell {
+class ListSeparatorCell: TableModelCell {
+  @TypedModelItem var item: ListSeparatorItem
+
   @IBOutlet var label: UILabel!
 
-  override func update(with baseItem: TKMModelItem!) {
-    super.update(with: baseItem)
-    let item = baseItem as! ListSeparatorItem
-
+  override func update() {
     label.text = item.label
 
     let boldFont = UIFont.boldSystemFont(ofSize: 14.0)

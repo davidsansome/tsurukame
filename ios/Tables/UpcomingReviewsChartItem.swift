@@ -36,36 +36,31 @@ class UpcomingReviewsXAxisValueFormatter: AxisValueFormatter {
   }
 }
 
-@objc
-class UpcomingReviewsChartItem: NSObject, TKMModelItem {
+class UpcomingReviewsChartItem: TableModelItem {
   let upcomingReviews: [Int]
   let currentReviewCount: Int
-  weak var target: NSObject?
-  let action: Selector
   let date: Date
+  let tapHandler: () -> Void
 
-  @objc init(_ upcomingReviews: [Int], currentReviewCount: Int, at date: Date,
-             target: NSObject, action: Selector) {
+  init(upcomingReviews: [Int], currentReviewCount: Int, date: Date,
+       tapHandler: @escaping () -> Void) {
     self.upcomingReviews = upcomingReviews
     self.currentReviewCount = currentReviewCount
     self.date = date
-    self.target = target
-    self.action = action
+    self.tapHandler = tapHandler
   }
 
-  func cellClass() -> AnyClass! {
-    UpcomingReviewsChartCell.self
+  var cellFactory: TableModelCellFactory {
+    .fromDefaultConstructor(cellClass: UpcomingReviewsChartCell.self)
   }
 
-  func rowHeight() -> CGFloat {
-    120
-  }
+  var rowHeight: CGFloat? { 120 }
 }
 
-class UpcomingReviewsChartCell: TKMModelCell {
+class UpcomingReviewsChartCell: TableModelCell {
+  @TypedModelItem var item: UpcomingReviewsChartItem
+
   private let view: CombinedChartView
-  private weak var targetController: NSObject?
-  private var action: Selector!
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     view = CombinedChartView()
@@ -99,11 +94,7 @@ class UpcomingReviewsChartCell: TKMModelCell {
     view.frame = contentView.bounds.inset(by: layoutMargins)
   }
 
-  override func update(with baseItem: TKMModelItem!) {
-    let item = baseItem as! UpcomingReviewsChartItem
-    targetController = item.target
-    action = item.action
-
+  override func update() {
     var hourlyData = [BarChartDataEntry]()
     var cumulativeData = [ChartDataEntry]()
 
@@ -151,6 +142,6 @@ class UpcomingReviewsChartCell: TKMModelCell {
   }
 
   override func didSelect() {
-    targetController?.perform(action)
+    item.tapHandler()
   }
 }

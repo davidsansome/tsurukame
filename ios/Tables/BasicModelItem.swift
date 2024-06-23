@@ -14,7 +14,7 @@
 
 import Foundation
 
-class BasicModelItem: NSObject, TKMModelItem {
+class BasicModelItem: TableModelItem {
   let style: UITableViewCell.CellStyle
 
   var title: String?
@@ -31,8 +31,6 @@ class BasicModelItem: NSObject, TKMModelItem {
 
   var image: UIImage?
 
-  weak var target: NSObject?
-  var action: Selector?
   var tapHandler: (() -> Void)?
 
   var textColor: UIColor?
@@ -43,49 +41,35 @@ class BasicModelItem: NSObject, TKMModelItem {
   weak var cell: BasicModelCell?
 
   init(style: UITableViewCell.CellStyle, title: String?, subtitle: String? = nil,
-       accessoryType: UITableViewCell.AccessoryType = .none, target: NSObject? = nil,
-       action: Selector? = nil, tapHandler: (() -> Void)? = nil) {
+       accessoryType: UITableViewCell.AccessoryType = .none, tapHandler: (() -> Void)? = nil) {
     self.style = style
     self.title = title
     self.subtitle = subtitle
     self.accessoryType = accessoryType
-    self.target = target
-    self.action = action
     self.tapHandler = tapHandler
 
     titleFont = UIFont.preferredFont(forTextStyle: .body)
     subtitleFont = UIFont.preferredFont(forTextStyle: .subheadline)
   }
 
-  // For objective-C compatibility only.
-  convenience init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?,
-                   accessoryType: UITableViewCell.AccessoryType, target: NSObject?,
-                   action: Selector?) {
-    self.init(style: style, title: title, subtitle: subtitle, accessoryType: accessoryType,
-              target: target, action: action, tapHandler: nil)
-  }
-
-  func cellClass() -> AnyClass! {
-    BasicModelCell.self
-  }
-
-  func cellReuseIdentifier() -> String! {
+  var cellReuseIdentifier: String {
     [
-      String(describing: cellClass()!),
+      String(describing: self.self),
       String(style.rawValue),
     ].joined(separator: "/")
   }
 
-  func createCell() -> TKMModelCell! {
-    BasicModelCell(style: style, reuseIdentifier: cellReuseIdentifier())
+  var cellFactory: TableModelCellFactory {
+    .fromFunction {
+      BasicModelCell(style: self.style, reuseIdentifier: self.cellReuseIdentifier)
+    }
   }
 }
 
-class BasicModelCell: TKMModelCell {
-  override func update(with baseItem: TKMModelItem!) {
-    super.update(with: baseItem)
-    let item = baseItem as! BasicModelItem
+class BasicModelCell: TableModelCell {
+  @TypedModelItem var item: BasicModelItem
 
+  override func update() {
     selectionStyle = .none
 
     textLabel?.text = item.title
@@ -115,11 +99,8 @@ class BasicModelCell: TKMModelCell {
   }
 
   override func didSelect() {
-    let item = self.item as! BasicModelItem
     if let tapHandler = item.tapHandler {
       tapHandler()
-    } else {
-      TKMSafePerformSelector(item.target, item.action, item)
     }
   }
 }

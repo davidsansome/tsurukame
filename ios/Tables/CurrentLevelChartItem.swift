@@ -66,24 +66,25 @@ func unsetAllLabels(view: ChartViewBase) {
   }
 }
 
-class CurrentLevelChartItem: NSObject, TKMModelItem {
+class CurrentLevelChartItem: TableModelItem {
   let currentLevelAssignments: [TKMAssignment]
 
   init(currentLevelAssignments: [TKMAssignment]) {
     self.currentLevelAssignments = currentLevelAssignments
-    super.init()
   }
 
-  func cellClass() -> AnyClass! {
-    CurrentLevelChartCell.self
+  var cellFactory: TableModelCellFactory {
+    .fromDefaultConstructor(cellClass: CurrentLevelChartCell.self)
   }
 
-  func rowHeight() -> CGFloat {
+  var rowHeight: CGFloat? {
     120
   }
 }
 
-class CurrentLevelChartCell: TKMModelCell {
+class CurrentLevelChartCell: TableModelCell {
+  @TypedModelItem var item: CurrentLevelChartItem
+
   var radicalChart: PieChartView!
   var kanjiChart: PieChartView!
   var vocabularyChart: PieChartView!
@@ -154,8 +155,7 @@ class CurrentLevelChartCell: TKMModelCell {
     }
   }
 
-  override func update(with baseItem: TKMModelItem!) {
-    let item = baseItem as! CurrentLevelChartItem
+  override func update() {
     let assignments = item.currentLevelAssignments
 
     update(chart: radicalChart, subjectType: .radical, withAssignments: assignments)

@@ -36,34 +36,36 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
     model.add(BasicModelItem(style: .value1,
                              title: "Order",
                              subtitle: lessonOrderValueText,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapLessonOrder(_:))))
+                             accessoryType: .disclosureIndicator) {
+        [unowned self] in self.didTapLessonOrder()
+      })
     model.add(BasicModelItem(style: .value1,
                              title: "Batch size",
                              subtitle: lessonBatchSizeText,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapLessonBatchSize(_:))))
+                             accessoryType: .disclosureIndicator) {
+        [unowned self] in self.didTapLessonBatchSize()
+      })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Prioritize current level",
                               subtitle: "Teach items from the current level first",
-                              on: Settings.prioritizeCurrentLevel,
-                              target: self,
-                              action: #selector(prioritizeCurrentLevelChanged(_:))))
+                              on: Settings.prioritizeCurrentLevel) {
+        [unowned self] in
+        self.prioritizeCurrentLevelChanged($0)
+      })
     model.add(BasicModelItem(style: .value1,
                              title: "Apprentice limit",
                              subtitle: apprenticeLessonsLimitText,
-                             accessoryType: .disclosureIndicator,
-                             target: self,
-                             action: #selector(didTapApprenticeLessonsLimit(_:))))
+                             accessoryType: .disclosureIndicator) {
+        [unowned self] in self.didTapApprenticeLessonsLimit()
+      })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Show kana-only vocabulary",
                               subtitle: "Include lessons for kana-only vocabulary" +
                                 " that were added in May 2023",
-                              on: Settings.showKanaOnlyVocab,
-                              target: self,
-                              action: #selector(showKanaOnlyVocabChanged(_:))))
+                              on: Settings.showKanaOnlyVocab) {
+        [unowned self] in
+        self.showKanaOnlyVocabChanged($0)
+      })
 
     self.model = model
     model.reloadTable()
@@ -100,15 +102,15 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
 
   // MARK: - Tap handlers
 
-  @objc private func didTapLessonOrder(_: BasicModelItem) {
+  private func didTapLessonOrder() {
     perform(segue: StoryboardSegue.LessonSettings.lessonOrder, sender: self)
   }
 
-  @objc private func didTapLessonBatchSize(_: BasicModelItem) {
+  private func didTapLessonBatchSize() {
     navigationController?.pushViewController(makeLessonBatchSizeViewController(), animated: true)
   }
 
-  @objc private func didTapApprenticeLessonsLimit(_: BasicModelItem) {
+  private func didTapApprenticeLessonsLimit() {
     navigationController?.pushViewController(makeApprenticeLessonLimitViewController(),
                                              animated: true)
   }

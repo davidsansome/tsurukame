@@ -19,43 +19,38 @@ class CheckmarkModelItem: BasicModelItem {
   var switchHandler: ((Bool) -> Void)?
 
   init(style: UITableViewCell.CellStyle, title: String?, subtitle: String? = nil, on: Bool,
-       target: NSObject? = nil, action: Selector? = nil, switchHandler: ((Bool) -> Void)? = nil) {
+       switchHandler: ((Bool) -> Void)? = nil) {
     isOn = on
     self.switchHandler = switchHandler
-    super.init(style: style, title: title, subtitle: subtitle, accessoryType: .none, target: target,
-               action: action, tapHandler: nil)
+    super.init(style: style, title: title, subtitle: subtitle, accessoryType: .none,
+               tapHandler: nil)
   }
 
-  override func cellClass() -> AnyClass! {
-    CheckmarkModelCell.self
-  }
-
-  override func createCell() -> TKMModelCell! {
-    CheckmarkModelCell(style: style, reuseIdentifier: cellReuseIdentifier())
+  override var cellFactory: TableModelCellFactory {
+    .fromFunction {
+      CheckmarkModelCell(style: self.style, reuseIdentifier: self.cellReuseIdentifier)
+    }
   }
 }
 
 class CheckmarkModelCell: BasicModelCell {
+  @TypedModelItem var checkmarkItem: CheckmarkModelItem
+
   private static let kTapAnimationWhiteness: CGFloat = 0.5
   private static let kTapAnimationDuration: TimeInterval = 0.4
 
-  override func update(with baseItem: TKMModelItem) {
-    super.update(with: baseItem)
-    let item = baseItem as! CheckmarkModelItem
-
-    accessoryType = item.isOn ? .checkmark : .none
+  override func update() {
+    super.update()
+    accessoryType = checkmarkItem.isOn ? .checkmark : .none
   }
 
   override func didSelect() {
-    let item = self.item as! CheckmarkModelItem
-    item.isOn = !item.isOn
+    checkmarkItem.isOn = !checkmarkItem.isOn
 
-    if let switchHandler = item.switchHandler {
-      switchHandler(item.isOn)
-    } else {
-      TKMSafePerformSelector(item.target, item.action, item)
+    if let switchHandler = checkmarkItem.switchHandler {
+      switchHandler(checkmarkItem.isOn)
     }
-    accessoryType = item.isOn ? .checkmark : .none
+    accessoryType = checkmarkItem.isOn ? .checkmark : .none
 
     backgroundColor = UIColor(white: CheckmarkModelCell.kTapAnimationWhiteness, alpha: 1.0)
     UIView.animate(withDuration: CheckmarkModelCell.kTapAnimationDuration, delay: 0.0,

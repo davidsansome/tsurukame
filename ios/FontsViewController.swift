@@ -59,8 +59,10 @@ class FontsViewController: DownloadViewController {
 
     if fileManager.fileExists(atPath: FontLoader.cacheDirectoryPath) {
       model.addSection()
-      let deleteItem = BasicModelItem(style: .default, title: "Delete all downloaded fonts",
-                                      tapHandler: didTapDeleteAllFonts)
+      let deleteItem = BasicModelItem(style: .default, title: "Delete all downloaded fonts") {
+        [unowned self] in
+        self.didTapDeleteAllFonts()
+      }
       deleteItem.textColor = .systemRed
       model.add(deleteItem)
     }

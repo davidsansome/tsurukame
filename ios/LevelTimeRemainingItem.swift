@@ -16,7 +16,7 @@ import Foundation
 import WaniKaniAPI
 
 func createLevelTimeRemainingItem(services: TKMServices,
-                                  currentLevelAssignments: [TKMAssignment]) -> TKMModelItem {
+                                  currentLevelAssignments: [TKMAssignment]) -> TableModelItem {
   let (finish, isEstimate) = calculateLevelTimeRemaining(services: services,
                                                          currentLevelAssignments: currentLevelAssignments)
 

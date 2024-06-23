@@ -68,7 +68,7 @@ class OfflineAudioViewController: UITableViewController {
       let item = SwitchModelItem(style: .subtitle,
                                  title: title,
                                  subtitle: subtitle,
-                                 on: on) { [unowned self] (on: Bool) in
+                                 on: on) { [unowned self] (_: UISwitch) in
         self.toggleVoiceActor(voiceActorId: id, on: on)
       }
       item.isEnabled = enabled
@@ -87,10 +87,10 @@ class OfflineAudioViewController: UITableViewController {
     updateCacheSize()
   }
 
-  private func toggleOfflineAudio(on: Bool) {
-    Settings.offlineAudio = on
+  private func toggleOfflineAudio(switchView: UISwitch) {
+    Settings.offlineAudio = switchView.isOn
 
-    if on {
+    if switchView.isOn {
       // Select all voice actors if there are none selected already.
       if Settings.offlineAudioVoiceActors.isEmpty {
         for voiceActor in services.localCachingClient.getVoiceActors() {
@@ -102,7 +102,7 @@ class OfflineAudioViewController: UITableViewController {
     settingsChanged()
     rerender()
 
-    if !on {
+    if !switchView.isOn {
       // Ask the user if they want to delete audio that's downloaded already.
       let device = UIDevice.current.model
       let ac = UIAlertController(title: "Delete offline audio?",
@@ -120,8 +120,8 @@ class OfflineAudioViewController: UITableViewController {
     }
   }
 
-  private func toggleCellular(on: Bool) {
-    Settings.offlineAudioCellular = on
+  private func toggleCellular(switchView: UISwitch) {
+    Settings.offlineAudioCellular = switchView.isOn
     settingsChanged()
   }
 
@@ -198,12 +198,11 @@ class OfflineAudioViewController: UITableViewController {
     }
 
     DispatchQueue.main.async {
-      if let statusCell = self.tableView.cellForRow(at: statusIndex) as? BasicModelCell,
-         let item = statusCell.item as? BasicModelItem {
-        item.title = self.statusTitle
-        item.subtitle = self.statusSubtitle
-        statusCell.textLabel?.text = item.title
-        statusCell.detailTextLabel?.text = item.subtitle
+      if let statusCell = self.tableView.cellForRow(at: statusIndex) as? BasicModelCell {
+        statusCell.item.title = self.statusTitle
+        statusCell.item.subtitle = self.statusSubtitle
+        statusCell.textLabel?.text = statusCell.item.title
+        statusCell.detailTextLabel?.text = statusCell.item.subtitle
       }
     }
   }
@@ -217,9 +216,8 @@ class OfflineAudioViewController: UITableViewController {
       cacheDirectorySize()
     }.done { sizeLabel in
       DispatchQueue.main.async {
-        if let sizeCell = self.tableView.cellForRow(at: sizeIndex) as? BasicModelCell,
-           let item = sizeCell.item as? BasicModelItem {
-          item.subtitle = sizeLabel
+        if let sizeCell = self.tableView.cellForRow(at: sizeIndex) as? BasicModelCell {
+          sizeCell.item.subtitle = sizeLabel
           sizeCell.detailTextLabel?.text = sizeLabel
         }
       }
