@@ -25,7 +25,6 @@ public protocol SubjectLevelGetter: AnyObject {
  * You need an API token to use this class.  Use WaniKaniWebClient to get an
  * API token from a username and password.
  */
-@objc(Client)
 public class WaniKaniAPIClient: NSObject {
   public weak var subjectLevelGetter: SubjectLevelGetter!
 
@@ -33,7 +32,6 @@ public class WaniKaniAPIClient: NSObject {
   private let session: URLSession
   private let httpDateFormatter: DateFormatter
 
-  @objc
   public init(apiToken: String) {
     self.apiToken = apiToken
 

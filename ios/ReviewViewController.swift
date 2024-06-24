@@ -235,7 +235,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     kanaInput = TKMKanaInput(delegate: self)
   }
 
-  @objc
   public func setup(services: TKMServices,
                     items: [ReviewItem],
                     showMenuButton: Bool,

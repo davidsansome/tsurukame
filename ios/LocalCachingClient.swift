@@ -46,7 +46,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   }
 }
 
-@objc class LocalCachingClient: NSObject, SubjectLevelGetter {
+class LocalCachingClient: NSObject, SubjectLevelGetter {
   let client: WaniKaniAPIClient
   let reachability: Reachability
 
@@ -64,7 +64,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
   @Cached var apprenticeCount: Int
   @Cached var recentLessonCount: Int
   @Cached(notificationName: .lccSRSCategoryCountsChanged) var srsCategoryCounts: [Int]
-  @objc @Cached var maxLevelGrantedBySubscription: Int
+  @Cached var maxLevelGrantedBySubscription: Int
 
   init(client: WaniKaniAPIClient, reachability: Reachability) {
     self.client = client

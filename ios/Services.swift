@@ -16,23 +16,17 @@ import Foundation
 import Reachability
 import WaniKaniAPI
 
-@objc
-@objcMembers
-class TKMServices: NSObject {
-  let reachability: Reachability
-  let fontLoader: FontLoader
+struct TKMServices {
+  let reachability: Reachability = .forInternetConnection()
+  let fontLoader: FontLoader = .init()
 
   private(set) var offlineAudio: OfflineAudio!
   private(set) var audio: Audio!
+
   var client: WaniKaniAPIClient!
   var localCachingClient: LocalCachingClient!
 
-  override init() {
-    reachability = Reachability.forInternetConnection()
-    fontLoader = FontLoader()
-
-    super.init()
-
+  init() {
     offlineAudio = OfflineAudio(services: self)
     audio = Audio(services: self)
   }

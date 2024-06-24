@@ -16,7 +16,6 @@ import Foundation
 import PMKFoundation
 import PromiseKit
 
-@objc
 public enum WaniKaniWebClientError: Int, LocalizedError {
   case csrfTokenNotFound
   case apiTokenNotFound
@@ -43,20 +42,11 @@ public enum WaniKaniWebClientError: Int, LocalizedError {
   }
 }
 
-// TODO: Convert this to a struct when we only call it from Swift.
-@objc
-@objcMembers
-public class LoginResult: NSObject {
-  public var cookie: String!
-  public var apiToken: String!
-
-  init(cookie: String, apiToken: String) {
-    self.cookie = cookie
-    self.apiToken = apiToken
-  }
+public struct LoginResult {
+  public let cookie: String
+  public let apiToken: String
 }
 
-@objc
 public class WaniKaniWebClient: NSObject {
   // MARK: - Login
 

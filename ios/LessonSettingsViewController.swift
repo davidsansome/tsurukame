@@ -92,11 +92,11 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
 
   // MARK: - Switch change handlers
 
-  @objc private func prioritizeCurrentLevelChanged(_ switchView: UISwitch) {
+  private func prioritizeCurrentLevelChanged(_ switchView: UISwitch) {
     Settings.prioritizeCurrentLevel = switchView.isOn
   }
 
-  @objc private func showKanaOnlyVocabChanged(_ switchView: UISwitch) {
+  private func showKanaOnlyVocabChanged(_ switchView: UISwitch) {
     Settings.showKanaOnlyVocab = switchView.isOn
   }
 
