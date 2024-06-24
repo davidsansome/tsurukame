@@ -16,7 +16,7 @@ import Foundation
 import Reachability
 import WaniKaniAPI
 
-struct TKMServices {
+class TKMServices {
   let reachability: Reachability = .forInternetConnection()
   let fontLoader: FontLoader = .init()
 
