@@ -18,7 +18,6 @@
 #import "Extensions/MMDrawerController+setAnimatingDrawer.h"
 #import "Extensions/NSString+LevenshteinDistance.h"
 #import "TKMKanaInput.h"
-#import "UIView+SafeAreaInsets.h"
 
 #import <Haneke/Haneke.h>
 #import <WatchConnectivity/WatchConnectivity.h>

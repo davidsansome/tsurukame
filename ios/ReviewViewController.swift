@@ -361,7 +361,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // 15.
     if #available(iOS 15.0, *) {} else {
       subjectDetailsView
-        .contentInset = UIEdgeInsets(top: -view.tkm_safeAreaInsets.top, left: 0, bottom: 0,
+        .contentInset = UIEdgeInsets(top: -view.safeAreaInsets.top, left: 0, bottom: 0,
                                      right: 0)
     }
   }

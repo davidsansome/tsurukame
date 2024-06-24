@@ -75,7 +75,7 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
 
-    let safeArea = view.frame.inset(by: view.tkm_safeAreaInsets)
+    let safeArea = view.frame.inset(by: view.safeAreaInsets)
     let pageControlSize = pageControl.sizeThatFits(CGSize(width: view.frame.size.width, height: 0))
     let pageControlFrame = CGRect(x: safeArea.minX, y: safeArea.maxY - pageControlSize.height,
                                   width: safeArea.size.width,
