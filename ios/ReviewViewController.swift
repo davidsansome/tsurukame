@@ -1108,7 +1108,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
          Settings.ankiMode,
          Settings.ankiModeCombineReadingMeaning {
         session.nextTask()
-        marked = session.markAnswer(.Correct)
+        marked = session.markAnswer(.Correct, isPracticeSession: isPracticeSession)
       }
 
       if Settings.playAudioAutomatically, session.activeTaskType == .reading,
