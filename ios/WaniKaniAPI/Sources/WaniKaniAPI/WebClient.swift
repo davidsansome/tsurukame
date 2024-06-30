@@ -212,11 +212,11 @@ private let kDashboardUrl = URL(string: "https://www.wanikani.com/dashboard")!
 private let kCSRFTokenRE = try! NSRegularExpression(pattern:
   "<meta name=\"csrf-token\" content=\"([^\"]*)", options: [])
 private let kApiTokenRE = try! NSRegularExpression(pattern:
-  "personal-access-token-description\">\\s*" +
+  ">\\s*" +
     "Tsurukame\\s*" +
-    "</td>\\s*" +
-    "<td class=\"personal-access-token-token\">\\s*" +
-    "<code>([a-f0-9-]{36})</code>", options: [])
+    "</.*?" +
+    "<code[^>]*>([a-f0-9-]{36})</code>",
+  options: [.dotMatchesLineSeparators])
 private let kEmailRE = try! NSRegularExpression(pattern:
   "<input[^>]+value=\"([^\"]+)\"[^>]+id=\"user_email\"")
 
