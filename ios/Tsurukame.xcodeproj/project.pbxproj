@@ -369,7 +369,6 @@
 		63CAAB0A1FD2CBD900E09DA1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63CAAB101FD7FAC600E09DA1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		63CAB3FA2604A1450057E1C2 /* URLRequest+SetBodyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+SetBodyTest.swift"; sourceTree = "<group>"; };
-		63CAB4F72605F9AF0057E1C2 /* WaniKaniAPI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = WaniKaniAPI; sourceTree = "<group>"; };
 		63CBFF2127730ED00086BA5F /* DownloadModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadModelItem.swift; sourceTree = "<group>"; };
 		63CBFF2527731B8B0086BA5F /* DownloadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewController.swift; sourceTree = SOURCE_ROOT; };
 		63CBFF28277327920086BA5F /* FontsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontsViewController.swift; sourceTree = "<group>"; };
@@ -640,7 +639,6 @@
 				636A63E6238A607A00902269 /* VacationModeView.swift */,
 				636A63E3238A5D6B00902269 /* VacationModeView.xib */,
 				633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */,
-				63CAB4F72605F9AF0057E1C2 /* WaniKaniAPI */,
 				C92AB96E237F280300F79904 /* WatchHelper.swift */,
 			);
 			sourceTree = "<group>";
