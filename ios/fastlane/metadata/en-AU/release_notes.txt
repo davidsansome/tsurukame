@@ -10,6 +10,8 @@ Features
 - Add more quick settings
 
 Bugfixes:
+- Fix an issue when logging in with username and password
+- Use the system's font size for all text
 - Fix an issue where recent mistakes would be lost after a sync
 - Use the system font size in the smaller subject chips
 - Fixed an issue where context sentences would be blurred again when scrolling up and down.
