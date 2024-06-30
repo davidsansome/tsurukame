@@ -594,7 +594,9 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       "LEFT JOIN assignments AS a " +
       "ON p.id = a.subject_id " +
       "WHERE srs_stage >= \(category.firstSrsStage.rawValue) AND srs_stage <= \(category.lastSrsStage.rawValue)") {
-      ret.append(cursor.proto(forColumnIndex: 0)!)
+      if let pb: TKMAssignment = cursor.proto(forColumnIndex: 0) {
+        ret.append(pb)
+      }
     }
     return ret
   }
