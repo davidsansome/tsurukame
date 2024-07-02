@@ -58,11 +58,17 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
       }
 
       for item in incorrectItemsByLevel[level]! {
-        if let subject = services.localCachingClient.getSubject(id: item.assignment.subjectID) {
-          model.add(SubjectModelItem(subject: subject, delegate: self, assignment: nil,
-                                     readingWrong: item.answer.readingWrong,
-                                     meaningWrong: item.answer.meaningWrong))
+        var subject = item.subject
+        if subject == nil {
+          subject = services.localCachingClient.getSubject(id: item.assignment.subjectID)
         }
+        guard let subject = subject else {
+          continue
+        }
+
+        model.add(SubjectModelItem(subject: subject, delegate: self, assignment: nil,
+                                   readingWrong: item.answer.readingWrong,
+                                   meaningWrong: item.answer.meaningWrong))
       }
     }
     self.model = model

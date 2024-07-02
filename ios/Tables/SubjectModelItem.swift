@@ -126,7 +126,8 @@ class SubjectModelView: TableModelCell {
         meaningLabel.text = item.subject
           .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
       case .vocabulary:
-        readingLabel.isHidden = false
+        readingLabel.isHidden = item.subject.readings.isEmpty
+        meaningLabel.isHidden = item.subject.meanings.isEmpty
         readingLabel.text = item.subject.commaSeparatedReadings
         meaningLabel.text = item.subject
           .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)

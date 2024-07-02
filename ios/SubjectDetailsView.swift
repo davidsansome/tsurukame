@@ -471,6 +471,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     self.hiddenIndexPaths = hiddenIndexPaths.filter {
       $0 != nil
     } as! [IndexPath]
+
+    if self.hiddenIndexPaths.isEmpty {
+      return
+    }
+
     for indexPath in self.hiddenIndexPaths {
       model.setIndexPath(indexPath, hidden: true)
     }
@@ -601,9 +606,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     // Your progress, SRS level, next review, first started, reached guru
     if let subjectAssignment = assignment, Settings.showStatsSection {
-      model.add(section: "Stats")
-      model.add(BasicModelItem(style: .value1, title: "WaniKani Level",
-                               subtitle: String(subjectAssignment.level)))
+      if subjectAssignment.hasLevel {
+        model.add(section: "Stats")
+        model.add(BasicModelItem(style: .value1, title: "WaniKani Level",
+                                 subtitle: String(subjectAssignment.level)))
+      }
 
       if subjectAssignment.hasStartedAt {
         if subjectAssignment.hasSrsStageNumber {

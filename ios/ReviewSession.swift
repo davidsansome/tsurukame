@@ -79,13 +79,18 @@ class ReviewSession {
   public func nextTask() {
     activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
     activeTask = activeQueue[activeTaskIndex]
-    activeSubject = services.localCachingClient.getSubject(id: activeTask.assignment.subjectID)!
-    activeStudyMaterials =
-      services.localCachingClient
-        .getStudyMaterial(subjectId: activeTask.assignment.subjectID)
+
+    if let subject = activeTask.subject {
+      activeSubject = subject
+      activeStudyMaterials = nil
+    } else {
+      activeSubject = services.localCachingClient.getSubject(id: activeTask.assignment.subjectID)!
+      activeStudyMaterials =
+        services.localCachingClient.getStudyMaterial(subjectId: activeTask.assignment.subjectID)
+    }
 
     // Choose whether to ask the meaning or the reading.
-    if activeTask.answeredMeaning {
+    if activeTask.answeredMeaning || activeSubject.meanings.isEmpty {
       activeTaskType = .reading
     } else if activeTask.answeredReading || activeSubject.readings.isEmpty {
       activeTaskType = .meaning
@@ -169,7 +174,8 @@ class ReviewSession {
 
     // Remove it from the active queue if that was the last part.
     let isSubjectFinished =
-      activeTask.answeredMeaning && (activeTask.answeredReading || activeSubject.readings.isEmpty)
+      (activeTask.answeredMeaning || activeSubject.meanings.isEmpty) &&
+      (activeTask.answeredReading || activeSubject.readings.isEmpty)
     let didLevelUp = (!activeTask.answer.readingWrong && !activeTask.answer
       .meaningWrong && !isPracticeSession)
     let newSrsStage =

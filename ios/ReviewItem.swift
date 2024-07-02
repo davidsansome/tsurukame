@@ -90,12 +90,15 @@ class ReviewItem: NSObject {
   }
 
   let assignment: TKMAssignment
+  let subject: TKMSubject?
+
   var answeredReading = false
   var answeredMeaning = false
   var answer = TKMProgress()
 
-  init(assignment: TKMAssignment) {
+  init(assignment: TKMAssignment, subject: TKMSubject? = nil) {
     self.assignment = assignment
+    self.subject = subject
     answer.assignment = assignment
     answer.isLesson = assignment.isLessonStage
   }

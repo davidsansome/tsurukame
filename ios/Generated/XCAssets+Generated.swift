@@ -53,6 +53,7 @@ internal enum Asset {
   internal static let icSearchWhite = ImageAsset(name: "ic_search_white")
   internal static let icSettingsWhite = ImageAsset(name: "ic_settings_white")
   internal static let inbox = ImageAsset(name: "inbox")
+  internal static let katakana = ImageAsset(name: "katakana")
   internal static let launchScreen = ImageAsset(name: "launch_screen")
   internal static let offline = ImageAsset(name: "offline")
   internal static let radical241 = ImageAsset(name: "radical-241")
@@ -99,6 +100,7 @@ internal enum Asset {
   internal static let refresh = ImageAsset(name: "refresh")
   internal static let thumb = ImageAsset(name: "thumb")
   internal static let tick = ImageAsset(name: "tick")
+  internal static let wanikani = ImageAsset(name: "wanikani")
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
