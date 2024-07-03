@@ -44,6 +44,8 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   var searchController: UISearchController!
   weak var searchResultsViewController: SearchResultViewController!
+  weak var tabBarViewController: MainTabBarViewController?
+
   var hourlyRefreshTimer = Timer()
   var isShowingUnauthorizedAlert = false
   var isUpdating = false
@@ -126,7 +128,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   private func recreateTableModel() {
     updateUserInfo()
 
-    // TODO: Update child tables.
+    tabBarViewController?.update()
   }
 
   // MARK: - UIViewController
@@ -189,6 +191,8 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     case .embedTabBar:
       let vc = segue.destination as! MainTabBarViewController
       vc.setup(services: services, waniKaniTabDelegate: self)
+
+      tabBarViewController = vc
 
     default:
       break

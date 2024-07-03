@@ -62,6 +62,10 @@ class MainWaniKaniTabViewController: UITableViewController {
     recreateTableModel()
   }
 
+  func update() {
+    recreateTableModel()
+  }
+
   private func recreateTableModel() {
     guard let user = services.localCachingClient.getUserInfo() else { return }
 

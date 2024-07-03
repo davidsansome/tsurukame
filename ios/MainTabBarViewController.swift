@@ -17,6 +17,8 @@ import Foundation
 class MainTabBarViewController: UITabBarController {
   var services: TKMServices!
   weak var waniKaniTabDelegate: MainWaniKaniTabViewController.Delegate?
+  weak var waniKaniViewController: MainWaniKaniTabViewController?
+  weak var practiceViewController: MainPracticeTabViewController?
 
   func setup(services: TKMServices, waniKaniTabDelegate: MainWaniKaniTabViewController.Delegate?) {
     self.services = services
@@ -28,13 +30,20 @@ class MainTabBarViewController: UITabBarController {
       switch vc {
       case let vc as MainWaniKaniTabViewController:
         vc.setup(services: services, delegate: waniKaniTabDelegate)
+        waniKaniViewController = vc
 
       case let vc as MainPracticeTabViewController:
         vc.setup(services: services)
+        practiceViewController = vc
 
       default:
         break
       }
     }
+  }
+
+  func update() {
+    waniKaniViewController?.update()
+    practiceViewController?.update()
   }
 }

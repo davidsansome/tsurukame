@@ -27,7 +27,11 @@ class MainPracticeTabViewController: UITableViewController {
     recreateTableModel()
   }
 
-  func recreateTableModel() {
+  func update() {
+    recreateTableModel()
+  }
+
+  private func recreateTableModel() {
     let model = MutableTableModel(tableView: tableView)
 
     model.add(section: "Katakana")
