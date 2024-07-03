@@ -69,7 +69,7 @@ class MainPracticeTabViewController: UITableViewController {
       }
 
       let vc = segue.destination as! ReviewContainerViewController
-      vc.setup(services: services, items: items)
+      vc.setup(services: services, items: items, isPracticeSession: true)
 
     default:
       break
