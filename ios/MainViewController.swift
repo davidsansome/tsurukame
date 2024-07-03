@@ -194,6 +194,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
       tabBarViewController = vc
 
+    case .settings:
+      let vc = segue.destination as! SettingsViewController
+      vc.setup(services: services)
+
     default:
       break
     }

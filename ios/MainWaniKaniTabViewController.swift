@@ -305,10 +305,6 @@ class MainWaniKaniTabViewController: UITableViewController {
       let vc = segue.destination as! SubjectsRemainingViewController
       vc.setup(services: services, level: selectedSubjectCatalogLevel)
 
-    case .settings:
-      let vc = segue.destination as! SettingsViewController
-      vc.setup(services: services)
-
     case .tableForecast:
       let vc = segue.destination as! UpcomingReviewsViewController
       vc.setup(services: services)
