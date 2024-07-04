@@ -1189,7 +1189,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
   private var busy = false
   func sync(quick: Bool, progress: Progress) -> PMKFinalizer {
-    guard !busy else {
+    guard !busy && reachability.isReachable() else {
       // Set isFinished to true so the caller knows we didn't do any work.
       progress.totalUnitCount = 1
       progress.completedUnitCount = 1
