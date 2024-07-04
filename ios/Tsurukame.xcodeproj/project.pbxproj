@@ -22,6 +22,7 @@
 		631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
 		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
+		631F34D72C36B7FE0071E983 /* BiggerTapAreaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631F34D62C36B7FE0071E983 /* BiggerTapAreaButton.swift */; };
 		633252882727E8A700ABBA04 /* SubjectCatalogueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */; };
 		6332528C2727F29D00ABBA04 /* PillModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6332528B2727F29D00ABBA04 /* PillModelItem.xib */; };
 		6332528E2727F32800ABBA04 /* PillModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6332528D2727F32800ABBA04 /* PillModelItem.swift */; };
@@ -269,6 +270,7 @@
 		631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCheckerTest.swift; sourceTree = "<group>"; };
 		631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelTimeRemainingItem.swift; sourceTree = "<group>"; };
 		631CAD71234B4A96008CEA73 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
+		631F34D62C36B7FE0071E983 /* BiggerTapAreaButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiggerTapAreaButton.swift; sourceTree = "<group>"; };
 		633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectCatalogueViewController.swift; sourceTree = "<group>"; };
 		6332528B2727F29D00ABBA04 /* PillModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PillModelItem.xib; sourceTree = "<group>"; };
 		6332528D2727F32800ABBA04 /* PillModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillModelItem.swift; sourceTree = "<group>"; };
@@ -565,6 +567,7 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				631F34D62C36B7FE0071E983 /* BiggerTapAreaButton.swift */,
 				63ECACD22C3430F800A0FBDD /* MainPracticeTabViewController.swift */,
 				63A702192C2DBD0D00AB0504 /* MainTabBarViewController.swift */,
 				63A702162C2DB97D00AB0504 /* MainWaniKaniTabViewController.swift */,
@@ -1384,6 +1387,7 @@
 				63CAAB091FD2C66100E09DA1 /* NSString+LevenshteinDistance.m in Sources */,
 				636A63DE238A107A00902269 /* CurrentLevelChartItem.swift in Sources */,
 				BBE4E32E2172576B003A200E /* FontLoader.swift in Sources */,
+				631F34D72C36B7FE0071E983 /* BiggerTapAreaButton.swift in Sources */,
 				63A16774253AD8AE00B5BCD6 /* CGContext+Blur.swift in Sources */,
 				63CBFF2227730ED10086BA5F /* DownloadModelItem.swift in Sources */,
 				6332528E2727F32800ABBA04 /* PillModelItem.swift in Sources */,
