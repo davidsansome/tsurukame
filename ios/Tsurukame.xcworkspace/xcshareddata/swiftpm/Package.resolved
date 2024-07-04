@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/JanGorman/Hippolyte",
         "state": {
           "branch": null,
-          "revision": "97238c56579bf1f43ca67d7b6d3b07eebd6d4641",
-          "version": "1.3.0"
+          "revision": "5b393c644c84877f36e461ae6d8209d35161e098",
+          "version": "1.4.1"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/mxcl/PromiseKit",
         "state": {
           "branch": null,
-          "revision": "3fd8c77ded8a4bbee548e3bd6c987ffe8c1e3574",
-          "version": "6.17.0"
+          "revision": "8a98e31a47854d3180882c8068cc4d9381bf382d",
+          "version": "6.22.1"
         }
       },
       {
@@ -51,13 +51,13 @@
         "repositoryURL": "https://github.com/apple/swift-algorithms",
         "state": {
           "branch": null,
-          "revision": "b14b7f4c528c942f121c8b860b9410b2bf57825e",
-          "version": "1.0.0"
+          "revision": "f6919dfc309e7f1b56224378b11e28bab5bccc42",
+          "version": "1.2.0"
         }
       },
       {
         "package": "swift-numerics",
-        "repositoryURL": "https://github.com/apple/swift-numerics",
+        "repositoryURL": "https://github.com/apple/swift-numerics.git",
         "state": {
           "branch": null,
           "revision": "0a5bc04095a675662cf24757cc0640aa2204253b",
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/apple/swift-protobuf",
         "state": {
           "branch": null,
-          "revision": "e1904bf5a5f79cb7e0ff68a427a53a93b652fcd1",
-          "version": "1.15.0"
+          "revision": "d57a5aecf24a25b32ec4a74be2f5d0a995a47c4b",
+          "version": "1.27.0"
         }
       }
     ]

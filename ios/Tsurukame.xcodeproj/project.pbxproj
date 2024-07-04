@@ -111,6 +111,7 @@
 		63CBFF24277315C80086BA5F /* DownloadModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CBFF2127730ED00086BA5F /* DownloadModelItem.swift */; };
 		63CBFF2627731B8B0086BA5F /* DownloadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CBFF2527731B8B0086BA5F /* DownloadViewController.swift */; };
 		63CBFF29277327920086BA5F /* FontsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CBFF28277327920086BA5F /* FontsViewController.swift */; };
+		63CCBF362C4502930002E9A2 /* BiggerTapAreaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CCBF352C4502930002E9A2 /* BiggerTapAreaButton.swift */; };
 		63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */; };
 		63D2DAEE275C5D4100D5F6FF /* UIControl+addAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D2DAED275C5D4100D5F6FF /* UIControl+addAction.swift */; };
 		63D746E127746C0800DDC822 /* ReviewContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B63FF827733DAC0098DAAD /* ReviewContainerViewController.swift */; };
@@ -334,6 +335,7 @@
 		63CBFF2127730ED00086BA5F /* DownloadModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadModelItem.swift; sourceTree = "<group>"; };
 		63CBFF2527731B8B0086BA5F /* DownloadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewController.swift; sourceTree = SOURCE_ROOT; };
 		63CBFF28277327920086BA5F /* FontsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontsViewController.swift; sourceTree = "<group>"; };
+		63CCBF352C4502930002E9A2 /* BiggerTapAreaButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BiggerTapAreaButton.swift; sourceTree = "<group>"; };
 		63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+InterfaceStyle.swift"; sourceTree = "<group>"; };
 		63D2DAED275C5D4100D5F6FF /* UIControl+addAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+addAction.swift"; sourceTree = "<group>"; };
 		63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingAppDelegate.swift; sourceTree = "<group>"; };
@@ -517,6 +519,7 @@
 				6335B46323CF0C820071671E /* AppStoreScreenshots */,
 				6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */,
 				63F7F52D23D4C2CA006A31FB /* Audio.swift */,
+				63CCBF352C4502930002E9A2 /* BiggerTapAreaButton.swift */,
 				C90846AD237F1C770068A272 /* Complication */,
 				C90846BC237F1C790068A272 /* ComplicationExtension */,
 				6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */,
@@ -574,8 +577,8 @@
 				63391B5C2779BECB005CDA72 /* SubjectDetailsSettingsViewController.swift */,
 				633AFAE023516BE7004F732F /* SubjectDetailsView.swift */,
 				63C74C9E25C9858D004F6C99 /* SubjectDetailsViewController.swift */,
-				63C74C8E25C970DA004F6C99 /* SubjectsByLevelViewController.swift */,
 				796706272B3BE71000CAF09B /* SubjectsByCategoryViewController.swift */,
+				63C74C8E25C970DA004F6C99 /* SubjectsByLevelViewController.swift */,
 				636502B225D7A39600801C2D /* SubjectsRemainingViewController.swift */,
 				63DE410727818A9A002CFB80 /* SuccessAnimation.swift */,
 				633DE93C20C2CA0600AC25F4 /* Tables */,
@@ -1283,6 +1286,7 @@
 				630EB13F25C5713000783E54 /* ReviewItem.swift in Sources */,
 				63DE410827818A9A002CFB80 /* SuccessAnimation.swift in Sources */,
 				63E1386A27E6C12500AC4706 /* SettingChoiceListViewController.swift in Sources */,
+				63CCBF362C4502930002E9A2 /* BiggerTapAreaButton.swift in Sources */,
 				63EF5752260617E30038551A /* LoginViewController.swift in Sources */,
 				63A9A55D282389C900602D09 /* ReviewSession.swift in Sources */,
 				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
