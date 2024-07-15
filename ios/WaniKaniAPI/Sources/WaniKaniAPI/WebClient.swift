@@ -128,16 +128,18 @@ public class WaniKaniWebClient: NSObject {
       let csrfToken = try self.extractCSRFToken(arg.data)
 
       let queryItems = [
-        URLQueryItem(name: "personal_access_token[description]", value: "Tsurukame"),
-        URLQueryItem(name: "personal_access_token[permissions][assignments][start]", value: "1"),
-        URLQueryItem(name: "personal_access_token[permissions][reviews][create]", value: "1"),
-        URLQueryItem(name: "personal_access_token[permissions][reviews][update]", value: "1"),
-        URLQueryItem(name: "personal_access_token[permissions][study_materials][create]",
-                     value: "1"),
-        URLQueryItem(name: "personal_access_token[permissions][study_materials][update]",
-                     value: "1"),
+        URLQueryItem(name: "description", value: "Tsurukame"),
+        URLQueryItem(name: "permissions[assignments][start]", value: "0"),
+        URLQueryItem(name: "permissions[assignments][start]", value: "1"),
+        URLQueryItem(name: "permissions[reviews][create]", value: "0"),
+        URLQueryItem(name: "permissions[reviews][create]", value: "1"),
+        URLQueryItem(name: "permissions[study_materials][create]", value: "0"),
+        URLQueryItem(name: "permissions[study_materials][create]", value: "1"),
+        URLQueryItem(name: "permissions[study_materials][update]", value: "0"),
+        URLQueryItem(name: "permissions[study_materials][update]", value: "1"),
+        URLQueryItem(name: "permissions[user][update]", value: "0"),
         URLQueryItem(name: "authenticity_token", value: csrfToken),
-        URLQueryItem(name: "utf8", value: "✓"),
+        URLQueryItem(name: "button", value: ""),
       ]
 
       var req = self.authorize(kAccessTokenUrl, cookie: cookie)
