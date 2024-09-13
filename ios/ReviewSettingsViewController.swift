@@ -358,9 +358,15 @@ func makeFontSizeViewController() -> UIViewController {
 }
 
 func makeReviewBatchSizeViewController() -> UIViewController {
+  let name = "Review Batch Size"
+  let description = "The \(name) setting is ONLY used when \"back-to-back\" reviews are disabled.\n\n" +
+    "When \"back-to-back\" reviews are disabled, you might be asked to review the meaning of an item and then " + 
+    "later after reviewing some other items, be asked to review the reading of that item. \nThe \(name) setting " + 
+    "controls the number of different review items you can encounter between reviewing the reading and " + 
+    "meaning for a given item."
   let vc = SettingChoiceListViewController(setting: Settings.$reviewBatchSize,
-                                           title: "Review Batch Size",
-                                           helpText: "Set the review queue size.")
+                                           title: name,
+                                           helpText: description)
   vc.addChoicesFromRange(3 ... 10, suffix: " reviews")
   return vc
 }
