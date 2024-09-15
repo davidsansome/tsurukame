@@ -59,7 +59,9 @@ class Audio: NSObject {
       case .playing:
         try? session.setActive(true, options: [])
       case .finished:
-        try? session.setActive(false, options: [.notifyOthersOnDeactivation])
+        DispatchQueue.global().async {
+          try? session.setActive(false, options: [.notifyOthersOnDeactivation])
+        }
       default:
         break
       }
