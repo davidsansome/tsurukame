@@ -19,6 +19,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
   private var services: TKMServices!
   private var model: TableModel?
   private var groupMeaningReadingIndexPath: IndexPath?
+  private var nonBackToBackBatchSizeIndexPath: IndexPath?
   private var ankiModeCombineReadingMeaningIndexPath: IndexPath?
 
   func setup(services: TKMServices) {
@@ -63,12 +64,13 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                              },
                                              hidden:!Settings
                                                .groupMeaningReading)
-    model.add(BasicModelItem(style: .value1,
-                             title: "Batch size",
-                             subtitle: "\(Settings.reviewBatchSize.description)",
-                             accessoryType: .disclosureIndicator) { [unowned self] in self
-        .didTapReviewBatchSize()
-      })
+    nonBackToBackBatchSizeIndexPath = model.add(BasicModelItem(style: .value1,
+                                                               title: "Batch size",
+                                                               subtitle: "\(Settings.reviewBatchSize.description)",
+                                                               accessoryType: .disclosureIndicator) {
+                                                  [unowned self] in self.didTapReviewBatchSize()
+                                                },
+                                                hidden: Settings.groupMeaningReading)
 
     model.add(section: "Display")
     model.add(SwitchModelItem(style: .subtitle,
@@ -254,6 +256,9 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     Settings.groupMeaningReading = switchView.isOn
     if let groupMeaningReadingIndexPath = groupMeaningReadingIndexPath {
       model?.setIndexPath(groupMeaningReadingIndexPath, hidden: !switchView.isOn)
+    }
+    if let nonBackToBackBatchSizeIndexPath = nonBackToBackBatchSizeIndexPath {
+      model?.setIndexPath(nonBackToBackBatchSizeIndexPath, hidden: switchView.isOn)
     }
   }
 
