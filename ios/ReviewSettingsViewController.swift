@@ -16,6 +16,7 @@ import Foundation
 import UIKit
 
 class ReviewSettingsViewController: UITableViewController, TKMViewController {
+  static let NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME = "Reviews Between Meaning & Reading"
   private var services: TKMServices!
   private var model: TableModel?
   private var groupMeaningReadingIndexPath: IndexPath?
@@ -65,7 +66,8 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                              hidden:!Settings
                                                .groupMeaningReading)
     nonBackToBackBatchSizeIndexPath = model.add(BasicModelItem(style: .value1,
-                                                               title: "Batch size",
+                                                               title: ReviewSettingsViewController
+                                                                 .NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME,
                                                                subtitle: "\(Settings.reviewBatchSize.description)",
                                                                accessoryType: .disclosureIndicator) {
                                                   [unowned self] in self.didTapReviewBatchSize()
@@ -363,11 +365,15 @@ func makeFontSizeViewController() -> UIViewController {
 }
 
 func makeReviewBatchSizeViewController() -> UIViewController {
-  let name = "Review Batch Size"
-  let description = "The \(name) setting is ONLY used when \"back-to-back\" reviews are disabled.\n\n" +
-    "When \"back-to-back\" reviews are disabled, you might be asked to review the meaning of an item and then " + 
-    "later after reviewing some other items, be asked to review the reading of that item. \nThe \(name) setting " + 
-    "controls the number of different review items you can encounter between reviewing the reading and " + 
+  let name = ReviewSettingsViewController.NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME
+  let description =
+    "The \"\(name)\" setting is ONLY used when \"back-to-back\" reviews are disabled.\n\n" +
+    "When \"back-to-back\" reviews are disabled, you might be asked to review the meaning of an item and then " +
+
+    "later after reviewing some other items, be asked to review the reading of that item. \nThe \"\(name)\" setting " +
+
+    "controls the number of different review items you can encounter between reviewing the reading and " +
+
     "meaning for a given item."
   let vc = SettingChoiceListViewController(setting: Settings.$reviewBatchSize,
                                            title: name,
