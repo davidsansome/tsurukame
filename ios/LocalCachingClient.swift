@@ -1257,6 +1257,8 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
                              ])
       }
     }
+    // make sure cloud is up to date in case we synced incomplete data earlier
+    updateRecentMistakesInCloud(recentMistakesData: recentMistakes)
     postNotificationOnMainQueue(.lccRecentMistakesCountChanged)
   }
 
