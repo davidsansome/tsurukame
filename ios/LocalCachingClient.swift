@@ -1232,14 +1232,17 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     // merge existing mistakes from storage and cloud
     let recentMistakes = mergeCloudWithLocalMistakes(recentMistakesData: recentMistakesData)
     // write back to cloud
-    var mistakeStr = ""
-    recentMistakes.forEach { item in
-      mistakeStr += String(item.key) + "|" + item.value + ","
+    if recentMistakes.count > 0 {
+      var mistakeStr = ""
+      recentMistakes.forEach { item in
+        mistakeStr += String(item.key) + "|" + item.value + ","
+      }
+      keyValueStore.set(mistakeStr, forKey: getRecentMistakesCloudStorageKey())
+      keyValueStore
+        .set(Date(), forKey: "lastSyncCall") // makes sure we get a notif on other devices
+      keyValueStore.synchronize() // fails silently if no account
+      postNotificationOnMainQueue(.lccRecentMistakesCountChanged)
     }
-    keyValueStore.set(mistakeStr, forKey: getRecentMistakesCloudStorageKey())
-    keyValueStore.set(Date(), forKey: "lastSyncCall") // makes sure we get a notif on other devices
-    keyValueStore.synchronize() // fails silently if no account
-    postNotificationOnMainQueue(.lccRecentMistakesCountChanged)
   }
 
   func updateRecentMistakesFromCloud() {
