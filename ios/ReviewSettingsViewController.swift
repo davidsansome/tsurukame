@@ -175,6 +175,13 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                 .playAudioAutomatically) { [unowned self] in
         playAudioAutomaticallySwitchChanged($0)
       })
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Interrupt background audio",
+                              subtitle: "When answer is played automatically",
+                              on: Settings
+                                .interruptBackgroundAudio) { [unowned self] in
+        interruptBackgroundAudioSwitchChanged($0)
+      })
     model.add(BasicModelItem(style: .default,
                              title: "Offline audio",
                              subtitle: nil,
@@ -326,6 +333,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
 
   private func playAudioAutomaticallySwitchChanged(_ switchView: UISwitch) {
     Settings.playAudioAutomatically = switchView.isOn
+  }
+
+  private func interruptBackgroundAudioSwitchChanged(_ switchView: UISwitch) {
+    Settings.interruptBackgroundAudio = switchView.isOn
   }
 
   // MARK: - Tap handlers

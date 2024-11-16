@@ -206,6 +206,7 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(seenFullAnswerPrompt)) static var seenFullAnswerPrompt: Bool
 
   @Setting(false, #keyPath(playAudioAutomatically)) static var playAudioAutomatically: Bool
+  @Setting(false, #keyPath(interruptBackgroundAudio)) static var interruptBackgroundAudio: Bool
   @Setting(false, #keyPath(offlineAudio)) static var offlineAudio: Bool
   @Setting(false, #keyPath(offlineAudioCellular)) static var offlineAudioCellular: Bool
   @Setting([], #keyPath(offlineAudioVoiceActors)) static var offlineAudioVoiceActors: Set<Int64>

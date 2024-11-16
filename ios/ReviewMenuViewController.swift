@@ -96,6 +96,10 @@ class ReviewMenuViewController: UIViewController, UITableViewDelegate {
                                  on: Settings.playAudioAutomatically) { on in
         Settings.playAudioAutomatically = on
       })
+    model.add(CheckmarkModelItem(style: .default, title: "Interrupt background audio",
+                                 on: Settings.playAudioAutomatically) { on in
+        Settings.interruptBackgroundAudio = on
+      })
 
     model.add(section: "End review session")
     endItem = BasicModelItem(style: .default, title: "End review session") { [weak self] in self?
