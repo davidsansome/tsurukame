@@ -93,8 +93,12 @@ private class ContextSentenceModelCell: AttributedModelCell {
       TKMStyle.Color.cellBackground.setFill()
       UIRectFill(rect)
       englishCtx.setAlpha(kBlurAlpha)
-      contextSentenceItem.englishText.draw(with: textView.frame, options: .usesLineFragmentOrigin,
-                                           context: nil)
+      // draw the full attributed string as displayed by the text view with Japanese as clear text
+      let mut = NSMutableAttributedString(attributedString: textView.attributedText)
+      mut.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.clear,
+                       range: NSRange(location: 0,
+                                      length: contextSentenceItem.japaneseText.length))
+      mut.draw(in: textView.frame)
     }
 
     // Blur the english text.
