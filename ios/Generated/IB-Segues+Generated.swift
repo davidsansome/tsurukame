@@ -37,6 +37,9 @@ internal enum StoryboardSegue {
     case reviewSummary
     case subjectDetails
   }
+  internal enum ReviewMenu: String, SegueType {
+    case fonts
+  }
   internal enum ReviewSettings: String, SegueType {
     case fonts
     case offlineAudio
