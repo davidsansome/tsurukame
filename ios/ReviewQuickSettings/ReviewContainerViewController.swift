@@ -16,7 +16,7 @@ import Foundation
 import MMDrawerController
 
 class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDelegate,
-  ReviewMenuDelegate {
+  ReviewQuickSettingsMenuDelegate {
   var services: TKMServices!
   var reviewVC: ReviewViewController!
 
@@ -27,11 +27,12 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
     reviewVC.setup(services: services, items: items, showMenuButton: true, showSubjectHistory: true,
                    delegate: self, isPracticeSession: isPracticeSession)
 
-    let menuVC = StoryboardScene.ReviewMenu.initialScene.instantiate()
-    menuVC.setup(services: services, delegate: self)
+    let menuVC = ReviewQuickSettingsMenu(services: services, delegate: self)
+    let menuNavigationVC = UINavigationController(rootViewController: menuVC)
+    menuNavigationVC.navigationBar.tintColor = .white
 
     centerViewController = reviewVC
-    leftDrawerViewController = menuVC
+    leftDrawerViewController = menuNavigationVC
     shouldStretchDrawer = false
     closeDrawerGestureModeMask = .all
     openDrawerGestureModeMask = .bezelPanningCenterView
@@ -51,6 +52,16 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
     }
   }
 
+  // MARK: - UIViewController
+
+  override func viewWillAppear(_ animated: Bool) {
+    if isInSettingsVc {
+      isInSettingsVc = false
+      closeDrawer(animated: false, completion: nil)
+    }
+    super.viewWillAppear(animated)
+  }
+
   // MARK: - ReviewViewControllerDelegate
 
   func allowsCheats(forReviewItem _: ReviewItem) -> Bool {
@@ -58,6 +69,7 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
   }
 
   func tappedMenuButton(reviewViewController _: ReviewViewController, menuButton _: UIButton) {
+    (leftDrawerViewController as! UINavigationController).popToRootViewController(animated: false)
     open(.left, animated: true, completion: nil)
   }
 
@@ -76,12 +88,17 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
 
   // MARK: - ReviewMenuDelegate
 
-  func quickSettingsChanged(closeDrawer shouldCloseDrawer: Bool) {
-    reviewVC.quickSettingsChanged()
+  // Set to true when another settings view controller is pushed. Upon returning to
+  // this view controller, the ReviewViewController will reload its display.
+  var isInSettingsVc = false
 
-    if shouldCloseDrawer {
-      closeDrawer(animated: false, completion: nil)
-    }
+  func closeMenuAndPush(viewController: UIViewController) {
+    isInSettingsVc = true
+    navigationController?.pushViewController(viewController, animated: true)
+  }
+
+  func quickSettingsChanged() {
+    reviewVC.quickSettingsChanged()
   }
 
   func endReviewSession(button: UIView) {
