@@ -26,6 +26,7 @@ class MainTabBarViewController: UITabBarController {
   }
 
   override func viewDidLoad() {
+    view.backgroundColor = .clear
     for vc in viewControllers! {
       switch vc {
       case let vc as MainWaniKaniTabViewController:
