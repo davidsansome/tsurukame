@@ -26,6 +26,10 @@ class MainTabBarViewController: UITabBarController {
   }
 
   override func viewDidLoad() {
+    if !FeatureFlags.showOtherPracticeModes {
+      tabBar.isHidden = true
+    }
+
     view.backgroundColor = .clear
     for vc in viewControllers! {
       switch vc {

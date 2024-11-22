@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 71;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -73,6 +73,7 @@
 		6398480E23D699E70077EB6B /* ContextSentenceModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */; };
 		63996B3C2594389500149414 /* LocalCachingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16785253AD8D200B5BCD6 /* LocalCachingClient.swift */; };
 		63996B44259438C400149414 /* FMDatabase+Assert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */; };
+		639CE0BD2CF0ABD500902668 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639CE0BC2CF0ABCE00902668 /* FeatureFlags.swift */; };
 		639E750427E9CFB3006E36EA /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639E750327E9CFB3006E36EA /* GradientView.swift */; };
 		63A16774253AD8AE00B5BCD6 /* CGContext+Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1676F253AD8AD00B5BCD6 /* CGContext+Blur.swift */; };
 		63A16775253AD8AE00B5BCD6 /* FMDatabase+Assert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */; };
@@ -312,6 +313,7 @@
 		639528EC25CC0688009845ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		639528FC25CC2F4F009845ED /* LessonOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonOrderViewController.swift; sourceTree = "<group>"; };
 		6398480D23D699E70077EB6B /* ContextSentenceModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextSentenceModelItem.swift; sourceTree = "<group>"; };
+		639CE0BC2CF0ABCE00902668 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		639E750327E9CFB3006E36EA /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		63A1676F253AD8AD00B5BCD6 /* CGContext+Blur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGContext+Blur.swift"; sourceTree = "<group>"; };
 		63A16770253AD8AD00B5BCD6 /* FMDatabase+Assert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FMDatabase+Assert.swift"; sourceTree = "<group>"; };
@@ -433,6 +435,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		632C17482CE98FCB00D2CF55 /* ReviewQuickSettings */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ReviewQuickSettings; sourceTree = "<group>"; };
+		639CE0B52CF0AA3700902668 /* BuildConfigs */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = BuildConfigs; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -564,6 +567,8 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				639CE0BC2CF0ABCE00902668 /* FeatureFlags.swift */,
+				639CE0B52CF0AA3700902668 /* BuildConfigs */,
 				632C17482CE98FCB00D2CF55 /* ReviewQuickSettings */,
 				631F34D62C36B7FE0071E983 /* BiggerTapAreaButton.swift */,
 				63ECACD22C3430F800A0FBDD /* MainPracticeTabViewController.swift */,
@@ -821,6 +826,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				632C17482CE98FCB00D2CF55 /* ReviewQuickSettings */,
+				639CE0B52CF0AA3700902668 /* BuildConfigs */,
 			);
 			name = Tsurukame;
 			packageProductDependencies = (
@@ -1422,6 +1428,7 @@
 				636A63E1238A2B8200902269 /* SRSStageCategoryItem.swift in Sources */,
 				481B2FED23C55AAF0041EF1F /* CurrentLevelReviewTimeItem.swift in Sources */,
 				63BEBF9725C57D4000123147 /* SearchResultViewController.swift in Sources */,
+				639CE0BD2CF0ABD500902668 /* FeatureFlags.swift in Sources */,
 				639528FD25CC2F4F009845ED /* LessonOrderViewController.swift in Sources */,
 				63E1386827E59F4100AC4706 /* FullRefreshOverlayView.swift in Sources */,
 				633252882727E8A700ABBA04 /* SubjectCatalogueViewController.swift in Sources */,
@@ -1699,7 +1706,8 @@
 		};
 		630FD62A1FC45BDF00D21C1F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 34E86AD95515CD815B3086D0 /* Pods-Tsurukame.debug.xcconfig */;
+			baseConfigurationReferenceAnchor = 639CE0B52CF0AA3700902668 /* BuildConfigs */;
+			baseConfigurationReferenceRelativePath = DeveloperDebug.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -1736,7 +1744,8 @@
 		};
 		630FD62B1FC45BDF00D21C1F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 21894D9E0883B0107075DD6F /* Pods-Tsurukame.release.xcconfig */;
+			baseConfigurationReferenceAnchor = 639CE0B52CF0AA3700902668 /* BuildConfigs */;
+			baseConfigurationReferenceRelativePath = AppStoreRelease.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;

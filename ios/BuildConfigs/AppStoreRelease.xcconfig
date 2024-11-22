@@ -1,0 +1,3 @@
+#include "../Pods/Target Support Files/Pods-Tsurukame/Pods-Tsurukame.release.xcconfig"
+
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) TSURUKAME_CONFIG_APP_STORE_RELEASE
