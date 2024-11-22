@@ -489,6 +489,10 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
                      assignment: TKMAssignment?, task: ReviewItem?) {
+    if FeatureFlags.dumpSubjectTextproto {
+      print(subject)
+    }
+
     let model = MutableTableModel(tableView: self), isReview = task != nil
     model.useSectionHeaderHeightFromView = true
 
@@ -646,6 +650,13 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
        ArtworkManager.contains(subjectID: subject.id) {
       model.add(section: "Artwork by @AmandaBear")
       model.add(ArtworkModelItem(subjectID: subject.id))
+    }
+
+    if FeatureFlags.showSubjectDeveloperOptions {
+      model.add(section: "Developer options")
+      model.add(BasicModelItem(style: .default, title: "Open practice review") { [unowned self] in
+        self.subjectDelegate.openPracticeReview(subject)
+      })
     }
 
     tableModel = model

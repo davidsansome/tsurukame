@@ -115,6 +115,19 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     navigationController?.pushViewController(vc, animated: true)
   }
 
+  func openPracticeReview(_ subject: TKMSubject) {
+    if FeatureFlags.showSubjectDeveloperOptions {
+      var assignment = TKMAssignment()
+      assignment.subjectType = subject.subjectType
+      let item = ReviewItem(assignment: assignment, subject: subject)
+
+      let vc = StoryboardScene.ReviewContainer.initialScene.instantiate()
+      vc.setup(services: services, items: [item], isPracticeSession: true)
+
+      navigationController?.pushViewController(vc, animated: true)
+    }
+  }
+
   // MARK: - Keyboard navigation
 
   override var canBecomeFirstResponder: Bool { true }

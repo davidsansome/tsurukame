@@ -12,22 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Compile-time feature flags.
 enum FeatureFlags {
-  private enum Config {
+  // Whether to show a tab bar at the bottom of the main screen to select between WaniKani and other
+  // practice modes.
+  static let showOtherPracticeModes = (config != .AppStoreRelease)
+
+  // Whether to print the Subject textproto when loading a SubjectDetailsView.
+  static let dumpSubjectTextproto = (config == .DeveloperDebug)
+
+  // Whether to show an extra Developer Options section at the bottom of the SubjectDetailsView.
+  static let showSubjectDeveloperOptions = (config == .DeveloperDebug)
+
+  private enum BuildConfig {
     case DeveloperDebug
     case TestFlightRelease
     case AppStoreRelease
   }
 
+  // These SWIFT_ACTIVE_COMPILATION_CONDITIONS are set by the .xcconfig files in the BuildConfigs
+  // directory.
   #if TSURUKAME_CONFIG_DEVELOPER_DEBUG
-    private static let config = Config.DeveloperDebug
+    private static let config = BuildConfig.DeveloperDebug
   #endif
   #if TSURUKAME_CONFIG_TESTFLIGHT_RELEASE
-    private static let config = Config.TestFlightRelease
+    private static let config = BuildConfig.TestFlightRelease
   #endif
   #if TSURUKAME_CONFIG_APP_STORE_RELEASE
-    private static let config = Config.AppStoreRelease
+    private static let config = BuildConfig.AppStoreRelease
   #endif
-
-  static let showOtherPracticeModes = (config != .AppStoreRelease)
 }
