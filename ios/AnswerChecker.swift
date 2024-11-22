@@ -188,6 +188,12 @@ class AnswerChecker: NSObject {
         if reading.reading == hiraganaText {
           return .Precise
         }
+
+        // Some katakana kanji subjects like ページ only have one primary katakana reading.
+        let hiraganaReading = convertKatakanaToHiragana(reading.reading)
+        if hiraganaReading == hiraganaText {
+          return .Precise
+        }
       }
       for reading in subject.alternateReadings {
         if reading.reading == hiraganaText {
