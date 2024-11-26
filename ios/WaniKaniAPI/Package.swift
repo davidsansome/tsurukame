@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(name: "WaniKaniAPI",
                       platforms: [
                         .iOS("12.0"),
-                        .macOS("15.1"),
+                        .macOS("14.6"),
                       ],
                       products: [
                         // Products define the executables and libraries a package produces, and
