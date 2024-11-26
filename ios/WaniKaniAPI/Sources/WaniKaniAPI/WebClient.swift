@@ -47,7 +47,9 @@ public struct LoginResult {
   public let apiToken: String
 }
 
-public class WaniKaniWebClient: NSObject {
+public class WaniKaniWebClient {
+  public init() {}
+
   // MARK: - Login
 
   /**

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import UIKit
+import Foundation
 
 private func jsonFromBundle<T>(_ fileName: String) -> T {
   let path = Bundle.module.path(forResource: fileName, ofType: nil)

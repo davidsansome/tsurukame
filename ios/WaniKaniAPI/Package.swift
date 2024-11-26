@@ -5,7 +5,8 @@ import PackageDescription
 
 let package = Package(name: "WaniKaniAPI",
                       platforms: [
-                        .iOS("9.3"),
+                        .iOS("12.0"),
+                        .macOS("15.1"),
                       ],
                       products: [
                         // Products define the executables and libraries a package produces, and
@@ -38,4 +39,5 @@ let package = Package(name: "WaniKaniAPI",
                                 ]),
                         .testTarget(name: "WaniKaniAPITests",
                                     dependencies: ["Hippolyte", "WaniKaniAPI"]),
+                        .target(name: "WaniKaniAPIProber", dependencies: ["WaniKaniAPI"]),
                       ])
