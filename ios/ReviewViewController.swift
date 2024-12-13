@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import UILabel_Copyable
 import WaniKaniAPI
 
 private let kDefaultAnimationDuration: TimeInterval = 0.25
@@ -300,7 +301,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     currentFontName = TKMStyle.japaneseFontName
     defaultFontSize = Double(questionLabel.font.pointSize)
 
-    questionLabel.isUserInteractionEnabled = false
+    questionLabel.isCopyingEnabled = true
 
     let shortPressRecognizer =
       UITapGestureRecognizer(target: self, action: #selector(didShortPressQuestionLabel))
