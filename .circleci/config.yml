@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: swift run WaniKaniAPIProber "$TSURUKAME_PROBER_EMAIL" "$TSURUKAME_PROBER_PASSWORD"
+          command: swift test --filter WaniKaniAPIProber.WaniKaniAPIProber
           working_directory: ios/WaniKaniAPI
 
 workflows:
