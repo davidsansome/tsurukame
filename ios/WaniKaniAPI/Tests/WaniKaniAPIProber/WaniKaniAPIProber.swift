@@ -22,7 +22,8 @@ class WaniKaniAPIProber: XCTestCase {
 
   let email = ProcessInfo.processInfo.environment["TSURUKAME_PROBER_EMAIL"]
   let password = ProcessInfo.processInfo.environment["TSURUKAME_PROBER_PASSWORD"]
-  let environmentVariablesNotSetError = XCTSkip("TSURUKAME_PROBER_EMAIL and TSURUKAME_PROBER_PASSWORD environment variables must be set")
+  let environmentVariablesNotSetError =
+    XCTSkip("TSURUKAME_PROBER_EMAIL and TSURUKAME_PROBER_PASSWORD environment variables must be set")
 
   let client = WaniKaniWebClient()
 

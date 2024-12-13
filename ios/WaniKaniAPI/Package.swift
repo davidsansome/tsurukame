@@ -43,5 +43,5 @@ let package = Package(name: "WaniKaniAPI",
                         .testTarget(name: "WaniKaniAPITests",
                                     dependencies: ["Hippolyte", "WaniKaniAPI"]),
                         .testTarget(name: "WaniKaniAPIProber",
-                                dependencies: ["WaniKaniAPI"]),
+                                    dependencies: ["WaniKaniAPI"]),
                       ])
