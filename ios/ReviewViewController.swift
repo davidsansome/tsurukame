@@ -301,7 +301,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     currentFontName = TKMStyle.japaneseFontName
     defaultFontSize = Double(questionLabel.font.pointSize)
 
-    questionLabel.isCopyingEnabled = true
+    // In Anki mode, disable interaction on the question label so we use our own gesture recognizer
+    // created below. Otherwise, allow a long-press on the question label to copy its text.
+    if Settings.ankiMode {
+      questionLabel.isUserInteractionEnabled = false
+    } else {
+      questionLabel.isCopyingEnabled = true
+    }
 
     let shortPressRecognizer =
       UITapGestureRecognizer(target: self, action: #selector(didShortPressQuestionLabel))
