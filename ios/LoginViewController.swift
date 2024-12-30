@@ -115,6 +115,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       let promise = client.login(email: emailField.text!, password: passwordField.text!)
       promise.done { result in
         NSLog("Login success!")
+        Settings.userCookie = result.cookie
         Settings.userApiToken = result.apiToken
         Settings.userEmailAddress = self.emailField.text!
 
@@ -128,6 +129,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       let promise = apiClient.user(progress: Progress())
       promise.done { user in
         NSLog("Login success! User is at level: \(user.currentLevel)")
+        Settings.userCookie = ""
         Settings.userApiToken = token
         Settings.userEmailAddress = ""
         self.delegate?.loginComplete()

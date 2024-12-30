@@ -24,6 +24,10 @@ enum FeatureFlags {
   // Whether to show an extra Developer Options section at the bottom of the SubjectDetailsView.
   static let showSubjectDeveloperOptions = (config == .DeveloperDebug)
 
+  // Whether to show options to let the user burn or resurrect subjects at the bottom of the
+  // SubjectDetailsView.
+  static let burnAndResurrect = (config != .AppStoreRelease)
+
   private enum BuildConfig {
     case DeveloperDebug
     case TestFlightRelease

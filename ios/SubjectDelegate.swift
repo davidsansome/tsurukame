@@ -18,8 +18,15 @@ import WaniKaniAPI
 protocol SubjectDelegate: AnyObject {
   func didTapSubject(_ subject: TKMSubject)
   func openPracticeReview(_ subject: TKMSubject)
+  func popViewController()
 }
 
 extension SubjectDelegate {
   func openPracticeReview(_: TKMSubject) {}
+}
+
+extension SubjectDelegate where Self: UIViewController {
+  func popViewController() {
+    navigationController?.popViewController(animated: true)
+  }
 }

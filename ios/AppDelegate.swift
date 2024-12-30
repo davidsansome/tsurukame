@@ -92,7 +92,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
 
   private func setMainViewControllerAnimated(animated: Bool, clearUserData: Bool) {
     services.client = WaniKaniAPIClient(apiToken: Settings.userApiToken)
+    if !Settings.userCookie.isEmpty {
+      services.webClient = WaniKaniAuthenticatedWebClient(cookie: Settings.userCookie)
+    }
     services.localCachingClient = Screenshotter.createLocalCachingClient(client: services.client,
+                                                                         webClient: services
+                                                                           .webClient,
                                                                          reachability: services
                                                                            .reachability)
     services.client.subjectLevelGetter = services.localCachingClient

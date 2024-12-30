@@ -157,7 +157,7 @@ public class WaniKaniWebClient {
 
   // MARK: - Extracting things from HTTP responses
 
-  private func extractCSRFToken(_ data: Data) throws -> String {
+  func extractCSRFToken(_ data: Data) throws -> String {
     guard let ret = kCSRFTokenRE.firstCapturingGroup(in: data) else {
       throw WaniKaniWebClientError.csrfTokenNotFound
     }
@@ -187,10 +187,50 @@ public class WaniKaniWebClient {
     throw WaniKaniWebClientError.sessionCookieNotSet
   }
 
-  private func authorize(_ url: URL, cookie: String) -> URLRequest {
+  func authorize(_ url: URL, cookie: String) -> URLRequest {
     var req = URLRequest(url: url)
     req.addValue("\(kWanikaniSessionCookieName)=\(cookie)", forHTTPHeaderField: "Cookie")
     return req
+  }
+}
+
+public class WaniKaniAuthenticatedWebClient: WaniKaniWebClient {
+  private var cookie: String
+
+  public init(cookie: String) {
+    self.cookie = cookie
+  }
+
+  public convenience init(loginResult: LoginResult) {
+    self.init(cookie: loginResult.cookie)
+  }
+
+  // MARK: - Features that aren't available through the API
+
+  public func resurrectSubject(subjectId: Int64) -> Promise<Void> {
+    putWithCsrfToken(url: URL(string: "\(kAssignmentUrlPrefix)\(subjectId)/resurrect")!)
+  }
+
+  public func burnSubject(subjectId: Int64) -> Promise<Void> {
+    putWithCsrfToken(url: URL(string: "\(kAssignmentUrlPrefix)\(subjectId)/burn")!)
+  }
+
+  // MARK: - Internals
+
+  private func putWithCsrfToken(url: URL) -> Promise<Void> {
+    firstly { () -> DataTaskPromise in
+      let req = authorize(kDashboardUrl, cookie: cookie)
+      return request(req)
+    }.then { arg -> DataTaskPromise in
+      let csrfToken = try self.extractCSRFToken(arg.data)
+
+      var req = self.authorize(url, cookie: self.cookie)
+      req.httpMethod = "PUT"
+      req.setValue(csrfToken, forHTTPHeaderField: "X-Csrf-Token")
+      return request(req)
+    }.map { _ in
+      // Ignore the response content.
+    }
   }
 }
 
@@ -202,6 +242,8 @@ private let kAccessTokenUrl =
   URL(string: "https://www.wanikani.com/settings/personal_access_tokens")!
 private let kLoginUrl = URL(string: "https://www.wanikani.com/login")!
 private let kDashboardUrl = URL(string: "https://www.wanikani.com/dashboard")!
+
+private let kAssignmentUrlPrefix = "https://www.wanikani.com/assignments/"
 
 private let kCSRFTokenRE = try! NSRegularExpression(pattern:
   "<meta name=\"csrf-token\" content=\"([^\"]*)", options: [])

@@ -24,6 +24,7 @@ class TKMServices {
   private(set) var audio: Audio!
 
   var client: WaniKaniAPIClient!
+  var webClient: WaniKaniAuthenticatedWebClient?
   var localCachingClient: LocalCachingClient!
 
   init() {

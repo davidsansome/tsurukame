@@ -48,6 +48,7 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 
 class LocalCachingClient: NSObject, SubjectLevelGetter {
   let client: WaniKaniAPIClient
+  let webClient: WaniKaniAuthenticatedWebClient?
   let reachability: Reachability
 
   private var db: FMDatabaseQueue!
@@ -66,8 +67,10 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   @Cached(notificationName: .lccSRSCategoryCountsChanged) var srsCategoryCounts: [Int]
   @Cached var maxLevelGrantedBySubscription: Int
 
-  init(client: WaniKaniAPIClient, reachability: Reachability) {
+  init(client: WaniKaniAPIClient, webClient: WaniKaniAuthenticatedWebClient?,
+       reachability: Reachability) {
     self.client = client
+    self.webClient = webClient
     self.reachability = reachability
 
     dateFormatter = DateFormatter()
@@ -278,10 +281,17 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     "",
     // Version 11. Added most_recent_mistake_time to allow for recent mistake reviews
     "ALTER TABLE subject_progress ADD COLUMN last_mistake_time TIMESTAMP;",
+    // Version 12. Added pending_burn_resurrect table.
+    """
+    CREATE TABLE pending_burn_resurrect (
+      subject_id INTEGER,
+      type TEXT CHECK(type IN ('B', 'R')) NOT NULL
+    );
+    """,
   ]
 
   private let kInitialSchemaVersion = 8
-  private let kSchemaVersion = 11
+  private let kSchemaVersion = 12
 
   // Run when the user logs out. Clears everything in the database.
   private let kClearAllData = """
@@ -302,6 +312,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   DELETE FROM subjects;
   DELETE FROM voice_actors;
   DELETE FROM audio_urls;
+  DELETE FROM pending_burn_resurrect;
   """
 
   // Run when the user pulls down on the main screen. Clears all locally cached data so it can be
@@ -1006,6 +1017,136 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     return ret
   }
 
+  // MARK: - Burn and resurrect
+
+  var canBurnAndResurrect: Bool {
+    webClient != nil && FeatureFlags.burnAndResurrect
+  }
+
+  enum BurnResurrectAction {
+    case Burn
+    case Resurrect
+
+    // The display text for the action.
+    var displayText: String {
+      switch self {
+      case .Burn: "Burn"
+      case .Resurrect: "Resurrect"
+      }
+    }
+
+    // The valid values of the pending_burn_resurrect table's type column.
+    var databaseEnumValue: String {
+      switch self {
+      case .Burn: "B"
+      case .Resurrect: "R"
+      }
+    }
+
+    init(databaseEnumValue: String) {
+      switch databaseEnumValue {
+      case "B": self = .Burn
+      case "R": self = .Resurrect
+      default: fatalError("Invalid value " + databaseEnumValue)
+      }
+    }
+
+    // The SRS stage the subject should be set to after the action is performed.
+    var targetSrsStage: SRSStage {
+      switch self {
+      case .Burn: .burned
+      case .Resurrect: .apprentice1
+      }
+    }
+  }
+
+  func burnOrResurrect(assignment: TKMAssignment,
+                       action: BurnResurrectAction) -> Promise<Void> {
+    guard canBurnAndResurrect else {
+      return .value(())
+    }
+
+    db.inTransaction { db in
+      // Delete the assignment.
+      db.mustExecuteUpdate("DELETE FROM assignments WHERE id = ?", args: [assignment.id])
+
+      // Store the pending action so we can retry until we're online.
+      db.mustExecuteUpdate("REPLACE INTO pending_burn_resurrect (subject_id, type) VALUES (?, ?)",
+                           args: [assignment.subjectID, action.databaseEnumValue])
+
+      db
+        .mustExecuteUpdate("REPLACE INTO subject_progress (id, level, srs_stage, subject_type, last_mistake_time) " +
+          "VALUES (?, ?, ?, ?, ?)",
+          args: [
+            assignment.subjectID,
+            assignment.level,
+            action.targetSrsStage.rawValue,
+            assignment.subjectType.rawValue,
+            "",
+          ])
+    }
+
+    _pendingProgressCount.invalidate()
+    _availableSubjects.invalidate()
+    _srsCategoryCounts.invalidate()
+    _apprenticeCount.invalidate()
+
+    return sendPendingBurnOrResurrect(subjectId: assignment.subjectID, action: action,
+                                      progress: Progress(totalUnitCount: -1))
+  }
+
+  private func sendPendingBurnOrResurrect(subjectId: Int64, action: BurnResurrectAction,
+                                          progress: Progress) -> Promise<Void> {
+    guard let webClient = webClient else {
+      return .value(())
+    }
+
+    return firstly {
+      return switch action {
+      case .Burn:
+        webClient.burnSubject(subjectId: subjectId)
+      case .Resurrect:
+        webClient.resurrectSubject(subjectId: subjectId)
+      }
+    }.map {
+      self.db.inTransaction { db in
+        db.mustExecuteUpdate("DELETE FROM pending_burn_resurrect WHERE subject_id = ?",
+                             args: [subjectId])
+      }
+    }.ensure {
+      progress.completedUnitCount += 1
+    }
+  }
+
+  private func getAllPendingBurnOrResurrect() -> [(Int64, BurnResurrectAction)] {
+    var ret = [(Int64, BurnResurrectAction)]()
+    db.inTransaction { db in
+      for cursor in db.query("SELECT subject_id, type FROM pending_burn_resurrect") {
+        ret.append((cursor.longLongInt(forColumnIndex: 0),
+                    BurnResurrectAction(databaseEnumValue: cursor.string(forColumnIndex: 1)!)))
+      }
+    }
+    return ret
+  }
+
+  private func sendAllPendingBurnOrResurrect(_ items: [(Int64, BurnResurrectAction)],
+                                             progress: Progress) -> Promise<Void> {
+    if items.isEmpty {
+      progress.totalUnitCount = 1
+      progress.completedUnitCount = 1
+      return .value(())
+    }
+    progress.totalUnitCount = Int64(items.count)
+
+    var promise = Promise()
+    for (subjectId, action) in items {
+      promise = promise.then { _ in
+        self.sendPendingBurnOrResurrect(subjectId: subjectId, action: action, progress: progress)
+      }
+    }
+    return promise
+  }
+
   // MARK: - Syncing
 
   private func fetchAssignments(progress: Progress) -> Promise<Void> {
@@ -1206,10 +1347,12 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     let pendingProgress = getAllPendingProgress(limit: requestsAvailable)
     requestsAvailable -= pendingProgress.count
     let pendingStudyMaterials = getAllPendingStudyMaterials(limit: requestsAvailable)
+    let pendingBurnOrResurrect = getAllPendingBurnOrResurrect()
 
     progress.totalUnitCount =
       Int64(pendingProgress.count) +
       Int64(pendingStudyMaterials.count) +
+      Int64(pendingBurnOrResurrect.count) +
       subjectProgressUnits +
       assignmentProgressUnits +
       4
@@ -1231,6 +1374,8 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       sendPendingProgress(pendingProgress, progress: childProgress(Int64(pendingProgress.count))),
       sendPendingStudyMaterials(pendingStudyMaterials,
                                 progress: childProgress(Int64(pendingStudyMaterials.count))),
+      sendAllPendingBurnOrResurrect(pendingBurnOrResurrect,
+                                    progress: childProgress(Int64(pendingBurnOrResurrect.count))),
 
       // Fetch subjects before fetching anything else - we need to know subject levels to use them
       // in assignment protos.

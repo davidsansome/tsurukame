@@ -110,7 +110,7 @@ public struct TKMMeaning {
 
 extension TKMMeaning.TypeEnum: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [TKMMeaning.TypeEnum] = [
+  public static let allCases: [TKMMeaning.TypeEnum] = [
     .unknown,
     .primary,
     .secondary,
@@ -203,7 +203,7 @@ public struct TKMReading {
 
 extension TKMReading.TypeEnum: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [TKMReading.TypeEnum] = [
+  public static let allCases: [TKMReading.TypeEnum] = [
     .unknown,
     .onyomi,
     .kunyomi,
@@ -514,7 +514,7 @@ public struct TKMVocabulary {
 
 extension TKMVocabulary.PartOfSpeech: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [TKMVocabulary.PartOfSpeech] = [
+  public static let allCases: [TKMVocabulary.PartOfSpeech] = [
     .unknown,
     .noun,
     .numeral,
@@ -686,7 +686,7 @@ public struct TKMSubject {
 
 extension TKMSubject.TypeEnum: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [TKMSubject.TypeEnum] = [
+  public static let allCases: [TKMSubject.TypeEnum] = [
     .unknown,
     .radical,
     .kanji,
@@ -782,6 +782,15 @@ public struct TKMAssignment {
   /// Clears the value of `burnedAt`. Subsequent reads from it will return its default value.
   public mutating func clearBurnedAt() {self._burnedAt = nil}
 
+  public var resurrectedAt: Int32 {
+    get {return _resurrectedAt ?? 0}
+    set {_resurrectedAt = newValue}
+  }
+  /// Returns true if `resurrectedAt` has been explicitly set.
+  public var hasResurrectedAt: Bool {return self._resurrectedAt != nil}
+  /// Clears the value of `resurrectedAt`. Subsequent reads from it will return its default value.
+  public mutating func clearResurrectedAt() {self._resurrectedAt = nil}
+
   /// Kana-only vocab shares the VOCABULARY subject_type, but we still want to be
   /// able to filter them out if the user wants to.
   public var isKanaOnlyVocab: Bool {
@@ -806,6 +815,7 @@ public struct TKMAssignment {
   fileprivate var _srsStageNumber: Int32? = nil
   fileprivate var _passedAt: Int32? = nil
   fileprivate var _burnedAt: Int32? = nil
+  fileprivate var _resurrectedAt: Int32? = nil
   fileprivate var _isKanaOnlyVocab: Bool? = nil
 }
 
@@ -815,79 +825,73 @@ public struct TKMProgress {
   // methods supported on all messages.
 
   public var meaningWrong: Bool {
-    get {return _meaningWrong ?? false}
-    set {_meaningWrong = newValue}
+    get {return _storage._meaningWrong ?? false}
+    set {_uniqueStorage()._meaningWrong = newValue}
   }
   /// Returns true if `meaningWrong` has been explicitly set.
-  public var hasMeaningWrong: Bool {return self._meaningWrong != nil}
+  public var hasMeaningWrong: Bool {return _storage._meaningWrong != nil}
   /// Clears the value of `meaningWrong`. Subsequent reads from it will return its default value.
-  public mutating func clearMeaningWrong() {self._meaningWrong = nil}
+  public mutating func clearMeaningWrong() {_uniqueStorage()._meaningWrong = nil}
 
   public var readingWrong: Bool {
-    get {return _readingWrong ?? false}
-    set {_readingWrong = newValue}
+    get {return _storage._readingWrong ?? false}
+    set {_uniqueStorage()._readingWrong = newValue}
   }
   /// Returns true if `readingWrong` has been explicitly set.
-  public var hasReadingWrong: Bool {return self._readingWrong != nil}
+  public var hasReadingWrong: Bool {return _storage._readingWrong != nil}
   /// Clears the value of `readingWrong`. Subsequent reads from it will return its default value.
-  public mutating func clearReadingWrong() {self._readingWrong = nil}
+  public mutating func clearReadingWrong() {_uniqueStorage()._readingWrong = nil}
 
   public var isLesson: Bool {
-    get {return _isLesson ?? false}
-    set {_isLesson = newValue}
+    get {return _storage._isLesson ?? false}
+    set {_uniqueStorage()._isLesson = newValue}
   }
   /// Returns true if `isLesson` has been explicitly set.
-  public var hasIsLesson: Bool {return self._isLesson != nil}
+  public var hasIsLesson: Bool {return _storage._isLesson != nil}
   /// Clears the value of `isLesson`. Subsequent reads from it will return its default value.
-  public mutating func clearIsLesson() {self._isLesson = nil}
+  public mutating func clearIsLesson() {_uniqueStorage()._isLesson = nil}
 
   public var assignment: TKMAssignment {
-    get {return _assignment ?? TKMAssignment()}
-    set {_assignment = newValue}
+    get {return _storage._assignment ?? TKMAssignment()}
+    set {_uniqueStorage()._assignment = newValue}
   }
   /// Returns true if `assignment` has been explicitly set.
-  public var hasAssignment: Bool {return self._assignment != nil}
+  public var hasAssignment: Bool {return _storage._assignment != nil}
   /// Clears the value of `assignment`. Subsequent reads from it will return its default value.
-  public mutating func clearAssignment() {self._assignment = nil}
+  public mutating func clearAssignment() {_uniqueStorage()._assignment = nil}
 
   public var createdAt: Int32 {
-    get {return _createdAt ?? 0}
-    set {_createdAt = newValue}
+    get {return _storage._createdAt ?? 0}
+    set {_uniqueStorage()._createdAt = newValue}
   }
   /// Returns true if `createdAt` has been explicitly set.
-  public var hasCreatedAt: Bool {return self._createdAt != nil}
+  public var hasCreatedAt: Bool {return _storage._createdAt != nil}
   /// Clears the value of `createdAt`. Subsequent reads from it will return its default value.
-  public mutating func clearCreatedAt() {self._createdAt = nil}
+  public mutating func clearCreatedAt() {_uniqueStorage()._createdAt = nil}
 
   public var meaningWrongCount: Int32 {
-    get {return _meaningWrongCount ?? 0}
-    set {_meaningWrongCount = newValue}
+    get {return _storage._meaningWrongCount ?? 0}
+    set {_uniqueStorage()._meaningWrongCount = newValue}
   }
   /// Returns true if `meaningWrongCount` has been explicitly set.
-  public var hasMeaningWrongCount: Bool {return self._meaningWrongCount != nil}
+  public var hasMeaningWrongCount: Bool {return _storage._meaningWrongCount != nil}
   /// Clears the value of `meaningWrongCount`. Subsequent reads from it will return its default value.
-  public mutating func clearMeaningWrongCount() {self._meaningWrongCount = nil}
+  public mutating func clearMeaningWrongCount() {_uniqueStorage()._meaningWrongCount = nil}
 
   public var readingWrongCount: Int32 {
-    get {return _readingWrongCount ?? 0}
-    set {_readingWrongCount = newValue}
+    get {return _storage._readingWrongCount ?? 0}
+    set {_uniqueStorage()._readingWrongCount = newValue}
   }
   /// Returns true if `readingWrongCount` has been explicitly set.
-  public var hasReadingWrongCount: Bool {return self._readingWrongCount != nil}
+  public var hasReadingWrongCount: Bool {return _storage._readingWrongCount != nil}
   /// Clears the value of `readingWrongCount`. Subsequent reads from it will return its default value.
-  public mutating func clearReadingWrongCount() {self._readingWrongCount = nil}
+  public mutating func clearReadingWrongCount() {_uniqueStorage()._readingWrongCount = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 
-  fileprivate var _meaningWrong: Bool? = nil
-  fileprivate var _readingWrong: Bool? = nil
-  fileprivate var _isLesson: Bool? = nil
-  fileprivate var _assignment: TKMAssignment? = nil
-  fileprivate var _createdAt: Int32? = nil
-  fileprivate var _meaningWrongCount: Int32? = nil
-  fileprivate var _readingWrongCount: Int32? = nil
+  fileprivate var _storage = _StorageClass.defaultInstance
 }
 
 public struct TKMStudyMaterials {
@@ -1134,7 +1138,7 @@ public struct TKMFormattedText {
 
 extension TKMFormattedText.Format: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [TKMFormattedText.Format] = [
+  public static let allCases: [TKMFormattedText.Format] = [
     .unknown,
     .radical,
     .kanji,
@@ -1404,7 +1408,7 @@ public struct TKMVoiceActor {
 
 extension TKMVoiceActor.Gender: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [TKMVoiceActor.Gender] = [
+  public static let allCases: [TKMVoiceActor.Gender] = [
     .unknown,
     .male,
     .female,
@@ -1412,6 +1416,34 @@ extension TKMVoiceActor.Gender: CaseIterable {
 }
 
 #endif  // swift(>=4.2)
+
+#if swift(>=5.5) && canImport(_Concurrency)
+extension TKMMeaning: @unchecked Sendable {}
+extension TKMMeaning.TypeEnum: @unchecked Sendable {}
+extension TKMReading: @unchecked Sendable {}
+extension TKMReading.TypeEnum: @unchecked Sendable {}
+extension TKMRadical: @unchecked Sendable {}
+extension TKMKanji: @unchecked Sendable {}
+extension TKMVocabulary: @unchecked Sendable {}
+extension TKMVocabulary.PartOfSpeech: @unchecked Sendable {}
+extension TKMVocabulary.Sentence: @unchecked Sendable {}
+extension TKMVocabulary.PronunciationAudio: @unchecked Sendable {}
+extension TKMSubject: @unchecked Sendable {}
+extension TKMSubject.TypeEnum: @unchecked Sendable {}
+extension TKMAssignment: @unchecked Sendable {}
+extension TKMProgress: @unchecked Sendable {}
+extension TKMStudyMaterials: @unchecked Sendable {}
+extension TKMUser: @unchecked Sendable {}
+extension TKMFormattedText: @unchecked Sendable {}
+extension TKMFormattedText.Format: @unchecked Sendable {}
+extension TKMDataFileHeader: @unchecked Sendable {}
+extension TKMSubjectsByLevel: @unchecked Sendable {}
+extension TKMLevel: @unchecked Sendable {}
+extension TKMDeprecatedMnemonicFile: @unchecked Sendable {}
+extension TKMDeprecatedMnemonicFile.Subject: @unchecked Sendable {}
+extension TKMVoiceActor: @unchecked Sendable {}
+extension TKMVoiceActor.Gender: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -1438,12 +1470,16 @@ extension TKMMeaning: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._meaning {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._meaning {
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    if let v = self._type {
+    } }()
+    try { if let v = self._type {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1488,15 +1524,19 @@ extension TKMReading: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._reading {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._reading {
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    if let v = self._isPrimary {
+    } }()
+    try { if let v = self._isPrimary {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 2)
-    }
-    if let v = self._type {
+    } }()
+    try { if let v = self._type {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1543,18 +1583,22 @@ extension TKMRadical: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._characterImage {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._characterImage {
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    if let v = self._mnemonic {
+    } }()
+    try { if let v = self._mnemonic {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
-    if let v = self._hasCharacterImageFile_p {
+    } }()
+    try { if let v = self._hasCharacterImageFile_p {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 3)
-    }
-    if let v = self._deprecatedMnemonic {
+    } }()
+    try { if let v = self._deprecatedMnemonic {
       try visitor.visitSingularStringField(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1595,21 +1639,25 @@ extension TKMKanji: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._meaningMnemonic {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._meaningMnemonic {
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    if let v = self._meaningHint {
+    } }()
+    try { if let v = self._meaningHint {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
-    if let v = self._readingMnemonic {
+    } }()
+    try { if let v = self._readingMnemonic {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._readingHint {
+    } }()
+    try { if let v = self._readingHint {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-    }
-    if let v = self._visuallySimilarKanji {
+    } }()
+    try { if let v = self._visuallySimilarKanji {
       try visitor.visitSingularStringField(value: v, fieldNumber: 10)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1651,12 +1699,16 @@ extension TKMVocabulary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._meaningExplanation {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._meaningExplanation {
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    if let v = self._readingExplanation {
+    } }()
+    try { if let v = self._readingExplanation {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.sentences.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.sentences, fieldNumber: 3)
     }
@@ -1727,12 +1779,16 @@ extension TKMVocabulary.Sentence: SwiftProtobuf.Message, SwiftProtobuf._MessageI
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._japanese {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._japanese {
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    if let v = self._english {
+    } }()
+    try { if let v = self._english {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1765,12 +1821,16 @@ extension TKMVocabulary.PronunciationAudio: SwiftProtobuf.Message, SwiftProtobuf
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._url {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._url {
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    if let v = self._voiceActorID {
+    } }()
+    try { if let v = self._voiceActorID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1868,21 +1928,25 @@ extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
-      if let v = _storage._id {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
+      try { if let v = _storage._id {
         try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-      }
-      if let v = _storage._level {
+      } }()
+      try { if let v = _storage._level {
         try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
-      }
-      if let v = _storage._slug {
+      } }()
+      try { if let v = _storage._slug {
         try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-      }
-      if let v = _storage._documentURL {
+      } }()
+      try { if let v = _storage._documentURL {
         try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-      }
-      if let v = _storage._japanese {
+      } }()
+      try { if let v = _storage._japanese {
         try visitor.visitSingularStringField(value: v, fieldNumber: 5)
-      }
+      } }()
       if !_storage._readings.isEmpty {
         try visitor.visitRepeatedMessageField(value: _storage._readings, fieldNumber: 6)
       }
@@ -1892,15 +1956,15 @@ extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
       if !_storage._componentSubjectIds.isEmpty {
         try visitor.visitPackedInt64Field(value: _storage._componentSubjectIds, fieldNumber: 8)
       }
-      if let v = _storage._radical {
+      try { if let v = _storage._radical {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
-      }
-      if let v = _storage._kanji {
+      } }()
+      try { if let v = _storage._kanji {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-      }
-      if let v = _storage._vocabulary {
+      } }()
+      try { if let v = _storage._vocabulary {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
-      }
+      } }()
       if !_storage._amalgamationSubjectIds.isEmpty {
         try visitor.visitPackedInt64Field(value: _storage._amalgamationSubjectIds, fieldNumber: 12)
       }
@@ -1955,6 +2019,7 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     7: .standard(proto: "srs_stage_number"),
     8: .standard(proto: "passed_at"),
     9: .standard(proto: "burned_at"),
+    11: .standard(proto: "resurrected_at"),
     10: .standard(proto: "is_kana_only_vocab"),
   ]
 
@@ -1974,42 +2039,50 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
       case 8: try { try decoder.decodeSingularInt32Field(value: &self._passedAt) }()
       case 9: try { try decoder.decodeSingularInt32Field(value: &self._burnedAt) }()
       case 10: try { try decoder.decodeSingularBoolField(value: &self._isKanaOnlyVocab) }()
+      case 11: try { try decoder.decodeSingularInt32Field(value: &self._resurrectedAt) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._id {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._id {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._level {
+    } }()
+    try { if let v = self._level {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._subjectID {
+    } }()
+    try { if let v = self._subjectID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._subjectType {
+    } }()
+    try { if let v = self._subjectType {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
-    }
-    if let v = self._availableAt {
+    } }()
+    try { if let v = self._availableAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 5)
-    }
-    if let v = self._startedAt {
+    } }()
+    try { if let v = self._startedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 6)
-    }
-    if let v = self._srsStageNumber {
+    } }()
+    try { if let v = self._srsStageNumber {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 7)
-    }
-    if let v = self._passedAt {
+    } }()
+    try { if let v = self._passedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 8)
-    }
-    if let v = self._burnedAt {
+    } }()
+    try { if let v = self._burnedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 9)
-    }
-    if let v = self._isKanaOnlyVocab {
+    } }()
+    try { if let v = self._isKanaOnlyVocab {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 10)
-    }
+    } }()
+    try { if let v = self._resurrectedAt {
+      try visitor.visitSingularInt32Field(value: v, fieldNumber: 11)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2023,6 +2096,7 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     if lhs._srsStageNumber != rhs._srsStageNumber {return false}
     if lhs._passedAt != rhs._passedAt {return false}
     if lhs._burnedAt != rhs._burnedAt {return false}
+    if lhs._resurrectedAt != rhs._resurrectedAt {return false}
     if lhs._isKanaOnlyVocab != rhs._isKanaOnlyVocab {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -2041,57 +2115,105 @@ extension TKMProgress: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
     9: .standard(proto: "reading_wrong_count"),
   ]
 
+  fileprivate class _StorageClass {
+    var _meaningWrong: Bool? = nil
+    var _readingWrong: Bool? = nil
+    var _isLesson: Bool? = nil
+    var _assignment: TKMAssignment? = nil
+    var _createdAt: Int32? = nil
+    var _meaningWrongCount: Int32? = nil
+    var _readingWrongCount: Int32? = nil
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _meaningWrong = source._meaningWrong
+      _readingWrong = source._readingWrong
+      _isLesson = source._isLesson
+      _assignment = source._assignment
+      _createdAt = source._createdAt
+      _meaningWrongCount = source._meaningWrongCount
+      _readingWrongCount = source._readingWrongCount
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 3: try { try decoder.decodeSingularBoolField(value: &self._meaningWrong) }()
-      case 4: try { try decoder.decodeSingularBoolField(value: &self._readingWrong) }()
-      case 5: try { try decoder.decodeSingularBoolField(value: &self._isLesson) }()
-      case 6: try { try decoder.decodeSingularMessageField(value: &self._assignment) }()
-      case 7: try { try decoder.decodeSingularInt32Field(value: &self._createdAt) }()
-      case 8: try { try decoder.decodeSingularInt32Field(value: &self._meaningWrongCount) }()
-      case 9: try { try decoder.decodeSingularInt32Field(value: &self._readingWrongCount) }()
-      default: break
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch fieldNumber {
+        case 3: try { try decoder.decodeSingularBoolField(value: &_storage._meaningWrong) }()
+        case 4: try { try decoder.decodeSingularBoolField(value: &_storage._readingWrong) }()
+        case 5: try { try decoder.decodeSingularBoolField(value: &_storage._isLesson) }()
+        case 6: try { try decoder.decodeSingularMessageField(value: &_storage._assignment) }()
+        case 7: try { try decoder.decodeSingularInt32Field(value: &_storage._createdAt) }()
+        case 8: try { try decoder.decodeSingularInt32Field(value: &_storage._meaningWrongCount) }()
+        case 9: try { try decoder.decodeSingularInt32Field(value: &_storage._readingWrongCount) }()
+        default: break
+        }
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._meaningWrong {
-      try visitor.visitSingularBoolField(value: v, fieldNumber: 3)
-    }
-    if let v = self._readingWrong {
-      try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
-    }
-    if let v = self._isLesson {
-      try visitor.visitSingularBoolField(value: v, fieldNumber: 5)
-    }
-    if let v = self._assignment {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
-    if let v = self._createdAt {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 7)
-    }
-    if let v = self._meaningWrongCount {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 8)
-    }
-    if let v = self._readingWrongCount {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 9)
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
+      try { if let v = _storage._meaningWrong {
+        try visitor.visitSingularBoolField(value: v, fieldNumber: 3)
+      } }()
+      try { if let v = _storage._readingWrong {
+        try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
+      } }()
+      try { if let v = _storage._isLesson {
+        try visitor.visitSingularBoolField(value: v, fieldNumber: 5)
+      } }()
+      try { if let v = _storage._assignment {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+      } }()
+      try { if let v = _storage._createdAt {
+        try visitor.visitSingularInt32Field(value: v, fieldNumber: 7)
+      } }()
+      try { if let v = _storage._meaningWrongCount {
+        try visitor.visitSingularInt32Field(value: v, fieldNumber: 8)
+      } }()
+      try { if let v = _storage._readingWrongCount {
+        try visitor.visitSingularInt32Field(value: v, fieldNumber: 9)
+      } }()
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: TKMProgress, rhs: TKMProgress) -> Bool {
-    if lhs._meaningWrong != rhs._meaningWrong {return false}
-    if lhs._readingWrong != rhs._readingWrong {return false}
-    if lhs._isLesson != rhs._isLesson {return false}
-    if lhs._assignment != rhs._assignment {return false}
-    if lhs._createdAt != rhs._createdAt {return false}
-    if lhs._meaningWrongCount != rhs._meaningWrongCount {return false}
-    if lhs._readingWrongCount != rhs._readingWrongCount {return false}
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._meaningWrong != rhs_storage._meaningWrong {return false}
+        if _storage._readingWrong != rhs_storage._readingWrong {return false}
+        if _storage._isLesson != rhs_storage._isLesson {return false}
+        if _storage._assignment != rhs_storage._assignment {return false}
+        if _storage._createdAt != rhs_storage._createdAt {return false}
+        if _storage._meaningWrongCount != rhs_storage._meaningWrongCount {return false}
+        if _storage._readingWrongCount != rhs_storage._readingWrongCount {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2124,18 +2246,22 @@ extension TKMStudyMaterials: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._id {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._id {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._subjectID {
+    } }()
+    try { if let v = self._subjectID {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._meaningNote {
+    } }()
+    try { if let v = self._meaningNote {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._readingNote {
+    } }()
+    try { if let v = self._readingNote {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-    }
+    } }()
     if !self.meaningSynonyms.isEmpty {
       try visitor.visitRepeatedStringField(value: self.meaningSynonyms, fieldNumber: 5)
     }
@@ -2186,30 +2312,34 @@ extension TKMUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._username {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._username {
       try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    if let v = self._level {
+    } }()
+    try { if let v = self._level {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._maxLevelGrantedBySubscription {
+    } }()
+    try { if let v = self._maxLevelGrantedBySubscription {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._profileURL {
+    } }()
+    try { if let v = self._profileURL {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-    }
-    if let v = self._startedAt {
+    } }()
+    try { if let v = self._startedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 5)
-    }
-    if let v = self._subscribed {
+    } }()
+    try { if let v = self._subscribed {
       try visitor.visitSingularBoolField(value: v, fieldNumber: 6)
-    }
-    if let v = self._subscriptionEndsAt {
+    } }()
+    try { if let v = self._subscriptionEndsAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 7)
-    }
-    if let v = self._vacationStartedAt {
+    } }()
+    try { if let v = self._vacationStartedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 8)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2250,15 +2380,19 @@ extension TKMFormattedText: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.format.isEmpty {
       try visitor.visitPackedEnumField(value: self.format, fieldNumber: 1)
     }
-    if let v = self._text {
+    try { if let v = self._text {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
-    }
-    if let v = self._linkURL {
+    } }()
+    try { if let v = self._linkURL {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2416,30 +2550,34 @@ extension TKMLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._id {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._id {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._level {
+    } }()
+    try { if let v = self._level {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
-    }
-    if let v = self._abandonedAt {
+    } }()
+    try { if let v = self._abandonedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
-    }
-    if let v = self._completedAt {
+    } }()
+    try { if let v = self._completedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
-    }
-    if let v = self._createdAt {
+    } }()
+    try { if let v = self._createdAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 5)
-    }
-    if let v = self._passedAt {
+    } }()
+    try { if let v = self._passedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 6)
-    }
-    if let v = self._startedAt {
+    } }()
+    try { if let v = self._startedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 7)
-    }
-    if let v = self._unlockedAt {
+    } }()
+    try { if let v = self._unlockedAt {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 8)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2510,9 +2648,13 @@ extension TKMDeprecatedMnemonicFile.Subject: SwiftProtobuf.Message, SwiftProtobu
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._id {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._id {
       try visitor.visitSingularInt32Field(value: v, fieldNumber: 1)
-    }
+    } }()
     if !self.formattedDeprecatedMnemonic.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.formattedDeprecatedMnemonic, fieldNumber: 2)
     }
@@ -2552,18 +2694,22 @@ extension TKMVoiceActor: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._id {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._id {
       try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
-    }
-    if let v = self._gender {
+    } }()
+    try { if let v = self._gender {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
-    }
-    if let v = self._name {
+    } }()
+    try { if let v = self._name {
       try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._description_p {
+    } }()
+    try { if let v = self._description_p {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

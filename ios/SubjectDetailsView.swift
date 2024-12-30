@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import PromiseKit
 import WaniKaniAPI
 
 private let kSectionHeaderHeight: CGFloat = 38.0
@@ -491,6 +492,9 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                      assignment: TKMAssignment?, task: ReviewItem?) {
     if FeatureFlags.dumpSubjectTextproto {
       print(subject)
+      if let assignment = assignment {
+        print(assignment)
+      }
     }
 
     let model = MutableTableModel(tableView: self), isReview = task != nil
@@ -639,9 +643,27 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                                    subtitle: statsDateFormatter
                                      .string(from: subjectAssignment.burnedAtDate)))
         }
+        if subjectAssignment.hasResurrectedAt {
+          model.add(BasicModelItem(style: .value1, title: "Resurrected",
+                                   subtitle: statsDateFormatter
+                                     .string(from: subjectAssignment.resurrectedAtDate)))
+        }
       }
+    }
 
-      // TODO: When possible in the API, add a resurrect button.
+    // Add the Settings section, if we can do anything to the item.
+    if let assignment = assignment, services.localCachingClient.canBurnAndResurrect,
+       assignment.canBurn || assignment.canResurrect {
+      model.add(section: "Settings")
+
+      let action: LocalCachingClient.BurnResurrectAction = assignment.canBurn ? .Burn : .Resurrect
+      let item = BasicModelItem(style: .default, title: action.displayText,
+                                accessoryType: .disclosureIndicator)
+
+      let indexPath = model.add(item)
+      item.tapHandler = {
+        self.burnOrResurrect(assignment: assignment, indexPath: indexPath, action: action)
+      }
     }
 
     // Add the Artwork section.
@@ -652,6 +674,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       model.add(ArtworkModelItem(subjectID: subject.id))
     }
 
+    // Add the Developer options section, if we're in a debug build.
     if FeatureFlags.showSubjectDeveloperOptions {
       model.add(section: "Developer options")
       model.add(BasicModelItem(style: .default, title: "Open practice review") { [unowned self] in
@@ -661,6 +684,26 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     tableModel = model
     model.reloadTable()
+  }
+
+  func burnOrResurrect(assignment: TKMAssignment, indexPath: IndexPath,
+                       action: LocalCachingClient.BurnResurrectAction) {
+    // Set the item's accessory to a spinner.
+    let viewIndexPath = tableModel!.modelIndexPathToViewIndexPath(indexPath)
+    let cell = cellForRow(at: viewIndexPath) as! BasicModelCell
+    cell.accessoryType = .none
+    cell.isUserInteractionEnabled = false
+
+    let spinner = UIActivityIndicatorView(style: .gray)
+    spinner.color = cell.tintColor
+    spinner.startAnimating()
+    cell.accessoryView = spinner
+
+    firstly {
+      self.services.localCachingClient.burnOrResurrect(assignment: assignment, action: action)
+    }.done {
+      self.subjectDelegate?.popViewController()
+    }.cauterize()
   }
 
   @objc public func deselectLastSubjectChipTapped() {

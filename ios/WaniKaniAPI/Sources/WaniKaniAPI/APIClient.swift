@@ -741,6 +741,7 @@ private struct AssignmentData: Codable {
   var started_at: WaniKaniDate?
   var passed_at: WaniKaniDate?
   var burned_at: WaniKaniDate?
+  var resurrected_at: WaniKaniDate?
   var available_at: WaniKaniDate?
 
   func toProto(id: Int64?, subjectLevelGetter: SubjectLevelGetter) -> TKMAssignment? {
@@ -753,6 +754,7 @@ private struct AssignmentData: Codable {
     toProtoDate(started_at) { ret.startedAt = $0 }
     toProtoDate(passed_at) { ret.passedAt = $0 }
     toProtoDate(burned_at) { ret.burnedAt = $0 }
+    toProtoDate(resurrected_at) { ret.resurrectedAt = $0 }
     if subject_type == "kana_vocabulary" {
       ret.isKanaOnlyVocab = true
     }

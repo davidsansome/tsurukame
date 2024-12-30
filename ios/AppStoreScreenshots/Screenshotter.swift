@@ -57,9 +57,11 @@ import WaniKaniAPI
     }
 
     static func createLocalCachingClient(client: WaniKaniAPIClient,
+                                         webClient: WaniKaniAuthenticatedWebClient?,
                                          reachability: Reachability) -> LocalCachingClient {
-      isActive ? FakeLocalCachingClient(client: client, reachability: reachability)
-        : LocalCachingClient(client: client, reachability: reachability)
+      isActive ? FakeLocalCachingClient(client: client, webClient: webClient,
+                                        reachability: reachability)
+        : LocalCachingClient(client: client, webClient: webClient, reachability: reachability)
     }
   }
 
