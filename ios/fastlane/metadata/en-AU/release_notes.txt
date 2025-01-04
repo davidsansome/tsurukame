@@ -1,4 +1,7 @@
 Bugfixes:
-- Fix a bug preventing new users from logging in for the first time.
-- Don't start refreshing data if the network is unavailable.
-- Increase the tappable area of the previous subject button.
+- Fix a bug where ぺージ wasn't accepted as the correct answer for 頁.
+- Fix the appearance of the app icon in dark and tinted modes.
+
+Improvements:
+- Split the quick settings menu into smaller sub-menus.
+- Make the Japanese question text copyable.
