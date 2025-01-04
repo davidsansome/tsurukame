@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 71;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,6 +28,15 @@
 		6332528E2727F32800ABBA04 /* PillModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6332528D2727F32800ABBA04 /* PillModelItem.swift */; };
 		633252922728131100ABBA04 /* TableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252912728131100ABBA04 /* TableModel.swift */; };
 		633252932728EA1100ABBA04 /* TableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252912728131100ABBA04 /* TableModel.swift */; };
+		63344E802D291C9F002A4FED /* AppStoreRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 63344E7C2D291C9F002A4FED /* AppStoreRelease.xcconfig */; };
+		63344E812D291C9F002A4FED /* DeveloperDebug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 63344E7D2D291C9F002A4FED /* DeveloperDebug.xcconfig */; };
+		63344E822D291C9F002A4FED /* TestFlightRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 63344E7E2D291C9F002A4FED /* TestFlightRelease.xcconfig */; };
+		63344E8A2D291CAA002A4FED /* ReviewContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63344E832D291CAA002A4FED /* ReviewContainerViewController.swift */; };
+		63344E8B2D291CAA002A4FED /* ReviewQuickSettingsAnswersMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63344E842D291CAA002A4FED /* ReviewQuickSettingsAnswersMenu.swift */; };
+		63344E8C2D291CAA002A4FED /* ReviewQuickSettingsAudioMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63344E852D291CAA002A4FED /* ReviewQuickSettingsAudioMenu.swift */; };
+		63344E8D2D291CAA002A4FED /* ReviewQuickSettingsDisplayMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63344E862D291CAA002A4FED /* ReviewQuickSettingsDisplayMenu.swift */; };
+		63344E8E2D291CAA002A4FED /* ReviewQuickSettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63344E872D291CAA002A4FED /* ReviewQuickSettingsMenu.swift */; };
+		63344E8F2D291CAA002A4FED /* ReviewQuickSettingsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63344E882D291CAA002A4FED /* ReviewQuickSettingsTable.swift */; };
 		63358E9A27365FC70013A2AC /* OfflineAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63358E9927365FC70013A2AC /* OfflineAudio.swift */; };
 		63358E9C273664D40013A2AC /* SwitchModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63358E9B273664D40013A2AC /* SwitchModelItem.swift */; };
 		63358E9E273664F50013A2AC /* BasicModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63358E9D273664F50013A2AC /* BasicModelItem.swift */; };
@@ -275,6 +284,15 @@
 		6332528B2727F29D00ABBA04 /* PillModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PillModelItem.xib; sourceTree = "<group>"; };
 		6332528D2727F32800ABBA04 /* PillModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillModelItem.swift; sourceTree = "<group>"; };
 		633252912728131100ABBA04 /* TableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableModel.swift; sourceTree = "<group>"; };
+		63344E7C2D291C9F002A4FED /* AppStoreRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppStoreRelease.xcconfig; sourceTree = "<group>"; };
+		63344E7D2D291C9F002A4FED /* DeveloperDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DeveloperDebug.xcconfig; sourceTree = "<group>"; };
+		63344E7E2D291C9F002A4FED /* TestFlightRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = TestFlightRelease.xcconfig; sourceTree = "<group>"; };
+		63344E832D291CAA002A4FED /* ReviewContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewContainerViewController.swift; sourceTree = "<group>"; };
+		63344E842D291CAA002A4FED /* ReviewQuickSettingsAnswersMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewQuickSettingsAnswersMenu.swift; sourceTree = "<group>"; };
+		63344E852D291CAA002A4FED /* ReviewQuickSettingsAudioMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewQuickSettingsAudioMenu.swift; sourceTree = "<group>"; };
+		63344E862D291CAA002A4FED /* ReviewQuickSettingsDisplayMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewQuickSettingsDisplayMenu.swift; sourceTree = "<group>"; };
+		63344E872D291CAA002A4FED /* ReviewQuickSettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewQuickSettingsMenu.swift; sourceTree = "<group>"; };
+		63344E882D291CAA002A4FED /* ReviewQuickSettingsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewQuickSettingsTable.swift; sourceTree = "<group>"; };
 		63358E9927365FC70013A2AC /* OfflineAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineAudio.swift; sourceTree = "<group>"; };
 		63358E9B273664D40013A2AC /* SwitchModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchModelItem.swift; sourceTree = "<group>"; };
 		63358E9D273664F50013A2AC /* BasicModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicModelItem.swift; sourceTree = "<group>"; };
@@ -435,11 +453,6 @@
 		FC80AAF9736A570E3C4CC09E /* Pods_Tsurukame.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		632C17482CE98FCB00D2CF55 /* ReviewQuickSettings */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ReviewQuickSettings; sourceTree = "<group>"; };
-		639CE0B52CF0AA3700902668 /* BuildConfigs */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = BuildConfigs; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		630FD6101FC45BDF00D21C1F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -579,7 +592,7 @@
 				6335B46223CF0C820071671E /* AppStoreScreenshots.xctest */,
 				63F7F52D23D4C2CA006A31FB /* Audio.swift */,
 				631F34D62C36B7FE0071E983 /* BiggerTapAreaButton.swift */,
-				639CE0B52CF0AA3700902668 /* BuildConfigs */,
+				63344E7F2D291C9F002A4FED /* BuildConfigs */,
 				C90846AD237F1C770068A272 /* Complication */,
 				C90846BC237F1C790068A272 /* ComplicationExtension */,
 				63CBFF2527731B8B0086BA5F /* DownloadViewController.swift */,
@@ -619,7 +632,7 @@
 				684AE501E6BF8ED5D65DA298 /* Pods */,
 				41897D922372287F00F6A0B7 /* Resources */,
 				630EB13E25C5713000783E54 /* ReviewItem.swift */,
-				632C17482CE98FCB00D2CF55 /* ReviewQuickSettings */,
+				63344E892D291CAA002A4FED /* ReviewQuickSettings */,
 				63A9A55C282389C800602D09 /* ReviewSession.swift */,
 				63391B582779B8BF005CDA72 /* ReviewSettingsViewController.swift */,
 				637CA12B25D7EDFE0082580E /* ReviewSummaryViewController.swift */,
@@ -658,6 +671,29 @@
 				633AFAE52352B6F2004F732F /* VocabularyHighlighter.swift */,
 				C92AB96E237F280300F79904 /* WatchHelper.swift */,
 			);
+			sourceTree = "<group>";
+		};
+		63344E7F2D291C9F002A4FED /* BuildConfigs */ = {
+			isa = PBXGroup;
+			children = (
+				63344E7C2D291C9F002A4FED /* AppStoreRelease.xcconfig */,
+				63344E7D2D291C9F002A4FED /* DeveloperDebug.xcconfig */,
+				63344E7E2D291C9F002A4FED /* TestFlightRelease.xcconfig */,
+			);
+			path = BuildConfigs;
+			sourceTree = "<group>";
+		};
+		63344E892D291CAA002A4FED /* ReviewQuickSettings */ = {
+			isa = PBXGroup;
+			children = (
+				63344E832D291CAA002A4FED /* ReviewContainerViewController.swift */,
+				63344E842D291CAA002A4FED /* ReviewQuickSettingsAnswersMenu.swift */,
+				63344E852D291CAA002A4FED /* ReviewQuickSettingsAudioMenu.swift */,
+				63344E862D291CAA002A4FED /* ReviewQuickSettingsDisplayMenu.swift */,
+				63344E872D291CAA002A4FED /* ReviewQuickSettingsMenu.swift */,
+				63344E882D291CAA002A4FED /* ReviewQuickSettingsTable.swift */,
+			);
+			path = ReviewQuickSettings;
 			sourceTree = "<group>";
 		};
 		6335B46323CF0C820071671E /* AppStoreScreenshots */ = {
@@ -827,10 +863,6 @@
 			dependencies = (
 				63EF56FD26060BE50038551A /* PBXTargetDependency */,
 				C90846C7237F1C790068A272 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				632C17482CE98FCB00D2CF55 /* ReviewQuickSettings */,
-				639CE0B52CF0AA3700902668 /* BuildConfigs */,
 			);
 			name = Tsurukame;
 			packageProductDependencies = (
@@ -1073,6 +1105,9 @@
 				63C4EA682C258DF0003D3C0B /* UpcomingReviews.storyboard in Resources */,
 				63C4EA6A2C258E0E003D3C0B /* LessonPicker.storyboard in Resources */,
 				63C4EA4C2C257B8A003D3C0B /* Navigation.storyboard in Resources */,
+				63344E802D291C9F002A4FED /* AppStoreRelease.xcconfig in Resources */,
+				63344E812D291C9F002A4FED /* DeveloperDebug.xcconfig in Resources */,
+				63344E822D291C9F002A4FED /* TestFlightRelease.xcconfig in Resources */,
 				6365041F25D7DE0900801C2D /* Lessons.storyboard in Resources */,
 				63BFA78B218EB1B30058E885 /* DownloadModelItem.xib in Resources */,
 				63C4EA762C25991F003D3C0B /* ReviewSettings.storyboard in Resources */,
@@ -1421,6 +1456,12 @@
 				63358EA227366D720013A2AC /* CheckmarkModelItem.swift in Sources */,
 				63391B572779B7FC005CDA72 /* AppSettingsViewController.swift in Sources */,
 				79D887452B41949F003D8F99 /* String+SHA256.swift in Sources */,
+				63344E8A2D291CAA002A4FED /* ReviewContainerViewController.swift in Sources */,
+				63344E8B2D291CAA002A4FED /* ReviewQuickSettingsAnswersMenu.swift in Sources */,
+				63344E8C2D291CAA002A4FED /* ReviewQuickSettingsAudioMenu.swift in Sources */,
+				63344E8D2D291CAA002A4FED /* ReviewQuickSettingsDisplayMenu.swift in Sources */,
+				63344E8E2D291CAA002A4FED /* ReviewQuickSettingsMenu.swift in Sources */,
+				63344E8F2D291CAA002A4FED /* ReviewQuickSettingsTable.swift in Sources */,
 				633AFAE123516BE7004F732F /* SubjectDetailsView.swift in Sources */,
 				63358E9A27365FC70013A2AC /* OfflineAudio.swift in Sources */,
 				C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */,
@@ -1713,8 +1754,7 @@
 		};
 		630FD62A1FC45BDF00D21C1F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 639CE0B52CF0AA3700902668 /* BuildConfigs */;
-			baseConfigurationReferenceRelativePath = DeveloperDebug.xcconfig;
+			baseConfigurationReference = 63344E7D2D291C9F002A4FED /* DeveloperDebug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -1751,8 +1791,7 @@
 		};
 		630FD62B1FC45BDF00D21C1F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 639CE0B52CF0AA3700902668 /* BuildConfigs */;
-			baseConfigurationReferenceRelativePath = AppStoreRelease.xcconfig;
+			baseConfigurationReference = 63344E7C2D291C9F002A4FED /* AppStoreRelease.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
