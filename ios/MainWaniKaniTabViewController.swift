@@ -156,7 +156,7 @@ class MainWaniKaniTabViewController: UITableViewController {
        !services.localCachingClient.hasCompletedPreviousLevel() {
       let previousLevel = Int(user.currentLevel) - 1
       model
-        .add(section: "Prior level being completed (\(user.currentLevel - 1))")
+        .add(section: "Previous level (\(user.currentLevel - 1))")
       let currentGraphLevelAssignments = services.localCachingClient
         .getAssignments(level: previousLevel)
       model.add(CurrentLevelChartItem(currentLevelAssignments: currentGraphLevelAssignments))
