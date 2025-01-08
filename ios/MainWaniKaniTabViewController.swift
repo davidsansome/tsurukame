@@ -156,13 +156,13 @@ class MainWaniKaniTabViewController: UITableViewController {
        !services.localCachingClient.hasCompletedPreviousLevel() {
       let previousLevel = Int(user.currentLevel) - 1
       model
-        .add(section: "Current level (\(user.currentLevel - 1))")
+        .add(section: "Previous level (\(user.currentLevel - 1))")
       let currentGraphLevelAssignments = services.localCachingClient
         .getAssignments(level: previousLevel)
       model.add(CurrentLevelChartItem(currentLevelAssignments: currentGraphLevelAssignments))
       addShowRemainingAllItems(model: model, level: previousLevel)
       // add header for next section; graph and other items will be added after this if/else block
-      model.add(section: "Next level (\(user.currentLevel))")
+      model.add(section: "Current level (\(user.currentLevel))")
     } else {
       model.add(section: "Current level")
     }

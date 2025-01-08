@@ -62,8 +62,8 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
     }
 
     model.add(SwitchModelItem(style: .subtitle,
-                              title: "Keep current level graph",
-                              subtitle: "Instead of showing the next level's graph when you finish the kanji for a given level, keep showing the same level completion graph until all radicals, kanji, and vocabulary have gotten to Guru or higher",
+                              title: "Show prior level graph until fully completed",
+                              subtitle: "When you finish the kanji for a given level, keep showing that level's completion graph until all radicals, kanji, and vocabulary have gotten to Guru or higher",
                               on: Settings.showPreviousLevelGraph,
                               switchHandler: levelGraphSwitchChanged))
 
