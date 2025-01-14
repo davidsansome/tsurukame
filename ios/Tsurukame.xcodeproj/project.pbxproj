@@ -145,7 +145,6 @@
 		63CBFF2627731B8B0086BA5F /* DownloadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CBFF2527731B8B0086BA5F /* DownloadViewController.swift */; };
 		63CBFF29277327920086BA5F /* FontsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CBFF28277327920086BA5F /* FontsViewController.swift */; };
 		63D1026923D7ED3200838F7C /* UIWindow+InterfaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D1026823D7ED3200838F7C /* UIWindow+InterfaceStyle.swift */; };
-		63D1D6F92D0C312A0042168C /* UILabel+Copyable in Frameworks */ = {isa = PBXBuildFile; productRef = 63D1D6F82D0C312A0042168C /* UILabel+Copyable */; };
 		63D2DAEE275C5D4100D5F6FF /* UIControl+addAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D2DAED275C5D4100D5F6FF /* UIControl+addAction.swift */; };
 		63DB065B25A055D70071DC1C /* TestingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DB065A25A055D70071DC1C /* TestingAppDelegate.swift */; };
 		63DE410827818A9A002CFB80 /* SuccessAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DE410727818A9A002CFB80 /* SuccessAnimation.swift */; };
@@ -163,7 +162,6 @@
 		63F7F52923D42C6E006A31FB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52223D423E9006A31FB /* MainViewController.swift */; };
 		63F7F52C23D43DF6006A31FB /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52B23D43DF6006A31FB /* Services.swift */; };
 		63F7F52E23D4C2CA006A31FB /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7F52D23D4C2CA006A31FB /* Audio.swift */; };
-		63FC57FA2D0C2C5800D4901B /* WaniKaniAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 63FC57F92D0C2C5800D4901B /* WaniKaniAPI */; };
 		63FCAE78237F75CC00DB1418 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCAE77237F75CC00DB1418 /* Style.swift */; };
 		6F5E95176B5DCA719A6EED55 /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10E5709643045C62AD6AC427 /* Pods_Tests.framework */; };
 		79661CC22BAC117D003F8764 /* LessonPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79661CC12BAC117D003F8764 /* LessonPickerViewController.swift */; };
@@ -458,11 +456,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63D1D6F92D0C312A0042168C /* UILabel+Copyable in Frameworks */,
 				63A702152C2920D500AB0504 /* WaniKaniAPI in Frameworks */,
 				63EF56DE26060B980038551A /* WaniKaniAPI in Frameworks */,
 				637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */,
-				63FC57FA2D0C2C5800D4901B /* WaniKaniAPI in Frameworks */,
 				63CAB5012605FB1B0057E1C2 /* PromiseKit in Frameworks */,
 				63C0400E28DD581F0068F53D /* Charts in Frameworks */,
 				63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */,
@@ -872,8 +868,6 @@
 				63EF56DD26060B980038551A /* WaniKaniAPI */,
 				63C0400D28DD581F0068F53D /* Charts */,
 				63A702142C2920D500AB0504 /* WaniKaniAPI */,
-				63FC57F92D0C2C5800D4901B /* WaniKaniAPI */,
-				63D1D6F82D0C312A0042168C /* UILabel+Copyable */,
 			);
 			productName = wk;
 			productReference = 6319C9B520441DE200C31F87 /* Tsurukame.app */;
@@ -1057,8 +1051,7 @@
 				637CA18525D7F5A10082580E /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 				63CAB4FF2605FB1B0057E1C2 /* XCRemoteSwiftPackageReference "PromiseKit" */,
 				63C0400C28DD581F0068F53D /* XCRemoteSwiftPackageReference "Charts" */,
-				63FC57F82D0C2C5800D4901B /* XCLocalSwiftPackageReference "WaniKaniAPI" */,
-				63D1D6F72D0C2E600042168C /* XCRemoteSwiftPackageReference "UILabel-Copyable" */,
+				63A702132C2920D500AB0504 /* XCLocalSwiftPackageReference "WaniKaniAPI" */,
 			);
 			productRefGroup = 630FD60A1FC45BDF00D21C1F;
 			projectDirPath = "";
@@ -2224,7 +2217,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		63FC57F82D0C2C5800D4901B /* XCLocalSwiftPackageReference "WaniKaniAPI" */ = {
+		63A702132C2920D500AB0504 /* XCLocalSwiftPackageReference "WaniKaniAPI" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = WaniKaniAPI;
 		};
@@ -2263,14 +2256,6 @@
 				minimumVersion = 6.13.3;
 			};
 		};
-		63D1D6F72D0C2E600042168C /* XCRemoteSwiftPackageReference "UILabel-Copyable" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/alexandreos/UILabel-Copyable.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2298,20 +2283,11 @@
 			package = 63CAB4FF2605FB1B0057E1C2 /* XCRemoteSwiftPackageReference "PromiseKit" */;
 			productName = PromiseKit;
 		};
-		63D1D6F82D0C312A0042168C /* UILabel+Copyable */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 63D1D6F72D0C2E600042168C /* XCRemoteSwiftPackageReference "UILabel-Copyable" */;
-			productName = "UILabel+Copyable";
-		};
 		63EF56DD26060B980038551A /* WaniKaniAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WaniKaniAPI;
 		};
 		63EF56E126060BA70038551A /* WaniKaniAPI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = WaniKaniAPI;
-		};
-		63FC57F92D0C2C5800D4901B /* WaniKaniAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WaniKaniAPI;
 		};

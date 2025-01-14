@@ -1,5 +1,5 @@
 {
-  "originHash" : "3e8d2d253252d733dd51413c2e4d35fe19f1f053a5de56c1d138b2b2f97acc09",
+  "originHash" : "50ab24e9160cefb70db5403bc840965d085fcf6c361d806847735ac41bb48801",
   "pins" : [
     {
       "identity" : "charts",
@@ -62,15 +62,6 @@
       "state" : {
         "revision" : "e1904bf5a5f79cb7e0ff68a427a53a93b652fcd1",
         "version" : "1.15.0"
-      }
-    },
-    {
-      "identity" : "uilabel-copyable",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/alexandreos/UILabel-Copyable.git",
-      "state" : {
-        "revision" : "a1ac4d7d1118fde314796f449e803e610d7b801c",
-        "version" : "2.0.1"
       }
     }
   ],
