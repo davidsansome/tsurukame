@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
   static let NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME = "Reviews Between Meaning & Reading"
   private var services: TKMServices!
   private var model: TableModel?
+  private var reviewItemsLimitSelector: IndexPath!
   private var groupMeaningReadingIndexPath: IndexPath?
   private var nonBackToBackBatchSizeIndexPath: IndexPath?
   private var ankiModeCombineReadingMeaningIndexPath: IndexPath?
@@ -42,6 +43,23 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     let model = MutableTableModel(tableView: tableView)
 
     model.addSection()
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Review items in batches",
+                              subtitle: "Limit the number of items in review sessions",
+                              on: Settings
+                                .reviewItemsLimitEnabled) { [unowned self] in
+        reviewItemsLimitSwitchChanged($0)
+      })
+    reviewItemsLimitSelector = model.add(BasicModelItem(style: .value1,
+                                                        title: "Batch size",
+                                                        subtitle: "\(Settings.reviewItemsLimit.description)",
+                                                        accessoryType: .disclosureIndicator) {
+                                           [unowned self] in self.didTapReviewItemsLimit()
+                                         },
+                                         hidden: !Settings
+                                           .reviewItemsLimitEnabled)
+
+    model.add(section: "Order")
     model.add(BasicModelItem(style: .value1,
                              title: "Order",
                              subtitle: reviewOrderValueText,
@@ -271,6 +289,11 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     }
   }
 
+  private func reviewItemsLimitSwitchChanged(_ switchView: UISwitch) {
+    Settings.reviewItemsLimitEnabled = switchView.isOn
+    model?.setIndexPath(reviewItemsLimitSelector, hidden: !switchView.isOn)
+  }
+
   private func showAnswerImmediatelySwitchChanged(_ switchView: UISwitch) {
     Settings.showAnswerImmediately = switchView.isOn
   }
@@ -345,6 +368,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     navigationController?.pushViewController(makeReviewBatchSizeViewController(), animated: true)
   }
 
+  private func didTapReviewItemsLimit() {
+    navigationController?.pushViewController(makeReviewItemsLimitViewController(), animated: true)
+  }
+
   private func fontSizeChanged() {
     navigationController?.pushViewController(makeFontSizeViewController(), animated: true)
   }
@@ -390,6 +417,15 @@ func makeReviewBatchSizeViewController() -> UIViewController {
                                            title: name,
                                            helpText: description)
   vc.addChoicesFromRange(3 ... 10, suffix: " reviews")
+  return vc
+}
+
+func makeReviewItemsLimitViewController() -> UIViewController {
+  let vc = SettingChoiceListViewController(setting: Settings.$reviewItemsLimit,
+                                           title: "Review Batch Size",
+                                           helpText: "Set the number of items to review in a session.")
+  let defaultChoices = [5, 10, 15, 20, 25, 30, 50, 75, 100]
+  vc.addChoicesFromRange(defaultChoices, suffix: " reviews")
   return vc
 }
 

@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -179,8 +179,10 @@ protocol SettingProtocol {
 
   @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
+  @Setting(15, #keyPath(reviewItemsLimit)) static var reviewItemsLimit: Int
   @Setting(Int.max, #keyPath(apprenticeLessonsLimit)) static var apprenticeLessonsLimit: Int
   @Setting(false, #keyPath(groupMeaningReading)) static var groupMeaningReading: Bool
+  @Setting(false, #keyPath(reviewItemsLimitEnabled)) static var reviewItemsLimitEnabled: Bool
   @Setting(true, #keyPath(meaningFirst)) static var meaningFirst: Bool
   @Setting(true, #keyPath(showAnswerImmediately)) static var showAnswerImmediately: Bool
   @Setting(false, #keyPath(showFullAnswer)) static var showFullAnswer: Bool
