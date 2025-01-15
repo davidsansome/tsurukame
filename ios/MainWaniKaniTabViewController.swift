@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -231,10 +231,14 @@ class MainWaniKaniTabViewController: UITableViewController {
     switch StoryboardSegue.Main(segue) {
     case .startReviews:
       let assignments = services.localCachingClient.getAllAssignments()
-      let items = ReviewItem.readyForReview(assignments: assignments,
+      var items = ReviewItem.readyForReview(assignments: assignments,
                                             localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return
+      }
+
+      if Settings.reviewItemsLimitEnabled && items.count > Settings.reviewItemsLimit {
+        items = Array(items[0 ..< Int(Settings.reviewItemsLimit)])
       }
 
       let vc = segue.destination as! ReviewContainerViewController
