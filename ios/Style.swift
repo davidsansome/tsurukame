@@ -77,6 +77,14 @@ class TKMStyle: NSObject {
   static let explosionColor2 = UIColor(red: 230.0 / 255, green: 57.0 / 255, blue: 91.0 / 255,
                                        alpha: 1.0)
 
+  static let incorrectAnswerColor: UIColor = .init(red: 234.0 / 255, green: 51.0 / 255,
+                                                   blue: 61.0 / 255,
+                                                   alpha: 1.0) // also srsLevelDownColor
+  static let correctAnswerColor: UIColor = .init(red: 151.0 / 255, green: 202.0 / 255,
+                                                 blue: 62.0 / 255, alpha: 1.0)
+  static let srsLevelUpColor: UIColor = .init(red: 91.0 / 255, green: 168.0 / 255, blue: 51.0 / 255,
+                                              alpha: 1.0)
+
   static var radicalGradient: [CGColor] { [radicalColor1.cgColor, radicalColor2.cgColor] }
   static var kanjiGradient: [CGColor] { [kanjiColor1.cgColor, kanjiColor2.cgColor] }
   static var vocabularyGradient: [CGColor] { [vocabularyColor1.cgColor, vocabularyColor2.cgColor] }
