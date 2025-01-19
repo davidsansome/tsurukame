@@ -237,10 +237,6 @@ class MainWaniKaniTabViewController: UITableViewController {
         return
       }
 
-      if Settings.reviewItemsLimitEnabled && items.count > Settings.reviewItemsLimit {
-        items = Array(items[0 ..< Int(Settings.reviewItemsLimit)])
-      }
-
       let vc = segue.destination as! ReviewContainerViewController
       vc.setup(services: services, items: items)
 
