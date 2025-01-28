@@ -53,6 +53,11 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
                               subtitle: "Include radical mnemonics removed in 2018",
                               on: Settings.showOldMnemonic,
                               switchHandler: showOldMnemonicSwitchChanged))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Blur context sentences",
+                              subtitle: nil,
+                              on: Settings.blurContextSentences,
+                              switchHandler: blurContextSentencesSwitchChanged))
     if #available(iOS 15.0, *) {
       model.add(SwitchModelItem(style: .subtitle,
                                 title: "Show Artwork by @AmandaBear",
@@ -83,6 +88,10 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
 
   private func showOldMnemonicSwitchChanged(_ switchView: UISwitch) {
     Settings.showOldMnemonic = switchView.isOn
+  }
+
+  private func blurContextSentencesSwitchChanged(_ switchView: UISwitch) {
+    Settings.blurContextSentences = switchView.isOn
   }
 
   private func useKatakanaForOnyomiSwitchChanged(_ switchView: UISwitch) {

@@ -191,6 +191,7 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(exactMatch)) static var exactMatch: Bool
   @Setting(true, #keyPath(enableCheats)) static var enableCheats: Bool
   @Setting(true, #keyPath(showOldMnemonic)) static var showOldMnemonic: Bool
+  @Setting(true, #keyPath(blurContextSentences)) static var blurContextSentences: Bool
   @Setting(false, #keyPath(useKatakanaForOnyomi)) static var useKatakanaForOnyomi: Bool
   @Setting(false, #keyPath(showSRSLevelIndicator)) static var showSRSLevelIndicator: Bool
   @Setting(false,

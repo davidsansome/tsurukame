@@ -23,7 +23,7 @@ private let kRevealDuration: TimeInterval = 0.2
 class ContextSentenceModelItem: AttributedModelItem {
   let japaneseText: NSAttributedString
   let englishText: NSAttributedString
-  var blurred = true
+  var blurred = Settings.blurContextSentences
 
   init(_ sentence: TKMVocabulary.Sentence,
        highlightSubject: TKMSubject,
