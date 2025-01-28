@@ -215,9 +215,6 @@ protocol SettingProtocol {
 
   @Setting("", #keyPath(gravatarCustomEmail)) static var gravatarCustomEmail: String
 
-  // Deprecated - remove after 1.24.
-  @Setting([], #keyPath(installedAudioPackages)) static var installedAudioPackages: Set<String>
-
   @Setting(true, #keyPath(animateParticleExplosion)) static var animateParticleExplosion: Bool
   @Setting(true, #keyPath(animateLevelUpPopup)) static var animateLevelUpPopup: Bool
   @Setting(true, #keyPath(animatePlusOne)) static var animatePlusOne: Bool
