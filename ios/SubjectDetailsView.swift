@@ -66,9 +66,9 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
   var strings = [NSAttributedString]()
   for reading in readings {
     if reading.isPrimary {
-      var font = UIFont(name: TKMStyle.japaneseFontName, size: kFontSize)
+      var font = UIFont.systemFont(ofSize: kFontSize, weight: .regular)
       if !primaryOnly, readings.count > 1 {
-        font = UIFont(name: TKMStyle.japaneseFontNameBold, size: kFontSize)
+        font = UIFont.systemFont(ofSize: kFontSize, weight: .bold)
       }
       strings
         .append(attrString(reading.displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi),
@@ -76,13 +76,11 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
     }
   }
   if !primaryOnly {
-    let font = UIFont(name: TKMStyle.japaneseFontName, size: kFontSize)
     for reading in readings {
       if !reading.isPrimary {
         strings
           .append(attrString(reading
-              .displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi),
-            attrs: [.font: font as Any]))
+              .displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi)))
       }
     }
   }
