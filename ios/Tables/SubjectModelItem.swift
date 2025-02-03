@@ -203,6 +203,9 @@ class SubjectModelView: TableModelCell {
   // MARK: - UITraitEnvironment
 
   override func traitCollectionDidChange(_: UITraitCollection?) {
+    if super.baseItem == nil {
+      return
+    }
     updateGradient()
   }
 

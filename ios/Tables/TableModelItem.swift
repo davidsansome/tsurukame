@@ -33,8 +33,8 @@ extension TableModelItem {
 }
 
 class TableModelCell: UITableViewCell {
-  unowned var baseItem: (any TableModelItem)!
-  unowned var tableView: UITableView!
+  weak var baseItem: (any TableModelItem)?
+  weak var tableView: UITableView?
 
   func update() {}
   func didSelect() {}
