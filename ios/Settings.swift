@@ -20,11 +20,12 @@ typealias SettingEnum = RawRepresentable & Codable & CaseIterable & CustomString
 @objc enum ReviewOrder: UInt, SettingEnum {
   case random = 1
   case ascendingSRSStage = 2
+  case descendingSRSStage = 7
+  case alternatingSRSStage = 9
   case currentLevelFirst = 3
   case lowestLevelFirst = 4
   case newestAvailableFirst = 5
   case oldestAvailableFirst = 6
-  case descendingSRSStage = 7
   case longestRelativeWait = 8
 
   var description: String {
@@ -37,6 +38,7 @@ typealias SettingEnum = RawRepresentable & Codable & CaseIterable & CustomString
     case .newestAvailableFirst: return "Newest available first"
     case .oldestAvailableFirst: return "Oldest available first"
     case .longestRelativeWait: return "Longest relative wait"
+    case .alternatingSRSStage: return "Alternating SRS stage"
     }
   }
 }
