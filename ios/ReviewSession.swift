@@ -277,7 +277,7 @@ class ReviewSession {
       var highest = false
       while (reviewQueue.count > 0) {
         alternatingReviewQueue.append(highest ? reviewQueue.removeLast() : reviewQueue.removeFirst())
-        highest = !highest;
+        highest = !highest
       }
       reviewQueue = alternatingReviewQueue
     case .random:
