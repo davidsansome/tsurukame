@@ -120,12 +120,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         self.delegate?.loginComplete()
       }.catch { error in
-        if let wkError = error as? WaniKaniAPI.WaniKaniWebClientError {
-          if wkError == .accountHibernating {
-            self.showHibernatingError()
-          } else {
-            self.showLoginError(error.localizedDescription)
-          }
+        if let wkError = error as? WaniKaniAPI.WaniKaniWebClientError,
+           wkError == .accountHibernating {
+          self.showHibernatingError()
         } else {
           self.showLoginError(error.localizedDescription)
         }
@@ -140,12 +137,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         Settings.userEmailAddress = ""
         self.delegate?.loginComplete()
       }.catch { err in
-        if let wkError = err as? WaniKaniAPIError {
-          if wkError.message?.contains("hibernating") ?? false {
-            self.showHibernatingError()
-          } else {
-            self.showLoginError("Unable to login with API token! (\(err.localizedDescription))")
-          }
+        if let wkError = err as? WaniKaniAPIError,
+           wkError.message?.contains("hibernating") ?? false {
+          self.showHibernatingError()
         } else {
           self.showLoginError("Unable to login with API token! (\(err.localizedDescription))")
         }
