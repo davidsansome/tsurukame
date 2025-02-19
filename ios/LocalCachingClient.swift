@@ -54,7 +54,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   private var db: FMDatabaseQueue!
   private var dateFormatter: DateFormatter
   private var keyValueStore: NSUbiquitousKeyValueStore
-  private var recentMistakesHandler: RecentMistakeHandler
+  private var recentMistakeHandler: RecentMistakeHandler
   private var busySyncing = false
   private var gotRecentMistakesCloudNotificationWhileSyncing = false
 
@@ -78,7 +78,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     keyValueStore = NSUbiquitousKeyValueStore.default
-    recentMistakesHandler = RecentMistakeHandler()
+    recentMistakeHandler = RecentMistakeHandler()
 
     super.init()
     openDatabase()
@@ -86,13 +86,13 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     // register for notifications before setting up key store so that we don't
     // run into any crazy race conditions
     NotificationCenter.default.addObserver(forName: .rmhCloudUpdateReceived,
-                                           object: recentMistakesHandler,
+                                           object: recentMistakeHandler,
                                            queue: .main) { [weak self] notification in
       self?.receivedRecentMistakesFromCloud(notification: notification)
     }
 
     let user = getUserInfo()
-    recentMistakesHandler.setup(keyStore: NSUbiquitousKeyValueStore
+    recentMistakeHandler.setup(keyStore: NSUbiquitousKeyValueStore
       .default,
       storageFileNamePrefix: user?.username ?? "")
 
@@ -1208,7 +1208,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   }
 
   func updateRecentMistakesFromCloud() {
-    let mergedMistakes = recentMistakesHandler
+    let mergedMistakes = recentMistakeHandler
       .mergeMistakesWithCloud(mistakes: getRecentMistakeTimes())
     // write data to db
     db.inDatabase { db in
@@ -1222,7 +1222,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       }
     }
     // make sure cloud is up to date in case we synced incomplete data earlier
-    recentMistakesHandler.uploadRecentMistakesToCloud(mistakes: mergedMistakes)
+    recentMistakeHandler.uploadRecentMistakesToCloud(mistakes: mergedMistakes)
     postNotificationOnMainQueue(.lccRecentMistakesCountChanged)
   }
 
@@ -1292,6 +1292,10 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         self.fetchVoiceActors(progress: childProgress(1)),
       ])
     }.ensure {
+        // we need to make sure that our current, local batch of recent mistakes go up to the cloud
+        let mergedMistakes = self.recentMistakeHandler.mergeMistakesWithCloud(mistakes: recentMistakes)
+        self.recentMistakeHandler.uploadRecentMistakesToCloud(mistakes: mergedMistakes)
+
       if !quick && recentMistakes.count != 0 {
         // re-insert recent mistakes into database
         self.db.inDatabase { db in
@@ -1315,7 +1319,8 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       progress.completedUnitCount = progress.totalUnitCount
       if self.gotRecentMistakesCloudNotificationWhileSyncing {
         // recent mistake data was updated while we were busy doing other syncing,
-        // so let's make sure to grab the latest data from the cloud now that we're done syncing.
+        // so let's make sure to grab the latest data from the cloud now that we're done syncing
+          // and update our local data.
         // (subject_progress is being updated/rebuilt during sync,
         // so we don't want to touch it during with data from the cloud until the
         // subject_progress is done updating)
