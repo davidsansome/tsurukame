@@ -7,11 +7,15 @@
       "**/node_modules/**",
       "README.md"
     ],
-    "redirects": [
+    "headers": [
       {
-        "source": "/",
-        "destination": "https://itunes.apple.com/au/app/tsurukame-for-wanikani/id1367114761",
-        "type": 302
+        "source": "/.well-known/apple-app-site-association",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ]
       }
     ]
   }

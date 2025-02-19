@@ -167,6 +167,7 @@
 		791B8B5E2D6584C9000C8142 /* RecentMistakeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B8B5D2D6584C9000C8142 /* RecentMistakeHandler.swift */; };
 		791B8B612D659106000C8142 /* RecentMistakesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B8B602D659106000C8142 /* RecentMistakesTest.swift */; };
 		791B8B622D65B0F1000C8142 /* RecentMistakeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B8B5D2D6584C9000C8142 /* RecentMistakeHandler.swift */; };
+		791B8B5C2D657E2A000C8142 /* CommonErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B8B5B2D657E2A000C8142 /* CommonErrors.swift */; };
 		79661CC22BAC117D003F8764 /* LessonPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79661CC12BAC117D003F8764 /* LessonPickerViewController.swift */; };
 		796706282B3BE71000CAF09B /* SubjectsByCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796706272B3BE71000CAF09B /* SubjectsByCategoryViewController.swift */; };
 		79D887452B41949F003D8F99 /* String+SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D887442B41949F003D8F99 /* String+SHA256.swift */; };
@@ -420,6 +421,7 @@
 		6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		791B8B5D2D6584C9000C8142 /* RecentMistakeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMistakeHandler.swift; sourceTree = "<group>"; };
 		791B8B602D659106000C8142 /* RecentMistakesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMistakesTest.swift; sourceTree = "<group>"; };
+		791B8B5B2D657E2A000C8142 /* CommonErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonErrors.swift; sourceTree = "<group>"; };
 		79661CC12BAC117D003F8764 /* LessonPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonPickerViewController.swift; sourceTree = "<group>"; };
 		796706272B3BE71000CAF09B /* SubjectsByCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectsByCategoryViewController.swift; sourceTree = "<group>"; };
 		79D887442B41949F003D8F99 /* String+SHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SHA256.swift"; sourceTree = "<group>"; };
@@ -594,6 +596,7 @@
 				63F7F52D23D4C2CA006A31FB /* Audio.swift */,
 				631F34D62C36B7FE0071E983 /* BiggerTapAreaButton.swift */,
 				63344E7F2D291C9F002A4FED /* BuildConfigs */,
+				791B8B5B2D657E2A000C8142 /* CommonErrors.swift */,
 				C90846AD237F1C770068A272 /* Complication */,
 				C90846BC237F1C790068A272 /* ComplicationExtension */,
 				63CBFF2527731B8B0086BA5F /* DownloadViewController.swift */,
@@ -1458,6 +1461,7 @@
 				79D887452B41949F003D8F99 /* String+SHA256.swift in Sources */,
 				63344E8A2D291CAA002A4FED /* ReviewContainerViewController.swift in Sources */,
 				63344E8B2D291CAA002A4FED /* ReviewQuickSettingsAnswersMenu.swift in Sources */,
+				791B8B5C2D657E2A000C8142 /* CommonErrors.swift in Sources */,
 				63344E8C2D291CAA002A4FED /* ReviewQuickSettingsAudioMenu.swift in Sources */,
 				63344E8D2D291CAA002A4FED /* ReviewQuickSettingsDisplayMenu.swift in Sources */,
 				63344E8E2D291CAA002A4FED /* ReviewQuickSettingsMenu.swift in Sources */,

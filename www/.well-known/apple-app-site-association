@@ -1,0 +1,41 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "7B2GP77Y4A.com.davidsansome.wanikani"
+        ],
+        "components": [
+          {
+            "/": "/",
+            "comment": "Opens Tsurukame at the home screen"
+          },
+          {
+            "/": "/reviews",
+            "comment": "Opens Tsurukame and starts a review session"
+          },
+          {
+            "/": "/lessons",
+            "comment": "Opens Tsurukame and starts a lesson session"
+          },
+          {
+            "/": "/subject/*",
+            "comment": "Opens the subject details screen for the given subject ID"
+          },
+          {
+            "/": "/radical/*",
+            "comment": "Opens the subject details screen for the given radical"
+          },
+          {
+            "/": "/kanji/*",
+            "comment": "Opens the subject details screen for the given kanji"
+          },
+          {
+            "/": "/vocabulary/*",
+            "comment": "Opens the subject details screen for the given vocabulary"
+          }
+        ]
+      }
+    ]
+  }
+}

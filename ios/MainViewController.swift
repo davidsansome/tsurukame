@@ -99,6 +99,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     nd.add(name: .lccUserInfoChanged) { [weak self] _ in self?.userInfoChanged() }
     nd.add(name: .lccSRSCategoryCountsChanged) { [weak self] _ in self?.srsLevelCountsChanged() }
     nd.add(name: .lccUnauthorized) { [weak self] _ in self?.clientIsUnauthorized() }
+    nd.add(name: .lccHibernating) { [weak self] _ in self?.clientIsHibernating() }
     nd
       .add(name: UIApplication.didEnterBackgroundNotification) { [weak self] _ in
         self?.applicationDidEnterBackground()
@@ -380,6 +381,15 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     present(ac, animated: true, completion: nil)
   }
 
+  func clientIsHibernating() {
+    if isShowingUnauthorizedAlert {
+      return
+    }
+    isShowingUnauthorizedAlert = true
+
+    present(CommonErrors.getHibernatingAccountAlertController(), animated: true, completion: nil)
+  }
+
   func loginAgain() {
     guard services.localCachingClient.getUserInfo() != nil else {
       return
@@ -411,7 +421,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   func searchResultSelected(subject: TKMSubject) {
     let vc = StoryboardScene.SubjectDetails.initialScene.instantiate()
-    vc.setup(services: services, subject: subject, showHints: true, hideBackButton: false, index: 0)
+    vc.setup(services: services, subject: subject, showHints: true)
     searchController.dismiss(animated: true) {
       self.navigationController?.pushViewController(vc, animated: true)
     }
