@@ -14,10 +14,6 @@
 
 import Foundation
 
-extension Notification.Name {
-  static let rmhCloudUpdateReceived = Notification.Name(rawValue: "rmhCloudUpdateReceived")
-}
-
 class RecentMistakeHandler {
   var keyValueStore: NSUbiquitousKeyValueStore?
   var fileNamePrefix: String?
@@ -33,11 +29,6 @@ class RecentMistakeHandler {
   func setup(keyStore: NSUbiquitousKeyValueStore, storageFileNamePrefix: String?) {
     keyValueStore = keyStore
     fileNamePrefix = storageFileNamePrefix
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(receivedCloudUpdate),
-                                           name: NSUbiquitousKeyValueStore
-                                             .didChangeExternallyNotification,
-                                           object: keyValueStore)
     keyStore.synchronize()
   }
 
@@ -107,12 +98,5 @@ class RecentMistakeHandler {
       }
     }
     return output
-  }
-
-  @objc func receivedCloudUpdate(notification _: NSNotification) {
-    DispatchQueue.main.async {
-      NotificationCenter.default.post(name: .rmhCloudUpdateReceived,
-                                      object: self.getCloudMistakes())
-    }
   }
 }

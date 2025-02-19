@@ -85,16 +85,15 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
 
     // register for notifications before setting up key store so that we don't
     // run into any crazy race conditions
-    NotificationCenter.default.addObserver(forName: .rmhCloudUpdateReceived,
-                                           object: recentMistakeHandler,
-                                           queue: .main) { [weak self] notification in
-      self?.receivedRecentMistakesFromCloud(notification: notification)
-    }
+    NotificationCenter.default.addObserver(self,
+                                           selector: #selector(receivedRecentMistakesFromCloud),
+                                           name: NSUbiquitousKeyValueStore
+                                             .didChangeExternallyNotification,
+                                           object: keyValueStore)
 
     let user = getUserInfo()
-    recentMistakeHandler.setup(keyStore: NSUbiquitousKeyValueStore
-      .default,
-      storageFileNamePrefix: user?.username ?? "")
+    recentMistakeHandler.setup(keyStore: keyValueStore,
+                               storageFileNamePrefix: user?.username ?? "")
 
     _pendingProgressCount.updateBlock = {
       self.countRows(inTable: "pending_progress")
@@ -1217,7 +1216,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         db
           .mustExecuteUpdate("UPDATE subject_progress SET last_mistake_time = ? WHERE id = ?",
                              args: [
-                               item.value,
+                               dateFormatter.string(from: item.value),
                                item.key,
                              ])
       }
@@ -1230,7 +1229,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     // so we download the cloud update (getCloudMistakes(), and merge it with our local
     // data. At that point, our local data is up to date, but the cloud has not
     // received the latest updates that were in our local copy, so we upload those
-    // int he following line.
+    // in the following line.
     recentMistakeHandler.uploadMistakesToCloud(mistakes: mergedMistakes)
     postNotificationOnMainQueue(.lccRecentMistakesCountChanged)
   }
