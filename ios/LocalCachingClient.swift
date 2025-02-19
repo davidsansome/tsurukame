@@ -1340,7 +1340,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         // (subject_progress is being updated/rebuilt during sync,
         // so we don't want to touch it during with data from the cloud until the
         // subject_progress is done updating)
-        updateRecentMistakesFromCloud(skipReuploadToCloud: false)
+        self.updateRecentMistakesFromCloud(skipReuploadToCloud: false)
         self.gotRecentMistakesCloudNotificationWhileSyncing = false
       }
     }.catch(handleError)
