@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@ import Foundation
 import UIKit
 
 class ReviewSettingsViewController: UITableViewController, TKMViewController {
+  static let NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME = "Reviews Between Meaning & Reading"
   private var services: TKMServices!
   private var model: TableModel?
+  private var reviewItemsLimitSelector: IndexPath!
   private var groupMeaningReadingIndexPath: IndexPath?
   private var nonBackToBackBatchSizeIndexPath: IndexPath?
   private var ankiModeCombineReadingMeaningIndexPath: IndexPath?
@@ -41,6 +43,23 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     let model = MutableTableModel(tableView: tableView)
 
     model.addSection()
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Review items in batches",
+                              subtitle: "Limit the number of items in review sessions",
+                              on: Settings
+                                .reviewItemsLimitEnabled) { [unowned self] in
+        reviewItemsLimitSwitchChanged($0)
+      })
+    reviewItemsLimitSelector = model.add(BasicModelItem(style: .value1,
+                                                        title: "Batch size",
+                                                        subtitle: "\(Settings.reviewItemsLimit.description)",
+                                                        accessoryType: .disclosureIndicator) {
+                                           [unowned self] in self.didTapReviewItemsLimit()
+                                         },
+                                         hidden: !Settings
+                                           .reviewItemsLimitEnabled)
+
+    model.add(section: "Order")
     model.add(BasicModelItem(style: .value1,
                              title: "Order",
                              subtitle: reviewOrderValueText,
@@ -65,7 +84,8 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                              hidden:!Settings
                                                .groupMeaningReading)
     nonBackToBackBatchSizeIndexPath = model.add(BasicModelItem(style: .value1,
-                                                               title: "Batch size",
+                                                               title: ReviewSettingsViewController
+                                                                 .NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME,
                                                                subtitle: "\(Settings.reviewBatchSize.description)",
                                                                accessoryType: .disclosureIndicator) {
                                                   [unowned self] in self.didTapReviewBatchSize()
@@ -173,6 +193,13 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                 .playAudioAutomatically) { [unowned self] in
         playAudioAutomaticallySwitchChanged($0)
       })
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Interrupt background audio",
+                              subtitle: "When answer is played automatically",
+                              on: Settings
+                                .interruptBackgroundAudio) { [unowned self] in
+        interruptBackgroundAudioSwitchChanged($0)
+      })
     model.add(BasicModelItem(style: .default,
                              title: "Offline audio",
                              subtitle: nil,
@@ -262,6 +289,11 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     }
   }
 
+  private func reviewItemsLimitSwitchChanged(_ switchView: UISwitch) {
+    Settings.reviewItemsLimitEnabled = switchView.isOn
+    model?.setIndexPath(reviewItemsLimitSelector, hidden: !switchView.isOn)
+  }
+
   private func showAnswerImmediatelySwitchChanged(_ switchView: UISwitch) {
     Settings.showAnswerImmediately = switchView.isOn
   }
@@ -326,10 +358,18 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     Settings.playAudioAutomatically = switchView.isOn
   }
 
+  private func interruptBackgroundAudioSwitchChanged(_ switchView: UISwitch) {
+    Settings.interruptBackgroundAudio = switchView.isOn
+  }
+
   // MARK: - Tap handlers
 
   private func didTapReviewBatchSize() {
     navigationController?.pushViewController(makeReviewBatchSizeViewController(), animated: true)
+  }
+
+  private func didTapReviewItemsLimit() {
+    navigationController?.pushViewController(makeReviewItemsLimitViewController(), animated: true)
   }
 
   private func fontSizeChanged() {
@@ -363,16 +403,29 @@ func makeFontSizeViewController() -> UIViewController {
 }
 
 func makeReviewBatchSizeViewController() -> UIViewController {
-  let name = "Review Batch Size"
-  let description = "The \(name) setting is ONLY used when \"back-to-back\" reviews are disabled.\n\n" +
-    "When \"back-to-back\" reviews are disabled, you might be asked to review the meaning of an item and then " + 
-    "later after reviewing some other items, be asked to review the reading of that item. \nThe \(name) setting " + 
-    "controls the number of different review items you can encounter between reviewing the reading and " + 
+  let name = ReviewSettingsViewController.NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME
+  let description =
+    "The \"\(name)\" setting is ONLY used when \"back-to-back\" reviews are disabled.\n\n" +
+    "When \"back-to-back\" reviews are disabled, you might be asked to review the meaning of an item and then " +
+
+    "later after reviewing some other items, be asked to review the reading of that item. \nThe \"\(name)\" setting " +
+
+    "controls the number of different review items you can encounter between reviewing the reading and " +
+
     "meaning for a given item."
   let vc = SettingChoiceListViewController(setting: Settings.$reviewBatchSize,
                                            title: name,
                                            helpText: description)
   vc.addChoicesFromRange(3 ... 10, suffix: " reviews")
+  return vc
+}
+
+func makeReviewItemsLimitViewController() -> UIViewController {
+  let vc = SettingChoiceListViewController(setting: Settings.$reviewItemsLimit,
+                                           title: "Review Batch Size",
+                                           helpText: "Set the number of items to review in a session.")
+  let defaultChoices = [5, 10, 15, 20, 25, 30, 50, 75, 100]
+  vc.addChoicesFromRange(defaultChoices, suffix: " reviews")
   return vc
 }
 

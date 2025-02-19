@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -179,8 +179,10 @@ protocol SettingProtocol {
 
   @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
+  @Setting(15, #keyPath(reviewItemsLimit)) static var reviewItemsLimit: Int
   @Setting(Int.max, #keyPath(apprenticeLessonsLimit)) static var apprenticeLessonsLimit: Int
   @Setting(false, #keyPath(groupMeaningReading)) static var groupMeaningReading: Bool
+  @Setting(false, #keyPath(reviewItemsLimitEnabled)) static var reviewItemsLimitEnabled: Bool
   @Setting(true, #keyPath(meaningFirst)) static var meaningFirst: Bool
   @Setting(true, #keyPath(showAnswerImmediately)) static var showAnswerImmediately: Bool
   @Setting(false, #keyPath(showFullAnswer)) static var showFullAnswer: Bool
@@ -189,6 +191,7 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(exactMatch)) static var exactMatch: Bool
   @Setting(true, #keyPath(enableCheats)) static var enableCheats: Bool
   @Setting(true, #keyPath(showOldMnemonic)) static var showOldMnemonic: Bool
+  @Setting(true, #keyPath(blurContextSentences)) static var blurContextSentences: Bool
   @Setting(false, #keyPath(useKatakanaForOnyomi)) static var useKatakanaForOnyomi: Bool
   @Setting(false, #keyPath(showSRSLevelIndicator)) static var showSRSLevelIndicator: Bool
   @Setting(false,
@@ -206,14 +209,12 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(seenFullAnswerPrompt)) static var seenFullAnswerPrompt: Bool
 
   @Setting(false, #keyPath(playAudioAutomatically)) static var playAudioAutomatically: Bool
+  @Setting(false, #keyPath(interruptBackgroundAudio)) static var interruptBackgroundAudio: Bool
   @Setting(false, #keyPath(offlineAudio)) static var offlineAudio: Bool
   @Setting(false, #keyPath(offlineAudioCellular)) static var offlineAudioCellular: Bool
   @Setting([], #keyPath(offlineAudioVoiceActors)) static var offlineAudioVoiceActors: Set<Int64>
 
   @Setting("", #keyPath(gravatarCustomEmail)) static var gravatarCustomEmail: String
-
-  // Deprecated - remove after 1.24.
-  @Setting([], #keyPath(installedAudioPackages)) static var installedAudioPackages: Set<String>
 
   @Setting(true, #keyPath(animateParticleExplosion)) static var animateParticleExplosion: Bool
   @Setting(true, #keyPath(animateLevelUpPopup)) static var animateLevelUpPopup: Bool

@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ extension TableModelItem {
 }
 
 class TableModelCell: UITableViewCell {
-  unowned var baseItem: (any TableModelItem)!
-  unowned var tableView: UITableView!
+  weak var baseItem: (any TableModelItem)?
+  weak var tableView: UITableView?
 
   func update() {}
   func didSelect() {}

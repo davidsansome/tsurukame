@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,9 +66,9 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
   var strings = [NSAttributedString]()
   for reading in readings {
     if reading.isPrimary {
-      var font = UIFont(name: TKMStyle.japaneseFontName, size: kFontSize)
+      var font = UIFont.systemFont(ofSize: kFontSize, weight: .regular)
       if !primaryOnly, readings.count > 1 {
-        font = UIFont(name: TKMStyle.japaneseFontNameBold, size: kFontSize)
+        font = UIFont.systemFont(ofSize: kFontSize, weight: .bold)
       }
       strings
         .append(attrString(reading.displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi),
@@ -76,13 +76,11 @@ private func renderReadings(readings: [TKMReading], primaryOnly: Bool) -> NSAttr
     }
   }
   if !primaryOnly {
-    let font = UIFont(name: TKMStyle.japaneseFontName, size: kFontSize)
     for reading in readings {
       if !reading.isPrimary {
         strings
           .append(attrString(reading
-              .displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi),
-            attrs: [.font: font as Any]))
+              .displayText(useKatakanaForOnyomi: Settings.useKatakanaForOnyomi)))
       }
     }
   }
@@ -489,6 +487,10 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
                      assignment: TKMAssignment?, task: ReviewItem?) {
+    if FeatureFlags.dumpSubjectTextproto {
+      print(subject)
+    }
+
     let model = MutableTableModel(tableView: self), isReview = task != nil
     model.useSectionHeaderHeightFromView = true
 
@@ -646,6 +648,13 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
        ArtworkManager.contains(subjectID: subject.id) {
       model.add(section: "Artwork by @AmandaBear")
       model.add(ArtworkModelItem(subjectID: subject.id))
+    }
+
+    if FeatureFlags.showSubjectDeveloperOptions {
+      model.add(section: "Developer options")
+      model.add(BasicModelItem(style: .default, title: "Open practice review") { [unowned self] in
+        self.subjectDelegate.openPracticeReview(subject)
+      })
     }
 
     tableModel = model

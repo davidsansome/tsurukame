@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,7 +44,12 @@ class AttributedModelCell: TableModelCell {
     selectionStyle = .none
     isUserInteractionEnabled = true
 
-    textView = UITextView(frame: bounds)
+    if #available(iOS 16.0, *) {
+      textView = UITextView(usingTextLayoutManager: false)
+      textView.frame = bounds
+    } else {
+      textView = UITextView(frame: bounds)
+    }
     textView.isEditable = false
     textView.isScrollEnabled = false
     textView.textContainerInset = .zero
@@ -74,25 +79,14 @@ class AttributedModelCell: TableModelCell {
       exclusionPaths.append(UIBezierPath(rect: rightButtonFrame!))
     }
 
-    // Calculate the height of the text. We can't just use UITextView.sizeThatFits because it gets
-    // the wrong answer for CJK text. The order here matters, see
-    // https://github.com/facebook/AsyncDisplayKit/issues/2894.
-    let storage = NSTextStorage()
-    let manager = NSLayoutManager()
-    manager.usesFontLeading = false
-    storage.addLayoutManager(manager)
-    storage.setAttributedString(textView.attributedText)
+    textView.frame = CGRect(origin: textView.frame.origin,
+                            size: CGSize(width: availableRect.width,
+                                         height: textView.frame.height))
 
-    var size = availableRect.size
-    size.height = CGFloat.greatestFiniteMagnitude
+    textView.textContainer.exclusionPaths = exclusionPaths
+    textView.layoutManager.ensureLayout(for: textView.textContainer)
 
-    let container = NSTextContainer(size: size)
-    container.lineFragmentPadding = 0
-    container.exclusionPaths = exclusionPaths
-    manager.addTextContainer(container)
-    manager.ensureLayout(for: container)
-
-    let textHeight = manager.usedRect(for: container).height
+    let textHeight = textView.sizeThatFits(availableRect.size).height
 
     return (rightButtonFrame: rightButtonFrame, exclusionPaths: exclusionPaths,
             textHeight: textHeight)
@@ -116,7 +110,6 @@ class AttributedModelCell: TableModelCell {
     if let rightButton = rightButton, let rightButtonFrame = layout.rightButtonFrame {
       rightButton.frame = rightButtonFrame
     }
-    textView.textContainer.exclusionPaths = layout.exclusionPaths
 
     let textViewSize = CGSize(width: availableRect.width, height: layout.textHeight)
 

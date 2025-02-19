@@ -74,11 +74,6 @@ internal enum StoryboardScene {
 
     internal static let initialScene = InitialSceneType<Tsurukame.ReviewContainerViewController>(storyboard: Self.self)
   }
-  internal enum ReviewMenu: StoryboardType {
-    internal static let storyboardName = "ReviewMenu"
-
-    internal static let initialScene = InitialSceneType<Tsurukame.ReviewMenuViewController>(storyboard: Self.self)
-  }
   internal enum ReviewSettings: StoryboardType {
     internal static let storyboardName = "ReviewSettings"
 

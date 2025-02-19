@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -186,6 +186,12 @@ class AnswerChecker: NSObject {
 
       for reading in subject.primaryReadings {
         if reading.reading == hiraganaText {
+          return .Precise
+        }
+
+        // Some katakana kanji subjects like ページ only have one primary katakana reading.
+        let hiraganaReading = convertKatakanaToHiragana(reading.reading)
+        if hiraganaReading == hiraganaText {
           return .Precise
         }
       }

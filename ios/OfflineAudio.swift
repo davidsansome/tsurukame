@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -118,17 +118,6 @@ class OfflineAudio {
   // Progress that can be used to track the progress of the downloads.
   // Calling this a second time will cancel and re-queue all pending downloads.
   func queueDownloads() -> Progress {
-    // Handle upgrades from 1.22. Delete after 1.24.
-    // If the user had any audio packages installed before, opt them in to offline audio now and
-    // enable all the voice actors.
-    if !Settings.installedAudioPackages.isEmpty {
-      Settings.installedAudioPackages = []
-      Settings.offlineAudio = true
-      for voiceActor in services.localCachingClient.getVoiceActors() {
-        Settings.offlineAudioVoiceActors.insert(voiceActor.id)
-      }
-    }
-
     let voiceActorIds = Array(Settings.offlineAudioVoiceActors)
 
     // Download levels in priority order, starting at the current level, then all previous levels,

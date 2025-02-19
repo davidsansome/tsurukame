@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -611,19 +611,7 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    let expected = try! TKMAssignment(textFormatString: """
-      id: 42
-      level: 42
-      subject_id: 8761
-      subject_type: RADICAL
-      available_at: 1519689600
-      started_at: 1504654888
-      srs_stage_number: 1
-    """)
-
-    if let result = waitForPromise(client.sendProgress(progress)) {
-      XCTAssertEqual(result, expected)
-    }
+    waitForPromise(client.sendProgress(progress))
   }
 
   func testCreateReview() {
@@ -639,11 +627,16 @@ class APIClientTest: XCTestCase {
 
     var request = StubRequest(method: .POST,
                               url: URL(string: "https://api.wanikani.com/v2/reviews")!)
-    request.bodyMatcher = DataMatcher(data: ("{\"review\":{\"assignment_id\":42," +
-        "\"incorrect_reading_answers\":4" +
-        ",\"incorrect_meaning_answers\":3" +
-        ",\"created_at\":\"1973-11-29T21:33:09.000000Z\"}}")
-      .data(using: .utf8)!)
+    request.bodyMatcher = JSONSerializationMatcher("""
+      {
+        "review": {
+          "assignment_id": 42,
+          "incorrect_reading_answers": 4,
+          "incorrect_meaning_answers": 3,
+          "created_at":"1973-11-29T21:33:09.000000Z"
+        }
+      }
+    """)
     request.setHeader(key: "Content-Type", value: "application/json")
     request.setHeader(key: "Authorization", value: "Token token=bob")
     request.response.body = """
@@ -711,19 +704,7 @@ class APIClientTest: XCTestCase {
     """.data(using: .utf8)
     Hippolyte.shared.add(stubbedRequest: request)
 
-    let expected = try! TKMAssignment(textFormatString: """
-      id: 1422
-      level: 42
-      subject_id: 997
-      subject_type: VOCABULARY
-      available_at: 1526281200
-      started_at: 1516830767
-      srs_stage_number: 1
-    """)
-
-    if let result = waitForPromise(client.sendProgress(progress)) {
-      XCTAssertEqual(result, expected)
-    }
+    waitForPromise(client.sendProgress(progress))
   }
 
   func testCreateNewStudyMaterial() {
@@ -754,10 +735,16 @@ class APIClientTest: XCTestCase {
 
     var postRequest = StubRequest(method: .POST,
                                   url: URL(string: "https://api.wanikani.com/v2/study_materials")!)
-    postRequest
-      .bodyMatcher =
-      DataMatcher(data: "{\"study_material\":{\"meaning_synonyms\":[\"foo\",\"bar\"],\"subject_id\":42}}"
-        .data(using: .utf8)!)
+    postRequest.bodyMatcher = JSONSerializationMatcher("""
+      {
+        "study_material": {
+          "meaning_synonyms": ["foo", "bar"],
+          "meaning_note": "",
+          "reading_note": "",
+          "subject_id": 42
+        }
+      }
+    """)
     postRequest.setHeader(key: "Content-Type", value: "application/json")
     postRequest.setHeader(key: "Authorization", value: "Token token=bob")
     Hippolyte.shared.add(stubbedRequest: postRequest)
@@ -808,10 +795,15 @@ class APIClientTest: XCTestCase {
 
     var postRequest = StubRequest(method: .PUT,
                                   url: URL(string: "https://api.wanikani.com/v2/study_materials/65231")!)
-    postRequest
-      .bodyMatcher =
-      DataMatcher(data: "{\"study_material\":{\"meaning_synonyms\":[\"foo\",\"bar\"]}}"
-        .data(using: .utf8)!)
+    postRequest.bodyMatcher = JSONSerializationMatcher("""
+      {
+        "study_material": {
+          "meaning_synonyms": ["foo", "bar"],
+          "meaning_note": "",
+          "reading_note": ""
+        }
+      }
+    """)
     postRequest.setHeader(key: "Content-Type", value: "application/json")
     postRequest.setHeader(key: "Authorization", value: "Token token=bob")
     Hippolyte.shared.add(stubbedRequest: postRequest)

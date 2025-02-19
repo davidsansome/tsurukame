@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ private let kRevealDuration: TimeInterval = 0.2
 class ContextSentenceModelItem: AttributedModelItem {
   let japaneseText: NSAttributedString
   let englishText: NSAttributedString
-  var blurred = true
+  var blurred = Settings.blurContextSentences
 
   init(_ sentence: TKMVocabulary.Sentence,
        highlightSubject: TKMSubject,
@@ -43,7 +43,7 @@ class ContextSentenceModelItem: AttributedModelItem {
     text = text.replaceFontSize(fontSize)
 
     // Now build the two parts individually so we can render them separately.  For the English text
-    // we render to Japanese text on top in a transparent color so the English text is positioned
+    // we render the Japanese text on top in a transparent color so the English text is positioned
     // properly.
     let english = NSMutableAttributedString()
     english.append(NSAttributedString(string: sentence.japanese,
@@ -93,14 +93,23 @@ private class ContextSentenceModelCell: AttributedModelCell {
       TKMStyle.Color.cellBackground.setFill()
       UIRectFill(rect)
       englishCtx.setAlpha(kBlurAlpha)
-      contextSentenceItem.englishText.draw(with: textView.frame, options: .usesLineFragmentOrigin,
-                                           context: nil)
+      // draw the full attributed string as displayed by the text view with Japanese as clear text
+      let mut = NSMutableAttributedString(attributedString: textView.attributedText)
+      mut.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.clear,
+                       range: NSRange(location: 0,
+                                      length: contextSentenceItem.japaneseText.length))
+      mut.draw(in: textView.frame)
     }
 
     // Blur the english text.
+    // The kernel size must be odd.
+    var kernelSize = UInt32(UIFontMetrics.default.scaledValue(for: kBlurKernelSize))
+    if kernelSize.isMultiple(of: 2) {
+      kernelSize += 1
+    }
+
     let blurredCtx = CGContext.screenBitmap(size: size, screen: window!.screen)
-    englishCtx.blur(to: blurredCtx,
-                    kernelSize: UInt32(UIFontMetrics.default.scaledValue(for: kBlurKernelSize)))
+    englishCtx.blur(to: blurredCtx, kernelSize: kernelSize)
 
     // Render the Japanese text on top of the result.
     blurredCtx.with {

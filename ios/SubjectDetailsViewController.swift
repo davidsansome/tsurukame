@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -113,6 +113,19 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     let vc = StoryboardScene.SubjectDetails.initialScene.instantiate()
     vc.setup(services: services, subject: subject)
     navigationController?.pushViewController(vc, animated: true)
+  }
+
+  func openPracticeReview(_ subject: TKMSubject) {
+    if FeatureFlags.showSubjectDeveloperOptions {
+      var assignment = TKMAssignment()
+      assignment.subjectType = subject.subjectType
+      let item = ReviewItem(assignment: assignment, subject: subject)
+
+      let vc = StoryboardScene.ReviewContainer.initialScene.instantiate()
+      vc.setup(services: services, items: [item], isPracticeSession: true)
+
+      navigationController?.pushViewController(vc, animated: true)
+    }
   }
 
   // MARK: - Keyboard navigation

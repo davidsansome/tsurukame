@@ -80,6 +80,7 @@ lane :beta do
 
   build_app(
     scheme: "Tsurukame",
+    xcconfig: "BuildConfigurations/TestFlightRelease.xcconfig",
   )
 
   # Generate the changelog from git commits since the last tag.

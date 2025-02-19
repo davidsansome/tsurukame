@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -156,13 +156,13 @@ class MainWaniKaniTabViewController: UITableViewController {
        !services.localCachingClient.hasCompletedPreviousLevel() {
       let previousLevel = Int(user.currentLevel) - 1
       model
-        .add(section: "Current level (\(user.currentLevel - 1))")
+        .add(section: "Previous level (\(user.currentLevel - 1))")
       let currentGraphLevelAssignments = services.localCachingClient
         .getAssignments(level: previousLevel)
       model.add(CurrentLevelChartItem(currentLevelAssignments: currentGraphLevelAssignments))
       addShowRemainingAllItems(model: model, level: previousLevel)
       // add header for next section; graph and other items will be added after this if/else block
-      model.add(section: "Next level (\(user.currentLevel))")
+      model.add(section: "Current level (\(user.currentLevel))")
     } else {
       model.add(section: "Current level")
     }
@@ -231,7 +231,7 @@ class MainWaniKaniTabViewController: UITableViewController {
     switch StoryboardSegue.Main(segue) {
     case .startReviews:
       let assignments = services.localCachingClient.getAllAssignments()
-      let items = ReviewItem.readyForReview(assignments: assignments,
+      var items = ReviewItem.readyForReview(assignments: assignments,
                                             localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return

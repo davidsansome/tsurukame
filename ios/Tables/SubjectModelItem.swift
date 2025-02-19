@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -203,6 +203,9 @@ class SubjectModelView: TableModelCell {
   // MARK: - UITraitEnvironment
 
   override func traitCollectionDidChange(_: UITraitCollection?) {
+    if super.baseItem == nil {
+      return
+    }
     updateGradient()
   }
 

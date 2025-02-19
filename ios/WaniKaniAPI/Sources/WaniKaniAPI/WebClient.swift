@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,7 +47,9 @@ public struct LoginResult {
   public let apiToken: String
 }
 
-public class WaniKaniWebClient: NSObject {
+public class WaniKaniWebClient {
+  public init() {}
+
   // MARK: - Login
 
   /**

@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,6 +53,11 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
                               subtitle: "Include radical mnemonics removed in 2018",
                               on: Settings.showOldMnemonic,
                               switchHandler: showOldMnemonicSwitchChanged))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Blur context sentences",
+                              subtitle: nil,
+                              on: Settings.blurContextSentences,
+                              switchHandler: blurContextSentencesSwitchChanged))
     if #available(iOS 15.0, *) {
       model.add(SwitchModelItem(style: .subtitle,
                                 title: "Show Artwork by @AmandaBear",
@@ -62,8 +67,8 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
     }
 
     model.add(SwitchModelItem(style: .subtitle,
-                              title: "Keep current level graph",
-                              subtitle: "Instead of showing the next level's graph when you finish the kanji for a given level, keep showing the same level completion graph until all radicals, kanji, and vocabulary have gotten to Guru or higher",
+                              title: "Show prior level graph until fully completed",
+                              subtitle: "When you finish the kanji for a given level, keep showing that level's completion graph until all radicals, kanji, and vocabulary have gotten to Guru or higher",
                               on: Settings.showPreviousLevelGraph,
                               switchHandler: levelGraphSwitchChanged))
 
@@ -83,6 +88,10 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
 
   private func showOldMnemonicSwitchChanged(_ switchView: UISwitch) {
     Settings.showOldMnemonic = switchView.isOn
+  }
+
+  private func blurContextSentencesSwitchChanged(_ switchView: UISwitch) {
+    Settings.blurContextSentences = switchView.isOn
   }
 
   private func useKatakanaForOnyomiSwitchChanged(_ switchView: UISwitch) {

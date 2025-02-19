@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,7 +42,13 @@ class Audio: NSObject {
     // Set the audio session category.
     let session = AVAudioSession.sharedInstance()
     try? session
-      .setCategory(.playback, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
+      .setCategory(.playback,
+                   options: Settings
+                     .interruptBackgroundAudio ? [
+                       .duckOthers,
+                       .interruptSpokenAudioAndMixWithOthers
+                     ] :
+                     [.mixWithOthers])
 
     // Listen for when playback of any item finished.
     nd.add(name: .AVPlayerItemDidPlayToEndTime) { [weak self] _ in self?.itemFinishedPlaying() }
@@ -131,8 +137,9 @@ class Audio: NSObject {
                              change _: [NSKeyValueChangeKey: Any]?,
                              context _: UnsafeMutableRawPointer?) {
     if keyPath == "currentItem.status" {
-      guard let player = player,
-            let currentItem = player.currentItem else {
+      guard let player,
+            let currentItem = player.currentItem
+      else {
         return
       }
 
@@ -156,7 +163,8 @@ class Audio: NSObject {
 
   private func showErrorDialog(_ error: Error) {
     guard let currentItem = player?.currentItem,
-          let asset = currentItem.asset as? AVURLAsset else {
+          let asset = currentItem.asset as? AVURLAsset
+    else {
       return
     }
 

@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import Hippolyte
 import PromiseKit
 import SwiftProtobuf
 import XCTest
@@ -62,4 +63,29 @@ func waitForError<T>(_ p: Promise<T>,
     XCTFail("Promise never completed: \(waitResult.rawValue)", file: file, line: line)
   }
   return ret
+}
+
+class JSONSerializationMatcher: Matcher {
+  let object: NSObject
+
+  private static func jsonObject(data: Data) -> NSObject {
+    let object = try! JSONSerialization.jsonObject(with: data)
+    return object as! NSObject
+  }
+
+  private static func jsonObject(string: String) -> NSObject {
+    jsonObject(data: string.data(using: .utf8)!)
+  }
+
+  init(_ jsonText: String) {
+    object = JSONSerializationMatcher.jsonObject(string: jsonText)
+  }
+
+  override func matches(data: Data?) -> Bool {
+    object == JSONSerializationMatcher.jsonObject(data: data!)
+  }
+
+  override func matches(string: String?) -> Bool {
+    object == JSONSerializationMatcher.jsonObject(string: string!)
+  }
 }

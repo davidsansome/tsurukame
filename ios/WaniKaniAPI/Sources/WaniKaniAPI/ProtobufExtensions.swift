@@ -1,4 +1,4 @@
-// Copyright 2024 David Sansome
+// Copyright 2025 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,10 @@
 // limitations under the License.
 
 import Foundation
-import UIKit
+
+#if canImport(UIKit)
+  import UIKit
+#endif
 
 public enum SRSStageCategory: Int, CustomStringConvertible, Comparable, Strideable {
   case apprentice = 0
@@ -192,15 +195,19 @@ public extension TKMSubject {
       return NSAttributedString(string: japanese)
     }
 
-    let imageAttachment = NSTextAttachment()
-    imageAttachment.image = UIImage(named: "radical-\(id)")
+    #if canImport(UIKit)
+      let imageAttachment = NSTextAttachment()
+      imageAttachment.image = UIImage(named: "radical-\(id)")
 
-    var size = imageSize
-    if size == 0 {
-      size = imageAttachment.image?.size.width ?? 0
-    }
-    imageAttachment.bounds = CGRect(x: 0, y: 0, width: size, height: size)
-    return NSAttributedString(attachment: imageAttachment)
+      var size = imageSize
+      if size == 0 {
+        size = imageAttachment.image?.size.width ?? 0
+      }
+      imageAttachment.bounds = CGRect(x: 0, y: 0, width: size, height: size)
+      return NSAttributedString(attachment: imageAttachment)
+    #endif
+
+    return NSAttributedString()
   }
 
   var japaneseText: NSAttributedString { japaneseText(imageSize: 0) }
