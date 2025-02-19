@@ -120,7 +120,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         self.delegate?.loginComplete()
       }.catch { error in
-        self.showLoginError(error.localizedDescription)
+        if let wkError = error as? WaniKaniAPI.WaniKaniWebClientError {
+          if wkError == .accountHibernating {
+            self.showHibernatingError()
+          } else {
+            self.showLoginError(error.localizedDescription)
+          }
+        } else {
+          self.showLoginError(error.localizedDescription)
+        }
       }
     } else {
       let token = apiTokenField.text!
@@ -132,7 +140,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         Settings.userEmailAddress = ""
         self.delegate?.loginComplete()
       }.catch { err in
-        self.showLoginError("Unable to login with API token! (\(err.localizedDescription))")
+        if let wkError = err as? WaniKaniAPIError {
+          if wkError.message?.contains("hibernating") ?? false {
+            self.showHibernatingError()
+          } else {
+            self.showLoginError("Unable to login with API token! (\(err.localizedDescription))")
+          }
+        } else {
+          self.showLoginError("Unable to login with API token! (\(err.localizedDescription))")
+        }
       }
     }
   }
@@ -174,6 +190,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       self.present(c, animated: true, completion: nil)
       self.showActivityIndicatorOverlay(false)
     }
+  }
+
+  func showHibernatingError() {
+    present(CommonErrors.getHibernatingAccountAlertController(), animated: true,
+            completion: nil)
+    showActivityIndicatorOverlay(false)
   }
 
   func showActivityIndicatorOverlay(_ visible: Bool) {
