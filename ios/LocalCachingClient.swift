@@ -54,6 +54,9 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   private var db: FMDatabaseQueue!
   private var dateFormatter: DateFormatter
   private var keyValueStore: NSUbiquitousKeyValueStore
+  private var recentMistakesHandler: RecentMistakeHandler
+  private var busySyncing = false
+  private var gotRecentMistakesCloudNotificationWhileSyncing = false
 
   @Cached(notificationName: .lccPendingItemsChanged) var pendingProgressCount: Int
   @Cached(notificationName: .lccPendingItemsChanged) var pendingStudyMaterialsCount: Int
@@ -75,9 +78,23 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     keyValueStore = NSUbiquitousKeyValueStore.default
+    recentMistakesHandler = RecentMistakeHandler()
 
     super.init()
     openDatabase()
+
+    // register for notifications before setting up key store so that we don't
+    // run into any crazy race conditions
+    NotificationCenter.default.addObserver(forName: .rmhCloudUpdateReceived,
+                                           object: recentMistakesHandler,
+                                           queue: .main) { [weak self] notification in
+      self?.receivedRecentMistakesFromCloud(notification: notification)
+    }
+
+    let user = getUserInfo()
+    recentMistakesHandler.setup(keyStore: NSUbiquitousKeyValueStore
+      .default,
+      storageFileNamePrefix: user?.username ?? "")
 
     _pendingProgressCount.updateBlock = {
       self.countRows(inTable: "pending_progress")
@@ -103,12 +120,6 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     _maxLevelGrantedBySubscription.updateBlock = {
       Int(self.getUserInfo()?.maxLevelGrantedBySubscription ?? 0)
     }
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(keyStoreDidChange),
-                                           name: NSUbiquitousKeyValueStore
-                                             .didChangeExternallyNotification,
-                                           object: keyValueStore)
-    keyValueStore.synchronize()
   }
 
   func updateGuruKanjiCount() -> Int {
@@ -746,17 +757,17 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   }
 
   /**
-      Return array of subject/assignment ID (which is the same as subject_progress.id) to last_mistake_time
+      Return array of subject/assignment ID (which is the same as subject_progress.id) to last_mistake_time (Date)
    */
-  func getRecentMistakeTimes() -> [Int32: String] {
+  func getRecentMistakeTimes() -> [Int32: Date] {
     let dayAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
-    var mistakeTimes = [Int32: String]()
+    var mistakeTimes = [Int32: Date]()
     db.inDatabase { db in
       for cursor in db.query("SELECT id, last_mistake_time " +
         "FROM subject_progress " +
         "WHERE last_mistake_time >= \"\(dateFormatter.string(from: dayAgo))\"") {
         let subjectId = cursor.int(forColumnIndex: 0)
-        let lastMistakeTime = cursor.string(forColumnIndex: 1)
+        let lastMistakeTime = cursor.date(forColumnIndex: 1)
         mistakeTimes[subjectId] = lastMistakeTime
       }
     }
@@ -1196,62 +1207,12 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
-  func getRecentMistakesCloudStorageKey() -> String {
-    let user = getUserInfo()
-    return (user?.username ?? "") + "tsurukame-mistakes"
-  }
-
-  func mergeCloudWithLocalMistakes(recentMistakesData: [Int32: String]) -> [Int32: String] {
-    var recentMistakes = recentMistakesData
-    let cloudMistakes = keyValueStore.string(forKey: getRecentMistakesCloudStorageKey())
-    // merge datasets
-    let cloudArrayItems = cloudMistakes?.split(separator: ",")
-    let dayAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
-    let dayAgoStr = dateFormatter.string(from: dayAgo)
-    cloudArrayItems?.forEach { cloudMistake in
-      let parts = cloudMistake.split(separator: "|")
-      if parts.count == 2 {
-        let subjectID = parts[0]
-        let time = String(parts[1])
-        // if time is less than a day old AND
-        // (time from cloud is more recent than the database's info OR
-        // the database doesn't have info on that subject being a recent mistake),
-        // use the data in the local copy
-        if time >= dayAgoStr &&
-          (recentMistakes[Int32(subjectID)!] == nil ||
-            (recentMistakes[Int32(subjectID)!] != nil &&
-              time > recentMistakes[Int32(subjectID)!]!)) {
-          recentMistakes[Int32(subjectID)!] = time
-        }
-      }
-    }
-    return recentMistakes
-  }
-
-  func updateRecentMistakesInCloud(recentMistakesData: [Int32: String]) {
-    // merge existing mistakes from storage and cloud
-    let recentMistakes = mergeCloudWithLocalMistakes(recentMistakesData: recentMistakesData)
-    // write back to cloud
-    if recentMistakes.count > 0 {
-      var mistakeStr = ""
-      recentMistakes.forEach { item in
-        mistakeStr += String(item.key) + "|" + item.value + ","
-      }
-      keyValueStore.set(mistakeStr, forKey: getRecentMistakesCloudStorageKey())
-      keyValueStore
-        .set(Date(), forKey: "lastSyncCall") // makes sure we get a notif on other devices
-      keyValueStore.synchronize() // fails silently if no account
-      postNotificationOnMainQueue(.lccRecentMistakesCountChanged)
-    }
-  }
-
   func updateRecentMistakesFromCloud() {
-    var recentMistakes = getRecentMistakeTimes()
-    // merge existing mistakes from storage and cloud
-    recentMistakes = mergeCloudWithLocalMistakes(recentMistakesData: recentMistakes)
+    let mergedMistakes = recentMistakesHandler
+      .mergeMistakesWithCloud(mistakes: getRecentMistakeTimes())
     // write data to db
     db.inDatabase { db in
-      recentMistakes.forEach { item in
+      mergedMistakes.forEach { item in
         db
           .mustExecuteUpdate("UPDATE subject_progress SET last_mistake_time = ? WHERE id = ?",
                              args: [
@@ -1261,28 +1222,28 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       }
     }
     // make sure cloud is up to date in case we synced incomplete data earlier
-    updateRecentMistakesInCloud(recentMistakesData: recentMistakes)
+    recentMistakesHandler.uploadRecentMistakesToCloud(mistakes: mergedMistakes)
     postNotificationOnMainQueue(.lccRecentMistakesCountChanged)
   }
 
-  @objc func keyStoreDidChange(notification _: NSNotification) {
-    if !busy {
+  @objc func receivedRecentMistakesFromCloud(notification _: Notification) {
+    if !busySyncing {
+      // we aren't syncing, so go ahead and update our local data with the data
+      // from in the cloud
       updateRecentMistakesFromCloud()
     } else {
       gotRecentMistakesCloudNotificationWhileSyncing = true
     }
   }
 
-  private var busy = false
-  private var gotRecentMistakesCloudNotificationWhileSyncing = false
   func sync(quick: Bool, progress: Progress) -> PMKFinalizer {
-    guard !busy && reachability.isReachable() else {
+    guard !busySyncing && reachability.isReachable() else {
       // Set isFinished to true so the caller knows we didn't do any work.
       progress.totalUnitCount = 1
       progress.completedUnitCount = 1
       return Promise.value(()).cauterize()
     }
-    busy = true
+    busySyncing = true
 
     let assignmentProgressUnits: Int64 = quick ? 1 : 8
     let subjectProgressUnits: Int64 = quick ? 1 : 20
@@ -1331,7 +1292,6 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         self.fetchVoiceActors(progress: childProgress(1)),
       ])
     }.ensure {
-      self.updateRecentMistakesInCloud(recentMistakesData: recentMistakes)
       if !quick && recentMistakes.count != 0 {
         // re-insert recent mistakes into database
         self.db.inDatabase { db in
@@ -1351,10 +1311,14 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       self._recentLessonCount.invalidate()
       postNotificationOnMainQueue(.lccUserInfoChanged)
 
-      self.busy = false
+      self.busySyncing = false
       progress.completedUnitCount = progress.totalUnitCount
       if self.gotRecentMistakesCloudNotificationWhileSyncing {
-        // this data was not updated while we were busy doing other syncing, so update it now
+        // recent mistake data was updated while we were busy doing other syncing,
+        // so let's make sure to grab the latest data from the cloud now that we're done syncing.
+        // (subject_progress is being updated/rebuilt during sync,
+        // so we don't want to touch it during with data from the cloud until the
+        // subject_progress is done updating)
         self.updateRecentMistakesFromCloud()
         self.gotRecentMistakesCloudNotificationWhileSyncing = false
       }

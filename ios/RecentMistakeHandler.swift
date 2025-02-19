@@ -23,25 +23,55 @@ import Foundation
 //    }
 // }
 
-class RecentMistakeHandler {
-  var keyValueStore: NSUbiquitousKeyValueStore
-  var fileNamePrefix: String
-  private var dateFormatter: DateFormatter
+extension Notification.Name {
+  static let rmhCloudUpdateReceived = Notification.Name(rawValue: "rmhCloudUpdateReceived")
+}
 
-  init(keyValueStore: NSUbiquitousKeyValueStore, storageFileNamePrefix: String?) {
-    self.keyValueStore = keyValueStore
-    fileNamePrefix = storageFileNamePrefix ?? ""
+class RecentMistakeHandler {
+  var keyValueStore: NSUbiquitousKeyValueStore?
+  var fileNamePrefix: String?
+  private var dateFormatter: DateFormatter
+  private var busySyncing = false
+  private var gotRecentMistakesCloudNotificationWhileSyncing = false
+
+  init() {
     dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
   }
 
-  func getCloudStorageKey() -> String {
-    fileNamePrefix + "tsurukame-mistakes"
+  func setup(keyStore: NSUbiquitousKeyValueStore, storageFileNamePrefix: String?) {
+    keyValueStore = keyStore
+    fileNamePrefix = storageFileNamePrefix
+    NotificationCenter.default.addObserver(self,
+                                           selector: #selector(receivedCloudUpdate),
+                                           name: NSUbiquitousKeyValueStore
+                                             .didChangeExternallyNotification,
+                                           object: keyValueStore)
+    keyStore.synchronize()
   }
 
-  func getMistakesFromCloud() -> [Int32: Date] {
-    let data = keyValueStore.dictionary(forKey: getCloudStorageKey()) as? [Int32: Date]
+  func getCloudStorageKey() -> String {
+    (fileNamePrefix ?? "") + "tsurukame-mistakes"
+  }
+
+  func getCloudMistakes() -> [Int32: Date] {
+    let data = keyValueStore?.dictionary(forKey: getCloudStorageKey()) as? [Int32: Date]
     return data ?? [:]
+  }
+
+  func mergeMistakesWithCloud(mistakes: [Int32: Date]) -> [Int32: Date] {
+    let cloudMistakes = getCloudMistakes()
+    // merge existing mistakes from storage and cloud
+    return RecentMistakeHandler.mergeMistakes(original: mistakes, other: cloudMistakes)
+  }
+
+  func uploadRecentMistakesToCloud(mistakes: [Int32: Date]) {
+    // write back to cloud
+    // note: should we write JSON here instead?
+    keyValueStore?.set(mistakes, forKey: getCloudStorageKey())
+    // sync latest date as well so that other devices are sure to get an update
+    keyValueStore?.set(Date(), forKey: "lastSyncCall")
+    keyValueStore?.synchronize() // fails silently if no iCloud account
   }
 
   // Merge 2 dictionaries together and clean up any unnecessary data in the array along the way
@@ -69,13 +99,10 @@ class RecentMistakeHandler {
     return output
   }
 
-  func uploadRecentMistakesToCloud(mistakes: [Int32: Date]) {
-    // write back to cloud
-    // TODO: experiment writing to json string
-    keyValueStore.set(mistakes, forKey: getCloudStorageKey())
-    // make sure we get a notif on other devices
-    keyValueStore.set(Date(), forKey: "lastSyncCall")
-    keyValueStore.synchronize() // fails silently if no account
-//        postNotificationOnMainQueue(.lccRecentMistakesCountChanged) // TODO: handle this
+  @objc func receivedCloudUpdate(notification _: NSNotification) {
+    DispatchQueue.main.async {
+      NotificationCenter.default.post(name: .rmhCloudUpdateReceived,
+                                      object: self.getCloudMistakes())
+    }
   }
 }
