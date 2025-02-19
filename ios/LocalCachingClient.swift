@@ -94,6 +94,10 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     let user = getUserInfo()
     recentMistakeHandler.setup(keyStore: keyValueStore,
                                storageFileNamePrefix: user?.username ?? "")
+    // ensure we have latest mistakes all merged in from cloud in case we downloaded
+    // data but did not trigger the notification (e.g. app got killed before local merge
+    // or similar)
+    updateRecentMistakesFromCloud(skipReuploadToCloud: true)
 
     _pendingProgressCount.updateBlock = {
       self.countRows(inTable: "pending_progress")
@@ -1206,7 +1210,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
-  func updateRecentMistakesFromCloud() {
+  func updateRecentMistakesFromCloud(skipReuploadToCloud: Bool) {
     let mergedMistakes = RecentMistakeHandler.mergeMistakes(original: getRecentMistakeTimes(),
                                                             other: recentMistakeHandler
                                                               .getCloudMistakes())
@@ -1230,7 +1234,9 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     // data. At that point, our local data is up to date, but the cloud has not
     // received the latest updates that were in our local copy, so we upload those
     // in the following line.
-    recentMistakeHandler.uploadMistakesToCloud(mistakes: mergedMistakes)
+    if !skipReuploadToCloud {
+      recentMistakeHandler.uploadMistakesToCloud(mistakes: mergedMistakes)
+    }
     postNotificationOnMainQueue(.lccRecentMistakesCountChanged)
   }
 
@@ -1238,7 +1244,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     if !busySyncing {
       // we aren't syncing, so go ahead and update our local data with the data
       // from in the cloud
-      updateRecentMistakesFromCloud()
+      updateRecentMistakesFromCloud(skipReuploadToCloud: false)
     } else {
       gotRecentMistakesCloudNotificationWhileSyncing = true
     }
@@ -1334,7 +1340,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         // (subject_progress is being updated/rebuilt during sync,
         // so we don't want to touch it during with data from the cloud until the
         // subject_progress is done updating)
-        self.updateRecentMistakesFromCloud()
+        updateRecentMistakesFromCloud(skipReuploadToCloud: false)
         self.gotRecentMistakesCloudNotificationWhileSyncing = false
       }
     }.catch(handleError)
