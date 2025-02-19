@@ -1222,7 +1222,15 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
                              ])
       }
     }
-    // make sure cloud is up to date in case we synced incomplete data earlier
+    // make sure cloud is up to date in case we synced incomplete data earlier.
+    // we need to upload mistakes as we have just merged the cloud data
+    // with our local data so that the cloud has the latest data.
+    // for example, if we get a cloud update while we are syncing local data,
+    // we wait until that sync is done. Then, we realize that we got a cloud update,
+    // so we download the cloud update (getCloudMistakes(), and merge it with our local
+    // data. At that point, our local data is up to date, but the cloud has not
+    // received the latest updates that were in our local copy, so we upload those
+    // int he following line.
     recentMistakeHandler.uploadMistakesToCloud(mistakes: mergedMistakes)
     postNotificationOnMainQueue(.lccRecentMistakesCountChanged)
   }
