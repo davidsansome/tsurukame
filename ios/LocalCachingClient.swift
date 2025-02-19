@@ -1223,7 +1223,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       }
     }
     // make sure cloud is up to date in case we synced incomplete data earlier
-    recentMistakeHandler.uploadRecentMistakesToCloud(mistakes: mergedMistakes)
+    recentMistakeHandler.uploadMistakesToCloud(mistakes: mergedMistakes)
     postNotificationOnMainQueue(.lccRecentMistakesCountChanged)
   }
 
@@ -1297,7 +1297,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       let mergedMistakes = RecentMistakeHandler.mergeMistakes(original: recentMistakes,
                                                               other: self.recentMistakeHandler
                                                                 .getCloudMistakes())
-      self.recentMistakeHandler.uploadRecentMistakesToCloud(mistakes: mergedMistakes)
+      self.recentMistakeHandler.uploadMistakesToCloud(mistakes: mergedMistakes)
 
       if !quick && recentMistakes.count != 0 {
         // re-insert recent mistakes into database

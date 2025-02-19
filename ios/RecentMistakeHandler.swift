@@ -14,15 +14,6 @@
 
 import Foundation
 
-// struct RecentMistake {
-//    var subjectId: Int32
-//    var date: Date
-//    init(subjectId: Int32, date: Date) {
-//        self.subjectId = subjectId
-//        self.date = date
-//    }
-// }
-
 extension Notification.Name {
   static let rmhCloudUpdateReceived = Notification.Name(rawValue: "rmhCloudUpdateReceived")
 }
@@ -59,7 +50,7 @@ class RecentMistakeHandler {
     return data ?? [:]
   }
 
-  func uploadRecentMistakesToCloud(mistakes: [Int32: Date]) {
+  func uploadMistakesToCloud(mistakes: [Int32: Date]) {
     // write back to cloud
     // note: should we write JSON here instead?
     keyValueStore?.set(mistakes, forKey: getCloudStorageKey())
