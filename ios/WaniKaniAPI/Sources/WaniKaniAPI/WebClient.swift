@@ -19,6 +19,7 @@ import PromiseKit
 public enum WaniKaniWebClientError: Int, LocalizedError {
   case csrfTokenNotFound
   case apiTokenNotFound
+  case accountHibernating
   case emailNotFound
   case sessionCookieNotSet
   case badCredentials
@@ -36,6 +37,8 @@ public enum WaniKaniWebClientError: Int, LocalizedError {
       return "Session cookie not set"
     case .badCredentials:
       return "Incorrect email or password"
+    case .accountHibernating:
+      return "Account is in hibernation mode"
     default:
       return "Unknown error"
     }
@@ -150,6 +153,9 @@ public class WaniKaniWebClient {
     }.map { arg throws -> String in
       if let apiToken = self.extractApiToken(arg.data) {
         return apiToken
+      }
+      if arg.response.url?.absoluteString.contains("hibernation") ?? false {
+        throw WaniKaniWebClientError.accountHibernating
       }
       throw WaniKaniWebClientError.apiTokenNotFound
     }

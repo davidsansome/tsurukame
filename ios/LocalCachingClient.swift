@@ -20,6 +20,7 @@ import WaniKaniAPI
 
 extension Notification.Name {
   static let lccUnauthorized = Notification.Name(rawValue: "lccUnauthorized")
+  static let lccHibernating = Notification.Name(rawValue: "lccHibernating")
   static let lccAvailableItemsChanged = Notification.Name("lccAvailableItemsChanged")
   static let lccPendingItemsChanged = Notification.Name("lccPendingItemsChanged")
   static let lccUserInfoChanged = Notification.Name("lccUserInfoChanged")
@@ -900,6 +901,17 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       switch err.code {
       case 401:
         postNotificationOnMainQueue(.lccUnauthorized)
+      case 403:
+        // For hibernating acconts, message is: "403: The user is hibernating"
+        if (err.message?.contains("hibernating")) ?? false {
+          postNotificationOnMainQueue(.lccHibernating)
+        } else {
+          logError(code: err.code,
+                   description: err.message,
+                   request: err.request,
+                   response: err.response,
+                   responseData: nil)
+        }
 
       default:
         logError(code: err.code,
