@@ -1208,8 +1208,9 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   }
 
   func updateRecentMistakesFromCloud() {
-    let mergedMistakes = recentMistakeHandler
-      .mergeMistakesWithCloud(mistakes: getRecentMistakeTimes())
+    let mergedMistakes = RecentMistakeHandler.mergeMistakes(original: getRecentMistakeTimes(),
+                                                            other: recentMistakeHandler
+                                                              .getCloudMistakes())
     // write data to db
     db.inDatabase { db in
       mergedMistakes.forEach { item in
@@ -1292,9 +1293,11 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         self.fetchVoiceActors(progress: childProgress(1)),
       ])
     }.ensure {
-        // we need to make sure that our current, local batch of recent mistakes go up to the cloud
-        let mergedMistakes = self.recentMistakeHandler.mergeMistakesWithCloud(mistakes: recentMistakes)
-        self.recentMistakeHandler.uploadRecentMistakesToCloud(mistakes: mergedMistakes)
+      // we need to make sure that our current, local batch of recent mistakes go up to the cloud
+      let mergedMistakes = RecentMistakeHandler.mergeMistakes(original: recentMistakes,
+                                                              other: self.recentMistakeHandler
+                                                                .getCloudMistakes())
+      self.recentMistakeHandler.uploadRecentMistakesToCloud(mistakes: mergedMistakes)
 
       if !quick && recentMistakes.count != 0 {
         // re-insert recent mistakes into database
@@ -1320,7 +1323,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       if self.gotRecentMistakesCloudNotificationWhileSyncing {
         // recent mistake data was updated while we were busy doing other syncing,
         // so let's make sure to grab the latest data from the cloud now that we're done syncing
-          // and update our local data.
+        // and update our local data.
         // (subject_progress is being updated/rebuilt during sync,
         // so we don't want to touch it during with data from the cloud until the
         // subject_progress is done updating)

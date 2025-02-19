@@ -59,12 +59,6 @@ class RecentMistakeHandler {
     return data ?? [:]
   }
 
-  func mergeMistakesWithCloud(mistakes: [Int32: Date]) -> [Int32: Date] {
-    let cloudMistakes = getCloudMistakes()
-    // merge existing mistakes from storage and cloud
-    return RecentMistakeHandler.mergeMistakes(original: mistakes, other: cloudMistakes)
-  }
-
   func uploadRecentMistakesToCloud(mistakes: [Int32: Date]) {
     // write back to cloud
     // note: should we write JSON here instead?
