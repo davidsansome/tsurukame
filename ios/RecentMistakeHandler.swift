@@ -37,20 +37,21 @@ class RecentMistakeHandler {
   }
 
   func getCloudMistakes() -> [Int32: Date] {
-    let data = keyValueStore?.data(forKey: getCloudStorageKey())
-    if data != nil {
+    if let data = keyValueStore?.data(forKey: getCloudStorageKey()) {
       do {
-        let decoded = try JSONSerialization.jsonObject(with: data!)
+        let decoded = try JSONSerialization.jsonObject(with: data)
         if let mistakes = decoded as? [String: String] {
           // re-create dict to be [Int32: Date] from [String: String]
           var outputDict = [Int32: Date]()
           mistakes.forEach { el in
-            outputDict[Int32(el.key)!] = dateFormatter.date(from: el.value)
+            if let key = Int32(el.key), let value = dateFormatter.date(from: el.value) {
+              outputDict[key] = value
+            }
           }
           return outputDict
         }
       } catch {
-        NSLog("Unable to deserialize mistakes from JSON")
+        NSLog("Unable to deserialize mistakes from JSON: \(error)")
       }
     }
     return [:]
@@ -71,7 +72,7 @@ class RecentMistakeHandler {
       keyValueStore?.set(Date(), forKey: "lastSyncCall")
       keyValueStore?.synchronize() // fails silently if no iCloud account
     } catch {
-      NSLog("Unable to serialize mistakes to JSON")
+      NSLog("Unable to serialize mistakes to JSON: \(error)")
     }
   }
 
@@ -80,16 +81,13 @@ class RecentMistakeHandler {
     var output = [Int32: Date]()
     let dayAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
     [original, other].forEach { dict in
-      dict.forEach { mistake in
-        let subjectID = mistake.key
-        let dateToAdd = mistake.value
+      dict.forEach { subjectID, dateToAdd in
         if dateToAdd >= dayAgo {
           if let currentMistakeDate = output[subjectID] {
             // compare the existing item in the output with the "new" item from this dictionary.
             // We want the newer date of the two dates because we want the user to have the
             // max 24 hrs for the recent mistake available.
-            output[subjectID] = dateToAdd > currentMistakeDate ? dateToAdd :
-              currentMistakeDate
+            output[subjectID] = max(dateToAdd, currentMistakeDate)
           } else {
             // we don't have data on this subjectID yet, so go ahead and add it in
             output[subjectID] = dateToAdd

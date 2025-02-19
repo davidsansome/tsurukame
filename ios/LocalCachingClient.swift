@@ -771,8 +771,10 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         "FROM subject_progress " +
         "WHERE last_mistake_time >= \"\(dateFormatter.string(from: dayAgo))\"") {
         let subjectId = cursor.int(forColumnIndex: 0)
-        let lastMistakeTime = cursor.string(forColumnIndex: 1)
-        mistakeTimes[subjectId] = dateFormatter.date(from: lastMistakeTime!)
+        if let lastMistakeTime = cursor.string(forColumnIndex: 1),
+           let date = dateFormatter.date(from: lastMistakeTime) {
+          mistakeTimes[subjectId] = date
+        }
       }
     }
     return mistakeTimes
