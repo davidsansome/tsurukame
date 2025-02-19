@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
 
   func application(_: UIApplication,
                    willContinueUserActivityWithType userActivityType: String) -> Bool {
-    guard let mainVC = findMainViewController() else {
+    guard let mainVC = findMainWaniKaniTabViewController() else {
       return true
     }
     if userActivityType == SiriShortcutHelper.ShortcutType.reviews.rawValue {
@@ -75,10 +75,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
     return true
   }
 
-  private func findMainViewController() -> MainViewController? {
+  func application(_: UIApplication,
+                   continue userActivity: NSUserActivity,
+                   restorationHandler _: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+    switch userActivity.activityType {
+    case NSUserActivityTypeBrowsingWeb:
+      if let url = userActivity.webpageURL {
+        return handleApplink(url: url)
+      }
+    default:
+      break
+    }
+
+    return false
+  }
+
+  func application(_: UIApplication, open url: URL,
+                   options _: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+    handleApplink(url: url)
+  }
+
+  private func findMainWaniKaniTabViewController() -> MainWaniKaniTabViewController? {
     for vc in navigationController.viewControllers {
       if let vc = vc as? MainViewController {
-        return vc
+        return vc.tabBarViewController?.waniKaniViewController
       }
     }
     return nil
@@ -244,5 +264,66 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
         }
       }
     }
+  }
+
+  // MARK: - Applinks
+
+  private func openSubjectDetails(subject: TKMSubject) {
+    let vc = StoryboardScene.SubjectDetails.initialScene.instantiate()
+    vc.setup(services: services, subject: subject, showHints: true)
+    navigationController.pushViewController(vc, animated: true)
+  }
+
+  func handleApplink(url: URL) -> Bool {
+    // This function handles both universal links (like https://tsurukame.app) and custom URL
+    // schemes (like tsurukame:). It ignores the scheme and the host - only looking at the path.
+    let path = URLComponents(url: url, resolvingAgainstBaseURL: false)?.path ?? ""
+    let components = path.split(separator: "/")
+
+    guard !components.isEmpty else {
+      // An empty path should just bring the app to the foreground, which has been done already.
+      return true
+    }
+
+    guard let mainVC = findMainWaniKaniTabViewController() else {
+      // If the main VC isn't there maybe the user isn't signed in. Don't do anything else.
+      return false
+    }
+
+    switch components[0] {
+    case "reviews":
+      mainVC.perform(segue: StoryboardSegue.Main.startReviews)
+    case "lessons":
+      mainVC.perform(segue: StoryboardSegue.Main.startLessons)
+    case "subject":
+      if components.count > 1,
+         let subjectID = Int64(components[1]),
+         let subject = services.localCachingClient.getSubject(id: subjectID) {
+        openSubjectDetails(subject: subject)
+      }
+    case "radical":
+      if components.count > 1,
+         let subject = services.localCachingClient.getSubject(japanese: String(components[1]),
+                                                              type: .radical) {
+        openSubjectDetails(subject: subject)
+      }
+    case "kanji":
+      if components.count > 1,
+         let subject = services.localCachingClient.getSubject(japanese: String(components[1]),
+                                                              type: .kanji) {
+        openSubjectDetails(subject: subject)
+      }
+    case "vocabulary":
+      if components.count > 1,
+         let subject = services.localCachingClient.getSubject(japanese: String(components[1]),
+                                                              type: .vocabulary) {
+        openSubjectDetails(subject: subject)
+      }
+    default:
+      print("Unsupported applink path: \(url.path)")
+      return false
+    }
+
+    return true
   }
 }
