@@ -17,7 +17,7 @@ import WaniKaniAPI
 
 private let nonBreakingSpace = "\u{00a0}"
 
-class UpcomingReviewsViewController: UITableViewController {
+class UpcomingReviewsViewController: UITableViewController, TKMViewController {
   private var services: TKMServices!
   private var dateFormatter = DateFormatter()
   private var model: TableModel?
@@ -25,6 +25,10 @@ class UpcomingReviewsViewController: UITableViewController {
   func setup(services: TKMServices) {
     self.services = services
   }
+
+  // MARK: - TKMViewController
+
+  var canSwipeToGoBack: Bool { true }
 
   // MARK: - UIView
 
