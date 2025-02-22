@@ -269,8 +269,10 @@ class AnswerChecker: NSObject {
       let kanaText = TKMConvertKanaText(answer)
       switch checkAnswer(kanaText, subject: subject, studyMaterials: studyMaterials,
                          taskType: .reading, localCachingClient: localCachingClient) {
-      case .Precise, .Imprecise, .OtherKanjiReading:
+      case .Precise, .Imprecise:
         return .IsReadingButWantMeaning
+      case .OtherKanjiReading:
+        return .OtherKanjiReading
       default:
         break
       }
