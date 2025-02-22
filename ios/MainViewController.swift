@@ -95,6 +95,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     recreateTableModel()
 
     nd.add(name: .lccAvailableItemsChanged) { [weak self] _ in self?.availableItemsChanged() }
+    nd.add(name: .lccRecentMistakesCountChanged) { [weak self] _ in self?.availableItemsChanged() }
     nd.add(name: .lccUserInfoChanged) { [weak self] _ in self?.userInfoChanged() }
     nd.add(name: .lccSRSCategoryCountsChanged) { [weak self] _ in self?.srsLevelCountsChanged() }
     nd.add(name: .lccUnauthorized) { [weak self] _ in self?.clientIsUnauthorized() }
