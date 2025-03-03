@@ -403,10 +403,12 @@ NSString *TKMConvertKanaText(NSString *input) {
         [kConsonants characterIsMember:newChar] && [kConsonants characterIsMember:lastChar]) {
       NSString *replacementString =
           (lastCharWasUppercase || _alphabet == kTKMAlphabetKatakana) ? @"ッ" : @"っ";
+      UITextRange *beforeChangeRange = textField.selectedTextRange;
       textField.text =
           [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
                                                   withString:replacementString];
       [textField setTextAlignment:NSTextAlignmentCenter];
+      textField.selectedTextRange = beforeChangeRange;
 
       return YES;
     }
@@ -416,10 +418,12 @@ NSString *TKMConvertKanaText(NSString *input) {
         ![kCanFollowN characterIsMember:newChar]) {
       NSString *replacementString =
           (lastCharWasUppercase || _alphabet == kTKMAlphabetKatakana) ? @"ン" : @"ん";
+      UITextRange *beforeChangeRange = textField.selectedTextRange;
       textField.text =
           [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
                                                   withString:replacementString];
       [textField setTextAlignment:NSTextAlignmentCenter];
+      textField.selectedTextRange = beforeChangeRange;
 
       return YES;
     }
@@ -447,6 +451,15 @@ NSString *TKMConvertKanaText(NSString *input) {
       textField.text = [textField.text stringByReplacingCharactersInRange:replacementRange
                                                                withString:replacement];
       [textField setTextAlignment:NSTextAlignmentCenter];
+      // range is before the new letter is typed, so it is off by 1 from where it would be if we
+      // made no changes, so we add in 1 again for the new final position
+      NSUInteger updatedPosition = text.length > replacement.length
+                                       ? range.location - (text.length - replacement.length) + 1
+                                       : range.location + 1;
+      UITextPosition *updatedTextPosition =
+          [textField positionFromPosition:textField.beginningOfDocument offset:updatedPosition];
+      textField.selectedTextRange = [textField textRangeFromPosition:updatedTextPosition
+                                                          toPosition:updatedTextPosition];
 
       return NO;
     }
