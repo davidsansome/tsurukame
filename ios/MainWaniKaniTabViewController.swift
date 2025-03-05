@@ -150,6 +150,21 @@ class MainWaniKaniTabViewController: UITableViewController {
         _ = setTableViewCellCount(recentMistakesItem, count: recentMistakes)
         model.add(recentMistakesItem)
       }
+
+      let alreadyPassedButApprenticeCount = apprenticeCount - recentLessonCount
+      if alreadyPassedButApprenticeCount > 0 {
+        let alreadyPassedApprenticeItem = BasicModelItem(style: .value1,
+                                                         title: "Review apprentice leeches",
+                                                         subtitle: "",
+                                                         accessoryType: .disclosureIndicator) { [
+          unowned self
+        ] in
+          self.startAlreadyPassedApprenticeReviews()
+        }
+        _ = setTableViewCellCount(alreadyPassedApprenticeItem,
+                                  count: alreadyPassedButApprenticeCount)
+        model.add(alreadyPassedApprenticeItem)
+      }
     }
 
     if Settings.showPreviousLevelGraph, user.currentLevel > 1,
@@ -257,6 +272,20 @@ class MainWaniKaniTabViewController: UITableViewController {
       let items = ReviewItem.readyForRecentLessonReview(assignments: assignments,
                                                         localCachingClient: services
                                                           .localCachingClient)
+      if items.count == 0 {
+        return
+      }
+
+      let vc = segue.destination as! ReviewContainerViewController
+      vc.setup(services: services, items: items, isPracticeSession: true)
+
+    case .startAlreadyPassedApprenticeReviews:
+      // load apprentice items, then keep the ones that have been passed.
+      let apprenticeItems = services.localCachingClient
+        .getAssignmentsInCategory(category: SRSStageCategory.apprentice)
+      let items = ReviewItem.readyForAlreadyPassedApprenticeReview(assignments: apprenticeItems,
+                                                                   localCachingClient: services
+                                                                     .localCachingClient)
       if items.count == 0 {
         return
       }
@@ -377,6 +406,10 @@ class MainWaniKaniTabViewController: UITableViewController {
 
   @objc func startRecentLessonReviews() {
     perform(segue: StoryboardSegue.Main.startRecentLessonReviews, sender: self)
+  }
+
+  @objc func startAlreadyPassedApprenticeReviews() {
+    perform(segue: StoryboardSegue.Main.startAlreadyPassedApprenticeReviews, sender: self)
   }
 
   @objc func startBurnedItemReviews() {

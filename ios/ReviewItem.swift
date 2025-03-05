@@ -73,6 +73,15 @@ class ReviewItem: NSObject {
     }
   }
 
+  class func readyForAlreadyPassedApprenticeReview(assignments: [TKMAssignment],
+                                                   localCachingClient: LocalCachingClient)
+    -> [ReviewItem] {
+    filterReadyItems(assignments: assignments,
+                     localCachingClient: localCachingClient) { assignment -> Bool in
+      assignment.hasPassedAt && assignment.srsStage < .guru1
+    }
+  }
+
   class func readyForBurnedReview(assignments: [TKMAssignment],
                                   localCachingClient: LocalCachingClient) -> [ReviewItem] {
     filterReadyItems(assignments: assignments,
