@@ -482,7 +482,8 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         let currentStreak = min(reviewStatPb.meaningCurrentStreak,
                                 reviewStatPb.readingCurrentStreak)
         // formula for leeches from: https://community.wanikani.com/t/userscript-wanikani-open-framework-additional-filters-recent-lessons-leech-training-related-items-and-more/30512
-        if Float(incorrect) / pow(Float(currentStreak), 1.5) >= Settings.leechThreshold {
+        if currentStreak > 0,
+           Float(incorrect) / pow(Float(currentStreak), 1.5) >= Settings.leechThreshold {
           ret.append(assignmentPb)
         }
       }
