@@ -71,6 +71,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   @Cached var recentLessonCount: Int
   @Cached(notificationName: .lccSRSCategoryCountsChanged) var srsCategoryCounts: [Int]
   @Cached var maxLevelGrantedBySubscription: Int
+  @Cached var leechCount: Int
 
   init(client: WaniKaniAPIClient, reachability: Reachability) {
     self.client = client
@@ -118,6 +119,9 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     _recentLessonCount.updateBlock = {
       self.updateRecentLessonCount()
     }
+    _leechCount.updateBlock = {
+      self.updateLeechCount()
+    }
     _srsCategoryCounts.updateBlock = {
       self.updateSrsCategoryCounts()
     }
@@ -150,6 +154,10 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
 
   func updateRecentLessonCount() -> Int {
     getAllRecentLessonAssignments().count
+  }
+
+  func updateLeechCount() -> Int {
+    getAllLeeches().count
   }
 
   func updateSrsCategoryCounts() -> [Int] {
@@ -432,6 +440,12 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
+  func getAllLeeches() -> [TKMAssignment] {
+    db.inDatabase { db in
+      getAllLeechAssignments(transaction: db)
+    }
+  }
+
   private func getAllAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
     var ret = [TKMAssignment]()
     for cursor in db.query("SELECT pb FROM assignments") {
@@ -450,6 +464,27 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       "WHERE last_mistake_time >= \"\(dateFormatter.string(from: dayAgo))\"") {
       if let pb: TKMAssignment = cursor.proto(forColumnIndex: 0) {
         ret.append(pb)
+      }
+    }
+    return ret
+  }
+
+  private func getAllLeechAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
+    var ret = [TKMAssignment]()
+    for cursor in db.query("SELECT a.pb, rs.pb " +
+      "FROM assignments AS a " +
+      "JOIN review_stats AS rs " +
+      "ON a.subject_id = rs.subject_id ") {
+      if let assignmentPb: TKMAssignment = cursor.proto(forColumnIndex: 0),
+         let reviewStatPb: TKMReviewStatistic = cursor.proto(forColumnIndex: 1),
+         assignmentPb.hasPassedAt {
+        // incorrect / currentStreak^1.5 >= X
+        let incorrect = max(reviewStatPb.meaningIncorrect, reviewStatPb.meaningIncorrect)
+        let currentStreak = min(reviewStatPb.meaningCurrentStreak,
+                                reviewStatPb.readingCurrentStreak)
+        if Double(incorrect) / pow(Double(currentStreak), 1.5) >= 1 {
+          ret.append(assignmentPb)
+        }
       }
     }
     return ret
@@ -830,6 +865,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     _guruKanjiCount.invalidate()
     _apprenticeCount.invalidate()
     _recentLessonCount.invalidate()
+    _leechCount.invalidate()
 
     return sendPendingProgress(progress, progress: Progress(totalUnitCount: -1))
   }
@@ -1388,6 +1424,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       self._availableSubjects.invalidate()
       self._srsCategoryCounts.invalidate()
       self._recentLessonCount.invalidate()
+      self._leechCount.invalidate()
       postNotificationOnMainQueue(.lccUserInfoChanged)
 
       self.busySyncing = false
@@ -1417,6 +1454,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     _guruKanjiCount.invalidate()
     _apprenticeCount.invalidate()
     _recentLessonCount.invalidate()
+    _leechCount.invalidate()
   }
 
   func clearAllDataAndClose() {

@@ -82,6 +82,15 @@ class ReviewItem: NSObject {
     }
   }
 
+  class func readyForLeechReview(assignments: [TKMAssignment],
+                                 localCachingClient: LocalCachingClient)
+    -> [ReviewItem] {
+    filterReadyItems(assignments: assignments,
+                     localCachingClient: localCachingClient) { assignment -> Bool in
+      assignment.hasPassedAt
+    }
+  }
+
   class func readyForBurnedReview(assignments: [TKMAssignment],
                                   localCachingClient: LocalCachingClient) -> [ReviewItem] {
     filterReadyItems(assignments: assignments,
