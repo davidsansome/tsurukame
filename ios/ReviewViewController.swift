@@ -983,7 +983,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     DispatchQueue.main.async {
       self.answerFieldValueDidChange()
     }
-    field.typingAttributes = [:]
+    let style = NSMutableParagraphStyle()
+    style.alignment = NSTextAlignment.center
+    field.typingAttributes = [.paragraphStyle: style]
     return true
   }
 
