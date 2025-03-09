@@ -59,6 +59,13 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                          hidden: !Settings
                                            .reviewItemsLimitEnabled)
 
+    model.add(BasicModelItem(style: .value1,
+                             title: "Leech Threshold",
+                             subtitle: leechThresholdValueText,
+                             accessoryType: .disclosureIndicator) { [unowned self] in self
+        .leechThresholdChanged()
+      })
+
     model.add(section: "Order")
     model.add(BasicModelItem(style: .value1,
                              title: "Order",
@@ -258,6 +265,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     Settings.meaningFirst ? "Meaning first" : "Reading first"
   }
 
+  private var leechThresholdValueText: String {
+    Settings.leechThreshold.description
+  }
+
   private var fontSizeValueText: String {
     if Settings.fontSize != 0.0 {
       return "\(Int(Settings.fontSize * 100))%"
@@ -376,6 +387,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     navigationController?.pushViewController(makeFontSizeViewController(), animated: true)
   }
 
+  private func leechThresholdChanged() {
+    navigationController?.pushViewController(makeLeechThresholdViewController(), animated: true)
+  }
+
   private func didTapReviewOrder() {
     navigationController?.pushViewController(makeReviewOrderViewController(), animated: true)
   }
@@ -426,6 +441,15 @@ func makeReviewItemsLimitViewController() -> UIViewController {
                                            helpText: "Set the number of items to review in a session.")
   let defaultChoices = [5, 10, 15, 20, 25, 30, 50, 75, 100]
   vc.addChoicesFromRange(defaultChoices, suffix: " reviews")
+  return vc
+}
+
+func makeLeechThresholdViewController() -> UIViewController {
+  let vc = SettingChoiceListViewController(setting: Settings.$fontSize, title: "Leech Threshold",
+                                           helpText: "The higher the value, the fewer items will be considered leeches. Leeches are considered a leech if (incorrect / currentStreak^1.5 >= threshold) is true.")
+  for threshold in stride(from: 1.0, through: 5.0, by: 0.25) {
+    vc.addChoice(name: "\(threshold)", value: Float(threshold))
+  }
   return vc
 }
 

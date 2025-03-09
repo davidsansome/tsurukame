@@ -206,6 +206,8 @@ protocol SettingProtocol {
   @Setting(true, #keyPath(showPreviousLevelGraph)) static var showPreviousLevelGraph: Bool
   @Setting(true, #keyPath(showKanaOnlyVocab)) static var showKanaOnlyVocab: Bool
 
+  @Setting(1.0, #keyPath(leechThreshold)) static var leechThreshold: Double
+
   @Setting(false, #keyPath(seenFullAnswerPrompt)) static var seenFullAnswerPrompt: Bool
 
   @Setting(false, #keyPath(playAudioAutomatically)) static var playAudioAutomatically: Bool

@@ -482,7 +482,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         let incorrect = max(reviewStatPb.meaningIncorrect, reviewStatPb.meaningIncorrect)
         let currentStreak = min(reviewStatPb.meaningCurrentStreak,
                                 reviewStatPb.readingCurrentStreak)
-        if Double(incorrect) / pow(Double(currentStreak), 1.5) >= 1 {
+        if Double(incorrect) / pow(Double(currentStreak), 1.5) >= Settings.leechThreshold {
           ret.append(assignmentPb)
         }
       }
