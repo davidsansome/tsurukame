@@ -174,7 +174,7 @@ class MainWaniKaniTabViewController: UITableViewController {
                                           accessoryType: .disclosureIndicator) { [
           unowned self
         ] in
-          self.startAlreadyPassedApprenticeReviews()
+          self.startAllLeechReviews()
         }
         _ = setTableViewCellCount(allLeechItem,
                                   count: leechCount)
@@ -309,7 +309,6 @@ class MainWaniKaniTabViewController: UITableViewController {
       vc.setup(services: services, items: items, isPracticeSession: true)
 
     case .startAllLeechReviews:
-      // load apprentice items, then keep the ones that have been passed.
       let leechItems = services.localCachingClient.getAllLeeches()
       let items = ReviewItem.readyForLeechReview(assignments: leechItems,
                                                  localCachingClient: services
