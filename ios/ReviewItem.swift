@@ -87,7 +87,7 @@ class ReviewItem: NSObject {
     -> [ReviewItem] {
     filterReadyItems(assignments: assignments,
                      localCachingClient: localCachingClient) { assignment -> Bool in
-      assignment.hasPassedAt
+      assignment.hasPassedAt && !assignment.hasBurnedAt
     }
   }
 
