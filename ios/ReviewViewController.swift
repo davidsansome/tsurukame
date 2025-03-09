@@ -978,11 +978,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     submitButton.isEnabled = Settings.allowSkippingReviews || Settings.ankiMode || !text.isEmpty
   }
 
-  func textField(_: UITextField, shouldChangeCharactersIn _: NSRange,
+  func textField(_ field: UITextField, shouldChangeCharactersIn _: NSRange,
                  replacementString _: String) -> Bool {
     DispatchQueue.main.async {
       self.answerFieldValueDidChange()
     }
+    field.typingAttributes = [:]
     return true
   }
 
