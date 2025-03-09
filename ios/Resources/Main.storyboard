@@ -52,6 +52,7 @@
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startBurnedItemReviews" id="p5M-1d-3JR"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startRecentMistakeReviews" id="k4i-e6-YJX"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startReviews" id="SNd-yz-wla"/>
+                        <segue destination="pOc-Ig-wgQ" kind="show" identifier="startAlreadyPassedApprenticeReviews" id="Zly-NW-0bf"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kbL-0E-6LB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -256,7 +257,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="AxF-9f-jjW"/>
+        <segue reference="Zly-NW-0bf"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="ic_search_white" width="24" height="24"/>

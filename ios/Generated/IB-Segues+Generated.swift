@@ -25,6 +25,7 @@ internal enum StoryboardSegue {
     case showAll
     case showLessonPicker
     case showRemaining
+    case startAlreadyPassedApprenticeReviews
     case startBurnedItemReviews
     case startLessons
     case startRecentLessonReviews
