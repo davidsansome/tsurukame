@@ -1423,6 +1423,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
 
       self._availableSubjects.invalidate()
       self._srsCategoryCounts.invalidate()
+      self._apprenticeCount.invalidate()
       self._recentLessonCount.invalidate()
       self._leechCount.invalidate()
       postNotificationOnMainQueue(.lccUserInfoChanged)
