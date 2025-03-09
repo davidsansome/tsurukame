@@ -478,10 +478,10 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       if let assignmentPb: TKMAssignment = cursor.proto(forColumnIndex: 0),
          let reviewStatPb: TKMReviewStatistic = cursor.proto(forColumnIndex: 1),
          assignmentPb.hasPassedAt {
-        // incorrect / currentStreak^1.5 >= X
-        let incorrect = max(reviewStatPb.meaningIncorrect, reviewStatPb.meaningIncorrect)
+          let incorrect = max(reviewStatPb.meaningIncorrect, reviewStatPb.readingIncorrect)
         let currentStreak = min(reviewStatPb.meaningCurrentStreak,
                                 reviewStatPb.readingCurrentStreak)
+        // formula for leeches from: https://community.wanikani.com/t/userscript-wanikani-open-framework-additional-filters-recent-lessons-leech-training-related-items-and-more/30512
         if Double(incorrect) / pow(Double(currentStreak), 1.5) >= Settings.leechThreshold {
           ret.append(assignmentPb)
         }
