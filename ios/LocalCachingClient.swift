@@ -302,10 +302,21 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     "",
     // Version 11. Added most_recent_mistake_time to allow for recent mistake reviews
     "ALTER TABLE subject_progress ADD COLUMN last_mistake_time TIMESTAMP;",
+    // Version 12. Review stats and last review stat sync time.
+    """
+    ALTER TABLE sync ADD COLUMN review_stats_updated_after TEXT DEFAULT \"\";
+
+    CREATE TABLE review_stats (
+        id INTEGER PRIMARY KEY,
+        subject_id INTEGER,
+        pb BLOB
+    );
+    CREATE INDEX idx_stat_subject_id ON review_stats (subject_id);
+    """,
   ]
 
   private let kInitialSchemaVersion = 8
-  private let kSchemaVersion = 11
+  private let kSchemaVersion = 12
 
   // Run when the user logs out. Clears everything in the database.
   private let kClearAllData = """
@@ -326,6 +337,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   DELETE FROM subjects;
   DELETE FROM voice_actors;
   DELETE FROM audio_urls;
+  DELETE FROM review_stats;
   """
 
   // Run when the user pulls down on the main screen. Clears all locally cached data so it can be
@@ -335,12 +347,14 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     SET assignments_updated_after = \"\",
         subjects_updated_after = \"\",
         voice_actors_updated_after = \"\",
-        study_materials_updated_after = \"\";
+        study_materials_updated_after = \"\",
+            review_stats_updated_after = \"\";
   DELETE FROM assignments;
   DELETE FROM subjects;
   DELETE FROM subject_progress;
   DELETE FROM voice_actors;
   DELETE FROM study_materials;
+  DELETE FROM review_stats;
   """
 
   private func openDatabase() {
@@ -1224,6 +1238,36 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
+  private func fetchReviewStatistics(progress: Progress) -> Promise<Void> {
+    // Get the last voice actors update time.
+    let updatedAfter: String = db.inDatabase { db in
+      let cursor = db.query("SELECT review_stats_updated_after FROM sync")
+      if cursor.next() {
+        return cursor.string(forColumnIndex: 0) ?? ""
+      }
+      return ""
+    }
+
+    return firstly { () -> Promise<WaniKaniAPIClient.ReviewStatistics> in
+      client.reviewStatistics(progress: progress, updatedAfter: updatedAfter)
+    }.done { reviewStats, updatedAt in
+      NSLog("Updated %d review stats at %@", reviewStats.count, updatedAt)
+      self.db.inTransaction { db in
+        for stat in reviewStats {
+          db.mustExecuteUpdate("REPLACE INTO review_stats (id, subject_id, pb) " +
+            "VALUES (?, ?, ?)",
+            args: [
+              stat.id,
+              stat.subjectID,
+              try! stat.serializedData(),
+            ])
+        }
+        db.mustExecuteUpdate("UPDATE sync SET review_stats_updated_after = ?",
+                             args: [updatedAt])
+      }
+    }
+  }
+
   func updateRecentMistakesFromCloud(skipReuploadToCloud: Bool) {
     let mergedMistakes = RecentMistakeHandler.mergeMistakes(original: getRecentMistakeTimes(),
                                                             other: recentMistakeHandler
@@ -1318,6 +1362,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         self.fetchUserInfo(progress: childProgress(1)),
         self.fetchLevelProgression(progress: childProgress(1)),
         self.fetchVoiceActors(progress: childProgress(1)),
+        self.fetchReviewStatistics(progress: childProgress(1)),
       ])
     }.ensure {
       // we need to make sure that our current, local batch of recent mistakes go up to the cloud

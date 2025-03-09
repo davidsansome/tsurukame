@@ -931,7 +931,7 @@ private struct VoiceActorData: Codable {
 
 /** Response type for /reviews_statistics. */
 private struct ReviewStatisticData: Codable {
-  var subject_id: Int64?
+  var subject_id: Int64
   var created_at: WaniKaniDate
   var subject_type: String
   var meaning_correct: Int
@@ -947,6 +947,7 @@ private struct ReviewStatisticData: Codable {
   func toProto(id: Int64?) -> TKMReviewStatistic? {
     var ret = TKMReviewStatistic()
     ret.id = id ?? 0
+    ret.subjectID = Int64(subject_id)
     toProtoDate(created_at) { ret.createdAt = $0 }
     ret.meaningCorrect = Int32(meaning_correct)
     ret.meaningIncorrect = Int32(meaning_incorrect)
