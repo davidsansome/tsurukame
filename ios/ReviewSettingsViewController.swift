@@ -445,7 +445,8 @@ func makeReviewItemsLimitViewController() -> UIViewController {
 }
 
 func makeLeechThresholdViewController() -> UIViewController {
-  let vc = SettingChoiceListViewController(setting: Settings.$fontSize, title: "Leech Threshold",
+  let vc = SettingChoiceListViewController(setting: Settings.$leechThreshold,
+                                           title: "Leech Threshold",
                                            helpText: "The higher the value, the fewer items will be considered leeches. Leeches are considered a leech if (incorrect / currentStreak^1.5 >= threshold) is true.")
   for threshold in stride(from: 1.0, through: 5.0, by: 0.25) {
     vc.addChoice(name: "\(threshold)", value: Float(threshold))
