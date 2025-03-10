@@ -266,3 +266,26 @@ message VoiceActor {
   optional string name = 3;
   optional string description = 4;
 }
+
+message ReviewStatistic {
+  optional int64 id = 1;
+  optional int64 subject_id = 2;
+  optional int32 created_at = 3;
+  enum Type {
+    UNKNOWN = 0;
+    RADICAL = 1;
+    KANJI = 2;
+    VOCABULARY = 3;
+  }
+  optional Type type = 4;
+  optional int32 meaning_correct = 5;
+  optional int32 meaning_incorrect = 6;
+  optional int32 meaning_max_streak = 7;
+  optional int32 meaning_current_streak = 8;
+  optional int32 reading_correct = 9;
+  optional int32 reading_incorrect = 10;
+  optional int32 reading_max_streak = 11;
+  optional int32 reading_current_streak = 12;
+  optional int32 percentage_correct = 13;
+  optional bool hidden = 14;
+}

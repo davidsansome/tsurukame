@@ -307,6 +307,50 @@ public class WaniKaniAPIClient: NSObject {
     }
   }
 
+  public typealias ReviewStatistics = (stats: [TKMReviewStatistic], updatedAt: String)
+  /**
+   * Fetches all review statistics. If updatedAfter is empty, all stats are returned, otherwise returns
+   * only the ones modified after that date.
+   */
+  public func reviewStatistics(progress: Progress,
+                               updatedAfter: String = "") -> Promise<ReviewStatistics> {
+    // Build the URL.
+    var url = URLComponents(string: "\(kBaseUrl)/review_statistics")!
+    url.queryItems = [
+      URLQueryItem(name: "hidden", value: "false"),
+    ]
+    if !updatedAfter.isEmpty {
+      url.queryItems!.append(URLQueryItem(name: "updated_after",
+                                          value: updatedAfter))
+    }
+
+    // Fetch the data and convert to protobufs.
+    return firstly {
+      updatedAfter.isEmpty ?
+        speculativeParallelPagedQuery(url: url.url!, progress: progress, perPage: 1000,
+                                      numPages: 9) :
+        pagedQuery(url: url.url!, progress: progress)
+    }.map { (allData: Response<[Response<ReviewStatisticData>]>) -> ReviewStatistics in
+      var ret = [TKMReviewStatistic]()
+      var seenIds = Set<Int64>()
+      for data in allData.data {
+        guard let id = data.id else {
+          continue
+        }
+        if seenIds.contains(id) {
+          continue
+        }
+        seenIds.insert(id)
+
+        if let objectType = data.object,
+           let subject = data.data.toProto(id: id) {
+          ret.append(subject)
+        }
+      }
+      return (stats: ret, updatedAt: allData.data_updated_at ?? updatedAfter)
+    }
+  }
+
   // MARK: - Sending lesson/review progress
 
   public func sendProgress(_ progress: TKMProgress) -> Promise<Void> {
@@ -879,6 +923,52 @@ private struct VoiceActorData: Codable {
     case "female": ret.gender = .female
     default:
       break
+    }
+
+    return ret
+  }
+}
+
+/** Response type for /reviews_statistics. */
+private struct ReviewStatisticData: Codable {
+  var subject_id: Int64
+  var created_at: WaniKaniDate
+  var subject_type: String
+  var meaning_correct: Int
+  var meaning_incorrect: Int
+  var meaning_max_streak: Int
+  var meaning_current_streak: Int
+  var reading_correct: Int
+  var reading_incorrect: Int
+  var reading_max_streak: Int
+  var reading_current_streak: Int
+  var percentage_correct: Int
+
+  func toProto(id: Int64?) -> TKMReviewStatistic? {
+    var ret = TKMReviewStatistic()
+    ret.id = id ?? 0
+    ret.subjectID = Int64(subject_id)
+    toProtoDate(created_at) { ret.createdAt = $0 }
+    ret.meaningCorrect = Int32(meaning_correct)
+    ret.meaningIncorrect = Int32(meaning_incorrect)
+    ret.meaningMaxStreak = Int32(meaning_max_streak)
+    ret.meaningCurrentStreak = Int32(meaning_current_streak)
+    ret.readingCorrect = Int32(reading_correct)
+    ret.readingIncorrect = Int32(reading_incorrect)
+    ret.readingMaxStreak = Int32(reading_max_streak)
+    ret.readingCurrentStreak = Int32(reading_current_streak)
+    ret.percentageCorrect = Int32(percentage_correct)
+
+    switch subject_type {
+    case "radical":
+      ret.type = .radical
+    case "kanji":
+      ret.type = .kanji
+    case "vocabulary", "kana_vocabulary":
+      ret.type = .vocabulary
+    default:
+      NSLog("Unknown review statistic subject type: %@", subject_type)
+      return nil
     }
 
     return ret

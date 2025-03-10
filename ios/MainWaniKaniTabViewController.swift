@@ -78,6 +78,7 @@ class MainWaniKaniTabViewController: UITableViewController {
     let reviews = services.localCachingClient.availableReviewCount
     let recentMistakes = services.localCachingClient.getRecentMistakesCount()
     let recentLessonCount = services.localCachingClient.recentLessonCount
+    let leechCount = services.localCachingClient.leechCount
     let upcomingReviews = services.localCachingClient.upcomingReviews
     let currentLevelAssignments = services.localCachingClient.getAssignmentsAtUsersCurrentLevel()
 
@@ -165,6 +166,20 @@ class MainWaniKaniTabViewController: UITableViewController {
                                   count: alreadyPassedButApprenticeCount)
         model.add(alreadyPassedApprenticeItem)
       }
+
+      if leechCount > 0 {
+        let allLeechItem = BasicModelItem(style: .value1,
+                                          title: "Review all leeches",
+                                          subtitle: "",
+                                          accessoryType: .disclosureIndicator) { [
+          unowned self
+        ] in
+          self.startAllLeechReviews()
+        }
+        _ = setTableViewCellCount(allLeechItem,
+                                  count: leechCount)
+        model.add(allLeechItem)
+      }
     }
 
     if Settings.showPreviousLevelGraph, user.currentLevel > 1,
@@ -246,7 +261,7 @@ class MainWaniKaniTabViewController: UITableViewController {
     switch StoryboardSegue.Main(segue) {
     case .startReviews:
       let assignments = services.localCachingClient.getAllAssignments()
-      var items = ReviewItem.readyForReview(assignments: assignments,
+      let items = ReviewItem.readyForReview(assignments: assignments,
                                             localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return
@@ -286,6 +301,18 @@ class MainWaniKaniTabViewController: UITableViewController {
       let items = ReviewItem.readyForAlreadyPassedApprenticeReview(assignments: apprenticeItems,
                                                                    localCachingClient: services
                                                                      .localCachingClient)
+      if items.count == 0 {
+        return
+      }
+
+      let vc = segue.destination as! ReviewContainerViewController
+      vc.setup(services: services, items: items, isPracticeSession: true)
+
+    case .startAllLeechReviews:
+      let leechItems = services.localCachingClient.getAllLeeches()
+      let items = ReviewItem.readyForLeechReview(assignments: leechItems,
+                                                 localCachingClient: services
+                                                   .localCachingClient)
       if items.count == 0 {
         return
       }
@@ -410,6 +437,10 @@ class MainWaniKaniTabViewController: UITableViewController {
 
   @objc func startAlreadyPassedApprenticeReviews() {
     perform(segue: StoryboardSegue.Main.startAlreadyPassedApprenticeReviews, sender: self)
+  }
+
+  @objc func startAllLeechReviews() {
+    perform(segue: StoryboardSegue.Main.startAllLeechReviews, sender: self)
   }
 
   @objc func startBurnedItemReviews() {
