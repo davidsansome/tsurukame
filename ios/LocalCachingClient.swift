@@ -475,15 +475,15 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       "FROM assignments AS a " +
       "JOIN review_stats AS rs " +
       "ON a.subject_id = rs.subject_id ") {
-      if let assignmentPb: TKMAssignment = cursor.proto(forColumnIndex: 0),
-         let reviewStatPb: TKMReviewStatistic = cursor.proto(forColumnIndex: 1),
-         assignmentPb.hasPassedAt, !assignmentPb.hasBurnedAt {
+      if let reviewStatPb: TKMReviewStatistic = cursor.proto(forColumnIndex: 1) {
         let incorrect = max(reviewStatPb.meaningIncorrect, reviewStatPb.readingIncorrect)
         let currentStreak = min(reviewStatPb.meaningCurrentStreak,
                                 reviewStatPb.readingCurrentStreak)
         // formula for leeches from: https://community.wanikani.com/t/userscript-wanikani-open-framework-additional-filters-recent-lessons-leech-training-related-items-and-more/30512
         if currentStreak > 0,
-           Float(incorrect) / pow(Float(currentStreak), 1.5) >= Settings.leechThreshold {
+           Float(incorrect) / pow(Float(currentStreak), 1.5) >= Settings.leechThreshold,
+           let assignmentPb: TKMAssignment = cursor.proto(forColumnIndex: 0),
+           assignmentPb.hasPassedAt, !assignmentPb.hasBurnedAt {
           ret.append(assignmentPb)
         }
       }
