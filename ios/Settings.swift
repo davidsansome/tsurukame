@@ -203,6 +203,8 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(ankiMode)) static var ankiMode: Bool
   @Setting(false,
            #keyPath(ankiModeCombineReadingMeaning)) static var ankiModeCombineReadingMeaning: Bool
+  @Setting(false,
+           #keyPath(ankiModeEnableSwipeGestures)) static var ankiModeEnableSwipeGestures: Bool
   @Setting(true, #keyPath(showPreviousLevelGraph)) static var showPreviousLevelGraph: Bool
   @Setting(true, #keyPath(showKanaOnlyVocab)) static var showKanaOnlyVocab: Bool
 
