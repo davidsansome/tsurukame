@@ -20,6 +20,7 @@ static const unichar kHiraganaMax = u'\u309f';
 static const unichar kHiraganaMin = u'\u3040';
 
 static NSDictionary<NSString *, NSString *> *kReplacements;
+static NSCharacterSet *kVowels;
 static NSCharacterSet *kConsonants;
 static NSCharacterSet *kN;
 static NSCharacterSet *kCanFollowN;

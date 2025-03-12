@@ -314,6 +314,7 @@ void EnsureInitialised(void) {
     };
 
     kConsonants = [NSCharacterSet characterSetWithCharactersInString:@"bcdfghjklmnpqrstvwxyz"];
+    kVowels = [NSCharacterSet characterSetWithCharactersInString:@"aeiou"];
     kN = [NSCharacterSet characterSetWithCharactersInString:@"nm"];
     kCanFollowN = [NSCharacterSet characterSetWithCharactersInString:@"aiueony"];
   });
@@ -384,6 +385,33 @@ NSString *TKMConvertKanaText(NSString *input) {
     shouldChangeCharactersInRange:(NSRange)range
                 replacementString:(NSString *)string {
   [_delegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
+  // handle case where range.length != 0 and user wants to type a single vowel (e.g. a -> あ).
+  // the text input should auto-change that character to the applicable hiragana/katakana.
+  // this is essentially a special case as we are dealing with a range > 0 and replacing
+  // that range with some text.
+  if (_enabled && range.length > 0 && string.length == 1) {
+    unichar ch = [string characterAtIndex:0];
+    if ([kVowels characterIsMember:tolower(ch)]) {
+      BOOL firstCharacterIsUppercase =
+          [[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:ch];
+      NSString *replacement = kReplacements[[string lowercaseString]];
+      if (firstCharacterIsUppercase || _alphabet == kTKMAlphabetKatakana) {
+        replacement = [replacement stringByApplyingTransform:NSStringTransformHiraganaToKatakana
+                                                     reverse:NO];
+      }
+      textField.text = [textField.text stringByReplacingCharactersInRange:range
+                                                               withString:replacement];
+      textField.textAlignment = NSTextAlignmentCenter;
+      UITextPosition *updatedTextPosition =
+          [textField positionFromPosition:textField.beginningOfDocument offset:range.location + 1];
+      textField.selectedTextRange = [textField textRangeFromPosition:updatedTextPosition
+                                                          toPosition:updatedTextPosition];
+      return NO;
+    }
+  }
+
+  // if not enabled, or our range is > 0, or we are replacing with the empty string,
+  // let the text field handle itself
   if (!_enabled || range.length != 0 || string.length == 0) {
     return YES;
   }
@@ -407,7 +435,7 @@ NSString *TKMConvertKanaText(NSString *input) {
       textField.text =
           [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
                                                   withString:replacementString];
-      [textField setTextAlignment:NSTextAlignmentCenter];
+      textField.textAlignment = NSTextAlignmentCenter;
       textField.selectedTextRange = beforeChangeRange;
 
       return YES;
@@ -422,7 +450,7 @@ NSString *TKMConvertKanaText(NSString *input) {
       textField.text =
           [textField.text stringByReplacingCharactersInRange:NSMakeRange(range.location - 1, 1)
                                                   withString:replacementString];
-      [textField setTextAlignment:NSTextAlignmentCenter];
+      textField.textAlignment = NSTextAlignmentCenter;
       textField.selectedTextRange = beforeChangeRange;
 
       return YES;
@@ -450,7 +478,7 @@ NSString *TKMConvertKanaText(NSString *input) {
       }
       textField.text = [textField.text stringByReplacingCharactersInRange:replacementRange
                                                                withString:replacement];
-      [textField setTextAlignment:NSTextAlignmentCenter];
+      textField.textAlignment = NSTextAlignmentCenter;
       // range is before the new letter is typed, so it is off by 1 from where it would be if we
       // made no changes, so we add in 1 again for the new final position
       NSUInteger updatedPosition = text.length > replacement.length
