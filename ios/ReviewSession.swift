@@ -82,6 +82,10 @@ class ReviewSession {
   }
 
   public func nextTask() {
+    guard !activeQueue.isEmpty else {
+      return
+    }
+    
     activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
     activeTask = activeQueue[activeTaskIndex]
 
