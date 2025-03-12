@@ -60,7 +60,7 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
                               switchHandler: blurContextSentencesSwitchChanged))
     if #available(iOS 15.0, *) {
       model.add(SwitchModelItem(style: .subtitle,
-                                title: "Show Artwork by @AmandaBear",
+                                title: "Show artwork by @AmandaBear",
                                 subtitle: "Mnemonic Artwork for Radical Levels 1-10 and Kanji Levels 1-7",
                                 on: Settings.showArtwork,
                                 switchHandler: showArtworkChanged))

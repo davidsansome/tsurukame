@@ -50,7 +50,7 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
     if #available(iOS 13.0, *) {
       model.addSection()
       model.add(BasicModelItem(style: .value1,
-                               title: "UI Appearance",
+                               title: "UI appearance",
                                subtitle: Settings.interfaceStyle.description,
                                accessoryType: .disclosureIndicator) {
           [unowned self] in

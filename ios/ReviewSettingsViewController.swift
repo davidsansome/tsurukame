@@ -16,7 +16,6 @@ import Foundation
 import UIKit
 
 class ReviewSettingsViewController: UITableViewController, TKMViewController {
-  static let NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME = "Reviews Between Meaning & Reading"
   private var services: TKMServices!
   private var model: TableModel?
   private var reviewItemsLimitSelector: IndexPath!
@@ -75,7 +74,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
       })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Back-to-back",
-                              subtitle: "Group Meaning and Reading together",
+                              subtitle: "Group meaning and reading together",
                               on: Settings
                                 .groupMeaningReading) { [unowned self] in
         groupMeaningReadingSwitchChanged($0)
@@ -91,8 +90,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                              hidden:!Settings
                                                .groupMeaningReading)
     nonBackToBackBatchSizeIndexPath = model.add(BasicModelItem(style: .value1,
-                                                               title: ReviewSettingsViewController
-                                                                 .NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME,
+                                                               title: "Reviews between meaning & reading",
                                                                subtitle: "\(Settings.reviewBatchSize.description)",
                                                                accessoryType: .disclosureIndicator) {
                                                   [unowned self] in self.didTapReviewBatchSize()
@@ -418,7 +416,7 @@ func makeFontSizeViewController() -> UIViewController {
 }
 
 func makeReviewBatchSizeViewController() -> UIViewController {
-  let name = ReviewSettingsViewController.NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME
+  let name = "Reviews Between Meaning & Reading"
   let description =
     "The \"\(name)\" setting is ONLY used when \"back-to-back\" reviews are disabled.\n\n" +
     "When \"back-to-back\" reviews are disabled, you might be asked to review the meaning of an item and then " +
