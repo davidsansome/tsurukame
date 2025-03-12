@@ -71,6 +71,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   @Cached var recentLessonCount: Int
   @Cached(notificationName: .lccSRSCategoryCountsChanged) var srsCategoryCounts: [Int]
   @Cached var maxLevelGrantedBySubscription: Int
+  @Cached var leechCount: Int
 
   init(client: WaniKaniAPIClient, reachability: Reachability) {
     self.client = client
@@ -118,6 +119,9 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     _recentLessonCount.updateBlock = {
       self.updateRecentLessonCount()
     }
+    _leechCount.updateBlock = {
+      self.updateLeechCount()
+    }
     _srsCategoryCounts.updateBlock = {
       self.updateSrsCategoryCounts()
     }
@@ -150,6 +154,10 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
 
   func updateRecentLessonCount() -> Int {
     getAllRecentLessonAssignments().count
+  }
+
+  func updateLeechCount() -> Int {
+    getAllLeeches().count
   }
 
   func updateSrsCategoryCounts() -> [Int] {
@@ -302,10 +310,21 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     "",
     // Version 11. Added most_recent_mistake_time to allow for recent mistake reviews
     "ALTER TABLE subject_progress ADD COLUMN last_mistake_time TIMESTAMP;",
+    // Version 12. Review stats and last review stat sync time.
+    """
+    ALTER TABLE sync ADD COLUMN review_stats_updated_after TEXT DEFAULT \"\";
+
+    CREATE TABLE review_stats (
+        id INTEGER PRIMARY KEY,
+        subject_id INTEGER,
+        pb BLOB
+    );
+    CREATE INDEX idx_stat_subject_id ON review_stats (subject_id);
+    """,
   ]
 
   private let kInitialSchemaVersion = 8
-  private let kSchemaVersion = 11
+  private let kSchemaVersion = 12
 
   // Run when the user logs out. Clears everything in the database.
   private let kClearAllData = """
@@ -326,6 +345,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   DELETE FROM subjects;
   DELETE FROM voice_actors;
   DELETE FROM audio_urls;
+  DELETE FROM review_stats;
   """
 
   // Run when the user pulls down on the main screen. Clears all locally cached data so it can be
@@ -335,12 +355,14 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     SET assignments_updated_after = \"\",
         subjects_updated_after = \"\",
         voice_actors_updated_after = \"\",
-        study_materials_updated_after = \"\";
+        study_materials_updated_after = \"\",
+        review_stats_updated_after = \"\";
   DELETE FROM assignments;
   DELETE FROM subjects;
   DELETE FROM subject_progress;
   DELETE FROM voice_actors;
   DELETE FROM study_materials;
+  DELETE FROM review_stats;
   """
 
   private func openDatabase() {
@@ -418,6 +440,12 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
+  func getAllLeeches() -> [TKMAssignment] {
+    db.inDatabase { db in
+      getAllLeechAssignments(transaction: db)
+    }
+  }
+
   private func getAllAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
     var ret = [TKMAssignment]()
     for cursor in db.query("SELECT pb FROM assignments") {
@@ -436,6 +464,28 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       "WHERE last_mistake_time >= \"\(dateFormatter.string(from: dayAgo))\"") {
       if let pb: TKMAssignment = cursor.proto(forColumnIndex: 0) {
         ret.append(pb)
+      }
+    }
+    return ret
+  }
+
+  private func getAllLeechAssignments(transaction db: FMDatabase) -> [TKMAssignment] {
+    var ret = [TKMAssignment]()
+    for cursor in db.query("SELECT a.pb, rs.pb " +
+      "FROM assignments AS a " +
+      "JOIN review_stats AS rs " +
+      "ON a.subject_id = rs.subject_id ") {
+      if let reviewStatPb: TKMReviewStatistic = cursor.proto(forColumnIndex: 1) {
+        let incorrect = max(reviewStatPb.meaningIncorrect, reviewStatPb.readingIncorrect)
+        let currentStreak = min(reviewStatPb.meaningCurrentStreak,
+                                reviewStatPb.readingCurrentStreak)
+        // formula for leeches from: https://community.wanikani.com/t/userscript-wanikani-open-framework-additional-filters-recent-lessons-leech-training-related-items-and-more/30512
+        if currentStreak > 0,
+           Float(incorrect) / pow(Float(currentStreak), 1.5) >= Settings.leechThreshold,
+           let assignmentPb: TKMAssignment = cursor.proto(forColumnIndex: 0),
+           assignmentPb.hasPassedAt, !assignmentPb.hasBurnedAt {
+          ret.append(assignmentPb)
+        }
       }
     }
     return ret
@@ -816,6 +866,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     _guruKanjiCount.invalidate()
     _apprenticeCount.invalidate()
     _recentLessonCount.invalidate()
+    _leechCount.invalidate()
 
     return sendPendingProgress(progress, progress: Progress(totalUnitCount: -1))
   }
@@ -1224,6 +1275,36 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
+  private func fetchReviewStatistics(progress: Progress) -> Promise<Void> {
+    // Get the last review stats update time.
+    let updatedAfter: String = db.inDatabase { db in
+      let cursor = db.query("SELECT review_stats_updated_after FROM sync")
+      if cursor.next() {
+        return cursor.string(forColumnIndex: 0) ?? ""
+      }
+      return ""
+    }
+
+    return firstly { () -> Promise<WaniKaniAPIClient.ReviewStatistics> in
+      client.reviewStatistics(progress: progress, updatedAfter: updatedAfter)
+    }.done { reviewStats, updatedAt in
+      NSLog("Updated %d review stats at %@", reviewStats.count, updatedAt)
+      self.db.inTransaction { db in
+        for stat in reviewStats {
+          db.mustExecuteUpdate("REPLACE INTO review_stats (id, subject_id, pb) " +
+            "VALUES (?, ?, ?)",
+            args: [
+              stat.id,
+              stat.subjectID,
+              try! stat.serializedData(),
+            ])
+        }
+        db.mustExecuteUpdate("UPDATE sync SET review_stats_updated_after = ?",
+                             args: [updatedAt])
+      }
+    }
+  }
+
   func updateRecentMistakesFromCloud(skipReuploadToCloud: Bool) {
     let mergedMistakes = RecentMistakeHandler.mergeMistakes(original: getRecentMistakeTimes(),
                                                             other: recentMistakeHandler
@@ -1283,12 +1364,14 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     requestsAvailable -= pendingProgress.count
     let pendingStudyMaterials = getAllPendingStudyMaterials(limit: requestsAvailable)
 
+    // if you add/edit items in the `.then { _ in when(fulfilled: [` section below,
+    // make sure to update the progress.totalUnitCount calculation here.
     progress.totalUnitCount =
       Int64(pendingProgress.count) +
       Int64(pendingStudyMaterials.count) +
       subjectProgressUnits +
       assignmentProgressUnits +
-      4
+      5
 
     let childProgress = { (units: Int64) in
       Progress(totalUnitCount: -1, parent: progress, pendingUnitCount: units)
@@ -1313,11 +1396,18 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       fetchSubjects(progress: childProgress(subjectProgressUnits)),
     ]).then { _ in
       when(fulfilled: [
+        // progress.totalUnitCount takes into account the items in this section when
+        // calculating the total things that must be completed.
+        // assignmentProgressUnits is accounted for already, but the other items
+        // (e.g. self.fetchStudyMaterials) need to be manually counted up and manually
+        // added to progress.totalUnitCount. So, if you add/remove items to this section,
+        // make sure also to update the calculations for progress.totalUnitCount.
         self.fetchAssignments(progress: childProgress(assignmentProgressUnits)),
         self.fetchStudyMaterials(progress: childProgress(1)),
         self.fetchUserInfo(progress: childProgress(1)),
         self.fetchLevelProgression(progress: childProgress(1)),
         self.fetchVoiceActors(progress: childProgress(1)),
+        self.fetchReviewStatistics(progress: childProgress(1)),
       ])
     }.ensure {
       // we need to make sure that our current, local batch of recent mistakes go up to the cloud
@@ -1342,7 +1432,9 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
 
       self._availableSubjects.invalidate()
       self._srsCategoryCounts.invalidate()
+      self._apprenticeCount.invalidate()
       self._recentLessonCount.invalidate()
+      self._leechCount.invalidate()
       postNotificationOnMainQueue(.lccUserInfoChanged)
 
       self.busySyncing = false
@@ -1372,6 +1464,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     _guruKanjiCount.invalidate()
     _apprenticeCount.invalidate()
     _recentLessonCount.invalidate()
+    _leechCount.invalidate()
   }
 
   func clearAllDataAndClose() {

@@ -16,7 +16,6 @@ import Foundation
 import UIKit
 
 class ReviewSettingsViewController: UITableViewController, TKMViewController {
-  static let NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME = "Reviews Between Meaning & Reading"
   private var services: TKMServices!
   private var model: TableModel?
   private var reviewItemsLimitSelector: IndexPath!
@@ -59,6 +58,13 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                          hidden: !Settings
                                            .reviewItemsLimitEnabled)
 
+    model.add(BasicModelItem(style: .value1,
+                             title: "Leech threshold",
+                             subtitle: leechThresholdValueText,
+                             accessoryType: .disclosureIndicator) { [unowned self] in self
+        .didTapLeechThreshold()
+      })
+
     model.add(section: "Order")
     model.add(BasicModelItem(style: .value1,
                              title: "Order",
@@ -68,7 +74,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
       })
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Back-to-back",
-                              subtitle: "Group Meaning and Reading together",
+                              subtitle: "Group meaning and reading together",
                               on: Settings
                                 .groupMeaningReading) { [unowned self] in
         groupMeaningReadingSwitchChanged($0)
@@ -84,8 +90,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                              hidden:!Settings
                                                .groupMeaningReading)
     nonBackToBackBatchSizeIndexPath = model.add(BasicModelItem(style: .value1,
-                                                               title: ReviewSettingsViewController
-                                                                 .NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME,
+                                                               title: "Reviews between meaning & reading",
                                                                subtitle: "\(Settings.reviewBatchSize.description)",
                                                                accessoryType: .disclosureIndicator) {
                                                   [unowned self] in self.didTapReviewBatchSize()
@@ -258,6 +263,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     Settings.meaningFirst ? "Meaning first" : "Reading first"
   }
 
+  private var leechThresholdValueText: String {
+    Settings.leechThreshold.description
+  }
+
   private var fontSizeValueText: String {
     if Settings.fontSize != 0.0 {
       return "\(Int(Settings.fontSize * 100))%"
@@ -376,6 +385,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     navigationController?.pushViewController(makeFontSizeViewController(), animated: true)
   }
 
+  private func didTapLeechThreshold() {
+    navigationController?.pushViewController(makeLeechThresholdViewController(), animated: true)
+  }
+
   private func didTapReviewOrder() {
     navigationController?.pushViewController(makeReviewOrderViewController(), animated: true)
   }
@@ -403,7 +416,7 @@ func makeFontSizeViewController() -> UIViewController {
 }
 
 func makeReviewBatchSizeViewController() -> UIViewController {
-  let name = ReviewSettingsViewController.NON_B2B_REVIEW_BATCH_SIZE_PROP_NAME
+  let name = "Reviews Between Meaning & Reading"
   let description =
     "The \"\(name)\" setting is ONLY used when \"back-to-back\" reviews are disabled.\n\n" +
     "When \"back-to-back\" reviews are disabled, you might be asked to review the meaning of an item and then " +
@@ -426,6 +439,16 @@ func makeReviewItemsLimitViewController() -> UIViewController {
                                            helpText: "Set the number of items to review in a session.")
   let defaultChoices = [5, 10, 15, 20, 25, 30, 50, 75, 100]
   vc.addChoicesFromRange(defaultChoices, suffix: " reviews")
+  return vc
+}
+
+func makeLeechThresholdViewController() -> UIViewController {
+  let vc = SettingChoiceListViewController(setting: Settings.$leechThreshold,
+                                           title: "Leech Threshold",
+                                           helpText: "Leeches are the items that you regularly get wrong. The lower the leech threshold value, the more items will be considered leeches. Leeches are considered a leech if (incorrect / currentStreak^1.5 >= threshold) is true.")
+  for threshold in stride(from: 1.0, through: 5.0, by: 0.25) {
+    vc.addChoice(name: "\(threshold)", value: Float(threshold))
+  }
   return vc
 }
 
