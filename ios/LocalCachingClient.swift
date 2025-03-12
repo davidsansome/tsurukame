@@ -356,7 +356,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         subjects_updated_after = \"\",
         voice_actors_updated_after = \"\",
         study_materials_updated_after = \"\",
-            review_stats_updated_after = \"\";
+        review_stats_updated_after = \"\";
   DELETE FROM assignments;
   DELETE FROM subjects;
   DELETE FROM subject_progress;
@@ -1276,7 +1276,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   }
 
   private func fetchReviewStatistics(progress: Progress) -> Promise<Void> {
-    // Get the last voice actors update time.
+    // Get the last review stats update time.
     let updatedAfter: String = db.inDatabase { db in
       let cursor = db.query("SELECT review_stats_updated_after FROM sync")
       if cursor.next() {
@@ -1364,12 +1364,14 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     requestsAvailable -= pendingProgress.count
     let pendingStudyMaterials = getAllPendingStudyMaterials(limit: requestsAvailable)
 
+    // if you add/edit items in the `.then { _ in when(fulfilled: [` section below,
+    // make sure to update the progress.totalUnitCount calculation here.
     progress.totalUnitCount =
       Int64(pendingProgress.count) +
       Int64(pendingStudyMaterials.count) +
       subjectProgressUnits +
       assignmentProgressUnits +
-      4
+      5
 
     let childProgress = { (units: Int64) in
       Progress(totalUnitCount: -1, parent: progress, pendingUnitCount: units)
@@ -1394,6 +1396,12 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       fetchSubjects(progress: childProgress(subjectProgressUnits)),
     ]).then { _ in
       when(fulfilled: [
+        // progress.totalUnitCount takes into account the items in this section when
+        // calculating the total things that must be completed.
+        // assignmentProgressUnits is accounted for already, but the other items
+        // (e.g. self.fetchStudyMaterials) need to be manually counted up and manually
+        // added to progress.totalUnitCount. So, if you add/remove items to this section,
+        // make sure also to update the calculations for progress.totalUnitCount.
         self.fetchAssignments(progress: childProgress(assignmentProgressUnits)),
         self.fetchStudyMaterials(progress: childProgress(1)),
         self.fetchUserInfo(progress: childProgress(1)),

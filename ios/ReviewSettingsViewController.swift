@@ -60,10 +60,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                            .reviewItemsLimitEnabled)
 
     model.add(BasicModelItem(style: .value1,
-                             title: "Leech Threshold",
+                             title: "Leech threshold",
                              subtitle: leechThresholdValueText,
                              accessoryType: .disclosureIndicator) { [unowned self] in self
-        .leechThresholdChanged()
+        .didTapLeechThreshold()
       })
 
     model.add(section: "Order")
@@ -387,7 +387,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     navigationController?.pushViewController(makeFontSizeViewController(), animated: true)
   }
 
-  private func leechThresholdChanged() {
+  private func didTapLeechThreshold() {
     navigationController?.pushViewController(makeLeechThresholdViewController(), animated: true)
   }
 
@@ -447,7 +447,7 @@ func makeReviewItemsLimitViewController() -> UIViewController {
 func makeLeechThresholdViewController() -> UIViewController {
   let vc = SettingChoiceListViewController(setting: Settings.$leechThreshold,
                                            title: "Leech Threshold",
-                                           helpText: "The higher the value, the fewer items will be considered leeches. Leeches are considered a leech if (incorrect / currentStreak^1.5 >= threshold) is true.")
+                                           helpText: "Leeches are the items that you regularly get wrong. The lower the leech threshold value, the more items will be considered leeches. Leeches are considered a leech if (incorrect / currentStreak^1.5 >= threshold) is true.")
   for threshold in stride(from: 1.0, through: 5.0, by: 0.25) {
     vc.addChoice(name: "\(threshold)", value: Float(threshold))
   }
