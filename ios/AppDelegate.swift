@@ -319,6 +319,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginViewControllerDelega
                                                               type: .vocabulary) {
         openSubjectDetails(subject: subject)
       }
+    case "wrap-up":
+      if let vcs = navigationController?.viewControllers,
+         let reviewContainerVC = vcs
+         .first(where: { $0 is ReviewContainerViewController }) as? ReviewContainerViewController {
+        reviewContainerVC.reviewVC.wrappingUp = true
+      }
     default:
       print("Unsupported applink path: \(url.path)")
       return false

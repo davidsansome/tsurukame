@@ -33,6 +33,10 @@
           {
             "/": "/vocabulary/*",
             "comment": "Opens the subject details screen for the given vocabulary"
+          },
+          {
+            "/": "/wrap-up",
+            "comment": "Wrap up the current review session, if one is active"
           }
         ]
       }
