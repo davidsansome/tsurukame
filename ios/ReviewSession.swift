@@ -287,6 +287,21 @@ class ReviewSession {
         if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
         return false
       }
+    case .alternatingSRSStage:
+      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
+        if a.assignment.srsStage < b.assignment.srsStage { return true }
+        if a.assignment.srsStage > b.assignment.srsStage { return false }
+        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
+        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
+        return false
+      }
+      var alternatingReviewQueue = [ReviewItem]()
+      var highest = false
+      while (reviewQueue.count > 0) {
+        alternatingReviewQueue.append(highest ? reviewQueue.removeLast() : reviewQueue.removeFirst())
+        highest = !highest
+      }
+      reviewQueue = alternatingReviewQueue
     case .random:
       break
 
