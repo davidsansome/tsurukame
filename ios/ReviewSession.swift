@@ -85,7 +85,7 @@ class ReviewSession {
     guard !activeQueue.isEmpty else {
       return
     }
-    
+
     activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
     activeTask = activeQueue[activeTaskIndex]
 
@@ -297,8 +297,9 @@ class ReviewSession {
       }
       var alternatingReviewQueue = [ReviewItem]()
       var highest = false
-      while (reviewQueue.count > 0) {
-        alternatingReviewQueue.append(highest ? reviewQueue.removeLast() : reviewQueue.removeFirst())
+      while reviewQueue.count > 0 {
+        alternatingReviewQueue
+          .append(highest ? reviewQueue.removeLast() : reviewQueue.removeFirst())
         highest = !highest
       }
       reviewQueue = alternatingReviewQueue

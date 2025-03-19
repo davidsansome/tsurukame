@@ -14,11 +14,9 @@
 
 import UIKit
 
-class ViewController: UIViewController, TKMDownloadModelDelegate {
+class ViewController: UIViewController, DownloadModelDelegate {
   var tableModel: MutableTableModel?
   var tableView: UITableView!
-
-  func didTapDownloadItem(_: TKMDownloadModelItem) {}
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -29,21 +27,26 @@ class ViewController: UIViewController, TKMDownloadModelDelegate {
 
     tableModel = MutableTableModel(tableView: tableView)
 
-    let fontLoader = TKMFontLoader()
+    let fontLoader = FontLoader()
     for font in fontLoader.allFonts {
       assert(font.available)
 
-      let item = DownloadModelItem(filename: "", title: font.fontName, delegate: self)
+      let item = DownloadModelItem(filename: "", title: font.displayName,
+                                   totalSizeBytes: font.sizeBytes, delegate: self)
       item.transparentBackground = true
-      item.totalSizeBytes = font.sizeBytes
       item.previewFontName = font.fontName
       item.previewAccessibilityLabel = font.fontName
-      item.previewText = kTKMFontPreviewText
+      item.previewText = Font.fontPreviewText
       tableModel!.add(item)
     }
   }
 
   override func viewWillLayoutSubviews() {
-    tableView!.frame = view.frame
+    tableView!.frame = CGRect(x: view.frame.minX, y: view.frame.minY,
+                              width: 360, height: view.frame.height)
   }
+
+  // MARK: - DownloadModelDelegate
+
+  func didTap(downloadItem _: DownloadModelItem) {}
 }

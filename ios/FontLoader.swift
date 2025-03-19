@@ -33,9 +33,12 @@ class Font: NSObject {
   static let fontDefinitions: [FontDefinition] = [
     FontDefinition("ArmedBanana", "armed-banana.ttf", "Armed Banana", 3_298_116),
     FontDefinition("darts font", "darts-font.woff", "Darts", 1_349_440),
+    FontDefinition("Hina Mincho", "hina-mincho.ttf", "Hina Mincho", 6_428_136),
     FontDefinition("Hosofuwafont", "hoso-fuwa.ttf", "Hoso Fuwa", 5_910_760),
     FontDefinition("nagayama_kai", "nagayama-kai.otf", "Nagayama Kai calligraphy", 15_576_732),
+    FontDefinition("Noto Serif JP", "noto-serif-jp.ttf", "Noto Serif", 13_512_012),
     FontDefinition("santyoume-font", "san-chou-me.ttf", "San Chou Me", 4_428_896),
+    FontDefinition("Sawarabi Mincho", "sawarabi-mincho.ttf", "Sawarabi Mincho", 1_082_324),
   ]
   static func loadFont(path: String) -> Bool {
     guard let data = FileManager.default.contents(atPath: path) else { return false }

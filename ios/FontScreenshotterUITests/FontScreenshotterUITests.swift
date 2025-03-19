@@ -29,8 +29,17 @@ class FontScreenshotterUITests: XCTestCase {
 
   func testScreenshotFontPreviews() {
     // Find all the font preview elements.
-    let elements = app.tables.cells.staticTexts.matching(identifier: "preview")
+    let table = app.tables.firstMatch
+    let elements = table.cells.staticTexts.matching(identifier: "preview")
     for i in 0 ... elements.count {
+      // Scroll down to make the next element visible.
+      // This is kinda dumb.
+      if i == 4 {
+        let scrollVector = CGVector(dx: 0, dy: -100)
+        let tableCenter = table.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        tableCenter.press(forDuration: 0.1, thenDragTo: tableCenter.withOffset(scrollVector))
+      }
+
       let element = elements.element(boundBy: i)
       if !element.exists {
         continue
@@ -40,7 +49,7 @@ class FontScreenshotterUITests: XCTestCase {
       let w = Int(original.width)
       let h = Int(original.height)
 
-      XCTAssertEqual(original.alphaInfo, CGImageAlphaInfo.noneSkipFirst)
+      XCTAssertEqual(original.alphaInfo, CGImageAlphaInfo.noneSkipLast)
 
       // Copy the image's pixel data and get a mutable pointer to it.
       let data = CFDataCreateMutableCopy(nil, 0, original.dataProvider!.data)
