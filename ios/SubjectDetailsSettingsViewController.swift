@@ -72,6 +72,12 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
                               on: Settings.showPreviousLevelGraph,
                               switchHandler: levelGraphSwitchChanged))
 
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Skip Kanji readings",
+                              subtitle: "Kanji have meanings and readings. When this setting is enabled, you will not be quizzed about Kanji readings during lessons and review sessions.",
+                              on: Settings.skipKanjiReadings,
+                              switchHandler: skipKanjiReadingsSwitchChanged))
+
     self.model = model
     model.reloadTable()
   }
@@ -104,5 +110,9 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
 
   private func levelGraphSwitchChanged(_ switchView: UISwitch) {
     Settings.showPreviousLevelGraph = switchView.isOn
+  }
+
+  private func skipKanjiReadingsSwitchChanged(_ switchView: UISwitch) {
+    Settings.skipKanjiReadings = switchView.isOn
   }
 }

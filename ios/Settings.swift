@@ -192,6 +192,7 @@ protocol SettingProtocol {
   @Setting(1.0, #keyPath(fontSize)) static var fontSize: Float
   @Setting(false, #keyPath(exactMatch)) static var exactMatch: Bool
   @Setting(true, #keyPath(enableCheats)) static var enableCheats: Bool
+  @Setting(false, #keyPath(skipKanjiReadings)) static var skipKanjiReadings: Bool
   @Setting(true, #keyPath(showOldMnemonic)) static var showOldMnemonic: Bool
   @Setting(true, #keyPath(blurContextSentences)) static var blurContextSentences: Bool
   @Setting(false, #keyPath(useKatakanaForOnyomi)) static var useKatakanaForOnyomi: Bool
