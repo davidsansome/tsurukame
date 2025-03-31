@@ -46,13 +46,7 @@ class ReviewSession {
       Settings.ankiModeCombineReadingMeaning) || self.isPracticeSession {
       activeQueueSize = 1
     } else {
-      activeQueueSize = Int(Settings.reviewBatchSize)
-    }
-
-    sortReviewQueue()
-
-    if Settings.reviewItemsLimitEnabled, reviewQueue.count > Settings.reviewItemsLimit {
-      reviewQueue = Array(reviewQueue[0 ..< Int(Settings.reviewItemsLimit)])
+      activeQueueSize = reviewQueue.count
     }
 
     refillActiveQueue()
@@ -226,97 +220,6 @@ class ReviewSession {
     }
     activeStudyMaterials!.meaningSynonyms.append(text)
     _ = services.localCachingClient?.updateStudyMaterial(activeStudyMaterials!)
-  }
-
-  private func sortReviewQueue() {
-    reviewQueue.shuffle()
-    switch Settings.reviewOrder {
-    case .ascendingSRSStage:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.srsStage < b.assignment.srsStage { return true }
-        if a.assignment.srsStage > b.assignment.srsStage { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .descendingSRSStage:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.srsStage < b.assignment.srsStage { return false }
-        if a.assignment.srsStage > b.assignment.srsStage { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .currentLevelFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.level < b.assignment.level { return false }
-        if a.assignment.level > b.assignment.level { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .lowestLevelFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.level < b.assignment.level { return true }
-        if a.assignment.level > b.assignment.level { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .newestAvailableFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.availableAt < b.assignment.availableAt { return false }
-        if a.assignment.availableAt > b.assignment.availableAt { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .oldestAvailableFirst:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.availableAt < b.assignment.availableAt { return true }
-        if a.assignment.availableAt > b.assignment.availableAt { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .longestRelativeWait:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if availableRatio(a.assignment) < availableRatio(b.assignment) { return false }
-        if availableRatio(a.assignment) > availableRatio(b.assignment) { return true }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-    case .alternatingSRSStage:
-      reviewQueue.sort { (a, b: ReviewItem) -> Bool in
-        if a.assignment.srsStage < b.assignment.srsStage { return true }
-        if a.assignment.srsStage > b.assignment.srsStage { return false }
-        if a.assignment.subjectType.rawValue < b.assignment.subjectType.rawValue { return true }
-        if a.assignment.subjectType.rawValue > b.assignment.subjectType.rawValue { return false }
-        return false
-      }
-      var alternatingReviewQueue = [ReviewItem]()
-      var highest = false
-      while reviewQueue.count > 0 {
-        alternatingReviewQueue
-          .append(highest ? reviewQueue.removeLast() : reviewQueue.removeFirst())
-        highest = !highest
-      }
-      reviewQueue = alternatingReviewQueue
-    case .random:
-      break
-
-    @unknown default:
-      fatalError()
-    }
-  }
-
-  private func availableRatio(_ assignment: TKMAssignment) -> TimeInterval {
-    let truncatedDate =
-      Date(timeIntervalSince1970: Double((Int(Date().timeIntervalSince1970) / 3600) * 3600))
-    let subject = services.localCachingClient.getSubject(id: assignment.subjectID)!
-    return truncatedDate.timeIntervalSince(assignment.availableAtDate) / assignment.srsStage
-      .duration(subject)
   }
 
   private func refillActiveQueue() {

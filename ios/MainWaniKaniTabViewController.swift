@@ -261,10 +261,17 @@ class MainWaniKaniTabViewController: UITableViewController {
     switch StoryboardSegue.Main(segue) {
     case .startReviews:
       let assignments = services.localCachingClient.getAllAssignments()
-      let items = ReviewItem.readyForReview(assignments: assignments,
+      var items = ReviewItem.readyForReview(assignments: assignments,
                                             localCachingClient: services.localCachingClient)
       if items.count == 0 {
         return
+      }
+        
+      items = sortReviewItems(items: items, services: services)
+
+      if Settings.reviewItemsLimitEnabled && items.count > Settings.reviewItemsLimit {
+        print("Truncating \(items.count) review items to \(Settings.reviewItemsLimit)")
+        items = Array(items[0 ..< Int(Settings.reviewItemsLimit)])
       }
 
       let vc = segue.destination as! ReviewContainerViewController
