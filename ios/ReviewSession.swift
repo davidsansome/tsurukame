@@ -176,9 +176,12 @@ class ReviewSession {
     }
 
     // Remove it from the active queue if that was the last part.
+    let shouldIgnoreReading: Bool = activeSubject.hasKanji && Settings.skipKanjiReadings
+    let answeredReading: Bool = activeTask.answeredReading || activeSubject
+      .readings.isEmpty
     let isSubjectFinished =
       (activeTask.answeredMeaning || activeSubject.meanings.isEmpty) &&
-      (activeTask.answeredReading || activeSubject.readings.isEmpty)
+      (shouldIgnoreReading || answeredReading)
     let didLevelUp = (!activeTask.answer.readingWrong && !activeTask.answer
       .meaningWrong && !isPracticeSession)
     let newSrsStage =

@@ -177,6 +177,7 @@
 		79D887472B419609003D8F99 /* String+SHA256Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D887462B419609003D8F99 /* String+SHA256Test.swift */; };
 		79D887482B419672003D8F99 /* String+SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D887442B41949F003D8F99 /* String+SHA256.swift */; };
 		93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */; };
+		97A120DF2D9C467100D19CAE /* ReviewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A120DE2D9C467100D19CAE /* ReviewUtils.swift */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* FontLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* FontLoader.swift */; };
 		C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
@@ -432,6 +433,7 @@
 		7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).debug.xcconfig"; sourceTree = "<group>"; };
 		82721E7B5A9C5562CC8D3B9B /* Pods-FontScreenshotter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.release.xcconfig"; sourceTree = "<group>"; };
 		93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingReviewsChartItem.swift; sourceTree = "<group>"; };
+		97A120DE2D9C467100D19CAE /* ReviewUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewUtils.swift; sourceTree = "<group>"; };
 		9CFD97ACE7ABC2C904715D83 /* Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame-Tsurukame Complication Extension/Pods-Tsurukame-Tsurukame Complication Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKMKanaInputTest.m; sourceTree = "<group>"; };
 		BB0F6B10216B333700CB1306 /* TKMKanaInput+Internals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TKMKanaInput+Internals.h"; sourceTree = "<group>"; };
@@ -632,6 +634,7 @@
 				638EFE3527E8892400D693D0 /* MainTitleView.xib */,
 				63F7F52223D423E9006A31FB /* MainViewController.swift */,
 				63A702162C2DB97D00AB0504 /* MainWaniKaniTabViewController.swift */,
+				97A120DE2D9C467100D19CAE /* ReviewUtils.swift */,
 				63A5598427E433DF00E7BBCB /* NavigationController.swift */,
 				63B63FF627733ABC0098DAAD /* NotificationDispatcher.swift */,
 				63358E9927365FC70013A2AC /* OfflineAudio.swift */,
@@ -1456,6 +1459,7 @@
 				63CBFF2627731B8B0086BA5F /* DownloadViewController.swift in Sources */,
 				63A16786253AD8D200B5BCD6 /* LocalCachingClient.swift in Sources */,
 				63C4EA7A2C267C85003D3C0B /* XCAssets+Generated.swift in Sources */,
+				97A120DF2D9C467100D19CAE /* ReviewUtils.swift in Sources */,
 				63F7F52E23D4C2CA006A31FB /* Audio.swift in Sources */,
 				63391B592779B8BF005CDA72 /* ReviewSettingsViewController.swift in Sources */,
 				93B59B2A2367AF130097533C /* UpcomingReviewsChartItem.swift in Sources */,
