@@ -266,7 +266,7 @@ class MainWaniKaniTabViewController: UITableViewController {
       if items.count == 0 {
         return
       }
-        
+
       items = sortReviewItems(items: items, services: services)
 
       if Settings.reviewItemsLimitEnabled && items.count > Settings.reviewItemsLimit {
@@ -281,7 +281,7 @@ class MainWaniKaniTabViewController: UITableViewController {
       let assignments = services.localCachingClient.getAllRecentMistakeAssignments()
       let items = ReviewItem.readyForRecentMistakesReview(assignments: assignments,
                                                           localCachingClient: services
-                                                            .localCachingClient)
+                                                            .localCachingClient).shuffled()
       if items.count == 0 {
         return
       }
@@ -293,7 +293,7 @@ class MainWaniKaniTabViewController: UITableViewController {
       let assignments = services.localCachingClient.getAllRecentLessonAssignments()
       let items = ReviewItem.readyForRecentLessonReview(assignments: assignments,
                                                         localCachingClient: services
-                                                          .localCachingClient)
+                                                          .localCachingClient).shuffled()
       if items.count == 0 {
         return
       }
@@ -307,7 +307,7 @@ class MainWaniKaniTabViewController: UITableViewController {
         .getAssignmentsInCategory(category: SRSStageCategory.apprentice)
       let items = ReviewItem.readyForAlreadyPassedApprenticeReview(assignments: apprenticeItems,
                                                                    localCachingClient: services
-                                                                     .localCachingClient)
+                                                                     .localCachingClient).shuffled()
       if items.count == 0 {
         return
       }
@@ -319,7 +319,7 @@ class MainWaniKaniTabViewController: UITableViewController {
       let leechItems = services.localCachingClient.getAllLeeches()
       let items = ReviewItem.readyForLeechReview(assignments: leechItems,
                                                  localCachingClient: services
-                                                   .localCachingClient)
+                                                   .localCachingClient).shuffled()
       if items.count == 0 {
         return
       }
@@ -331,7 +331,7 @@ class MainWaniKaniTabViewController: UITableViewController {
       let assignments = services.localCachingClient.getAllBurnedAssignments()
       let items = ReviewItem.readyForBurnedReview(assignments: assignments,
                                                   localCachingClient: services
-                                                    .localCachingClient)
+                                                    .localCachingClient).shuffled()
       if items.count == 0 {
         return
       }
@@ -343,6 +343,7 @@ class MainWaniKaniTabViewController: UITableViewController {
       let assignments = services.localCachingClient.getAllAssignments()
       var items = ReviewItem.readyForLessons(assignments: assignments,
                                              localCachingClient: services.localCachingClient)
+        .shuffled()
       if items.count == 0 {
         return
       }
