@@ -190,6 +190,18 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     ankiModeCombineReadingMeaningIndexPath = model.add(ankiModeCombineReadingMeaning,
                                                        hidden:!Settings.ankiMode)
 
+    let ankiModeSwipeGestures = SwitchModelItem(style: .subtitle,
+                                                title: "Enable swipe gestures",
+                                                subtitle: "Use swipes for marking reviews with Anki mode enabled",
+                                                on: Settings
+                                                  .ankiModeEnableSwipeGestures) { [
+      unowned self
+    ] in
+      ankiModeSwipeGesturesSwitchChanged($0)
+    }
+    ankiModeCombineReadingMeaningIndexPath = model.add(ankiModeSwipeGestures,
+                                                       hidden:!Settings.ankiMode)
+
     model.add(section: "Audio")
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Play audio automatically",
@@ -361,6 +373,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
 
   private func ankiModeCombineReadingMeaningSwitchChanged(_ switchView: UISwitch) {
     Settings.ankiModeCombineReadingMeaning = switchView.isOn
+  }
+
+  private func ankiModeSwipeGesturesSwitchChanged(_ switchView: UISwitch) {
+    Settings.ankiModeEnableSwipeGestures = switchView.isOn
   }
 
   private func playAudioAutomaticallySwitchChanged(_ switchView: UISwitch) {

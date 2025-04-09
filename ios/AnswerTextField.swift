@@ -53,4 +53,19 @@ class AnswerTextField: UITextField {
     }
     return super.textInputMode
   }
+
+  // Add a property to toggle interaction. Doing this will allow the textfield to process events,
+  // which is impossible when simply set to disabled.
+  var isInteractive: Bool = true {
+    didSet {
+      // Dismiss the keyboard if the field is no longer interactive
+      if !isInteractive && isFirstResponder {
+        resignFirstResponder()
+      }
+    }
+  }
+
+  override func becomeFirstResponder() -> Bool {
+    isInteractive ? super.becomeFirstResponder() : false
+  }
 }
