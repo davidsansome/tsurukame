@@ -46,7 +46,7 @@ class ReviewSession {
       Settings.ankiModeCombineReadingMeaning) || self.isPracticeSession {
       activeQueueSize = 1
     } else {
-      activeQueueSize = reviewQueue.count
+      activeQueueSize = Int(Settings.reviewBatchSize)
     }
 
     refillActiveQueue()
