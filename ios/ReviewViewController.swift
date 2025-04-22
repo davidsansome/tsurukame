@@ -159,7 +159,8 @@ protocol ReviewViewControllerDelegate: AnyObject {
                                        menuButton: UIButton)
 }
 
-class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelegate {
+class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelegate,
+  SwipeableContainerDelegate {
   private var kanaInput: TKMKanaInput!
   private let hapticGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator
     .FeedbackStyle.light)
@@ -184,6 +185,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var previousSubjectLabel: UILabel?
 
   private var isPracticeSession = false
+
+  private var swipeContainer: SwipeableContainer!
 
   // These are set to match the keyboard animation.
   private var animationDuration: Double = kDefaultAnimationDuration
@@ -302,21 +305,40 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     questionLabel.isUserInteractionEnabled = false
 
-    let shortPressRecognizer =
-      UITapGestureRecognizer(target: self, action: #selector(didShortPressQuestionLabel))
-    questionBackground.addGestureRecognizer(shortPressRecognizer)
+    // set up swipe gestures for answering
+    swipeContainer = SwipeableContainer()
+    swipeContainer.delegate = self
+    swipeContainer.translatesAutoresizingMaskIntoConstraints = false
+    view.insertSubview(swipeContainer, belowSubview: promptBackground)
 
-    let leftSwipeRecognizer = UISwipeGestureRecognizer(target: self,
-                                                       action: #selector(didSwipeQuestionLabel))
-    leftSwipeRecognizer.direction = .left
-    questionBackground.addGestureRecognizer(leftSwipeRecognizer)
-    let rightSwipeRecognizer = UISwipeGestureRecognizer(target: self,
-                                                        action: #selector(didSwipeQuestionLabel))
-    rightSwipeRecognizer.direction = .right
-    questionBackground.addGestureRecognizer(rightSwipeRecognizer)
+    // Add constraints to match question background
+    NSLayoutConstraint.activate([
+      swipeContainer.leadingAnchor.constraint(equalTo: questionBackground.leadingAnchor),
+      swipeContainer.trailingAnchor.constraint(equalTo: questionBackground.trailingAnchor),
+      swipeContainer.topAnchor.constraint(equalTo: questionBackground.topAnchor),
+      swipeContainer.bottomAnchor.constraint(equalTo: questionBackground.bottomAnchor),
+    ])
 
-    leftSwipeRecognizer.require(toFail: shortPressRecognizer)
-    rightSwipeRecognizer.require(toFail: shortPressRecognizer)
+    // font cycling tap recognizers
+    func setupTapQuestionRecognizer(numberOfTapsRequired: Int = 1) -> UITapGestureRecognizer {
+      let tapRecognizer = UITapGestureRecognizer(target: self,
+                                                 action: #selector(didTapQuestionView))
+      swipeContainer.addGestureRecognizer(tapRecognizer)
+      tapRecognizer.numberOfTapsRequired = numberOfTapsRequired
+      return tapRecognizer
+    }
+
+    let singleTapRecognizer = setupTapQuestionRecognizer()
+    let doubleTapRecognizer = setupTapQuestionRecognizer(numberOfTapsRequired: 2)
+    let tripleTapRecognizer = setupTapQuestionRecognizer(numberOfTapsRequired: 3)
+
+    // make sure to fail the tap gesture recognizers with less taps
+    singleTapRecognizer.require(toFail: doubleTapRecognizer)
+    doubleTapRecognizer.require(toFail: tripleTapRecognizer)
+
+    // add a tap gesture for the answer bar for submitting in anki mode
+    let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapAnswerBar))
+    answerField.addGestureRecognizer(tapRecognizer)
 
     resizeViewsForFontSize()
     viewDidLayoutSubviews()
@@ -728,6 +750,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         submitButton.isHidden = false
       }
     }
+    updateSwipeConfiguration()
 
     // Change the submit button icon.
     let submitButtonImage = shown ? forwardArrowImage :
@@ -760,7 +783,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Enable/disable the answer field, and set its first responder status.
     // This makes the keyboard appear or disappear immediately.  We need this animation to happen
     // here so it's in sync with the others.
-    answerField.isEnabled = !shown && !Settings.ankiMode
+    answerField.isInteractive = !shown && !Settings.ankiMode
     if updateFirstResponder {
       if !shown {
         answerField.becomeFirstResponder()
@@ -813,6 +836,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         addSynonymButton.isHidden = true
       }
     }
+
+    updateSwipeConfiguration()
 
     // This makes sure taps are still processed and not ignored, even when the closing animation
     // after a button press was not completed
@@ -896,19 +921,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     questionLabel.font = UIFont(name: fontName, size: questionLabelFontSize())
   }
 
-  @objc func didShortPressQuestionLabel(_: UITapGestureRecognizer) {
-    toggleFont()
-    if Settings.ankiMode {
-      if !isAnimatingSubjectDetailsView { submit() }
-      else { ankiModeCachedSubmit = true }
-    }
-  }
-
-  @objc func didSwipeQuestionLabel(_ sender: UISwipeGestureRecognizer) {
-    if sender.direction == .left {
-      showNextCustomFont()
-    } else if sender.direction == .right {
-      showPreviousCustomFont()
+  @objc func didTapQuestionView(_ sender: UITapGestureRecognizer) {
+    switch sender.numberOfTapsRequired {
+    case 1: toggleFont()
+    case 2: showNextCustomFont()
+    case 3: showPreviousCustomFont()
+    default: break
     }
   }
 
@@ -944,6 +962,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   func quickSettingsChanged() {
+    updateSwipeConfiguration()
     if subjectDetailsView.isHidden {
       updateViewForCurrentTask(updateFirstResponder: false)
     }
@@ -1009,7 +1028,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       markAnswer(.AskAgainLater)
       return
     }
-    if !answerField.isEnabled, !Settings.ankiMode {
+    if !answerField.isInteractive, !Settings.ankiMode {
       if !subjectDetailsView.isHidden {
         subjectDetailsView.saveStudyMaterials()
       }
@@ -1023,7 +1042,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   @objc func backspaceKeyPressed() {
     answerField.text = nil
     answerField.textColor = TKMStyle.Color.label
-    answerField.isEnabled = true
+    answerField.isInteractive = true
     answerField.becomeFirstResponder()
   }
 
@@ -1147,7 +1166,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       UIView.animate(withDuration: animationDuration,
                      animations: {
                        self.answerField.textColor = .systemRed
-                       self.answerField.isEnabled = false
+                       self.answerField.isInteractive = false
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)
                      })
@@ -1173,6 +1192,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                               updateFirstResponder: true)
   }
 
+  @objc func didTapAnswerBar(_: UITapGestureRecognizer) {
+    if Settings.ankiMode {
+      if !isAnimatingSubjectDetailsView { submit() }
+      else { ankiModeCachedSubmit = true }
+    }
+  }
+
   // MARK: - Ignoring incorrect answers
 
   @IBAction func addSynonymButtonPressed(_: Any) {
@@ -1186,7 +1212,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     c.addAction(UIAlertAction(title: "My answer was correct",
                               style: .default,
-                              handler: { _ in self.markCorrect() }))
+                              handler: { _ in self.markOverrideCorrect() }))
     if Settings.ankiMode {
       c.addAction(UIAlertAction(title: "My answer was incorrect",
                                 style: .default,
@@ -1206,7 +1232,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     present(c, animated: true, completion: nil)
   }
 
-  @objc func markCorrect() {
+  @objc func markOverrideCorrect() {
     markAnswer(.OverrideAnswerCorrect)
   }
 
@@ -1232,6 +1258,54 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     super.canPerformAction(action, withSender: sender)
   }
 
+  // MARK: - Swipe Gesture Delegate
+
+  func containerDidSwipeRight(_: SwipeableContainer) {
+    // Handle correct answer
+    if !subjectDetailsView.isHidden {
+      // call the same function that is used by the synonyms menu to mark correct
+      markOverrideCorrect()
+    } else {
+      // use the marking function for outside the details view
+      markAnswer(.Correct)
+    }
+  }
+
+  func containerDidSwipeLeft(_: SwipeableContainer) {
+    if subjectDetailsView.isHidden {
+      _ = session.markAnswer(.Incorrect, isPracticeSession: isPracticeSession)
+    }
+    randomTask()
+  }
+
+  func containerDidSwipeDown(_: SwipeableContainer) {
+    // Skip question
+    if Settings.allowSkippingReviews {
+      markAnswer(.AskAgainLater)
+      return
+    }
+  }
+
+  func containerDidSwipeUp(_: SwipeableContainer) {
+    submit()
+  }
+
+  private func updateSwipeConfiguration() {
+    var config = SwipeableContainer.SwipeConfiguration()
+
+    guard Settings.ankiMode,
+          Settings.ankiModeEnableSwipeGestures else {
+      swipeContainer.updateSwipeConfiguration(config)
+      return
+    }
+
+    config.isRightEnabled = true
+    config.isLeftEnabled = true
+    config.isDownEnabled = Settings.allowSkippingReviews
+    config.isUpEnabled = subjectDetailsView.isHidden
+    swipeContainer.updateSwipeConfiguration(config)
+  }
+
   // MARK: - SubjectDelegate
 
   func didTapSubject(_ subject: TKMSubject) {
@@ -1255,7 +1329,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                           discoverabilityTitle: "Continue")
     var keyCommands: [UIKeyCommand] = []
 
-    if !answerField.isEnabled, subjectDetailsView.isHidden {
+    if !answerField.isInteractive, subjectDetailsView.isHidden {
       // Continue when a wrong answer has been entered but the subject details view is hidden.
       keyCommands.append(contentsOf: [UIKeyCommand(input: "\u{8}",
                                                    modifierFlags: [],
@@ -1279,11 +1353,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                                    discoverabilityTitle: "Ask again later"),
                                       UIKeyCommand(input: "c",
                                                    modifierFlags: [.command],
-                                                   action: #selector(markCorrect),
+                                                   action: #selector(markOverrideCorrect),
                                                    discoverabilityTitle: "Mark correct"),
                                       UIKeyCommand(input: "c",
                                                    modifierFlags: [.control],
-                                                   action: #selector(markCorrect)),
+                                                   action: #selector(markOverrideCorrect)),
                                       UIKeyCommand(input: "i",
                                                    modifierFlags: [.command],
                                                    action: #selector(markIncorrect),
