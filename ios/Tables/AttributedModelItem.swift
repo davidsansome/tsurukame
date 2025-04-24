@@ -17,7 +17,7 @@ import Foundation
 private let kEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
 private let kMinimumHeight: CGFloat = 44
 
-class AttributedModelItem: TableModelItem {
+class AttributedModelItem: NSObject, TableModelItem {
   var text: NSAttributedString
 
   var rightButtonImage: UIImage?

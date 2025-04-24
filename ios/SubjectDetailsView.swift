@@ -360,9 +360,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     let indexPath = model.add(section: "Context Sentences")
     for sentence in subject.vocabulary.sentences {
-      model.add(ContextSentenceModelItem(sentence, highlightSubject: subject,
-                                         defaultAttributes: defaultStringAttrs(),
-                                         fontSize: kFontSize))
+      let item = ContextSentenceModelItem(sentence, highlightSubject: subject,
+                                          defaultAttributes: defaultStringAttrs(),
+                                          fontSize: kFontSize)
+      item.initReader()
+      model.add(item)
     }
     return indexPath
   }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Accelerate
+import AVFoundation
 import Foundation
 import WaniKaniAPI
 
@@ -24,6 +25,7 @@ class ContextSentenceModelItem: AttributedModelItem {
   let japaneseText: NSAttributedString
   let englishText: NSAttributedString
   var blurred = Settings.blurContextSentences
+  let speechSynthesizer = AVSpeechSynthesizer()
 
   init(_ sentence: TKMVocabulary.Sentence,
        highlightSubject: TKMSubject,
@@ -57,12 +59,29 @@ class ContextSentenceModelItem: AttributedModelItem {
     super.init(text: text)
   }
 
+  func initReader() {
+    rightButtonImage = Asset.baselineVolumeUpBlack24pt.image
+    rightButtonCallback = { [unowned self] (_: AttributedModelCell) in
+      self.readContextSentence()
+    }
+  }
+
+  @objc private func readContextSentence() {
+    if speechSynthesizer.isSpeaking {
+      speechSynthesizer.stopSpeaking(at: .immediate)
+    } else {
+      let utterance = AVSpeechUtterance(string: japaneseText.string)
+      utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP") // Japanese voice
+      speechSynthesizer.speak(utterance)
+    }
+  }
+
   override var cellFactory: TableModelCellFactory {
     .fromDefaultConstructor(cellClass: ContextSentenceModelCell.self)
   }
 }
 
-private class ContextSentenceModelCell: AttributedModelCell {
+private class ContextSentenceModelCell: AttributedModelCell, AVSpeechSynthesizerDelegate {
   @TypedModelItem var contextSentenceItem: ContextSentenceModelItem
 
   var blurredOverlay: UIView!
@@ -78,6 +97,7 @@ private class ContextSentenceModelCell: AttributedModelCell {
     super.update()
 
     blurredOverlay.alpha = contextSentenceItem.blurred ? 1 : 0
+    contextSentenceItem.speechSynthesizer.delegate = self
   }
 
   override func layoutSubviews() {
@@ -127,5 +147,17 @@ private class ContextSentenceModelCell: AttributedModelCell {
     UIView.animate(withDuration: kRevealDuration) {
       self.blurredOverlay.alpha = 0
     }
+  }
+
+  func speechSynthesizer(_: AVSpeechSynthesizer, didStart _: AVSpeechUtterance) {
+    rightButton?.setImage(Asset.baselineStopBlack24pt.image, for: .normal)
+  }
+
+  func speechSynthesizer(_: AVSpeechSynthesizer, didFinish _: AVSpeechUtterance) {
+    rightButton?.setImage(Asset.baselineVolumeUpBlack24pt.image, for: .normal)
+  }
+
+  func speechSynthesizer(_: AVSpeechSynthesizer, didCancel _: AVSpeechUtterance) {
+    rightButton?.setImage(Asset.baselineVolumeUpBlack24pt.image, for: .normal)
   }
 }
