@@ -47,7 +47,7 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
                 "When you've finished selecting items, tap \"Begin\" " +
                 "in the top right to start.")
 
-    let assignments = services.localCachingClient.getAllAssignments()
+    let assignments = services.localCachingClient.getNonExcludedAssignments()
     let items = ReviewItem.readyForLessons(assignments: assignments,
                                            localCachingClient: services.localCachingClient)
     var levels = [Int32: ReviewsForLevel]()

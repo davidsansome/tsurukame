@@ -230,6 +230,20 @@ class MainWaniKaniTabViewController: UITableViewController {
       }
     }
 
+    let excludedItems = BasicModelItem(style: .value1,
+                                       title: "Excluded items",
+                                       subtitle: "Items that have been marked as excluded from reviews",
+                                       accessoryType: .disclosureIndicator) { [unowned self] in self
+      .perform(segue: StoryboardSegue.Main.showExcluded,
+               sender: self)
+    }
+
+    let excludedCount = services.localCachingClient.excludedCount()
+    let disabledMessage = excludedCount == 0 ? "you have not excluded any items" : nil
+    _ = setTableViewCellCount(excludedItems, count: excludedCount,
+                              disabledMessage: disabledMessage)
+    model.add(excludedItems)
+
     self.model = model
     tableView.reloadData()
   }
@@ -260,7 +274,7 @@ class MainWaniKaniTabViewController: UITableViewController {
   override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
     switch StoryboardSegue.Main(segue) {
     case .startReviews:
-      let assignments = services.localCachingClient.getAllAssignments()
+      let assignments = services.localCachingClient.getNonExcludedAssignments()
       var items = ReviewItem.readyForReview(assignments: assignments,
                                             localCachingClient: services.localCachingClient)
       if items.count == 0 {
@@ -340,7 +354,7 @@ class MainWaniKaniTabViewController: UITableViewController {
       vc.setup(services: services, items: items, isPracticeSession: true)
 
     case .startLessons:
-      let assignments = services.localCachingClient.getAllAssignments()
+      let assignments = services.localCachingClient.getNonExcludedAssignments()
       var items = ReviewItem.readyForLessons(assignments: assignments,
                                              localCachingClient: services.localCachingClient)
         .shuffled()
@@ -367,6 +381,11 @@ class MainWaniKaniTabViewController: UITableViewController {
     case .showRemaining:
       let vc = segue.destination as! SubjectsRemainingViewController
       vc.setup(services: services, level: selectedSubjectCatalogLevel)
+
+    case .showExcluded:
+      let vc = segue.destination as! SubjectsExcludedViewController
+      vc.setup(services: services, category: selectedSrsStageCategory,
+               showAnswers: Settings.subjectCatalogueViewShowAnswers)
 
     case .tableForecast:
       let vc = segue.destination as! UpcomingReviewsViewController
