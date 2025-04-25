@@ -112,6 +112,12 @@ class ReviewSession {
     refillActiveQueue()
   }
 
+  public func excludeTask() {
+    activeQueue.remove(at: activeTaskIndex)
+    activeTask.reset()
+    refillActiveQueue()
+  }
+
   struct MarkResult {
     let subjectFinished: Bool
     let didLevelUp: Bool
@@ -170,6 +176,8 @@ class ReviewSession {
     case .OverrideAnswerCorrect:
       tasksAnsweredCorrectly += 1
 
+    case .Exclude:
+      fatalError()
     case .AskAgainLater:
       // Handled above.
       fatalError()
@@ -223,6 +231,15 @@ class ReviewSession {
     }
     activeStudyMaterials!.meaningSynonyms.append(text)
     _ = services.localCachingClient?.updateStudyMaterial(activeStudyMaterials!)
+  }
+
+  func setExclude(_ exclude: Bool) {
+    if activeStudyMaterials == nil {
+      activeStudyMaterials = TKMStudyMaterials()
+      activeStudyMaterials!.subjectID = activeSubject.id
+    }
+    _ = services.localCachingClient?.setExcluded(studyMaterials: &activeStudyMaterials!,
+                                                 shouldExclude: exclude)
   }
 
   private func refillActiveQueue() {

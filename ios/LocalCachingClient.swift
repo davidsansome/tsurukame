@@ -49,6 +49,8 @@ private func postNotificationOnMainQueue(_ notification: Notification.Name) {
 }
 
 class LocalCachingClient: NSObject, SubjectLevelGetter {
+  let excludedText = "#tsurukameExclude"
+
   let client: WaniKaniAPIClient
   let reachability: Reachability
 
@@ -194,7 +196,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
 
     let showKanaOnlyVocab = Settings.showKanaOnlyVocab
-    for assignment in getAllAssignments() {
+    for assignment in getNonExcludedAssignments() {
       // Don't count assignments with invalid subjects.  This includes assignments for levels higher
       // than the user's max subscription level.
       if !isValid(subjectId: assignment.subjectID) {
@@ -419,6 +421,60 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
   func getAllAssignments() -> [TKMAssignment] {
     db.inDatabase { db in
       getAllAssignments(transaction: db)
+    }
+  }
+
+  func isExcluded(studyMaterials: TKMStudyMaterials) -> Bool {
+    studyMaterials.meaningNote.contains(excludedText)
+  }
+
+  func getMeaningNoteDisplay(studyMaterials: TKMStudyMaterials) -> String {
+    studyMaterials.meaningNote.replacingOccurrences(of: excludedText, with: "")
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+  }
+
+  func setExcluded(studyMaterials: inout TKMStudyMaterials,
+                   shouldExclude: Bool) -> Promise<Void> {
+    if shouldExclude {
+      studyMaterials.meaningNote = studyMaterials.meaningNote.appending("\n\(excludedText)")
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+    } else {
+      studyMaterials.meaningNote = getMeaningNoteDisplay(studyMaterials: studyMaterials)
+    }
+    return updateStudyMaterial(studyMaterials)
+  }
+
+  func makeMeaningNote(studyMaterials: TKMStudyMaterials,
+                       note: String) -> String {
+    let excluded = isExcluded(studyMaterials: studyMaterials)
+    return excluded ? note.appending(excludedText) : note
+  }
+
+  func getExcludedAssignments() -> [TKMAssignment] {
+    getAllAssignments().filter { assignment in
+      if assignment.subjectType != .vocabulary {
+        return false
+      }
+      if let activeStudyMaterials = getStudyMaterial(subjectId: assignment.subjectID) {
+        return isExcluded(studyMaterials: activeStudyMaterials)
+      }
+      return false
+    }
+  }
+
+  func excludedCount() -> Int {
+    getExcludedAssignments().count
+  }
+
+  func getNonExcludedAssignments() -> [TKMAssignment] {
+    getAllAssignments().filter { assignment in
+      if assignment.subjectType != .vocabulary {
+        return true
+      }
+      if let activeStudyMaterials = getStudyMaterial(subjectId: assignment.subjectID) {
+        return !isExcluded(studyMaterials: activeStudyMaterials)
+      }
+      return true
     }
   }
 

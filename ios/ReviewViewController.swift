@@ -36,6 +36,7 @@ enum AnswerResult {
   case Incorrect
   case OverrideAnswerCorrect
   case AskAgainLater
+  case Exclude
 
   var correct: Bool {
     self == .Correct || self == .OverrideAnswerCorrect
@@ -1101,6 +1102,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       hapticGenerator.impactOccurred()
       hapticGenerator.prepare()
     }
+    if result == .Exclude {
+      // Take the task out of the queue
+      session.excludeTask()
+      randomTask()
+      return
+    }
 
     // Mark the task.
     var marked = session.markAnswer(result, isPracticeSession: isPracticeSession)
@@ -1196,6 +1203,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                               style: .default,
                               handler: { _ in self.askAgain() }))
 
+    if session.activeSubject.subjectType == .vocabulary {
+      c.addAction(UIAlertAction(title: "Exclude this item",
+                                style: .default,
+                                handler: { _ in self.exclude() }))
+    }
+
     if session.activeTaskType == .meaning {
       c.addAction(UIAlertAction(title: "Add synonym",
                                 style: .default,
@@ -1216,6 +1229,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   @objc func askAgain() {
     markAnswer(.AskAgainLater)
+  }
+
+  @objc func exclude() {
+    session.setExclude(true)
+    markAnswer(.Exclude)
   }
 
   @objc func addSynonym() {
