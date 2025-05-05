@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ByY-Kf-IzJ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ByY-Kf-IzJ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -54,6 +54,7 @@
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startReviews" id="SNd-yz-wla"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startAlreadyPassedApprenticeReviews" id="Zly-NW-0bf"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startAllLeechReviews" id="LEs-R7-aHH"/>
+                        <segue destination="5T5-eW-fQb" kind="show" identifier="showExcluded" id="m1H-uD-W8R"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kbL-0E-6LB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -204,7 +205,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NbY-WF-HHV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-415" y="-1043"/>
+            <point key="canvasLocation" x="-159" y="-1026"/>
         </scene>
         <!--Lessons-->
         <scene sceneID="z1E-IC-jbQ">
@@ -224,7 +225,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IjS-jp-gV8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-420" y="-948"/>
+            <point key="canvasLocation" x="583" y="-1051"/>
         </scene>
         <!--SubjectCatalogue-->
         <scene sceneID="cQS-Qo-ms0">
@@ -255,6 +256,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UAj-ZT-6TK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-449" y="-1186"/>
+        </scene>
+        <!--SubjectsExcluded-->
+        <scene sceneID="pPD-SX-ZXD">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="subjectsExcluded" storyboardName="SubjectsExcluded" id="5T5-eW-fQb" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="8gE-6x-hCy"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3dR-Vk-0XO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="605" y="-883"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
