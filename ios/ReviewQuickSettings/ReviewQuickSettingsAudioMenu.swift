@@ -25,7 +25,7 @@ class ReviewQuickSettingsAudioMenu: ReviewQuickSettingsTable {
         Settings.playAudioAutomatically = on
       })
     model.add(CheckmarkModelItem(style: .default, title: "Interrupt background audio",
-                                 on: Settings.playAudioAutomatically) { on in
+                                 on: Settings.interruptBackgroundAudio) { on in
         Settings.interruptBackgroundAudio = on
       })
 
