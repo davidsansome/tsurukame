@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *TKMConvertKanaText(NSString *text);
+extern NSString *TKMConvertKanaText(NSString *text, bool *__nullable convertedAllCharacters);
 
 typedef NS_ENUM(NSInteger, TKMAlphabet) {
   kTKMAlphabetHiragana,

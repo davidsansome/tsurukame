@@ -266,7 +266,7 @@ class AnswerChecker: NSObject {
       }
 
       // Check if the answer would match one of the readings if converted to hiragana.
-      let kanaText = TKMConvertKanaText(answer)
+      let kanaText = TKMConvertKanaText(answer, nil)
       switch checkAnswer(kanaText, subject: subject, studyMaterials: studyMaterials,
                          taskType: .reading, localCachingClient: localCachingClient) {
       case .Precise, .Imprecise:

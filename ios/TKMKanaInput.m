@@ -320,8 +320,11 @@ void EnsureInitialised(void) {
   });
 }
 
-NSString *TKMConvertKanaText(NSString *input) {
+NSString *TKMConvertKanaText(NSString *input, bool *__nullable convertedAllCharacters) {
   EnsureInitialised();
+  if (convertedAllCharacters != NULL) {
+    *convertedAllCharacters = true;
+  }
 
   NSMutableString *ret = [NSMutableString stringWithString:input];
   for (int i = 0; i < ret.length; ++i) {
@@ -361,6 +364,9 @@ NSString *TKMConvertKanaText(NSString *input) {
   for (int i = (int)ret.length - 1; i >= 0; --i) {
     if ([[NSCharacterSet lowercaseLetterCharacterSet] characterIsMember:[ret characterAtIndex:i]]) {
       [ret deleteCharactersInRange:NSMakeRange(i, 1)];
+      if (convertedAllCharacters != NULL) {
+        *convertedAllCharacters = false;
+      }
     } else {
       break;
     }

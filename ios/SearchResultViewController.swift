@@ -37,15 +37,17 @@ private func subjectMatchesQuery(subject: TKMSubject, query: String, kanaQuery: 
 }
 
 private func subjectMatchesQueryExactly(subject: TKMSubject, query: String,
-                                        kanaQuery: String) -> Bool {
+                                        kanaQuery: String?) -> Bool {
   for meaning in subject.meanings {
     if meaning.meaning.lowercased() == query {
       return true
     }
   }
-  for reading in subject.readings {
-    if reading.reading == kanaQuery {
-      return true
+  if let kanaQuery = kanaQuery {
+    for reading in subject.readings {
+      if reading.reading == kanaQuery {
+        return true
+      }
     }
   }
   return false
@@ -114,23 +116,24 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     queue.async {
       self.ensureAllSubjectsLoaded()
 
-      let kanaQuery = TKMConvertKanaText(query)
+      var convertedAllCharacters = true
+      let kanaQuery = TKMConvertKanaText(query, &convertedAllCharacters)
+      let exactKanaQuery: String? = convertedAllCharacters ? kanaQuery : nil
 
       var results = [TKMSubject]()
       for subject in self.allSubjects! {
         if subjectMatchesQuery(subject: subject, query: query, kanaQuery: kanaQuery) {
           results.append(subject)
         }
-        if results.count > kMaxResults {
-          break
-        }
       }
 
+      // Sort the results before trimming the list to kMaxResults so exact matches are always
+      // included.
       results.sort { a, b -> Bool in
         let aMatchesExactly = subjectMatchesQueryExactly(subject: a, query: query,
-                                                         kanaQuery: kanaQuery)
+                                                         kanaQuery: exactKanaQuery)
         let bMatchesExactly = subjectMatchesQueryExactly(subject: b, query: query,
-                                                         kanaQuery: kanaQuery)
+                                                         kanaQuery: exactKanaQuery)
         if aMatchesExactly, !bMatchesExactly {
           return true
         }
@@ -144,6 +147,10 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
           return false
         }
         return false
+      }
+
+      if results.count > kMaxResults {
+        results.removeLast(results.count - kMaxResults)
       }
 
       DispatchQueue.main.async {
