@@ -173,6 +173,24 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     studyMaterialsChanged = false
   }
 
+  private func addOptions(_: TKMSubject,
+                          studyMaterials _: TKMStudyMaterials?,
+                          toModel model: MutableTableModel) -> IndexPath? {
+    let sectionIndexPath = model.add(section: "Options")
+    let isExcluded = services.localCachingClient.isExcluded(studyMaterials: studyMaterials)
+
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Exclude this item",
+                              subtitle: "Excluded items do not appear in lessons or reviews.\nYou can exclude items that you are not interesting in learning.",
+                              on: isExcluded) { [unowned self] in
+        let exclude = $0.isOn
+        _ = services.localCachingClient.setExcluded(studyMaterials: &studyMaterials,
+                                                    shouldExclude: exclude)
+      })
+
+    return sectionIndexPath
+  }
+
   private func addMeanings(_ subject: TKMSubject,
                            studyMaterials: TKMStudyMaterials?,
                            toModel model: MutableTableModel) -> IndexPath? {
@@ -503,9 +521,13 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       self.studyMaterials.subjectID = subject.id
     }
 
-    let setMeaningNote = { [weak self] (_ text: String) in
-      self?.studyMaterials.meaningNote = text
-      self?.studyMaterialsChanged = true
+    let setMeaningNote = { [unowned self] (_ text: String) in
+      if self.studyMaterials != nil {
+        self.studyMaterials!.meaningNote = services.localCachingClient
+          .makeMeaningNote(studyMaterials: self.studyMaterials!,
+                           note: text)
+      }
+      self.studyMaterialsChanged = true
     }
     let setReadingNote = { [weak self] (_ text: String) in
       self?.studyMaterials.readingNote = text
@@ -516,12 +538,18 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     let readingAttempted = task?.answeredReading == true || task?.answer.readingWrong == true
     let meaningShown = !isReview || meaningAttempted
     let readingShown = !isReview || readingAttempted
+    let optionsShown = !isReview && subject.subjectType == .vocabulary
 
+    var meaningNote = ""
+    if studyMaterials != nil {
+      meaningNote = services.localCachingClient
+        .getMeaningNoteDisplay(studyMaterials: studyMaterials!)
+    }
     if subject.hasRadical {
       let meanings = addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
 
       let mnemonic = addExplanation(model: model, title: "Mnemonic", text: subject.radical.mnemonic,
-                                    note: studyMaterials?.meaningNote,
+                                    note: meaningNote,
                                     noteChangedCallback: setMeaningNote)
 
       var oldMnemonic: IndexPath?
@@ -545,7 +573,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       let meaningExplanation = addExplanation(model: model, title: "Meaning Explanation",
                                               text: subject.kanji.meaningMnemonic,
                                               hint: subject.kanji.meaningHint,
-                                              note: studyMaterials?.meaningNote,
+                                              note: meaningNote,
                                               noteChangedCallback: setMeaningNote)
       let readingExplanation = addExplanation(model: model, title: "Reading Explanation",
                                               text: subject.kanji.readingMnemonic,
@@ -577,7 +605,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
       let meaningExplanation = addExplanation(model: model, title: "Meaning Explanation",
                                               text: subject.vocabulary.meaningExplanation,
-                                              note: studyMaterials?.meaningNote,
+                                              note: meaningNote,
                                               noteChangedCallback: setMeaningNote)
       let readingExplanation = addExplanation(model: model, title: "Reading Explanation",
                                               text: subject.vocabulary.readingExplanation,
@@ -594,6 +622,10 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                          model: model)
       } else if !readingShown {
         addShowAllButton(hiddenIndexPaths: [readings, readingExplanation], model: model)
+      }
+
+      if optionsShown {
+        _ = addOptions(subject, studyMaterials: studyMaterials, toModel: model)
       }
 
       // Add context sentences after the Show All button, since they're quite big.
