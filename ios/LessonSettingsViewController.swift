@@ -121,7 +121,9 @@ func makeLessonBatchSizeViewController() -> UIViewController {
                                            title: "Lesson Batch Size",
                                            helpText: "Set the number of new lessons to be " +
                                              "introduced before the quiz session.")
-  vc.addChoicesFromRange(3 ... 10, suffix: " lessons")
+  vc.addChoice(name: "1 lesson", value: 1)
+  vc.addChoicesFromRange(2 ... 10, suffix: " lessons")
+
   return vc
 }
 
