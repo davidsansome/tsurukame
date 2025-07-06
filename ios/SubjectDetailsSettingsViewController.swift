@@ -78,6 +78,12 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
                               on: Settings.skipKanjiReadings,
                               switchHandler: skipKanjiReadingsSwitchChanged))
 
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Show visually similar kanji above current level",
+                              subtitle: "When this setting is enabled, the Visually Similar Kanji section will show items above your current level. When this is disabled, only visually similar items at or below your current level will be shown.",
+                              on: Settings.showSimilarKanjiAboveLevel,
+                              switchHandler: visuallySimilarKanjiAboveLevelSwitchChanged))
+
     self.model = model
     model.reloadTable()
   }
@@ -114,5 +120,9 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
 
   private func skipKanjiReadingsSwitchChanged(_ switchView: UISwitch) {
     Settings.skipKanjiReadings = switchView.isOn
+  }
+
+  private func visuallySimilarKanjiAboveLevelSwitchChanged(_ switchView: UISwitch) {
+    Settings.showSimilarKanjiAboveLevel = switchView.isOn
   }
 }

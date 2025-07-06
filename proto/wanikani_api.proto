@@ -72,6 +72,7 @@ message Kanji {
   reserved 5, 6, 7, 8, 9;
 
   optional string visually_similar_kanji = 10;
+  repeated int64 visually_similar_kanji_ids = 11;
 }
 
 message Vocabulary {

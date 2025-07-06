@@ -56,7 +56,7 @@ struct SubjectData: Codable {
   var character_images: [CharacterImage]? // Radical.
   var component_subject_ids: [Int64]? // Kanji and Vocabulary.
   var readings: [Reading]? // Kanji and Vocabulary.
-  var visually_similar_subject_ids: [Int]? // Kanji.
+  var visually_similar_subject_ids: [Int64]? // Kanji.
   var context_sentences: [ContextSentence]? // Vocabulary.
   var parts_of_speech: [String]? // Vocabulary.
   var pronunciation_audios: [PronounciationAudio]? // Vocabulary.
@@ -169,6 +169,9 @@ struct SubjectData: Codable {
       }
       if let visuallySimilarKanji = kVisuallySimilarKanji[ret.japanese] {
         ret.kanji.visuallySimilarKanji = visuallySimilarKanji
+      }
+      if let visuallySimilarSubjectIds = visually_similar_subject_ids {
+        ret.kanji.visuallySimilarKanjiIds = visuallySimilarSubjectIds
       }
 
     case "vocabulary", "kana_vocabulary":

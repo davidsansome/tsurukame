@@ -308,22 +308,38 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   private func addSimilarKanji(_ subject: TKMSubject, toModel model: MutableTableModel) {
     let currentLevel = services.localCachingClient!.getUserInfo()!.level
-    var addedSection = false
+    var encounteredIds = [Int64]()
+    var modelItems = [SubjectModelItem]()
+    for kanjiId in subject.kanji.visuallySimilarKanjiIds {
+      guard let subject = services.localCachingClient.getSubject(id: kanjiId) else {
+        continue
+      }
+      if encounteredIds
+        .contains(subject.id) ||
+        (!Settings.showSimilarKanjiAboveLevel && subject.level > currentLevel) {
+        continue
+      }
+      encounteredIds.append(subject.id)
+      modelItems.append(SubjectModelItem(subject: subject, delegate: subjectDelegate))
+    }
     for similar in subject.kanji.visuallySimilarKanji {
       guard let subject = services.localCachingClient.getSubject(japanese: String(similar),
                                                                  type: .kanji) else {
         continue
       }
-      if subject.level > currentLevel {
+      if encounteredIds
+        .contains(subject.id) ||
+        (!Settings.showSimilarKanjiAboveLevel && subject.level > currentLevel) {
         continue
       }
-      if !addedSection {
-        model.add(section: "Visually Similar Kanji")
-        addedSection = true
+      encounteredIds.append(subject.id)
+      modelItems.append(SubjectModelItem(subject: subject, delegate: subjectDelegate))
+    }
+    if modelItems.count > 0 {
+      model.add(section: "Visually Similar Kanji")
+      for modelItem in modelItems {
+        model.add(modelItem)
       }
-
-      let item = SubjectModelItem(subject: subject, delegate: subjectDelegate)
-      model.add(item)
     }
   }
 

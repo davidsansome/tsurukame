@@ -303,6 +303,8 @@ public struct TKMKanji: Sendable {
   /// Clears the value of `visuallySimilarKanji`. Subsequent reads from it will return its default value.
   public mutating func clearVisuallySimilarKanji() {self._visuallySimilarKanji = nil}
 
+  public var visuallySimilarKanjiIds: [Int64] = []
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -1745,6 +1747,7 @@ extension TKMKanji: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     3: .standard(proto: "reading_mnemonic"),
     4: .standard(proto: "reading_hint"),
     10: .standard(proto: "visually_similar_kanji"),
+    11: .standard(proto: "visually_similar_kanji_ids"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1758,6 +1761,7 @@ extension TKMKanji: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       case 3: try { try decoder.decodeSingularStringField(value: &self._readingMnemonic) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self._readingHint) }()
       case 10: try { try decoder.decodeSingularStringField(value: &self._visuallySimilarKanji) }()
+      case 11: try { try decoder.decodeRepeatedInt64Field(value: &self.visuallySimilarKanjiIds) }()
       default: break
       }
     }
@@ -1783,6 +1787,9 @@ extension TKMKanji: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     try { if let v = self._visuallySimilarKanji {
       try visitor.visitSingularStringField(value: v, fieldNumber: 10)
     } }()
+    if !self.visuallySimilarKanjiIds.isEmpty {
+      try visitor.visitPackedInt64Field(value: self.visuallySimilarKanjiIds, fieldNumber: 11)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1792,6 +1799,7 @@ extension TKMKanji: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if lhs._readingMnemonic != rhs._readingMnemonic {return false}
     if lhs._readingHint != rhs._readingHint {return false}
     if lhs._visuallySimilarKanji != rhs._visuallySimilarKanji {return false}
+    if lhs.visuallySimilarKanjiIds != rhs.visuallySimilarKanjiIds {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
