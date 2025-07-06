@@ -624,10 +624,6 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         addShowAllButton(hiddenIndexPaths: [readings, readingExplanation], model: model)
       }
 
-      if optionsShown {
-        _ = addOptions(subject, studyMaterials: studyMaterials, toModel: model)
-      }
-
       // Add context sentences after the Show All button, since they're quite big.
       let contextSentences = addContextSentences(subject, toModel: model)
       if !meaningShown, let contextSentences = contextSentences {
@@ -680,6 +676,10 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
        ArtworkManager.contains(subjectID: subject.id) {
       model.add(section: "Artwork by @AmandaBear")
       model.add(ArtworkModelItem(subjectID: subject.id))
+    }
+
+    if optionsShown {
+      _ = addOptions(subject, studyMaterials: studyMaterials, toModel: model)
     }
 
     if FeatureFlags.showSubjectDeveloperOptions {
