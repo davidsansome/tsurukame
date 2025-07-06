@@ -1203,7 +1203,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                               style: .default,
                               handler: { _ in self.askAgain() }))
 
-    if session.activeSubject.subjectType == .vocabulary {
+    if session.activeSubject.subjectType == .vocabulary && Settings.allowExcludeItems {
       c.addAction(UIAlertAction(title: "Exclude this item",
                                 style: .default,
                                 handler: { _ in self.exclude() }))

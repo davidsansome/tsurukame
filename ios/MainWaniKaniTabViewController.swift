@@ -231,7 +231,7 @@ class MainWaniKaniTabViewController: UITableViewController {
     }
 
     let excludedCount = services.localCachingClient.excludedCount()
-    if excludedCount > 0 {
+    if Settings.allowExcludeItems, excludedCount > 0 {
       let excludedItems = BasicModelItem(style: .value1,
                                          title: "Excluded items",
                                          accessoryType: .disclosureIndicator) { [

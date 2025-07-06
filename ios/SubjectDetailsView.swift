@@ -173,6 +173,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     studyMaterialsChanged = false
   }
 
+  // Note: as there is only one option right now, this function is not called if
+  // Settings.allowExcludeItems is false
   private func addOptions(_: TKMSubject,
                           studyMaterials _: TKMStudyMaterials?,
                           toModel model: MutableTableModel) -> IndexPath? {
@@ -538,7 +540,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     let readingAttempted = task?.answeredReading == true || task?.answer.readingWrong == true
     let meaningShown = !isReview || meaningAttempted
     let readingShown = !isReview || readingAttempted
-    let optionsShown = !isReview && subject.subjectType == .vocabulary
+    let optionsShown = !isReview && subject.subjectType == .vocabulary && Settings
+      .allowExcludeItems
 
     var meaningNote = ""
     if studyMaterials != nil {
