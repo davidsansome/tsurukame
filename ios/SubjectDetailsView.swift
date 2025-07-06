@@ -314,8 +314,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       guard let subject = services.localCachingClient.getSubject(id: kanjiId) else {
         continue
       }
-      if encounteredIds
-        .contains(subject.id) ||
+      if encounteredIds.contains(subject.id) ||
         (!Settings.showSimilarKanjiAboveLevel && subject.level > currentLevel) {
         continue
       }
@@ -327,8 +326,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                                                                  type: .kanji) else {
         continue
       }
-      if encounteredIds
-        .contains(subject.id) ||
+      if encounteredIds.contains(subject.id) ||
         (!Settings.showSimilarKanjiAboveLevel && subject.level > currentLevel) {
         continue
       }
