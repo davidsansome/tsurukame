@@ -208,6 +208,8 @@ protocol SettingProtocol {
            #keyPath(ankiModeCombineReadingMeaning)) static var ankiModeCombineReadingMeaning: Bool
   @Setting(true, #keyPath(showPreviousLevelGraph)) static var showPreviousLevelGraph: Bool
   @Setting(true, #keyPath(showKanaOnlyVocab)) static var showKanaOnlyVocab: Bool
+  @Setting(false,
+           #keyPath(showSimilarKanjiAboveLevel)) static var showSimilarKanjiAboveLevel: Bool
 
   @Setting(1.0, #keyPath(leechThreshold)) static var leechThreshold: Float
 
