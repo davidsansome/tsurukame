@@ -471,7 +471,8 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       if assignment.subjectType != .vocabulary {
         return true
       }
-      if let activeStudyMaterials = getStudyMaterial(subjectId: assignment.subjectID) {
+      if Settings.allowExcludeItems,
+         let activeStudyMaterials = getStudyMaterial(subjectId: assignment.subjectID) {
         return !isExcluded(studyMaterials: activeStudyMaterials)
       }
       return true
@@ -703,8 +704,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
 
     // Add fake assignments for any other subjects at this level that don't have assignments yet
-    // (the
-    // user hasn't unlocked the prerequisite radicals/kanji).
+    // (the user hasn't unlocked the prerequisite radicals/kanji).
     let subjectsByLevel = getSubjects(byLevel: level, transaction: db)
     addFakeAssignments(to: &ret, subjectIds: subjectsByLevel.radicals, type: .radical,
                        level: level, excludeSubjectIds: subjectIds)

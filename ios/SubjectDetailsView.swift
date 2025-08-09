@@ -173,6 +173,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     studyMaterialsChanged = false
   }
 
+  // Note: as there is only one option right now, this function is not called if
+  // Settings.allowExcludeItems is false
   private func addOptions(_: TKMSubject,
                           studyMaterials _: TKMStudyMaterials?,
                           toModel model: MutableTableModel) -> IndexPath? {
@@ -538,7 +540,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     let readingAttempted = task?.answeredReading == true || task?.answer.readingWrong == true
     let meaningShown = !isReview || meaningAttempted
     let readingShown = !isReview || readingAttempted
-    let optionsShown = !isReview && subject.subjectType == .vocabulary
+    let optionsShown = !isReview && subject.subjectType == .vocabulary && Settings
+      .allowExcludeItems
 
     var meaningNote = ""
     if studyMaterials != nil {
@@ -624,10 +627,6 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         addShowAllButton(hiddenIndexPaths: [readings, readingExplanation], model: model)
       }
 
-      if optionsShown {
-        _ = addOptions(subject, studyMaterials: studyMaterials, toModel: model)
-      }
-
       // Add context sentences after the Show All button, since they're quite big.
       let contextSentences = addContextSentences(subject, toModel: model)
       if !meaningShown, let contextSentences = contextSentences {
@@ -680,6 +679,10 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
        ArtworkManager.contains(subjectID: subject.id) {
       model.add(section: "Artwork by @AmandaBear")
       model.add(ArtworkModelItem(subjectID: subject.id))
+    }
+
+    if optionsShown {
+      _ = addOptions(subject, studyMaterials: studyMaterials, toModel: model)
     }
 
     if FeatureFlags.showSubjectDeveloperOptions {

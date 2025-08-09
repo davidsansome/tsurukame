@@ -230,20 +230,22 @@ class MainWaniKaniTabViewController: UITableViewController {
       }
     }
 
-    let excludedCount = services.localCachingClient.excludedCount()
-    if excludedCount > 0 {
-      let excludedItems = BasicModelItem(style: .value1,
-                                         title: "Excluded items",
-                                         accessoryType: .disclosureIndicator) { [
-        unowned self
-      ] in
-        self
-          .perform(segue: StoryboardSegue.Main.showExcluded,
-                   sender: self)
-      }
+    if Settings.allowExcludeItems {
+      let excludedCount = services.localCachingClient.excludedCount()
+      if excludedCount > 0 {
+        let excludedItems = BasicModelItem(style: .value1,
+                                           title: "Excluded items",
+                                           accessoryType: .disclosureIndicator) { [
+          unowned self
+        ] in
+          self
+            .perform(segue: StoryboardSegue.Main.showExcluded,
+                     sender: self)
+        }
 
-      _ = setTableViewCellCount(excludedItems, count: excludedCount)
-      model.add(excludedItems)
+        _ = setTableViewCellCount(excludedItems, count: excludedCount)
+        model.add(excludedItems)
+      }
     }
 
     self.model = model
