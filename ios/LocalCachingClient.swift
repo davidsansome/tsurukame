@@ -1479,7 +1479,7 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
             db
               .mustExecuteUpdate("UPDATE subject_progress SET last_mistake_time = ? WHERE id = ?",
                                  args: [
-                                   item.value,
+                                   self.dateFormatter.string(from: item.value),
                                    item.key,
                                  ])
           }
