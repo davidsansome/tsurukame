@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   tsurukame-prober:
     macos:
-      xcode: 16.1.0
+      xcode: 26.1.0
     steps:
       - checkout
       - run:
