@@ -1201,11 +1201,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // MARK: - Ignoring incorrect answers
 
   @IBAction func addSynonymButtonPressed(_: Any) {
-    let c = UIAlertController(title: "Ignore incorrect answer?",
-                              message:
-                              "Don't cheat!  Only use this if you promise you " +
-                                "knew the correct answer.",
-                              preferredStyle: .actionSheet)
+    let c =
+      UIAlertController(title: isAnkiModeActiveForCurrentTask ? nil : "Ignore incorrect answer?",
+                        message:
+                        isAnkiModeActiveForCurrentTask ? nil :
+                          ("Don't cheat!  Only use this if you promise you " +
+                            "knew the correct answer."),
+                        preferredStyle: .actionSheet)
     c.popoverPresentationController?.sourceView = addSynonymButton
     c.popoverPresentationController?.sourceRect = addSynonymButton.bounds
 
