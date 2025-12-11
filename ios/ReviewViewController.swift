@@ -186,6 +186,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   private var isPracticeSession = false
 
+  private var isAnkiModeActiveForCurrentTask: Bool {
+    guard Settings.ankiMode else { return false }
+    switch Settings.ankiModeTaskType {
+    case .both: return true
+    case .readingOnly: return session.activeTaskType == .reading
+    case .meaningOnly: return session.activeTaskType == .meaning
+    }
+  }
+
   // These are set to match the keyboard animation.
   private var animationDuration: Double = kDefaultAnimationDuration
   private var animationCurve: UIView.AnimationCurve = kDefaultAnimationCurve
@@ -538,7 +547,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         promptGradient = TKMStyle.meaningGradient
         promptTextColor = kMeaningTextColor
         taskTypePlaceholder = "Your Response"
-        if Settings.ankiMode {
+        if isAnkiModeActiveForCurrentTask {
           taskTypePlaceholder = "Show answer"
         }
       case .reading:
@@ -547,13 +556,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         promptGradient = TKMStyle.readingGradient
         promptTextColor = kReadingTextColor
         taskTypePlaceholder = "答え"
-        if Settings.ankiMode {
+        if isAnkiModeActiveForCurrentTask {
           taskTypePlaceholder = "答えを見せる"
         }
       }
 
       if session.activeAssignment.subjectType != .radical,
-         Settings.ankiMode,
+         isAnkiModeActiveForCurrentTask,
          Settings.ankiModeCombineReadingMeaning {
         taskTypePrompt = Settings.meaningFirst ? "Meaning + Reading" : "Reading + Meaning"
       }
@@ -574,11 +583,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       if Settings.allowSkippingReviews {
         // Change the skip button icon.
         submitButton.setImage(skipImage, for: .normal)
-      } else if !Settings.ankiMode {
-        submitButton.isEnabled = false
-      } else {
+        submitButton.isEnabled = true
+        submitButton.isHidden = false
+      } else if isAnkiModeActiveForCurrentTask {
         // Hide the submit button in Anki mode if skipping reviews are off
         submitButton.isHidden = true
+      } else {
+        // Normal mode: button visible but disabled until text entered
+        submitButton.isEnabled = false
+        submitButton.isHidden = false
       }
 
       // Background gradients.
@@ -714,18 +727,22 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     if shown {
       subjectDetailsView.isHidden = false
-      if cheats, !Settings.ankiMode {
+      if cheats, !isAnkiModeActiveForCurrentTask {
         addSynonymButton.isHidden = false
       }
-      if Settings.ankiMode, Settings.allowSkippingReviews {
+      if isAnkiModeActiveForCurrentTask, Settings.allowSkippingReviews {
         submitButton.isHidden = true
+      } else if !isAnkiModeActiveForCurrentTask {
+        // Normal mode: show submit button to continue after incorrect answer
+        submitButton.isHidden = false
+        submitButton.isEnabled = true
       }
     } else {
       if previousSubject != nil {
         previousSubjectLabel?.isHidden = false
         previousSubjectButton.isHidden = false
       }
-      if Settings.ankiMode, Settings.allowSkippingReviews {
+      if isAnkiModeActiveForCurrentTask, Settings.allowSkippingReviews {
         submitButton.isHidden = false
       }
     }
@@ -761,7 +778,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Enable/disable the answer field, and set its first responder status.
     // This makes the keyboard appear or disappear immediately.  We need this animation to happen
     // here so it's in sync with the others.
-    answerField.isEnabled = !shown && !Settings.ankiMode
+    answerField.isEnabled = !shown && !isAnkiModeActiveForCurrentTask
     if updateFirstResponder {
       if !shown {
         answerField.becomeFirstResponder()
@@ -817,7 +834,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     // This makes sure taps are still processed and not ignored, even when the closing animation
     // after a button press was not completed
-    if Settings.ankiMode, ankiModeCachedSubmit { submit() }
+    if isAnkiModeActiveForCurrentTask, ankiModeCachedSubmit { submit() }
   }
 
   // MARK: - Previous subject button
@@ -899,7 +916,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   @objc func didShortPressQuestionLabel(_: UITapGestureRecognizer) {
     toggleFont()
-    if Settings.ankiMode {
+    if isAnkiModeActiveForCurrentTask {
       if !isAnimatingSubjectDetailsView { submit() }
       else { ankiModeCachedSubmit = true }
     }
@@ -976,7 +993,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                       self.submitButton.setImage(newImage, for: .normal)
                     }, completion: nil)
     }
-    submitButton.isEnabled = Settings.allowSkippingReviews || Settings.ankiMode || !text.isEmpty
+    submitButton.isEnabled = Settings
+      .allowSkippingReviews || isAnkiModeActiveForCurrentTask || !text.isEmpty
   }
 
   func textField(_ field: UITextField, shouldChangeCharactersIn _: NSRange,
@@ -1010,7 +1028,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       markAnswer(.AskAgainLater)
       return
     }
-    if !answerField.isEnabled, !Settings.ankiMode {
+    if !answerField.isEnabled, !isAnkiModeActiveForCurrentTask {
       if !subjectDetailsView.isHidden {
         subjectDetailsView.saveStudyMaterials()
       }
@@ -1029,7 +1047,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   func submit() {
-    if Settings.ankiMode {
+    if isAnkiModeActiveForCurrentTask {
       ankiModeCachedSubmit = false
       // Mark the answer incorrect to show the details. This can still be overriden.
       let answersRevealed = !subjectDetailsView.isHidden
@@ -1115,7 +1133,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Show a new task if it was correct.
     if result != .Incorrect {
       if session.activeAssignment.subjectType != .radical, // or kana mode?
-         Settings.ankiMode,
+         isAnkiModeActiveForCurrentTask,
          Settings.ankiModeCombineReadingMeaning {
         session.nextTask()
         marked = session.markAnswer(.Correct, isPracticeSession: isPracticeSession)
@@ -1149,7 +1167,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     // Otherwise show the correct answer.
-    if !Settings.showAnswerImmediately, !Settings.ankiMode {
+    if !Settings.showAnswerImmediately, !isAnkiModeActiveForCurrentTask {
       revealAnswerButton.isHidden = false
       UIView.animate(withDuration: animationDuration,
                      animations: {
@@ -1194,7 +1212,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     c.addAction(UIAlertAction(title: "My answer was correct",
                               style: .default,
                               handler: { _ in self.markCorrect() }))
-    if Settings.ankiMode {
+    if isAnkiModeActiveForCurrentTask {
       c.addAction(UIAlertAction(title: "My answer was incorrect",
                                 style: .default,
                                 handler: { _ in self.markIncorrect() }))

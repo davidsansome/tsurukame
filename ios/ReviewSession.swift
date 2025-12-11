@@ -43,7 +43,8 @@ class ReviewSession {
     self.isPracticeSession = isPracticeSession
 
     if Settings.groupMeaningReading || (Settings.ankiMode &&
-      Settings.ankiModeCombineReadingMeaning) || self.isPracticeSession {
+      Settings.ankiModeCombineReadingMeaning && Settings.ankiModeTaskType == .both) || self
+      .isPracticeSession {
       activeQueueSize = 1
     } else {
       activeQueueSize = Int(Settings.reviewBatchSize)
@@ -98,7 +99,8 @@ class ReviewSession {
     } else if activeTask.answeredReading || activeSubject.readings.isEmpty {
       activeTaskType = .meaning
     } else if Settings.groupMeaningReading || (Settings.ankiMode &&
-      Settings.ankiModeCombineReadingMeaning) || isPracticeSession {
+      Settings.ankiModeCombineReadingMeaning && Settings.ankiModeTaskType == .both) ||
+      isPracticeSession {
       activeTaskType = Settings.meaningFirst ? .meaning : .reading
     } else {
       activeTaskType = TaskType.random()
