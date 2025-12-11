@@ -316,6 +316,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       UITapGestureRecognizer(target: self, action: #selector(didShortPressQuestionLabel))
     questionBackground.addGestureRecognizer(shortPressRecognizer)
 
+    let mainViewTapRecognizer =
+      UITapGestureRecognizer(target: self, action: #selector(didTapAnswerArea))
+    mainViewTapRecognizer.cancelsTouchesInView = false
+    view.addGestureRecognizer(mainViewTapRecognizer)
+
     let leftSwipeRecognizer = UISwipeGestureRecognizer(target: self,
                                                        action: #selector(didSwipeQuestionLabel))
     leftSwipeRecognizer.direction = .left
@@ -917,6 +922,20 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   @objc func didShortPressQuestionLabel(_: UITapGestureRecognizer) {
     toggleFont()
     if isAnkiModeActiveForCurrentTask {
+      if !isAnimatingSubjectDetailsView { submit() }
+      else { ankiModeCachedSubmit = true }
+    }
+  }
+
+  @objc func didTapAnswerArea(_ recognizer: UITapGestureRecognizer) {
+    if isAnkiModeActiveForCurrentTask {
+      // Ignore taps in the top portion of the screen (menu area)
+      let location = recognizer.location(in: view)
+      let topSafeArea = view.safeAreaInsets.top
+      if location.y < topSafeArea + 100 { // 100pt buffer for menu button area
+        return
+      }
+
       if !isAnimatingSubjectDetailsView { submit() }
       else { ankiModeCachedSubmit = true }
     }
