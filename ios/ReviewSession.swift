@@ -72,6 +72,20 @@ class ReviewSession {
     activeTask != nil
   }
 
+  public var canWrapUp: Bool {
+    if activeQueue.isEmpty {
+      return false
+    }
+    for item in activeQueue {
+      let hasAttempts = item.answer.hasMeaningWrong || item.answer.hasReadingWrong ||
+        item.answeredMeaning || item.answeredReading
+      if hasAttempts {
+        return true
+      }
+    }
+    return false
+  }
+
   public var activeAssignment: TKMAssignment! {
     activeTask.assignment
   }
@@ -81,7 +95,33 @@ class ReviewSession {
       return
     }
 
-    activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
+    if Settings.groupMeaningReading || isPracticeSession,
+       activeTask != nil,
+       !activeTask.answeredMeaning || !activeTask.answeredReading,
+       activeTask.skipCount == 0,
+       let taskIndex = activeQueue.firstIndex(where: { $0 === activeTask }) {
+      // Stay on current task for back-to-back after correct answer
+      activeTaskIndex = taskIndex
+    } else {
+      // Normal mode: find eligible tasks or pull from reviewQueue
+      var eligibleIndices = activeQueue.indices.filter { activeQueue[$0].skipCount == 0 }
+      if eligibleIndices.isEmpty, !wrappingUp, !reviewQueue.isEmpty {
+        let item = reviewQueue.removeFirst()
+        activeQueue.append(item)
+        eligibleIndices = [activeQueue.count - 1]
+      } else if eligibleIndices.isEmpty {
+        eligibleIndices = Array(activeQueue.indices)
+      }
+
+      // Decrement skip counts for all items
+      for i in activeQueue.indices {
+        if activeQueue[i].skipCount > 0 {
+          activeQueue[i].skipCount -= 1
+        }
+      }
+
+      activeTaskIndex = eligibleIndices.randomElement()!
+    }
     activeTask = activeQueue[activeTaskIndex]
 
     if let subject = activeTask.subject {
@@ -171,12 +211,15 @@ class ReviewSession {
     case .Correct:
       tasksAnswered += 1
       tasksAnsweredCorrectly += 1
+      activeTask.skipCount = 0
 
     case .Incorrect:
       tasksAnswered += 1
+      activeTask.skipCount = 5
 
     case .OverrideAnswerCorrect:
       tasksAnsweredCorrectly += 1
+      activeTask.skipCount = 0
 
     case .Exclude:
       fatalError()

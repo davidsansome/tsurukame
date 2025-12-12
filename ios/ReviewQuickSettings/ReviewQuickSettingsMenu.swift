@@ -21,6 +21,7 @@ protocol ReviewQuickSettingsMenuDelegate: AnyObject {
   func endReviewSession(button: UIView)
   func wrapUp()
   func wrapUpCount() -> Int
+  func canWrapUp() -> Bool
 }
 
 class ReviewQuickSettingsMenu: ReviewQuickSettingsTable {
@@ -62,16 +63,18 @@ class ReviewQuickSettingsMenu: ReviewQuickSettingsTable {
     endItem!.image = Asset.baselineCancelBlack24pt.image
     model.add(endItem!)
 
-    var wrapUpText = "Wrap up"
-    if let wrapUpCount = delegate?.wrapUpCount(), wrapUpCount != 0 {
-      wrapUpText = "Wrap up (\(wrapUpCount) to go)"
-    }
+    if delegate?.canWrapUp() ?? false {
+      var wrapUpText = "Wrap up"
+      if let wrapUpCount = delegate?.wrapUpCount(), wrapUpCount != 0 {
+        wrapUpText = "Wrap up (\(wrapUpCount) to go)"
+      }
 
-    let wrapUp = BasicModelItem(style: .default, title: wrapUpText) { [weak self] in
-      self?.delegate?.wrapUp()
+      let wrapUp = BasicModelItem(style: .default, title: wrapUpText) { [weak self] in
+        self?.delegate?.wrapUp()
+      }
+      wrapUp.image = Asset.baselineAccessTimeBlack24pt.image
+      model.add(wrapUp)
     }
-    wrapUp.image = Asset.baselineAccessTimeBlack24pt.image
-    model.add(wrapUp)
 
     self.model = model
     model.reloadTable()

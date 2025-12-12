@@ -265,6 +265,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     session.activeQueueLength
   }
 
+  public var canWrapUp: Bool {
+    session.canWrapUp
+  }
+
   public var tasksAnsweredCorrectly: Int {
     session.tasksAnsweredCorrectly
   }

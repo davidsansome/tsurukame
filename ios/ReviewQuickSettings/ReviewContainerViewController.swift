@@ -102,7 +102,7 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
   }
 
   func endReviewSession(button: UIView) {
-    if reviewVC.tasksAnsweredCorrectly == 0 {
+    if reviewVC.tasksAnsweredCorrectly == 0 || !reviewVC.canWrapUp {
       navigationController?.popToRootViewController(animated: true)
       return
     }
@@ -118,6 +118,10 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
     })
     ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
     present(ac, animated: true)
+  }
+
+  func canWrapUp() -> Bool {
+    reviewVC.canWrapUp
   }
 
   func wrapUp() {
