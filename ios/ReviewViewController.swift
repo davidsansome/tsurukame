@@ -437,6 +437,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   private func keyboardWillHide() {
     subjectDetailsView.contentInset = .zero
+    answerFieldToBottomConstraint.constant = 0
+    questionLabelBottomConstraint.constant = 0
+    previousKeyboardInsetHeight = nil
   }
 
   private func resizeKeyboard(toHeight height: Double) {
@@ -785,7 +788,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // here so it's in sync with the others.
     answerField.isEnabled = !shown && !isAnkiModeActiveForCurrentTask
     if updateFirstResponder {
-      if !shown {
+      if !shown, !isAnkiModeActiveForCurrentTask {
         answerField.becomeFirstResponder()
       } else {
         answerField.resignFirstResponder()
