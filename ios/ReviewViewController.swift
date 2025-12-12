@@ -1003,6 +1003,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       session.wrappingUp = newValue
       wrapUpIcon.isHidden = !newValue
       wrapUpLabel.isHidden = !newValue
+      if newValue {
+        randomTask()
+      }
     }
   }
 

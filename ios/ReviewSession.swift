@@ -35,7 +35,18 @@ class ReviewSession {
   public private(set) var tasksAnswered = 0
   public private(set) var reviewsCompleted = 0
 
-  public var wrappingUp: Bool = false
+  public var wrappingUp: Bool = false {
+    didSet {
+      if wrappingUp, let task = activeTask {
+        let hasAttempts = task.answer.hasMeaningWrong || task.answer.hasReadingWrong ||
+          task.answeredMeaning || task.answeredReading
+        if !hasAttempts, let index = activeQueue.firstIndex(where: { $0 === task }) {
+          activeQueue.remove(at: index)
+          reviewQueue.append(task)
+        }
+      }
+    }
+  }
 
   init(services: TKMServices, items: [ReviewItem], isPracticeSession: Bool = false) {
     self.services = services
@@ -92,7 +103,7 @@ class ReviewSession {
 
   public func nextTask() {
     guard !activeQueue.isEmpty else {
-      return
+      return 
     }
 
     if Settings.groupMeaningReading || isPracticeSession,
