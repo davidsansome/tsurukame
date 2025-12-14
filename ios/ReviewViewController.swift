@@ -1230,42 +1230,63 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // MARK: - Ignoring incorrect answers
 
   @IBAction func addSynonymButtonPressed(_: Any) {
-    let c =
-      UIAlertController(title: isAnkiModeActiveForCurrentTask ? nil : "Ignore incorrect answer?",
-                        message:
-                        isAnkiModeActiveForCurrentTask ? nil :
-                          ("Don't cheat!  Only use this if you promise you " +
-                            "knew the correct answer."),
-                        preferredStyle: .actionSheet)
-    c.popoverPresentationController?.sourceView = addSynonymButton
-    c.popoverPresentationController?.sourceRect = addSynonymButton.bounds
+    var actions: [BottomSheetAction] = []
 
-    c.addAction(UIAlertAction(title: "My answer was correct",
-                              style: .default,
-                              handler: { _ in self.markCorrect() }))
+    actions.append(BottomSheetAction(title: "My answer was correct") { [weak self] in
+      self?.markCorrect()
+    })
+
     if isAnkiModeActiveForCurrentTask {
-      c.addAction(UIAlertAction(title: "My answer was incorrect",
-                                style: .default,
-                                handler: { _ in self.markIncorrect() }))
+      actions.append(BottomSheetAction(title: "My answer was incorrect") { [weak self] in
+        self?.markIncorrect()
+      })
     }
-    c.addAction(UIAlertAction(title: "Ask again later",
-                              style: .default,
-                              handler: { _ in self.askAgain() }))
+
+    actions.append(BottomSheetAction(title: "Ask again later") { [weak self] in
+      self?.askAgain()
+    })
 
     if session.activeSubject.subjectType == .vocabulary && Settings.allowExcludeItems {
-      c.addAction(UIAlertAction(title: "Exclude this item",
-                                style: .default,
-                                handler: { _ in self.exclude() }))
+      actions.append(BottomSheetAction(title: "Exclude this item") { [weak self] in
+        self?.exclude()
+      })
     }
 
     if session.activeTaskType == .meaning {
-      c.addAction(UIAlertAction(title: "Add synonym",
-                                style: .default,
-                                handler: { _ in self.addSynonym() }))
+      actions.append(BottomSheetAction(title: "Add synonym") { [weak self] in
+        self?.addSynonym()
+      })
     }
 
-    c.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-    present(c, animated: true, completion: nil)
+    let dialogTitle = isAnkiModeActiveForCurrentTask ? nil : "Ignore incorrect answer?"
+    let dialogMessage = isAnkiModeActiveForCurrentTask ? nil :
+      "Don't cheat!  Only use this if you promise you knew the correct answer."
+
+    // Use custom bottom sheet on iPhone, standard action sheet on iPad
+    if traitCollection.userInterfaceIdiom == .pad {
+      let c = UIAlertController(title: dialogTitle, message: dialogMessage,
+                                preferredStyle: .actionSheet)
+      c.popoverPresentationController?.sourceView = addSynonymButton
+      c.popoverPresentationController?.sourceRect = addSynonymButton.bounds
+
+      for action in actions {
+        let style: UIAlertAction.Style
+        switch action.style {
+        case .default: style = .default
+        case .destructive: style = .destructive
+        case .cancel: style = .cancel
+        }
+        c.addAction(UIAlertAction(title: action.title, style: style) { _ in
+          action.handler?()
+        })
+      }
+      c.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+      present(c, animated: true, completion: nil)
+    } else {
+      let sheet = BottomSheetViewController(title: dialogTitle, message: dialogMessage,
+                                            actions: actions)
+      present(sheet, animated: false, completion: nil)
+    }
   }
 
   @objc func markCorrect() {
