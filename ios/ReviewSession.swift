@@ -105,13 +105,13 @@ class ReviewSession {
     if Settings.groupMeaningReading || isPracticeSession,
        activeTask != nil,
        !activeTask.answeredMeaning || !activeTask.answeredReading,
-       activeTask.skipCount == 0,
+       activeTask.returnDelay == 0,
        let taskIndex = activeQueue.firstIndex(where: { $0 === activeTask }) {
       // Stay on current task for back-to-back after correct answer
       activeTaskIndex = taskIndex
     } else {
       // Normal mode: find eligible tasks or pull from reviewQueue
-      var eligibleIndices = activeQueue.indices.filter { activeQueue[$0].skipCount == 0 }
+      var eligibleIndices = activeQueue.indices.filter { activeQueue[$0].returnDelay == 0 }
       if eligibleIndices.isEmpty, !wrappingUp, !reviewQueue.isEmpty {
         let item = reviewQueue.removeFirst()
         activeQueue.append(item)
@@ -122,8 +122,8 @@ class ReviewSession {
 
       // Decrement skip counts for all items
       for i in activeQueue.indices {
-        if activeQueue[i].skipCount > 0 {
-          activeQueue[i].skipCount -= 1
+        if activeQueue[i].returnDelay > 0 {
+          activeQueue[i].returnDelay -= 1
         }
       }
 
@@ -218,15 +218,16 @@ class ReviewSession {
     case .Correct:
       tasksAnswered += 1
       tasksAnsweredCorrectly += 1
-      activeTask.skipCount = 0
+      activeTask.returnDelay = 0
 
     case .Incorrect:
       tasksAnswered += 1
-      activeTask.skipCount = 5
+      // show this number of items before repeating this one:
+      activeTask.returnDelay = 5
 
     case .OverrideAnswerCorrect:
       tasksAnsweredCorrectly += 1
-      activeTask.skipCount = 0
+      activeTask.returnDelay = 0
 
     case .Exclude:
       fatalError()

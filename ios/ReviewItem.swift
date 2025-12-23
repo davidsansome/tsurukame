@@ -113,7 +113,7 @@ class ReviewItem: NSObject {
   var answeredReading = false
   var answeredMeaning = false
   var answer = TKMProgress()
-  var skipCount = 0
+  var returnDelay = 0
 
   init(assignment: TKMAssignment, subject: TKMSubject? = nil) {
     self.assignment = assignment
