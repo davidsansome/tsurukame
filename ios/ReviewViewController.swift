@@ -943,6 +943,17 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         return
       }
 
+      // Ignore taps on interactive elements (previous subject button, audio buttons, etc.)
+      if let hitView = view.hitTest(location, with: nil), hitView !== view {
+        var current: UIView? = hitView
+        while let v = current, v !== view, v !== questionBackground {
+          if v is UIControl || v.gestureRecognizers?.isEmpty == false {
+            return
+          }
+          current = v.superview
+        }
+      }
+
       if !isAnimatingSubjectDetailsView { submit() }
       else { ankiModeCachedSubmit = true }
     }
