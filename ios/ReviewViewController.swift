@@ -1168,8 +1168,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         marked = session.markAnswer(.Correct, isPracticeSession: isPracticeSession)
       }
 
-      if Settings.playAudioAutomatically, session.activeTaskType == .reading,
+      if Settings.playAudioAutomatically,
          let subject = session.activeSubject,
+         session.activeTaskType == .reading || subject.readings.isEmpty,
          subject.hasVocabulary, !subject.vocabulary.audio.isEmpty {
         services.audio.play(subjectID: subject.id, delegate: nil)
       }
