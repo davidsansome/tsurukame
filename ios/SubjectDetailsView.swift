@@ -53,7 +53,7 @@ private func renderMeanings(subject: TKMSubject,
   }
   for meaning in subject.meanings {
     if meaning.type != .primary, meaning.type != .blacklist,
-       meaning.type != .auxiliaryWhitelist || !subject.hasRadical || Settings.showOldMnemonic {
+       meaning.type != .auxiliaryWhitelist || (subject.hasRadical && Settings.showOldMnemonic) {
       let font = UIFont.systemFont(ofSize: kFontSize, weight: .light)
       strings.append(attrString(meaning.meaning.trimmingCharacters(in: .whitespacesAndNewlines),
                                 attrs: [.font: font]))

@@ -238,7 +238,7 @@ public extension TKMSubject {
     var strings = [String]()
     for meaning in meanings {
       if meaning.type != .blacklist,
-         meaning.type != .auxiliaryWhitelist || !hasRadical || showOldMnemonic {
+         meaning.type != .auxiliaryWhitelist || (hasRadical && showOldMnemonic) {
         strings.append(meaning.meaning)
       }
     }
