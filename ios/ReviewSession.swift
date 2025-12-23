@@ -35,7 +35,16 @@ class ReviewSession {
   public private(set) var tasksAnswered = 0
   public private(set) var reviewsCompleted = 0
 
-  public var wrappingUp: Bool = false
+  public var wrappingUp: Bool = false {
+    didSet {
+      if wrappingUp, let task = activeTask {
+        if !task.hasAttempts(), let index = activeQueue.firstIndex(where: { $0 === task }) {
+          activeQueue.remove(at: index)
+          reviewQueue.append(task)
+        }
+      }
+    }
+  }
 
   init(services: TKMServices, items: [ReviewItem], isPracticeSession: Bool = false) {
     self.services = services
@@ -43,7 +52,8 @@ class ReviewSession {
     self.isPracticeSession = isPracticeSession
 
     if Settings.groupMeaningReading || (Settings.ankiMode &&
-      Settings.ankiModeCombineReadingMeaning) || self.isPracticeSession {
+      Settings.ankiModeCombineReadingMeaning && Settings.ankiModeTaskType == .both) || self
+      .isPracticeSession {
       activeQueueSize = 1
     } else {
       activeQueueSize = Int(Settings.reviewBatchSize)
@@ -71,6 +81,18 @@ class ReviewSession {
     activeTask != nil
   }
 
+  public var canWrapUp: Bool {
+    if activeQueue.isEmpty {
+      return false
+    }
+    for item in activeQueue {
+      if item.hasAttempts() {
+        return true
+      }
+    }
+    return false
+  }
+
   public var activeAssignment: TKMAssignment! {
     activeTask.assignment
   }
@@ -80,7 +102,33 @@ class ReviewSession {
       return
     }
 
-    activeTaskIndex = Int(arc4random_uniform(UInt32(activeQueue.count)))
+    if Settings.groupMeaningReading || isPracticeSession,
+       activeTask != nil,
+       !activeTask.answeredMeaning || !activeTask.answeredReading,
+       activeTask.returnDelay == 0,
+       let taskIndex = activeQueue.firstIndex(where: { $0 === activeTask }) {
+      // Stay on current task for back-to-back after correct answer
+      activeTaskIndex = taskIndex
+    } else {
+      // Normal mode: find eligible tasks or pull from reviewQueue
+      var eligibleIndices = activeQueue.indices.filter { activeQueue[$0].returnDelay == 0 }
+      if eligibleIndices.isEmpty, !wrappingUp, !reviewQueue.isEmpty {
+        let item = reviewQueue.removeFirst()
+        activeQueue.append(item)
+        eligibleIndices = [activeQueue.count - 1]
+      } else if eligibleIndices.isEmpty {
+        eligibleIndices = Array(activeQueue.indices)
+      }
+
+      // Decrement skip counts for all items
+      for i in activeQueue.indices {
+        if activeQueue[i].returnDelay > 0 {
+          activeQueue[i].returnDelay -= 1
+        }
+      }
+
+      activeTaskIndex = eligibleIndices.randomElement()!
+    }
     activeTask = activeQueue[activeTaskIndex]
 
     if let subject = activeTask.subject {
@@ -98,7 +146,8 @@ class ReviewSession {
     } else if activeTask.answeredReading || activeSubject.readings.isEmpty {
       activeTaskType = .meaning
     } else if Settings.groupMeaningReading || (Settings.ankiMode &&
-      Settings.ankiModeCombineReadingMeaning) || isPracticeSession {
+      Settings.ankiModeCombineReadingMeaning && Settings.ankiModeTaskType == .both) ||
+      isPracticeSession {
       activeTaskType = Settings.meaningFirst ? .meaning : .reading
     } else {
       activeTaskType = TaskType.random()
@@ -169,12 +218,16 @@ class ReviewSession {
     case .Correct:
       tasksAnswered += 1
       tasksAnsweredCorrectly += 1
+      activeTask.returnDelay = 0
 
     case .Incorrect:
       tasksAnswered += 1
+      // show this number of items before repeating this one:
+      activeTask.returnDelay = 5
 
     case .OverrideAnswerCorrect:
       tasksAnsweredCorrectly += 1
+      activeTask.returnDelay = 0
 
     case .Exclude:
       fatalError()

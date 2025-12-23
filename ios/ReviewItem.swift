@@ -113,6 +113,7 @@ class ReviewItem: NSObject {
   var answeredReading = false
   var answeredMeaning = false
   var answer = TKMProgress()
+  var returnDelay = 0
 
   init(assignment: TKMAssignment, subject: TKMSubject? = nil) {
     self.assignment = assignment
@@ -145,6 +146,11 @@ class ReviewItem: NSObject {
       return false
     }
     return assignment.subjectID <= other.assignment.subjectID
+  }
+
+  func hasAttempts() -> Bool {
+    answer.hasMeaningWrong || answer.hasReadingWrong ||
+      answeredMeaning || answeredReading
   }
 
   func reset() {

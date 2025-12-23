@@ -57,6 +57,20 @@ typealias SettingEnum = CaseIterable & Codable & CustomStringConvertible & RawRe
   }
 }
 
+@objc enum AnkiModeTaskType: UInt, SettingEnum {
+  case both = 1
+  case readingOnly = 2
+  case meaningOnly = 3
+
+  var description: String {
+    switch self {
+    case .both: return "Both"
+    case .readingOnly: return "Reading only"
+    case .meaningOnly: return "Meaning only"
+    }
+  }
+}
+
 private func setArchiveData<T: Codable>(_ object: T, key: String) {
   var data: Data!
   if #available(iOS 11.0, *) {
@@ -204,6 +218,8 @@ protocol SettingProtocol {
   @Setting(false, #keyPath(allowSkippingReviews)) static var allowSkippingReviews: Bool
   @Setting(true, #keyPath(minimizeReviewPenalty)) static var minimizeReviewPenalty: Bool
   @Setting(false, #keyPath(ankiMode)) static var ankiMode: Bool
+  @EnumSetting(AnkiModeTaskType.both,
+               #keyPath(ankiModeTaskType)) static var ankiModeTaskType: AnkiModeTaskType
   @Setting(false,
            #keyPath(ankiModeCombineReadingMeaning)) static var ankiModeCombineReadingMeaning: Bool
   @Setting(true, #keyPath(showPreviousLevelGraph)) static var showPreviousLevelGraph: Bool
