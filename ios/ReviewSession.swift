@@ -38,9 +38,7 @@ class ReviewSession {
   public var wrappingUp: Bool = false {
     didSet {
       if wrappingUp, let task = activeTask {
-        let hasAttempts = task.answer.hasMeaningWrong || task.answer.hasReadingWrong ||
-          task.answeredMeaning || task.answeredReading
-        if !hasAttempts, let index = activeQueue.firstIndex(where: { $0 === task }) {
+        if !task.hasAttempts(), let index = activeQueue.firstIndex(where: { $0 === task }) {
           activeQueue.remove(at: index)
           reviewQueue.append(task)
         }
@@ -88,9 +86,7 @@ class ReviewSession {
       return false
     }
     for item in activeQueue {
-      let hasAttempts = item.answer.hasMeaningWrong || item.answer.hasReadingWrong ||
-        item.answeredMeaning || item.answeredReading
-      if hasAttempts {
+      if item.hasAttempts() {
         return true
       }
     }
@@ -103,7 +99,7 @@ class ReviewSession {
 
   public func nextTask() {
     guard !activeQueue.isEmpty else {
-      return 
+      return
     }
 
     if Settings.groupMeaningReading || isPracticeSession,

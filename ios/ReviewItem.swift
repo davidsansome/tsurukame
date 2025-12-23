@@ -148,6 +148,11 @@ class ReviewItem: NSObject {
     return assignment.subjectID <= other.assignment.subjectID
   }
 
+  func hasAttempts() -> Bool {
+    answer.hasMeaningWrong || answer.hasReadingWrong ||
+      answeredMeaning || answeredReading
+  }
+
   func reset() {
     answer.clearMeaningWrong()
     answer.clearReadingWrong()
