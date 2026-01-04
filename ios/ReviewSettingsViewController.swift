@@ -21,6 +21,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
   private var reviewItemsLimitSelector: IndexPath!
   private var groupMeaningReadingIndexPath: IndexPath?
   private var nonBackToBackBatchSizeIndexPath: IndexPath?
+  private var ankiModeTaskTypeIndexPath: IndexPath?
   private var ankiModeCombineReadingMeaningIndexPath: IndexPath?
 
   func setup(services: TKMServices) {
@@ -39,6 +40,11 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
   }
 
   private func rerender() {
+    // Ensure combine option is disabled if task type is not "both"
+    if Settings.ankiModeTaskType != .both {
+      Settings.ankiModeCombineReadingMeaning = false
+    }
+
     let model = MutableTableModel(tableView: tableView)
 
     model.addSection()
@@ -178,6 +184,15 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                               on: Settings.ankiMode) { [unowned self] in ankiModeSwitchChanged($0)
       })
 
+    ankiModeTaskTypeIndexPath = model.add(BasicModelItem(style: .value1,
+                                                         title: "Anki mode applies to",
+                                                         subtitle: Settings.ankiModeTaskType
+                                                           .description,
+                                                         accessoryType: .disclosureIndicator) {
+                                            [unowned self] in self.didTapAnkiModeTaskType()
+                                          },
+                                          hidden: !Settings.ankiMode)
+
     let ankiModeCombineReadingMeaning = SwitchModelItem(style: .subtitle,
                                                         title: "Combine Reading + Meaning",
                                                         subtitle: "Only one review for reading and meaning with Anki mode enabled",
@@ -188,7 +203,8 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
       ankiModeCombineReadingMeaningSwitchChanged($0)
     }
     ankiModeCombineReadingMeaningIndexPath = model.add(ankiModeCombineReadingMeaning,
-                                                       hidden:!Settings.ankiMode)
+                                                       hidden: !Settings.ankiMode || Settings
+                                                         .ankiModeTaskType != .both)
 
     model.add(section: "Audio")
     model.add(SwitchModelItem(style: .subtitle,
@@ -354,8 +370,11 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
   private func ankiModeSwitchChanged(_ switchView: UISwitch) {
     Settings.ankiMode = switchView.isOn
     Settings.ankiModeCombineReadingMeaning = false
-    if let indexPath = ankiModeCombineReadingMeaningIndexPath {
+    if let indexPath = ankiModeTaskTypeIndexPath {
       model?.setIndexPath(indexPath, hidden: !switchView.isOn)
+    }
+    if let indexPath = ankiModeCombineReadingMeaningIndexPath {
+      model?.setIndexPath(indexPath, hidden: !switchView.isOn || Settings.ankiModeTaskType != .both)
     }
   }
 
@@ -403,6 +422,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
 
   private func didTapOfflineAudio() {
     perform(segue: StoryboardSegue.ReviewSettings.offlineAudio, sender: self)
+  }
+
+  private func didTapAnkiModeTaskType() {
+    navigationController?.pushViewController(makeAnkiModeTaskTypeViewController(), animated: true)
   }
 }
 
@@ -465,5 +488,12 @@ func makeTaskOrderViewController() -> UIViewController {
     "Meaning then Reading": true,
     "Reading then Meaning": false,
   ])
+  return vc
+}
+
+func makeAnkiModeTaskTypeViewController() -> UIViewController {
+  let vc = SettingChoiceListViewController(setting: Settings.$ankiModeTaskType,
+                                           title: "Anki Mode Applies To")
+  vc.addChoicesFromEnum()
   return vc
 }
