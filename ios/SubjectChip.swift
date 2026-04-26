@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ class SubjectChip: UIView {
 
   convenience init(subject: TKMSubject, showMeaning: Bool, meaningFontSize: CGFloat?,
                    delegate: SubjectChipDelegate) {
-    let japaneseText = subject.japaneseText(imageSize: kLabelHeight)
+    let japaneseText = japaneseText(subject, imageSize: kLabelHeight)
     let sideText = showMeaning ? NSAttributedString(string: subject.primaryMeaning) : nil
     self.init(subject: subject, chipText: japaneseText, sideText: sideText,
               sideTextFontSize: meaningFontSize, chipTextColor: .white,

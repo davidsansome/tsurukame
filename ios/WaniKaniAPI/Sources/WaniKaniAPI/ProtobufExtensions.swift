@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -189,28 +189,6 @@ public extension TKMSubject {
   }
 
   var isAccelerated: Bool { level <= 2 }
-
-  func japaneseText(imageSize: CGFloat) -> NSAttributedString {
-    if !hasRadical || !radical.hasCharacterImageFile_p {
-      return NSAttributedString(string: japanese)
-    }
-
-    #if canImport(UIKit)
-      let imageAttachment = NSTextAttachment()
-      imageAttachment.image = UIImage(named: "radical-\(id)")
-
-      var size = imageSize
-      if size == 0 {
-        size = imageAttachment.image?.size.width ?? 0
-      }
-      imageAttachment.bounds = CGRect(x: 0, y: 0, width: size, height: size)
-      return NSAttributedString(attachment: imageAttachment)
-    #endif
-
-    return NSAttributedString()
-  }
-
-  var japaneseText: NSAttributedString { japaneseText(imageSize: 0) }
 
   var primaryMeaning: String {
     for meaning in meanings {

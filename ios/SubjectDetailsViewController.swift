@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
                               assignment: assignment, task: nil)
 
     subjectTitle.font = UIFont(name: TKMStyle.japaneseFontName, size: subjectTitle.font.pointSize)
-    subjectTitle.attributedText = subject.japaneseText(imageSize: 40.0)
+    subjectTitle.attributedText = japaneseText(subject, imageSize: 40.0)
     gradientLayer = CAGradientLayer()
     gradientLayer!.colors = TKMStyle.gradient(forSubject: subject)
     view.layer.insertSublayer(gradientLayer!, at: 0)

@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ class TKMServices {
 
   private(set) var offlineAudio: OfflineAudio!
   private(set) var audio: Audio!
+  private(set) var radicalCharacterImages: RadicalCharacterImages!
 
   var client: WaniKaniAPIClient!
   var localCachingClient: LocalCachingClient!
@@ -29,5 +30,6 @@ class TKMServices {
   init() {
     offlineAudio = OfflineAudio(services: self)
     audio = Audio(services: self)
+    radicalCharacterImages = RadicalCharacterImages(services: self)
   }
 }

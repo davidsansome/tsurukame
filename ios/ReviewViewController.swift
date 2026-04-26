@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -642,13 +642,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       let setupContextFunc = {
         (ctx: AnimationContext) in
         if !(self.questionLabel.attributedText?
-          .isEqual(to: self.session.activeSubject.japaneseText) ?? false) ||
+          .isEqual(to: japaneseText(self.session.activeSubject)) ?? false) ||
           self.questionLabel.font.fontName != self.currentFontName ||
           self.questionLabel.font.pointSize != self.questionLabelFontSize() {
           ctx.addFadingLabel(original: self.questionLabel!)
           self.questionLabel
             .font = UIFont(name: self.currentFontName, size: self.questionLabelFontSize())
-          self.questionLabel.attributedText = self.session.activeSubject.japaneseText
+          self.questionLabel.attributedText = japaneseText(self.session.activeSubject)
         }
         if self.wrapUpLabel.text != wrapUpText {
           ctx.addFadingLabel(original: self.wrapUpLabel!)

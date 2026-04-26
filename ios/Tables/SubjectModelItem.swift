@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ class SubjectModelView: TableModelCell {
     tintColor = .white // for the checkmark
 
     subjectLabel.font = UIFont(name: TKMStyle.japaneseFontName, size: subjectLabel.font.pointSize)
-    subjectLabel.attributedText = item.subject.japaneseText(imageSize: kJapaneseTextImageSize)
+    subjectLabel.attributedText = japaneseText(item.subject, imageSize: kJapaneseTextImageSize)
 
     if item.showRemaining {
       if let assignment = item.assignment, assignment.isReviewStage {
