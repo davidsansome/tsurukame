@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,10 @@ enum FeatureFlags {
 
   // Whether to show an extra Developer Options section at the bottom of the SubjectDetailsView.
   static let showSubjectDeveloperOptions = (config == .DeveloperDebug)
+
+  // Whether to show subjects from all levels, regardless of whether the user has an active
+  // subscription.
+  static let showAllLevelsForFreeUsers = (config == .DeveloperDebug)
 
   private enum BuildConfig {
     case DeveloperDebug

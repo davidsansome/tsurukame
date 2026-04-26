@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -128,7 +128,10 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       self.updateSrsCategoryCounts()
     }
     _maxLevelGrantedBySubscription.updateBlock = {
-      Int(self.getUserInfo()?.maxLevelGrantedBySubscription ?? 0)
+      if FeatureFlags.showAllLevelsForFreeUsers {
+        return 60
+      }
+      return Int(self.getUserInfo()?.maxLevelGrantedBySubscription ?? 0)
     }
   }
 
