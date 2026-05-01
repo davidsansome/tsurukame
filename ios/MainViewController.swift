@@ -69,6 +69,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     searchController.searchResultsUpdater = searchResultsViewController
     searchController.delegate = self
 
+    // On iOS 26 the default behaviour squishes the navigation bar up under the safe area when the
+    // search button is pressed. Setting this property to false leaves the navigation bar alone.
+    searchController.hidesNavigationBarDuringPresentation = false
+
     // Configure the search bar.
     let searchBar = searchController.searchBar
     searchBar.barTintColor = TKMStyle.radicalColor2
@@ -209,6 +213,10 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   @IBAction func searchButtonTapped() {
     present(searchController, animated: true, completion: nil)
+
+    // Show the results table immediately, otherwise the original MainViewController is still
+    // visible underneath.
+    searchController.showsSearchResultsController = true
   }
 
   @IBAction func settingsButtonTapped() {
