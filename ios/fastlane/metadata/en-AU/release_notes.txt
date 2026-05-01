@@ -1,7 +1,15 @@
 Bugfixes:
-- Fix a bug where ぺージ wasn't accepted as the correct answer for 頁.
-- Fix the appearance of the app icon in dark and tinted modes.
+- Fix a rendering issue with the "rib cage" radical.
+- Fix an issue where context sentences would sometimes not be blurred.
+- Show a better error message when the account is in hibernation mode.
+- Fix text highlighting issue in reviews.
+- Fix a crash when entering the last review in Anki mode.
+- Respect the system font size in more places.
 
 Improvements:
-- Split the quick settings menu into smaller sub-menus.
-- Make the Japanese question text copyable.
+- Add a "Review items in batches" setting.
+- Support universal links.
+- Sync recent mistakes between devices.
+- Allow swiping backward in the upcoming reviews screen.
+- Allow user to practice apprentice leech items.
+- Various new settings.
