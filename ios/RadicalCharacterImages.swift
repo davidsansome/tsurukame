@@ -20,8 +20,13 @@ class RadicalCharacterImages {
     "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/radical-images"
   }
 
+  // Size before pixel scaling.
+  private static let imageSizePx = 60
+
   static func pathForSubjectId(_ subjectId: Int64) -> String {
-    "\(RadicalCharacterImages.cacheDirectoryPath)/radical-\(subjectId).png"
+    let path = RadicalCharacterImages.cacheDirectoryPath
+    let scale = Int(UIScreen.main.scale)
+    return "\(path)/radical-\(subjectId)-\(imageSizePx)px@\(scale)x.png"
   }
 
   static func hasCachedImageForSubjectId(_ subjectId: Int64) -> Bool {
@@ -68,7 +73,8 @@ class RadicalCharacterImages {
             }
 
             // Scale down the image before rasterising it.
-            svgImage.size = CGSize(width: 180, height: 180)
+            svgImage.size = CGSize(width: RadicalCharacterImages.imageSizePx,
+                                   height: RadicalCharacterImages.imageSizePx)
 
             guard let image = svgImage.uiImage, let pngData = image.pngData() else {
               NSLog("Failed to convert SVG to PNG \(url)")
