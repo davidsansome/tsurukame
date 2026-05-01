@@ -97,8 +97,7 @@ func japaneseText(_ subject: TKMSubject, imageSize: CGFloat = 0.0) -> NSAttribut
   let templateImage = image?.withRenderingMode(.alwaysTemplate)
 
   let imageAttachment = NSTextAttachment()
-  imageAttachment
-    .image = templateImage
+  imageAttachment.image = templateImage
 
   var size = imageSize
   if size == 0 {
