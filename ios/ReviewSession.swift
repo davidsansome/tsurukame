@@ -222,8 +222,11 @@ class ReviewSession {
 
     case .Incorrect:
       tasksAnswered += 1
-      // show this number of items before repeating this one:
-      activeTask.returnDelay = 5
+      // In groupMeaningReading/practice mode the queue has size 1; setting a delay
+      // would evict the card and pull a new one in, breaking back-to-back retry.
+      if !Settings.groupMeaningReading && !isPracticeSession {
+        activeTask.returnDelay = 5
+      }
 
     case .OverrideAnswerCorrect:
       tasksAnsweredCorrectly += 1
