@@ -22,6 +22,7 @@
 		631CAD68234AFAA5008CEA73 /* AnswerChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD62234AD5FC008CEA73 /* AnswerChecker.swift */; };
 		631CAD6F234B3B8D008CEA73 /* LevelTimeRemainingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */; };
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
+		631CAD742F9ECF41008CEA73 /* GamepadCheatsheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD732F9ECF41008CEA73 /* GamepadCheatsheetView.swift */; };
 		631F34D72C36B7FE0071E983 /* BiggerTapAreaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631F34D62C36B7FE0071E983 /* BiggerTapAreaButton.swift */; };
 		6324AE3E2F9DC8040089066C /* RadicalCharacterImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324AE3D2F9DC7FF0089066C /* RadicalCharacterImages.swift */; };
 		6324AE412F9DCEAD0089066C /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6324AE402F9DCEAD0089066C /* SVGKit */; };
@@ -290,6 +291,7 @@
 		631CAD66234AF962008CEA73 /* AnswerCheckerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCheckerTest.swift; sourceTree = "<group>"; };
 		631CAD6B234B2B60008CEA73 /* LevelTimeRemainingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelTimeRemainingItem.swift; sourceTree = "<group>"; };
 		631CAD71234B4A96008CEA73 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
+		631CAD732F9ECF41008CEA73 /* GamepadCheatsheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamepadCheatsheetView.swift; sourceTree = "<group>"; };
 		631F34D62C36B7FE0071E983 /* BiggerTapAreaButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiggerTapAreaButton.swift; sourceTree = "<group>"; };
 		6324AE3D2F9DC7FF0089066C /* RadicalCharacterImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadicalCharacterImages.swift; sourceTree = "<group>"; };
 		633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectCatalogueViewController.swift; sourceTree = "<group>"; };
@@ -657,6 +659,7 @@
 				791B8B5D2D6584C9000C8142 /* RecentMistakeHandler.swift */,
 				41897D922372287F00F6A0B7 /* Resources */,
 				630EB13E25C5713000783E54 /* ReviewItem.swift */,
+				631CAD732F9ECF41008CEA73 /* GamepadCheatsheetView.swift */,
 				63344E892D291CAA002A4FED /* ReviewQuickSettings */,
 				63A9A55C282389C800602D09 /* ReviewSession.swift */,
 				63391B582779B8BF005CDA72 /* ReviewSettingsViewController.swift */,
@@ -1499,6 +1502,7 @@
 				637CA11525D7E48A0082580E /* LessonsViewController.swift in Sources */,
 				639528ED25CC0688009845ED /* SettingsViewController.swift in Sources */,
 				631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */,
+				631CAD742F9ECF41008CEA73 /* GamepadCheatsheetView.swift in Sources */,
 				63C74C8F25C970DA004F6C99 /* SubjectsByLevelViewController.swift in Sources */,
 				637740142C26A10C00A4F6EE /* TableModelItem.swift in Sources */,
 				63391B5F2779BF56005CDA72 /* LessonSettingsViewController.swift in Sources */,
