@@ -133,9 +133,14 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   // Items that are hidden, and will be shown when the Show All button is pressed.
   private var hiddenIndexPaths = [IndexPath]()
+  private var allFieldsShown = true
 
   // Button that shows all the hiddenIndexPaths.
   private var showAllButton: IndexPath?
+
+  var canShowAllFields: Bool {
+    !allFieldsShown && !hiddenIndexPaths.isEmpty
+  }
 
   public func setup(services: TKMServices, delegate: SubjectDelegate) {
     self.services = services
@@ -416,7 +421,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   static var showAllFieldsCount = 0
 
   @objc func showAllFields() {
-    if hiddenIndexPaths.isEmpty {
+    if !canShowAllFields {
       return
     }
 
@@ -432,6 +437,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         tableModel?.setIndexPath(indexPath, hidden: false)
       }
     }
+    allFieldsShown = true
 
     // If the user keeps pressing the button, prompt them once to enable the showFullAnswer setting.
     if !Settings.seenFullAnswerPrompt {
@@ -503,6 +509,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     self.hiddenIndexPaths = hiddenIndexPaths.filter {
       $0 != nil
     } as! [IndexPath]
+    allFieldsShown = self.hiddenIndexPaths.isEmpty
 
     if self.hiddenIndexPaths.isEmpty {
       return
@@ -530,6 +537,9 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     readingItem = nil
     studyMaterialsChanged = false
+    hiddenIndexPaths = []
+    showAllButton = nil
+    allFieldsShown = true
     if studyMaterials != nil {
       self.studyMaterials = studyMaterials
     } else {

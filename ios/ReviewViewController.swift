@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import Foundation
+import GameController
 import WaniKaniAPI
 
 private let kDefaultAnimationDuration: TimeInterval = 0.25
@@ -177,7 +178,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   private var lastMarkAnswerWasFirstTime = false
   private var ankiModeCachedSubmit = false
+  private var ankiModeShouldShowOptionsAfterReveal = false
   private var isAnimatingSubjectDetailsView = false
+  private var gamepadCheatsheetAnswersRevealedOverride: Bool?
+  private var gameControllers: [GCController] = []
+  private var gamepadButtonStates: [ObjectIdentifier: Set<String>] = [:]
+  private let gamepadCheatsheetView = GamepadCheatsheetView()
 
   private var previousSubjectGradient: CAGradientLayer!
 
@@ -187,7 +193,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var isPracticeSession = false
 
   private var isAnkiModeActiveForCurrentTask: Bool {
-    guard Settings.ankiMode else { return false }
+    guard Settings.ankiMode, session != nil, session.activeTaskType != nil else { return false }
     switch Settings.ankiModeTaskType {
     case .both: return true
     case .readingOnly: return session.activeTaskType == .reading
@@ -296,6 +302,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     nd.add(name: UIResponder.keyboardWillHideNotification) { [weak self] _ in
       self?.keyboardWillHide()
     }
+    nd.add(name: .GCControllerDidConnect) { [weak self] _ in
+      self?.updateGameControllers()
+    }
+    nd.add(name: .GCControllerDidDisconnect) { [weak self] _ in
+      self?.updateGameControllers()
+    }
 
     subjectDetailsView.setup(services: services, delegate: self)
 
@@ -337,6 +349,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     leftSwipeRecognizer.require(toFail: shortPressRecognizer)
     rightSwipeRecognizer.require(toFail: shortPressRecognizer)
 
+    setupGamepadCheatsheetView()
     resizeViewsForFontSize()
     viewDidLayoutSubviews()
   }
@@ -372,6 +385,222 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       UIFontMetrics(forTextStyle: .title2).scaledValue(for: 64.0)
   }
 
+  // MARK: - Gamepad controls
+
+  private var hasConnectedGameController: Bool {
+    !gameControllers.isEmpty
+  }
+
+  private var hasAudioForCurrentSubject: Bool {
+    guard let subject = session?.activeSubject else { return false }
+    return subject.hasVocabulary && !subject.vocabulary.audio.isEmpty
+  }
+
+  private func setupGamepadCheatsheetView() {
+    gamepadCheatsheetView.translatesAutoresizingMaskIntoConstraints = false
+    gamepadCheatsheetView.alpha = 0
+    gamepadCheatsheetView.isHidden = true
+    view.addSubview(gamepadCheatsheetView)
+    view.bringSubviewToFront(gamepadCheatsheetView)
+
+    NSLayoutConstraint.activate([
+      gamepadCheatsheetView.topAnchor
+        .constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+      gamepadCheatsheetView.centerXAnchor
+        .constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+      gamepadCheatsheetView.leadingAnchor
+        .constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 12),
+      gamepadCheatsheetView.trailingAnchor
+        .constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -12),
+      gamepadCheatsheetView.widthAnchor.constraint(lessThanOrEqualToConstant: 520),
+    ])
+  }
+
+  private func updateGameControllers() {
+    gameControllers = GCController.controllers().filter { $0.extendedGamepad != nil }
+    gamepadButtonStates = gameControllers.reduce(into: [:]) { states, controller in
+      states[ObjectIdentifier(controller)] = []
+    }
+    gameControllers.forEach(registerGameController)
+    updateGamepadCheatsheet()
+  }
+
+  private func unregisterGameControllers() {
+    gameControllers.forEach { controller in
+      controller.extendedGamepad?.valueChangedHandler = nil
+      controller.microGamepad?.valueChangedHandler = nil
+      controller.controllerPausedHandler = nil
+    }
+    gameControllers = []
+    gamepadButtonStates = [:]
+    ankiModeShouldShowOptionsAfterReveal = false
+    updateGamepadCheatsheet(animated: false)
+  }
+
+  private func registerGameController(_ controller: GCController) {
+    controller.controllerPausedHandler = nil
+    controller.extendedGamepad?.valueChangedHandler = { [weak self, weak controller] gamepad, _ in
+      guard let self = self, let controller = controller else { return }
+      self.handleGamepadButton(controller: controller, key: "a",
+                               pressed: gamepad.buttonA.isPressed,
+                               action: self.gamepadPrimaryAction)
+      self.handleGamepadButton(controller: controller, key: "b",
+                               pressed: gamepad.buttonB.isPressed,
+                               action: self.gamepadIncorrect)
+      self.handleGamepadButton(controller: controller, key: "y",
+                               pressed: gamepad.buttonY.isPressed,
+                               action: self.gamepadDefer)
+      self.handleGamepadButton(controller: controller, key: "x",
+                               pressed: gamepad.buttonX.isPressed,
+                               action: self.gamepadShowInformation)
+      self.handleGamepadButton(controller: controller, key: "rightShoulder",
+                               pressed: gamepad.rightShoulder.isPressed,
+                               action: self.gamepadPlayAudio)
+    }
+  }
+
+  private func handleGamepadButton(controller: GCController,
+                                   key: String,
+                                   pressed: Bool,
+                                   action: () -> Void) {
+    let controllerID = ObjectIdentifier(controller)
+    var pressedButtons = gamepadButtonStates[controllerID] ?? []
+    if pressed {
+      if !pressedButtons.contains(key) {
+        pressedButtons.insert(key)
+        gamepadButtonStates[controllerID] = pressedButtons
+        action()
+      }
+    } else if pressedButtons.remove(key) != nil {
+      gamepadButtonStates[controllerID] = pressedButtons
+    }
+  }
+
+  private func gamepadPrimaryAction() {
+    guard isAnkiModeActiveForCurrentTask else { return }
+    if !subjectDetailsView.isHidden {
+      performAfterDismissingAnkiAnswerOptions { [weak self] in
+        self?.markCorrect()
+        self?.updateGamepadCheatsheetForNextAnswer()
+      }
+    } else if !isAnimatingSubjectDetailsView {
+      submit()
+      gamepadCheatsheetAnswersRevealedOverride = true
+      updateGamepadCheatsheet(animated: false)
+    } else {
+      ankiModeCachedSubmit = true
+    }
+  }
+
+  private func gamepadIncorrect() {
+    guard isAnkiModeActiveForCurrentTask, !subjectDetailsView.isHidden else { return }
+    performAfterDismissingAnkiAnswerOptions { [weak self] in
+      self?.markIncorrect()
+      self?.updateGamepadCheatsheetForNextAnswer()
+    }
+  }
+
+  private func gamepadDefer() {
+    guard isAnkiModeActiveForCurrentTask else { return }
+    if !subjectDetailsView.isHidden {
+      performAfterDismissingAnkiAnswerOptions { [weak self] in
+        self?.askAgain()
+        self?.updateGamepadCheatsheetForNextAnswer()
+      }
+    } else if Settings.allowSkippingReviews {
+      markAnswer(.AskAgainLater)
+      updateGamepadCheatsheetForNextAnswer()
+    }
+  }
+
+  private func gamepadShowInformation() {
+    guard isAnkiModeActiveForCurrentTask, !subjectDetailsView.isHidden,
+          subjectDetailsView.canShowAllFields else { return }
+    showAllInformation()
+    updateGamepadCheatsheet(animated: false)
+  }
+
+  private func gamepadPlayAudio() {
+    guard isAnkiModeActiveForCurrentTask, !subjectDetailsView.isHidden,
+          hasAudioForCurrentSubject else { return }
+    playAudio()
+  }
+
+  private func presentAnkiAnswerOptionsIfNeeded(force: Bool = false) {
+    guard isAnkiModeActiveForCurrentTask, !subjectDetailsView.isHidden,
+          presentedViewController == nil, force || !hasConnectedGameController else { return }
+    addSynonymButtonPressed(true)
+  }
+
+  private func performAfterDismissingAnkiAnswerOptions(_ action: @escaping () -> Void) {
+    guard let presentedViewController = presentedViewController,
+          presentedViewController is BottomSheetViewController ||
+          presentedViewController is UIAlertController else {
+      action()
+      return
+    }
+
+    presentedViewController.dismiss(animated: true) {
+      action()
+    }
+  }
+
+  private func updateGamepadCheatsheet(animated: Bool = true) {
+    let shouldShow = isViewLoaded && hasConnectedGameController && isAnkiModeActiveForCurrentTask
+    let answersRevealed = gamepadCheatsheetAnswersRevealedOverride ?? !subjectDetailsView.isHidden
+    var items: [GamepadCheatsheetView.Item]
+    if !answersRevealed {
+      items = Settings.allowSkippingReviews
+        ? [
+          GamepadCheatsheetView.Item(icon: .faceButton("A", 0x55A43B),
+                                     title: "Show answer"),
+          GamepadCheatsheetView.Item(icon: .faceButton("Y", 0xF1D514),
+                                     title: "Skip"),
+        ]
+        : [
+          GamepadCheatsheetView.Item(icon: .faceButton("A", 0x55A43B),
+                                     title: "Show answer"),
+        ]
+    } else {
+      items = [
+        GamepadCheatsheetView.Item(icon: .faceButton("A", 0x55A43B),
+                                   title: "Correct"),
+        GamepadCheatsheetView.Item(icon: .faceButton("B", 0xDA1725),
+                                   title: "Incorrect"),
+        GamepadCheatsheetView.Item(icon: .faceButton("Y", 0xF1D514),
+                                   title: "Later"),
+      ]
+      if subjectDetailsView.canShowAllFields {
+        items.append(GamepadCheatsheetView.Item(icon: .faceButton("X", 0x039AC9),
+                                                title: "Info"))
+      }
+      if hasAudioForCurrentSubject {
+        items.append(GamepadCheatsheetView.Item(icon: .rightBumper, title: "Audio"))
+      }
+    }
+
+    if shouldShow {
+      gamepadCheatsheetView.setItems(items)
+      gamepadCheatsheetView.setVerticalLayout(items.count > 1 && view.bounds.width < 360)
+      view.bringSubviewToFront(gamepadCheatsheetView)
+    }
+
+    let changes = {
+      self.gamepadCheatsheetView.alpha = shouldShow ? 1 : 0
+    }
+    if shouldShow {
+      gamepadCheatsheetView.isHidden = false
+    }
+    UIView.animate(withDuration: animated ? 0.16 : 0, animations: changes) { _ in
+      self.gamepadCheatsheetView.isHidden = !shouldShow
+    }
+  }
+
+  private func updateGamepadCheatsheetForNextAnswer() {
+    gamepadCheatsheetAnswersRevealedOverride = false
+    updateGamepadCheatsheet(animated: false)
+  }
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
 
@@ -382,6 +611,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         .contentInset = UIEdgeInsets(top: -view.safeAreaInsets.top, left: 0, bottom: 0,
                                      right: 0)
     }
+    updateGamepadCheatsheet()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -401,6 +631,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     } else {
       subjectDetailsView.becomeFirstResponder()
     }
+    updateGameControllers()
+  }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    unregisterGameControllers()
+    updateGamepadCheatsheet()
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -516,6 +753,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     session.nextTask()
 
     updateViewForCurrentTask()
+    updateGamepadCheatsheet()
   }
 
   private func updateViewForCurrentTask(updateFirstResponder: Bool = true) {
@@ -823,6 +1061,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     subjectDetailsView
       .setContentOffset(CGPoint(x: 0, y: -subjectDetailsView.contentInset.top), animated: false)
 
+    updateGamepadCheatsheet()
+
     UIView.commitAnimations()
   }
 
@@ -847,6 +1087,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // This makes sure taps are still processed and not ignored, even when the closing animation
     // after a button press was not completed
     if isAnkiModeActiveForCurrentTask, ankiModeCachedSubmit { submit() }
+    if ctx.subjectDetailsViewShown, ankiModeShouldShowOptionsAfterReveal {
+      ankiModeShouldShowOptionsAfterReveal = false
+      presentAnkiAnswerOptionsIfNeeded()
+    }
+    gamepadCheatsheetAnswersRevealedOverride = nil
+    updateGamepadCheatsheet(animated: false)
   }
 
   // MARK: - Previous subject button
@@ -947,11 +1193,17 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       if let hitView = view.hitTest(location, with: nil), hitView !== view {
         var current: UIView? = hitView
         while let v = current, v !== view, v !== questionBackground {
-          if v is UIControl || v.gestureRecognizers?.isEmpty == false {
+          if v is UIControl ||
+            (subjectDetailsView.isHidden && v.gestureRecognizers?.isEmpty == false) {
             return
           }
           current = v.superview
         }
+      }
+
+      if !subjectDetailsView.isHidden {
+        presentAnkiAnswerOptionsIfNeeded(force: true)
+        return
       }
 
       if !isAnimatingSubjectDetailsView { submit() }
@@ -1091,8 +1343,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       ankiModeCachedSubmit = false
       // Mark the answer incorrect to show the details. This can still be overriden.
       let answersRevealed = !subjectDetailsView.isHidden
-      if !answersRevealed { markAnswer(.Incorrect) }
-      if Settings.showAnswerImmediately || answersRevealed { addSynonymButtonPressed(true) }
+      if !answersRevealed {
+        ankiModeShouldShowOptionsAfterReveal = true
+        markAnswer(.Incorrect)
+      } else {
+        presentAnkiAnswerOptionsIfNeeded()
+      }
       return
     }
 
@@ -1439,5 +1695,147 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     if !subjectDetailsView.isHidden {
       subjectDetailsView.playAudio()
     }
+  }
+}
+
+private final class GamepadCheatsheetView: UIView {
+  struct Item: Equatable {
+    let icon: Icon
+    let title: String
+  }
+
+  enum Icon: Equatable {
+    case faceButton(String, UInt32)
+    case rightBumper
+
+    var text: String {
+      switch self {
+      case let .faceButton(text, _): return text
+      case .rightBumper: return "RB"
+      }
+    }
+  }
+
+  private let stackView = UIStackView()
+  private var items: [Item] = []
+  private var itemViews: [UIView] = []
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    setup()
+  }
+
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+    setup()
+  }
+
+  func setItems(_ items: [Item]) {
+    if self.items == items { return }
+
+    itemViews.forEach { $0.removeFromSuperview() }
+    self.items = items
+    itemViews = items.map(makeItemView)
+    itemViews.forEach(stackView.addArrangedSubview)
+  }
+
+  func setVerticalLayout(_ vertical: Bool) {
+    stackView.axis = vertical ? .vertical : .horizontal
+    stackView.alignment = vertical ? .leading : .center
+  }
+
+  private func setup() {
+    layer.cornerRadius = 8
+    layer.masksToBounds = true
+    backgroundColor = UIColor.black.withAlphaComponent(0.62)
+
+    stackView.axis = .horizontal
+    stackView.alignment = .center
+    stackView.distribution = .fill
+    stackView.spacing = 10
+    stackView.translatesAutoresizingMaskIntoConstraints = false
+    addSubview(stackView)
+
+    NSLayoutConstraint.activate([
+      stackView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+      stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+      stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+      stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+    ])
+  }
+
+  private func makeItemView(_ item: Item) -> UIView {
+    let row = UIStackView()
+    row.axis = .horizontal
+    row.alignment = .center
+    row.spacing = 4
+
+    row.addArrangedSubview(makeIconView(item.icon))
+
+    let label = UILabel()
+    label.text = item.title
+    label.font = UIFontMetrics(forTextStyle: .caption1)
+      .scaledFont(for: .systemFont(ofSize: 12, weight: .semibold))
+    label.adjustsFontForContentSizeCategory = true
+    label.textColor = .white
+    label.numberOfLines = 1
+    label.setContentCompressionResistancePriority(.required, for: .vertical)
+    label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    row.addArrangedSubview(label)
+
+    return row
+  }
+
+  private func makeIconView(_ icon: Icon) -> UIView {
+    let wrapper = UIView()
+    wrapper.translatesAutoresizingMaskIntoConstraints = false
+
+    let label = UILabel()
+    label.translatesAutoresizingMaskIntoConstraints = false
+    label.text = icon.text
+    label.textAlignment = .center
+    label.font = .systemFont(ofSize: 12, weight: .bold)
+    label.adjustsFontForContentSizeCategory = false
+    label.setContentCompressionResistancePriority(.required, for: .horizontal)
+    label.setContentCompressionResistancePriority(.required, for: .vertical)
+    wrapper.addSubview(label)
+
+    switch icon {
+    case let .faceButton(_, color):
+      label.backgroundColor = colorFromHex(color)
+      label.textColor = colorFromHex(0x1C212A)
+      label.layer.cornerRadius = 9
+      label.layer.masksToBounds = true
+      NSLayoutConstraint.activate([
+        wrapper.widthAnchor.constraint(equalToConstant: 24),
+        wrapper.heightAnchor.constraint(equalToConstant: 24),
+        label.widthAnchor.constraint(equalToConstant: 18),
+        label.heightAnchor.constraint(equalToConstant: 18),
+        label.centerXAnchor.constraint(equalTo: wrapper.centerXAnchor),
+        label.centerYAnchor.constraint(equalTo: wrapper.centerYAnchor),
+      ])
+    case .rightBumper:
+      label.backgroundColor = colorFromHex(0xD6E1F6)
+      label.textColor = colorFromHex(0x1C212A)
+      label.layer.cornerRadius = 2
+      label.layer.masksToBounds = true
+      NSLayoutConstraint.activate([
+        wrapper.widthAnchor.constraint(equalToConstant: 30),
+        wrapper.heightAnchor.constraint(equalToConstant: 24),
+        label.widthAnchor.constraint(equalToConstant: 29),
+        label.heightAnchor.constraint(equalToConstant: 17),
+        label.centerXAnchor.constraint(equalTo: wrapper.centerXAnchor),
+        label.centerYAnchor.constraint(equalTo: wrapper.centerYAnchor),
+      ])
+    }
+
+    return wrapper
+  }
+
+  private func colorFromHex(_ hex: UInt32) -> UIColor {
+    UIColor(red: CGFloat((hex >> 16) & 0xFF) / 255,
+            green: CGFloat((hex >> 8) & 0xFF) / 255,
+            blue: CGFloat(hex & 0xFF) / 255,
+            alpha: 1)
   }
 }
