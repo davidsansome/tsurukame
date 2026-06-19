@@ -178,7 +178,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   private var lastMarkAnswerWasFirstTime = false
   private var ankiModeCachedSubmit = false
-  private var ankiModeShouldShowOptionsAfterReveal = false
   private var isAnimatingSubjectDetailsView = false
   private var gamepadCheatsheetAnswersRevealedOverride: Bool?
   private var gameControllers: [GCController] = []
@@ -436,7 +435,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
     gameControllers = []
     gamepadButtonStates = [:]
-    ankiModeShouldShowOptionsAfterReveal = false
     updateGamepadCheatsheet(animated: false)
   }
 
@@ -550,6 +548,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   private func updateGamepadCheatsheet(animated: Bool = true) {
     let shouldShow = isViewLoaded && hasConnectedGameController && isAnkiModeActiveForCurrentTask
+    guard shouldShow else {
+      if !gamepadCheatsheetView.isHidden {
+        gamepadCheatsheetView.alpha = 0
+        gamepadCheatsheetView.isHidden = true
+      }
+      return
+    }
+
     let answersRevealed = gamepadCheatsheetAnswersRevealedOverride ?? !subjectDetailsView.isHidden
     var items: [GamepadCheatsheetView.Item]
     if !answersRevealed {
@@ -582,20 +588,16 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       }
     }
 
-    if shouldShow {
-      gamepadCheatsheetView.setItems(items)
-      gamepadCheatsheetView.setVerticalLayout(items.count > 1 && view.bounds.width < 360)
-      view.bringSubviewToFront(gamepadCheatsheetView)
-    }
+    gamepadCheatsheetView.setItems(items)
+    gamepadCheatsheetView.setVerticalLayout(items.count > 1 && view.bounds.width < 360)
+    view.bringSubviewToFront(gamepadCheatsheetView)
 
     let changes = {
-      self.gamepadCheatsheetView.alpha = shouldShow ? 1 : 0
+      self.gamepadCheatsheetView.alpha = 1
     }
-    if shouldShow {
-      gamepadCheatsheetView.isHidden = false
-    }
+    gamepadCheatsheetView.isHidden = false
     UIView.animate(withDuration: animated ? 0.16 : 0, animations: changes) { _ in
-      self.gamepadCheatsheetView.isHidden = !shouldShow
+      self.gamepadCheatsheetView.isHidden = false
     }
   }
 
@@ -1090,10 +1092,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // This makes sure taps are still processed and not ignored, even when the closing animation
     // after a button press was not completed
     if isAnkiModeActiveForCurrentTask, ankiModeCachedSubmit { submit() }
-    if ctx.subjectDetailsViewShown, ankiModeShouldShowOptionsAfterReveal {
-      ankiModeShouldShowOptionsAfterReveal = false
-      presentAnkiAnswerOptionsIfNeeded()
-    }
     gamepadCheatsheetAnswersRevealedOverride = nil
     updateGamepadCheatsheet(animated: false)
   }
@@ -1346,12 +1344,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       ankiModeCachedSubmit = false
       // Mark the answer incorrect to show the details. This can still be overriden.
       let answersRevealed = !subjectDetailsView.isHidden
-      if !answersRevealed {
-        ankiModeShouldShowOptionsAfterReveal = true
-        markAnswer(.Incorrect)
-      } else {
-        presentAnkiAnswerOptionsIfNeeded()
-      }
+      if !answersRevealed { markAnswer(.Incorrect) }
+      if Settings.showAnswerImmediately || answersRevealed { presentAnkiAnswerOptionsIfNeeded() }
       return
     }
 
