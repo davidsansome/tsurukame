@@ -310,6 +310,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
 
     subjectDetailsView.setup(services: services, delegate: self)
+    subjectDetailsView.showAllFieldsCallback = { [weak self] in
+      self?.updateGamepadCheatsheet(animated: false)
+    }
 
     answerField.autocapitalizationType = .none
     answerField.delegate = kanaInput

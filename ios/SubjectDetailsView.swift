@@ -138,6 +138,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   // Button that shows all the hiddenIndexPaths.
   private var showAllButton: IndexPath?
 
+  var showAllFieldsCallback: (() -> Void)?
+
   var canShowAllFields: Bool {
     !allFieldsShown && !hiddenIndexPaths.isEmpty
   }
@@ -438,6 +440,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       }
     }
     allFieldsShown = true
+    showAllFieldsCallback?()
 
     // If the user keeps pressing the button, prompt them once to enable the showFullAnswer setting.
     if !Settings.seenFullAnswerPrompt {
