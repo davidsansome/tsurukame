@@ -29,10 +29,9 @@ class AnswerTextField: UITextField {
   public var useJapaneseKeyboard: Bool = false {
     didSet {
       if oldValue != useJapaneseKeyboard {
-        if self.isFirstResponder {
+        if isFirstResponder {
           // Reload the keyboard if we just changed its language.
-          self.resignFirstResponder()
-          self.becomeFirstResponder()
+          reloadInputViews()
         }
       }
     }
