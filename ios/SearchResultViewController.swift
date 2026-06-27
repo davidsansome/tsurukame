@@ -113,6 +113,10 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     }
 
     let query = searchController.searchBar.text!.lowercased()
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+    if query.isEmpty {
+      return
+    }
     queue.async {
       self.ensureAllSubjectsLoaded()
 
