@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,11 +55,12 @@ private func subjectMatchesQueryExactly(subject: TKMSubject, query: String,
 
 private let kMaxResults = 50
 
-class SearchResultViewController: UITableViewController, UISearchResultsUpdating,
+class SearchResultViewController: UITableViewController, UISearchBarDelegate,
   SubjectDelegate {
   private var services: TKMServices!
   private weak var delegate: SearchResultViewControllerDelegate?
 
+  private let searchBar = UISearchBar()
   private var allSubjects: [TKMSubject]?
   private var model: TableModel!
   private var queue: DispatchQueue?
@@ -74,9 +75,51 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
                           autoreleaseFrequency: .inherit,
                           target: DispatchQueue.global(qos: .userInitiated))
 
+    // Configure the search bar and place it in the navigation bar's title area, with a Cancel
+    // button next to it. We host a plain search bar here (rather than using a UISearchController)
+    // so
+    // it doesn't run a presentation animation that would slide it out of the navigation bar, and so
+    // we get a working cancel button on iPad.
+    searchBar.delegate = self
+    searchBar.barTintColor = TKMStyle.radicalColor2
+    searchBar.autocapitalizationType = .none
+
+    let originalSearchBarTintColor = searchBar.tintColor
+    searchBar.tintColor = .white // Make the button white.
+
+    if #available(iOS 13, *) {
+      let searchTextField = searchBar.searchTextField
+      searchTextField.backgroundColor = .systemBackground
+      searchTextField.tintColor = originalSearchBarTintColor
+    } else {
+      for view in searchBar.subviews[0].subviews {
+        if view.isKind(of: UITextField.self) {
+          // Make the input field cursor dark blue.
+          view.tintColor = originalSearchBarTintColor
+        }
+      }
+    }
+
+    navigationItem.titleView = searchBar
+    navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self,
+                                                        action: #selector(cancelTapped))
+
+    // Add a little extra space at the top so the first result doesn't overlap the search bar that's
+    // hosted in the navigation bar. The content still scrolls underneath the bar.
+    tableView.contentInset.top = 44
+
     queue!.async {
       self.ensureAllSubjectsLoaded()
     }
+  }
+
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    searchBar.becomeFirstResponder()
+  }
+
+  @objc private func cancelTapped() {
+    dismiss(animated: true)
   }
 
   override func didReceiveMemoryWarning() {
@@ -105,14 +148,14 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     }
   }
 
-  // MARK: - UISearchResultsUpdating
+  // MARK: - UISearchBarDelegate
 
-  func updateSearchResults(for searchController: UISearchController) {
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     guard let queue = queue else {
       return
     }
 
-    let query = searchController.searchBar.text!.lowercased()
+    let query = searchText.lowercased()
       .trimmingCharacters(in: .whitespacesAndNewlines)
     if query.isEmpty {
       return
@@ -159,7 +202,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
 
       DispatchQueue.main.async {
         // If the query text changed since we started, don't update the list.
-        let newQuery = searchController.searchBar.text!.lowercased()
+        let newQuery = searchBar.text!.lowercased()
         if query != newQuery {
           return
         }

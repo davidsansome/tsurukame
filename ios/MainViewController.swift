@@ -33,7 +33,7 @@ private func userProfileImageURL(emailAddress: String) -> URL {
 }
 
 class MainViewController: UIViewController, LoginViewControllerDelegate,
-  SearchResultViewControllerDelegate, UISearchControllerDelegate,
+  SearchResultViewControllerDelegate,
   UITableViewDelegate, MainWaniKaniTabViewController.Delegate {
   var services: TKMServices!
 
@@ -42,8 +42,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   @IBOutlet var progressView: UIProgressView!
   @IBOutlet var headerGradient: GradientView!
 
-  var searchController: UISearchController!
-  weak var searchResultsViewController: SearchResultViewController!
+  var searchResultsViewController: SearchResultViewController!
   weak var tabBarViewController: MainTabBarViewController?
 
   var hourlyRefreshTimer = Timer()
@@ -63,36 +62,6 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     let searchResultsVC = StoryboardScene.SearchResult.initialScene.instantiate()
     searchResultsVC.setup(services: services, delegate: self)
     searchResultsViewController = searchResultsVC
-
-    // Create the search controller.
-    searchController = UISearchController(searchResultsController: searchResultsViewController)
-    searchController.searchResultsUpdater = searchResultsViewController
-    searchController.delegate = self
-
-    // On iOS 26 the default behaviour squishes the navigation bar up under the safe area when the
-    // search button is pressed. Setting this property to false leaves the navigation bar alone.
-    searchController.hidesNavigationBarDuringPresentation = false
-
-    // Configure the search bar.
-    let searchBar = searchController.searchBar
-    searchBar.barTintColor = TKMStyle.radicalColor2
-    searchBar.autocapitalizationType = .none
-
-    let originalSearchBarTintColor = searchBar.tintColor
-    searchBar.tintColor = .white // Make the button white.
-
-    if #available(iOS 13, *) {
-      let searchTextField = searchBar.searchTextField
-      searchTextField.backgroundColor = .systemBackground
-      searchTextField.tintColor = originalSearchBarTintColor
-    } else {
-      for view in searchBar.subviews[0].subviews {
-        if view.isKind(of: UITextField.self) {
-          // Make the input field cursor dark blue.
-          view.tintColor = originalSearchBarTintColor
-        }
-      }
-    }
 
     updateGradientColors()
     updateHourlyTimer()
@@ -212,11 +181,12 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   // MARK: - Navigation bar buttons
 
   @IBAction func searchButtonTapped() {
-    present(searchController, animated: true, completion: nil)
-
-    // Show the results table immediately, otherwise the original MainViewController is still
-    // visible underneath.
-    searchController.showsSearchResultsController = true
+    // Present the search bar and results together in a modal dialog. The results view controller
+    // owns the search bar and Cancel button in its navigation bar (see SearchResultViewController);
+    // we just wrap it in a navigation controller and present it.
+    let nav = UINavigationController(rootViewController: searchResultsViewController)
+    nav.modalPresentationStyle = .formSheet
+    present(nav, animated: true)
   }
 
   @IBAction func settingsButtonTapped() {
@@ -432,7 +402,8 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   func searchResultSelected(subject: TKMSubject) {
     let vc = StoryboardScene.SubjectDetails.initialScene.instantiate()
     vc.setup(services: services, subject: subject, showHints: true)
-    searchController.dismiss(animated: true) {
+    // Dismiss the search dialog, then push the subject details onto the main navigation stack.
+    dismiss(animated: true) {
       self.navigationController?.pushViewController(vc, animated: true)
     }
   }
