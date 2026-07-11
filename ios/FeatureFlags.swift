@@ -28,6 +28,10 @@ enum FeatureFlags {
   // subscription.
   static let showAllLevelsForFreeUsers = (config == .DeveloperDebug)
 
+  // Whether to show a username/password login mode in addition to API
+  // key login.
+  static let showUsernamePasswordLogin = (config == .DeveloperDebug)
+
   private enum BuildConfig {
     case DeveloperDebug
     case TestFlightRelease

@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
   @IBOutlet private var apiTokenStack: UIStackView!
   @IBOutlet private var apiTokenField: UITextField!
   @IBOutlet private var pasteButton: UIButton!
+  @IBOutlet private var createApiTokenButton: UIButton!
   @IBOutlet private var swapLoginMethodsButton: UIButton!
   @IBOutlet private var privacyPolicyLabel: UILabel!
   @IBOutlet private var privacyPolicyButton: UIButton!
@@ -55,10 +56,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     TKMStyle.addShadowToView(privacyPolicyButton, offset: 0, opacity: 1, radius: 2)
     TKMStyle.addShadowToView(swapLoginMethodsButton, offset: 0, opacity: 1, radius: 2)
     TKMStyle.addShadowToView(pasteButton, offset: 0, opacity: 1, radius: 5)
+    TKMStyle.addShadowToView(createApiTokenButton, offset: 0, opacity: 1, radius: 2)
 
     if let forcedEmail = forcedEmail {
       emailField.text = forcedEmail
       emailField.isEnabled = false
+    }
+
+    if !FeatureFlags.showUsernamePasswordLogin {
+      swapLoginMethodsButton.isHidden = true
+      privacyPolicyLabel.isHidden = true
     }
 
     emailField.delegate = self
@@ -157,6 +164,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                      self.passwordField.isHidden = !animatingInUserPass
 
                      self.apiTokenStack.isHidden = animatingInUserPass
+                     self.createApiTokenButton.isHidden = animatingInUserPass
 
                      self.emailField.alpha = animatingInUserPass ? 1 : 0
                      self.passwordField.alpha = animatingInUserPass ? 1 : 0
@@ -173,6 +181,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       apiTokenField.text = text
       updateSignInButtonState()
     }
+  }
+
+  @IBAction func didTapCreateApiTokenButton(_: Any) {
+    UIApplication.shared
+      .open(URL(string: "https://www.wanikani.com/settings/personal_access_tokens")!)
   }
 
   // MARK: - Errors and competion
