@@ -1,15 +1,6 @@
 Bugfixes:
-- Fix a rendering issue with the "rib cage" radical.
-- Fix an issue where context sentences would sometimes not be blurred.
-- Show a better error message when the account is in hibernation mode.
-- Fix text highlighting issue in reviews.
-- Fix a crash when entering the last review in Anki mode.
-- Respect the system font size in more places.
+- Smoother transition between English and Japanese keyboards.
+- Better search bar appearance (especially on iPad).
 
-Improvements:
-- Add a "Review items in batches" setting.
-- Support universal links.
-- Sync recent mistakes between devices.
-- Allow swiping backward in the upcoming reviews screen.
-- Allow user to practice apprentice leech items.
-- Various new settings.
+Other changes:
+- Remove username/password login at Wanikani's request.
