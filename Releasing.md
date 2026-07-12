@@ -48,4 +48,5 @@
     1.  Check "Sign-in required" and enter the test account credentials
     2.  Click "Add for review" and then "Ready for review"
 3.  `fastlane tag_release`
-4.  `fastlane new_version`
+4.  `git push --tags`
+5.  `fastlane new_version`
