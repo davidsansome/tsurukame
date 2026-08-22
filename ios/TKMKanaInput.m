@@ -390,7 +390,13 @@ NSString *TKMConvertKanaText(NSString *input, bool *__nullable convertedAllChara
 - (BOOL)textField:(UITextField *)textField
     shouldChangeCharactersInRange:(NSRange)range
                 replacementString:(NSString *)string {
-  [_delegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
+  if ([_delegate respondsToSelector:@selector(textField:
+                                        shouldChangeCharactersInRange:replacementString:)] &&
+      ![_delegate textField:textField
+          shouldChangeCharactersInRange:range
+                      replacementString:string]) {
+    return NO;
+  }
   // handle case where range.length != 0 and user wants to type a single vowel (e.g. a -> あ).
   // the text input should auto-change that character to the applicable hiragana/katakana.
   // this is essentially a special case as we are dealing with a range > 0 and replacing
