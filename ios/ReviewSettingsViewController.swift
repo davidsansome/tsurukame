@@ -102,6 +102,12 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
                                                   [unowned self] in self.didTapReviewBatchSize()
                                                 },
                                                 hidden: Settings.groupMeaningReading)
+    model.add(BasicModelItem(style: .value1,
+                             title: "Repeat incorrect answers",
+                             subtitle: incorrectAnswerReturnDelayValueText,
+                             accessoryType: .disclosureIndicator) { [unowned self] in self
+        .didTapIncorrectAnswerReturnDelay()
+      })
 
     model.add(section: "Display")
     model.add(SwitchModelItem(style: .subtitle,
@@ -283,6 +289,10 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     Settings.leechThreshold.description
   }
 
+  private var incorrectAnswerReturnDelayValueText: String {
+    incorrectAnswerReturnDelayName(Settings.incorrectAnswerReturnDelay)
+  }
+
   private var fontSizeValueText: String {
     if Settings.fontSize != 0.0 {
       return "\(Int(Settings.fontSize * 100))%"
@@ -396,6 +406,11 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
     navigationController?.pushViewController(makeReviewBatchSizeViewController(), animated: true)
   }
 
+  private func didTapIncorrectAnswerReturnDelay() {
+    navigationController?.pushViewController(makeIncorrectAnswerReturnDelayViewController(),
+                                             animated: true)
+  }
+
   private func didTapReviewItemsLimit() {
     navigationController?.pushViewController(makeReviewItemsLimitViewController(), animated: true)
   }
@@ -453,6 +468,26 @@ func makeReviewBatchSizeViewController() -> UIViewController {
                                            title: name,
                                            helpText: description)
   vc.addChoicesFromRange(3 ... 10, suffix: " reviews")
+  return vc
+}
+
+func incorrectAnswerReturnDelayName(_ delay: Int) -> String {
+  switch delay {
+  case 0: return "Immediately"
+  case 1: return "After 1 item"
+  default: return "After \(delay) items"
+  }
+}
+
+func makeIncorrectAnswerReturnDelayViewController() -> UIViewController {
+  let vc =
+    SettingChoiceListViewController(setting: Settings.$incorrectAnswerReturnDelay,
+                                    title: "Repeat Incorrect Answers",
+                                    helpText: "When you get an item wrong, this is how many other items you'll be asked about before that item comes back.\n\n" +
+                                      "Choose \"Immediately\" to be asked the same item again straight away, so you can retype the correct answer.")
+  for delay in 0 ... 10 {
+    vc.addChoice(name: incorrectAnswerReturnDelayName(delay), value: delay)
+  }
   return vc
 }
 
