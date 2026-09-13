@@ -32,7 +32,6 @@ class ReviewSession {
   public private(set) var activeStudyMaterials: TKMStudyMaterials?
 
   public private(set) var tasksAnsweredCorrectly = 0
-  public private(set) var tasksAnswered = 0
   public private(set) var reviewsCompleted = 0
 
   public var wrappingUp: Bool = false {
@@ -71,10 +70,11 @@ class ReviewSession {
   }
 
   public var successRateText: String {
-    if tasksAnswered == 0 {
+    if completedReviews.isEmpty {
       return "100%"
     }
-    return String(Int(Double(tasksAnsweredCorrectly) / Double(tasksAnswered) * 100)) + "%"
+    let correct = completedReviews.filter { $0.answeredCorrectly }.count
+    return String(Int(Double(correct) / Double(completedReviews.count) * 100)) + "%"
   }
 
   public var hasStarted: Bool {
@@ -216,12 +216,10 @@ class ReviewSession {
     // Update stats.
     switch result {
     case .Correct:
-      tasksAnswered += 1
       tasksAnsweredCorrectly += 1
       activeTask.returnDelay = 0
 
     case .Incorrect:
-      tasksAnswered += 1
       // In groupMeaningReading/practice mode the queue has size 1; setting a delay
       // would evict the card and pull a new one in, breaking back-to-back retry.
       if !Settings.groupMeaningReading && !isPracticeSession {

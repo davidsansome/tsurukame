@@ -153,6 +153,10 @@ class ReviewItem: NSObject {
       answeredMeaning || answeredReading
   }
 
+  var answeredCorrectly: Bool {
+    !answer.meaningWrong && !answer.readingWrong
+  }
+
   func reset() {
     answer.clearMeaningWrong()
     answer.clearReadingWrong()

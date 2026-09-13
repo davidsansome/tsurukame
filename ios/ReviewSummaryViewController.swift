@@ -26,7 +26,7 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
     var incorrectItemsByLevel = [Int32: [ReviewItem]]()
     var correct = 0
     for item in items {
-      if !item.answer.meaningWrong, !item.answer.readingWrong {
+      if item.answeredCorrectly {
         correct += 1
         continue
       }
