@@ -102,8 +102,9 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
   }
 
   func endReviewSession(button: UIView) {
-    if reviewVC.tasksAnsweredCorrectly == 0 || !reviewVC.canWrapUp {
-      navigationController?.popToRootViewController(animated: true)
+    // Only confirm if there are half-answered reviews whose progress would be lost.
+    if !reviewVC.canWrapUp {
+      reviewVC.endReviewSession()
       return
     }
 

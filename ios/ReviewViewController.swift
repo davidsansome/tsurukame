@@ -501,6 +501,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   @objc public func endReviewSession() {
+    if session.completedReviews.isEmpty {
+      // There's nothing to show in the summary.
+      navigationController?.popToRootViewController(animated: true)
+      return
+    }
     perform(segue: StoryboardSegue.Review.reviewSummary, sender: self)
   }
 
