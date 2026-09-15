@@ -70,11 +70,15 @@ class ReviewSession {
   }
 
   public var successRateText: String {
-    if completedReviews.isEmpty {
+    // An item counts against the rate as soon as either part is wrong, before it's finished and
+    // moved to completedReviews.
+    let pendingWrong = activeQueue.filter { !$0.answeredCorrectly }.count
+    let total = completedReviews.count + pendingWrong
+    if total == 0 {
       return "100%"
     }
     let correct = completedReviews.filter { $0.answeredCorrectly }.count
-    return String(Int(Double(correct) / Double(completedReviews.count) * 100)) + "%"
+    return String(Int(Double(correct) / Double(total) * 100)) + "%"
   }
 
   public var hasStarted: Bool {
