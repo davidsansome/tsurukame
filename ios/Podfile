@@ -1,7 +1,7 @@
 # Use the CDN to make CircleCI builds faster.
 source 'https://cdn.cocoapods.org/'
 
-platform :ios, '12.0'
+platform :ios, '15.0'
 
 target 'FontScreenshotter' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -31,7 +31,7 @@ target 'Tsurukame' do
   target 'Tests' do
     inherit! :search_paths
 
-    platform :ios, '12.0'
+    platform :ios, '15.0'
     pod 'Hippolyte', '~> 1.3.0'
   end
 end
