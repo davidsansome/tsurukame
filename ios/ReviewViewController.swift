@@ -179,6 +179,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var ankiModeCachedSubmit = false
   private var isAnimatingSubjectDetailsView = false
 
+  private var isShowingWrongAnswer = false
+
   private var previousSubjectGradient: CAGradientLayer!
 
   private var previousSubject: TKMSubject?
@@ -795,6 +797,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Enable/disable the answer field, and set its first responder status.
     // This makes the keyboard appear or disappear immediately.  We need this animation to happen
     // here so it's in sync with the others.
+    unlockAnswerField()
     answerField.isEnabled = !shown && !isAnkiModeActiveForCurrentTask
     if updateFirstResponder {
       if !shown, !isAnkiModeActiveForCurrentTask {
@@ -1044,6 +1047,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   func textField(_ field: UITextField, shouldChangeCharactersIn _: NSRange,
                  replacementString _: String) -> Bool {
+    if isShowingWrongAnswer {
+      return false
+    }
     DispatchQueue.main.async {
       self.answerFieldValueDidChange()
     }
@@ -1073,7 +1079,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       markAnswer(.AskAgainLater)
       return
     }
-    if !answerField.isEnabled, !isAnkiModeActiveForCurrentTask {
+    if !answerField.isEnabled || isShowingWrongAnswer, !isAnkiModeActiveForCurrentTask {
       if !subjectDetailsView.isHidden {
         subjectDetailsView.saveStudyMaterials()
       }
@@ -1088,7 +1094,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     answerField.text = nil
     answerField.textColor = TKMStyle.Color.label
     answerField.isEnabled = true
+    unlockAnswerField()
     answerField.becomeFirstResponder()
+  }
+
+  private func unlockAnswerField() {
+    isShowingWrongAnswer = false
+    answerField.tintColor = nil
   }
 
   func submit() {
@@ -1215,10 +1227,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Otherwise show the correct answer.
     if !Settings.showAnswerImmediately, !isAnkiModeActiveForCurrentTask {
       revealAnswerButton.isHidden = false
+      isShowingWrongAnswer = true
+      answerField.tintColor = .clear
       UIView.animate(withDuration: animationDuration,
                      animations: {
                        self.answerField.textColor = .systemRed
-                       self.answerField.isEnabled = false
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)
                      })
@@ -1360,14 +1373,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                           discoverabilityTitle: "Continue")
     var keyCommands: [UIKeyCommand] = []
 
-    if !answerField.isEnabled, subjectDetailsView.isHidden {
+    if !answerField.isEnabled || isShowingWrongAnswer, subjectDetailsView.isHidden {
       // Continue when a wrong answer has been entered but the subject details view is hidden.
-      keyCommands.append(contentsOf: [UIKeyCommand(input: "\u{8}",
-                                                   modifierFlags: [],
-                                                   action: #selector(backspaceKeyPressed),
-                                                   discoverabilityTitle: "Clear wrong answer"),
-                                      keyboardEnter,
-                                      numericKeyPadEnter])
+      keyCommands.append(UIKeyCommand(input: "\u{8}",
+                                      modifierFlags: [],
+                                      action: #selector(backspaceKeyPressed),
+                                      discoverabilityTitle: "Clear wrong answer"))
+      if !answerField.isFirstResponder {
+        keyCommands.append(contentsOf: [keyboardEnter, numericKeyPadEnter])
+      }
     }
 
     if !subjectDetailsView.isHidden {
