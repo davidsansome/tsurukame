@@ -195,6 +195,7 @@ protocol SettingProtocol {
 
   @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
+  @Setting(5, #keyPath(incorrectAnswerReturnDelay)) static var incorrectAnswerReturnDelay: Int
   @Setting(15, #keyPath(reviewItemsLimit)) static var reviewItemsLimit: Int
   @Setting(Int.max, #keyPath(apprenticeLessonsLimit)) static var apprenticeLessonsLimit: Int
   @Setting(false, #keyPath(groupMeaningReading)) static var groupMeaningReading: Bool
