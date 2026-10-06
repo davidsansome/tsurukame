@@ -310,6 +310,25 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     waves.radius = 18
     waves.translatesAutoresizingMaskIntoConstraints = false
     questionBackground.insertSubview(waves, at: 0)
+
+    // A translucent white progress line and a round translucent menu button over the subject.
+    progressBar.trackTintColor = UIColor.white.withAlphaComponent(0.22)
+    progressBar.progressTintColor = .white
+    progressBar.layer.cornerRadius = 2.5
+    progressBar.clipsToBounds = true
+    progressBar.subviews.forEach { $0.layer.cornerRadius = 2.5
+      $0.clipsToBounds = true
+    }
+    var menuConfig = UIButton.Configuration.filled()
+    menuConfig.image = UIImage(systemName: "line.3.horizontal",
+                               withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))
+    menuConfig.baseForegroundColor = .white
+    menuConfig.baseBackgroundColor = UIColor.white.withAlphaComponent(0.16)
+    menuConfig.cornerStyle = .capsule
+    menuConfig.background.backgroundInsets = NSDirectionalEdgeInsets(top: 6, leading: 6,
+                                                                     bottom: 6, trailing: 6)
+    menuButton.configuration = menuConfig
+    menuButton.accessibilityLabel = "Menu"
     NSLayoutConstraint.activate([
       waves.leadingAnchor.constraint(equalTo: questionBackground.leadingAnchor),
       waves.trailingAnchor.constraint(equalTo: questionBackground.trailingAnchor),

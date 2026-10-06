@@ -37,6 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, LoginViewControllerDele
     // Paper behind every table that doesn't choose its own background.
     UITableView.appearance().backgroundColor = TKMStyle.Color.background
     UITableView.appearance().separatorColor = TKMStyle.Color.separator
+    UISwitch.appearance().onTintColor = TKMStyle.Color.accent
     navigationController = (window.rootViewController as! UINavigationController)
 
     let nc = NotificationCenter.default

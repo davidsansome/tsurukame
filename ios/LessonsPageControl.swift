@@ -34,11 +34,15 @@ class LessonsPageControl: UIControl, SubjectChipDelegate {
     }
 
     // Create the quiz chip.
+    // The quiz chip is ink with paper text, like the other primary buttons.
     let quizText = NSAttributedString(string: "Quiz")
-    let gradient: [Any] = [TKMStyle.Color.grey80.cgColor, TKMStyle.Color.grey80.cgColor]
+    let ink = TKMStyle.Color.label.resolvedColor(with: traitCollection).cgColor
+    let gradient: [Any] = [ink, ink]
     let quizChip = SubjectChip(subject: nil, chipText: quizText, sideText: nil,
                                sideTextFontSize: nil,
-                               chipTextColor: .white, chipGradient: gradient, delegate: self)
+                               chipTextColor: TKMStyle.Color.background
+                                 .resolvedColor(with: traitCollection),
+                               chipGradient: gradient, delegate: self)
     addSubview(quizChip)
     chips.append(quizChip)
 

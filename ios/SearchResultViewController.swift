@@ -81,15 +81,15 @@ class SearchResultViewController: UITableViewController, UISearchBarDelegate,
     // it doesn't run a presentation animation that would slide it out of the navigation bar, and so
     // we get a working cancel button on iPad.
     searchBar.delegate = self
-    searchBar.barTintColor = TKMStyle.radicalColor2
+    searchBar.barTintColor = TKMStyle.Color.background
     searchBar.autocapitalizationType = .none
 
     let originalSearchBarTintColor = searchBar.tintColor
-    searchBar.tintColor = .white // Make the button white.
+    searchBar.tintColor = TKMStyle.Color.accent
 
     if #available(iOS 13, *) {
       let searchTextField = searchBar.searchTextField
-      searchTextField.backgroundColor = .systemBackground
+      searchTextField.backgroundColor = TKMStyle.Color.cellBackground
       searchTextField.tintColor = originalSearchBarTintColor
     } else {
       for view in searchBar.subviews[0].subviews {

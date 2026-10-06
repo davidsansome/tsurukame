@@ -17,9 +17,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_screen" translatesAutoresizingMaskIntoConstraints="NO" id="2nw-3e-CvJ">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in to your WaniKani account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d7n-s4-OyH">
                                 <rect key="frame" x="57.5" y="233" width="260.5" height="21.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
@@ -149,13 +146,10 @@
                             <constraint firstItem="5XY-Jr-SQY" firstAttribute="leading" secondItem="dX7-mn-Kqu" secondAttribute="leading" id="EP2-Ed-FHs"/>
                             <constraint firstItem="5XY-Jr-SQY" firstAttribute="top" secondItem="dX7-mn-Kqu" secondAttribute="top" id="GAv-il-7KY"/>
                             <constraint firstItem="d7n-s4-OyH" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="HzV-nI-Nph"/>
-                            <constraint firstItem="2nw-3e-CvJ" firstAttribute="bottom" secondItem="dX7-mn-Kqu" secondAttribute="bottom" id="I35-jy-ixE"/>
-                            <constraint firstItem="2nw-3e-CvJ" firstAttribute="trailing" secondItem="dX7-mn-Kqu" secondAttribute="trailing" id="Ia3-tL-OIZ"/>
                             <constraint firstItem="ALW-Xn-F7M" firstAttribute="centerY" secondItem="Rp7-Cm-oWw" secondAttribute="centerY" id="Oih-nr-rVO"/>
                             <constraint firstItem="5XY-Jr-SQY" firstAttribute="bottom" secondItem="dX7-mn-Kqu" secondAttribute="bottom" id="RrX-4Y-sRH"/>
                             <constraint firstItem="ALW-Xn-F7M" firstAttribute="centerX" secondItem="Rp7-Cm-oWw" secondAttribute="centerX" id="S46-jY-dQh"/>
                             <constraint firstItem="Rp7-Cm-oWw" firstAttribute="bottom" secondItem="Nzq-PL-tt3" secondAttribute="bottom" constant="16" id="SXf-im-eLH"/>
-                            <constraint firstItem="2nw-3e-CvJ" firstAttribute="top" secondItem="dX7-mn-Kqu" secondAttribute="top" id="Tos-NO-hAY"/>
                             <constraint firstItem="XQW-gv-i5e" firstAttribute="leading" secondItem="Rp7-Cm-oWw" secondAttribute="leading" constant="16" id="fPH-ty-5QI"/>
                             <constraint firstItem="5XY-Jr-SQY" firstAttribute="trailing" secondItem="dX7-mn-Kqu" secondAttribute="trailing" id="few-EA-9bH"/>
                             <constraint firstItem="CPO-Og-8Rb" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="fiv-rM-akO"/>
@@ -164,7 +158,6 @@
                             <constraint firstItem="Rp7-Cm-oWw" firstAttribute="trailing" secondItem="XQW-gv-i5e" secondAttribute="trailing" constant="16" id="jwX-SG-i0P"/>
                             <constraint firstItem="CPO-Og-8Rb" firstAttribute="centerY" secondItem="dX7-mn-Kqu" secondAttribute="centerY" constant="100" id="qUg-uh-6ye"/>
                             <constraint firstItem="ZdY-Fw-RIo" firstAttribute="centerY" secondItem="Rp7-Cm-oWw" secondAttribute="centerY" constant="120" id="si1-qd-eM8"/>
-                            <constraint firstItem="2nw-3e-CvJ" firstAttribute="leading" secondItem="dX7-mn-Kqu" secondAttribute="leading" id="tMJ-Kr-V7q"/>
                             <constraint firstItem="ZdY-Fw-RIo" firstAttribute="centerX" secondItem="ALW-Xn-F7M" secondAttribute="centerX" id="vZn-4k-6Fq"/>
                         </constraints>
                     </view>
@@ -191,7 +184,6 @@
     </scenes>
     <resources>
         <image name="doc.on.clipboard" catalog="system" width="116" height="128"/>
-        <image name="launch_screen" width="1126" height="2436"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -34,14 +34,12 @@ class MainPracticeTabViewController: UITableViewController {
   private func recreateTableModel() {
     let model = MutableTableModel(tableView: tableView)
 
-    model.add(section: "Katakana")
-
-    let charactersItem = BasicModelItem(style: .default, title: "Katakana characters",
-                                        accessoryType: .disclosureIndicator) {
-      [unowned self] in
-      self.perform(segue: StoryboardSegue.Main.katakanaCharacterPractice, sender: self)
-    }
-    model.add(charactersItem)
+    model.addSection()
+    model.add(PracticeCardItem(caption: "Katakana", title: "Katakana characters", glyph: "カ",
+                               samples: ["ア", "シ", "ツ", "ソ", "ン"]) { [unowned self] in
+        self.perform(segue: StoryboardSegue.Main.katakanaCharacterPractice, sender: self)
+      })
+    model.add(section: nil, footer: "Practice sessions don't affect your WaniKani SRS progress.")
 
     self.model = model
     tableView.reloadData()

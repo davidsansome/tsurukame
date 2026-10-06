@@ -22,6 +22,8 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
   private var model: TableModel?
   private var reviewsBySubjectId: [Int64: ReviewItem] = [:]
   private var selectedItems: [Int64: ReviewItem] = [:]
+  private let selectionLabel = UILabel()
+  private var startButton: UIBarButtonItem!
 
   func setup(services: TKMServices) {
     self.services = services
@@ -36,16 +38,20 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationItem.title = "Lesson Picker"
-    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Begin", style: .plain,
-                                                        target: self,
-                                                        action: #selector(startLessons))
-    navigationItem.rightBarButtonItem?.isEnabled = false // waiting for user to select items
+    // The selection count and Start button live in a toolbar along the bottom.
+    startButton = UIBarButtonItem(title: "Start lessons", style: .done, target: self,
+                                  action: #selector(startLessons))
+    startButton.tintColor = TKMStyle.Color.accent
+    selectionLabel.font = UIFont.systemFont(ofSize: 15)
+    selectionLabel.textColor = TKMStyle.Color.grey33
+    toolbarItems = [UIBarButtonItem(customView: selectionLabel), .flexibleSpace(), startButton]
+    updateSelection()
 
     let model = MutableTableModel(tableView: tableView)
     model.add(section: "",
               footer: "Select items below to queue them up for lessons. " +
-                "When you've finished selecting items, tap \"Begin\" " +
-                "in the top right to start.")
+                "When you've finished selecting items, tap \"Start lessons\" " +
+                "at the bottom to begin.")
 
     let assignments = services.localCachingClient.getNonExcludedAssignments()
     let items = ReviewItem.readyForLessons(assignments: assignments,
@@ -111,6 +117,19 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     navigationController?.isNavigationBarHidden = false
+    navigationController?.setToolbarHidden(false, animated: animated)
+  }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    navigationController?.setToolbarHidden(true, animated: animated)
+  }
+
+  private func updateSelection() {
+    let count = selectedItems.count
+    selectionLabel.text = count == 0 ? "Tap items to select them" : "\(count) selected"
+    selectionLabel.sizeToFit()
+    startButton.isEnabled = count > 0
   }
 
   override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
@@ -135,8 +154,6 @@ class LessonPickerViewController: UITableViewController, SubjectDelegate {
     } else {
       selectedItems[subject.id] = reviewsBySubjectId[subject.id]
     }
-    navigationItem.rightBarButtonItem?.title = selectedItems
-      .count > 0 ? "Begin (\(selectedItems.count))" : "Begin"
-    navigationItem.rightBarButtonItem?.isEnabled = selectedItems.count > 0
+    updateSelection()
   }
 }

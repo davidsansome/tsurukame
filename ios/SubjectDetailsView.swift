@@ -23,7 +23,8 @@ private let kFontSize: CGFloat = {
   return bodyFontDescriptor.pointSize
 }()
 
-private let kMeaningSynonymColor = UIColor(red: 0.231, green: 0.6, blue: 0.988, alpha: 1)
+// User-added synonyms are marked in the accent colour.
+private let kMeaningSynonymColor = TKMStyle.Color.accent
 
 private func join(_ arr: [NSAttributedString], with joinString: String) -> NSAttributedString {
   let ret = NSMutableAttributedString()

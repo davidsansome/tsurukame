@@ -125,7 +125,7 @@ class SubjectChip: UIView {
 private let kChipHeight: CGFloat = UIFontMetrics.default.scaledValue(for: 28.0)
 private let kLabelInset: CGFloat = 6.0
 private let kLabelHeight: CGFloat = kChipHeight - kLabelInset * 2.0
-private let kChipCornerRadius: CGFloat = 6.0
+private let kChipCornerRadius: CGFloat = 8.0
 
 private let kChipHorizontalSpacing: CGFloat = UIFontMetrics.default.scaledValue(for: 8.0)
 

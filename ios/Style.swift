@@ -100,6 +100,23 @@ class TKMStyle: NSObject {
     }
   }
 
+  // For filled shapes with white text on top. Unlike color(forSRSStageCategory:), which lightens
+  // in dark mode so it reads as text on a dark background, these stay deep in both modes.
+  class func fillColor(forSRSStageCategory srsStageCategory: SRSStageCategory) -> UIColor {
+    switch srsStageCategory {
+    case .apprentice:
+      return UIColorFromHex(0xB8346B)
+    case .guru:
+      return UIColorFromHex(0x74409F)
+    case .master:
+      return UIColorFromHex(0x2F55B5)
+    case .enlightened:
+      return UIColorFromHex(0x2F7FB5)
+    case .burned:
+      return UIColorFromHex(0x3A3631)
+    }
+  }
+
   class func color2(forSubjectType subjectType: TKMSubject.TypeEnum) -> UIColor {
     switch subjectType {
     case .radical:
