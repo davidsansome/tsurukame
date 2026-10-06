@@ -25,7 +25,7 @@ private let kPreviousSubjectAnimationDuration: Double = 0.3
 
 // Paper text on the ink reading strip, ink text on the paper meaning strip.
 private let kReadingTextColor = UIColor(red: 0.961, green: 0.937, blue: 0.890, alpha: 1.0)
-private let kMeaningTextColor = UIColor(red: 0.122, green: 0.114, blue: 0.102, alpha: 1.0)
+private let kMeaningTextColor = TKMStyle.Color.label
 private let kDefaultButtonTintColor = UIButton().tintColor
 
 // If the keyboard height changes by less than this amount, the question label will stay where it
@@ -296,6 +296,26 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     TKMStyle.addShadowToView(questionLabel, offset: 1, opacity: 0.2, radius: 4)
     TKMStyle.addShadowToView(previousSubjectButton, offset: 0, opacity: 0.7, radius: 4)
+
+    // The subject sits on a block of its colour with rounded bottom corners and a faint wave
+    // pattern, above paper.
+    view.backgroundColor = TKMStyle.Color.background
+    questionBackground.layer.cornerRadius = 28
+    questionBackground.layer.cornerCurve = .continuous
+    questionBackground.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+    questionBackground.clipsToBounds = true
+    let waves = WavesView()
+    waves.waveColor = UIColor.white.withAlphaComponent(0.08)
+    waves.fillColor = .clear
+    waves.radius = 18
+    waves.translatesAutoresizingMaskIntoConstraints = false
+    questionBackground.insertSubview(waves, at: 0)
+    NSLayoutConstraint.activate([
+      waves.leadingAnchor.constraint(equalTo: questionBackground.leadingAnchor),
+      waves.trailingAnchor.constraint(equalTo: questionBackground.trailingAnchor),
+      waves.bottomAnchor.constraint(equalTo: questionBackground.bottomAnchor),
+      waves.heightAnchor.constraint(equalTo: questionBackground.heightAnchor, multiplier: 0.3),
+    ])
 
     wrapUpIcon.image = Asset.baselineAccessTimeBlack24pt.image
       .withRenderingMode(UIImage.RenderingMode.alwaysTemplate)

@@ -140,6 +140,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   public func setup(services: TKMServices, delegate: SubjectDelegate) {
     self.services = services
     subjectDelegate = delegate
+    backgroundColor = TKMStyle.Color.background
   }
 
   public func saveStudyMaterials() {

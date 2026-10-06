@@ -62,6 +62,8 @@ class WavesView: UIView {
     guard let context = UIGraphicsGetCurrentContext() else { return }
     let fill = fillColor.resolvedColor(with: traitCollection)
     let line = waveColor.resolvedColor(with: traitCollection)
+    // A clear fill punches holes instead of painting, so the rings can sit over any background.
+    let fillBlendMode: CGBlendMode = fill.cgColor.alpha == 0 ? .clear : .normal
 
     // Draw rows from the top down, so each row of scales overlaps the one behind it.
     let rowStep = radius / 2
@@ -75,7 +77,9 @@ class WavesView: UIView {
         // Alternate filled discs of decreasing size to make the concentric rings.
         for ring in 0 ..< 4 {
           let r = radius * (1 - CGFloat(ring) * 0.22)
-          context.setFillColor((ring % 2 == 0 ? line : fill).cgColor)
+          let isLine = ring % 2 == 0
+          context.setBlendMode(isLine ? .copy : fillBlendMode)
+          context.setFillColor((isLine ? line : fill).cgColor)
           context.fillEllipse(in: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2))
         }
       }

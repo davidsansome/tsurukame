@@ -70,7 +70,7 @@ class TKMStyle: NSObject {
   // The review prompt strip: ink for readings, paper for meanings.
   static let readingColor1 = AdaptiveColorHex(light: 0x1F1D1A, dark: 0x2E2B26)
   static let readingColor2 = readingColor1
-  static let meaningColor1 = AdaptiveColorHex(light: 0xFFFCF6, dark: 0xE9E1D2)
+  static let meaningColor1 = Color.background
   static let meaningColor2 = meaningColor1
 
   static let explosionColor1 = UIColor(red: 247.0 / 255, green: 181.0 / 255, blue: 74.0 / 255,

@@ -37,6 +37,82 @@ class AnswerTextField: UITextField {
     }
   }
 
+  // MARK: - Appearance
+
+  // The field is drawn as a rounded box inset from the edges of the text field. The review screen
+  // marks a wrong answer by colouring its text with the accent colour, and the box follows suit.
+  private static let horizontalInset: CGFloat = 16
+  private static let verticalInset: CGFloat = 6
+  // Room on the right for the submit button that sits over the field.
+  private static let trailingTextInset: CGFloat = 56
+
+  private let fieldLayer = CAShapeLayer()
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    commonInit()
+  }
+
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+    commonInit()
+  }
+
+  private func commonInit() {
+    borderStyle = .none
+    fieldLayer.lineWidth = 2
+    layer.insertSublayer(fieldLayer, at: 0)
+    updateFieldColors()
+  }
+
+  private var isMarkedIncorrect: Bool {
+    textColor == TKMStyle.Color.accent
+  }
+
+  override var textColor: UIColor? {
+    didSet { updateFieldColors() }
+  }
+
+  private var fieldRect: CGRect {
+    bounds.insetBy(dx: AnswerTextField.horizontalInset, dy: AnswerTextField.verticalInset)
+  }
+
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    fieldLayer.frame = bounds
+    fieldLayer.path = UIBezierPath(roundedRect: fieldRect, cornerRadius: 18).cgPath
+  }
+
+  override func textRect(forBounds bounds: CGRect) -> CGRect {
+    bounds.inset(by: UIEdgeInsets(top: 0, left: AnswerTextField.trailingTextInset, bottom: 0,
+                                  right: AnswerTextField.trailingTextInset))
+  }
+
+  override func editingRect(forBounds bounds: CGRect) -> CGRect {
+    textRect(forBounds: bounds)
+  }
+
+  override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+    textRect(forBounds: bounds)
+  }
+
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    super.traitCollectionDidChange(previousTraitCollection)
+    updateFieldColors()
+  }
+
+  private func updateFieldColors() {
+    let incorrectFill = UIColor { tc in
+      tc.userInterfaceStyle == .dark ?
+        UIColor(red: 0.239, green: 0.141, blue: 0.125, alpha: 1) :
+        UIColor(red: 0.984, green: 0.906, blue: 0.886, alpha: 1)
+    }
+    let fill = isMarkedIncorrect ? incorrectFill : TKMStyle.Color.cellBackground
+    let stroke = isMarkedIncorrect ? TKMStyle.Color.accent : TKMStyle.Color.label
+    fieldLayer.fillColor = fill.resolvedColor(with: traitCollection).cgColor
+    fieldLayer.strokeColor = stroke.resolvedColor(with: traitCollection).cgColor
+  }
+
   // MARK: - UIResponder
 
   override var textInputContextIdentifier: String? {
