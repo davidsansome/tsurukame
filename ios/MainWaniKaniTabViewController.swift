@@ -85,37 +85,22 @@ class MainWaniKaniTabViewController: UITableViewController {
     let model = MutableTableModel(tableView: tableView)
 
     if !user.hasVacationStartedAt {
-      model.add(section: "Currently available")
-      let lessonsItem = BasicModelItem(style: .value1,
-                                       title: "Lessons",
-                                       subtitle: "",
-                                       accessoryType: .disclosureIndicator) { [unowned self] in self
-        .startLessons()
-      }
       let apprenticeCount = services.localCachingClient.apprenticeCount
       let limit = Settings.apprenticeLessonsLimit
-      let disabledMessage = apprenticeCount >= limit ? "apprentice limit reached" : nil
-      hasLessons = setTableViewCellCount(lessonsItem, count: lessons,
-                                         disabledMessage: disabledMessage)
-      model.add(lessonsItem)
+      let lessonsDisabledMessage = apprenticeCount >= limit ? "Apprentice limit reached" : nil
+      let alreadyPassedButApprenticeCount = apprenticeCount - recentLessonCount
+      hasLessons = lessons > 0 && lessonsDisabledMessage == nil
+      hasReviews = reviews > 0
 
-      if lessons > 0 && apprenticeCount < limit {
-        model.add(BasicModelItem(style: .value1,
-                                 title: "Lesson Picker",
-                                 subtitle: "",
-                                 accessoryType: .disclosureIndicator) { [unowned self] in
-            self.showLessonPicker()
-          })
-      }
-
-      let reviewsItem = BasicModelItem(style: .value1,
-                                       title: "Reviews",
-                                       subtitle: "",
-                                       accessoryType: .disclosureIndicator) { [unowned self] in self
-        .startReviews()
-      }
-      hasReviews = setTableViewCellCount(reviewsItem, count: reviews)
-      model.add(reviewsItem)
+      model.addSection()
+      let hero = HomeHeroItem(reviewCount: reviews, lessonCount: lessons,
+                              lessonsDisabledMessage: lessonsDisabledMessage,
+                              leechCount: max(alreadyPassedButApprenticeCount, 0))
+      hero.startReviews = { [unowned self] in self.startReviews() }
+      hero.startLessons = { [unowned self] in self.startLessons() }
+      hero.showLessonPicker = { [unowned self] in self.showLessonPicker() }
+      hero.startLeechReviews = { [unowned self] in self.startAlreadyPassedApprenticeReviews() }
+      model.add(hero)
 
       model.add(section: "Upcoming reviews")
       model.add(UpcomingReviewsChartItem(upcomingReviews: upcomingReviews,
@@ -150,21 +135,6 @@ class MainWaniKaniTabViewController: UITableViewController {
         }
         _ = setTableViewCellCount(recentMistakesItem, count: recentMistakes)
         model.add(recentMistakesItem)
-      }
-
-      let alreadyPassedButApprenticeCount = apprenticeCount - recentLessonCount
-      if alreadyPassedButApprenticeCount > 0 {
-        let alreadyPassedApprenticeItem = BasicModelItem(style: .value1,
-                                                         title: "Review apprentice leeches",
-                                                         subtitle: "",
-                                                         accessoryType: .disclosureIndicator) { [
-          unowned self
-        ] in
-          self.startAlreadyPassedApprenticeReviews()
-        }
-        _ = setTableViewCellCount(alreadyPassedApprenticeItem,
-                                  count: alreadyPassedButApprenticeCount)
-        model.add(alreadyPassedApprenticeItem)
       }
 
       if leechCount > 0 {
@@ -207,6 +177,11 @@ class MainWaniKaniTabViewController: UITableViewController {
     addShowRemainingAllItems(model: model, level: Int(user.currentLevel))
 
     model.add(section: "All levels")
+    var srsCounts = [SRSStageCategory: Int]()
+    for category in SRSStageCategory.apprentice ... SRSStageCategory.burned {
+      srsCounts[category] = Int(services.localCachingClient.srsCategoryCounts[category.rawValue])
+    }
+    model.add(SRSBreakdownItem(counts: srsCounts))
     for category in SRSStageCategory.apprentice ... SRSStageCategory.burned {
       let count = services.localCachingClient.srsCategoryCounts[category.rawValue]
       let item = SRSStageCategoryItem(stageCategory: category, count: Int(count),
