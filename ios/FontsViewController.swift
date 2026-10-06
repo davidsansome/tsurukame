@@ -63,7 +63,7 @@ class FontsViewController: DownloadViewController {
         [unowned self] in
         self.didTapDeleteAllFonts()
       }
-      deleteItem.textColor = .systemRed
+      deleteItem.textColor = TKMStyle.Color.accent
       model.add(deleteItem)
     }
   }

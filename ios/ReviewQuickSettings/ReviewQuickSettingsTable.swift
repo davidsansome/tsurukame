@@ -36,8 +36,9 @@ class ReviewQuickSettingsTable: UIViewController, UITableViewDelegate {
   override func loadView() {
     tableView = UITableView(frame: .zero, style: .grouped)
     tableView.delegate = self
-    tableView.backgroundColor = .darkGray
-    tableView.separatorColor = .gray
+    // The menu slides in like a night sky beside the review.
+    tableView.backgroundColor = TKMStyle.Color.night
+    tableView.separatorColor = UIColor.white.withAlphaComponent(0.12)
     view = tableView
   }
 
@@ -54,18 +55,26 @@ class ReviewQuickSettingsTable: UIViewController, UITableViewDelegate {
 
   // MARK: - UITableViewDelegate
 
-  func tableView(_: UITableView, willDisplayHeaderView view: UIView, forSection _: Int) {
-    if let header = view as? UITableViewHeaderFooterView {
-      header.textLabel?.textColor = .lightGray
+  func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView,
+                 forSection section: Int) {
+    if let header = view as? UITableViewHeaderFooterView,
+       let title = tableView.dataSource?.tableView?(tableView, titleForHeaderInSection: section) {
+      var config = header.defaultContentConfiguration()
+      config.attributedText = NSAttributedString(string: title.uppercased(), attributes: [
+        .font: UIFont.systemFont(ofSize: 12, weight: .bold),
+        .foregroundColor: TKMStyle.Color.onNightSecondary,
+        .kern: 1.6,
+      ])
+      header.contentConfiguration = config
     }
   }
 
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
                  forRowAt _: IndexPath) {
     cell.backgroundColor = tableView.backgroundColor
-    cell.textLabel?.textColor = .white
-    cell.imageView?.tintColor = .white
-    cell.tintColor = .white
+    cell.textLabel?.textColor = TKMStyle.Color.onNight
+    cell.imageView?.tintColor = TKMStyle.Color.onNight
+    cell.tintColor = TKMStyle.Color.onNight
     cell.separatorInset = .zero
 
     // Disclosure indicators don't take the cell's tint color, so we have to change the button's
@@ -77,7 +86,7 @@ class ReviewQuickSettingsTable: UIViewController, UITableViewDelegate {
       }) as? UIButton {
         if let image = button.backgroundImage(for: .normal) {
           button.setBackgroundImage(image.withRenderingMode(.alwaysTemplate), for: .normal)
-          button.tintColor = .white
+          button.tintColor = TKMStyle.Color.onNight
         }
       }
     }

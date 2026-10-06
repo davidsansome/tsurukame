@@ -23,8 +23,9 @@ private let kPreviousSubjectScale: CGFloat = 0.25
 private let kPreviousSubjectButtonPadding: CGFloat = 6.0
 private let kPreviousSubjectAnimationDuration: Double = 0.3
 
-private let kReadingTextColor = UIColor.white
-private let kMeaningTextColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0)
+// Paper text on the ink reading strip, ink text on the paper meaning strip.
+private let kReadingTextColor = UIColor(red: 0.961, green: 0.937, blue: 0.890, alpha: 1.0)
+private let kMeaningTextColor = UIColor(red: 0.122, green: 0.114, blue: 0.102, alpha: 1.0)
 private let kDefaultButtonTintColor = UIButton().tintColor
 
 // If the keyboard height changes by less than this amount, the question label will stay where it
@@ -57,11 +58,11 @@ private func copyLabel(_ original: UILabel) -> UILabel {
   return copy
 }
 
-private let kDotColorApprentice = UIColor(red: 0.87, green: 0.00, blue: 0.58, alpha: 1.0)
-private let kDotColorGuru = UIColor(red: 0.53, green: 0.18, blue: 0.62, alpha: 1.0)
-private let kDotColorMaster = UIColor(red: 0.16, green: 0.30, blue: 0.86, alpha: 1.0)
-private let kDotColorEnlightened = UIColor(red: 0.00, green: 0.58, blue: 0.87, alpha: 1.0)
-private let kDotColorBurned = UIColor(red: 0.26, green: 0.26, blue: 0.26, alpha: 1.0)
+private let kDotColorApprentice = TKMStyle.color(forSRSStageCategory: .apprentice)
+private let kDotColorGuru = TKMStyle.color(forSRSStageCategory: .guru)
+private let kDotColorMaster = TKMStyle.color(forSRSStageCategory: .master)
+private let kDotColorEnlightened = TKMStyle.color(forSRSStageCategory: .enlightened)
+private let kDotColorBurned = TKMStyle.color(forSRSStageCategory: .burned)
 
 private func getDots(stage: SRSStage) -> NSAttributedString? {
   var string: NSMutableAttributedString?
@@ -868,7 +869,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     previousSubjectButton.alpha = shown ? 0.0 : 1.0
 
     // Change the foreground color of the answer field.
-    answerField.textColor = shown ? .systemRed : TKMStyle.Color.label
+    answerField.textColor = shown ? TKMStyle.Color.accent : TKMStyle.Color.label
 
     // Scroll to the top.
     subjectDetailsView
@@ -1190,7 +1191,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   func highlightAndShakeAnswer(ranges: [NSRange]) {
     let text = NSMutableAttributedString(string: answerField.text!)
     for range in ranges {
-      text.addAttribute(.foregroundColor, value: UIColor.systemRed, range: range)
+      text.addAttribute(.foregroundColor, value: TKMStyle.Color.accent, range: range)
     }
     answerField.attributedText = text
 
@@ -1274,7 +1275,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       answerField.tintColor = .clear
       UIView.animate(withDuration: animationDuration,
                      animations: {
-                       self.answerField.textColor = .systemRed
+                       self.answerField.textColor = TKMStyle.Color.accent
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)
                      })

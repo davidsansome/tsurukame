@@ -63,6 +63,15 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     searchResultsVC.setup(services: services, delegate: self)
     searchResultsViewController = searchResultsVC
 
+    view.backgroundColor = TKMStyle.Color.background
+    if let items = navigationItem.rightBarButtonItems, items.count == 2 {
+      items[0].image = UIImage(systemName: "gearshape")
+      items[1].image = UIImage(systemName: "magnifyingglass")
+      for item in items {
+        item.tintColor = TKMStyle.Color.label
+      }
+    }
+
     updateGradientColors()
     updateHourlyTimer()
     recreateTableModel()
@@ -84,7 +93,9 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   }
 
   private func updateGradientColors() {
-    headerGradient.colors = TKMStyle.radicalGradient
+    // The header sits on plain paper; the gradient view is kept so the layout doesn't change.
+    let paper = TKMStyle.Color.background.resolvedColor(with: traitCollection).cgColor
+    headerGradient.colors = [paper, paper]
   }
 
   private func scheduleTableModelUpdate() {
@@ -154,7 +165,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   }
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
-    .lightContent
+    .default
   }
 
   override func traitCollectionDidChange(_: UITraitCollection?) {

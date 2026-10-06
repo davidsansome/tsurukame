@@ -205,6 +205,8 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
     cell.baseItem = item
     cell.tableView = tableView
+    // Items that want a different background set their own in update().
+    cell.backgroundColor = TKMStyle.Color.cellBackground
     cell.update()
     CATransaction.commit()
     return cell
@@ -252,6 +254,40 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
       return rowHeight
     }
     return tableView.rowHeight
+  }
+
+  // Section headers are small tracked capitals in secondary ink. The content is set here, before
+  // UIKit sizes the header, so it lays out correctly. Delegates can still restyle it in
+  // willDisplayHeaderView, which is forwarded to them as before.
+  func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    guard let title = sections[viewSectionToModelSection(section)].headerTitle,
+          !title.isEmpty else {
+      return nil
+    }
+    let reuseId = "TKMSectionHeader"
+    let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: reuseId) ??
+      UITableViewHeaderFooterView(reuseIdentifier: reuseId)
+    var config = UIListContentConfiguration.groupedHeader()
+    config.attributedText = NSAttributedString(string: title.uppercased(), attributes: [
+      .font: UIFont.systemFont(ofSize: 12, weight: .bold),
+      .foregroundColor: TKMStyle.Color.grey33,
+      .kern: 1.6,
+    ])
+    header.contentConfiguration = config
+    return header
+  }
+
+  // Some storyboards set the estimated header height to 0, which turns off self-sizing for the
+  // custom header views above.
+  func tableView(_: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+    let section = sections[viewSectionToModelSection(section)]
+    if (section.headerTitle ?? "").isEmpty {
+      return 12
+    }
+    if useSectionHeaderHeightFromView {
+      return tableView.sectionHeaderHeight
+    }
+    return 44
   }
 
   func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
