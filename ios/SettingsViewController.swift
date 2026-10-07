@@ -95,6 +95,13 @@ class SettingsViewController: SettingsTableViewController, TKMViewController {
     logOutItem.textColor = TKMStyle.Color.accent
     model.add(logOutItem)
 
+    model.addSection()
+    model.add(BasicModelItem(style: .default,
+                             title: "Give feedback on the new app look",
+                             accessoryType: .disclosureIndicator) {
+        UIApplication.shared.open(kRedesignFeedbackURL)
+      })
+
     self.model = model
     styleRows(model)
     model.reloadTable()

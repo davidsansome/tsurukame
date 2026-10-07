@@ -84,6 +84,15 @@ class MainWaniKaniTabViewController: UITableViewController {
 
     let model = MutableTableModel(tableView: tableView)
 
+    model.addSection()
+    if !Settings.dismissedRedesignFeedbackCard {
+      let feedbackIndexPath = IndexPath(row: 0, section: 0)
+      model.add(RedesignFeedbackItem { [unowned self] in
+        Settings.dismissedRedesignFeedbackCard = true
+        self.model.setIndexPath(feedbackIndexPath, hidden: true)
+      })
+    }
+
     if !user.hasVacationStartedAt {
       let apprenticeCount = services.localCachingClient.apprenticeCount
       let limit = Settings.apprenticeLessonsLimit
@@ -92,7 +101,6 @@ class MainWaniKaniTabViewController: UITableViewController {
       hasLessons = lessons > 0 && lessonsDisabledMessage == nil
       hasReviews = reviews > 0
 
-      model.addSection()
       let hero = HomeHeroItem(reviewCount: reviews, lessonCount: lessons,
                               lessonsDisabledMessage: lessonsDisabledMessage,
                               leechCount: max(alreadyPassedButApprenticeCount, 0))
