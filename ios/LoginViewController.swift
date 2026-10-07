@@ -129,7 +129,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     let waves = WavesView()
     waves.fillColor = UIColor(red: 0.133, green: 0.192, blue: 0.310, alpha: 1)
     waves.waveColor = UIColor(red: 0.200, green: 0.278, blue: 0.424, alpha: 1)
-    waves.radius = 16
+    waves.radius = 32
 
     for v in [waves, hanko, title] {
       v.translatesAutoresizingMaskIntoConstraints = false

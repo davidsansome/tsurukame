@@ -26,7 +26,7 @@ class WavesView: UIView {
   }
 
   // Radius of each scale of the pattern, in points.
-  var radius: CGFloat = 14 {
+  var radius: CGFloat = 28 {
     didSet { setNeedsDisplay() }
   }
 

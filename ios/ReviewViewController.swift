@@ -328,7 +328,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     let waves = WavesView()
     waves.waveColor = UIColor.white.withAlphaComponent(0.08)
     waves.fillColor = .clear
-    waves.radius = 18
+    waves.radius = 36
     waves.translatesAutoresizingMaskIntoConstraints = false
     questionBackground.insertSubview(waves, at: 0)
 
@@ -1227,11 +1227,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   func questionLabelFontSize() -> CGFloat {
-    if UIDevice.current.userInterfaceIdiom == .pad {
-      return CGFloat(defaultFontSize * 2.5 * Double(Settings.fontSize))
-    } else {
-      return CGFloat(defaultFontSize * Double(Settings.fontSize))
-    }
+    TKMStyle.reviewSubjectFontSize(baseSize: CGFloat(defaultFontSize))
   }
 
   @objc func toggleFont() {

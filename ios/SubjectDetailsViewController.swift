@@ -92,11 +92,12 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     let waves = WavesView()
     waves.waveColor = UIColor.white.withAlphaComponent(0.08)
     waves.fillColor = .clear
-    waves.radius = 18
+    waves.radius = 36
 
-    // Subjects keep the app's Japanese font.
-    subjectTitle.font = UIFont(name: TKMStyle.japaneseFontName, size: 96)
-    subjectTitle.attributedText = japaneseText(subject, imageSize: 80.0)
+    // Subjects keep the app's Japanese font, no bigger than on the review screen.
+    let titleSize = TKMStyle.reviewSubjectFontSize()
+    subjectTitle.font = UIFont(name: TKMStyle.japaneseFontName, size: titleSize)
+    subjectTitle.attributedText = japaneseText(subject, imageSize: titleSize * 0.85)
     subjectTitle.adjustsFontSizeToFitWidth = true
     subjectTitle.minimumScaleFactor = 0.4
     for constraint in subjectTitle.constraints where constraint.firstAttribute == .height {
