@@ -48,12 +48,14 @@ class SubjectModelItem: TableModelItem {
 
 private let kJapaneseTextImageSize: CGFloat = 26.0
 private let kFontSize: CGFloat = UIFontMetrics.default.scaledValue(for: 14.0)
+// How far a subject's tile reaches past its text.
+private let kTilePadding = CGSize(width: 8, height: 6)
 
 class SubjectModelView: TableModelCell {
   @TypedModelItem var item: SubjectModelItem
 
   private weak var gradient: CAGradientLayer?
-  private let tile = CALayer()
+  private let tile = UIView()
 
   @IBOutlet var levelLabel: UILabel!
   @IBOutlet var subjectLabel: UILabel!
@@ -68,27 +70,36 @@ class SubjectModelView: TableModelCell {
     let gradientLayer = CAGradientLayer()
     gradient = gradientLayer
     layer.insertSublayer(gradientLayer, at: 0)
-    tile.cornerRadius = 10
-    tile.cornerCurve = .continuous
+    tile.layer.cornerRadius = 10
+    tile.layer.cornerCurve = .continuous
+  }
+
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    // A long meaning is truncated rather than squashing the subject, whose tile is sized from it.
+    subjectLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+    // The tile follows the subject's text as it changes when the cell is reused, and is at least
+    // square so a single character doesn't get a narrow one.
+    tile.translatesAutoresizingMaskIntoConstraints = false
+    tile.isUserInteractionEnabled = false
+    contentView.insertSubview(tile, at: 0)
+    let tileWidth = tile.widthAnchor.constraint(equalTo: subjectLabel.widthAnchor,
+                                                constant: kTilePadding.width * 2)
+    tileWidth.priority = .defaultHigh
+    NSLayoutConstraint.activate([
+      tile.centerXAnchor.constraint(equalTo: subjectLabel.centerXAnchor),
+      tile.centerYAnchor.constraint(equalTo: subjectLabel.centerYAnchor),
+      tile.heightAnchor.constraint(equalTo: subjectLabel.heightAnchor,
+                                   constant: kTilePadding.height * 2),
+      tile.widthAnchor.constraint(greaterThanOrEqualTo: tile.heightAnchor),
+      tileWidth,
+    ])
   }
 
   override func layoutSubviews() {
     super.layoutSubviews()
     gradient?.frame = bounds
-    if tile.superlayer == nil {
-      contentView.layer.insertSublayer(tile, at: 0)
-    }
-    // The label sits inside a stack view, so lay that out first and convert its frame.
-    contentView.layoutIfNeeded()
-    var tileFrame = contentView.convert(subjectLabel.bounds, from: subjectLabel)
-      .insetBy(dx: -8, dy: -6)
-    if tileFrame.width < tileFrame.height {
-      tileFrame = tileFrame.insetBy(dx: (tileFrame.width - tileFrame.height) / 2, dy: 0)
-    }
-    CATransaction.begin()
-    CATransaction.setDisableActions(true)
-    tile.frame = tileFrame
-    CATransaction.commit()
 
     // Make sure the level label is wide enough for two digits, even when the system
     // font is larger than normal.
@@ -107,6 +118,9 @@ class SubjectModelView: TableModelCell {
       levelLabel.text = "\(item.subject.level)"
     }
     updateGradient()
+    // The tile reaches past the subject, so leave room for it before the answers.
+    (subjectLabel.superview as? UIStackView)?
+      .setCustomSpacing(item.showsTile ? kTilePadding.width * 2 : 0, after: subjectLabel)
     // Tile rows have ink text on the card; full-colour rows have white text.
     let secondaryText = item.showsTile ? TKMStyle.Color.grey33 : .white
     levelLabel.textColor = secondaryText
@@ -239,7 +253,7 @@ class SubjectModelView: TableModelCell {
     if item.showsTile {
       gradient?.isHidden = true
       tile.isHidden = false
-      tile.backgroundColor = (colors.first as! CGColor)
+      tile.backgroundColor = UIColor(cgColor: colors.first as! CGColor)
     } else {
       gradient?.isHidden = false
       tile.isHidden = true
