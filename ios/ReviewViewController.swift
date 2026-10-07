@@ -1323,6 +1323,29 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     markAnswer(.OverrideAnswerCorrect)
   }
 
+  // ⌘C copies the selected text if the user has selected something in the subject details view,
+  // otherwise it marks the answer correct.
+  @objc func commandCPressed() {
+    if let textView = selectedTextView(in: subjectDetailsView) {
+      textView.copy(nil)
+    } else {
+      markCorrect()
+    }
+  }
+
+  private func selectedTextView(in view: UIView) -> UITextView? {
+    if let textView = view as? UITextView, textView.isSelectable,
+       textView.selectedRange.length > 0 {
+      return textView
+    }
+    for subview in view.subviews {
+      if let textView = selectedTextView(in: subview) {
+        return textView
+      }
+    }
+    return nil
+  }
+
   @objc func markIncorrect() {
     randomTask()
   }
@@ -1398,7 +1421,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                                    discoverabilityTitle: "Ask again later"),
                                       UIKeyCommand(input: "c",
                                                    modifierFlags: [.command],
-                                                   action: #selector(markCorrect),
+                                                   action: #selector(commandCPressed),
                                                    discoverabilityTitle: "Mark correct"),
                                       UIKeyCommand(input: "c",
                                                    modifierFlags: [.control],
