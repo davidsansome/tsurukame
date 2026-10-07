@@ -786,6 +786,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       var taskTypePrompt: String
       var promptGradient: [CGColor]
       var promptTextColor: UIColor
+      var promptColor: UIColor
       var taskTypePlaceholder: String
 
       switch session.activeAssignment.subjectType {
@@ -803,6 +804,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         kanaInput.enabled = false
         taskTypePrompt = session.activeAssignment.subjectType == .radical ? "Name" : "Meaning"
         promptGradient = TKMStyle.meaningGradient
+        promptColor = TKMStyle.meaningColor1
         promptTextColor = kMeaningTextColor
         taskTypePlaceholder = "Your Response"
         if isAnkiModeActiveForCurrentTask {
@@ -812,6 +814,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         kanaInput.enabled = true
         taskTypePrompt = "Reading"
         promptGradient = TKMStyle.readingGradient
+        promptColor = TKMStyle.readingColor1
         promptTextColor = kReadingTextColor
         taskTypePlaceholder = "答え"
         if isAnkiModeActiveForCurrentTask {
@@ -857,6 +860,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         .animateColors(to: TKMStyle.gradient(forAssignment: session.activeAssignment),
                        duration: animationDuration)
       promptBackground.animateColors(to: promptGradient, duration: animationDuration)
+      // The page behind the subject's rounded corners and the answer field matches the prompt.
+      UIView.animate(withDuration: animationDuration) { self.view.backgroundColor = promptColor }
 
       // Accessibility.
       successRateLabel.accessibilityLabel = session.successRateText + " correct so far"
@@ -867,7 +872,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
       answerField.text = nil
       answerField.textColor = TKMStyle.Color.label
-      answerField.backgroundColor = TKMStyle.Color.background
+      answerField.backgroundColor = .clear
       answerField.placeholder = taskTypePlaceholder
       if let firstReading = session.activeSubject.primaryReadings.first {
         kanaInput.alphabet = (firstReading.hasType && firstReading.type == .onyomi &&

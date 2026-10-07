@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
     menuNavigationVC.navigationBar.tintColor = .white
 
     centerViewController = reviewVC
-    leftDrawerViewController = menuNavigationVC
+    rightDrawerViewController = menuNavigationVC
     shouldStretchDrawer = false
     closeDrawerGestureModeMask = .all
     openDrawerGestureModeMask = .bezelPanningCenterView
@@ -76,8 +76,8 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
   }
 
   func tappedMenuButton(reviewViewController _: ReviewViewController, menuButton _: UIButton) {
-    (leftDrawerViewController as! UINavigationController).popToRootViewController(animated: false)
-    open(.left, animated: true, completion: nil)
+    (rightDrawerViewController as! UINavigationController).popToRootViewController(animated: false)
+    open(.right, animated: true, completion: nil)
   }
 
   func tappedCloseButton(reviewViewController _: ReviewViewController, closeButton: UIButton) {
@@ -112,8 +112,11 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
     reviewVC.quickSettingsChanged()
   }
 
-  func endReviewSession(button: UIView) {
-    // Only confirm if there are half-answered reviews whose progress would be lost.
+  // MARK: - Ending the session
+
+  private func endReviewSession(button: UIView) {
+    // Only confirm if there are half-answered reviews whose progress would be lost. These can be
+    // wrapped up instead: finished off without starting any new ones.
     if !reviewVC.canWrapUp {
       reviewVC.endReviewSession()
       return
@@ -125,26 +128,21 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
     ac.popoverPresentationController?.sourceView = button
     ac.popoverPresentationController?.sourceRect = button.bounds
 
+    if reviewVC.wrappingUp {
+      ac.addAction(UIAlertAction(title: "Stop wrapping up", style: .default) { _ in
+        self.reviewVC.wrappingUp = false
+      })
+    } else {
+      let count = reviewVC.activeQueueLength
+      let title = "Wrap up (\(count) to go)"
+      ac.addAction(UIAlertAction(title: title, style: .default) { _ in
+        self.reviewVC.wrappingUp = true
+      })
+    }
     ac.addAction(UIAlertAction(title: "End review session", style: .destructive) { _ in
       self.reviewVC.endReviewSession()
     })
     ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
     present(ac, animated: true)
-  }
-
-  func canWrapUp() -> Bool {
-    reviewVC.canWrapUp
-  }
-
-  func wrapUp() {
-    reviewVC.wrappingUp = !reviewVC.wrappingUp
-    closeDrawer(animated: true, completion: nil)
-  }
-
-  func wrapUpCount() -> Int {
-    if reviewVC.wrappingUp {
-      return reviewVC.activeQueueLength
-    }
-    return 0
   }
 }
