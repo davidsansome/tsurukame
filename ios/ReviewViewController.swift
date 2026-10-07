@@ -327,7 +327,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     questionBackground.clipsToBounds = true
     let waves = WavesView()
     waves.waveColor = UIColor.white.withAlphaComponent(0.08)
-    waves.fillColor = .clear
+    // A faint dark fill between the lines, like the mocks.
+    waves.fillColor = UIColor.black.withAlphaComponent(0.08)
     waves.radius = 36
     waves.translatesAutoresizingMaskIntoConstraints = false
     questionBackground.insertSubview(waves, at: 0)

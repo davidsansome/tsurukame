@@ -91,7 +91,8 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     hero.clipsToBounds = true
     let waves = WavesView()
     waves.waveColor = UIColor.white.withAlphaComponent(0.08)
-    waves.fillColor = .clear
+    // A faint dark fill between the lines, like the mocks.
+    waves.fillColor = UIColor.black.withAlphaComponent(0.08)
     waves.radius = 36
 
     // Subjects keep the app's Japanese font, no bigger than on the review screen.

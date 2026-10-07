@@ -32,6 +32,9 @@ class WavesView: UIView {
 
   private let fadeMask = CAGradientLayer()
 
+  // Outer edge of each disc, as a fraction of the radius: line, gap, line, gap, line, gap, dot.
+  private static let ringScales: [CGFloat] = [1, 0.89, 0.71, 0.61, 0.425, 0.325, 0.14]
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     commonInit()
@@ -62,8 +65,9 @@ class WavesView: UIView {
     guard let context = UIGraphicsGetCurrentContext() else { return }
     let fill = fillColor.resolvedColor(with: traitCollection)
     let line = waveColor.resolvedColor(with: traitCollection)
-    // A clear fill punches holes instead of painting, so the rings can sit over any background.
-    let fillBlendMode: CGBlendMode = fill.cgColor.alpha == 0 ? .clear : .normal
+    // Every disc replaces what's under it rather than blending, so each row of scales hides the
+    // one behind it even when the colours are translucent (a clear fill punches holes).
+    context.setBlendMode(.copy)
 
     // Draw rows from the top down, so each row of scales overlaps the one behind it.
     let rowStep = radius / 2
@@ -74,11 +78,11 @@ class WavesView: UIView {
       let xOffset = row % 2 == 0 ? 0 : radius
       for column in -1 ..< columns {
         let x = CGFloat(column) * radius * 2 + xOffset
-        // Alternate filled discs of decreasing size to make the concentric rings.
-        for ring in 0 ..< 4 {
-          let r = radius * (1 - CGFloat(ring) * 0.22)
+        // Alternate filled discs of decreasing size to make thin concentric rings and a dot in the
+        // middle, in the proportions of the mocks' pattern.
+        for (ring, scale) in WavesView.ringScales.enumerated() {
+          let r = radius * scale
           let isLine = ring % 2 == 0
-          context.setBlendMode(isLine ? .copy : fillBlendMode)
           context.setFillColor((isLine ? line : fill).cgColor)
           context.fillEllipse(in: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2))
         }
