@@ -466,6 +466,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     NSLayoutConstraint.activate([
       questionLabel.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 4),
       header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
+      // Fixed so the subject below can't stretch it.
+      header.heightAnchor.constraint(equalToConstant: 48),
       header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
       header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
       closeButton.widthAnchor.constraint(equalToConstant: 44),
