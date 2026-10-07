@@ -71,6 +71,12 @@ class SubjectListCell: TableModelCell {
   private let readingPlaceholder = UIView()
   private var meaningPlaceholderWidth: NSLayoutConstraint!
   private let chip = PillLabel()
+  // Burned subjects get the burned symbol in a small ink circle instead of a chip, so it fits
+  // next to long meanings.
+  private let burnedBadge =
+    UIImageView(image: UIImage(named: SRSStageCategory.burned.description)?
+      .withRenderingMode(.alwaysTemplate))
+  private let burnedBadgeBackground = UIView()
   private let whenLabel = UILabel()
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -115,7 +121,11 @@ class SubjectListCell: TableModelCell {
     chip.font = UIFont.systemFont(ofSize: 11, weight: .bold)
     chip.insets = UIEdgeInsets(top: 4, left: 9, bottom: 4, right: 9)
     whenLabel.font = UIFont.systemFont(ofSize: 12)
-    let trailing = UIStackView(arrangedSubviews: [chip, whenLabel])
+    burnedBadge.contentMode = .scaleAspectFit
+    burnedBadge.translatesAutoresizingMaskIntoConstraints = false
+    burnedBadgeBackground.layer.cornerRadius = 13
+    burnedBadgeBackground.addSubview(burnedBadge)
+    let trailing = UIStackView(arrangedSubviews: [chip, burnedBadgeBackground, whenLabel])
     trailing.axis = .vertical
     trailing.alignment = .trailing
     trailing.spacing = 4
@@ -126,9 +136,13 @@ class SubjectListCell: TableModelCell {
     row.translatesAutoresizingMaskIntoConstraints = false
     contentView.addSubview(row)
 
-    for view in [tile, trailing] {
+    // The tile, chip and badge never shrink; a long meaning is truncated instead.
+    for view in [tile, trailing, chip, burnedBadgeBackground, whenLabel] {
       view.setContentHuggingPriority(.required, for: .horizontal)
       view.setContentCompressionResistancePriority(.required, for: .horizontal)
+    }
+    for label in [meaningLabel, readingLabel] {
+      label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
     japaneseLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
     let minimumHeight = contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 64)
@@ -136,6 +150,12 @@ class SubjectListCell: TableModelCell {
     NSLayoutConstraint.activate([
       minimumHeight,
       tile.heightAnchor.constraint(equalToConstant: 44),
+      burnedBadgeBackground.widthAnchor.constraint(equalToConstant: 26),
+      burnedBadgeBackground.heightAnchor.constraint(equalToConstant: 26),
+      burnedBadge.centerXAnchor.constraint(equalTo: burnedBadgeBackground.centerXAnchor),
+      burnedBadge.centerYAnchor.constraint(equalTo: burnedBadgeBackground.centerYAnchor),
+      burnedBadge.widthAnchor.constraint(equalToConstant: 24),
+      burnedBadge.heightAnchor.constraint(equalToConstant: 24),
       tile.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
       japaneseLabel.centerYAnchor.constraint(equalTo: tile.centerYAnchor),
       japaneseLabel.leadingAnchor.constraint(equalTo: tile.leadingAnchor, constant: 8),
@@ -174,7 +194,8 @@ class SubjectListCell: TableModelCell {
     updateWhen()
     setShowAnswers(item.showAnswers, animated: false)
 
-    accessibilityLabel = [subject.japanese, item.showAnswers ? meaning : nil, chip.text,
+    let stage = burnedBadgeBackground.isHidden ? chip.text : "Burned"
+    accessibilityLabel = [subject.japanese, item.showAnswers ? meaning : nil, stage,
                           whenLabel.isHidden ? nil : whenLabel.text]
       .compactMap { $0 }.joined(separator: ", ")
     accessibilityTraits = .button
@@ -208,6 +229,8 @@ class SubjectListCell: TableModelCell {
   // chip is a tint of the SRS stage's colour.
   private func updateColors() {
     chip.layer.borderWidth = 0
+    chip.isHidden = false
+    burnedBadgeBackground.isHidden = true
     guard let assignment = item.assignment else {
       // Search results don't have assignments, so show the level instead.
       tile.backgroundColor = TKMStyle.color2(forSubjectType: item.subject.subjectType)
@@ -233,7 +256,10 @@ class SubjectListCell: TableModelCell {
               border: TKMStyle.Color.grey80)
     } else if assignment.isBurned {
       tile.backgroundColor = TKMStyle.fillColor(forSRSStageCategory: .burned)
-      setChip(text: "Burned", color: TKMStyle.Color.background, background: TKMStyle.Color.label)
+      chip.isHidden = true
+      burnedBadgeBackground.isHidden = false
+      burnedBadgeBackground.backgroundColor = TKMStyle.Color.label
+      burnedBadge.tintColor = TKMStyle.Color.background
     } else {
       tile.backgroundColor = TKMStyle.color2(forSubjectType: item.subject.subjectType)
       let color = TKMStyle.color(forSRSStageCategory: assignment.srsStage.category)
