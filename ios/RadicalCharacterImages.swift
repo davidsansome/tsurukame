@@ -35,8 +35,18 @@ class RadicalCharacterImages {
 
   private let services: TKMServices
 
+  // Whether downloadAll() has anything new to look at: true at launch and after a sync brings in
+  // new or changed subjects. Checking every radical on every sync held the database long enough
+  // to freeze the home screen.
+  private let lock = NSLock()
+  private var needsDownload = true
+
   init(services: TKMServices) {
     self.services = services
+    NotificationCenter.default.addObserver(forName: .lccSubjectsChanged, object: nil,
+                                           queue: nil) { [weak self] _ in
+      self?.setNeedsDownload(true)
+    }
 
     do {
       try FileManager.default
@@ -48,11 +58,25 @@ class RadicalCharacterImages {
     }
   }
 
+  private func setNeedsDownload(_ value: Bool) {
+    lock.lock()
+    needsDownload = value
+    lock.unlock()
+  }
+
+  // Downloads any radical images that aren't cached yet. Does nothing unless subjects have changed
+  // since the last time.
   func downloadAll() {
+    lock.lock()
+    let shouldDownload = needsDownload
+    needsDownload = false
+    lock.unlock()
+    if !shouldDownload {
+      return
+    }
+
     Task.detached(priority: .background) { [unowned self] in
-      self.services.localCachingClient.getAllSubjects().filter { subject in
-        subject.hasRadical && subject.radical.hasCharacterImageFile_p
-      }.forEach { subject in
+      self.services.localCachingClient.getRadicalsWithCharacterImages().forEach { subject in
         let id = subject.id
 
         // Don't do anything if we've got this image already.

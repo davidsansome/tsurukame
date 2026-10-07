@@ -26,6 +26,7 @@ extension Notification.Name {
   static let lccUserInfoChanged = Notification.Name("lccUserInfoChanged")
   static let lccSRSCategoryCountsChanged = Notification.Name("lccSRSCategoryCountsChanged")
   static let lccRecentMistakesCountChanged = Notification.Name("lccRecentMistakesCountChanged")
+  static let lccSubjectsChanged = Notification.Name("lccSubjectsChanged")
 }
 
 struct ReviewComposition {
@@ -765,6 +766,22 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
+  // Radicals that are drawn with an image instead of a character. Only radicals are decoded, so
+  // this is much quicker than filtering getAllSubjects().
+  func getRadicalsWithCharacterImages() -> [TKMSubject] {
+    db.inDatabase { db in
+      var ret = [TKMSubject]()
+      for cursor in db.query("SELECT pb FROM subjects WHERE type = ?",
+                             args: [TKMSubject.TypeEnum.radical.rawValue]) {
+        let subject: TKMSubject = cursor.proto(forColumnIndex: 0)!
+        if subject.hasRadical, subject.radical.hasCharacterImageFile_p {
+          ret.append(subject)
+        }
+      }
+      return ret
+    }
+  }
+
   private func getAllSubjects(transaction db: FMDatabase) -> [TKMSubject] {
     var ret = [TKMSubject]()
     for cursor in db.query("SELECT pb FROM subjects") {
@@ -1300,6 +1317,9 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
         }
         db.mustExecuteUpdate("UPDATE sync SET subjects_updated_after = ?",
                              args: [updatedAt])
+      }
+      if !subjects.isEmpty {
+        postNotificationOnMainQueue(.lccSubjectsChanged)
       }
     }
   }
