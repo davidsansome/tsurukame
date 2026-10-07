@@ -12,7 +12,9 @@ jobs:
           working_directory: ios/WaniKaniAPI
 
 workflows:
-  version: 2
   tsurukame-prober:
+    # Only run from the CircleCI schedule trigger, not on every push/PR.
+    when:
+      equal: [ schedule, << pipeline.trigger.type >> ]
     jobs:
       - tsurukame-prober
