@@ -326,10 +326,18 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     );
     CREATE INDEX idx_stat_subject_id ON review_stats (subject_id);
     """,
+    // Version 13. WaniKani sometimes gives an existing subject a new assignment ID. Older
+    // versions kept the stale assignments alongside the new one, so subjects appeared several
+    // times in lists. Keep only the newest (highest ID) assignment for each subject.
+    """
+    DELETE FROM assignments WHERE id NOT IN (
+      SELECT MAX(id) FROM assignments GROUP BY subject_id
+    );
+    """,
   ]
 
   private let kInitialSchemaVersion = 8
-  private let kSchemaVersion = 12
+  private let kSchemaVersion = 13
 
   // Run when the user logs out. Clears everything in the database.
   private let kClearAllData = """
@@ -1171,6 +1179,10 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       NSLog("Updated %d assignments at %@", assignments.count, updatedAt)
       self.db.inTransaction { db in
         for assignment in assignments {
+          // A subject can be given a new assignment ID; drop any older assignment for it so the
+          // subject isn't stored twice.
+          db.mustExecuteUpdate("DELETE FROM assignments WHERE subject_id = ? AND id != ?",
+                               args: [assignment.subjectID, assignment.id])
           db.mustExecuteUpdate("REPLACE INTO assignments (id, pb, subject_id) " +
             "VALUES (?, ?, ?)",
             args: [
