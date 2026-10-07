@@ -16,8 +16,9 @@ import Foundation
 import UIKit
 import WaniKaniAPI
 
-// A subject in a list of subjects: a tile in its colour, its meaning and reading, and a chip with
-// its SRS stage. Used by the level, SRS stage, excluded and search lists.
+// A subject in a list of subjects: a tile in its colour, its meaning and reading, and its SRS
+// stage's symbol (or a chip for lessons, locked subjects and search results). Used by the level,
+// SRS stage, excluded and search lists.
 class SubjectListItem: TableModelItem {
   enum Detail {
     // Just the SRS stage.
@@ -71,12 +72,11 @@ class SubjectListCell: TableModelCell {
   private let readingPlaceholder = UIView()
   private var meaningPlaceholderWidth: NSLayoutConstraint!
   private let chip = PillLabel()
-  // Burned subjects get the burned symbol in a small ink circle instead of a chip, so it fits
-  // next to long meanings.
-  private let burnedBadge =
-    UIImageView(image: UIImage(named: SRSStageCategory.burned.description)?
-      .withRenderingMode(.alwaysTemplate))
-  private let burnedBadgeBackground = UIView()
+  // Subjects in an SRS stage get the stage's symbol in a small circle instead of a chip, so it fits
+  // next to long meanings. The same symbols are used on the home screen.
+  private let stageBadge = UIImageView()
+  private var stageDescription: String?
+  private let stageBadgeBackground = UIView()
   private let whenLabel = UILabel()
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -121,11 +121,11 @@ class SubjectListCell: TableModelCell {
     chip.font = UIFont.systemFont(ofSize: 11, weight: .bold)
     chip.insets = UIEdgeInsets(top: 4, left: 9, bottom: 4, right: 9)
     whenLabel.font = UIFont.systemFont(ofSize: 12)
-    burnedBadge.contentMode = .scaleAspectFit
-    burnedBadge.translatesAutoresizingMaskIntoConstraints = false
-    burnedBadgeBackground.layer.cornerRadius = 13
-    burnedBadgeBackground.addSubview(burnedBadge)
-    let trailing = UIStackView(arrangedSubviews: [chip, burnedBadgeBackground, whenLabel])
+    stageBadge.contentMode = .scaleAspectFit
+    stageBadge.translatesAutoresizingMaskIntoConstraints = false
+    stageBadgeBackground.layer.cornerRadius = 13
+    stageBadgeBackground.addSubview(stageBadge)
+    let trailing = UIStackView(arrangedSubviews: [chip, stageBadgeBackground, whenLabel])
     trailing.axis = .vertical
     trailing.alignment = .trailing
     trailing.spacing = 4
@@ -137,7 +137,7 @@ class SubjectListCell: TableModelCell {
     contentView.addSubview(row)
 
     // The tile, chip and badge never shrink; a long meaning is truncated instead.
-    for view in [tile, trailing, chip, burnedBadgeBackground, whenLabel] {
+    for view in [tile, trailing, chip, stageBadgeBackground, whenLabel] {
       view.setContentHuggingPriority(.required, for: .horizontal)
       view.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
@@ -150,12 +150,12 @@ class SubjectListCell: TableModelCell {
     NSLayoutConstraint.activate([
       minimumHeight,
       tile.heightAnchor.constraint(equalToConstant: 44),
-      burnedBadgeBackground.widthAnchor.constraint(equalToConstant: 26),
-      burnedBadgeBackground.heightAnchor.constraint(equalToConstant: 26),
-      burnedBadge.centerXAnchor.constraint(equalTo: burnedBadgeBackground.centerXAnchor),
-      burnedBadge.centerYAnchor.constraint(equalTo: burnedBadgeBackground.centerYAnchor),
-      burnedBadge.widthAnchor.constraint(equalToConstant: 24),
-      burnedBadge.heightAnchor.constraint(equalToConstant: 24),
+      stageBadgeBackground.widthAnchor.constraint(equalToConstant: 26),
+      stageBadgeBackground.heightAnchor.constraint(equalToConstant: 26),
+      stageBadge.centerXAnchor.constraint(equalTo: stageBadgeBackground.centerXAnchor),
+      stageBadge.centerYAnchor.constraint(equalTo: stageBadgeBackground.centerYAnchor),
+      stageBadge.widthAnchor.constraint(equalToConstant: 24),
+      stageBadge.heightAnchor.constraint(equalToConstant: 24),
       tile.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
       japaneseLabel.centerYAnchor.constraint(equalTo: tile.centerYAnchor),
       japaneseLabel.leadingAnchor.constraint(equalTo: tile.leadingAnchor, constant: 8),
@@ -194,7 +194,7 @@ class SubjectListCell: TableModelCell {
     updateWhen()
     setShowAnswers(item.showAnswers, animated: false)
 
-    let stage = burnedBadgeBackground.isHidden ? chip.text : "Burned"
+    let stage = stageBadgeBackground.isHidden ? chip.text : stageDescription
     accessibilityLabel = [subject.japanese, item.showAnswers ? meaning : nil, stage,
                           whenLabel.isHidden ? nil : whenLabel.text]
       .compactMap { $0 }.joined(separator: ", ")
@@ -225,12 +225,11 @@ class SubjectListCell: TableModelCell {
     }
   }
 
-  // The tile is in the subject's colour, except locked subjects are grey and burned ones ink. The
-  // chip is a tint of the SRS stage's colour.
+  // The tile is in the subject's colour, except locked subjects are grey and burned ones ink.
   private func updateColors() {
     chip.layer.borderWidth = 0
     chip.isHidden = false
-    burnedBadgeBackground.isHidden = true
+    stageBadgeBackground.isHidden = true
     guard let assignment = item.assignment else {
       // Search results don't have assignments, so show the level instead.
       tile.backgroundColor = TKMStyle.color2(forSubjectType: item.subject.subjectType)
@@ -254,17 +253,24 @@ class SubjectListCell: TableModelCell {
       tile.backgroundColor = TKMStyle.color2(forSubjectType: item.subject.subjectType)
       setChip(text: "Lesson", color: TKMStyle.Color.grey33, background: .clear,
               border: TKMStyle.Color.grey80)
-    } else if assignment.isBurned {
-      tile.backgroundColor = TKMStyle.fillColor(forSRSStageCategory: .burned)
-      chip.isHidden = true
-      burnedBadgeBackground.isHidden = false
-      burnedBadgeBackground.backgroundColor = TKMStyle.Color.label
-      burnedBadge.tintColor = TKMStyle.Color.background
     } else {
-      tile.backgroundColor = TKMStyle.color2(forSubjectType: item.subject.subjectType)
-      let color = TKMStyle.color(forSRSStageCategory: assignment.srsStage.category)
-      setChip(text: assignment.srsStage.description, color: color,
-              background: color.withAlphaComponent(0.14))
+      let category = assignment.srsStage.category
+      let isBurned = category == .burned
+      tile.backgroundColor = isBurned ? TKMStyle.fillColor(forSRSStageCategory: .burned)
+        : TKMStyle.color2(forSubjectType: item.subject.subjectType)
+      chip.isHidden = true
+      stageBadgeBackground.isHidden = false
+      stageDescription = assignment.srsStage.description
+      stageBadge.image = UIImage(named: category.description)?.withRenderingMode(.alwaysTemplate)
+      if isBurned {
+        stageBadgeBackground.backgroundColor = TKMStyle.Color.label
+        stageBadge.tintColor = TKMStyle.Color.background
+      } else {
+        // A tint of the stage's colour, like the stage list on the home screen.
+        let color = TKMStyle.color(forSRSStageCategory: category)
+        stageBadgeBackground.backgroundColor = color.withAlphaComponent(0.14)
+        stageBadge.tintColor = color
+      }
     }
   }
 
