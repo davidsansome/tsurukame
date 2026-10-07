@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,18 +39,6 @@ class SubjectCatalogueViewController: UIPageViewController, UIPageViewController
     setViewControllers([createViewController(level: level)!], direction: .forward, animated: false,
                        completion: nil)
     updateNavigationItem()
-
-    if #available(iOS 15.0, *) {
-      // On iOS 15 the scrollEdgeAppearance is used when the view is scrolled all the way to the top
-      // edge. Unfortunately here the scroll view is in the nested view controller, so the
-      // navigation bar doesn't know when the user starts scrolling down.
-      // Override the scrollEdgeAppearance to have an opaque background, so it covers the scroll
-      // view when it's scrolled.
-      let appearance = UINavigationBarAppearance()
-      appearance.configureWithOpaqueBackground()
-      navigationItem.scrollEdgeAppearance = appearance
-      navigationItem.compactScrollEdgeAppearance = appearance
-    }
   }
 
   private func updateNavigationItem() {
@@ -59,6 +47,9 @@ class SubjectCatalogueViewController: UIPageViewController, UIPageViewController
     }
     level = vc.level
     navigationItem.title = vc.navigationItem.title
+    // The table is in the nested page, so tell the navigation bar which one to follow when it's
+    // scrolled.
+    setContentScrollView(vc.tableView, for: .top)
   }
 
   @objc private func answerSwitchChanged() {

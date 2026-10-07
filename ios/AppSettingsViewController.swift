@@ -66,6 +66,7 @@ class AppSettingsViewController: SettingsTableViewController, TKMViewController 
                             font: UIFont.systemFont(ofSize: kFontSize),
                             autoCapitalizationType: .none,
                             maximumNumberOfLines: 1)
+    gravatarItem.becomeFirstResponderImmediately = false
     gravatarItem.textChangedCallback = { (text: String) in
       Settings.gravatarCustomEmail = text
     }
