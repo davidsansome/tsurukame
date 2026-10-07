@@ -19,8 +19,11 @@ private let kDefaultAnimationDuration: TimeInterval = 0.25
 // Undocumented, but it's what the keyboard animations use.
 private let kDefaultAnimationCurve = UIView.AnimationCurve(rawValue: 7)!
 
-private let kPreviousSubjectScale: CGFloat = 0.25
-private let kPreviousSubjectButtonPadding: CGFloat = 6.0
+// The previous subject shrinks into a pill like the Level and SRS stage chips, in its type's
+// colour.
+private let kPreviousSubjectFontSize: CGFloat = 14
+private let kPreviousSubjectHorizontalPadding: CGFloat = 12
+private let kPreviousSubjectVerticalPadding: CGFloat = 4
 private let kPreviousSubjectAnimationDuration: Double = 0.3
 
 // Paper text on the ink reading strip, ink text on the paper meaning strip.
@@ -316,7 +319,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     super.viewDidLoad()
 
     TKMStyle.addShadowToView(questionLabel, offset: 1, opacity: 0.2, radius: 4)
-    TKMStyle.addShadowToView(previousSubjectButton, offset: 0, opacity: 0.7, radius: 4)
 
     // The subject sits on a block of its colour with rounded bottom corners and a faint wave
     // pattern, above paper.
@@ -346,7 +348,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       .withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
 
     previousSubjectGradient = CAGradientLayer()
-    previousSubjectGradient.cornerRadius = 4.0
+    previousSubjectGradient.cornerCurve = .continuous
+    // A faint white edge keeps the pill visible over a subject of the same type.
+    previousSubjectGradient.borderWidth = 1
+    previousSubjectGradient.borderColor = UIColor.white.withAlphaComponent(0.35).cgColor
     previousSubjectButton.layer.addSublayer(previousSubjectGradient)
 
     nd.add(name: UIResponder.keyboardWillShowNotification) { [weak self] notification in
@@ -519,6 +524,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       chips.bottomAnchor.constraint(equalTo: questionBackground.bottomAnchor,
                                     constant: -kChipsBottomMargin),
     ])
+
+    // The previous subject pill sits in line with the chips, instead of a fixed distance above the
+    // prompt.
+    for constraint in view.constraints where
+      (constraint.secondItem as? UIView) == previousSubjectButton &&
+      constraint.secondAttribute == .bottom {
+      constraint.isActive = false
+    }
+    previousSubjectButton.centerYAnchor.constraint(equalTo: chips.centerYAnchor).isActive = true
   }
 
   private func updateChips() {
@@ -1109,10 +1123,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     label.bounds = labelBounds
     label.center = oldLabelCenter
 
-    let newButtonWidth =
-      kPreviousSubjectButtonPadding * 2 + labelBounds.size.width * kPreviousSubjectScale
-    let newButtonHeight =
-      kPreviousSubjectButtonPadding * 2 + labelBounds.size.height * kPreviousSubjectScale
+    let scale = kPreviousSubjectFontSize / label.font.pointSize
+    let newButtonWidth = kPreviousSubjectHorizontalPadding * 2 + labelBounds.size.width * scale
+    let newButtonHeight = kPreviousSubjectVerticalPadding * 2 + labelBounds.size.height * scale
 
     var newGradient: [CGColor]!
     TKMStyle.withTraitCollection(traitCollection) {
@@ -1125,8 +1138,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                    options: .curveEaseOut,
                    animations: {
                      label
-                       .transform = CGAffineTransform(scaleX: kPreviousSubjectScale,
-                                                      y: kPreviousSubjectScale)
+                       .transform = CGAffineTransform(scaleX: scale, y: scale)
 
                      label.translatesAutoresizingMaskIntoConstraints = false
                      let centerYConstraint =
@@ -1153,6 +1165,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
                      self.previousSubjectGradient.colors = newGradient
                      self.previousSubjectGradient.frame = self.previousSubjectButton.bounds
+                     self.previousSubjectGradient.cornerRadius = newButtonHeight / 2
                      self.previousSubjectButton.alpha = 1.0
 
                      self.previousSubjectLabel?.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
