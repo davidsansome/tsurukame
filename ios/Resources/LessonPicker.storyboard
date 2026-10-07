@@ -11,21 +11,17 @@
         <!--Lesson Picker View Controller-->
         <scene sceneID="wa2-Sb-bdJ">
             <objects>
-                <tableViewController id="dSL-HU-ltD" customClass="LessonPickerViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Yw9-FI-HLy">
+                <viewController id="dSL-HU-ltD" customClass="LessonPickerViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Yw9-FI-HLy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <connections>
-                            <outlet property="dataSource" destination="dSL-HU-ltD" id="lUK-aG-fps"/>
-                            <outlet property="delegate" destination="dSL-HU-ltD" id="Tuy-qz-8un"/>
-                        </connections>
-                    </tableView>
+                    </view>
                     <navigationItem key="navigationItem" id="rL4-Vu-YuP"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <segue destination="cAb-cO-8UZ" kind="show" identifier="startCustomLessons" id="qUH-XI-g4x"/>
                     </connections>
-                </tableViewController>
+                </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="88N-Oi-2D0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="910" y="361"/>
