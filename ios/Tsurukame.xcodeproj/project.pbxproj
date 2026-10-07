@@ -194,6 +194,8 @@
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* FontLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* FontLoader.swift */; };
 		BDB49A4C77A82BE725D09593 /* HomeHeroItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277BB6E424992F8F2C53564B /* HomeHeroItem.swift */; };
+		98CB06617A7F94BF2B0CE9AC /* RedesignFeedbackItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3857A1F90A4B6B5CDFDE7003 /* RedesignFeedbackItem.swift */; };
+		A8C37490C70EB24EEC4C6AE8 /* PracticeCardItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3565A0DBD16020ADBFAB194 /* PracticeCardItem.swift */; };
 		C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
 		C904455E2395DBAE001BC48B /* AnswerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904455C2395DBAE001BC48B /* AnswerTextField.swift */; };
 		C90846B0237F1C770068A272 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C90846AE237F1C770068A272 /* Interface.storyboard */; };
@@ -284,6 +286,8 @@
 		20A6D3E1C6F7A492EB9DDF0C /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		21894D9E0883B0107075DD6F /* Pods-Tsurukame.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame.release.xcconfig"; path = "Target Support Files/Pods-Tsurukame/Pods-Tsurukame.release.xcconfig"; sourceTree = "<group>"; };
 		277BB6E424992F8F2C53564B /* HomeHeroItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeHeroItem.swift; sourceTree = "<group>"; };
+		3857A1F90A4B6B5CDFDE7003 /* RedesignFeedbackItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RedesignFeedbackItem.swift; sourceTree = "<group>"; };
+		F3565A0DBD16020ADBFAB194 /* PracticeCardItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PracticeCardItem.swift; sourceTree = "<group>"; };
 		2DCB1C322531CAD495E7E543 /* SessionCompleteItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SessionCompleteItem.swift; sourceTree = "<group>"; };
 		301BAAC2C21E4A99238D1E80 /* Pods-FontScreenshotter-FontScreenshotterUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter-FontScreenshotterUITests.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests.release.xcconfig"; sourceTree = "<group>"; };
 		34E86AD95515CD815B3086D0 /* Pods-Tsurukame.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame.debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame/Pods-Tsurukame.debug.xcconfig"; sourceTree = "<group>"; };
@@ -793,6 +797,8 @@
 				637740132C26A10C00A4F6EE /* TableModelItem.swift */,
 				93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */,
 				277BB6E424992F8F2C53564B /* HomeHeroItem.swift */,
+				3857A1F90A4B6B5CDFDE7003 /* RedesignFeedbackItem.swift */,
+				F3565A0DBD16020ADBFAB194 /* PracticeCardItem.swift */,
 				2DCB1C322531CAD495E7E543 /* SessionCompleteItem.swift */,
 			);
 			path = Tables;
@@ -1547,6 +1553,8 @@
 				85A8A502A74E08D93DD9682D /* SceneDelegate.swift in Sources */,
 				67E06C99CDF8C3C0A5F82329 /* WavesView.swift in Sources */,
 				BDB49A4C77A82BE725D09593 /* HomeHeroItem.swift in Sources */,
+				98CB06617A7F94BF2B0CE9AC /* RedesignFeedbackItem.swift in Sources */,
+				A8C37490C70EB24EEC4C6AE8 /* PracticeCardItem.swift in Sources */,
 				7CE83359729B91FC7B1C8BDA /* SessionCompleteItem.swift in Sources */,
 				F472FEF47C88DAECCBC93B48 /* HankoView.swift in Sources */,
 				97D823D8C321A8DCEFD65355 /* PillLabel.swift in Sources */,
