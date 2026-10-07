@@ -233,6 +233,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // Level and SRS stage chips at the bottom of the subject.
   private let levelChip = PillLabel()
   private let srsChip = PillLabel()
+  private let chips = UIStackView()
   @IBOutlet private var questionBackground: GradientView!
   @IBOutlet private var promptBackground: GradientView!
   @IBOutlet private var questionLabel: UILabel!
@@ -452,7 +453,18 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     view.addSubview(header)
 
     headerFillWidth = headerFill.widthAnchor.constraint(equalToConstant: 0)
+    // The subject used to sit just below the old stats row; it now sits below this header, which
+    // is taller, so it doesn't slide under it when the subject block shrinks.
+    var ancestor = questionLabel.superview
+    while let v = ancestor {
+      for constraint in v.constraints where
+        (constraint.firstItem as? UIView) == questionLabel && constraint.firstAttribute == .top {
+        constraint.isActive = false
+      }
+      ancestor = v.superview
+    }
     NSLayoutConstraint.activate([
+      questionLabel.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 4),
       header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
       header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
       header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -488,7 +500,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private func setUpChips() {
     // The SRS dots label stays (hidden) because the level-up animation explodes its dots.
     levelLabel.alpha = 0
-    let chips = UIStackView(arrangedSubviews: [levelChip, srsChip])
+    chips.addArrangedSubview(levelChip)
+    chips.addArrangedSubview(srsChip)
     chips.spacing = 8
     chips.translatesAutoresizingMaskIntoConstraints = false
     questionBackground.addSubview(chips)
@@ -995,6 +1008,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         answerField.resignFirstResponder()
       }
     }
+
+    // There's no room for the chips while the subject block is shrunk.
+    chips.alpha = shown ? 0 : 1
 
     // Scale the text in the question label.
     let scale = shown ? 0.7 : 1.0
