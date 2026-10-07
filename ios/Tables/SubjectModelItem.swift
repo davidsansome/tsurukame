@@ -28,6 +28,9 @@ class SubjectModelItem: TableModelItem {
   var gradientColors: [Any]?
   var canShowCheckmark = false
   var isChecked = false
+  // Draw the subject in a small coloured tile on a plain card row, instead of filling the whole
+  // row with the subject's colour.
+  var showsTile = false
 
   init(subject: TKMSubject, delegate: SubjectDelegate, assignment: TKMAssignment? = nil,
        readingWrong: Bool = false, meaningWrong: Bool = false) {
@@ -50,6 +53,7 @@ class SubjectModelView: TableModelCell {
   @TypedModelItem var item: SubjectModelItem
 
   private weak var gradient: CAGradientLayer?
+  private let tile = CALayer()
 
   @IBOutlet var levelLabel: UILabel!
   @IBOutlet var subjectLabel: UILabel!
@@ -64,11 +68,27 @@ class SubjectModelView: TableModelCell {
     let gradientLayer = CAGradientLayer()
     gradient = gradientLayer
     layer.insertSublayer(gradientLayer, at: 0)
+    tile.cornerRadius = 10
+    tile.cornerCurve = .continuous
   }
 
   override func layoutSubviews() {
     super.layoutSubviews()
     gradient?.frame = bounds
+    if tile.superlayer == nil {
+      contentView.layer.insertSublayer(tile, at: 0)
+    }
+    // The label sits inside a stack view, so lay that out first and convert its frame.
+    contentView.layoutIfNeeded()
+    var tileFrame = contentView.convert(subjectLabel.bounds, from: subjectLabel)
+      .insetBy(dx: -8, dy: -6)
+    if tileFrame.width < tileFrame.height {
+      tileFrame = tileFrame.insetBy(dx: (tileFrame.width - tileFrame.height) / 2, dy: 0)
+    }
+    CATransaction.begin()
+    CATransaction.setDisableActions(true)
+    tile.frame = tileFrame
+    CATransaction.commit()
 
     // Make sure the level label is wide enough for two digits, even when the system
     // font is larger than normal.
@@ -82,11 +102,16 @@ class SubjectModelView: TableModelCell {
   override func update() {
     setShowAnswers(item.showAnswers, animated: false)
 
-    levelLabel.isHidden = !item.showLevelNumber
+    levelLabel.isHidden = !item.showLevelNumber || item.showsTile
     if item.showLevelNumber {
       levelLabel.text = "\(item.subject.level)"
     }
     updateGradient()
+    // Tile rows have ink text on the card; full-colour rows have white text.
+    let secondaryText = item.showsTile ? TKMStyle.Color.grey33 : .white
+    levelLabel.textColor = secondaryText
+    readingLabel.textColor = secondaryText
+    meaningLabel.textColor = item.showsTile ? TKMStyle.Color.label : .white
     if item.canShowCheckmark && item.isChecked {
       accessoryType = .checkmark
     } else {
@@ -210,10 +235,15 @@ class SubjectModelView: TableModelCell {
   }
 
   private func updateGradient() {
-    if let itemGradientColors = item.gradientColors {
-      gradient?.colors = itemGradientColors
+    let colors = item.gradientColors ?? TKMStyle.gradient(forSubject: item.subject)
+    if item.showsTile {
+      gradient?.isHidden = true
+      tile.isHidden = false
+      tile.backgroundColor = (colors.first as! CGColor)
     } else {
-      gradient?.colors = TKMStyle.gradient(forSubject: item.subject)
+      gradient?.isHidden = false
+      tile.isHidden = true
+      gradient?.colors = colors
     }
   }
 }

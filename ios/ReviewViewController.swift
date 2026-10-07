@@ -170,6 +170,8 @@ protocol ReviewViewControllerDelegate: AnyObject {
 
   @objc optional func tappedMenuButton(reviewViewController: ReviewViewController,
                                        menuButton: UIButton)
+  @objc optional func tappedCloseButton(reviewViewController: ReviewViewController,
+                                        closeButton: UIButton)
 }
 
 class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelegate {
@@ -219,6 +221,18 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var defaultFontSize: Double!
 
   @IBOutlet private var menuButton: UIButton!
+
+  // The header over the subject: close, progress, quick settings.
+  private let closeButton = UIButton(type: .system)
+  private let settingsButton = UIButton(type: .system)
+  private let headerProgressLabel = UILabel()
+  private let headerAccuracyLabel = UILabel()
+  private let headerTrack = UIView()
+  private let headerFill = UIView()
+  private var headerFillWidth: NSLayoutConstraint!
+  // Level and SRS stage chips at the bottom of the subject.
+  private let levelChip = PillLabel()
+  private let srsChip = PillLabel()
   @IBOutlet private var questionBackground: GradientView!
   @IBOutlet private var promptBackground: GradientView!
   @IBOutlet private var questionLabel: UILabel!
@@ -311,24 +325,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     waves.translatesAutoresizingMaskIntoConstraints = false
     questionBackground.insertSubview(waves, at: 0)
 
-    // A translucent white progress line and a round translucent menu button over the subject.
-    progressBar.trackTintColor = UIColor.white.withAlphaComponent(0.22)
-    progressBar.progressTintColor = .white
-    progressBar.layer.cornerRadius = 2.5
-    progressBar.clipsToBounds = true
-    progressBar.subviews.forEach { $0.layer.cornerRadius = 2.5
-      $0.clipsToBounds = true
-    }
-    var menuConfig = UIButton.Configuration.filled()
-    menuConfig.image = UIImage(systemName: "line.3.horizontal",
-                               withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))
-    menuConfig.baseForegroundColor = .white
-    menuConfig.baseBackgroundColor = UIColor.white.withAlphaComponent(0.16)
-    menuConfig.cornerStyle = .capsule
-    menuConfig.background.backgroundInsets = NSDirectionalEdgeInsets(top: 6, leading: 6,
-                                                                     bottom: 6, trailing: 6)
-    menuButton.configuration = menuConfig
-    menuButton.accessibilityLabel = "Menu"
+    setUpHeader()
+    setUpChips()
     NSLayoutConstraint.activate([
       waves.leadingAnchor.constraint(equalTo: questionBackground.leadingAnchor),
       waves.trailingAnchor.constraint(equalTo: questionBackground.trailingAnchor),
@@ -392,6 +390,122 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     resizeViewsForFontSize()
     viewDidLayoutSubviews()
+  }
+
+  // MARK: - Header and chips
+
+  private func makeHeaderButton(_ button: UIButton, symbol: String, label: String) {
+    var config = UIButton.Configuration.filled()
+    config.image = UIImage(systemName: symbol,
+                           withConfiguration: UIImage.SymbolConfiguration(pointSize: 15,
+                                                                          weight: .bold))
+    config.baseForegroundColor = .white
+    config.baseBackgroundColor = UIColor.white.withAlphaComponent(0.16)
+    config.cornerStyle = .capsule
+    button.configuration = config
+    button.accessibilityLabel = label
+    button.translatesAutoresizingMaskIntoConstraints = false
+  }
+
+  private func setUpHeader() {
+    // The storyboard's stats row, progress bar and menu button are replaced by this header. The
+    // stats labels stay in the view (invisibly) because the success animation starts from them.
+    for v: UIView in [progressBar, menuButton, successRateIcon, successRateLabel, doneIcon,
+                      doneLabel, queueIcon, queueLabel, wrapUpIcon, wrapUpLabel] {
+      v.alpha = 0
+    }
+
+    makeHeaderButton(closeButton, symbol: "xmark", label: "End session")
+    closeButton.addAction(UIAction { [unowned self] _ in
+      self.delegate.tappedCloseButton?(reviewViewController: self, closeButton: self.closeButton)
+    }, for: .touchUpInside)
+    makeHeaderButton(settingsButton, symbol: "slider.horizontal.3", label: "Quick settings")
+    settingsButton.addAction(UIAction { [unowned self] _ in
+      self.delegate.tappedMenuButton?(reviewViewController: self, menuButton: self.settingsButton)
+    }, for: .touchUpInside)
+    closeButton.isHidden = !showMenuButton || delegate.tappedCloseButton == nil
+    settingsButton.isHidden = !showMenuButton
+
+    for label in [headerProgressLabel, headerAccuracyLabel] {
+      label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+      label.textColor = .white
+    }
+    headerAccuracyLabel.textAlignment = .right
+    headerAccuracyLabel.isHidden = !delegate.showsSuccessRate()
+    headerTrack.backgroundColor = UIColor.white.withAlphaComponent(0.22)
+    headerTrack.layer.cornerRadius = 3
+    headerTrack.clipsToBounds = true
+    headerFill.backgroundColor = .white
+    headerFill.layer.cornerRadius = 3
+
+    let labels = UIStackView(arrangedSubviews: [headerProgressLabel, headerAccuracyLabel])
+    let middle = UIStackView(arrangedSubviews: [labels, headerTrack])
+    middle.axis = .vertical
+    middle.spacing = 6
+    headerFill.translatesAutoresizingMaskIntoConstraints = false
+    headerTrack.addSubview(headerFill)
+
+    let header = UIStackView(arrangedSubviews: [closeButton, middle, settingsButton])
+    header.alignment = .center
+    header.spacing = 12
+    header.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(header)
+
+    headerFillWidth = headerFill.widthAnchor.constraint(equalToConstant: 0)
+    NSLayoutConstraint.activate([
+      header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
+      header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+      header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+      closeButton.widthAnchor.constraint(equalToConstant: 44),
+      closeButton.heightAnchor.constraint(equalToConstant: 44),
+      settingsButton.widthAnchor.constraint(equalToConstant: 44),
+      settingsButton.heightAnchor.constraint(equalToConstant: 44),
+      headerTrack.heightAnchor.constraint(equalToConstant: 6),
+      headerFill.leadingAnchor.constraint(equalTo: headerTrack.leadingAnchor),
+      headerFill.topAnchor.constraint(equalTo: headerTrack.topAnchor),
+      headerFill.bottomAnchor.constraint(equalTo: headerTrack.bottomAnchor),
+      headerFillWidth,
+    ])
+  }
+
+  private func updateHeader(completed: Int, total: Int) {
+    let current = min(completed + 1, max(total, 1))
+    var text = "\(current) of \(total)"
+    if session.wrappingUp {
+      text += " · wrapping up"
+    }
+    headerProgressLabel.text = text
+    headerProgressLabel.accessibilityLabel = "Review \(current) of \(total)"
+    headerAccuracyLabel.text = "✓ " + session.successRateText
+    headerAccuracyLabel.accessibilityLabel = session.successRateText + " correct so far"
+
+    view.layoutIfNeeded()
+    let fraction = total == 0 ? 0 : CGFloat(completed) / CGFloat(total)
+    headerFillWidth.constant = headerTrack.bounds.width * fraction
+    UIView.animate(withDuration: animationDuration) { self.headerTrack.layoutIfNeeded() }
+  }
+
+  private func setUpChips() {
+    // The SRS dots label stays (hidden) because the level-up animation explodes its dots.
+    levelLabel.alpha = 0
+    let chips = UIStackView(arrangedSubviews: [levelChip, srsChip])
+    chips.spacing = 8
+    chips.translatesAutoresizingMaskIntoConstraints = false
+    questionBackground.addSubview(chips)
+    NSLayoutConstraint.activate([
+      chips.centerXAnchor.constraint(equalTo: questionBackground.centerXAnchor),
+      chips.bottomAnchor.constraint(equalTo: questionBackground.bottomAnchor, constant: -24),
+    ])
+  }
+
+  private func updateChips() {
+    guard let assignment = session.activeAssignment else { return }
+    // Practice items have no level. The SRS stage is only shown if the user asked for the SRS
+    // level indicator, since knowing it can bias the answer.
+    levelChip.isHidden = assignment.level <= 0
+    levelChip.text = "Level \(assignment.level)"
+    srsChip.isHidden = !Settings.showSRSLevelIndicator
+    srsChip.text = assignment.srsStage.description
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -618,6 +732,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
       // Update the progress bar.
       let totalLength = queueLength + session.reviewsCompleted
+      updateHeader(completed: session.reviewsCompleted, total: totalLength)
+      updateChips()
       if totalLength == 0 {
         progressBar.setProgress(0.0, animated: true)
       } else {
@@ -740,22 +856,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
             .font = UIFont(name: self.currentFontName, size: self.questionLabelFontSize())
           self.questionLabel.attributedText = japaneseText(self.session.activeSubject)
         }
-        if self.wrapUpLabel.text != wrapUpText {
-          ctx.addFadingLabel(original: self.wrapUpLabel!)
-          self.wrapUpLabel.text = wrapUpText
-        }
-        if self.successRateLabel.text != self.session.successRateText {
-          ctx.addFadingLabel(original: self.successRateLabel!)
-          self.successRateLabel.text = self.session.successRateText
-        }
-        if self.doneLabel.text != doneText {
-          ctx.addFadingLabel(original: self.doneLabel!)
-          self.doneLabel.text = doneText
-        }
-        if self.queueLabel.text != queueText {
-          ctx.addFadingLabel(original: self.queueLabel!)
-          self.queueLabel.text = queueText
-        }
+        // The old stats labels are hidden behind the header, so they're updated without the fade
+        // (which would make them visible again).
+        self.wrapUpLabel.text = wrapUpText
+        self.successRateLabel.text = self.session.successRateText
+        self.doneLabel.text = doneText
+        self.queueLabel.text = queueText
         if self.promptLabel.attributedText?.string != prompt.string {
           ctx.addFadingLabel(original: self.promptLabel!)
           self.promptLabel.attributedText = prompt
@@ -1107,6 +1213,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       wrapUpLabel.isHidden = !newValue
       if newValue {
         randomTask()
+      } else {
+        let remaining = Int(session.activeQueueLength + session.reviewQueueLength)
+        updateHeader(completed: session.reviewsCompleted,
+                     total: remaining + session.reviewsCompleted)
       }
     }
   }

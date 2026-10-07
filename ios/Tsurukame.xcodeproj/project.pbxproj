@@ -187,6 +187,7 @@
 		9721708A2DBAF247001DFFED /* SubjectsExcludedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 972170892DBAF247001DFFED /* SubjectsExcludedViewController.swift */; };
 		9721708C2DBAF3A6001DFFED /* SubjectsExcluded.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9721708B2DBAF3A6001DFFED /* SubjectsExcluded.storyboard */; };
 		97A120DF2D9C467100D19CAE /* ReviewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A120DE2D9C467100D19CAE /* ReviewUtils.swift */; };
+		97D823D8C321A8DCEFD65355 /* PillLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6952928A3A57ECAC38BF1F03 /* PillLabel.swift */; };
 		BB0F6B0C216698F800CB1306 /* TKMKanaInputTest.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0F6B0B216698F800CB1306 /* TKMKanaInputTest.m */; };
 		BBE4E32E2172576B003A200E /* FontLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE4E32D2172576B003A200E /* FontLoader.swift */; };
 		BDB49A4C77A82BE725D09593 /* HomeHeroItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277BB6E424992F8F2C53564B /* HomeHeroItem.swift */; };
@@ -436,6 +437,7 @@
 		63F7F52D23D4C2CA006A31FB /* Audio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
 		63FCAE77237F75CC00DB1418 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame__App_Store_screenshots_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6952928A3A57ECAC38BF1F03 /* PillLabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PillLabel.swift; sourceTree = "<group>"; };
 		6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7298C3542866B43ADABAFA94 /* WavesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WavesView.swift; sourceTree = "<group>"; };
 		791B8B5B2D657E2A000C8142 /* CommonErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonErrors.swift; sourceTree = "<group>"; };
@@ -709,6 +711,7 @@
 				F9C48CF5ADDC56D1A96EDE8C /* SceneDelegate.swift */,
 				7298C3542866B43ADABAFA94 /* WavesView.swift */,
 				D03F2B2960505C9046CF238A /* HankoView.swift */,
+				6952928A3A57ECAC38BF1F03 /* PillLabel.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1535,6 +1538,7 @@
 				BDB49A4C77A82BE725D09593 /* HomeHeroItem.swift in Sources */,
 				7CE83359729B91FC7B1C8BDA /* SessionCompleteItem.swift in Sources */,
 				F472FEF47C88DAECCBC93B48 /* HankoView.swift in Sources */,
+				97D823D8C321A8DCEFD65355 /* PillLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

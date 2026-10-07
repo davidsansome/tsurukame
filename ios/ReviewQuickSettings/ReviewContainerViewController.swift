@@ -80,6 +80,10 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
     open(.left, animated: true, completion: nil)
   }
 
+  func tappedCloseButton(reviewViewController _: ReviewViewController, closeButton: UIButton) {
+    endReviewSession(button: closeButton)
+  }
+
   func finishedAllReviewItems(_ reviewViewController: ReviewViewController) {
     reviewViewController.perform(segue: StoryboardSegue.Review.reviewSummary,
                                  sender: reviewViewController)

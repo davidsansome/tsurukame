@@ -323,7 +323,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         continue
       }
       encounteredIds.append(subject.id)
-      modelItems.append(SubjectModelItem(subject: subject, delegate: subjectDelegate))
+      modelItems.append(subjectTile(subject))
     }
     for similar in subject.kanji.visuallySimilarKanji {
       guard let subject = services.localCachingClient.getSubject(japanese: String(similar),
@@ -335,7 +335,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         continue
       }
       encounteredIds.append(subject.id)
-      modelItems.append(SubjectModelItem(subject: subject, delegate: subjectDelegate))
+      modelItems.append(subjectTile(subject))
     }
     if modelItems.count > 0 {
       model.add(section: "Visually Similar Kanji")
@@ -343,6 +343,12 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         model.add(modelItem)
       }
     }
+  }
+
+  private func subjectTile(_ subject: TKMSubject) -> SubjectModelItem {
+    let item = SubjectModelItem(subject: subject, delegate: subjectDelegate)
+    item.showsTile = true
+    return item
   }
 
   private func addAmalgamationSubjects(_ subject: TKMSubject, toModel model: MutableTableModel) {
@@ -363,7 +369,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     model.add(section: "Used in")
     for subject in subjects {
-      model.add(SubjectModelItem(subject: subject, delegate: subjectDelegate))
+      model.add(subjectTile(subject))
     }
   }
 
