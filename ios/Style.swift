@@ -40,6 +40,8 @@ private func AdaptiveColorHex(light: Int32, dark: Int32) -> UIColor {
   AdaptiveColor(light: UIColorFromHex(light), dark: UIColorFromHex(dark))
 }
 
+// The colours, type and shapes here follow the "Orizuru" visual refresh. The design mocks for every
+// screen, in light and dark mode, are at https://claude.ai/artifact/EzDD4prsDfKNsdXy5Bfifb
 @objc
 class TKMStyle: NSObject {
   // MARK: - Shadows
