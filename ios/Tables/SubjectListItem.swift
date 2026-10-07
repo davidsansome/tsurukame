@@ -77,6 +77,8 @@ class SubjectListCell: TableModelCell {
   private let stageBadge = UIImageView()
   private var stageDescription: String?
   private let stageBadgeBackground = UIView()
+  // Which step within the stage the subject is at (Apprentice 1-4, Guru 1-2), on the circle's edge.
+  private let stageNumber = UILabel()
   private let whenLabel = UILabel()
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -115,8 +117,13 @@ class SubjectListCell: TableModelCell {
     placeholders.alignment = .leading
     placeholders.spacing = 6
 
-    let text = UIStackView(arrangedSubviews: [answers, placeholders])
-    text.axis = .vertical
+    // The placeholders sit over the answers, so showing and hiding them is just a fade and the row
+    // keeps its size.
+    let text = UIView()
+    for view in [answers, placeholders] {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      text.addSubview(view)
+    }
 
     chip.font = UIFont.systemFont(ofSize: 11, weight: .bold)
     chip.insets = UIEdgeInsets(top: 4, left: 9, bottom: 4, right: 9)
@@ -125,6 +132,14 @@ class SubjectListCell: TableModelCell {
     stageBadge.translatesAutoresizingMaskIntoConstraints = false
     stageBadgeBackground.layer.cornerRadius = 13
     stageBadgeBackground.addSubview(stageBadge)
+    stageNumber.font = UIFont.systemFont(ofSize: 9, weight: .heavy)
+    stageNumber.textColor = .white
+    stageNumber.textAlignment = .center
+    stageNumber.layer.cornerRadius = 7
+    stageNumber.layer.borderWidth = 1.5
+    stageNumber.clipsToBounds = true
+    stageNumber.translatesAutoresizingMaskIntoConstraints = false
+    stageBadgeBackground.addSubview(stageNumber)
     let trailing = UIStackView(arrangedSubviews: [chip, stageBadgeBackground, whenLabel])
     trailing.axis = .vertical
     trailing.alignment = .trailing
@@ -156,10 +171,23 @@ class SubjectListCell: TableModelCell {
       stageBadge.centerYAnchor.constraint(equalTo: stageBadgeBackground.centerYAnchor),
       stageBadge.widthAnchor.constraint(equalToConstant: 24),
       stageBadge.heightAnchor.constraint(equalToConstant: 24),
+      stageNumber.widthAnchor.constraint(equalToConstant: 14),
+      stageNumber.heightAnchor.constraint(equalToConstant: 14),
+      stageNumber.centerXAnchor.constraint(equalTo: stageBadgeBackground.trailingAnchor,
+                                           constant: -3),
+      stageNumber.centerYAnchor.constraint(equalTo: stageBadgeBackground.bottomAnchor,
+                                           constant: -3),
       tile.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
       japaneseLabel.centerYAnchor.constraint(equalTo: tile.centerYAnchor),
       japaneseLabel.leadingAnchor.constraint(equalTo: tile.leadingAnchor, constant: 8),
       japaneseLabel.trailingAnchor.constraint(equalTo: tile.trailingAnchor, constant: -8),
+      answers.topAnchor.constraint(equalTo: text.topAnchor),
+      answers.bottomAnchor.constraint(equalTo: text.bottomAnchor),
+      answers.leadingAnchor.constraint(equalTo: text.leadingAnchor),
+      answers.trailingAnchor.constraint(equalTo: text.trailingAnchor),
+      placeholders.leadingAnchor.constraint(equalTo: text.leadingAnchor),
+      placeholders.trailingAnchor.constraint(lessThanOrEqualTo: text.trailingAnchor),
+      placeholders.centerYAnchor.constraint(equalTo: text.centerYAnchor),
       row.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
       row.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
       row.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -203,12 +231,11 @@ class SubjectListCell: TableModelCell {
 
   func setShowAnswers(_ show: Bool, animated: Bool) {
     let change = {
-      self.answers.isHidden = !show
-      self.placeholders.isHidden = show
+      self.answers.alpha = show ? 1 : 0
+      self.placeholders.alpha = show ? 0 : 1
     }
     if animated {
-      UIView.transition(with: contentView, duration: 0.25, options: .transitionCrossDissolve,
-                        animations: change)
+      UIView.animate(withDuration: 0.25, animations: change)
     } else {
       change()
     }
@@ -262,6 +289,15 @@ class SubjectListCell: TableModelCell {
       stageBadgeBackground.isHidden = false
       stageDescription = assignment.srsStage.description
       stageBadge.image = UIImage(named: category.description)?.withRenderingMode(.alwaysTemplate)
+      if let number = stepWithinStage(assignment.srsStage) {
+        stageNumber.isHidden = false
+        stageNumber.text = "\(number)"
+        stageNumber.backgroundColor = TKMStyle.fillColor(forSRSStageCategory: category)
+        stageNumber.layer.borderColor = TKMStyle.Color.cellBackground
+          .resolvedColor(with: traitCollection).cgColor
+      } else {
+        stageNumber.isHidden = true
+      }
       if isBurned {
         stageBadgeBackground.backgroundColor = TKMStyle.Color.label
         stageBadge.tintColor = TKMStyle.Color.background
@@ -271,6 +307,18 @@ class SubjectListCell: TableModelCell {
         stageBadgeBackground.backgroundColor = color.withAlphaComponent(0.14)
         stageBadge.tintColor = color
       }
+    }
+  }
+
+  private func stepWithinStage(_ stage: SRSStage) -> Int? {
+    switch stage {
+    case .apprentice1: return 1
+    case .apprentice2: return 2
+    case .apprentice3: return 3
+    case .apprentice4: return 4
+    case .guru1: return 1
+    case .guru2: return 2
+    default: return nil
     }
   }
 
