@@ -139,9 +139,8 @@
                                     <action selector="menuButtonPressed:" destination="Mzz-hx-Bdo" eventType="touchUpInside" id="ISu-1N-wnP"/>
                                 </connections>
                             </button>
-                            <tableView hidden="YES" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="wFr-RK-iSqq" customClass="SubjectDetailsView" customModule="Tsurukame" customModuleProvider="target">
+                            <tableView hidden="YES" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="wFr-RK-iSqq" customClass="SubjectDetailsView" customModule="Tsurukame" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="896" width="414" height="0.0"/>
-                                <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                             </tableView>
                             <button hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fq3-oe-fWe">
                                 <rect key="frame" x="0.0" y="833" width="62" height="62"/>
@@ -231,11 +230,11 @@
                             <constraint firstItem="Jee-0P-imk" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="ljd-NO-w9T"/>
                             <constraint firstItem="gcI-ex-zA1" firstAttribute="leading" secondItem="lSQ-lD-Xmj" secondAttribute="trailing" constant="6" id="nJ5-hs-SPn"/>
                             <constraint firstAttribute="trailing" secondItem="Nab-RQ-m49" secondAttribute="trailing" id="oyD-zi-Z0d"/>
-                            <constraint firstItem="Fq3-oe-fWe" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" id="oyI-I7-NWJ"/>
+                            <constraint firstItem="Fq3-oe-fWe" firstAttribute="leading" secondItem="4jI-do-0VR" secondAttribute="leading" constant="24" id="oyI-I7-NWJ"/>
                             <constraint firstItem="Hl2-BP-AQQ" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" id="rEb-27-zRA"/>
                             <constraint firstItem="ctF-hm-AxT" firstAttribute="centerY" secondItem="M27-Di-5Wg" secondAttribute="centerY" id="rNU-ae-KIP"/>
                             <constraint firstItem="TgI-GY-kYL" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="rUl-Oy-n19"/>
-                            <constraint firstAttribute="trailing" secondItem="ctF-hm-AxT" secondAttribute="trailing" id="s4d-2D-nAL"/>
+                            <constraint firstAttribute="trailing" secondItem="ctF-hm-AxT" secondAttribute="trailing" constant="24" id="s4d-2D-nAL"/>
                             <constraint firstAttribute="bottom" secondItem="EBu-6v-Hcw" secondAttribute="bottom" id="vCF-K7-jHy"/>
                             <constraint firstItem="S3x-ei-BlA" firstAttribute="top" secondItem="Jee-0P-imk" secondAttribute="bottom" constant="12" id="vXr-eI-eku"/>
                             <constraint firstItem="Jee-0P-imk" firstAttribute="top" secondItem="EBu-6v-Hcw" secondAttribute="top" id="w6F-Tb-Vrq"/>
@@ -318,9 +317,6 @@
         <image name="inbox" width="24" height="24"/>
         <image name="thumb" width="24" height="24"/>
         <image name="tick" width="24" height="24"/>
-        <systemColor name="groupTableViewBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

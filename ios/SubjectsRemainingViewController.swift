@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
   var services: TKMServices!
   var model: TableModel?
   private var level: Int = 0
+  private lazy var cards = TableCards(tableView: tableView)
 
   func setup(services: TKMServices, level: Int) {
     self.services = services
@@ -34,12 +35,10 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    navigationItem.title = "Remaining"
+    navigationItem.largeTitleDisplayMode = .always
 
-    navigationItem.title = "Remaining in Level \(level)"
-
-    var radicals = [SubjectModelItem]()
-    var kanji = [SubjectModelItem]()
-    var vocabulary = [SubjectModelItem]()
+    var items = [TKMSubject.TypeEnum: [SubjectListItem]]()
     for assignment in services.localCachingClient.getAssignments(level: level) {
       if assignment.srsStage > .apprentice4 {
         continue
@@ -51,87 +50,54 @@ class SubjectsRemainingViewController: UITableViewController, SubjectDelegate,
       if !Settings.showPreviousLevelGraph, subject.subjectType == .vocabulary {
         continue
       }
+      let item = SubjectListItem(subject: subject, assignment: assignment, delegate: self)
+      item.detail = .remaining
+      items[subject.subjectType, default: []].append(item)
+    }
 
-      let item = SubjectModelItem(subject: subject, delegate: self, assignment: assignment,
-                                  readingWrong: false, meaningWrong: false)
-      item.showLevelNumber = false
-      item.showAnswers = true
-      item.showRemaining = true
-      if assignment.isLocked || assignment.isBurned {
-        item.gradientColors = TKMStyle.lockedGradient
-      }
-      switch subject.subjectType {
-      case .radical:
-        radicals.append(item)
-      case .kanji:
-        kanji.append(item)
-      case .vocabulary:
-        vocabulary.append(item)
-      default:
-        break
-      }
+    // Whatever can be done now comes first: reviews, then lessons, then the rest from the highest
+    // SRS stage down, with locked subjects last.
+    func order(_ a: TKMAssignment) -> Int {
+      if a.isLocked { return 1000 }
+      if a.isReviewStage, let date = a.reviewDate, date <= Date() { return -2 }
+      if a.isLessonStage { return -1 }
+      return 100 - a.srsStage.rawValue
     }
 
     let model = MutableTableModel(tableView: tableView)
-    if !radicals.isEmpty {
-      model.add(section: "Radicals (\(radicals.count))")
-      for item in radicals {
+    let types: [(TKMSubject.TypeEnum, String)] =
+      [(.radical, "Radicals"), (.kanji, "Kanji"), (.vocabulary, "Vocabulary")]
+    for (type, name) in types {
+      guard let typeItems = items[type] else { continue }
+      model.add(section: name)
+      model.sections[model.sections.count - 1].headerDetail = "\(typeItems.count) left"
+      for item in typeItems.sorted(by: { order($0.assignment!) < order($1.assignment!) }) {
         model.add(item)
       }
     }
-    if !kanji.isEmpty {
-      model.add(section: "Kanji (\(kanji.count))")
-      for item in kanji {
-        model.add(item)
-      }
-    }
-    if !vocabulary.isEmpty {
-      model.add(section: "Vocabulary (\(vocabulary.count))")
-      for item in vocabulary {
-        model.add(item)
-      }
-    }
-
-    for section in 0 ..< model.sectionCount {
-      model.sort(section: section) { (itemA: SubjectModelItem, itemB: SubjectModelItem) -> Bool in
-        if let a = itemA.assignment, let b = itemB.assignment {
-          if a.isLocked, !b.isLocked { return false }
-          if !a.isLocked, b.isLocked { return true }
-          if a.isReviewStage, !b.isReviewStage { return true }
-          if !a.isReviewStage, b.isReviewStage { return false }
-          if a.isLessonStage, !b.isLessonStage { return true }
-          if !a.isLessonStage, b.isLessonStage { return false }
-          if a.srsStage > b.srsStage { return true }
-          if a.srsStage < b.srsStage { return false }
-        }
-        return false
-      }
-
-      let items = model.items(inSection: section)
-      var lastAssignment: TKMAssignment?
-      var index = 0
-      for item in items {
-        let assignment = (item as! SubjectModelItem).assignment!
-        if lastAssignment == nil || lastAssignment!.srsStage != assignment.srsStage ||
-          lastAssignment!.isReviewStage != assignment.isReviewStage ||
-          lastAssignment!.isLessonStage != assignment.isLessonStage {
-          var label = ""
-          if assignment.isLocked {
-            label = "Locked"
-          } else if assignment.isLessonStage {
-            label = "Available in Lessons"
-          } else {
-            label = assignment.srsStage.description
-          }
-          model.insert(ListSeparatorItem(label: label), atIndex: index, inSection: section)
-          index += 1
-        }
-        lastAssignment = assignment
-        index += 1
-      }
-    }
-
+    cards.prepare(model)
     self.model = model
+
+    let count = items.values.map(\.count).reduce(0, +)
+    let label = UILabel()
+    label.text = "Level \(level) · \(count) \(count == 1 ? "item" : "items") to Guru"
+    label.font = UIFont.systemFont(ofSize: 14)
+    label.textColor = TKMStyle.Color.grey33
+    let header = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 36))
+    header.preservesSuperviewLayoutMargins = true
+    label.translatesAutoresizingMaskIntoConstraints = false
+    header.addSubview(label)
+    NSLayoutConstraint.activate([
+      label.leadingAnchor.constraint(equalTo: header.layoutMarginsGuide.leadingAnchor),
+      label.trailingAnchor.constraint(equalTo: header.layoutMarginsGuide.trailingAnchor),
+      label.centerYAnchor.constraint(equalTo: header.centerYAnchor),
+    ])
+    tableView.tableHeaderView = header
+  }
+
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    cards.layout()
   }
 
   override func viewWillAppear(_ animated: Bool) {

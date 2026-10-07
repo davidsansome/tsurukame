@@ -22,6 +22,14 @@ private let kProfileImageSize: CGFloat = 80
 
 private let kUpcomingReviewsSection = 1
 
+// The user's Gravatar, or WaniKani's default avatar if they haven't given an email address.
+func currentUserProfileImageURL() -> URL {
+  let email = Settings.gravatarCustomEmail.isEmpty
+    ? Settings.userEmailAddress : Settings.gravatarCustomEmail
+  return email.isEmpty ? URL(string: kDefaultProfileImageURL)!
+    : userProfileImageURL(emailAddress: email)
+}
+
 private func userProfileImageURL(emailAddress: String) -> URL {
   let address = emailAddress.trimmingCharacters(in: .whitespaces).lowercased()
   // Gravatar asks for an SHA-256 hash: https://docs.gravatar.com/general/hash/
@@ -63,6 +71,15 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
     searchResultsVC.setup(services: services, delegate: self)
     searchResultsViewController = searchResultsVC
 
+    view.backgroundColor = TKMStyle.Color.background
+    if let items = navigationItem.rightBarButtonItems, items.count == 2 {
+      items[0].image = UIImage(systemName: "gearshape")
+      items[1].image = UIImage(systemName: "magnifyingglass")
+      for item in items {
+        item.tintColor = TKMStyle.Color.label
+      }
+    }
+
     updateGradientColors()
     updateHourlyTimer()
     recreateTableModel()
@@ -84,7 +101,9 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   }
 
   private func updateGradientColors() {
-    headerGradient.colors = TKMStyle.radicalGradient
+    // The header sits on plain paper; the gradient view is kept so the layout doesn't change.
+    let paper = TKMStyle.Color.background.resolvedColor(with: traitCollection).cgColor
+    headerGradient.colors = [paper, paper]
   }
 
   private func scheduleTableModelUpdate() {
@@ -154,7 +173,7 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
   }
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
-    .lightContent
+    .default
   }
 
   override func traitCollectionDidChange(_: UITraitCollection?) {
@@ -290,16 +309,12 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   func updateUserInfo() {
     guard let user = services.localCachingClient.getUserInfo() else { return }
-    let email = Settings.gravatarCustomEmail.isEmpty
-      ? Settings.userEmailAddress : Settings.gravatarCustomEmail
     let guruKanji = services.localCachingClient.guruKanjiCount
-    let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)
-      : userProfileImageURL(emailAddress: email)
 
     titleView.update(username: user.username,
                      level: Int(user.level),
                      guruKanji: Int(guruKanji),
-                     imageURL: imageURL)
+                     imageURL: currentUserProfileImageURL())
 
     updateTableContentInset(animated: true)
   }

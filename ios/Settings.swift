@@ -247,4 +247,7 @@ protocol SettingProtocol {
   @Setting(true,
            #keyPath(subjectCatalogueViewShowAnswers)) static var subjectCatalogueViewShowAnswers: Bool
   @Setting(true, #keyPath(allowExcludeItems)) static var allowExcludeItems: Bool
+
+  @Setting(false,
+           #keyPath(dismissedRedesignFeedbackCard)) static var dismissedRedesignFeedbackCard: Bool
 }

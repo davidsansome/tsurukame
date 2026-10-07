@@ -19,17 +19,22 @@ private let kDefaultAnimationDuration: TimeInterval = 0.25
 // Undocumented, but it's what the keyboard animations use.
 private let kDefaultAnimationCurve = UIView.AnimationCurve(rawValue: 7)!
 
-private let kPreviousSubjectScale: CGFloat = 0.25
-private let kPreviousSubjectButtonPadding: CGFloat = 6.0
+// The previous subject shrinks into a pill like the Level and SRS stage chips, in its type's
+// colour.
+private let kPreviousSubjectFontSize: CGFloat = 14
+private let kPreviousSubjectHorizontalPadding: CGFloat = 12
+private let kPreviousSubjectVerticalPadding: CGFloat = 4
 private let kPreviousSubjectAnimationDuration: Double = 0.3
 
-private let kReadingTextColor = UIColor.white
-private let kMeaningTextColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0)
+// Paper text on the ink reading strip, ink text on the paper meaning strip.
+private let kReadingTextColor = UIColor(red: 0.961, green: 0.937, blue: 0.890, alpha: 1.0)
+private let kMeaningTextColor = TKMStyle.Color.label
 private let kDefaultButtonTintColor = UIButton().tintColor
 
 // If the keyboard height changes by less than this amount, the question label will stay where it
 // is.
 private let kSmallKeyboardHeightChange: CGFloat = 50.0
+private let kChipsBottomMargin: CGFloat = 24.0
 
 enum AnswerResult {
   case Correct
@@ -57,11 +62,11 @@ private func copyLabel(_ original: UILabel) -> UILabel {
   return copy
 }
 
-private let kDotColorApprentice = UIColor(red: 0.87, green: 0.00, blue: 0.58, alpha: 1.0)
-private let kDotColorGuru = UIColor(red: 0.53, green: 0.18, blue: 0.62, alpha: 1.0)
-private let kDotColorMaster = UIColor(red: 0.16, green: 0.30, blue: 0.86, alpha: 1.0)
-private let kDotColorEnlightened = UIColor(red: 0.00, green: 0.58, blue: 0.87, alpha: 1.0)
-private let kDotColorBurned = UIColor(red: 0.26, green: 0.26, blue: 0.26, alpha: 1.0)
+private let kDotColorApprentice = TKMStyle.color(forSRSStageCategory: .apprentice)
+private let kDotColorGuru = TKMStyle.color(forSRSStageCategory: .guru)
+private let kDotColorMaster = TKMStyle.color(forSRSStageCategory: .master)
+private let kDotColorEnlightened = TKMStyle.color(forSRSStageCategory: .enlightened)
+private let kDotColorBurned = TKMStyle.color(forSRSStageCategory: .burned)
 
 private func getDots(stage: SRSStage) -> NSAttributedString? {
   var string: NSMutableAttributedString?
@@ -169,6 +174,8 @@ protocol ReviewViewControllerDelegate: AnyObject {
 
   @objc optional func tappedMenuButton(reviewViewController: ReviewViewController,
                                        menuButton: UIButton)
+  @objc optional func tappedCloseButton(reviewViewController: ReviewViewController,
+                                        closeButton: UIButton)
 }
 
 class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelegate {
@@ -218,6 +225,24 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var defaultFontSize: Double!
 
   @IBOutlet private var menuButton: UIButton!
+
+  // The header over the subject: close, progress, quick settings.
+  private let closeButton = UIButton(type: .system)
+  private let settingsButton = UIButton(type: .system)
+  private let headerProgressLabel = UILabel()
+  private let headerAccuracyLabel = UILabel()
+  private let headerTrack = UIView()
+  private let headerFill = UIView()
+  private var headerFillWidth: NSLayoutConstraint!
+  // Level and SRS stage chips at the bottom of the subject.
+  private let levelChip = PillLabel()
+  private let srsChip = PillLabel()
+  private let chips = UIStackView()
+  // How far the subject's bottom edge is lifted so it's centred in the space above the chips,
+  // rather than over them. Zero when there are no chips or the subject details are shown.
+  private var chipsInset: CGFloat = 0
+  // How far the subject is nudged to stay put when the keyboard changes size slightly.
+  private var keyboardNudge: CGFloat = 0
   @IBOutlet private var questionBackground: GradientView!
   @IBOutlet private var promptBackground: GradientView!
   @IBOutlet private var questionLabel: UILabel!
@@ -294,13 +319,39 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     super.viewDidLoad()
 
     TKMStyle.addShadowToView(questionLabel, offset: 1, opacity: 0.2, radius: 4)
-    TKMStyle.addShadowToView(previousSubjectButton, offset: 0, opacity: 0.7, radius: 4)
+
+    // The subject sits on a block of its colour with rounded bottom corners and a faint wave
+    // pattern, above paper.
+    view.backgroundColor = TKMStyle.Color.background
+    questionBackground.layer.cornerRadius = 28
+    questionBackground.layer.cornerCurve = .continuous
+    questionBackground.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+    questionBackground.clipsToBounds = true
+    let waves = WavesView()
+    waves.waveColor = UIColor.white.withAlphaComponent(0.08)
+    // A faint dark fill between the lines, like the mocks.
+    waves.fillColor = UIColor.black.withAlphaComponent(0.08)
+    waves.radius = 36
+    waves.translatesAutoresizingMaskIntoConstraints = false
+    questionBackground.insertSubview(waves, at: 0)
+
+    setUpHeader()
+    setUpChips()
+    NSLayoutConstraint.activate([
+      waves.leadingAnchor.constraint(equalTo: questionBackground.leadingAnchor),
+      waves.trailingAnchor.constraint(equalTo: questionBackground.trailingAnchor),
+      waves.bottomAnchor.constraint(equalTo: questionBackground.bottomAnchor),
+      waves.heightAnchor.constraint(equalTo: questionBackground.heightAnchor, multiplier: 0.3),
+    ])
 
     wrapUpIcon.image = Asset.baselineAccessTimeBlack24pt.image
       .withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
 
     previousSubjectGradient = CAGradientLayer()
-    previousSubjectGradient.cornerRadius = 4.0
+    previousSubjectGradient.cornerCurve = .continuous
+    // A faint white edge keeps the pill visible over a subject of the same type.
+    previousSubjectGradient.borderWidth = 1
+    previousSubjectGradient.borderColor = UIColor.white.withAlphaComponent(0.35).cgColor
     previousSubjectButton.layer.addSublayer(previousSubjectGradient)
 
     nd.add(name: UIResponder.keyboardWillShowNotification) { [weak self] notification in
@@ -352,6 +403,162 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     resizeViewsForFontSize()
     viewDidLayoutSubviews()
+  }
+
+  // MARK: - Header and chips
+
+  private func makeHeaderButton(_ button: UIButton, symbol: String, label: String) {
+    var config = UIButton.Configuration.filled()
+    config.image = UIImage(systemName: symbol,
+                           withConfiguration: UIImage.SymbolConfiguration(pointSize: 15,
+                                                                          weight: .bold))
+    config.baseForegroundColor = .white
+    config.baseBackgroundColor = UIColor.white.withAlphaComponent(0.16)
+    config.cornerStyle = .capsule
+    button.configuration = config
+    button.accessibilityLabel = label
+    button.translatesAutoresizingMaskIntoConstraints = false
+  }
+
+  private func setUpHeader() {
+    // The storyboard's stats row, progress bar and menu button are replaced by this header. The
+    // stats labels stay in the view (invisibly) because the success animation starts from them.
+    for v: UIView in [progressBar, menuButton, successRateIcon, successRateLabel, doneIcon,
+                      doneLabel, queueIcon, queueLabel, wrapUpIcon, wrapUpLabel] {
+      v.alpha = 0
+    }
+
+    makeHeaderButton(closeButton, symbol: "xmark", label: "End session")
+    closeButton.addAction(UIAction { [unowned self] _ in
+      self.delegate.tappedCloseButton?(reviewViewController: self, closeButton: self.closeButton)
+    }, for: .touchUpInside)
+    makeHeaderButton(settingsButton, symbol: "slider.horizontal.3", label: "Quick settings")
+    settingsButton.addAction(UIAction { [unowned self] _ in
+      self.delegate.tappedMenuButton?(reviewViewController: self, menuButton: self.settingsButton)
+    }, for: .touchUpInside)
+    closeButton.isHidden = !showMenuButton || delegate.tappedCloseButton == nil
+    settingsButton.isHidden = !showMenuButton
+
+    for label in [headerProgressLabel, headerAccuracyLabel] {
+      label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+      label.textColor = .white
+    }
+    headerAccuracyLabel.textAlignment = .right
+    headerAccuracyLabel.isHidden = !delegate.showsSuccessRate()
+    headerTrack.backgroundColor = UIColor.white.withAlphaComponent(0.22)
+    headerTrack.layer.cornerRadius = 3
+    headerTrack.clipsToBounds = true
+    headerFill.backgroundColor = .white
+    headerFill.layer.cornerRadius = 3
+
+    let labels = UIStackView(arrangedSubviews: [headerProgressLabel, headerAccuracyLabel])
+    let middle = UIStackView(arrangedSubviews: [labels, headerTrack])
+    middle.axis = .vertical
+    middle.spacing = 6
+    headerFill.translatesAutoresizingMaskIntoConstraints = false
+    headerTrack.addSubview(headerFill)
+
+    let header = UIStackView(arrangedSubviews: [closeButton, middle, settingsButton])
+    header.alignment = .center
+    header.spacing = 12
+    header.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(header)
+
+    headerFillWidth = headerFill.widthAnchor.constraint(equalToConstant: 0)
+    // The subject used to sit just below the old stats row; it now sits below this header, which
+    // is taller, so it doesn't slide under it when the subject block shrinks.
+    var ancestor = questionLabel.superview
+    while let v = ancestor {
+      for constraint in v.constraints where
+        (constraint.firstItem as? UIView) == questionLabel && constraint.firstAttribute == .top {
+        constraint.isActive = false
+      }
+      ancestor = v.superview
+    }
+    NSLayoutConstraint.activate([
+      questionLabel.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 4),
+      header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
+      // Fixed so the subject below can't stretch it.
+      header.heightAnchor.constraint(equalToConstant: 48),
+      header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+      header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+      closeButton.widthAnchor.constraint(equalToConstant: 44),
+      closeButton.heightAnchor.constraint(equalToConstant: 44),
+      settingsButton.widthAnchor.constraint(equalToConstant: 44),
+      settingsButton.heightAnchor.constraint(equalToConstant: 44),
+      headerTrack.heightAnchor.constraint(equalToConstant: 6),
+      headerFill.leadingAnchor.constraint(equalTo: headerTrack.leadingAnchor),
+      headerFill.topAnchor.constraint(equalTo: headerTrack.topAnchor),
+      headerFill.bottomAnchor.constraint(equalTo: headerTrack.bottomAnchor),
+      headerFillWidth,
+    ])
+  }
+
+  private func updateHeader(completed: Int, total: Int) {
+    let current = min(completed + 1, max(total, 1))
+    var text = "\(current) of \(total)"
+    if session.wrappingUp {
+      text += " · wrapping up"
+    }
+    headerProgressLabel.text = text
+    headerProgressLabel.accessibilityLabel = "Review \(current) of \(total)"
+    headerAccuracyLabel.text = "✓ " + session.successRateText
+    headerAccuracyLabel.accessibilityLabel = session.successRateText + " correct so far"
+
+    view.layoutIfNeeded()
+    let fraction = total == 0 ? 0 : CGFloat(completed) / CGFloat(total)
+    headerFillWidth.constant = headerTrack.bounds.width * fraction
+    UIView.animate(withDuration: animationDuration) { self.headerTrack.layoutIfNeeded() }
+  }
+
+  private func setUpChips() {
+    // The SRS dots label stays (hidden) because the level-up animation explodes its dots.
+    levelLabel.alpha = 0
+    chips.addArrangedSubview(levelChip)
+    chips.addArrangedSubview(srsChip)
+    chips.spacing = 8
+    chips.translatesAutoresizingMaskIntoConstraints = false
+    questionBackground.addSubview(chips)
+    NSLayoutConstraint.activate([
+      chips.centerXAnchor.constraint(equalTo: questionBackground.centerXAnchor),
+      chips.bottomAnchor.constraint(equalTo: questionBackground.bottomAnchor,
+                                    constant: -kChipsBottomMargin),
+    ])
+
+    // The previous subject pill sits in line with the chips, instead of a fixed distance above the
+    // prompt.
+    for constraint in view.constraints where
+      (constraint.secondItem as? UIView) == previousSubjectButton &&
+      constraint.secondAttribute == .bottom {
+      constraint.isActive = false
+    }
+    previousSubjectButton.centerYAnchor.constraint(equalTo: chips.centerYAnchor).isActive = true
+  }
+
+  private func updateChips() {
+    guard let assignment = session.activeAssignment else { return }
+    // Practice items have no level. The SRS stage is only shown if the user asked for the SRS
+    // level indicator, since knowing it can bias the answer.
+    levelChip.isHidden = assignment.level <= 0
+    levelChip.text = "Level \(assignment.level)"
+    srsChip.isHidden = !Settings.showSRSLevelIndicator
+    srsChip.text = assignment.srsStage.description
+    updateChipsInset(subjectDetailsShown: !subjectDetailsView.isHidden)
+  }
+
+  private func updateChipsInset(subjectDetailsShown: Bool) {
+    let hasChips = !levelChip.isHidden || !srsChip.isHidden
+    if hasChips, !subjectDetailsShown {
+      let chipsHeight = chips.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+      chipsInset = kChipsBottomMargin + chipsHeight
+    } else {
+      chipsInset = 0
+    }
+    updateQuestionLabelBottom()
+  }
+
+  private func updateQuestionLabelBottom() {
+    questionLabelBottomConstraint.constant = chipsInset + keyboardNudge
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -487,7 +694,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private func resetKeyboardLayout() {
     subjectDetailsView.contentInset = .zero
     answerFieldToBottomConstraint.constant = 0
-    questionLabelBottomConstraint.constant = 0
+    keyboardNudge = 0
+    updateQuestionLabelBottom()
     previousKeyboardInsetHeight = nil
   }
 
@@ -512,11 +720,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // keyboard moved.
     if let previousKeyboardInsetHeight = previousKeyboardInsetHeight,
        abs(insetHeight - previousKeyboardInsetHeight) <= kSmallKeyboardHeightChange {
-      questionLabelBottomConstraint.constant = previousKeyboardInsetHeight - insetHeight
+      keyboardNudge = previousKeyboardInsetHeight - insetHeight
     } else {
-      questionLabelBottomConstraint.constant = 0
+      keyboardNudge = 0
       previousKeyboardInsetHeight = insetHeight
     }
+    updateQuestionLabelBottom()
 
     var subjectDetailsViewInset = subjectDetailsView.contentInset
     subjectDetailsViewInset.bottom = insetHeight
@@ -578,6 +787,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
       // Update the progress bar.
       let totalLength = queueLength + session.reviewsCompleted
+      updateHeader(completed: session.reviewsCompleted, total: totalLength)
+      updateChips()
       if totalLength == 0 {
         progressBar.setProgress(0.0, animated: true)
       } else {
@@ -590,6 +801,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       var taskTypePrompt: String
       var promptGradient: [CGColor]
       var promptTextColor: UIColor
+      var promptColor: UIColor
       var taskTypePlaceholder: String
 
       switch session.activeAssignment.subjectType {
@@ -607,6 +819,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         kanaInput.enabled = false
         taskTypePrompt = session.activeAssignment.subjectType == .radical ? "Name" : "Meaning"
         promptGradient = TKMStyle.meaningGradient
+        promptColor = TKMStyle.meaningColor1
         promptTextColor = kMeaningTextColor
         taskTypePlaceholder = "Your Response"
         if isAnkiModeActiveForCurrentTask {
@@ -616,6 +829,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         kanaInput.enabled = true
         taskTypePrompt = "Reading"
         promptGradient = TKMStyle.readingGradient
+        promptColor = TKMStyle.readingColor1
         promptTextColor = kReadingTextColor
         taskTypePlaceholder = "答え"
         if isAnkiModeActiveForCurrentTask {
@@ -661,6 +875,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         .animateColors(to: TKMStyle.gradient(forAssignment: session.activeAssignment),
                        duration: animationDuration)
       promptBackground.animateColors(to: promptGradient, duration: animationDuration)
+      // The page behind the subject's rounded corners and the answer field matches the prompt.
+      UIView.animate(withDuration: animationDuration) { self.view.backgroundColor = promptColor }
 
       // Accessibility.
       successRateLabel.accessibilityLabel = session.successRateText + " correct so far"
@@ -671,7 +887,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
       answerField.text = nil
       answerField.textColor = TKMStyle.Color.label
-      answerField.backgroundColor = TKMStyle.Color.background
+      answerField.backgroundColor = .clear
+      answerField.isOnInk = session.activeTaskType == .reading
       answerField.placeholder = taskTypePlaceholder
       if let firstReading = session.activeSubject.primaryReadings.first {
         kanaInput.alphabet = (firstReading.hasType && firstReading.type == .onyomi &&
@@ -700,22 +917,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
             .font = UIFont(name: self.currentFontName, size: self.questionLabelFontSize())
           self.questionLabel.attributedText = japaneseText(self.session.activeSubject)
         }
-        if self.wrapUpLabel.text != wrapUpText {
-          ctx.addFadingLabel(original: self.wrapUpLabel!)
-          self.wrapUpLabel.text = wrapUpText
-        }
-        if self.successRateLabel.text != self.session.successRateText {
-          ctx.addFadingLabel(original: self.successRateLabel!)
-          self.successRateLabel.text = self.session.successRateText
-        }
-        if self.doneLabel.text != doneText {
-          ctx.addFadingLabel(original: self.doneLabel!)
-          self.doneLabel.text = doneText
-        }
-        if self.queueLabel.text != queueText {
-          ctx.addFadingLabel(original: self.queueLabel!)
-          self.queueLabel.text = queueText
-        }
+        // The old stats labels are hidden behind the header, so they're updated without the fade
+        // (which would make them visible again).
+        self.wrapUpLabel.text = wrapUpText
+        self.successRateLabel.text = self.session.successRateText
+        self.doneLabel.text = doneText
+        self.queueLabel.text = queueText
         if self.promptLabel.attributedText?.string != prompt.string {
           ctx.addFadingLabel(original: self.promptLabel!)
           self.promptLabel.attributedText = prompt
@@ -834,8 +1041,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Constraints.
     answerFieldToBottomConstraint.isActive = !shown
     if shown {
-      questionLabelBottomConstraint.constant = 0
+      keyboardNudge = 0
     }
+    updateChipsInset(subjectDetailsShown: shown)
 
     // Enable/disable the answer field, and set its first responder status.
     // This makes the keyboard appear or disappear immediately.  We need this animation to happen
@@ -849,6 +1057,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         answerField.resignFirstResponder()
       }
     }
+
+    // There's no room for the chips while the subject block is shrunk.
+    chips.alpha = shown ? 0 : 1
 
     // Scale the text in the question label.
     let scale = shown ? 0.7 : 1.0
@@ -868,7 +1079,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     previousSubjectButton.alpha = shown ? 0.0 : 1.0
 
     // Change the foreground color of the answer field.
-    answerField.textColor = shown ? .systemRed : TKMStyle.Color.label
+    answerField.textColor = shown ? TKMStyle.Color.accent : TKMStyle.Color.label
 
     // Scroll to the top.
     subjectDetailsView
@@ -912,10 +1123,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     label.bounds = labelBounds
     label.center = oldLabelCenter
 
-    let newButtonWidth =
-      kPreviousSubjectButtonPadding * 2 + labelBounds.size.width * kPreviousSubjectScale
-    let newButtonHeight =
-      kPreviousSubjectButtonPadding * 2 + labelBounds.size.height * kPreviousSubjectScale
+    let scale = kPreviousSubjectFontSize / label.font.pointSize
+    let newButtonWidth = kPreviousSubjectHorizontalPadding * 2 + labelBounds.size.width * scale
+    let newButtonHeight = kPreviousSubjectVerticalPadding * 2 + labelBounds.size.height * scale
 
     var newGradient: [CGColor]!
     TKMStyle.withTraitCollection(traitCollection) {
@@ -928,8 +1138,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                    options: .curveEaseOut,
                    animations: {
                      label
-                       .transform = CGAffineTransform(scaleX: kPreviousSubjectScale,
-                                                      y: kPreviousSubjectScale)
+                       .transform = CGAffineTransform(scaleX: scale, y: scale)
 
                      label.translatesAutoresizingMaskIntoConstraints = false
                      let centerYConstraint =
@@ -956,6 +1165,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
                      self.previousSubjectGradient.colors = newGradient
                      self.previousSubjectGradient.frame = self.previousSubjectButton.bounds
+                     self.previousSubjectGradient.cornerRadius = newButtonHeight / 2
                      self.previousSubjectButton.alpha = 1.0
 
                      self.previousSubjectLabel?.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
@@ -1031,11 +1241,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   func questionLabelFontSize() -> CGFloat {
-    if UIDevice.current.userInterfaceIdiom == .pad {
-      return CGFloat(defaultFontSize * 2.5 * Double(Settings.fontSize))
-    } else {
-      return CGFloat(defaultFontSize * Double(Settings.fontSize))
-    }
+    TKMStyle.reviewSubjectFontSize(baseSize: CGFloat(defaultFontSize))
   }
 
   @objc func toggleFont() {
@@ -1067,6 +1273,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       wrapUpLabel.isHidden = !newValue
       if newValue {
         randomTask()
+      } else {
+        let remaining = Int(session.activeQueueLength + session.reviewQueueLength)
+        updateHeader(completed: session.reviewsCompleted,
+                     total: remaining + session.reviewsCompleted)
       }
     }
   }
@@ -1190,7 +1400,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   func highlightAndShakeAnswer(ranges: [NSRange]) {
     let text = NSMutableAttributedString(string: answerField.text!)
     for range in ranges {
-      text.addAttribute(.foregroundColor, value: UIColor.systemRed, range: range)
+      text.addAttribute(.foregroundColor, value: TKMStyle.Color.accent, range: range)
     }
     answerField.attributedText = text
 
@@ -1274,7 +1484,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       answerField.tintColor = .clear
       UIView.animate(withDuration: animationDuration,
                      animations: {
-                       self.answerField.textColor = .systemRed
+                       self.answerField.textColor = TKMStyle.Color.accent
                        self.revealAnswerButton.alpha = 1.0
                        self.submitButton.setImage(self.forwardArrowImage, for: .normal)
                      })

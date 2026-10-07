@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import Foundation
 import UIKit
 
-class ReviewSettingsViewController: UITableViewController, TKMViewController {
+class ReviewSettingsViewController: SettingsTableViewController, TKMViewController {
   private var services: TKMServices!
   private var model: TableModel?
   private var reviewItemsLimitSelector: IndexPath!
@@ -47,7 +47,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
 
     let model = MutableTableModel(tableView: tableView)
 
-    model.addSection()
+    model.add(section: "Review session")
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Review items in batches",
                               subtitle: "Limit the number of items in review sessions",
@@ -257,6 +257,7 @@ class ReviewSettingsViewController: UITableViewController, TKMViewController {
       })
 
     self.model = model
+    styleRows(model)
     model.reloadTable()
   }
 

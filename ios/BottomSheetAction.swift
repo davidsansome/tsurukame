@@ -89,7 +89,7 @@ class BottomSheetViewController: UIViewController {
 
   private func setupContainerView() {
     if #available(iOS 13.0, *) {
-      containerView.backgroundColor = .systemBackground
+      containerView.backgroundColor = TKMStyle.Color.cellBackground
     } else {
       containerView.backgroundColor = .white
     }
@@ -184,7 +184,7 @@ class BottomSheetViewController: UIViewController {
       spacer.translatesAutoresizingMaskIntoConstraints = false
       spacer.heightAnchor.constraint(equalToConstant: 8).isActive = true
       if #available(iOS 13.0, *) {
-        spacer.backgroundColor = .systemGroupedBackground
+        spacer.backgroundColor = TKMStyle.Color.background
       } else {
         spacer.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
       }
@@ -206,11 +206,11 @@ class BottomSheetViewController: UIViewController {
 
     switch action.style {
     case .default:
-      button.setTitleColor(.systemBlue, for: .normal)
+      button.setTitleColor(TKMStyle.Color.label, for: .normal)
     case .destructive:
-      button.setTitleColor(.systemRed, for: .normal)
+      button.setTitleColor(TKMStyle.Color.accent, for: .normal)
     case .cancel:
-      button.setTitleColor(.systemBlue, for: .normal)
+      button.setTitleColor(TKMStyle.Color.grey33, for: .normal)
     }
 
     button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
@@ -229,7 +229,7 @@ class BottomSheetViewController: UIViewController {
   private func createSeparator() -> UIView {
     let separator = UIView()
     if #available(iOS 13.0, *) {
-      separator.backgroundColor = .separator
+      separator.backgroundColor = TKMStyle.Color.separator
     } else {
       separator.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
     }

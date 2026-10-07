@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import Foundation
 import UIKit
 
-class AppSettingsViewController: UITableViewController, TKMViewController {
+class AppSettingsViewController: SettingsTableViewController, TKMViewController {
   private var model: TableModel?
   private var notificationHandler: ((Bool) -> Void)?
 
@@ -48,9 +48,9 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
     let model = MutableTableModel(tableView: tableView)
 
     if #available(iOS 13.0, *) {
-      model.addSection()
+      model.add(section: "UI appearance")
       model.add(BasicModelItem(style: .value1,
-                               title: "UI appearance",
+                               title: "Interface style",
                                subtitle: Settings.interfaceStyle.description,
                                accessoryType: .disclosureIndicator) {
           [unowned self] in
@@ -66,6 +66,7 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
                             font: UIFont.systemFont(ofSize: kFontSize),
                             autoCapitalizationType: .none,
                             maximumNumberOfLines: 1)
+    gravatarItem.becomeFirstResponderImmediately = false
     gravatarItem.textChangedCallback = { (text: String) in
       Settings.gravatarCustomEmail = text
     }
@@ -90,6 +91,7 @@ class AppSettingsViewController: UITableViewController, TKMViewController {
                               switchHandler: soundSwitchChanged))
 
     self.model = model
+    styleRows(model)
     model.reloadTable()
   }
 

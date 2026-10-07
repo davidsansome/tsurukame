@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ class SubjectCatalogueViewController: UIPageViewController, UIPageViewController
   UIPageViewControllerDataSource {
   private var services: TKMServices!
   private var level: Int!
-  private var answerSwitch: UISwitch!
+  private var answerButton: ShowAnswersButton!
 
   func setup(services: TKMServices, level: Int) {
     self.services = services
@@ -31,26 +31,19 @@ class SubjectCatalogueViewController: UIPageViewController, UIPageViewController
     delegate = self
     dataSource = self
 
-    answerSwitch = UISwitch()
-    answerSwitch.isOn = Settings.subjectCatalogueViewShowAnswers
-    answerSwitch.addTarget(self, action: #selector(answerSwitchChanged), for: .valueChanged)
-    navigationItem.rightBarButtonItem = UIBarButtonItem(customView: answerSwitch)
+    navigationItem.largeTitleDisplayMode = .always
+    answerButton = ShowAnswersButton(isOn: Settings.subjectCatalogueViewShowAnswers)
+    answerButton.onChange = { [unowned self] _ in self.answersChanged() }
+    let answerItem = UIBarButtonItem(customView: answerButton)
+    if #available(iOS 26.0, *) {
+      // The pill draws its own background.
+      answerItem.hidesSharedBackground = true
+    }
+    navigationItem.rightBarButtonItem = answerItem
 
     setViewControllers([createViewController(level: level)!], direction: .forward, animated: false,
                        completion: nil)
     updateNavigationItem()
-
-    if #available(iOS 15.0, *) {
-      // On iOS 15 the scrollEdgeAppearance is used when the view is scrolled all the way to the top
-      // edge. Unfortunately here the scroll view is in the nested view controller, so the
-      // navigation bar doesn't know when the user starts scrolling down.
-      // Override the scrollEdgeAppearance to have an opaque background, so it covers the scroll
-      // view when it's scrolled.
-      let appearance = UINavigationBarAppearance()
-      appearance.configureWithOpaqueBackground()
-      navigationItem.scrollEdgeAppearance = appearance
-      navigationItem.compactScrollEdgeAppearance = appearance
-    }
   }
 
   private func updateNavigationItem() {
@@ -59,9 +52,12 @@ class SubjectCatalogueViewController: UIPageViewController, UIPageViewController
     }
     level = vc.level
     navigationItem.title = vc.navigationItem.title
+    // The table is in the nested page, so tell the navigation bar which one to follow when it's
+    // scrolled.
+    setContentScrollView(vc.tableView, for: .top)
   }
 
-  @objc private func answerSwitchChanged() {
+  private func answersChanged() {
     guard let vc = viewControllers?.first as? SubjectsByLevelViewController else {
       return
     }
@@ -70,7 +66,17 @@ class SubjectCatalogueViewController: UIPageViewController, UIPageViewController
   }
 
   var showAnswers: Bool {
-    answerSwitch.isOn
+    answerButton.isOn
+  }
+
+  // Moves to another level when the level's previous or next button is tapped.
+  private func showLevel(_ newLevel: Int) {
+    guard let vc = createViewController(level: newLevel) else {
+      return
+    }
+    setViewControllers([vc], direction: newLevel < level ? .reverse : .forward, animated: true,
+                       completion: nil)
+    updateNavigationItem()
   }
 
   // MARK: - UIPageViewControllerDataSource
@@ -82,6 +88,10 @@ class SubjectCatalogueViewController: UIPageViewController, UIPageViewController
 
     let vc = StoryboardScene.SubjectsByLevel.initialScene.instantiate()
     vc.setup(services: services, level: level, showAnswers: showAnswers)
+    let maxLevel = services.localCachingClient.maxLevelGrantedBySubscription
+    vc.hasPreviousLevel = level > 1
+    vc.hasNextLevel = level < maxLevel
+    vc.onChangeLevel = { [unowned self] in self.showLevel($0) }
     return vc
   }
 

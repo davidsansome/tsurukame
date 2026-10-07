@@ -20,7 +20,7 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
   private var showHints: Bool!
   private var hideBackButton: Bool!
   private var subject: TKMSubject!
-  private var gradientLayer: CAGradientLayer?
+  private let hero = UIView()
 
   @objc private(set) var index: Int = 0
 
@@ -49,11 +49,7 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     subjectDetailsView.update(withSubject: subject, studyMaterials: studyMaterials,
                               assignment: assignment, task: nil)
 
-    subjectTitle.font = UIFont(name: TKMStyle.japaneseFontName, size: subjectTitle.font.pointSize)
-    subjectTitle.attributedText = japaneseText(subject, imageSize: 40.0)
-    gradientLayer = CAGradientLayer()
-    gradientLayer!.colors = TKMStyle.gradient(forSubject: subject)
-    view.layer.insertSublayer(gradientLayer!, at: 0)
+    setUpHero(assignment: assignment)
 
     if hideBackButton {
       backButton.isHidden = true
@@ -81,11 +77,95 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     subjectDetailsView.deselectLastSubjectChipTapped()
   }
 
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    gradientLayer?.frame = CGRect(x: 0, y: 0, width: view.bounds.size.width,
-                                  height: subjectTitle.frame.origin.y + subjectTitle.frame.size
-                                    .height)
+  // MARK: - Hero
+
+  // The subject on a block of its colour with rounded bottom corners and waves: the characters,
+  // the primary meaning, and chips for its type, level and SRS stage.
+  private func setUpHero(assignment: TKMAssignment?) {
+    let color = UIColor(cgColor: TKMStyle.gradient(forSubject: subject).first as! CGColor)
+    hero.backgroundColor = color
+    view.backgroundColor = TKMStyle.Color.background
+    hero.layer.cornerRadius = 32
+    hero.layer.cornerCurve = .continuous
+    hero.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+    hero.clipsToBounds = true
+    let waves = WavesView()
+    waves.waveColor = UIColor.white.withAlphaComponent(0.08)
+    // A faint dark fill between the lines, like the mocks.
+    waves.fillColor = UIColor.black.withAlphaComponent(0.08)
+    waves.radius = 36
+
+    // Subjects keep the app's Japanese font, no bigger than on the review screen.
+    let titleSize = TKMStyle.reviewSubjectFontSize()
+    subjectTitle.font = UIFont(name: TKMStyle.japaneseFontName, size: titleSize)
+    subjectTitle.attributedText = japaneseText(subject, imageSize: titleSize * 0.85)
+    subjectTitle.adjustsFontSizeToFitWidth = true
+    subjectTitle.minimumScaleFactor = 0.4
+    for constraint in subjectTitle.constraints where constraint.firstAttribute == .height {
+      constraint.constant = 120
+    }
+
+    let meaning = UILabel()
+    meaning.text = subject.primaryMeaning
+    meaning.font = UIFont.systemFont(ofSize: 22, weight: .heavy)
+    meaning.textColor = .white
+    meaning.textAlignment = .center
+    meaning.numberOfLines = 2
+
+    var chipTexts = ["\(subjectTypeName) · Level \(subject.level)"]
+    if let assignment = assignment, assignment.hasSrsStageNumber, !assignment.isLessonStage {
+      chipTexts.append(assignment.srsStage.description)
+    }
+    let chips = UIStackView(arrangedSubviews: chipTexts.map { text in
+      let chip = PillLabel()
+      chip.text = text
+      return chip
+    })
+    chips.spacing = 8
+
+    let info = UIStackView(arrangedSubviews: [meaning, chips])
+    info.axis = .vertical
+    info.alignment = .center
+    info.spacing = 12
+
+    styleRoundBackButton(backButton, in: view)
+
+    for v in [hero, waves, info] {
+      v.translatesAutoresizingMaskIntoConstraints = false
+    }
+    view.insertSubview(hero, at: 0)
+    hero.addSubview(waves)
+    view.addSubview(info)
+
+    // The table now starts below the hero rather than directly under the title.
+    for constraint in view.constraints where
+      (constraint.firstItem as? UIView) == subjectDetailsView && constraint
+      .firstAttribute == .top {
+      constraint.isActive = false
+    }
+    NSLayoutConstraint.activate([
+      hero.topAnchor.constraint(equalTo: view.topAnchor),
+      hero.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      hero.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      hero.bottomAnchor.constraint(equalTo: info.bottomAnchor, constant: 28),
+      waves.leadingAnchor.constraint(equalTo: hero.leadingAnchor),
+      waves.trailingAnchor.constraint(equalTo: hero.trailingAnchor),
+      waves.bottomAnchor.constraint(equalTo: hero.bottomAnchor),
+      waves.heightAnchor.constraint(equalToConstant: 110),
+      info.topAnchor.constraint(equalTo: subjectTitle.bottomAnchor, constant: 4),
+      info.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+      info.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+      subjectDetailsView.topAnchor.constraint(equalTo: hero.bottomAnchor, constant: 4),
+    ])
+  }
+
+  private var subjectTypeName: String {
+    switch subject.subjectType {
+    case .radical: return "Radical"
+    case .kanji: return "Kanji"
+    case .vocabulary: return "Vocabulary"
+    default: return ""
+    }
   }
 
   @IBAction func backButtonPressed(sender _: UIButton) {
@@ -155,4 +235,33 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
   @objc func playAudio() {
     subjectDetailsView.playAudio()
   }
+}
+
+// Turns a storyboard back button pinned to the top-left of the safe area into the round
+// translucent button that sits over a subject's colour.
+func styleRoundBackButton(_ button: UIButton, in view: UIView) {
+  var config = UIButton.Configuration.filled()
+  config.image = UIImage(systemName: "chevron.left",
+                         withConfiguration: UIImage.SymbolConfiguration(pointSize: 16,
+                                                                        weight: .bold))
+  config.baseForegroundColor = .white
+  config.baseBackgroundColor = UIColor.white.withAlphaComponent(0.16)
+  config.cornerStyle = .capsule
+  button.setTitle(nil, for: .normal)
+  button.setImage(nil, for: .normal)
+  button.configuration = config
+  button.accessibilityLabel = "Back"
+
+  // A 44pt circle, inset from the edge like the other round buttons.
+  for constraint in view.constraints where
+    (constraint.firstItem as? UIView) == button && constraint.firstAttribute == .leading {
+    constraint.constant = 16
+  }
+  NSLayoutConstraint.deactivate(button.constraints.filter {
+    $0.firstAttribute == .height || $0.firstAttribute == .width
+  })
+  NSLayoutConstraint.activate([
+    button.widthAnchor.constraint(equalToConstant: 44),
+    button.heightAnchor.constraint(equalToConstant: 44),
+  ])
 }

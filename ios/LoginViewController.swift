@@ -26,6 +26,11 @@ protocol LoginViewControllerDelegate: AnyObject {
   func loginComplete()
 }
 
+// Colours for the form on the night background.
+private let kFieldColor = UIColor(red: 0.059, green: 0.094, blue: 0.165, alpha: 1)
+private let kFieldBorderColor = UIColor(red: 0.227, green: 0.290, blue: 0.420, alpha: 1)
+private let kSecondaryOnNight = UIColor(red: 0.620, green: 0.651, blue: 0.722, alpha: 1)
+
 class LoginViewController: UIViewController, UITextFieldDelegate {
   weak var delegate: LoginViewControllerDelegate?
   var forcedEmail: String?
@@ -47,16 +52,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    if #available(iOS 13.0, *) {
-      overrideUserInterfaceStyle = .light
-    }
-
-    TKMStyle.addShadowToView(signInLabel, offset: 0, opacity: 1, radius: 5)
-    TKMStyle.addShadowToView(privacyPolicyLabel, offset: 0, opacity: 1, radius: 2)
-    TKMStyle.addShadowToView(privacyPolicyButton, offset: 0, opacity: 1, radius: 2)
-    TKMStyle.addShadowToView(swapLoginMethodsButton, offset: 0, opacity: 1, radius: 2)
-    TKMStyle.addShadowToView(pasteButton, offset: 0, opacity: 1, radius: 5)
-    TKMStyle.addShadowToView(createApiTokenButton, offset: 0, opacity: 1, radius: 2)
+    // The sign-in screen is always the night sea, whatever the system appearance.
+    overrideUserInterfaceStyle = .dark
+    styleForNight()
 
     if let forcedEmail = forcedEmail {
       emailField.text = forcedEmail
@@ -106,7 +104,98 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       enabled = !(emailField.text?.isEmpty ?? true) && !(passwordField.text?.isEmpty ?? true)
     }
     signInButton.isEnabled = enabled
-    signInButton.backgroundColor = enabled ? TKMStyle.radicalColor2 : TKMStyle.Color.grey33
+    signInButton.backgroundColor = enabled ? TKMStyle.Color.accent : kFieldBorderColor
+  }
+
+  // MARK: - Appearance
+
+  private func styleForNight() {
+    view.backgroundColor = TKMStyle.Color.night
+
+    // The seal and the app's name above the form.
+    let hanko = HankoView()
+    hanko.transform = CGAffineTransform(rotationAngle: -3 * .pi / 180)
+    hanko.layer.shadowColor = UIColor.black.cgColor
+    hanko.layer.shadowOpacity = 0.35
+    hanko.layer.shadowRadius = 14
+    hanko.layer.shadowOffset = CGSize(width: 0, height: 10)
+    let title = UILabel()
+    title.text = "Tsurukame"
+    title.font = UIFont.systemFont(ofSize: 34, weight: .heavy)
+    title.textColor = TKMStyle.Color.onNight
+    title.accessibilityTraits = .header
+
+    // The sea along the bottom.
+    let waves = WavesView()
+    waves.fillColor = UIColor(red: 0.133, green: 0.192, blue: 0.310, alpha: 1)
+    waves.waveColor = UIColor(red: 0.200, green: 0.278, blue: 0.424, alpha: 1)
+    waves.radius = 32
+
+    for v in [waves, hanko, title] {
+      v.translatesAutoresizingMaskIntoConstraints = false
+    }
+    view.insertSubview(waves, at: 0)
+    view.addSubview(hanko)
+    view.addSubview(title)
+    NSLayoutConstraint.activate([
+      waves.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      waves.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      waves.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      waves.heightAnchor.constraint(equalToConstant: 150),
+
+      title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      title.bottomAnchor.constraint(equalTo: signInLabel.topAnchor, constant: -10),
+      hanko.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      hanko.bottomAnchor.constraint(equalTo: title.topAnchor, constant: -24),
+      hanko.widthAnchor.constraint(equalToConstant: 96),
+      hanko.heightAnchor.constraint(equalTo: hanko.widthAnchor,
+                                    multiplier: HankoView.aspectRatio),
+      hanko.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor,
+                                 constant: 8),
+    ])
+
+    // The storyboard's text shadows were for legibility over the old photo background.
+    for label in [signInLabel!, privacyPolicyLabel!] {
+      label.shadowColor = nil
+    }
+    for button in [signInButton!, pasteButton!, createApiTokenButton!, swapLoginMethodsButton!,
+                   privacyPolicyButton!] {
+      button.titleLabel?.shadowColor = nil
+      button.setTitleShadowColor(nil, for: .normal)
+      button.setTitleShadowColor(nil, for: .disabled)
+    }
+
+    signInLabel.textColor = TKMStyle.Color.onNightSecondary
+    signInLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+    privacyPolicyLabel.textColor = kSecondaryOnNight
+
+    for field in [emailField!, passwordField!, apiTokenField!] {
+      field.borderStyle = .none
+      field.backgroundColor = kFieldColor
+      field.textColor = TKMStyle.Color.onNight
+      field.layer.cornerRadius = 14
+      field.layer.cornerCurve = .continuous
+      field.layer.borderWidth = 1
+      field.layer.borderColor = kFieldBorderColor.cgColor
+      field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 14, height: 1))
+      field.leftViewMode = .always
+      field.attributedPlaceholder = NSAttributedString(string: field.placeholder ?? "",
+                                                       attributes: [
+                                                         .foregroundColor: kSecondaryOnNight,
+                                                       ])
+    }
+
+    signInButton.layer.cornerRadius = 14
+    signInButton.layer.cornerCurve = .continuous
+    signInButton.setTitleColor(.white, for: .normal)
+    signInButton.setTitleColor(kSecondaryOnNight, for: .disabled)
+    signInButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+
+    for button in [pasteButton!, createApiTokenButton!, swapLoginMethodsButton!,
+                   privacyPolicyButton!] {
+      button.tintColor = TKMStyle.Color.onNight
+      button.setTitleColor(TKMStyle.Color.onNight, for: .normal)
+    }
   }
 
   // MARK: - Sign In flow

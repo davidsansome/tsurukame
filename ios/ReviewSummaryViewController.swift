@@ -36,15 +36,8 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
     let model = MutableTableModel(tableView: tableView)
 
     // Summary section.
-    var summaryText: String
-    if items.isEmpty {
-      summaryText = "0%"
-    } else {
-      summaryText =
-        "\(Int(Double(correct) / Double(items.count) * 100.0))% (\(correct)/\(items.count))"
-    }
-    model.add(section: "Summary")
-    model.add(BasicModelItem(style: .value1, title: "Correct answers", subtitle: summaryText))
+    model.addSection()
+    model.add(SessionCompleteItem(correct: correct, total: items.count))
 
     // Add a section for each level.
     let incorrectItemLevels = incorrectItemsByLevel.keys.sorted { a, b -> Bool in
@@ -52,9 +45,9 @@ class ReviewSummaryViewController: UITableViewController, SubjectDelegate {
     }
     for level in incorrectItemLevels {
       if level == currentLevel {
-        model.add(section: "Current level (\(level))")
+        model.add(section: "Missed · current level (\(level))")
       } else {
-        model.add(section: "Level \(level)")
+        model.add(section: "Missed · level \(level)")
       }
 
       for item in incorrectItemsByLevel[level]! {

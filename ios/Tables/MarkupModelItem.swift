@@ -49,16 +49,16 @@ private func render(formattedText: TKMFormattedText,
       attributes[.link] = formattedText.linkURL
     case .apprentice:
       attributes[.foregroundColor] = UIColor.white
-      attributes[.backgroundColor] = TKMStyle.color(forSRSStageCategory: .apprentice)
+      attributes[.backgroundColor] = TKMStyle.fillColor(forSRSStageCategory: .apprentice)
     case .guru:
       attributes[.foregroundColor] = UIColor.white
-      attributes[.backgroundColor] = TKMStyle.color(forSRSStageCategory: .guru)
+      attributes[.backgroundColor] = TKMStyle.fillColor(forSRSStageCategory: .guru)
     case .master:
       attributes[.foregroundColor] = UIColor.white
-      attributes[.backgroundColor] = TKMStyle.color(forSRSStageCategory: .master)
+      attributes[.backgroundColor] = TKMStyle.fillColor(forSRSStageCategory: .master)
     case .enlightened:
       attributes[.foregroundColor] = UIColor.white
-      attributes[.backgroundColor] = TKMStyle.color(forSRSStageCategory: .enlightened)
+      attributes[.backgroundColor] = TKMStyle.fillColor(forSRSStageCategory: .enlightened)
     default:
       break
     }

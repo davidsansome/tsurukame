@@ -39,10 +39,14 @@ class MainTitleView: UIView {
   }
 
   override func didMoveToSuperview() {
-    // Add shadows.
-    TKMStyle.addShadowToView(imageContainer, offset: 2.0, opacity: 0.4, radius: 4.0)
-    TKMStyle.addShadowToView(usernameLabel, offset: 1.0, opacity: 0.4, radius: 4.0)
-    TKMStyle.addShadowToView(levelLabel, offset: 1.0, opacity: 0.2, radius: 2.0)
+    // Ink on paper: no text shadows, and a hairline ring around the avatar instead of a drop
+    // shadow.
+    usernameLabel.textColor = TKMStyle.Color.label
+    usernameLabel.font = UIFont.systemFont(ofSize: 22, weight: .heavy)
+    levelLabel.textColor = TKMStyle.Color.grey33
+    levelLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+    imageContainer.layer.borderWidth = 2
+    imageContainer.layer.borderColor = TKMStyle.Color.cellBackground.cgColor
 
     imageView.layer.masksToBounds = true
 
@@ -63,6 +67,12 @@ class MainTitleView: UIView {
     }
   }
 
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    super.traitCollectionDidChange(previousTraitCollection)
+    imageContainer.layer.borderColor = TKMStyle.Color.cellBackground
+      .resolvedColor(with: traitCollection).cgColor
+  }
+
   func update(username: String,
               level: Int,
               guruKanji: Int,
@@ -73,6 +83,6 @@ class MainTitleView: UIView {
     }
 
     usernameLabel.text = username
-    levelLabel.text = "Level \(level) \u{00B7} learned \(guruKanji) kanji"
+    levelLabel.text = "Level \(level) \u{00B7} \(guruKanji) kanji learned"
   }
 }

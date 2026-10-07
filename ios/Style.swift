@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,8 @@ private func AdaptiveColorHex(light: Int32, dark: Int32) -> UIColor {
   AdaptiveColor(light: UIColorFromHex(light), dark: UIColorFromHex(dark))
 }
 
+// The colours, type and shapes here follow the "Orizuru" visual refresh. The design mocks for every
+// screen, in light and dark mode, are at https://claude.ai/artifact/EzDD4prsDfKNsdXy5Bfifb
 @objc
 class TKMStyle: NSObject {
   // MARK: - Shadows
@@ -54,23 +56,26 @@ class TKMStyle: NSObject {
 
   // MARK: - WaniKani colors and gradients
 
-  static let defaultTintColor = UIColor(red: 0.0, green: 122.0 / 255.0, blue: 1.0, alpha: 1.0)
-  static let radicalColor1 = AdaptiveColorHex(light: 0x00AAFF, dark: 0x006090)
-  static let radicalColor2 = AdaptiveColorHex(light: 0x0093DD, dark: 0x005080)
-  static let kanjiColor1 = AdaptiveColorHex(light: 0xFF00AA, dark: 0x940060)
-  static let kanjiColor2 = AdaptiveColorHex(light: 0xDD0093, dark: 0x800050)
-  static let vocabularyColor1 = AdaptiveColorHex(light: 0xAA00FF, dark: 0x6100AA)
-  static let vocabularyColor2 = AdaptiveColorHex(light: 0x9300DD, dark: 0x530080)
-  static let lockedColor1 = UIColorFromHex(0x505050)
-  static let lockedColor2 = UIColorFromHex(0x484848)
-  static let readingColor1 = AdaptiveColor(light: UIColor(white: 0.235, alpha: 1),
-                                           dark: UIColor(white: 0.235, alpha: 1))
-  static let readingColor2 = AdaptiveColor(light: UIColor(white: 0.102, alpha: 1),
-                                           dark: UIColor(white: 0.102, alpha: 1))
-  static let meaningColor1 = AdaptiveColor(light: UIColor(white: 0.933, alpha: 1),
-                                           dark: UIColor(white: 0.733, alpha: 1))
-  static let meaningColor2 = AdaptiveColor(light: UIColor(white: 0.882, alpha: 1),
-                                           dark: UIColor(white: 0.682, alpha: 1))
+  // Shu (vermilion) — the red crown of the tanchō crane. The app's single accent colour.
+  static let defaultTintColor = AdaptiveColorHex(light: 0xC8402B, dark: 0xD9533D)
+
+  // Subject colours are flat (both "gradient" stops are the same) and deep enough for white
+  // text at 5:1 or better.
+  static let radicalColor1 = AdaptiveColorHex(light: 0x2B6CB0, dark: 0x2A64A3)
+  static let radicalColor2 = radicalColor1
+  static let kanjiColor1 = AdaptiveColorHex(light: 0xB8346B, dark: 0xA82E62)
+  static let kanjiColor2 = kanjiColor1
+  static let vocabularyColor1 = AdaptiveColorHex(light: 0x74409F, dark: 0x6A3A96)
+  static let vocabularyColor2 = vocabularyColor1
+  static let lockedColor1 = UIColorFromHex(0x5F574B)
+  static let lockedColor2 = lockedColor1
+  // Tiles for subjects that are locked, in lists where burned subjects are drawn in ink.
+  static let lockedTileColor = AdaptiveColorHex(light: 0x8F8474, dark: 0x5F574B)
+  // The review prompt strip: ink for readings, paper for meanings.
+  static let readingColor1 = AdaptiveColorHex(light: 0x1F1D1A, dark: 0x2E2B26)
+  static let readingColor2 = readingColor1
+  static let meaningColor1 = Color.background
+  static let meaningColor2 = meaningColor1
 
   static let explosionColor1 = UIColor(red: 247.0 / 255, green: 181.0 / 255, blue: 74.0 / 255,
                                        alpha: 1.0)
@@ -87,15 +92,32 @@ class TKMStyle: NSObject {
   class func color(forSRSStageCategory srsStageCategory: SRSStageCategory) -> UIColor {
     switch srsStageCategory {
     case .apprentice:
-      return UIColor(red: 0.87, green: 0.00, blue: 0.58, alpha: 1.0)
+      return AdaptiveColorHex(light: 0xB8346B, dark: 0xE0678F)
     case .guru:
-      return UIColor(red: 0.53, green: 0.17, blue: 0.62, alpha: 1.0)
+      return AdaptiveColorHex(light: 0x74409F, dark: 0xB083D6)
     case .master:
-      return UIColor(red: 0.16, green: 0.30, blue: 0.86, alpha: 1.0)
+      return AdaptiveColorHex(light: 0x2F55B5, dark: 0x7D98E0)
     case .enlightened:
-      return UIColor(red: 0.00, green: 0.58, blue: 0.87, alpha: 1.0)
+      return AdaptiveColorHex(light: 0x2F7FB5, dark: 0x6FB3E0)
     case .burned:
-      return UIColor(red: 0.26, green: 0.26, blue: 0.26, alpha: 1.0)
+      return AdaptiveColorHex(light: 0x3A3631, dark: 0xF2ECDF)
+    }
+  }
+
+  // For filled shapes with white text on top. Unlike color(forSRSStageCategory:), which lightens
+  // in dark mode so it reads as text on a dark background, these stay deep in both modes.
+  class func fillColor(forSRSStageCategory srsStageCategory: SRSStageCategory) -> UIColor {
+    switch srsStageCategory {
+    case .apprentice:
+      return UIColorFromHex(0xB8346B)
+    case .guru:
+      return UIColorFromHex(0x74409F)
+    case .master:
+      return UIColorFromHex(0x2F55B5)
+    case .enlightened:
+      return UIColorFromHex(0x2F7FB5)
+    case .burned:
+      return UIColorFromHex(0x3A3631)
     }
   }
 
@@ -125,6 +147,13 @@ class TKMStyle: NSObject {
     }
   }
 
+  // The size of a subject on the review screen: its base size scaled by the font size setting, and
+  // larger on iPad. Other screens that show a subject large don't go bigger than this.
+  class func reviewSubjectFontSize(baseSize: CGFloat = 60) -> CGFloat {
+    let idiomScale: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 2.5 : 1
+    return baseSize * idiomScale * CGFloat(Settings.fontSize)
+  }
+
   class func gradient(forSubject subject: TKMSubject) -> [CGColor] {
     if subject.hasRadical {
       return radicalGradient
@@ -144,22 +173,28 @@ class TKMStyle: NSObject {
   // MARK: - Dark mode aware UI colors
 
   enum Color {
-    static let background = AdaptiveColor(light: UIColor.white, dark: UIColor.black)
-    static let cellBackground = AdaptiveColorHex(light: 0xFFFFFF, dark: 0x1C1C1E)
-    static let separator = UIColor(red: 0.24, green: 0.24, blue: 0.26, alpha: 0.29)
-    static let label = AdaptiveColor(light: UIColor.black, dark: UIColor.white)
-    static let grey33 = AdaptiveColor(light: UIColor.darkGray, dark: UIColor.lightGray)
-    static let grey66 = AdaptiveColor(light: UIColor.lightGray, dark: UIColor.darkGray)
-    static let grey80 = AdaptiveColor(light: UIColor(white: 0.8, alpha: 1.0),
-                                      dark: UIColor(white: 0.2, alpha: 1.0))
+    // Washi paper and sumi ink. Dark mode swaps them for warm near-black and off-white.
+    static let background = AdaptiveColorHex(light: 0xF5EFE3, dark: 0x161512)
+    static let cellBackground = AdaptiveColorHex(light: 0xFFFCF6, dark: 0x211F1B)
+    static let separator = AdaptiveColorHex(light: 0xEEE6D6, dark: 0x2C2924)
+    static let cardBorder = AdaptiveColorHex(light: 0xE6DCC9, dark: 0x2E2B26)
+    static let label = AdaptiveColorHex(light: 0x1F1D1A, dark: 0xF2ECDF)
+    static let grey33 = AdaptiveColorHex(light: 0x5F574B, dark: 0xABA290)
+    static let grey66 = AdaptiveColorHex(light: 0xB9AE99, dark: 0x6E665A)
+    static let grey80 = AdaptiveColorHex(light: 0xE0D5C1, dark: 0x3A3630)
+    static let accent = TKMStyle.defaultTintColor
+    // Night indigo, used behind the waves on the home screen's Reviews card.
+    static let night = UIColorFromHex(0x1B2740)
+    static let onNight = UIColorFromHex(0xF5EFE3)
+    static let onNightSecondary = UIColorFromHex(0xC9C1B1)
 
     // Markup colors for mnemonics.
-    static let markupRadicalForeground = AdaptiveColorHex(light: 0x000000, dark: 0x4AC3FF)
-    static let markupRadicalBackground = AdaptiveColorHex(light: 0xD6F1FF, dark: 0x1C1C1E)
-    static let markupKanjiForeground = AdaptiveColorHex(light: 0x000000, dark: 0xFF4AC3)
-    static let markupKanjiBackground = AdaptiveColorHex(light: 0xFFD6F1, dark: 0x1C1C1E)
-    static let markupVocabularyForeground = AdaptiveColorHex(light: 0x000000, dark: 0xC34AFF)
-    static let markupVocabularyBackground = AdaptiveColorHex(light: 0xF1D6FF, dark: 0x1C1C1E)
+    static let markupRadicalForeground = label
+    static let markupRadicalBackground = AdaptiveColorHex(light: 0xDCE8F5, dark: 0x24364D)
+    static let markupKanjiForeground = label
+    static let markupKanjiBackground = AdaptiveColorHex(light: 0xF7E4EC, dark: 0x45283A)
+    static let markupVocabularyForeground = label
+    static let markupVocabularyBackground = AdaptiveColorHex(light: 0xEEE5F5, dark: 0x3A2D47)
 
     static var placeholderText: UIColor {
       if #available(iOS 13.0, *) {

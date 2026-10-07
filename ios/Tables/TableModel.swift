@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   struct Section {
     var hidden: Bool = false
     var headerTitle: String?
+    // Shown on the right of the header, like a count.
+    var headerDetail: String?
     var footerTitle: String?
     var items = [any TableModelItem]()
     var hiddenItems = NSMutableIndexSet()
@@ -34,6 +36,9 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   // If set to true, the table will use the sectionHeaderHeight
   // from the UITableView instead of the UITableView.automaticDimension.
   var useSectionHeaderHeightFromView = false
+
+  // The background behind each row. Items that want a different one set it in update().
+  var cellBackgroundColor = TKMStyle.Color.cellBackground
 
   deinit {
     if !isInitialised {
@@ -205,6 +210,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
     cell.baseItem = item
     cell.tableView = tableView
+    cell.backgroundColor = cellBackgroundColor
     cell.update()
     CATransaction.commit()
     return cell
@@ -252,6 +258,48 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
       return rowHeight
     }
     return tableView.rowHeight
+  }
+
+  // Section headers are small tracked capitals in secondary ink. The content is set here, before
+  // UIKit sizes the header, so it lays out correctly. Delegates can still restyle it in
+  // willDisplayHeaderView, which is forwarded to them as before.
+  func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    let modelSection = sections[viewSectionToModelSection(section)]
+    guard let title = modelSection.headerTitle, !title.isEmpty else {
+      return nil
+    }
+    let reuseId = "TKMSectionHeader"
+    let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: reuseId) ??
+      UITableViewHeaderFooterView(reuseIdentifier: reuseId)
+    var attributes: [NSAttributedString.Key: Any] = [
+      .font: UIFont.systemFont(ofSize: 12, weight: .bold),
+      .foregroundColor: TKMStyle.Color.grey33,
+      .kern: 1.6,
+    ]
+    var config = UIListContentConfiguration.groupedHeader()
+    config.attributedText = NSAttributedString(string: title.uppercased(), attributes: attributes)
+    config.secondaryAttributedText = nil
+    if let detail = modelSection.headerDetail {
+      attributes[.kern] = 0.8
+      config.secondaryAttributedText = NSAttributedString(string: detail.uppercased(),
+                                                          attributes: attributes)
+      config.prefersSideBySideTextAndSecondaryText = true
+    }
+    header.contentConfiguration = config
+    return header
+  }
+
+  // Some storyboards set the estimated header height to 0, which turns off self-sizing for the
+  // custom header views above.
+  func tableView(_: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+    let section = sections[viewSectionToModelSection(section)]
+    if (section.headerTitle ?? "").isEmpty {
+      return 12
+    }
+    if useSectionHeaderHeightFromView {
+      return tableView.sectionHeaderHeight
+    }
+    return 44
   }
 
   func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

@@ -31,7 +31,7 @@
         <scene sceneID="K7h-9v-EbW">
             <objects>
                 <tableViewController id="xs8-Ja-JLy" customClass="MainWaniKaniTabViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="gyB-v8-wyw">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="gyB-v8-wyw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="609"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -65,7 +65,7 @@
         <scene sceneID="d6R-Gk-GXK">
             <objects>
                 <tableViewController id="Spk-nW-GEQ" customClass="MainPracticeTabViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="tim-gF-sT3">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="tim-gF-sT3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="609"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -91,9 +91,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.25" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_screen" translatesAutoresizingMaskIntoConstraints="NO" id="TOM-SC-Xoi">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
                             <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Hq-bM-Oba" customClass="GradientView" customModule="Tsurukame" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="663"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -125,20 +122,16 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="uiT-6O-5H9" firstAttribute="leading" secondItem="ge9-QL-YFj" secondAttribute="leading" id="2Y7-2r-WNS"/>
-                            <constraint firstItem="TOM-SC-Xoi" firstAttribute="leading" secondItem="f6b-3A-D9O" secondAttribute="leading" id="4rD-Jq-ep8"/>
                             <constraint firstItem="c7o-N7-LTQ" firstAttribute="bottom" secondItem="9Hq-bM-Oba" secondAttribute="bottom" id="9wP-Kd-L2b"/>
                             <constraint firstItem="xYm-HJ-awB" firstAttribute="bottom" secondItem="2ko-Of-YXN" secondAttribute="top" id="CY4-nv-N9l"/>
                             <constraint firstItem="c7o-N7-LTQ" firstAttribute="leading" secondItem="f6b-3A-D9O" secondAttribute="leading" id="HHP-Le-EvM"/>
                             <constraint firstItem="9Hq-bM-Oba" firstAttribute="top" secondItem="f6b-3A-D9O" secondAttribute="top" id="Lar-94-88K"/>
                             <constraint firstItem="2ko-Of-YXN" firstAttribute="leading" secondItem="ge9-QL-YFj" secondAttribute="leading" id="Lft-l0-CsK"/>
-                            <constraint firstAttribute="trailing" secondItem="TOM-SC-Xoi" secondAttribute="trailing" id="P6w-3y-wbC"/>
                             <constraint firstItem="uiT-6O-5H9" firstAttribute="top" secondItem="c7o-N7-LTQ" secondAttribute="bottom" id="SGU-3j-hW7"/>
                             <constraint firstItem="ge9-QL-YFj" firstAttribute="trailing" secondItem="uiT-6O-5H9" secondAttribute="trailing" id="Upr-a1-K3d"/>
                             <constraint firstItem="ge9-QL-YFj" firstAttribute="trailing" secondItem="xYm-HJ-awB" secondAttribute="trailing" id="VZD-Da-GgU"/>
                             <constraint firstItem="c7o-N7-LTQ" firstAttribute="top" secondItem="f6b-3A-D9O" secondAttribute="top" id="Vfd-rw-Sjq"/>
                             <constraint firstItem="xYm-HJ-awB" firstAttribute="top" secondItem="c7o-N7-LTQ" secondAttribute="bottom" id="b3n-bM-i9q"/>
-                            <constraint firstAttribute="bottom" secondItem="TOM-SC-Xoi" secondAttribute="bottom" id="hyJ-ZC-mMV"/>
-                            <constraint firstItem="TOM-SC-Xoi" firstAttribute="top" secondItem="f6b-3A-D9O" secondAttribute="top" id="jwm-bH-MMb"/>
                             <constraint firstItem="ge9-QL-YFj" firstAttribute="trailing" secondItem="2ko-Of-YXN" secondAttribute="trailing" id="qyU-Sp-ap1"/>
                             <constraint firstAttribute="trailing" secondItem="c7o-N7-LTQ" secondAttribute="trailing" id="r15-ms-muQ"/>
                             <constraint firstAttribute="bottom" secondItem="2ko-Of-YXN" secondAttribute="bottom" id="sLN-Q1-Iz1"/>
@@ -273,7 +266,6 @@
         <image name="ic_search_white" width="24" height="24"/>
         <image name="ic_settings_white" width="24" height="24"/>
         <image name="katakana" width="25" height="25"/>
-        <image name="launch_screen" width="1126" height="2436"/>
         <image name="wanikani" width="25" height="25"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

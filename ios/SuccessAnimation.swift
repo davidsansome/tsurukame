@@ -276,7 +276,7 @@ enum SuccessAnimation {
         switch newSrsStage {
         // Only show the level up popup for the first SRS stage in each category.
         case .guru1, .master, .enlightened, .burned:
-          let srsLevelColor = TKMStyle.color(forSRSStageCategory: newSrsStage.category)
+          let srsLevelColor = TKMStyle.fillColor(forSRSStageCategory: newSrsStage.category)
           let srsLevelString = newSrsStage.category.description
 
           createSpringyBillboard(originView: answerField, text: srsLevelString,

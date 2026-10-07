@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,15 +18,9 @@ import UIKit
 protocol ReviewQuickSettingsMenuDelegate: AnyObject {
   func quickSettingsChanged()
   func closeMenuAndPush(viewController: UIViewController)
-  func endReviewSession(button: UIView)
-  func wrapUp()
-  func wrapUpCount() -> Int
-  func canWrapUp() -> Bool
 }
 
 class ReviewQuickSettingsMenu: ReviewQuickSettingsTable {
-  private var endItem: BasicModelItem?
-
   override func rerender() {
     let model = MutableTableModel(tableView: tableView, delegate: self)
 
@@ -56,33 +50,7 @@ class ReviewQuickSettingsMenu: ReviewQuickSettingsTable {
                                                              .delegate), animated: true)
       })
 
-    model.add(section: "End review session")
-    endItem = BasicModelItem(style: .default, title: "End review session") { [weak self] in self?
-      .endReviewSession()
-    }
-    endItem!.image = Asset.baselineCancelBlack24pt.image
-    model.add(endItem!)
-
-    if delegate?.canWrapUp() ?? false {
-      var wrapUpText = "Wrap up"
-      if let wrapUpCount = delegate?.wrapUpCount(), wrapUpCount != 0 {
-        wrapUpText = "Wrap up (\(wrapUpCount) to go)"
-      }
-
-      let wrapUp = BasicModelItem(style: .default, title: wrapUpText) { [weak self] in
-        self?.delegate?.wrapUp()
-      }
-      wrapUp.image = Asset.baselineAccessTimeBlack24pt.image
-      model.add(wrapUp)
-    }
-
     self.model = model
     model.reloadTable()
-  }
-
-  private func endReviewSession() {
-    if let endItem = endItem, let cell = endItem.cell, let delegate = delegate {
-      delegate.endReviewSession(button: cell)
-    }
   }
 }

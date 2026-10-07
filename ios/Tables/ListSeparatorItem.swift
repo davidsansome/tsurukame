@@ -36,15 +36,15 @@ class ListSeparatorCell: TableModelCell {
   @IBOutlet var label: UILabel!
 
   override func update() {
-    label.text = item.label
-
-    let boldFont = UIFont.boldSystemFont(ofSize: 14.0)
-    label.font = UIFontMetrics(forTextStyle: .footnote).scaledFont(for: boldFont)
-  }
-
-  override func didMoveToSuperview() {
-    super.didMoveToSuperview()
-    TKMStyle.addShadowToView(label, offset: 0.0, opacity: 1.0, radius: 2.0)
+    // A small tracked-capitals label on the card, like the section headers.
+    backgroundColor = TKMStyle.Color.cellBackground
+    contentView.backgroundColor = .clear
+    let boldFont = UIFont.systemFont(ofSize: 11.0, weight: .bold)
+    label.attributedText = NSAttributedString(string: item.label.uppercased(), attributes: [
+      .font: UIFontMetrics(forTextStyle: .footnote).scaledFont(for: boldFont),
+      .foregroundColor: TKMStyle.Color.grey33,
+      .kern: 1.4,
+    ])
   }
 
   override func layoutSubviews() {

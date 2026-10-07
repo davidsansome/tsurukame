@@ -24,10 +24,10 @@ class SubjectModelItem: TableModelItem {
   var assignment: TKMAssignment?
   var showLevelNumber = true
   var showAnswers = true
-  var showRemaining = false
   var gradientColors: [Any]?
-  var canShowCheckmark = false
-  var isChecked = false
+  // Draw the subject in a small coloured tile on a plain card row, instead of filling the whole
+  // row with the subject's colour.
+  var showsTile = false
 
   init(subject: TKMSubject, delegate: SubjectDelegate, assignment: TKMAssignment? = nil,
        readingWrong: Bool = false, meaningWrong: Bool = false) {
@@ -45,11 +45,14 @@ class SubjectModelItem: TableModelItem {
 
 private let kJapaneseTextImageSize: CGFloat = 26.0
 private let kFontSize: CGFloat = UIFontMetrics.default.scaledValue(for: 14.0)
+// How far a subject's tile reaches past its text.
+private let kTilePadding = CGSize(width: 8, height: 6)
 
 class SubjectModelView: TableModelCell {
   @TypedModelItem var item: SubjectModelItem
 
   private weak var gradient: CAGradientLayer?
+  private let tile = UIView()
 
   @IBOutlet var levelLabel: UILabel!
   @IBOutlet var subjectLabel: UILabel!
@@ -64,6 +67,31 @@ class SubjectModelView: TableModelCell {
     let gradientLayer = CAGradientLayer()
     gradient = gradientLayer
     layer.insertSublayer(gradientLayer, at: 0)
+    tile.layer.cornerRadius = 10
+    tile.layer.cornerCurve = .continuous
+  }
+
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    // A long meaning is truncated rather than squashing the subject, whose tile is sized from it.
+    subjectLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+    // The tile follows the subject's text as it changes when the cell is reused, and is at least
+    // square so a single character doesn't get a narrow one.
+    tile.translatesAutoresizingMaskIntoConstraints = false
+    tile.isUserInteractionEnabled = false
+    contentView.insertSubview(tile, at: 0)
+    let tileWidth = tile.widthAnchor.constraint(equalTo: subjectLabel.widthAnchor,
+                                                constant: kTilePadding.width * 2)
+    tileWidth.priority = .defaultHigh
+    NSLayoutConstraint.activate([
+      tile.centerXAnchor.constraint(equalTo: subjectLabel.centerXAnchor),
+      tile.centerYAnchor.constraint(equalTo: subjectLabel.centerYAnchor),
+      tile.heightAnchor.constraint(equalTo: subjectLabel.heightAnchor,
+                                   constant: kTilePadding.height * 2),
+      tile.widthAnchor.constraint(greaterThanOrEqualTo: tile.heightAnchor),
+      tileWidth,
+    ])
   }
 
   override func layoutSubviews() {
@@ -82,58 +110,41 @@ class SubjectModelView: TableModelCell {
   override func update() {
     setShowAnswers(item.showAnswers, animated: false)
 
-    levelLabel.isHidden = !item.showLevelNumber
+    levelLabel.isHidden = !item.showLevelNumber || item.showsTile
     if item.showLevelNumber {
       levelLabel.text = "\(item.subject.level)"
     }
     updateGradient()
-    if item.canShowCheckmark && item.isChecked {
-      accessoryType = .checkmark
-    } else {
-      accessoryType = .none
-    }
-    tintColor = .white // for the checkmark
+    // The tile reaches past the subject, so leave room for it before the answers.
+    (subjectLabel.superview as? UIStackView)?
+      .setCustomSpacing(item.showsTile ? kTilePadding.width * 2 : 0, after: subjectLabel)
+    // Tile rows have ink text on the card; full-colour rows have white text.
+    let secondaryText = item.showsTile ? TKMStyle.Color.grey33 : .white
+    levelLabel.textColor = secondaryText
+    readingLabel.textColor = secondaryText
+    meaningLabel.textColor = item.showsTile ? TKMStyle.Color.label : .white
 
     subjectLabel.font = UIFont(name: TKMStyle.japaneseFontName, size: subjectLabel.font.pointSize)
     subjectLabel.attributedText = japaneseText(item.subject, imageSize: kJapaneseTextImageSize)
 
-    if item.showRemaining {
-      if let assignment = item.assignment, assignment.isReviewStage {
-        readingLabel.isHidden = false
-        readingLabel.text = formattedInterval(until: assignment.reviewDate!, label: "Review")
-        meaningLabel.isHidden = false
-        meaningLabel
-          .text = formattedInterval(until: assignment.guruDate(subject: item.subject)!,
-                                    label: "Guru")
-      } else if let assignment = item.assignment, assignment.isLessonStage {
-        readingLabel.isHidden = false
-        readingLabel.text = formattedInterval(until: assignment.guruDate(subject: item.subject)!,
-                                              label: "Guru")
-        meaningLabel.isHidden = true
-      } else {
-        readingLabel.isHidden = true
-        meaningLabel.isHidden = true
-      }
-    } else {
-      switch item.subject.subjectType {
-      case .radical:
-        readingLabel.isHidden = true
-        meaningLabel.text = item.subject
-          .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
-      case .kanji:
-        readingLabel.isHidden = false
-        readingLabel.text = item.subject.commaSeparatedPrimaryReadings
-        meaningLabel.text = item.subject
-          .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
-      case .vocabulary:
-        readingLabel.isHidden = item.subject.readings.isEmpty
-        meaningLabel.isHidden = item.subject.meanings.isEmpty
-        readingLabel.text = item.subject.commaSeparatedReadings
-        meaningLabel.text = item.subject
-          .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
-      default:
-        break
-      }
+    switch item.subject.subjectType {
+    case .radical:
+      readingLabel.isHidden = true
+      meaningLabel.text = item.subject
+        .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
+    case .kanji:
+      readingLabel.isHidden = false
+      readingLabel.text = item.subject.commaSeparatedPrimaryReadings
+      meaningLabel.text = item.subject
+        .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
+    case .vocabulary:
+      readingLabel.isHidden = item.subject.readings.isEmpty
+      meaningLabel.isHidden = item.subject.meanings.isEmpty
+      readingLabel.text = item.subject.commaSeparatedReadings
+      meaningLabel.text = item.subject
+        .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
+    default:
+      break
     }
 
     readingLabel.font = item.readingWrong ? UIFont(name: TKMStyle.japaneseFontNameBold,
@@ -141,26 +152,6 @@ class SubjectModelView: TableModelCell {
       : UIFont(name: TKMStyle.japaneseFontName, size: kFontSize)
     meaningLabel.font = item.meaningWrong ? UIFont.systemFont(ofSize: kFontSize, weight: .bold)
       : UIFont.systemFont(ofSize: kFontSize)
-  }
-
-  private func formattedInterval(until toDate: Date, label: String) -> String {
-    if Date().compare(toDate) == .orderedDescending {
-      return "\(label) available"
-    }
-
-    let formatter = DateComponentsFormatter()
-    formatter.unitsStyle = .abbreviated
-
-    var components = Calendar.current.dateComponents([.day, .hour, .minute], from: Date(),
-                                                     to: toDate)
-
-    // Only show minutes after there are no hours left.
-    if components.hour ?? 0 > 0 {
-      components.minute = 0
-    }
-
-    let interval = formatter.string(from: components)!
-    return "\(label) in \(interval)"
   }
 
   func setShowAnswers(_ value: Bool, animated: Bool) {
@@ -191,12 +182,6 @@ class SubjectModelView: TableModelCell {
   }
 
   override func didSelect() {
-    item.isChecked = !item.isChecked
-    if item.canShowCheckmark && item.isChecked {
-      accessoryType = .checkmark
-    } else {
-      accessoryType = .none
-    }
     item.delegate?.didTapSubject(item.subject)
   }
 
@@ -210,10 +195,15 @@ class SubjectModelView: TableModelCell {
   }
 
   private func updateGradient() {
-    if let itemGradientColors = item.gradientColors {
-      gradient?.colors = itemGradientColors
+    let colors = item.gradientColors ?? TKMStyle.gradient(forSubject: item.subject)
+    if item.showsTile {
+      gradient?.isHidden = true
+      tile.isHidden = false
+      tile.backgroundColor = UIColor(cgColor: colors.first as! CGColor)
     } else {
-      gradient?.colors = TKMStyle.gradient(forSubject: item.subject)
+      gradient?.isHidden = false
+      tile.isHidden = true
+      gradient?.colors = colors
     }
   }
 }

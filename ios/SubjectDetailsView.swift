@@ -23,7 +23,8 @@ private let kFontSize: CGFloat = {
   return bodyFontDescriptor.pointSize
 }()
 
-private let kMeaningSynonymColor = UIColor(red: 0.231, green: 0.6, blue: 0.988, alpha: 1)
+// User-added synonyms are marked in the accent colour.
+private let kMeaningSynonymColor = TKMStyle.Color.accent
 
 private func join(_ arr: [NSAttributedString], with joinString: String) -> NSAttributedString {
   let ret = NSMutableAttributedString()
@@ -140,6 +141,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   public func setup(services: TKMServices, delegate: SubjectDelegate) {
     self.services = services
     subjectDelegate = delegate
+    backgroundColor = TKMStyle.Color.background
   }
 
   public func saveStudyMaterials() {
@@ -321,7 +323,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         continue
       }
       encounteredIds.append(subject.id)
-      modelItems.append(SubjectModelItem(subject: subject, delegate: subjectDelegate))
+      modelItems.append(subjectTile(subject))
     }
     for similar in subject.kanji.visuallySimilarKanji {
       guard let subject = services.localCachingClient.getSubject(japanese: String(similar),
@@ -333,7 +335,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         continue
       }
       encounteredIds.append(subject.id)
-      modelItems.append(SubjectModelItem(subject: subject, delegate: subjectDelegate))
+      modelItems.append(subjectTile(subject))
     }
     if modelItems.count > 0 {
       model.add(section: "Visually Similar Kanji")
@@ -341,6 +343,12 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
         model.add(modelItem)
       }
     }
+  }
+
+  private func subjectTile(_ subject: TKMSubject) -> SubjectModelItem {
+    let item = SubjectModelItem(subject: subject, delegate: subjectDelegate)
+    item.showsTile = true
+    return item
   }
 
   private func addAmalgamationSubjects(_ subject: TKMSubject, toModel model: MutableTableModel) {
@@ -361,7 +369,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     model.add(section: "Used in")
     for subject in subjects {
-      model.add(SubjectModelItem(subject: subject, delegate: subjectDelegate))
+      model.add(subjectTile(subject))
     }
   }
 

@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -17,18 +18,7 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_screen" translatesAutoresizingMaskIntoConstraints="NO" id="9Fo-CK-EuL">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="9Fo-CK-EuL" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="XJU-UW-uki"/>
-                            <constraint firstItem="9Fo-CK-EuL" firstAttribute="bottom" secondItem="Ze5-6b-2t3" secondAttribute="bottom" id="dr1-Cn-obO"/>
-                            <constraint firstItem="9Fo-CK-EuL" firstAttribute="trailing" secondItem="Bcu-3y-fUS" secondAttribute="trailing" id="ugt-cp-VjM"/>
-                            <constraint firstItem="9Fo-CK-EuL" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" id="zag-o7-1lD"/>
-                        </constraints>
+                        <color key="backgroundColor" name="Paper"/>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                     </view>
                     <nil key="simulatedTopBarMetrics"/>
@@ -40,6 +30,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="launch_screen" width="1126" height="2436"/>
+        <namedColor name="Paper">
+            <color red="0.96078431372549022" green="0.93725490196078431" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>
