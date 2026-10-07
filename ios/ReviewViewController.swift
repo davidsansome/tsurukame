@@ -124,22 +124,33 @@ private class AnimationContext {
     fadingLabels.append((original, copy))
   }
 
+  // Call inside the animation block, after laying out the new positions. Each copy is pinned to its
+  // original with constraints rather than moved to where the original is now, so it keeps following
+  // the original if the original moves again during the animation (the keyboard appearing moves
+  // the question label after this is called).
   func animateFadingLabels() {
+    guard let superview = fadingLabels.first?.0.superview else { return }
     for (original, copy) in fadingLabels {
       original.alpha = 1.0
+      copy.translatesAutoresizingMaskIntoConstraints = false
       switch original.textAlignment {
-      case NSTextAlignment.natural:
-        fallthrough
-      case NSTextAlignment.left:
-        copy.center = CGPoint(x: original.frame.minX + copy.frame.size.width / 2,
-                              y: original.frame.minY + copy.frame.size.height / 2)
+      case NSTextAlignment.natural, NSTextAlignment.left:
+        NSLayoutConstraint.activate([
+          copy.leadingAnchor.constraint(equalTo: original.leadingAnchor),
+          copy.topAnchor.constraint(equalTo: original.topAnchor),
+        ])
       default:
-        copy.center = original.center
-        copy.bounds = original.bounds
+        NSLayoutConstraint.activate([
+          copy.centerXAnchor.constraint(equalTo: original.centerXAnchor),
+          copy.centerYAnchor.constraint(equalTo: original.centerYAnchor),
+          copy.widthAnchor.constraint(equalTo: original.widthAnchor),
+          copy.heightAnchor.constraint(equalTo: original.heightAnchor),
+        ])
       }
       copy.transform = original.transform
       copy.alpha = 0.0
     }
+    superview.layoutIfNeeded()
   }
 
   deinit {
