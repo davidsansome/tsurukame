@@ -676,14 +676,14 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     guard let userInfo = getUserInfo() else {
       return []
     }
-    return getAssignments(level: Int(userInfo.level))
+    return getAssignments(level: Int(userInfo.currentLevel))
   }
 
   func hasCompletedPreviousLevel() -> Bool {
     guard let userInfo = getUserInfo() else {
       return false
     }
-    var level = Int(userInfo.level)
+    var level = Int(userInfo.currentLevel)
     if level > 1 {
       level = level - 1
     }
