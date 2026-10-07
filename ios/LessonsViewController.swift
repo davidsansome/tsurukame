@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,6 +51,8 @@ class LessonsViewController: UIViewController, UIPageViewControllerDataSource,
       }
     }
     pageControl.setSubjects(subjects)
+
+    styleRoundBackButton(backButton, in: view)
 
     // Add it as a child view controller, below the back button.
     addChild(pageController)

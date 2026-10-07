@@ -126,26 +126,7 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     info.alignment = .center
     info.spacing = 12
 
-    var backConfig = UIButton.Configuration.filled()
-    backConfig.image = UIImage(systemName: "chevron.left",
-                               withConfiguration: UIImage.SymbolConfiguration(pointSize: 16,
-                                                                              weight: .bold))
-    backConfig.baseForegroundColor = .white
-    backConfig.baseBackgroundColor = UIColor.white.withAlphaComponent(0.16)
-    backConfig.cornerStyle = .capsule
-    backButton.setTitle(nil, for: .normal)
-    backButton.setImage(nil, for: .normal)
-    backButton.configuration = backConfig
-    backButton.accessibilityLabel = "Back"
-    // A 44pt circle, inset from the edge like the other round buttons.
-    for constraint in view.constraints where
-      (constraint.firstItem as? UIView) == backButton && constraint.firstAttribute == .leading {
-      constraint.constant = 16
-    }
-    for constraint in backButton.constraints where constraint.firstAttribute == .height {
-      constraint.constant = 44
-    }
-    backButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
+    styleRoundBackButton(backButton, in: view)
 
     for v in [hero, waves, info] {
       v.translatesAutoresizingMaskIntoConstraints = false
@@ -252,4 +233,33 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
   @objc func playAudio() {
     subjectDetailsView.playAudio()
   }
+}
+
+// Turns a storyboard back button pinned to the top-left of the safe area into the round
+// translucent button that sits over a subject's colour.
+func styleRoundBackButton(_ button: UIButton, in view: UIView) {
+  var config = UIButton.Configuration.filled()
+  config.image = UIImage(systemName: "chevron.left",
+                         withConfiguration: UIImage.SymbolConfiguration(pointSize: 16,
+                                                                        weight: .bold))
+  config.baseForegroundColor = .white
+  config.baseBackgroundColor = UIColor.white.withAlphaComponent(0.16)
+  config.cornerStyle = .capsule
+  button.setTitle(nil, for: .normal)
+  button.setImage(nil, for: .normal)
+  button.configuration = config
+  button.accessibilityLabel = "Back"
+
+  // A 44pt circle, inset from the edge like the other round buttons.
+  for constraint in view.constraints where
+    (constraint.firstItem as? UIView) == button && constraint.firstAttribute == .leading {
+    constraint.constant = 16
+  }
+  NSLayoutConstraint.deactivate(button.constraints.filter {
+    $0.firstAttribute == .height || $0.firstAttribute == .width
+  })
+  NSLayoutConstraint.activate([
+    button.widthAnchor.constraint(equalToConstant: 44),
+    button.heightAnchor.constraint(equalToConstant: 44),
+  ])
 }
