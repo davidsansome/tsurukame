@@ -31,6 +31,7 @@ private let kDefaultButtonTintColor = UIButton().tintColor
 // If the keyboard height changes by less than this amount, the question label will stay where it
 // is.
 private let kSmallKeyboardHeightChange: CGFloat = 50.0
+private let kChipsBottomMargin: CGFloat = 24.0
 
 enum AnswerResult {
   case Correct
@@ -234,6 +235,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private let levelChip = PillLabel()
   private let srsChip = PillLabel()
   private let chips = UIStackView()
+  // How far the subject's bottom edge is lifted so it's centred in the space above the chips,
+  // rather than over them. Zero when there are no chips or the subject details are shown.
+  private var chipsInset: CGFloat = 0
+  // How far the subject is nudged to stay put when the keyboard changes size slightly.
+  private var keyboardNudge: CGFloat = 0
   @IBOutlet private var questionBackground: GradientView!
   @IBOutlet private var promptBackground: GradientView!
   @IBOutlet private var questionLabel: UILabel!
@@ -509,7 +515,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     questionBackground.addSubview(chips)
     NSLayoutConstraint.activate([
       chips.centerXAnchor.constraint(equalTo: questionBackground.centerXAnchor),
-      chips.bottomAnchor.constraint(equalTo: questionBackground.bottomAnchor, constant: -24),
+      chips.bottomAnchor.constraint(equalTo: questionBackground.bottomAnchor,
+                                    constant: -kChipsBottomMargin),
     ])
   }
 
@@ -521,6 +528,22 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     levelChip.text = "Level \(assignment.level)"
     srsChip.isHidden = !Settings.showSRSLevelIndicator
     srsChip.text = assignment.srsStage.description
+    updateChipsInset(subjectDetailsShown: !subjectDetailsView.isHidden)
+  }
+
+  private func updateChipsInset(subjectDetailsShown: Bool) {
+    let hasChips = !levelChip.isHidden || !srsChip.isHidden
+    if hasChips, !subjectDetailsShown {
+      let chipsHeight = chips.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+      chipsInset = kChipsBottomMargin + chipsHeight
+    } else {
+      chipsInset = 0
+    }
+    updateQuestionLabelBottom()
+  }
+
+  private func updateQuestionLabelBottom() {
+    questionLabelBottomConstraint.constant = chipsInset + keyboardNudge
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -656,7 +679,8 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private func resetKeyboardLayout() {
     subjectDetailsView.contentInset = .zero
     answerFieldToBottomConstraint.constant = 0
-    questionLabelBottomConstraint.constant = 0
+    keyboardNudge = 0
+    updateQuestionLabelBottom()
     previousKeyboardInsetHeight = nil
   }
 
@@ -681,11 +705,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // keyboard moved.
     if let previousKeyboardInsetHeight = previousKeyboardInsetHeight,
        abs(insetHeight - previousKeyboardInsetHeight) <= kSmallKeyboardHeightChange {
-      questionLabelBottomConstraint.constant = previousKeyboardInsetHeight - insetHeight
+      keyboardNudge = previousKeyboardInsetHeight - insetHeight
     } else {
-      questionLabelBottomConstraint.constant = 0
+      keyboardNudge = 0
       previousKeyboardInsetHeight = insetHeight
     }
+    updateQuestionLabelBottom()
 
     var subjectDetailsViewInset = subjectDetailsView.contentInset
     subjectDetailsViewInset.bottom = insetHeight
@@ -995,8 +1020,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // Constraints.
     answerFieldToBottomConstraint.isActive = !shown
     if shown {
-      questionLabelBottomConstraint.constant = 0
+      keyboardNudge = 0
     }
+    updateChipsInset(subjectDetailsShown: shown)
 
     // Enable/disable the answer field, and set its first responder status.
     // This makes the keyboard appear or disappear immediately.  We need this animation to happen
