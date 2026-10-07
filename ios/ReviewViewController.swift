@@ -873,6 +873,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       answerField.text = nil
       answerField.textColor = TKMStyle.Color.label
       answerField.backgroundColor = .clear
+      answerField.isOnInk = session.activeTaskType == .reading
       answerField.placeholder = taskTypePlaceholder
       if let firstReading = session.activeSubject.primaryReadings.first {
         kanaInput.alphabet = (firstReading.hasType && firstReading.type == .onyomi &&

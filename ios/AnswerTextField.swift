@@ -65,6 +65,11 @@ class AnswerTextField: UITextField {
     updateFieldColors()
   }
 
+  // Set when the field sits on ink (the reading prompt), where an ink outline wouldn't show.
+  public var isOnInk = false {
+    didSet { updateFieldColors() }
+  }
+
   private var isMarkedIncorrect: Bool {
     textColor == TKMStyle.Color.accent
   }
@@ -108,7 +113,8 @@ class AnswerTextField: UITextField {
         UIColor(red: 0.984, green: 0.906, blue: 0.886, alpha: 1)
     }
     let fill = isMarkedIncorrect ? incorrectFill : TKMStyle.Color.cellBackground
-    let stroke = isMarkedIncorrect ? TKMStyle.Color.accent : TKMStyle.Color.label
+    let stroke = isMarkedIncorrect ? TKMStyle.Color.accent :
+      isOnInk ? TKMStyle.Color.onNightSecondary : TKMStyle.Color.label
     fieldLayer.fillColor = fill.resolvedColor(with: traitCollection).cgColor
     fieldLayer.strokeColor = stroke.resolvedColor(with: traitCollection).cgColor
   }
