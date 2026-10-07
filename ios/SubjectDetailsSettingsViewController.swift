@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import Foundation
 import UIKit
 
-class SubjectDetailsSettingsViewController: UITableViewController, TKMViewController {
+class SubjectDetailsSettingsViewController: SettingsTableViewController, TKMViewController {
   private var model: TableModel?
 
   // MARK: - TKMViewController
@@ -33,6 +33,7 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
   private func rerender() {
     let model = MutableTableModel(tableView: tableView)
 
+    model.add(section: "Readings")
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Use Katakana for Onyomi",
                               subtitle: "Show Onyomi kanji readings in Katakana instead of Hiragana",
@@ -43,6 +44,13 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
                               subtitle: "Primary reading(s) will be shown in bold",
                               on: Settings.showAllReadings,
                               switchHandler: showAllReadingsSwitchChanged))
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Skip Kanji readings",
+                              subtitle: "Kanji have meanings and readings. When this setting is enabled, you will not be quizzed about Kanji readings during lessons and review sessions.",
+                              on: Settings.skipKanjiReadings,
+                              switchHandler: skipKanjiReadingsSwitchChanged))
+
+    model.add(section: "Details pages")
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Show stats section",
                               subtitle: "Level, SRS stage, and more",
@@ -73,18 +81,13 @@ class SubjectDetailsSettingsViewController: UITableViewController, TKMViewContro
                               switchHandler: levelGraphSwitchChanged))
 
     model.add(SwitchModelItem(style: .subtitle,
-                              title: "Skip Kanji readings",
-                              subtitle: "Kanji have meanings and readings. When this setting is enabled, you will not be quizzed about Kanji readings during lessons and review sessions.",
-                              on: Settings.skipKanjiReadings,
-                              switchHandler: skipKanjiReadingsSwitchChanged))
-
-    model.add(SwitchModelItem(style: .subtitle,
                               title: "Show visually similar kanji above current level",
                               subtitle: "When this setting is enabled, the Visually Similar Kanji section will show items above your current level. When this is disabled, only visually similar items at or below your current level will be shown.",
                               on: Settings.showSimilarKanjiAboveLevel,
                               switchHandler: visuallySimilarKanjiAboveLevelSwitchChanged))
 
     self.model = model
+    styleRows(model)
     model.reloadTable()
   }
 

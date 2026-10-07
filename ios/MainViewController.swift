@@ -22,6 +22,14 @@ private let kProfileImageSize: CGFloat = 80
 
 private let kUpcomingReviewsSection = 1
 
+// The user's Gravatar, or WaniKani's default avatar if they haven't given an email address.
+func currentUserProfileImageURL() -> URL {
+  let email = Settings.gravatarCustomEmail.isEmpty
+    ? Settings.userEmailAddress : Settings.gravatarCustomEmail
+  return email.isEmpty ? URL(string: kDefaultProfileImageURL)!
+    : userProfileImageURL(emailAddress: email)
+}
+
 private func userProfileImageURL(emailAddress: String) -> URL {
   let address = emailAddress.trimmingCharacters(in: .whitespaces).lowercased()
   // Gravatar asks for an SHA-256 hash: https://docs.gravatar.com/general/hash/
@@ -301,16 +309,12 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
 
   func updateUserInfo() {
     guard let user = services.localCachingClient.getUserInfo() else { return }
-    let email = Settings.gravatarCustomEmail.isEmpty
-      ? Settings.userEmailAddress : Settings.gravatarCustomEmail
     let guruKanji = services.localCachingClient.guruKanjiCount
-    let imageURL = email.isEmpty ? URL(string: kDefaultProfileImageURL)
-      : userProfileImageURL(emailAddress: email)
 
     titleView.update(username: user.username,
                      level: Int(user.level),
                      guruKanji: Int(guruKanji),
-                     imageURL: imageURL)
+                     imageURL: currentUserProfileImageURL())
 
     updateTableContentInset(animated: true)
   }

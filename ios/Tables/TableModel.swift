@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,6 +34,9 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   // If set to true, the table will use the sectionHeaderHeight
   // from the UITableView instead of the UITableView.automaticDimension.
   var useSectionHeaderHeightFromView = false
+
+  // The background behind each row. Items that want a different one set it in update().
+  var cellBackgroundColor = TKMStyle.Color.cellBackground
 
   deinit {
     if !isInitialised {
@@ -205,8 +208,7 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
     cell.baseItem = item
     cell.tableView = tableView
-    // Items that want a different background set their own in update().
-    cell.backgroundColor = TKMStyle.Color.cellBackground
+    cell.backgroundColor = cellBackgroundColor
     cell.update()
     CATransaction.commit()
     return cell

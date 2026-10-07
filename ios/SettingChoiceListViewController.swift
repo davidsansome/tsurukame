@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ import Foundation
 
 // A view controller that shows a list of possible choices for a single Setting.
 // The current value of the Setting is checked, and the default value is given a "(default)" suffix.
-class SettingChoiceListViewController<T: SettingProtocol>: UITableViewController,
+class SettingChoiceListViewController<T: SettingProtocol>: SettingsTableViewController,
   TKMViewController
   where T.ValueType: Equatable {
   private var setting: T
@@ -86,6 +86,7 @@ class SettingChoiceListViewController<T: SettingProtocol>: UITableViewController
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     navigationController?.isNavigationBarHidden = false
+    styleRows(model)
     model.reloadTable()
   }
 }

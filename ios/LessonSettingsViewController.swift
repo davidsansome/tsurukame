@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import Foundation
 import UIKit
 
-class LessonSettingsViewController: UITableViewController, TKMViewController {
+class LessonSettingsViewController: SettingsTableViewController, TKMViewController {
   private var model: TableModel?
 
   // MARK: - TKMViewController
@@ -33,6 +33,7 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
   private func rerender() {
     let model = MutableTableModel(tableView: tableView)
 
+    model.add(section: "Lessons")
     model.add(BasicModelItem(style: .value1,
                              title: "Order",
                              subtitle: lessonOrderValueText,
@@ -58,6 +59,8 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
                              accessoryType: .disclosureIndicator) {
         [unowned self] in self.didTapApprenticeLessonsLimit()
       })
+
+    model.add(section: "Vocabulary")
     model.add(SwitchModelItem(style: .subtitle,
                               title: "Show kana-only vocabulary",
                               subtitle: "Include lessons for kana-only vocabulary" +
@@ -75,6 +78,7 @@ class LessonSettingsViewController: UITableViewController, TKMViewController {
       })
 
     self.model = model
+    styleRows(model)
     model.reloadTable()
   }
 

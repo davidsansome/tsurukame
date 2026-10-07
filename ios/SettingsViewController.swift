@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import Foundation
 import UIKit
 
-class SettingsViewController: UITableViewController, TKMViewController {
+class SettingsViewController: SettingsTableViewController, TKMViewController {
   private var services: TKMServices!
   private var model: TableModel?
   private var versionIndexPath: IndexPath?
@@ -39,6 +39,12 @@ class SettingsViewController: UITableViewController, TKMViewController {
 
   private func rerender() {
     let model = MutableTableModel(tableView: tableView, delegate: self)
+
+    if let user = services.localCachingClient.getUserInfo() {
+      model.addSection()
+      model.add(SettingsAccountItem(username: user.username, level: Int(user.level),
+                                    imageURL: currentUserProfileImageURL()))
+    }
 
     model.add(section: "Settings")
     model.add(BasicModelItem(style: .default,
@@ -78,7 +84,7 @@ class SettingsViewController: UITableViewController, TKMViewController {
       })
     model.add(BasicModelItem(style: .subtitle,
                              title: "Clear avatar image cache",
-                             subtitle: "If you are having issues with your avatar not loading, try clearing the image cache.",
+                             subtitle: "If your avatar isn't loading, try clearing the image cache.",
                              accessoryType: .none) { [unowned self] in didTapClearImageCache() })
 
     model.addSection()
@@ -90,6 +96,7 @@ class SettingsViewController: UITableViewController, TKMViewController {
     model.add(logOutItem)
 
     self.model = model
+    styleRows(model)
     model.reloadTable()
   }
 
@@ -145,5 +152,80 @@ class SettingsViewController: UITableViewController, TKMViewController {
     let c = UIAlertController(title: "Image cache cleared", message: nil, preferredStyle: .alert)
     c.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
     present(c, animated: true, completion: nil)
+  }
+}
+
+// The user's avatar, name and level, at the top of the settings.
+private class SettingsAccountItem: TableModelItem {
+  let username: String
+  let level: Int
+  let imageURL: URL
+
+  init(username: String, level: Int, imageURL: URL) {
+    self.username = username
+    self.level = level
+    self.imageURL = imageURL
+  }
+
+  var cellFactory: TableModelCellFactory {
+    .fromDefaultConstructor(cellClass: SettingsAccountCell.self)
+  }
+}
+
+private class SettingsAccountCell: TableModelCell {
+  @TypedModelItem var item: SettingsAccountItem
+
+  // Haneke needs a size to pick its cache format before the first layout.
+  private let avatar = UIImageView(frame: CGRect(x: 0, y: 0, width: 52, height: 52))
+  private let nameLabel = UILabel()
+  private let detailLabel = UILabel()
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    selectionStyle = .none
+
+    avatar.backgroundColor = TKMStyle.Color.grey80
+    avatar.contentMode = .scaleAspectFill
+    avatar.layer.cornerRadius = 26
+    avatar.clipsToBounds = true
+
+    nameLabel.font = UIFontMetrics(forTextStyle: .headline)
+      .scaledFont(for: UIFont.systemFont(ofSize: 18, weight: .black))
+    nameLabel.textColor = TKMStyle.Color.label
+    detailLabel.font = UIFontMetrics(forTextStyle: .subheadline)
+      .scaledFont(for: UIFont.systemFont(ofSize: 13))
+    detailLabel.textColor = TKMStyle.Color.grey33
+    for label in [nameLabel, detailLabel] {
+      label.adjustsFontForContentSizeCategory = true
+    }
+
+    let labels = UIStackView(arrangedSubviews: [nameLabel, detailLabel])
+    labels.axis = .vertical
+    labels.spacing = 2
+    let row = UIStackView(arrangedSubviews: [avatar, labels])
+    row.alignment = .center
+    row.spacing = 14
+    row.translatesAutoresizingMaskIntoConstraints = false
+    contentView.addSubview(row)
+
+    NSLayoutConstraint.activate([
+      avatar.widthAnchor.constraint(equalToConstant: 52),
+      avatar.heightAnchor.constraint(equalToConstant: 52),
+      row.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+      row.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -16),
+      row.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+      row.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+    ])
+  }
+
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override func update() {
+    nameLabel.text = item.username
+    detailLabel.text = "Level \(item.level) · WaniKani"
+    avatar.hnk_setImage(from: item.imageURL)
   }
 }

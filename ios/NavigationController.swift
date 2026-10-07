@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,22 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
   override func viewDidLoad() {
     super.viewDidLoad()
     delegate = self
+
+    // Large titles are only shown by screens that ask for them (the settings pages); see
+    // navigationController(_:willShow:animated:). Their font is set on the appearances because the
+    // bar's own largeTitleTextAttributes lose the weight when switching between light and dark.
+    navigationBar.prefersLargeTitles = true
+    let largeTitleAttributes: [NSAttributedString.Key: Any] = [
+      .font: largeTitleFont(),
+      .foregroundColor: TKMStyle.Color.label,
+    ]
+    let standard = navigationBar.standardAppearance.copy()
+    standard.largeTitleTextAttributes = largeTitleAttributes
+    navigationBar.standardAppearance = standard
+    let scrollEdge = standard.copy()
+    scrollEdge.configureWithTransparentBackground()
+    scrollEdge.largeTitleTextAttributes = largeTitleAttributes
+    navigationBar.scrollEdgeAppearance = scrollEdge
 
     // Add a new pan gesture recogniser, but copy the targets list from the built-in edge pop
     // recogniser.
@@ -81,6 +97,13 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
   }
 
   // MARK: - UINavigationControllerDelegate
+
+  func navigationController(_: UINavigationController, willShow viewController: UIViewController,
+                            animated _: Bool) {
+    if viewController.navigationItem.largeTitleDisplayMode == .automatic {
+      viewController.navigationItem.largeTitleDisplayMode = .never
+    }
+  }
 
   func navigationController(_: UINavigationController, didShow _: UIViewController,
                             animated _: Bool) {
