@@ -397,6 +397,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     SiriShortcutHelper.shared
       .attachShortcutActivity(self, type: .reviews)
     navigationController?.setNavigationBarHidden(true, animated: false)
+    // Coming back from a settings page opened from the quick settings menu closes the menu without
+    // animating it, so quickSettingsMenuDidClose() isn't called.
+    isKeyboardHiddenForMenu = false
     if subjectDetailsView.isHidden {
       answerField.becomeFirstResponder()
       answerField.reloadInputViews()
@@ -417,6 +420,28 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   @objc public func focusAnswerField() {
     answerField.becomeFirstResponder()
+  }
+
+  // While the quick settings menu is open the layout stays as it was with the keyboard up, so the
+  // screen doesn't reflow behind the menu as it slides in, and doesn't jump when the keyboard comes
+  // back as it closes.
+  private var isKeyboardHiddenForMenu = false
+
+  func quickSettingsMenuWillOpen() {
+    isKeyboardHiddenForMenu = true
+  }
+
+  // Puts the layout back if the keyboard didn't come back when the menu closed (for example while
+  // an answer is shown).
+  func quickSettingsMenuDidClose() {
+    guard isKeyboardHiddenForMenu else { return }
+    isKeyboardHiddenForMenu = false
+    if !answerField.isFirstResponder {
+      UIView.animate(withDuration: animationDuration) {
+        self.resetKeyboardLayout()
+        self.view.layoutIfNeeded()
+      }
+    }
   }
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -442,6 +467,13 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   private func keyboardWillHide() {
+    if isKeyboardHiddenForMenu {
+      return
+    }
+    resetKeyboardLayout()
+  }
+
+  private func resetKeyboardLayout() {
     subjectDetailsView.contentInset = .zero
     answerFieldToBottomConstraint.constant = 0
     questionLabelBottomConstraint.constant = 0

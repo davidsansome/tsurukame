@@ -41,6 +41,11 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
   }
 
   override func setAnimatingDrawer(_ animatingDrawer: Bool) {
+    // The drawer disables interaction while it animates, which makes the answer field resign and
+    // hides the keyboard, so the review screen has to know the menu is opening before then.
+    if animatingDrawer, openSide == .none {
+      reviewVC.quickSettingsMenuWillOpen()
+    }
     super.setAnimatingDrawer(animatingDrawer)
 
     // Hide the keyboard if we're opening the drawer, show it if we're closing it.
@@ -49,6 +54,8 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
       view.endEditing(true)
     } else if animatingDrawer, openSide != .none {
       reviewVC.focusAnswerField()
+    } else if !animatingDrawer, openSide == .none {
+      reviewVC.quickSettingsMenuDidClose()
     }
   }
 
