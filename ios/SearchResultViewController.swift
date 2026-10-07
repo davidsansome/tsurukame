@@ -64,6 +64,7 @@ class SearchResultViewController: UITableViewController, UISearchBarDelegate,
   private var allSubjects: [TKMSubject]?
   private var model: TableModel!
   private var queue: DispatchQueue?
+  private lazy var cards = TableCards(tableView: tableView)
 
   func setup(services: TKMServices, delegate: SearchResultViewControllerDelegate) {
     self.services = services
@@ -106,11 +107,16 @@ class SearchResultViewController: UITableViewController, UISearchBarDelegate,
 
     // Add a little extra space at the top so the first result doesn't overlap the search bar that's
     // hosted in the navigation bar. The content still scrolls underneath the bar.
-    tableView.contentInset.top = 44
+    tableView.contentInset.top = 64
 
     queue!.async {
       self.ensureAllSubjectsLoaded()
     }
+  }
+
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    cards.layout()
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -210,8 +216,10 @@ class SearchResultViewController: UITableViewController, UISearchBarDelegate,
         let model = MutableTableModel(tableView: self.tableView)
         model.addSection()
         for subject in results {
-          model.add(SubjectModelItem(subject: subject, delegate: self))
+          let assignment = self.services.localCachingClient.getAssignment(subjectId: subject.id)
+          model.add(SubjectListItem(subject: subject, assignment: assignment, delegate: self))
         }
+        self.cards.prepare(model)
         self.model = model
         self.tableView.reloadData()
       }

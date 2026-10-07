@@ -21,6 +21,8 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   struct Section {
     var hidden: Bool = false
     var headerTitle: String?
+    // Shown on the right of the header, like a count.
+    var headerDetail: String?
     var footerTitle: String?
     var items = [any TableModelItem]()
     var hiddenItems = NSMutableIndexSet()
@@ -262,19 +264,27 @@ class TableModel: NSObject, UITableViewDataSource, UITableViewDelegate {
   // UIKit sizes the header, so it lays out correctly. Delegates can still restyle it in
   // willDisplayHeaderView, which is forwarded to them as before.
   func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    guard let title = sections[viewSectionToModelSection(section)].headerTitle,
-          !title.isEmpty else {
+    let modelSection = sections[viewSectionToModelSection(section)]
+    guard let title = modelSection.headerTitle, !title.isEmpty else {
       return nil
     }
     let reuseId = "TKMSectionHeader"
     let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: reuseId) ??
       UITableViewHeaderFooterView(reuseIdentifier: reuseId)
-    var config = UIListContentConfiguration.groupedHeader()
-    config.attributedText = NSAttributedString(string: title.uppercased(), attributes: [
+    var attributes: [NSAttributedString.Key: Any] = [
       .font: UIFont.systemFont(ofSize: 12, weight: .bold),
       .foregroundColor: TKMStyle.Color.grey33,
       .kern: 1.6,
-    ])
+    ]
+    var config = UIListContentConfiguration.groupedHeader()
+    config.attributedText = NSAttributedString(string: title.uppercased(), attributes: attributes)
+    config.secondaryAttributedText = nil
+    if let detail = modelSection.headerDetail {
+      attributes[.kern] = 0.8
+      config.secondaryAttributedText = NSAttributedString(string: detail.uppercased(),
+                                                          attributes: attributes)
+      config.prefersSideBySideTextAndSecondaryText = true
+    }
     header.contentConfiguration = config
     return header
   }

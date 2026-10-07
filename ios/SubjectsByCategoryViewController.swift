@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@ class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate, 
   private(set) var category: SRSStageCategory!
   private var showAnswers: Bool!
   private var model: TableModel?
-  private var answerSwitch: UISwitch!
+  private var answerButton: ShowAnswersButton!
+  private lazy var cards = TableCards(tableView: tableView)
 
   func setup(services: TKMServices, category: SRSStageCategory, showAnswers: Bool) {
     self.services = services
     self.category = category
     self.showAnswers = showAnswers
-    setShowAnswers(showAnswers, animated: false)
   }
 
   // MARK: - TKMViewController
@@ -40,18 +40,18 @@ class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate, 
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationItem.title = category.description
+    navigationItem.largeTitleDisplayMode = .always
 
-    let model = MutableTableModel(tableView: tableView)
+    answerButton = ShowAnswersButton(isOn: showAnswers)
+    answerButton.onChange = { [unowned self] in self.setShowAnswers($0, animated: true) }
+    let answerItem = UIBarButtonItem(customView: answerButton)
+    if #available(iOS 26.0, *) {
+      // The pill draws its own background.
+      answerItem.hidesSharedBackground = true
+    }
+    navigationItem.rightBarButtonItem = answerItem
 
-    answerSwitch = UISwitch()
-    answerSwitch.isOn = showAnswers
-    answerSwitch.addTarget(self, action: #selector(answerSwitchChanged), for: .valueChanged)
-    navigationItem.rightBarButtonItem = UIBarButtonItem(customView: answerSwitch)
-
-    var radicals = [SubjectModelItem]()
-    var kanji = [SubjectModelItem]()
-    var vocabulary = [SubjectModelItem]()
-
+    var items = [TKMSubject.TypeEnum: [SubjectListItem]]()
     for assignment in services.localCachingClient.getAssignmentsInCategory(category: category) {
       guard let subject = services.localCachingClient.getSubject(id: assignment.subjectID)
       else {
@@ -60,87 +60,31 @@ class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate, 
       if assignment.startedAt == 0 {
         continue
       }
-
-      let item = SubjectModelItem(subject: subject, delegate: self, assignment: assignment,
-                                  readingWrong: false, meaningWrong: false)
-      item.showLevelNumber = true
+      let item = SubjectListItem(subject: subject, assignment: assignment, delegate: self)
       item.showAnswers = showAnswers
-      if assignment.isBurned {
-        item.gradientColors = TKMStyle.lockedGradient
-      }
-      switch subject.subjectType {
-      case .radical:
-        radicals.append(item)
-      case .kanji:
-        kanji.append(item)
-      case .vocabulary:
-        vocabulary.append(item)
-      default:
-        break
-      }
+      items[subject.subjectType, default: []].append(item)
     }
 
-    if !radicals.isEmpty {
-      model.add(section: "Radicals (\(radicals.count))")
-      for item in radicals {
+    // Lowest SRS stage first, then by level.
+    let comparator = { (a: SubjectListItem, b: SubjectListItem) -> Bool in
+      let a = a.assignment!, b = b.assignment!
+      if a.srsStage != b.srsStage { return a.srsStage < b.srsStage }
+      return a.level < b.level
+    }
+
+    let model = MutableTableModel(tableView: tableView)
+    let types: [(TKMSubject.TypeEnum, String)] =
+      [(.radical, "Radicals"), (.kanji, "Kanji"), (.vocabulary, "Vocabulary")]
+    for (type, name) in types {
+      guard let typeItems = items[type] else { continue }
+      model.add(section: name)
+      model.sections[model.sections.count - 1].headerDetail = "\(typeItems.count)"
+      for item in typeItems.sorted(by: comparator) {
         model.add(item)
       }
     }
-    if !kanji.isEmpty {
-      model.add(section: "Kanji (\(kanji.count))")
-      for item in kanji {
-        model.add(item)
-      }
-    }
-    if !vocabulary.isEmpty {
-      model.add(section: "Vocabulary (\(vocabulary.count))")
-      for item in vocabulary {
-        model.add(item)
-      }
-    }
-
-    let comparator = { (a: SubjectModelItem, b: SubjectModelItem) -> Bool in
-      guard let aAssignment = a.assignment,
-            let bAssignment = b.assignment else {
-        return false
-      }
-
-      if aAssignment.srsStage < bAssignment.srsStage { return true }
-      if aAssignment.srsStage > bAssignment.srsStage { return false }
-      if aAssignment.level < bAssignment.level { return true }
-      if aAssignment.level > bAssignment.level { return false }
-      return false
-    }
-
-    if category == SRSStageCategory.apprentice || category == SRSStageCategory.guru {
-      for section in 0 ..< model.sectionCount {
-        model.sort(section: section, using: comparator)
-        var lastAssignment: TKMAssignment?
-
-        var itemIndex = 0
-        while itemIndex < model.items(inSection: section).count {
-          let item = model.items(inSection: section)[itemIndex]
-          if let assignment = (item as! SubjectModelItem).assignment {
-            if lastAssignment == nil || lastAssignment!.srsStage != assignment.srsStage ||
-              lastAssignment!.isReviewStage != assignment.isReviewStage ||
-              lastAssignment!.isLessonStage != assignment.isLessonStage {
-              let label = assignment.srsStage.description
-              model.insert(ListSeparatorItem(label: label), atIndex: itemIndex,
-                           inSection: section)
-              itemIndex += 1
-            }
-            lastAssignment = assignment
-          }
-          itemIndex += 1
-        }
-      }
-    }
-
+    cards.prepare(model)
     self.model = model
-  }
-
-  @objc private func answerSwitchChanged() {
-    setShowAnswers(answerSwitch.isOn, animated: true)
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -148,24 +92,15 @@ class SubjectsByCategoryViewController: UITableViewController, SubjectDelegate, 
     navigationController?.isNavigationBarHidden = false
   }
 
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    cards.layout()
+  }
+
   func setShowAnswers(_ value: Bool, animated: Bool = false) {
     showAnswers = value
-    guard let model = model else {
-      return
-    }
-
-    for section in 0 ..< model.sectionCount {
-      for item in model.items(inSection: section) {
-        if let item = item as? SubjectModelItem {
-          item.showAnswers = showAnswers
-        }
-      }
-    }
-
-    for cell in tableView.visibleCells {
-      if let cell = cell as? SubjectModelView {
-        cell.setShowAnswers(showAnswers, animated: animated)
-      }
+    if isViewLoaded {
+      setSubjectListAnswersShown(value, model: model, tableView: tableView, animated: animated)
     }
   }
 

@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,6 +67,8 @@ class TKMStyle: NSObject {
   static let vocabularyColor2 = vocabularyColor1
   static let lockedColor1 = UIColorFromHex(0x5F574B)
   static let lockedColor2 = lockedColor1
+  // Tiles for subjects that are locked, in lists where burned subjects are drawn in ink.
+  static let lockedTileColor = AdaptiveColorHex(light: 0x8F8474, dark: 0x5F574B)
   // The review prompt strip: ink for readings, paper for meanings.
   static let readingColor1 = AdaptiveColorHex(light: 0x1F1D1A, dark: 0x2E2B26)
   static let readingColor2 = readingColor1

@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ class SubjectsExcludedViewController: UITableViewController, SubjectDelegate, TK
   private var services: TKMServices!
   private var model: TableModel?
   private var shouldReload: Bool = false
+  private lazy var cards = TableCards(tableView: tableView)
 
   func setup(services: TKMServices, category _: SRSStageCategory, showAnswers _: Bool) {
     self.services = services
@@ -32,18 +33,14 @@ class SubjectsExcludedViewController: UITableViewController, SubjectDelegate, TK
 
   // MARK: - UIViewController
 
-  func getItems() -> [SubjectModelItem] {
-    var items = [SubjectModelItem]()
+  func getItems() -> [SubjectListItem] {
+    var items = [SubjectListItem]()
     for assignment in services.localCachingClient.getExcludedAssignments() {
       guard let subject = services.localCachingClient.getSubject(id: assignment.subjectID)
       else {
         continue
       }
-      let item = SubjectModelItem(subject: subject, delegate: self, assignment: assignment,
-                                  readingWrong: false, meaningWrong: false)
-      item.showLevelNumber = true
-      item.showAnswers = true
-      items.append(item)
+      items.append(SubjectListItem(subject: subject, assignment: assignment, delegate: self))
     }
     return items
   }
@@ -51,15 +48,23 @@ class SubjectsExcludedViewController: UITableViewController, SubjectDelegate, TK
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationItem.title = "Excluded items"
+    navigationItem.largeTitleDisplayMode = .always
     let model = MutableTableModel(tableView: tableView)
 
     let exclusions = getItems()
-    model.add(section: "Vocabulary (\(exclusions.count))")
+    model.add(section: "Vocabulary")
+    model.sections[0].headerDetail = "\(exclusions.count)"
     for item in exclusions {
       model.add(item)
     }
+    cards.prepare(model)
 
     self.model = model
+  }
+
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    cards.layout()
   }
 
   override func viewWillAppear(_ animated: Bool) {

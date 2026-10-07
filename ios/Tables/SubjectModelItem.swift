@@ -24,10 +24,7 @@ class SubjectModelItem: TableModelItem {
   var assignment: TKMAssignment?
   var showLevelNumber = true
   var showAnswers = true
-  var showRemaining = false
   var gradientColors: [Any]?
-  var canShowCheckmark = false
-  var isChecked = false
   // Draw the subject in a small coloured tile on a plain card row, instead of filling the whole
   // row with the subject's colour.
   var showsTile = false
@@ -126,53 +123,28 @@ class SubjectModelView: TableModelCell {
     levelLabel.textColor = secondaryText
     readingLabel.textColor = secondaryText
     meaningLabel.textColor = item.showsTile ? TKMStyle.Color.label : .white
-    if item.canShowCheckmark && item.isChecked {
-      accessoryType = .checkmark
-    } else {
-      accessoryType = .none
-    }
-    tintColor = .white // for the checkmark
 
     subjectLabel.font = UIFont(name: TKMStyle.japaneseFontName, size: subjectLabel.font.pointSize)
     subjectLabel.attributedText = japaneseText(item.subject, imageSize: kJapaneseTextImageSize)
 
-    if item.showRemaining {
-      if let assignment = item.assignment, assignment.isReviewStage {
-        readingLabel.isHidden = false
-        readingLabel.text = formattedInterval(until: assignment.reviewDate!, label: "Review")
-        meaningLabel.isHidden = false
-        meaningLabel
-          .text = formattedInterval(until: assignment.guruDate(subject: item.subject)!,
-                                    label: "Guru")
-      } else if let assignment = item.assignment, assignment.isLessonStage {
-        readingLabel.isHidden = false
-        readingLabel.text = formattedInterval(until: assignment.guruDate(subject: item.subject)!,
-                                              label: "Guru")
-        meaningLabel.isHidden = true
-      } else {
-        readingLabel.isHidden = true
-        meaningLabel.isHidden = true
-      }
-    } else {
-      switch item.subject.subjectType {
-      case .radical:
-        readingLabel.isHidden = true
-        meaningLabel.text = item.subject
-          .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
-      case .kanji:
-        readingLabel.isHidden = false
-        readingLabel.text = item.subject.commaSeparatedPrimaryReadings
-        meaningLabel.text = item.subject
-          .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
-      case .vocabulary:
-        readingLabel.isHidden = item.subject.readings.isEmpty
-        meaningLabel.isHidden = item.subject.meanings.isEmpty
-        readingLabel.text = item.subject.commaSeparatedReadings
-        meaningLabel.text = item.subject
-          .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
-      default:
-        break
-      }
+    switch item.subject.subjectType {
+    case .radical:
+      readingLabel.isHidden = true
+      meaningLabel.text = item.subject
+        .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
+    case .kanji:
+      readingLabel.isHidden = false
+      readingLabel.text = item.subject.commaSeparatedPrimaryReadings
+      meaningLabel.text = item.subject
+        .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
+    case .vocabulary:
+      readingLabel.isHidden = item.subject.readings.isEmpty
+      meaningLabel.isHidden = item.subject.meanings.isEmpty
+      readingLabel.text = item.subject.commaSeparatedReadings
+      meaningLabel.text = item.subject
+        .commaSeparatedMeanings(showOldMnemonic: Settings.showOldMnemonic)
+    default:
+      break
     }
 
     readingLabel.font = item.readingWrong ? UIFont(name: TKMStyle.japaneseFontNameBold,
@@ -180,26 +152,6 @@ class SubjectModelView: TableModelCell {
       : UIFont(name: TKMStyle.japaneseFontName, size: kFontSize)
     meaningLabel.font = item.meaningWrong ? UIFont.systemFont(ofSize: kFontSize, weight: .bold)
       : UIFont.systemFont(ofSize: kFontSize)
-  }
-
-  private func formattedInterval(until toDate: Date, label: String) -> String {
-    if Date().compare(toDate) == .orderedDescending {
-      return "\(label) available"
-    }
-
-    let formatter = DateComponentsFormatter()
-    formatter.unitsStyle = .abbreviated
-
-    var components = Calendar.current.dateComponents([.day, .hour, .minute], from: Date(),
-                                                     to: toDate)
-
-    // Only show minutes after there are no hours left.
-    if components.hour ?? 0 > 0 {
-      components.minute = 0
-    }
-
-    let interval = formatter.string(from: components)!
-    return "\(label) in \(interval)"
   }
 
   func setShowAnswers(_ value: Bool, animated: Bool) {
@@ -230,12 +182,6 @@ class SubjectModelView: TableModelCell {
   }
 
   override func didSelect() {
-    item.isChecked = !item.isChecked
-    if item.canShowCheckmark && item.isChecked {
-      accessoryType = .checkmark
-    } else {
-      accessoryType = .none
-    }
     item.delegate?.didTapSubject(item.subject)
   }
 

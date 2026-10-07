@@ -15,7 +15,6 @@
 import Foundation
 import UIKit
 
-private let kCardCornerRadius: CGFloat = 20
 private let kLargeTitleSize: CGFloat = 32
 private let kMinimumLargeTitleSize: CGFloat = 20
 
@@ -27,9 +26,7 @@ func largeTitleFont(size: CGFloat = kLargeTitleSize) -> UIFont {
 // The settings pages share one look: a large heavy title under the back button, and each section's
 // rows on a bordered paper card, in smaller text than the app's other lists.
 class SettingsTableViewController: UITableViewController {
-  // One card behind each section's rows. The system's own grouped backgrounds can't be given a
-  // border, so the rows are drawn clear over these instead.
-  private var cardViews = [SettingsCardView]()
+  private lazy var cards = TableCards(tableView: tableView)
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -43,12 +40,12 @@ class SettingsTableViewController: UITableViewController {
 
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    layoutCards()
+    cards.layout()
   }
 
   // Applies the settings fonts and colours to the model's rows. Call before reloading the table.
   func styleRows(_ model: TableModel) {
-    model.cellBackgroundColor = .clear
+    cards.prepare(model)
     let titleFont = UIFontMetrics(forTextStyle: .body)
       .scaledFont(for: UIFont.systemFont(ofSize: 15, weight: .medium))
     let valueFont = UIFontMetrics(forTextStyle: .body)
@@ -92,57 +89,5 @@ class SettingsTableViewController: UITableViewController {
       scrollEdge.largeTitleTextAttributes[.font] = font
       navigationItem.scrollEdgeAppearance = scrollEdge
     }
-  }
-
-  private func layoutCards() {
-    var frames = [CGRect]()
-    for section in 0 ..< tableView.numberOfSections {
-      let rows = tableView.numberOfRows(inSection: section)
-      if rows == 0 {
-        continue
-      }
-      let first = tableView.rectForRow(at: IndexPath(row: 0, section: section))
-      let last = tableView.rectForRow(at: IndexPath(row: rows - 1, section: section))
-      frames.append(first.union(last))
-    }
-
-    while cardViews.count < frames.count {
-      let card = SettingsCardView()
-      tableView.insertSubview(card, at: 0)
-      cardViews.append(card)
-    }
-    for (i, card) in cardViews.enumerated() {
-      card.isHidden = i >= frames.count
-      if i < frames.count {
-        card.frame = frames[i]
-      }
-    }
-  }
-}
-
-private class SettingsCardView: UIView {
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    isUserInteractionEnabled = false
-    backgroundColor = TKMStyle.Color.cellBackground
-    layer.cornerRadius = kCardCornerRadius
-    layer.cornerCurve = .continuous
-    layer.borderWidth = 1
-  }
-
-  @available(*, unavailable)
-  required init?(coder _: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  override func layoutSubviews() {
-    super.layoutSubviews()
-    // Resolved here so it follows light and dark mode.
-    layer.borderColor = TKMStyle.Color.cardBorder.resolvedColor(with: traitCollection).cgColor
-  }
-
-  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-    super.traitCollectionDidChange(previousTraitCollection)
-    setNeedsLayout()
   }
 }

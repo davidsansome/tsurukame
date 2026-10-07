@@ -17,7 +17,9 @@ import Foundation
 // A small translucent white pill for showing facts over a subject's colour, like its level and
 // SRS stage.
 class PillLabel: UILabel {
-  private let insets = UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12)
+  var insets = UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12) {
+    didSet { invalidateIntrinsicContentSize() }
+  }
 
   override init(frame: CGRect) {
     super.init(frame: frame)
