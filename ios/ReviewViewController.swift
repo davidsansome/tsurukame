@@ -436,7 +436,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     settingsButton.addAction(UIAction { [unowned self] _ in
       self.delegate.tappedMenuButton?(reviewViewController: self, menuButton: self.settingsButton)
     }, for: .touchUpInside)
-    closeButton.isHidden = !showMenuButton || delegate.tappedCloseButton == nil
+    if showMenuButton {
+      closeButton.isHidden = delegate.tappedCloseButton == nil
+    } else {
+      // The lessons screen draws its own back button over this corner, so keep the close button's
+      // space (invisibly) to stop the progress label sliding underneath it.
+      closeButton.alpha = 0
+      closeButton.isUserInteractionEnabled = false
+      closeButton.accessibilityElementsHidden = true
+    }
     settingsButton.isHidden = !showMenuButton
 
     for label in [headerProgressLabel, headerAccuracyLabel] {
