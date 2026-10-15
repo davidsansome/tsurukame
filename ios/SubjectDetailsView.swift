@@ -1,4 +1,4 @@
-// Copyright 2025 David Sansome
+// Copyright 2026 David Sansome
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -528,7 +528,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   }
 
   public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
-                     assignment: TKMAssignment?, task: ReviewItem?) {
+                     assignment: TKMAssignment?, task: ReviewItem?,
+                     alwaysShowLevel: Bool = false) {
     if FeatureFlags.dumpSubjectTextproto {
       print(subject)
     }
@@ -660,13 +661,14 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     }
 
     // Your progress, SRS level, next review, first started, reached guru
-    if let subjectAssignment = assignment, Settings.showStatsSection {
-      if subjectAssignment.hasLevel {
-        model.add(section: "Stats")
-        model.add(BasicModelItem(style: .value1, title: "WaniKani Level",
-                                 subtitle: String(subjectAssignment.level)))
-      }
+    let statsShown = assignment != nil && Settings.showStatsSection
+    if statsShown || alwaysShowLevel {
+      model.add(section: "Stats")
+      model.add(BasicModelItem(style: .value1, title: "WaniKani Level",
+                               subtitle: String(subject.level)))
+    }
 
+    if let subjectAssignment = assignment, statsShown {
       if subjectAssignment.hasStartedAt {
         if subjectAssignment.hasSrsStageNumber {
           model.add(BasicModelItem(style: .value1, title: "SRS Stage",
