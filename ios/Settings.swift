@@ -189,6 +189,8 @@ protocol SettingProtocol {
   @Setting("", #keyPath(userCookie)) static var userCookie: String
   @Setting("", #keyPath(userEmailAddress)) static var userEmailAddress: String
   @Setting("", #keyPath(userApiToken)) static var userApiToken: String
+  @Setting(WaniKaniAPIClient.defaultBaseUrl,
+           #keyPath(apiBaseUrl)) static var apiBaseUrl: String
 
   @EnumSetting(InterfaceStyle.system,
                #keyPath(interfaceStyle)) static var interfaceStyle: InterfaceStyle

@@ -225,7 +225,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       }
     } else {
       let token = apiTokenField.text!
-      let apiClient = WaniKaniAPIClient(apiToken: token)
+      let apiClient = WaniKaniAPIClient(apiToken: token, baseUrl: Settings.apiBaseUrl)
       let promise = apiClient.user(progress: Progress())
       promise.done { user in
         NSLog("Login success! User is at level: \(user.currentLevel)")

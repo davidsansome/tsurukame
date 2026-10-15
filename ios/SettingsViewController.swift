@@ -76,16 +76,12 @@ class SettingsViewController: SettingsTableViewController, TKMViewController {
         .add(BasicModelItem(style: .value1, title: "Version", subtitle: version,
                             accessoryType: .none))
     }
-    model.add(BasicModelItem(style: .subtitle,
-                             title: "Export local database",
-                             subtitle: "To attach to bug reports or email to the developer",
+    model.add(BasicModelItem(style: .default,
+                             title: "Developer options",
                              accessoryType: .disclosureIndicator) { [unowned self] in
-        didTapSendBugReport()
+        navigationController?.pushViewController(DeveloperOptionsViewController(services: services),
+                                                 animated: true)
       })
-    model.add(BasicModelItem(style: .subtitle,
-                             title: "Clear avatar image cache",
-                             subtitle: "If your avatar isn't loading, try clearing the image cache.",
-                             accessoryType: .none) { [unowned self] in didTapClearImageCache() })
 
     model.addSection()
     let logOutItem = BasicModelItem(style: .default,
@@ -145,19 +141,6 @@ class SettingsViewController: SettingsTableViewController, TKMViewController {
       NotificationCenter.default.post(name: .logout, object: self)
     }))
     c.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-    present(c, animated: true, completion: nil)
-  }
-
-  private func didTapSendBugReport() {
-    let c = UIActivityViewController(activityItems: [LocalCachingClient.databaseUrl()],
-                                     applicationActivities: nil)
-    present(c, animated: true, completion: nil)
-  }
-
-  private func didTapClearImageCache() {
-    HNKCache.shared().removeAllImages()
-    let c = UIAlertController(title: "Image cache cleared", message: nil, preferredStyle: .alert)
-    c.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
     present(c, animated: true, completion: nil)
   }
 }

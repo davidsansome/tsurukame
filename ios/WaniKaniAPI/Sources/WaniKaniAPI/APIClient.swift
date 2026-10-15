@@ -28,12 +28,16 @@ public protocol SubjectLevelGetter: AnyObject {
 public class WaniKaniAPIClient: NSObject {
   public weak var subjectLevelGetter: SubjectLevelGetter!
 
+  // The URL that API paths are appended to, without a trailing slash.
+  public var baseUrl: String
+
   private var apiToken: String
   private let session: URLSession
   private let httpDateFormatter: DateFormatter
 
-  public init(apiToken: String) {
+  public init(apiToken: String, baseUrl: String = WaniKaniAPIClient.defaultBaseUrl) {
     self.apiToken = apiToken
+    self.baseUrl = baseUrl
 
     let sessionConfig = URLSessionConfiguration.default
     sessionConfig.requestCachePolicy = .reloadIgnoringLocalCacheData
@@ -45,6 +49,8 @@ public class WaniKaniAPIClient: NSObject {
 
     super.init()
   }
+
+  public static let defaultBaseUrl = "https://api.wanikani.com/v2"
 
   public func updateApiToken(_ apiToken: String) {
     self.apiToken = apiToken
@@ -120,7 +126,7 @@ public class WaniKaniAPIClient: NSObject {
   public func user(progress: Progress) -> Promise<TKMUser> {
     progress.totalUnitCount = 1
     return firstly {
-      query(authorize(URL(string: "\(kBaseUrl)/user")!))
+      query(authorize(URL(string: "\(baseUrl)/user")!))
     }.ensure {
       progress.completedUnitCount = 1
     }.map { (data: Response<UserData>) -> TKMUser in
@@ -135,7 +141,7 @@ public class WaniKaniAPIClient: NSObject {
    */
   public func assignments(progress: Progress, updatedAfter: String = "") -> Promise<Assignments> {
     // Build the URL.
-    var url = URLComponents(string: "\(kBaseUrl)/assignments")!
+    var url = URLComponents(string: "\(baseUrl)/assignments")!
     url.queryItems = [
       URLQueryItem(name: "unlocked", value: "true"),
       URLQueryItem(name: "hidden", value: "false"),
@@ -169,7 +175,7 @@ public class WaniKaniAPIClient: NSObject {
   public func studyMaterials(progress: Progress,
                              updatedAfter: String = "") -> Promise<StudyMaterials> {
     // Build the URL.
-    var url = URLComponents(string: "\(kBaseUrl)/study_materials")!
+    var url = URLComponents(string: "\(baseUrl)/study_materials")!
     if !updatedAfter.isEmpty {
       url.queryItems = []
       url.queryItems!.append(URLQueryItem(name: "updated_after",
@@ -195,7 +201,7 @@ public class WaniKaniAPIClient: NSObject {
     progress.totalUnitCount = 1
 
     // Build the URL.
-    let url = URLComponents(string: "\(kBaseUrl)/study_materials?subject_ids=\(subjectId)")!
+    let url = URLComponents(string: "\(baseUrl)/study_materials?subject_ids=\(subjectId)")!
 
     // Fetch the data and convert to a protobuf.
     return firstly {
@@ -215,7 +221,7 @@ public class WaniKaniAPIClient: NSObject {
   public func levelProgressions(progress: Progress,
                                 updatedAfter: String = "") -> Promise<LevelProgressions> {
     // Build the URL.
-    var url = URLComponents(string: "\(kBaseUrl)/level_progressions")!
+    var url = URLComponents(string: "\(baseUrl)/level_progressions")!
     if !updatedAfter.isEmpty {
       url.queryItems = []
       url.queryItems!.append(URLQueryItem(name: "updated_after",
@@ -242,7 +248,7 @@ public class WaniKaniAPIClient: NSObject {
   public func subjects(progress: Progress,
                        updatedAfter: String = "") -> Promise<Subjects> {
     // Build the URL.
-    var url = URLComponents(string: "\(kBaseUrl)/subjects")!
+    var url = URLComponents(string: "\(baseUrl)/subjects")!
     url.queryItems = [
       URLQueryItem(name: "hidden", value: "false"),
     ]
@@ -286,7 +292,7 @@ public class WaniKaniAPIClient: NSObject {
   public func voiceActors(progress: Progress,
                           updatedAfter: String = "") -> Promise<VoiceActors> {
     // Build the URL.
-    var url = URLComponents(string: "\(kBaseUrl)/voice_actors")!
+    var url = URLComponents(string: "\(baseUrl)/voice_actors")!
     if !updatedAfter.isEmpty {
       url.queryItems = [URLQueryItem(name: "updated_after", value: updatedAfter)]
     }
@@ -315,7 +321,7 @@ public class WaniKaniAPIClient: NSObject {
   public func reviewStatistics(progress: Progress,
                                updatedAfter: String = "") -> Promise<ReviewStatistics> {
     // Build the URL.
-    var url = URLComponents(string: "\(kBaseUrl)/review_statistics")!
+    var url = URLComponents(string: "\(baseUrl)/review_statistics")!
     url.queryItems = [
       URLQueryItem(name: "hidden", value: "false"),
     ]
@@ -361,7 +367,7 @@ public class WaniKaniAPIClient: NSObject {
   }
 
   private func startAssignment(_ progress: TKMProgress) -> Promise<Void> {
-    let url = URL(string: "\(kBaseUrl)/assignments/\(progress.assignment.id)/start")!
+    let url = URL(string: "\(baseUrl)/assignments/\(progress.assignment.id)/start")!
     let body = StartAssignmentRequest(started_at: WaniKaniDate(date: progress.createdAtDate))
 
     return firstly { () -> Promise<Response<AssignmentData>> in
@@ -375,7 +381,7 @@ public class WaniKaniAPIClient: NSObject {
   }
 
   private func createReview(_ progress: TKMProgress) -> Promise<Void> {
-    let url = URL(string: "\(kBaseUrl)/reviews")!
+    let url = URL(string: "\(baseUrl)/reviews")!
     var body = CreateReviewRequest(review: CreateReviewRequest
       .Review(assignment_id: progress.assignment.id,
               incorrect_meaning_answers: Int(progress.meaningWrongCount),
@@ -416,10 +422,10 @@ public class WaniKaniAPIClient: NSObject {
       var method: String
       if let existing = existing {
         method = "PUT"
-        url = URL(string: "\(kBaseUrl)/study_materials/\(existing.id)")!
+        url = URL(string: "\(self.baseUrl)/study_materials/\(existing.id)")!
       } else {
         method = "POST"
-        url = URL(string: "\(kBaseUrl)/study_materials")!
+        url = URL(string: "\(self.baseUrl)/study_materials")!
         body.study_material.subject_id = pb.subjectID
       }
 
@@ -591,8 +597,6 @@ public struct WaniKaniJSONDecodeError: Error {
   public let request: URLRequest // The HTTP request.
   public let response: HTTPURLResponse // The HTTP response.
 }
-
-private let kBaseUrl = "https://api.wanikani.com/v2"
 
 // MARK: - JSON decoding
 
