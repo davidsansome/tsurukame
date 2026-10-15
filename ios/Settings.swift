@@ -71,6 +71,20 @@ typealias SettingEnum = CaseIterable & Codable & CustomStringConvertible & RawRe
   }
 }
 
+@objc enum SRSLevelIndicatorStyle: UInt, SettingEnum {
+  case none = 1
+  case bubble = 2
+  case dots = 3
+
+  var description: String {
+    switch self {
+    case .none: return "None"
+    case .bubble: return "Bubble"
+    case .dots: return "Dots"
+    }
+  }
+}
+
 private func setArchiveData<T: Codable>(_ object: T, key: String) {
   var data: Data!
   if #available(iOS 11.0, *) {
@@ -211,7 +225,8 @@ protocol SettingProtocol {
   @Setting(true, #keyPath(showOldMnemonic)) static var showOldMnemonic: Bool
   @Setting(true, #keyPath(blurContextSentences)) static var blurContextSentences: Bool
   @Setting(false, #keyPath(useKatakanaForOnyomi)) static var useKatakanaForOnyomi: Bool
-  @Setting(false, #keyPath(showSRSLevelIndicator)) static var showSRSLevelIndicator: Bool
+  @EnumSetting(SRSLevelIndicatorStyle.none,
+               #keyPath(srsLevelIndicatorStyle)) static var srsLevelIndicatorStyle: SRSLevelIndicatorStyle
   @Setting(false,
            #keyPath(showMinutesForNextLevelUpReview)) static var showMinutesForNextLevelUpReview: Bool
   @Setting(false, #keyPath(showAllReadings)) static var showAllReadings: Bool
@@ -250,4 +265,16 @@ protocol SettingProtocol {
 
   @Setting(false,
            #keyPath(dismissedRedesignFeedbackCard)) static var dismissedRedesignFeedbackCard: Bool
+
+  // Converts settings stored by older versions of the app to their new form.
+  static func migrate() {
+    // The SRS level indicator used to be an on/off switch.
+    let legacyKey = "showSRSLevelIndicator"
+    if UserDefaults.standard.object(forKey: legacyKey) != nil {
+      if getArchiveData(false, key: legacyKey) {
+        srsLevelIndicatorStyle = .bubble
+      }
+      UserDefaults.standard.removeObject(forKey: legacyKey)
+    }
+  }
 }
