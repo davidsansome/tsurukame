@@ -15,7 +15,7 @@
 import Foundation
 
 // The top of the home screen: a large night-indigo Reviews card over the waves, with smaller
-// Lessons and Leeches cards beneath it.
+// Lessons and Leeches cards beneath it and a row for the lesson picker under those.
 class HomeHeroItem: TableModelItem {
   let reviewCount: Int
   let lessonCount: Int
@@ -43,6 +43,7 @@ class HomeHeroItem: TableModelItem {
 private let kCardSpacing: CGFloat = 12
 private let kReviewsCardHeight: CGFloat = 210
 private let kSmallCardHeight: CGFloat = 118
+private let kPickerRowHeight: CGFloat = 64
 
 class HomeHeroCell: TableModelCell {
   @TypedModelItem var item: HomeHeroItem
@@ -56,6 +57,7 @@ class HomeHeroCell: TableModelCell {
 
   private let lessonsCard = HomeSmallCard()
   private let leechesCard = HomeSmallCard()
+  private let lessonPickerRow = HomeLessonPickerRow()
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -111,9 +113,6 @@ class HomeHeroCell: TableModelCell {
     lessonsCard.caption = "LESSONS"
     lessonsCard.addAction(UIAction { [weak self] _ in self?.item.startLessons?() },
                           for: .touchUpInside)
-    lessonsCard.accessoryButton.addAction(UIAction { [weak self] _ in
-      self?.item.showLessonPicker?()
-    }, for: .touchUpInside)
     leechesCard.caption = "LEECHES"
     leechesCard.addAction(UIAction { [weak self] _ in self?.item.startLeechReviews?() },
                           for: .touchUpInside)
@@ -122,7 +121,10 @@ class HomeHeroCell: TableModelCell {
     smallCards.distribution = .fillEqually
     smallCards.spacing = kCardSpacing
 
-    for view in [reviewsCard, smallCards] {
+    lessonPickerRow.addAction(UIAction { [weak self] _ in self?.item.showLessonPicker?() },
+                              for: .touchUpInside)
+
+    for view in [reviewsCard, smallCards, lessonPickerRow] {
       view.translatesAutoresizingMaskIntoConstraints = false
       contentView.addSubview(view)
     }
@@ -160,7 +162,13 @@ class HomeHeroCell: TableModelCell {
       smallCards.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
       smallCards.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
       smallCards.heightAnchor.constraint(equalToConstant: kSmallCardHeight),
-      smallCards.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
+
+      lessonPickerRow.topAnchor.constraint(equalTo: smallCards.bottomAnchor,
+                                           constant: kCardSpacing),
+      lessonPickerRow.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+      lessonPickerRow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+      lessonPickerRow.heightAnchor.constraint(equalToConstant: kPickerRowHeight),
+      lessonPickerRow.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
     ])
   }
 
@@ -188,16 +196,9 @@ class HomeHeroCell: TableModelCell {
     reviewsCard.accessibilityLabel = "\(item.reviewCount) reviews"
 
     lessonsCard.count = item.lessonCount
-    lessonsCard.detail = item.lessonsDisabledMessage ?? "or open the lesson picker"
+    lessonsCard.detail = item.lessonsDisabledMessage ?? "ready to learn"
     lessonsCard.isEnabled = item.lessonCount > 0 && item.lessonsDisabledMessage == nil
-    lessonsCard.accessoryButton.isHidden = !lessonsCard.isEnabled
-    // The card is a single VoiceOver element, so offer the picker as an action on it.
-    lessonsCard.accessibilityCustomActions = lessonsCard.isEnabled ? [
-      UIAccessibilityCustomAction(name: "Lesson picker") { [weak self] _ in
-        self?.item.showLessonPicker?()
-        return true
-      },
-    ] : nil
+    lessonPickerRow.isEnabled = lessonsCard.isEnabled
 
     leechesCard.count = item.leechCount
     leechesCard.detail = "in Apprentice"
@@ -232,9 +233,6 @@ private class HomeSmallCard: UIControl {
     }
   }
 
-  // A small secondary button in the top-right corner (the lesson picker).
-  let accessoryButton = UIButton(type: .system)
-
   private let captionLabel = UILabel()
   private let countLabel = UILabel()
   private let detailLabel = UILabel()
@@ -259,14 +257,9 @@ private class HomeSmallCard: UIControl {
     chevron.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 13,
                                                                        weight: .semibold)
 
-    accessoryButton.setImage(UIImage(systemName: "list.bullet"), for: .normal)
-    accessoryButton.tintColor = TKMStyle.Color.label
-    accessoryButton.accessibilityLabel = "Lesson picker"
-    accessoryButton.isHidden = true
-
-    for view in [captionLabel, countLabel, detailLabel, chevron, accessoryButton] {
+    for view in [captionLabel, countLabel, detailLabel, chevron] {
       view.translatesAutoresizingMaskIntoConstraints = false
-      view.isUserInteractionEnabled = view == accessoryButton
+      view.isUserInteractionEnabled = false
       addSubview(view)
     }
     NSLayoutConstraint.activate([
@@ -279,10 +272,6 @@ private class HomeSmallCard: UIControl {
       detailLabel.leadingAnchor.constraint(equalTo: captionLabel.leadingAnchor),
       detailLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -12),
       detailLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14),
-      accessoryButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
-      accessoryButton.centerYAnchor.constraint(equalTo: countLabel.centerYAnchor),
-      accessoryButton.widthAnchor.constraint(equalToConstant: 44),
-      accessoryButton.heightAnchor.constraint(equalToConstant: 44),
     ])
     updateColors()
   }
@@ -318,5 +307,100 @@ private class HomeSmallCard: UIControl {
 
   private func updateAccessibility() {
     accessibilityLabel = "\(caption.capitalized): \(count), \(detail)"
+  }
+}
+
+// A full-width paper row under the small cards that opens the lesson picker: an icon in a
+// circle, a title and subtitle, and a chevron. The whole row is a button.
+private class HomeLessonPickerRow: UIControl {
+  private let iconCircle = UIView()
+  private let icon = UIImageView(image: UIImage(systemName: "list.bullet"))
+  private let titleLabel = UILabel()
+  private let subtitleLabel = UILabel()
+  private let chevron = UIImageView(image: UIImage(systemName: "chevron.right"))
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    backgroundColor = TKMStyle.Color.cellBackground
+    layer.cornerRadius = 22
+    layer.cornerCurve = .continuous
+    layer.borderWidth = 1
+    isAccessibilityElement = true
+    accessibilityTraits = .button
+    accessibilityLabel = "Lesson picker"
+    accessibilityHint = "Choose exactly what to learn next"
+
+    iconCircle.backgroundColor = TKMStyle.Color.background
+    iconCircle.layer.cornerRadius = 18
+    iconCircle.layer.borderWidth = 1
+    icon.tintColor = TKMStyle.Color.label
+    icon.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 14,
+                                                                    weight: .semibold)
+    titleLabel.text = "Lesson picker"
+    titleLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+    titleLabel.textColor = TKMStyle.Color.label
+    subtitleLabel.text = "Choose exactly what to learn next"
+    subtitleLabel.font = UIFont.systemFont(ofSize: 13)
+    subtitleLabel.textColor = TKMStyle.Color.grey33
+    subtitleLabel.adjustsFontSizeToFitWidth = true
+    subtitleLabel.minimumScaleFactor = 0.8
+    chevron.tintColor = TKMStyle.Color.grey33
+    chevron.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 13,
+                                                                       weight: .semibold)
+
+    let text = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
+    text.axis = .vertical
+    text.spacing = 1
+
+    for view in [iconCircle, icon, text, chevron] {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      view.isUserInteractionEnabled = false
+      addSubview(view)
+    }
+    NSLayoutConstraint.activate([
+      iconCircle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      iconCircle.centerYAnchor.constraint(equalTo: centerYAnchor),
+      iconCircle.widthAnchor.constraint(equalToConstant: 36),
+      iconCircle.heightAnchor.constraint(equalToConstant: 36),
+      icon.centerXAnchor.constraint(equalTo: iconCircle.centerXAnchor),
+      icon.centerYAnchor.constraint(equalTo: iconCircle.centerYAnchor),
+      text.leadingAnchor.constraint(equalTo: iconCircle.trailingAnchor, constant: 12),
+      text.centerYAnchor.constraint(equalTo: centerYAnchor),
+      text.trailingAnchor.constraint(lessThanOrEqualTo: chevron.leadingAnchor, constant: -12),
+      chevron.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+      chevron.centerYAnchor.constraint(equalTo: centerYAnchor),
+    ])
+    updateColors()
+  }
+
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override var isEnabled: Bool {
+    didSet {
+      alpha = isEnabled ? 1 : 0.55
+      chevron.isHidden = !isEnabled
+    }
+  }
+
+  override var isHighlighted: Bool {
+    didSet {
+      UIView.animate(withDuration: 0.15) {
+        self.transform = self.isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+      }
+    }
+  }
+
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    super.traitCollectionDidChange(previousTraitCollection)
+    updateColors()
+  }
+
+  private func updateColors() {
+    layer.borderColor = TKMStyle.Color.cardBorder.resolvedColor(with: traitCollection).cgColor
+    iconCircle.layer.borderColor = TKMStyle.Color.grey80.resolvedColor(with: traitCollection)
+      .cgColor
   }
 }
