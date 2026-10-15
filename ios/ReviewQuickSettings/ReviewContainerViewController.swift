@@ -65,6 +65,7 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
     if isInSettingsVc {
       isInSettingsVc = false
       closeDrawer(animated: false, completion: nil)
+      reviewVC.quickSettingsChanged()
     }
     super.viewWillAppear(animated)
   }

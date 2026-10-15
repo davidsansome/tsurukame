@@ -520,8 +520,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   private func setUpChips() {
-    // The SRS dots label stays (hidden) because the level-up animation explodes its dots.
-    levelLabel.alpha = 0
     chips.addArrangedSubview(levelChip)
     chips.addArrangedSubview(srsChip)
     chips.spacing = 8
@@ -549,7 +547,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     // level indicator, since knowing it can bias the answer.
     levelChip.isHidden = assignment.level <= 0
     levelChip.text = "Level \(assignment.level)"
-    srsChip.isHidden = !Settings.showSRSLevelIndicator
+    srsChip.isHidden = Settings.srsLevelIndicatorStyle != .bubble
     srsChip.text = assignment.srsStage.description
     updateChipsInset(subjectDetailsShown: !subjectDetailsView.isHidden)
   }
@@ -908,7 +906,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       answerField.useJapaneseKeyboard = Settings
         .autoSwitchKeyboard && session.activeTaskType == .reading
 
-      if Settings.showSRSLevelIndicator {
+      // The SRS dots are only visible in the dots style, but they're set in the bubble style too
+      // because the level-up animation explodes them.
+      levelLabel.alpha = Settings.srsLevelIndicatorStyle == .dots ? 1 : 0
+      if Settings.srsLevelIndicatorStyle != .none {
         levelLabel.attributedText = getDots(stage: session.activeAssignment.srsStage)
       } else {
         levelLabel.attributedText = nil

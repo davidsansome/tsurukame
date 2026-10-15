@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil)
     -> Bool {
+    Settings.migrate()
     Screenshotter.setUp()
 
     application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)

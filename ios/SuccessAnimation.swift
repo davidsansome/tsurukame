@@ -268,7 +268,7 @@ enum SuccessAnimation {
                           duration: 1.5)
       }
 
-      if Settings.showSRSLevelIndicator {
+      if Settings.srsLevelIndicatorStyle != .none {
         createDotExplosion(label: srsLevelLabel)
       }
 

@@ -36,7 +36,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="kc6-Lm-8sK" firstAttribute="centerY" secondItem="gdi-7v-770" secondAttribute="centerY" id="BMH-R7-0xe"/>
-                                    <constraint firstAttribute="trailing" secondItem="kc6-Lm-8sK" secondAttribute="trailing" constant="8" id="hnc-JP-Evv"/>
+                                    <constraint firstAttribute="trailing" secondItem="kc6-Lm-8sK" secondAttribute="trailing" constant="16" id="hnc-JP-Evv"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="Nab-RQ-m49">

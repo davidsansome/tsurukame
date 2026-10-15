@@ -51,7 +51,7 @@ import WaniKaniAPI
           // Pretend there's a logged in user.
           Settings.userApiToken = "dummy"
           Settings.userEmailAddress = "dummy"
-          Settings.showSRSLevelIndicator = true
+          Settings.srsLevelIndicatorStyle = .bubble
         }
       }
     }

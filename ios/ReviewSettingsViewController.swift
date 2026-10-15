@@ -110,12 +110,11 @@ class ReviewSettingsViewController: SettingsTableViewController, TKMViewControll
       })
 
     model.add(section: "Display")
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Show SRS level indicator",
-                              subtitle: nil,
-                              on: Settings
-                                .showSRSLevelIndicator) { [unowned self] in
-        showSRSLevelIndicatorSwitchChanged($0)
+    model.add(BasicModelItem(style: .value1,
+                             title: "SRS level indicator",
+                             subtitle: Settings.srsLevelIndicatorStyle.description,
+                             accessoryType: .disclosureIndicator) { [unowned self] in
+        self.didTapSRSLevelIndicator()
       })
     model.add(BasicModelItem(style: .default,
                              title: "Fonts",
@@ -354,10 +353,6 @@ class ReviewSettingsViewController: SettingsTableViewController, TKMViewControll
     Settings.enableCheats = switchView.isOn
   }
 
-  private func showSRSLevelIndicatorSwitchChanged(_ switchView: UISwitch) {
-    Settings.showSRSLevelIndicator = switchView.isOn
-  }
-
   private func showMinutesForNextLevelUpReview(_ switchView: UISwitch) {
     Settings.showMinutesForNextLevelUpReview = switchView.isOn
   }
@@ -440,9 +435,21 @@ class ReviewSettingsViewController: SettingsTableViewController, TKMViewControll
     perform(segue: StoryboardSegue.ReviewSettings.offlineAudio, sender: self)
   }
 
+  private func didTapSRSLevelIndicator() {
+    navigationController?.pushViewController(makeSRSLevelIndicatorViewController(), animated: true)
+  }
+
   private func didTapAnkiModeTaskType() {
     navigationController?.pushViewController(makeAnkiModeTaskTypeViewController(), animated: true)
   }
+}
+
+func makeSRSLevelIndicatorViewController() -> UIViewController {
+  let vc = SettingChoiceListViewController(setting: Settings.$srsLevelIndicatorStyle,
+                                           title: "SRS Level Indicator",
+                                           helpText: "Shows the SRS stage of each item during reviews, either as a labelled bubble or as coloured dots.")
+  vc.addChoicesFromEnum()
+  return vc
 }
 
 func makeFontSizeViewController() -> UIViewController {

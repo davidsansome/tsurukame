@@ -24,11 +24,11 @@ class ReviewQuickSettingsDisplayMenu: ReviewQuickSettingsTable {
         [unowned self] in
         self.delegate?.closeMenuAndPush(viewController: makeInterfaceStyleViewController())
       })
-    model.add(CheckmarkModelItem(style: .default, title: "Show SRS level indicator",
-                                 on: Settings.showSRSLevelIndicator) {
-        [unowned self] on in
-        Settings.showSRSLevelIndicator = on
-        self.delegate?.quickSettingsChanged()
+    model.add(BasicModelItem(style: .value1, title: "SRS level indicator",
+                             subtitle: Settings.srsLevelIndicatorStyle.description,
+                             accessoryType: .disclosureIndicator) {
+        [unowned self] in
+        self.delegate?.closeMenuAndPush(viewController: makeSRSLevelIndicatorViewController())
       })
     model.add(BasicModelItem(style: .default, title: "Fonts",
                              subtitle: nil, accessoryType: .disclosureIndicator) {

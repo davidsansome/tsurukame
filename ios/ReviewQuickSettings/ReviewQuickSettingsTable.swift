@@ -73,6 +73,7 @@ class ReviewQuickSettingsTable: UIViewController, UITableViewDelegate {
                  forRowAt _: IndexPath) {
     cell.backgroundColor = tableView.backgroundColor
     cell.textLabel?.textColor = TKMStyle.Color.onNight
+    cell.detailTextLabel?.textColor = TKMStyle.Color.onNightSecondary
     cell.imageView?.tintColor = TKMStyle.Color.onNight
     cell.tintColor = TKMStyle.Color.onNight
     cell.separatorInset = .zero
