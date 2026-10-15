@@ -138,7 +138,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, LoginViewControllerDele
   }
 
   private func setMainViewControllerAnimated(animated: Bool, clearUserData: Bool) {
-    services.client = WaniKaniAPIClient(apiToken: Settings.userApiToken)
+    services.client = WaniKaniAPIClient(apiToken: Settings.userApiToken,
+                                        baseUrl: Settings.apiBaseUrl)
     services.localCachingClient = Screenshotter.createLocalCachingClient(client: services.client,
                                                                          reachability: services
                                                                            .reachability)
