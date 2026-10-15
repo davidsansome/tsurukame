@@ -40,14 +40,20 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
 
   var canSwipeToGoBack: Bool { true }
 
+  // Lessons embed this view controller in a page view without a back button. Otherwise it's
+  // been pushed full screen.
+  private var isFullScreen: Bool { !hideBackButton }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     subjectDetailsView.setup(services: services, delegate: self)
 
     let studyMaterials = services.localCachingClient.getStudyMaterial(subjectId: subject.id)
     let assignment = services.localCachingClient.getAssignment(subjectId: subject.id)
+    // The full-screen header doesn't show the level, so make sure the table does.
     subjectDetailsView.update(withSubject: subject, studyMaterials: studyMaterials,
-                              assignment: assignment, task: nil)
+                              assignment: assignment, task: nil,
+                              alwaysShowLevel: isFullScreen)
 
     setUpHero(assignment: assignment)
 
@@ -80,7 +86,8 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
   // MARK: - Hero
 
   // The subject on a block of its colour with rounded bottom corners and waves: the characters,
-  // the primary meaning, and chips for its type, level and SRS stage.
+  // then in lessons the primary meaning and chips for its type, level and SRS stage. Full screen
+  // just has the SRS stage chip, since the meaning and level are in the table below.
   private func setUpHero(assignment: TKMAssignment?) {
     let color = UIColor(cgColor: TKMStyle.gradient(forSubject: subject).first as! CGColor)
     hero.backgroundColor = color
@@ -96,13 +103,13 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     waves.radius = 36
 
     // Subjects keep the app's Japanese font, no bigger than on the review screen.
-    let titleSize = TKMStyle.reviewSubjectFontSize()
+    let titleSize = TKMStyle.reviewSubjectFontSize() * (isFullScreen ? 0.8 : 1)
     subjectTitle.font = UIFont(name: TKMStyle.japaneseFontName, size: titleSize)
     subjectTitle.attributedText = japaneseText(subject, imageSize: titleSize * 0.85)
     subjectTitle.adjustsFontSizeToFitWidth = true
     subjectTitle.minimumScaleFactor = 0.4
     for constraint in subjectTitle.constraints where constraint.firstAttribute == .height {
-      constraint.constant = 120
+      constraint.constant = isFullScreen ? 90 : 120
     }
 
     let meaning = UILabel()
@@ -112,7 +119,7 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     meaning.textAlignment = .center
     meaning.numberOfLines = 2
 
-    var chipTexts = ["\(subjectTypeName) · Level \(subject.level)"]
+    var chipTexts = isFullScreen ? [] : ["\(subjectTypeName) · Level \(subject.level)"]
     if let assignment = assignment, assignment.hasSrsStageNumber, !assignment.isLessonStage {
       chipTexts.append(assignment.srsStage.description)
     }
@@ -123,6 +130,8 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     })
     chips.spacing = 8
 
+    meaning.isHidden = isFullScreen
+    chips.isHidden = chipTexts.isEmpty
     let info = UIStackView(arrangedSubviews: [meaning, chips])
     info.axis = .vertical
     info.alignment = .center
@@ -147,7 +156,8 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
       hero.topAnchor.constraint(equalTo: view.topAnchor),
       hero.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       hero.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      hero.bottomAnchor.constraint(equalTo: info.bottomAnchor, constant: 28),
+      hero.bottomAnchor.constraint(equalTo: info.bottomAnchor,
+                                   constant: isFullScreen ? 16 : 28),
       waves.leadingAnchor.constraint(equalTo: hero.leadingAnchor),
       waves.trailingAnchor.constraint(equalTo: hero.trailingAnchor),
       waves.bottomAnchor.constraint(equalTo: hero.bottomAnchor),
