@@ -44,6 +44,9 @@ class BurnedReviewFiltersViewController: UITableViewController, TKMViewControlle
 
     // Get all available burned levels
     let burnedAssignments = services.localCachingClient.getAllBurnedAssignments()
+    
+    logBurnedAssignmentsDebugInfo(burnedAssignments)
+    
     availableLevels = Array(Set(burnedAssignments.map { $0.level })).sorted()
 
     // Initialize selected levels to all available
@@ -158,10 +161,14 @@ class BurnedReviewFiltersViewController: UITableViewController, TKMViewControlle
 
     // Get filtered burned assignments
     let allBurnedAssignments = services.localCachingClient.getAllBurnedAssignments()
+    
     let filteredAssignments = allBurnedAssignments.filter { assignment in
       selectedLevels.contains(assignment.level) &&
       selectedTypes.contains(assignment.subjectType)
     }
+    
+    logFilteringDebugInfo(allBurnedAssignments: allBurnedAssignments,
+                          filteredAssignments: filteredAssignments)
 
     let items = ReviewItem.readyForBurnedReview(assignments: filteredAssignments,
                                                 localCachingClient: services.localCachingClient)
@@ -180,5 +187,68 @@ class BurnedReviewFiltersViewController: UITableViewController, TKMViewControlle
     let vc = StoryboardScene.ReviewContainer.initialScene.instantiate()
     vc.setup(services: services, items: items, isPracticeSession: true)
     navigationController?.pushViewController(vc, animated: true)
+  }
+
+  // MARK: - Debug Logging
+
+  private func logBurnedAssignmentsDebugInfo(_ assignments: [TKMAssignment]) {
+    #if DEBUG
+    print("=== BURNED ASSIGNMENTS DEBUG INFO ===")
+    print("Total burned assignments: \(assignments.count)")
+    
+    // Count by level and type
+    var levelTypeCounts: [Int32: [TKMSubject.TypeEnum: Int]] = [:]
+    for assignment in assignments {
+      if levelTypeCounts[assignment.level] == nil {
+        levelTypeCounts[assignment.level] = [:]
+      }
+      levelTypeCounts[assignment.level]![assignment.subjectType, default: 0] += 1
+    }
+    
+    print("\n--- By Level and Type ---")
+    for (level, typeCounts) in levelTypeCounts.sorted(by: { $0.key < $1.key }) {
+      let radicals = typeCounts[.radical] ?? 0
+      let kanji = typeCounts[.kanji] ?? 0
+      let vocab = typeCounts[.vocabulary] ?? 0
+      let total = radicals + kanji + vocab
+      print("Level \(level): Radicals=\(radicals), Kanji=\(kanji), Vocab=\(vocab), Total=\(total)")
+    }
+    
+    // Show high-level items (old reorganized items)
+    let highLevelAssignments = assignments.filter { $0.level > 38 }
+    if !highLevelAssignments.isEmpty {
+      print("\n--- HIGH LEVEL ITEMS (> 38) ---")
+      for assignment in highLevelAssignments.sorted(by: { $0.level < $1.level }) {
+        if let subject = services.localCachingClient.getSubject(id: assignment.subjectID) {
+          let subjectType = assignment.subjectType == .radical ? "Radical" : (assignment.subjectType == .kanji ? "Kanji" : "Vocab")
+          let meaning = subject.primaryMeaning.isEmpty ? "NO MEANING" : subject.primaryMeaning
+          print("  Level \(assignment.level), \(subjectType): \(subject.japanese) - \(meaning)")
+        }
+      }
+    }
+    
+    print("\nMin level: \(assignments.map { $0.level }.min() ?? -1)")
+    print("Max level: \(assignments.map { $0.level }.max() ?? -1)")
+    print("=====================================")
+    #endif
+  }
+
+  private func logFilteringDebugInfo(allBurnedAssignments: [TKMAssignment],
+                                     filteredAssignments: [TKMAssignment]) {
+    #if DEBUG
+    print("=== BEFORE FILTERING ===")
+    print("Total burned assignments: \(allBurnedAssignments.count)")
+    
+    print("=== AFTER FILTERING ===")
+    print("Selected levels: \(selectedLevels.sorted())")
+    print("Selected types: \(selectedTypes)")
+    print("Filtered assignments: \(filteredAssignments.count)")
+    
+    let levelCountsAfterFilter = Dictionary(grouping: filteredAssignments, by: { $0.level })
+      .mapValues { $0.count }
+      .sorted { $0.key < $1.key }
+    print("Levels in filtered result: \(levelCountsAfterFilter.map { "Level \($0.key): \($0.value)" }.joined(separator: ", "))")
+    print("=======================")
+    #endif
   }
 }
