@@ -17,6 +17,11 @@ internal enum StoryboardScene {
 
     internal static let initialScene = InitialSceneType<Tsurukame.AppSettingsViewController>(storyboard: Self.self)
   }
+  internal enum BurnedReviewFilters: StoryboardType {
+    internal static let storyboardName = "BurnedReviewFilters"
+
+    internal static let initialScene = InitialSceneType<Tsurukame.BurnedReviewFiltersViewController>(storyboard: Self.self)
+  }
   internal enum LaunchScreen: StoryboardType {
     internal static let storyboardName = "LaunchScreen"
 
