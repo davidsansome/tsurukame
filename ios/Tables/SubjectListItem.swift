@@ -252,7 +252,7 @@ class SubjectListCell: TableModelCell {
     }
   }
 
-  // The tile is in the subject's colour, except locked subjects are grey and burned ones ink.
+  // The tile is in the subject's colour, except locked subjects are grey.
   private func updateColors() {
     chip.layer.borderWidth = 0
     chip.isHidden = false
@@ -282,9 +282,7 @@ class SubjectListCell: TableModelCell {
               border: TKMStyle.Color.grey80)
     } else {
       let category = assignment.srsStage.category
-      let isBurned = category == .burned
-      tile.backgroundColor = isBurned ? TKMStyle.fillColor(forSRSStageCategory: .burned)
-        : TKMStyle.color2(forSubjectType: item.subject.subjectType)
+      tile.backgroundColor = TKMStyle.color2(forSubjectType: item.subject.subjectType)
       chip.isHidden = true
       stageBadgeBackground.isHidden = false
       stageDescription = assignment.srsStage.description
@@ -298,7 +296,7 @@ class SubjectListCell: TableModelCell {
       } else {
         stageNumber.isHidden = true
       }
-      if isBurned {
+      if category == .burned {
         stageBadgeBackground.backgroundColor = TKMStyle.Color.label
         stageBadge.tintColor = TKMStyle.Color.background
       } else {
