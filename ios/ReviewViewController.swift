@@ -1451,11 +1451,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
     // Show a new task if it was correct.
     if result != .Incorrect {
-      if session.activeAssignment.subjectType != .radical, // or kana mode?
+      if !marked.subjectFinished,
+         session.activeAssignment.subjectType != .radical, // or kana mode?
          isAnkiModeActiveForCurrentTask,
          Settings.ankiModeCombineReadingMeaning {
-        session.nextTask()
-        marked = session.markAnswer(.Correct, isPracticeSession: isPracticeSession)
+        marked = session.markOtherHalfCorrect(isPracticeSession: isPracticeSession)
       }
 
       if Settings.playAudioAutomatically,
