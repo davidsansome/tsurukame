@@ -154,6 +154,11 @@ class ReviewSession {
     }
   }
 
+  public func markOtherHalfCorrect(isPracticeSession: Bool) -> MarkResult {
+    activeTaskType = activeTaskType == .meaning ? .reading : .meaning
+    return markAnswer(.Correct, isPracticeSession: isPracticeSession)
+  }
+
   public func moveActiveTaskToEnd() {
     activeQueue.remove(at: activeTaskIndex)
     activeTask.reset()
