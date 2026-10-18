@@ -71,9 +71,11 @@ class TKMStyle: NSObject {
   static let lockedColor2 = lockedColor1
   // Tiles for subjects that are locked, in lists where burned subjects are drawn in ink.
   static let lockedTileColor = AdaptiveColorHex(light: 0x8F8474, dark: 0x5F574B)
-  // The review prompt strip: ink for readings, paper for meanings.
-  static let readingColor1 = AdaptiveColorHex(light: 0x1F1D1A, dark: 0x2E2B26)
+  // The review prompt strip: ink for readings, paper for meanings. In dark mode the paper is
+  // near-black, so readings flip to light paper to stay clearly distinct from meanings.
+  static let readingColor1 = AdaptiveColorHex(light: 0x1F1D1A, dark: 0xE6DFD1)
   static let readingColor2 = readingColor1
+  static let readingTextColor = AdaptiveColorHex(light: 0xF5EFE3, dark: 0x1F1D1A)
   static let meaningColor1 = Color.background
   static let meaningColor2 = meaningColor1
 

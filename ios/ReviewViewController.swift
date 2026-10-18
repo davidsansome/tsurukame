@@ -26,8 +26,8 @@ private let kPreviousSubjectHorizontalPadding: CGFloat = 12
 private let kPreviousSubjectVerticalPadding: CGFloat = 4
 private let kPreviousSubjectAnimationDuration: Double = 0.3
 
-// Paper text on the ink reading strip, ink text on the paper meaning strip.
-private let kReadingTextColor = UIColor(red: 0.961, green: 0.937, blue: 0.890, alpha: 1.0)
+// Text on the reading strip (paper on ink, or ink on paper in dark mode), and on the meaning strip.
+private let kReadingTextColor = TKMStyle.readingTextColor
 private let kMeaningTextColor = TKMStyle.Color.label
 private let kDefaultButtonTintColor = UIButton().tintColor
 
@@ -575,12 +575,23 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
           .colors = TKMStyle.gradient(forAssignment: session.activeAssignment)
         promptBackground.colors = session.activeTaskType == .meaning ? TKMStyle
           .meaningGradient : TKMStyle.readingGradient
+        updateAnswerFieldStyle()
       }
       if previousTraitCollection.preferredContentSizeCategory != traitCollection
         .preferredContentSizeCategory {
         resizeViewsForFontSize()
       }
     }
+  }
+
+  // The reading strip is ink in light mode but paper in dark mode, so in dark mode the answer
+  // field on it is drawn as it would be on paper in light mode.
+  private func updateAnswerFieldStyle() {
+    let isReading = session.activeTaskType == .reading
+    let isDark = traitCollection.userInterfaceStyle == .dark
+    answerField.isOnInk = isReading && !isDark
+    answerField.overrideUserInterfaceStyle = isReading && isDark ? .light : .unspecified
+    answerField.keyboardAppearance = isDark ? .dark : .default
   }
 
   func resizeViewsForFontSize() {
@@ -894,7 +905,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       answerField.text = nil
       answerField.textColor = TKMStyle.Color.label
       answerField.backgroundColor = .clear
-      answerField.isOnInk = session.activeTaskType == .reading
+      updateAnswerFieldStyle()
       answerField.placeholder = taskTypePlaceholder
       if let firstReading = session.activeSubject.primaryReadings.first {
         kanaInput.alphabet = (firstReading.hasType && firstReading.type == .onyomi &&
