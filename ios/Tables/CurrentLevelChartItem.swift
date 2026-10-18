@@ -16,7 +16,8 @@ import Foundation
 import WaniKaniAPI
 
 // How far through a level each subject type is, as one stacked bar per type:
-// Guru and above, then Apprentice, then available lessons, then locked.
+// Guru and above, then Apprentice, then available lessons, then locked. Tapping the chart makes
+// the bars taller and shows the count in each segment.
 class CurrentLevelChartItem: TableModelItem {
   let currentLevelAssignments: [TKMAssignment]
 
@@ -29,7 +30,7 @@ class CurrentLevelChartItem: TableModelItem {
   }
 
   var rowHeight: CGFloat? {
-    150
+    Settings.expandLevelGraphs ? 174 : 150
   }
 }
 
@@ -85,6 +86,9 @@ class CurrentLevelChartCell: TableModelCell {
       stack.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
       stack.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
     ])
+
+    contentView.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                            action: #selector(didTap)))
   }
 
   @available(*, unavailable) required init?(coder _: NSCoder) {
@@ -96,6 +100,26 @@ class CurrentLevelChartCell: TableModelCell {
     rows[0].progress = LevelProgress(subjectType: .radical, assignments: assignments)
     rows[1].progress = LevelProgress(subjectType: .kanji, assignments: assignments)
     rows[2].progress = LevelProgress(subjectType: .vocabulary, assignments: assignments)
+    updateExpanded()
+  }
+
+  private func updateExpanded() {
+    for row in rows {
+      row.isExpanded = Settings.expandLevelGraphs
+    }
+  }
+
+  @objc private func didTap() {
+    Settings.expandLevelGraphs.toggle()
+    let cells = tableView?.visibleCells.compactMap { $0 as? CurrentLevelChartCell } ?? [self]
+    UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.85,
+                   initialSpringVelocity: 0, options: [.beginFromCurrentState]) {
+      self.tableView?.performBatchUpdates(nil)
+      for cell in cells {
+        cell.updateExpanded()
+        cell.layoutIfNeeded()
+      }
+    }
   }
 }
 
@@ -104,13 +128,23 @@ private class LevelProgressRow: UIView {
     didSet { updateProgress() }
   }
 
+  var isExpanded = false {
+    didSet {
+      barHeight.constant = isExpanded ? 16 : 8
+      bar.showsCounts = isExpanded
+    }
+  }
+
   private let color: UIColor
   private let titleLabel = UILabel()
   private let countLabel = UILabel()
-  private let bar = LevelProgressBar()
+  private let bar: LevelProgressBar
+  private let barHeight: NSLayoutConstraint
 
   init(title: String, color: UIColor) {
     self.color = color
+    bar = LevelProgressBar(color: color)
+    barHeight = bar.heightAnchor.constraint(equalToConstant: 8)
     super.init(frame: .zero)
 
     let swatch = UIView()
@@ -122,7 +156,6 @@ private class LevelProgressRow: UIView {
     countLabel.font = UIFont.systemFont(ofSize: 13)
     countLabel.textColor = TKMStyle.Color.grey33
     countLabel.textAlignment = .right
-    bar.color = color
 
     for view in [swatch, titleLabel, countLabel, bar] {
       view.translatesAutoresizingMaskIntoConstraints = false
@@ -142,7 +175,7 @@ private class LevelProgressRow: UIView {
       bar.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 6),
       bar.leadingAnchor.constraint(equalTo: leadingAnchor),
       bar.trailingAnchor.constraint(equalTo: trailingAnchor),
-      bar.heightAnchor.constraint(equalToConstant: 8),
+      barHeight,
     ])
 
     isAccessibilityElement = true
@@ -162,49 +195,72 @@ private class LevelProgressRow: UIView {
 }
 
 private class LevelProgressBar: UIView {
-  var color = UIColor.gray {
-    didSet { setNeedsDisplay() }
-  }
-
   var progress = LevelProgress(subjectType: .radical, assignments: []) {
-    didSet { setNeedsDisplay() }
+    didSet {
+      for (label, count) in zip(countLabels, counts) {
+        label.text = "\(count)"
+      }
+      setNeedsLayout()
+    }
   }
 
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    isOpaque = false
-    backgroundColor = .clear
-    contentMode = .redraw
+  var showsCounts = false {
+    didSet { setNeedsLayout() }
+  }
+
+  // Guru, Apprentice, lessons and locked.
+  private let segments: [UIView]
+  private let countLabels: [UILabel]
+
+  private var counts: [Int] {
+    [progress.guru, progress.apprentice, progress.lesson, progress.locked]
+  }
+
+  init(color: UIColor) {
+    segments = [color, color.withAlphaComponent(0.45), TKMStyle.Color.grey66,
+                TKMStyle.Color.grey80].map {
+      let view = UIView()
+      view.backgroundColor = $0
+      return view
+    }
+    countLabels = [.white, TKMStyle.Color.label, TKMStyle.Color.label, TKMStyle.Color.grey33].map {
+      let label = UILabel()
+      label.font = UIFont.monospacedDigitSystemFont(ofSize: 11, weight: .semibold)
+      label.textColor = $0
+      label.alpha = 0
+      return label
+    }
+    super.init(frame: .zero)
+    clipsToBounds = true
+    for view in segments + countLabels {
+      addSubview(view)
+    }
   }
 
   @available(*, unavailable) required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override func draw(_: CGRect) {
-    let track = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.height / 2)
-    TKMStyle.Color.grey80.resolvedColor(with: traitCollection).setFill()
-    track.fill()
-    guard progress.total > 0 else { return }
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    layer.cornerRadius = bounds.height / 2
 
-    track.addClip()
-    let base = color.resolvedColor(with: traitCollection)
-    let segments: [(Int, UIColor)] = [
-      (progress.guru, base),
-      (progress.apprentice, base.withAlphaComponent(0.45)),
-      (progress.lesson, TKMStyle.Color.grey66.resolvedColor(with: traitCollection)),
-    ]
+    // An empty level is drawn as all locked.
+    let counts = progress.total > 0 ? self.counts : [0, 0, 0, 1]
+    let total = CGFloat(counts.reduce(0, +))
     var x: CGFloat = 0
-    for (count, segmentColor) in segments where count > 0 {
-      let width = bounds.width * CGFloat(count) / CGFloat(progress.total)
-      segmentColor.setFill()
-      UIRectFill(CGRect(x: x, y: 0, width: width, height: bounds.height))
+    for (index, count) in counts.enumerated() {
+      let width = bounds.width * CGFloat(count) / total
+      let rect = CGRect(x: x, y: 0, width: width, height: bounds.height)
+      segments[index].frame = rect
+
+      // Centre the count in its segment, and only show it if it fits.
+      let label = countLabels[index]
+      let size = label.intrinsicContentSize
+      label.bounds = CGRect(origin: .zero, size: size)
+      label.center = CGPoint(x: rect.midX, y: rect.midY)
+      label.alpha = showsCounts && progress.total > 0 && size.width + 4 <= width ? 1 : 0
       x += width
     }
-  }
-
-  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-    super.traitCollectionDidChange(previousTraitCollection)
-    setNeedsDisplay()
   }
 }
