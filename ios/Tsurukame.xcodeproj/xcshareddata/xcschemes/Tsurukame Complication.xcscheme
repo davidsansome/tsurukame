@@ -60,6 +60,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C90846AB237F1C770068A272"
             BuildableName = "Tsurukame Complication.app"
+            BlueprintName = "Tsurukame Complication"
             ReferencedContainer = "container:Tsurukame.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -76,6 +77,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C90846AB237F1C770068A272"
             BuildableName = "Tsurukame Complication.app"
+            BlueprintName = "Tsurukame Complication"
             ReferencedContainer = "container:Tsurukame.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
