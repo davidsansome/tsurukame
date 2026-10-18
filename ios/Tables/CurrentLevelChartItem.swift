@@ -19,9 +19,6 @@ import WaniKaniAPI
 // Guru and above, then Apprentice, then available lessons, then locked. Tapping the chart makes
 // the bars taller and shows the count in each segment.
 class CurrentLevelChartItem: TableModelItem {
-  // Shared by every level chart, and kept when the home screen rebuilds its items.
-  static var isExpanded = false
-
   let currentLevelAssignments: [TKMAssignment]
 
   init(currentLevelAssignments: [TKMAssignment]) {
@@ -33,7 +30,7 @@ class CurrentLevelChartItem: TableModelItem {
   }
 
   var rowHeight: CGFloat? {
-    CurrentLevelChartItem.isExpanded ? 174 : 150
+    Settings.expandLevelGraphs ? 174 : 150
   }
 }
 
@@ -108,12 +105,12 @@ class CurrentLevelChartCell: TableModelCell {
 
   private func updateExpanded() {
     for row in rows {
-      row.isExpanded = CurrentLevelChartItem.isExpanded
+      row.isExpanded = Settings.expandLevelGraphs
     }
   }
 
   @objc private func didTap() {
-    CurrentLevelChartItem.isExpanded.toggle()
+    Settings.expandLevelGraphs.toggle()
     let cells = tableView?.visibleCells.compactMap { $0 as? CurrentLevelChartCell } ?? [self]
     UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.85,
                    initialSpringVelocity: 0, options: [.beginFromCurrentState]) {
