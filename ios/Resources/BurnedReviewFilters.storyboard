@@ -11,24 +11,14 @@
         <!--Burned Review Filters View Controller-->
         <scene sceneID="KvK-5m-6aN">
             <objects>
-                <tableViewController id="eGc-4x-t1L" customClass="BurnedReviewFiltersViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="d8R-mR-YmJ">
+                <viewController id="eGc-4x-t1L" customClass="BurnedReviewFiltersViewController" customModule="Tsurukame" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="d8R-mR-YmJ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <connections>
-                            <outlet property="dataSource" destination="eGc-4x-t1L" id="8Xs-rl-f0v"/>
-                            <outlet property="delegate" destination="eGc-4x-t1L" id="h9A-zQ-bP1"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="mFQ-Li-HJn">
-                        <barButtonItem key="rightBarButtonItem" title="Start" style="done" id="brF-LN-DFA">
-                            <connections>
-                                <action selector="startButtonTapped:" destination="eGc-4x-t1L" eventType="touchUpInside" id="aBc-5h-kLm"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                </tableViewController>
+                    </view>
+                    <navigationItem key="navigationItem" id="mFQ-Li-HJn"/>
+                </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ybG-Z3-9Ey" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="445" y="-363"/>
