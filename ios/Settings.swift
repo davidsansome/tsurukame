@@ -241,6 +241,7 @@ protocol SettingProtocol {
   @Setting(false,
            #keyPath(ankiModeCombineReadingMeaning)) static var ankiModeCombineReadingMeaning: Bool
   @Setting(true, #keyPath(showPreviousLevelGraph)) static var showPreviousLevelGraph: Bool
+  @Setting(false, #keyPath(expandLevelGraphs)) static var expandLevelGraphs: Bool
   @Setting(true, #keyPath(showKanaOnlyVocab)) static var showKanaOnlyVocab: Bool
   @Setting(false,
            #keyPath(showSimilarKanjiAboveLevel)) static var showSimilarKanjiAboveLevel: Bool
