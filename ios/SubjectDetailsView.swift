@@ -479,8 +479,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     if hasNote, let note = note {
       // If there is a note, add it with its own edit button.
-      let attributedNote = NSAttributedString(string: note, attributes: defaultStringAttrs())
-      let noteItem = EditableTextModelItem(text: attributedNote,
+      let parsedNote = parseFormattedText(note)
+      let formattedNote = render(formattedText: parsedNote,
+                                 standardAttributes: defaultStringAttrs())
+        .replaceFontSize(kFontSize)
+      let noteItem = EditableTextModelItem(text: formattedNote,
                                            placeholderText: "Add a note",
                                            rightButtonImage: Asset.baselineEditBlack24pt.image,
                                            font: UIFont.systemFont(ofSize: kFontSize))
