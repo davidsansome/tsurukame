@@ -115,7 +115,6 @@ class BurnedReviewFiltersViewController: UIViewController, TKMViewController {
       footerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       footerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-      footerView.heightAnchor.constraint(equalToConstant: 100),
     ])
 
     setupSubjectTypeSection()
@@ -397,6 +396,8 @@ class BurnedReviewFiltersViewController: UIViewController, TKMViewController {
       startButton.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 16),
       startButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -16),
       startButton.heightAnchor.constraint(equalToConstant: 50),
+      startButton.bottomAnchor.constraint(equalTo: footerView.safeAreaLayoutGuide.bottomAnchor,
+                                          constant: -8),
     ])
   }
 
