@@ -49,7 +49,7 @@
                         <segue destination="MHj-tV-Wy7" kind="show" identifier="showAll" id="UhX-pZ-jlZ"/>
                         <segue destination="Qs4-9j-s1J" kind="show" identifier="showRemaining" id="eaV-nJ-gI9"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startRecentLessonReviews" id="sbz-Gx-ZP8"/>
-                        <segue destination="pOc-Ig-wgQ" kind="show" identifier="startBurnedItemReviews" id="p5M-1d-3JR"/>
+                        <segue destination="T2j-pI-Gqk" kind="show" identifier="startBurnedItemReviews" id="p5M-1d-3JR"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startRecentMistakeReviews" id="k4i-e6-YJX"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startReviews" id="SNd-yz-wla"/>
                         <segue destination="pOc-Ig-wgQ" kind="show" identifier="startAlreadyPassedApprenticeReviews" id="Zly-NW-0bf"/>
@@ -257,6 +257,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3dR-Vk-0XO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="605" y="-883"/>
+        </scene>
+        <!--BurnedReviewFilters-->
+        <scene sceneID="C4a-k0-CJx">
+            <objects>
+                <viewControllerPlaceholder storyboardName="BurnedReviewFilters" id="T2j-pI-Gqk" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Jmn-H3-d0y"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4b0-Pq-Qtr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="605" y="-993"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
