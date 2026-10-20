@@ -329,16 +329,8 @@ class MainWaniKaniTabViewController: UITableViewController {
       vc.setup(services: services, items: items, isPracticeSession: true)
 
     case .startBurnedItemReviews:
-      let assignments = services.localCachingClient.getAllBurnedAssignments()
-      let items = ReviewItem.readyForBurnedReview(assignments: assignments,
-                                                  localCachingClient: services
-                                                    .localCachingClient).shuffled()
-      if items.count == 0 {
-        return
-      }
-
-      let vc = segue.destination as! ReviewContainerViewController
-      vc.setup(services: services, items: items, isPracticeSession: true)
+      let vc = segue.destination as! BurnedReviewFiltersViewController
+      vc.setup(services: services)
 
     case .startLessons:
       let assignments = services.localCachingClient.getNonExcludedAssignments()
