@@ -74,8 +74,8 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
     textView.font = editableItem.font
     // Only set textColor if the attributed text doesn't have background colors
     // (preserves markup coloring)
-    let hasBackgroundColor = editableItem.text.attribute(.backgroundColor, at: 0,
-                                                         effectiveRange: nil) != nil
+    let hasBackgroundColor = editableItem.text.length > 0 &&
+      editableItem.text.attribute(.backgroundColor, at: 0, effectiveRange: nil) != nil
     if !hasBackgroundColor {
       textView.textColor = TKMStyle.Color.label
     }

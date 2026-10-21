@@ -132,10 +132,6 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private var studyMaterialsChanged = false
   private var synonymSection: Int?
 
-  // Store original HTML for notes
-  private var originalMeaningNoteHTML: String?
-  private var originalReadingNoteHTML: String?
-
   // Items that are hidden, and will be shown when the Show All button is pressed.
   private var hiddenIndexPaths = [IndexPath]()
 
@@ -467,7 +463,6 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   private func addExplanation(model: MutableTableModel, title: String, text: String,
                               hint: String? = nil, note: String? = nil,
-                              noteHTML _: String? = nil,
                               noteChangedCallback: ((_ text: String) -> Void)? = nil)
     -> IndexPath? {
     if text.isEmpty {
@@ -497,9 +492,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                                            font: UIFont.systemFont(ofSize: kFontSize))
 
       // When editing starts, show the original HTML
-      noteItem.rightButtonCallback = { [weak self] cell in
-        guard let self = self else { return }
+      noteItem.rightButtonCallback = { [weak noteItem] cell in
         if let editableCell = cell as? EditableTextModelCell {
+          // Update the model so the cell stays in edit mode if it's reused after scrolling.
+          noteItem?.rightButtonImage = nil
+          noteItem?.text = NSAttributedString(string: note)
           // Show original HTML when editing
           editableCell.textView.text = note
           // Remove the right button
@@ -602,7 +599,6 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
       let mnemonic = addExplanation(model: model, title: "Mnemonic", text: subject.radical.mnemonic,
                                     note: meaningNote,
-                                    noteHTML: meaningNote,
                                     noteChangedCallback: setMeaningNote)
 
       var oldMnemonic: IndexPath?
@@ -627,13 +623,11 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                                               text: subject.kanji.meaningMnemonic,
                                               hint: subject.kanji.meaningHint,
                                               note: meaningNote,
-                                              noteHTML: meaningNote,
                                               noteChangedCallback: setMeaningNote)
       let readingExplanation = addExplanation(model: model, title: "Reading Explanation",
                                               text: subject.kanji.readingMnemonic,
                                               hint: subject.kanji.readingHint,
                                               note: studyMaterials?.readingNote,
-                                              noteHTML: studyMaterials?.readingNote,
                                               noteChangedCallback: setReadingNote)
 
       if !meaningShown, !readingShown {
@@ -823,39 +817,6 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
       let replacement = "<\(tagName)>\(content)</\(tagName)>"
       result.replaceSubrange(fullRange, with: replacement)
-    }
-
-    return result
-  }
-
-  /// Converts formatted attributed string back to plain text with tags
-  /// This is the inverse of parseFormattedText + render
-  private func convertAttributedToTextWithTags(_ attributedString: NSAttributedString) -> String {
-    var result = ""
-    let range = NSRange(location: 0, length: attributedString.length)
-
-    attributedString.enumerateAttributes(in: range, options: []) { attrs, _, _ in
-      if let backgroundColor = attrs[.backgroundColor] as? UIColor {
-        let text = attributedString.string
-        let tag: String
-
-        // Determine which color corresponds to which tag
-        if backgroundColor == TKMStyle.Color.markupRadicalBackground {
-          tag = "radical"
-        } else if backgroundColor == TKMStyle.Color.markupKanjiBackground {
-          tag = "kanji"
-        } else if backgroundColor == TKMStyle.Color.markupVocabularyBackground {
-          tag = "vocabulary"
-        } else if backgroundColor == TKMStyle.Color.grey33 {
-          tag = "reading"
-        } else {
-          tag = "b"
-        }
-
-        result += "<\(tag)>\(text)</\(tag)>"
-      } else {
-        result += attributedString.string
-      }
     }
 
     return result
