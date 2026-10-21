@@ -287,6 +287,14 @@ extension TKMVocabulary.PartOfSpeech: CustomStringConvertible {
       return "Pronoun"
     case .conjunction:
       return "Conjunction"
+    case .verbalNoun:
+      return "Verbal Noun"
+    case .independentNoun:
+      return "Independent Noun"
+    case .kosoadoWord:
+      return "Kosoado Word"
+    case .onomatopoeia:
+      return "Onomatopoeia"
     default:
       return ""
     }
