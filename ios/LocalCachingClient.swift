@@ -335,10 +335,13 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
       SELECT MAX(id) FROM assignments GROUP BY subject_id
     );
     """,
+    // Version 14. New parts of speech were added. Clear the sync marker so all subjects are
+    // downloaded again with the new values.
+    "UPDATE sync SET subjects_updated_after = \"\";",
   ]
 
   private let kInitialSchemaVersion = 8
-  private let kSchemaVersion = 13
+  private let kSchemaVersion = 14
 
   // Run when the user logs out. Clears everything in the database.
   private let kClearAllData = """

@@ -370,6 +370,10 @@ public struct TKMVocabulary: Sendable {
     case counter // = 18
     case pronoun // = 19
     case conjunction // = 20
+    case verbalNoun // = 21
+    case independentNoun // = 22
+    case kosoadoWord // = 23
+    case onomatopoeia // = 24
     case UNRECOGNIZED(Int)
 
     public init() {
@@ -399,6 +403,10 @@ public struct TKMVocabulary: Sendable {
       case 18: self = .counter
       case 19: self = .pronoun
       case 20: self = .conjunction
+      case 21: self = .verbalNoun
+      case 22: self = .independentNoun
+      case 23: self = .kosoadoWord
+      case 24: self = .onomatopoeia
       default: self = .UNRECOGNIZED(rawValue)
       }
     }
@@ -426,6 +434,10 @@ public struct TKMVocabulary: Sendable {
       case .counter: return 18
       case .pronoun: return 19
       case .conjunction: return 20
+      case .verbalNoun: return 21
+      case .independentNoun: return 22
+      case .kosoadoWord: return 23
+      case .onomatopoeia: return 24
       case .UNRECOGNIZED(let i): return i
       }
     }
@@ -453,6 +465,10 @@ public struct TKMVocabulary: Sendable {
       .counter,
       .pronoun,
       .conjunction,
+      .verbalNoun,
+      .independentNoun,
+      .kosoadoWord,
+      .onomatopoeia,
     ]
 
   }
@@ -1888,6 +1904,10 @@ extension TKMVocabulary.PartOfSpeech: SwiftProtobuf._ProtoNameProviding {
     18: .same(proto: "COUNTER"),
     19: .same(proto: "PRONOUN"),
     20: .same(proto: "CONJUNCTION"),
+    21: .same(proto: "VERBAL_NOUN"),
+    22: .same(proto: "INDEPENDENT_NOUN"),
+    23: .same(proto: "KOSOADO_WORD"),
+    24: .same(proto: "ONOMATOPOEIA"),
   ]
 }
 
