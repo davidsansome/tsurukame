@@ -16,7 +16,7 @@ let package = Package(name: "WaniKaniAPI",
                       ],
                       dependencies: [
                         // Dependencies declare other packages that this package depends on.
-                        .package(url: "https://github.com/apple/swift-protobuf", from: "1.15.0"),
+                        .package(url: "https://github.com/apple/swift-protobuf", from: "1.39.0"),
                         .package(url: "https://github.com/mxcl/PromiseKit",
                                  from: "6.13.3"),
                         .package(name: "PMKFoundation",

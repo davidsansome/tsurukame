@@ -2361,7 +2361,7 @@
 			repositoryURL = "https://github.com/apple/swift-protobuf";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.15.0;
+				minimumVersion = 1.39.0;
 			};
 		};
 		63C0400C28DD581F0068F53D /* XCRemoteSwiftPackageReference "Charts" */ = {
