@@ -109,6 +109,10 @@ message Vocabulary {
     COUNTER = 18;
     PRONOUN = 19;
     CONJUNCTION = 20;
+    VERBAL_NOUN = 21;
+    INDEPENDENT_NOUN = 22;
+    KOSOADO_WORD = 23;
+    ONOMATOPOEIA = 24;
   }
   repeated PartOfSpeech parts_of_speech = 4;
 

@@ -332,6 +332,14 @@ struct SubjectData: Codable {
       return .pronoun
     case "conjunction":
       return .conjunction
+    case "verbal_noun":
+      return .verbalNoun
+    case "independent_noun":
+      return .independentNoun
+    case "kosoado_word", "こそあど_word":
+      return .kosoadoWord
+    case "onomatopoeia", "オノマトペ":
+      return .onomatopoeia
     default:
       NSLog("Unknown part of speech: %@", part)
       return nil
