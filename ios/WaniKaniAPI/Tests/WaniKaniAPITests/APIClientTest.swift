@@ -1021,7 +1021,7 @@ class APIClientTest: XCTestCase {
         meaning_hint: "To remember the meaning of <kanji>One</kanji>, imagine yourself there at the scene of the crime. You grab <kanji>One</kanji> in your arms, trying to prop it up, trying to hear its last words. Instead, it just splatters some blood on your face. \\"Who did this to you?\\" you ask. The number One points weakly, and you see number Two running off into an alleyway. He\\'s always been jealous of number One and knows he can be number one now that he\\'s taken the real number one out."
         reading_mnemonic: "As you\\'re sitting there next to <kanji>One</kanji>, holding him up, you start feeling a weird sensation all over your skin. From the wound comes a fine powder (obviously coming from the special bullet used to kill One) that causes the person it touches to get extremely <reading>itchy</reading> (いち)"
         reading_hint: "Make sure you feel the ridiculously <reading>itchy</reading> sensation covering your body. It climbs from your hands, where you\\'re holding the number <kanji>One</kanji> up, and then goes through your arms, crawls up your neck, goes down your body, and then covers everything. It becomes uncontrollable, and you\\'re scratching everywhere, writhing on the ground. It\\'s so itchy that it\\'s the most painful thing you\\'ve ever experienced (you should imagine this vividly, so you remember the reading of this kanji)."
-        visually_similar_kanji: "互下両土且正本末未士丁七二十"
+        visually_similar_kanji: "互正本末未士土両且下十二七丁"
       }
       amalgamation_subject_ids: 56
       amalgamation_subject_ids: 88
