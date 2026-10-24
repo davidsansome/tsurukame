@@ -72,7 +72,13 @@ class EditableTextModelCell: AttributedModelCell, UITextViewDelegate {
     super.update()
 
     textView.font = editableItem.font
-    textView.textColor = TKMStyle.Color.label
+    // Only set textColor if the attributed text doesn't have background colors
+    // (preserves markup coloring)
+    let hasBackgroundColor = editableItem.text.length > 0 &&
+      editableItem.text.attribute(.backgroundColor, at: 0, effectiveRange: nil) != nil
+    if !hasBackgroundColor {
+      textView.textColor = TKMStyle.Color.label
+    }
     textView.autocapitalizationType = editableItem.autoCapitalizationType
     textView.textContainer.maximumNumberOfLines = editableItem.maximumNumberOfLines
     placeholderLabel.text = editableItem.placeholderText

@@ -190,13 +190,13 @@ class TKMStyle: NSObject {
     static let onNight = UIColorFromHex(0xF5EFE3)
     static let onNightSecondary = UIColorFromHex(0xC9C1B1)
 
-    // Markup colors for mnemonics.
-    static let markupRadicalForeground = label
-    static let markupRadicalBackground = AdaptiveColorHex(light: 0xDCE8F5, dark: 0x24364D)
-    static let markupKanjiForeground = label
-    static let markupKanjiBackground = AdaptiveColorHex(light: 0xF7E4EC, dark: 0x45283A)
-    static let markupVocabularyForeground = label
-    static let markupVocabularyBackground = AdaptiveColorHex(light: 0xEEE5F5, dark: 0x3A2D47)
+    // Markup colors for mnemonics (matching WaniKani web colors)
+    static let markupRadicalForeground = UIColor.white
+    static let markupRadicalBackground = AdaptiveColorHex(light: 0x0093DD, dark: 0x0077B3)
+    static let markupKanjiForeground = UIColor.white
+    static let markupKanjiBackground = AdaptiveColorHex(light: 0xDD0093, dark: 0xB20077)
+    static let markupVocabularyForeground = UIColor.white
+    static let markupVocabularyBackground = AdaptiveColorHex(light: 0x9300DD, dark: 0x7600B0)
 
     static var placeholderText: UIColor {
       if #available(iOS 13.0, *) {

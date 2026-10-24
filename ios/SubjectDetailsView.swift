@@ -479,11 +479,34 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     if hasNote, let note = note {
       // If there is a note, add it with its own edit button.
-      let attributedNote = NSAttributedString(string: note, attributes: defaultStringAttrs())
-      let noteItem = EditableTextModelItem(text: attributedNote,
+      // Convert web-style <mark> tags to API-style tags first
+      let convertedNote = convertWebMarkTagsToAPITags(note)
+      let parsedNote = parseFormattedText(convertedNote)
+      let formattedNote = render(formattedText: parsedNote,
+                                 standardAttributes: defaultStringAttrs())
+        .replaceFontSize(kFontSize)
+
+      let noteItem = EditableTextModelItem(text: formattedNote,
                                            placeholderText: "Add a note",
                                            rightButtonImage: Asset.baselineEditBlack24pt.image,
                                            font: UIFont.systemFont(ofSize: kFontSize))
+
+      // When editing starts, show the original HTML
+      noteItem.rightButtonCallback = { [weak noteItem] cell in
+        if let editableCell = cell as? EditableTextModelCell {
+          // Update the model so the cell stays in edit mode if it's reused after scrolling.
+          noteItem?.rightButtonImage = nil
+          noteItem?.text = NSAttributedString(string: note)
+          // Show original HTML when editing
+          editableCell.textView.text = note
+          // Remove the right button
+          cell.removeRightButton()
+          // Make it editable
+          editableCell.textView.isEditable = true
+          editableCell.textView.becomeFirstResponder()
+        }
+      }
+
       noteItem.textChangedCallback = noteChangedCallback
       model.add(noteItem)
     } else if noteChangedCallback != nil {
@@ -745,5 +768,57 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     if let subject = chip.subject {
       subjectDelegate.didTapSubject(subject)
     }
+  }
+
+  /// Converts web-style <mark> tags to API-style tags
+  /// <mark title="Reading" class="reading-highlight">text</mark> → <reading>text</reading>
+  /// <mark title="Kanji" class="kanji-highlight">text</mark> → <kanji>text</kanji>
+  /// <mark title="Radical" class="radical-highlight">text</mark> → <radical>text</radical>
+  /// <mark title="Vocabulary" class="vocabulary-highlight">text</mark> →
+  /// <vocabulary>text</vocabulary>
+  private func convertWebMarkTagsToAPITags(_ text: String) -> String {
+    var result = text
+
+    // Pattern to match <mark title="..." class="...">text</mark>
+    let pattern = #"<mark\s+title="([^"]+)"[^>]*>([^<]+)</mark>"#
+
+    guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
+      return result
+    }
+
+    let range = NSRange(result.startIndex..., in: result)
+    let matches = regex.matches(in: result, options: [], range: range)
+
+    // Process in reverse order to not affect indices
+    for match in matches.reversed() {
+      guard let titleRange = Range(match.range(at: 1), in: result),
+            let contentRange = Range(match.range(at: 2), in: result),
+            let fullRange = Range(match.range, in: result) else {
+        continue
+      }
+
+      let title = String(result[titleRange])
+      let content = String(result[contentRange])
+
+      // Map title to tag name
+      let tagName: String
+      switch title.lowercased() {
+      case "reading":
+        tagName = "reading"
+      case "kanji":
+        tagName = "kanji"
+      case "radical":
+        tagName = "radical"
+      case "vocabulary":
+        tagName = "vocabulary"
+      default:
+        tagName = "b" // fallback to bold for unknown types
+      }
+
+      let replacement = "<\(tagName)>\(content)</\(tagName)>"
+      result.replaceSubrange(fullRange, with: replacement)
+    }
+
+    return result
   }
 }
