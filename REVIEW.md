@@ -1,7 +1,7 @@
 # Code review guidelines
 
 Tsurukame is an iOS app (Swift, deployment target iOS 15) for WaniKani, with
-a few Go utilities in `utils/`, `proto/` and `similar_kanji/`. Many PRs come
+a small Go tool in `similar_kanji/` (with a helper in `utils/`). Many PRs come
 from outside contributors via forks. Reviews should be short and only point
 out things worth the author's time to fix.
 
