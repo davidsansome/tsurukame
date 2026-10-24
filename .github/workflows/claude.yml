@@ -48,3 +48,66 @@ jobs:
           # or https://code.claude.com/docs/en/cli-reference for available options
           # claude_args: '--allowed-tools Bash(gh pr *)'
 
+  # claude-code-action can only push to this repo, so on a PR from a fork Claude's commits
+  # land on a pr-<number> branch here instead of on the PR. This job moves them onto the
+  # fork's branch, which needs a classic personal access token (FORK_PUSH_TOKEN) and the
+  # PR's "Allow edits by maintainers" box. It runs in its own job so nothing Claude left
+  # behind on the runner (git hooks, say) can see the token.
+  move-to-fork:
+    needs: claude
+    if: |
+      needs.claude.result == 'success' &&
+      (github.event.issue.pull_request || github.event.pull_request)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Push Claude's commits to the fork's PR branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORK_PUSH_TOKEN: ${{ secrets.FORK_PUSH_TOKEN }}
+          PR: ${{ github.event.issue.number || github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          pr=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" \
+            --json isCrossRepository,headRepositoryOwner,headRepository,headRefName,maintainerCanModify)
+          if [[ $(jq -r .isCrossRepository <<<"$pr") != true ]]; then
+            echo "Not a fork PR, nothing to do"
+            exit 0
+          fi
+
+          claude_branch="pr-$PR"
+          origin="https://x-access-token:$FORK_PUSH_TOKEN@github.com/$GITHUB_REPOSITORY.git"
+          if ! git ls-remote --exit-code "$origin" "refs/heads/$claude_branch" >/dev/null; then
+            echo "Claude didn't push a $claude_branch branch, nothing to do"
+            exit 0
+          fi
+
+          fork=$(jq -r '.headRepositoryOwner.login + "/" + .headRepository.name' <<<"$pr")
+          fork_branch=$(jq -r .headRefName <<<"$pr")
+
+          fail() {
+            gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body "$1"
+            exit 1
+          }
+
+          if [[ -z "$FORK_PUSH_TOKEN" ]]; then
+            fail "Claude's changes are on the \`$claude_branch\` branch. They couldn't be moved onto this PR because the \`FORK_PUSH_TOKEN\` secret isn't set."
+          fi
+          if [[ $(jq -r .maintainerCanModify <<<"$pr") != true ]]; then
+            fail "Claude's changes are on the \`$claude_branch\` branch. They couldn't be moved onto this PR because \"Allow edits by maintainers\" is off. Turn it on and ask Claude again, or pull them in yourself."
+          fi
+
+          git init -q work
+          cd work
+          git fetch -q "$origin" "refs/heads/$claude_branch"
+          # Not forced, so if the contributor pushed in the meantime this fails instead of
+          # overwriting their commits.
+          if ! git push "https://x-access-token:$FORK_PUSH_TOKEN@github.com/$fork.git" \
+              "FETCH_HEAD:refs/heads/$fork_branch"; then
+            fail "Claude's changes are on the \`$claude_branch\` branch, but pushing them to \`$fork:$fork_branch\` failed (see the workflow log). The PR branch may have changed since Claude started."
+          fi
+          git push -q "$origin" --delete "$claude_branch"
+
