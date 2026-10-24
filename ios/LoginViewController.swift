@@ -143,9 +143,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
       waves.bottomAnchor.constraint(equalTo: view.bottomAnchor),
       waves.heightAnchor.constraint(equalToConstant: 150),
 
-      title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      title.centerXAnchor.constraint(equalTo: signInLabel.centerXAnchor),
       title.bottomAnchor.constraint(equalTo: signInLabel.topAnchor, constant: -10),
-      hanko.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      hanko.centerXAnchor.constraint(equalTo: signInLabel.centerXAnchor),
       hanko.bottomAnchor.constraint(equalTo: title.topAnchor, constant: -24),
       hanko.widthAnchor.constraint(equalToConstant: 96),
       hanko.heightAnchor.constraint(equalTo: hanko.widthAnchor,
