@@ -29,37 +29,37 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+fileprivate nonisolated struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
   struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
   typealias Version = _2
 }
 
-public struct TKMMeaning: Sendable {
+public nonisolated struct TKMMeaning: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var meaning: String {
-    get {return _meaning ?? String()}
+    get {_meaning ?? String()}
     set {_meaning = newValue}
   }
   /// Returns true if `meaning` has been explicitly set.
-  public var hasMeaning: Bool {return self._meaning != nil}
+  public var hasMeaning: Bool {self._meaning != nil}
   /// Clears the value of `meaning`. Subsequent reads from it will return its default value.
   public mutating func clearMeaning() {self._meaning = nil}
 
   public var type: TKMMeaning.TypeEnum {
-    get {return _type ?? .unknown}
+    get {_type ?? .unknown}
     set {_type = newValue}
   }
   /// Returns true if `type` has been explicitly set.
-  public var hasType: Bool {return self._type != nil}
+  public var hasType: Bool {self._type != nil}
   /// Clears the value of `type`. Subsequent reads from it will return its default value.
   public mutating func clearType() {self._type = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public enum TypeEnum: SwiftProtobuf.Enum, Swift.CaseIterable {
+  public nonisolated enum TypeEnum: SwiftProtobuf.Enum, Swift.CaseIterable {
     public typealias RawValue = Int
     case unknown // = 0
     case primary // = 1
@@ -115,44 +115,44 @@ public struct TKMMeaning: Sendable {
   fileprivate var _type: TKMMeaning.TypeEnum? = nil
 }
 
-public struct TKMReading: Sendable {
+public nonisolated struct TKMReading: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var reading: String {
-    get {return _reading ?? String()}
+    get {_reading ?? String()}
     set {_reading = newValue}
   }
   /// Returns true if `reading` has been explicitly set.
-  public var hasReading: Bool {return self._reading != nil}
+  public var hasReading: Bool {self._reading != nil}
   /// Clears the value of `reading`. Subsequent reads from it will return its default value.
   public mutating func clearReading() {self._reading = nil}
 
   /// Non-primary readings are not accepted for Kanji.
   /// TODO: use the accepted_answer field instead.
   public var isPrimary: Bool {
-    get {return _isPrimary ?? false}
+    get {_isPrimary ?? false}
     set {_isPrimary = newValue}
   }
   /// Returns true if `isPrimary` has been explicitly set.
-  public var hasIsPrimary: Bool {return self._isPrimary != nil}
+  public var hasIsPrimary: Bool {self._isPrimary != nil}
   /// Clears the value of `isPrimary`. Subsequent reads from it will return its default value.
   public mutating func clearIsPrimary() {self._isPrimary = nil}
 
   public var type: TKMReading.TypeEnum {
-    get {return _type ?? .unknown}
+    get {_type ?? .unknown}
     set {_type = newValue}
   }
   /// Returns true if `type` has been explicitly set.
-  public var hasType: Bool {return self._type != nil}
+  public var hasType: Bool {self._type != nil}
   /// Clears the value of `type`. Subsequent reads from it will return its default value.
   public mutating func clearType() {self._type = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   /// Type is only set for Kanji readings - not for Vocabulary.
-  public enum TypeEnum: SwiftProtobuf.Enum, Swift.CaseIterable {
+  public nonisolated enum TypeEnum: SwiftProtobuf.Enum, Swift.CaseIterable {
     public typealias RawValue = Int
     case unknown // = 0
     case onyomi // = 1
@@ -201,45 +201,45 @@ public struct TKMReading: Sendable {
   fileprivate var _type: TKMReading.TypeEnum? = nil
 }
 
-public struct TKMRadical: Sendable {
+public nonisolated struct TKMRadical: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Not present in final data.
   public var characterImage: String {
-    get {return _characterImage ?? String()}
+    get {_characterImage ?? String()}
     set {_characterImage = newValue}
   }
   /// Returns true if `characterImage` has been explicitly set.
-  public var hasCharacterImage: Bool {return self._characterImage != nil}
+  public var hasCharacterImage: Bool {self._characterImage != nil}
   /// Clears the value of `characterImage`. Subsequent reads from it will return its default value.
   public mutating func clearCharacterImage() {self._characterImage = nil}
 
   public var mnemonic: String {
-    get {return _mnemonic ?? String()}
+    get {_mnemonic ?? String()}
     set {_mnemonic = newValue}
   }
   /// Returns true if `mnemonic` has been explicitly set.
-  public var hasMnemonic: Bool {return self._mnemonic != nil}
+  public var hasMnemonic: Bool {self._mnemonic != nil}
   /// Clears the value of `mnemonic`. Subsequent reads from it will return its default value.
   public mutating func clearMnemonic() {self._mnemonic = nil}
 
   public var deprecatedMnemonic: String {
-    get {return _deprecatedMnemonic ?? String()}
+    get {_deprecatedMnemonic ?? String()}
     set {_deprecatedMnemonic = newValue}
   }
   /// Returns true if `deprecatedMnemonic` has been explicitly set.
-  public var hasDeprecatedMnemonic: Bool {return self._deprecatedMnemonic != nil}
+  public var hasDeprecatedMnemonic: Bool {self._deprecatedMnemonic != nil}
   /// Clears the value of `deprecatedMnemonic`. Subsequent reads from it will return its default value.
   public mutating func clearDeprecatedMnemonic() {self._deprecatedMnemonic = nil}
 
   public var hasCharacterImageFile_p: Bool {
-    get {return _hasCharacterImageFile_p ?? false}
+    get {_hasCharacterImageFile_p ?? false}
     set {_hasCharacterImageFile_p = newValue}
   }
   /// Returns true if `hasCharacterImageFile_p` has been explicitly set.
-  public var hasHasCharacterImageFile_p: Bool {return self._hasCharacterImageFile_p != nil}
+  public var hasHasCharacterImageFile_p: Bool {self._hasCharacterImageFile_p != nil}
   /// Clears the value of `hasCharacterImageFile_p`. Subsequent reads from it will return its default value.
   public mutating func clearHasCharacterImageFile_p() {self._hasCharacterImageFile_p = nil}
 
@@ -253,53 +253,53 @@ public struct TKMRadical: Sendable {
   fileprivate var _hasCharacterImageFile_p: Bool? = nil
 }
 
-public struct TKMKanji: Sendable {
+public nonisolated struct TKMKanji: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var meaningMnemonic: String {
-    get {return _meaningMnemonic ?? String()}
+    get {_meaningMnemonic ?? String()}
     set {_meaningMnemonic = newValue}
   }
   /// Returns true if `meaningMnemonic` has been explicitly set.
-  public var hasMeaningMnemonic: Bool {return self._meaningMnemonic != nil}
+  public var hasMeaningMnemonic: Bool {self._meaningMnemonic != nil}
   /// Clears the value of `meaningMnemonic`. Subsequent reads from it will return its default value.
   public mutating func clearMeaningMnemonic() {self._meaningMnemonic = nil}
 
   public var meaningHint: String {
-    get {return _meaningHint ?? String()}
+    get {_meaningHint ?? String()}
     set {_meaningHint = newValue}
   }
   /// Returns true if `meaningHint` has been explicitly set.
-  public var hasMeaningHint: Bool {return self._meaningHint != nil}
+  public var hasMeaningHint: Bool {self._meaningHint != nil}
   /// Clears the value of `meaningHint`. Subsequent reads from it will return its default value.
   public mutating func clearMeaningHint() {self._meaningHint = nil}
 
   public var readingMnemonic: String {
-    get {return _readingMnemonic ?? String()}
+    get {_readingMnemonic ?? String()}
     set {_readingMnemonic = newValue}
   }
   /// Returns true if `readingMnemonic` has been explicitly set.
-  public var hasReadingMnemonic: Bool {return self._readingMnemonic != nil}
+  public var hasReadingMnemonic: Bool {self._readingMnemonic != nil}
   /// Clears the value of `readingMnemonic`. Subsequent reads from it will return its default value.
   public mutating func clearReadingMnemonic() {self._readingMnemonic = nil}
 
   public var readingHint: String {
-    get {return _readingHint ?? String()}
+    get {_readingHint ?? String()}
     set {_readingHint = newValue}
   }
   /// Returns true if `readingHint` has been explicitly set.
-  public var hasReadingHint: Bool {return self._readingHint != nil}
+  public var hasReadingHint: Bool {self._readingHint != nil}
   /// Clears the value of `readingHint`. Subsequent reads from it will return its default value.
   public mutating func clearReadingHint() {self._readingHint = nil}
 
   public var visuallySimilarKanji: String {
-    get {return _visuallySimilarKanji ?? String()}
+    get {_visuallySimilarKanji ?? String()}
     set {_visuallySimilarKanji = newValue}
   }
   /// Returns true if `visuallySimilarKanji` has been explicitly set.
-  public var hasVisuallySimilarKanji: Bool {return self._visuallySimilarKanji != nil}
+  public var hasVisuallySimilarKanji: Bool {self._visuallySimilarKanji != nil}
   /// Clears the value of `visuallySimilarKanji`. Subsequent reads from it will return its default value.
   public mutating func clearVisuallySimilarKanji() {self._visuallySimilarKanji = nil}
 
@@ -316,26 +316,26 @@ public struct TKMKanji: Sendable {
   fileprivate var _visuallySimilarKanji: String? = nil
 }
 
-public struct TKMVocabulary: Sendable {
+public nonisolated struct TKMVocabulary: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var meaningExplanation: String {
-    get {return _meaningExplanation ?? String()}
+    get {_meaningExplanation ?? String()}
     set {_meaningExplanation = newValue}
   }
   /// Returns true if `meaningExplanation` has been explicitly set.
-  public var hasMeaningExplanation: Bool {return self._meaningExplanation != nil}
+  public var hasMeaningExplanation: Bool {self._meaningExplanation != nil}
   /// Clears the value of `meaningExplanation`. Subsequent reads from it will return its default value.
   public mutating func clearMeaningExplanation() {self._meaningExplanation = nil}
 
   public var readingExplanation: String {
-    get {return _readingExplanation ?? String()}
+    get {_readingExplanation ?? String()}
     set {_readingExplanation = newValue}
   }
   /// Returns true if `readingExplanation` has been explicitly set.
-  public var hasReadingExplanation: Bool {return self._readingExplanation != nil}
+  public var hasReadingExplanation: Bool {self._readingExplanation != nil}
   /// Clears the value of `readingExplanation`. Subsequent reads from it will return its default value.
   public mutating func clearReadingExplanation() {self._readingExplanation = nil}
 
@@ -347,7 +347,7 @@ public struct TKMVocabulary: Sendable {
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public enum PartOfSpeech: SwiftProtobuf.Enum, Swift.CaseIterable {
+  public nonisolated enum PartOfSpeech: SwiftProtobuf.Enum, Swift.CaseIterable {
     public typealias RawValue = Int
     case unknown // = 0
     case noun // = 1
@@ -473,26 +473,26 @@ public struct TKMVocabulary: Sendable {
 
   }
 
-  public struct Sentence: Sendable {
+  public nonisolated struct Sentence: Sendable {
     // SwiftProtobuf.Message conformance is added in an extension below. See the
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
     public var japanese: String {
-      get {return _japanese ?? String()}
+      get {_japanese ?? String()}
       set {_japanese = newValue}
     }
     /// Returns true if `japanese` has been explicitly set.
-    public var hasJapanese: Bool {return self._japanese != nil}
+    public var hasJapanese: Bool {self._japanese != nil}
     /// Clears the value of `japanese`. Subsequent reads from it will return its default value.
     public mutating func clearJapanese() {self._japanese = nil}
 
     public var english: String {
-      get {return _english ?? String()}
+      get {_english ?? String()}
       set {_english = newValue}
     }
     /// Returns true if `english` has been explicitly set.
-    public var hasEnglish: Bool {return self._english != nil}
+    public var hasEnglish: Bool {self._english != nil}
     /// Clears the value of `english`. Subsequent reads from it will return its default value.
     public mutating func clearEnglish() {self._english = nil}
 
@@ -504,26 +504,26 @@ public struct TKMVocabulary: Sendable {
     fileprivate var _english: String? = nil
   }
 
-  public struct PronunciationAudio: Sendable {
+  public nonisolated struct PronunciationAudio: Sendable {
     // SwiftProtobuf.Message conformance is added in an extension below. See the
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
     public var url: String {
-      get {return _url ?? String()}
+      get {_url ?? String()}
       set {_url = newValue}
     }
     /// Returns true if `url` has been explicitly set.
-    public var hasURL: Bool {return self._url != nil}
+    public var hasURL: Bool {self._url != nil}
     /// Clears the value of `url`. Subsequent reads from it will return its default value.
     public mutating func clearURL() {self._url = nil}
 
     public var voiceActorID: Int64 {
-      get {return _voiceActorID ?? 0}
+      get {_voiceActorID ?? 0}
       set {_voiceActorID = newValue}
     }
     /// Returns true if `voiceActorID` has been explicitly set.
-    public var hasVoiceActorID: Bool {return self._voiceActorID != nil}
+    public var hasVoiceActorID: Bool {self._voiceActorID != nil}
     /// Clears the value of `voiceActorID`. Subsequent reads from it will return its default value.
     public mutating func clearVoiceActorID() {self._voiceActorID = nil}
 
@@ -541,109 +541,109 @@ public struct TKMVocabulary: Sendable {
   fileprivate var _readingExplanation: String? = nil
 }
 
-public struct TKMSubject: @unchecked Sendable {
+public nonisolated struct TKMSubject: @unchecked Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var id: Int64 {
-    get {return _storage._id ?? 0}
+    get {_storage._id ?? 0}
     set {_uniqueStorage()._id = newValue}
   }
   /// Returns true if `id` has been explicitly set.
-  public var hasID: Bool {return _storage._id != nil}
+  public var hasID: Bool {_storage._id != nil}
   /// Clears the value of `id`. Subsequent reads from it will return its default value.
   public mutating func clearID() {_uniqueStorage()._id = nil}
 
   public var level: Int32 {
-    get {return _storage._level ?? 0}
+    get {_storage._level ?? 0}
     set {_uniqueStorage()._level = newValue}
   }
   /// Returns true if `level` has been explicitly set.
-  public var hasLevel: Bool {return _storage._level != nil}
+  public var hasLevel: Bool {_storage._level != nil}
   /// Clears the value of `level`. Subsequent reads from it will return its default value.
   public mutating func clearLevel() {_uniqueStorage()._level = nil}
 
   public var slug: String {
-    get {return _storage._slug ?? String()}
+    get {_storage._slug ?? String()}
     set {_uniqueStorage()._slug = newValue}
   }
   /// Returns true if `slug` has been explicitly set.
-  public var hasSlug: Bool {return _storage._slug != nil}
+  public var hasSlug: Bool {_storage._slug != nil}
   /// Clears the value of `slug`. Subsequent reads from it will return its default value.
   public mutating func clearSlug() {_uniqueStorage()._slug = nil}
 
   public var documentURL: String {
-    get {return _storage._documentURL ?? String()}
+    get {_storage._documentURL ?? String()}
     set {_uniqueStorage()._documentURL = newValue}
   }
   /// Returns true if `documentURL` has been explicitly set.
-  public var hasDocumentURL: Bool {return _storage._documentURL != nil}
+  public var hasDocumentURL: Bool {_storage._documentURL != nil}
   /// Clears the value of `documentURL`. Subsequent reads from it will return its default value.
   public mutating func clearDocumentURL() {_uniqueStorage()._documentURL = nil}
 
   public var japanese: String {
-    get {return _storage._japanese ?? String()}
+    get {_storage._japanese ?? String()}
     set {_uniqueStorage()._japanese = newValue}
   }
   /// Returns true if `japanese` has been explicitly set.
-  public var hasJapanese: Bool {return _storage._japanese != nil}
+  public var hasJapanese: Bool {_storage._japanese != nil}
   /// Clears the value of `japanese`. Subsequent reads from it will return its default value.
   public mutating func clearJapanese() {_uniqueStorage()._japanese = nil}
 
   /// Does not apply to radicals or kana vocabulary.
   public var readings: [TKMReading] {
-    get {return _storage._readings}
+    get {_storage._readings}
     set {_uniqueStorage()._readings = newValue}
   }
 
   public var meanings: [TKMMeaning] {
-    get {return _storage._meanings}
+    get {_storage._meanings}
     set {_uniqueStorage()._meanings = newValue}
   }
 
   /// Does not apply to radicals.
   public var componentSubjectIds: [Int64] {
-    get {return _storage._componentSubjectIds}
+    get {_storage._componentSubjectIds}
     set {_uniqueStorage()._componentSubjectIds = newValue}
   }
 
   /// Does not apply to vocabulary or kana vocabulary.
   public var amalgamationSubjectIds: [Int64] {
-    get {return _storage._amalgamationSubjectIds}
+    get {_storage._amalgamationSubjectIds}
     set {_uniqueStorage()._amalgamationSubjectIds = newValue}
   }
 
   public var radical: TKMRadical {
-    get {return _storage._radical ?? TKMRadical()}
+    get {_storage._radical ?? TKMRadical()}
     set {_uniqueStorage()._radical = newValue}
   }
   /// Returns true if `radical` has been explicitly set.
-  public var hasRadical: Bool {return _storage._radical != nil}
+  public var hasRadical: Bool {_storage._radical != nil}
   /// Clears the value of `radical`. Subsequent reads from it will return its default value.
   public mutating func clearRadical() {_uniqueStorage()._radical = nil}
 
   public var kanji: TKMKanji {
-    get {return _storage._kanji ?? TKMKanji()}
+    get {_storage._kanji ?? TKMKanji()}
     set {_uniqueStorage()._kanji = newValue}
   }
   /// Returns true if `kanji` has been explicitly set.
-  public var hasKanji: Bool {return _storage._kanji != nil}
+  public var hasKanji: Bool {_storage._kanji != nil}
   /// Clears the value of `kanji`. Subsequent reads from it will return its default value.
   public mutating func clearKanji() {_uniqueStorage()._kanji = nil}
 
   public var vocabulary: TKMVocabulary {
-    get {return _storage._vocabulary ?? TKMVocabulary()}
+    get {_storage._vocabulary ?? TKMVocabulary()}
     set {_uniqueStorage()._vocabulary = newValue}
   }
   /// Returns true if `vocabulary` has been explicitly set.
-  public var hasVocabulary: Bool {return _storage._vocabulary != nil}
+  public var hasVocabulary: Bool {_storage._vocabulary != nil}
   /// Clears the value of `vocabulary`. Subsequent reads from it will return its default value.
   public mutating func clearVocabulary() {_uniqueStorage()._vocabulary = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public enum TypeEnum: SwiftProtobuf.Enum, Swift.CaseIterable {
+  public nonisolated enum TypeEnum: SwiftProtobuf.Enum, Swift.CaseIterable {
     public typealias RawValue = Int
     case unknown // = 0
     case radical // = 1
@@ -690,100 +690,100 @@ public struct TKMSubject: @unchecked Sendable {
   fileprivate var _storage = _StorageClass.defaultInstance
 }
 
-public struct TKMAssignment: Sendable {
+public nonisolated struct TKMAssignment: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var id: Int64 {
-    get {return _id ?? 0}
+    get {_id ?? 0}
     set {_id = newValue}
   }
   /// Returns true if `id` has been explicitly set.
-  public var hasID: Bool {return self._id != nil}
+  public var hasID: Bool {self._id != nil}
   /// Clears the value of `id`. Subsequent reads from it will return its default value.
   public mutating func clearID() {self._id = nil}
 
   public var level: Int32 {
-    get {return _level ?? 0}
+    get {_level ?? 0}
     set {_level = newValue}
   }
   /// Returns true if `level` has been explicitly set.
-  public var hasLevel: Bool {return self._level != nil}
+  public var hasLevel: Bool {self._level != nil}
   /// Clears the value of `level`. Subsequent reads from it will return its default value.
   public mutating func clearLevel() {self._level = nil}
 
   public var subjectID: Int64 {
-    get {return _subjectID ?? 0}
+    get {_subjectID ?? 0}
     set {_subjectID = newValue}
   }
   /// Returns true if `subjectID` has been explicitly set.
-  public var hasSubjectID: Bool {return self._subjectID != nil}
+  public var hasSubjectID: Bool {self._subjectID != nil}
   /// Clears the value of `subjectID`. Subsequent reads from it will return its default value.
   public mutating func clearSubjectID() {self._subjectID = nil}
 
   public var subjectType: TKMSubject.TypeEnum {
-    get {return _subjectType ?? .unknown}
+    get {_subjectType ?? .unknown}
     set {_subjectType = newValue}
   }
   /// Returns true if `subjectType` has been explicitly set.
-  public var hasSubjectType: Bool {return self._subjectType != nil}
+  public var hasSubjectType: Bool {self._subjectType != nil}
   /// Clears the value of `subjectType`. Subsequent reads from it will return its default value.
   public mutating func clearSubjectType() {self._subjectType = nil}
 
   public var availableAt: Int32 {
-    get {return _availableAt ?? 0}
+    get {_availableAt ?? 0}
     set {_availableAt = newValue}
   }
   /// Returns true if `availableAt` has been explicitly set.
-  public var hasAvailableAt: Bool {return self._availableAt != nil}
+  public var hasAvailableAt: Bool {self._availableAt != nil}
   /// Clears the value of `availableAt`. Subsequent reads from it will return its default value.
   public mutating func clearAvailableAt() {self._availableAt = nil}
 
   public var startedAt: Int32 {
-    get {return _startedAt ?? 0}
+    get {_startedAt ?? 0}
     set {_startedAt = newValue}
   }
   /// Returns true if `startedAt` has been explicitly set.
-  public var hasStartedAt: Bool {return self._startedAt != nil}
+  public var hasStartedAt: Bool {self._startedAt != nil}
   /// Clears the value of `startedAt`. Subsequent reads from it will return its default value.
   public mutating func clearStartedAt() {self._startedAt = nil}
 
   public var srsStageNumber: Int32 {
-    get {return _srsStageNumber ?? 0}
+    get {_srsStageNumber ?? 0}
     set {_srsStageNumber = newValue}
   }
   /// Returns true if `srsStageNumber` has been explicitly set.
-  public var hasSrsStageNumber: Bool {return self._srsStageNumber != nil}
+  public var hasSrsStageNumber: Bool {self._srsStageNumber != nil}
   /// Clears the value of `srsStageNumber`. Subsequent reads from it will return its default value.
   public mutating func clearSrsStageNumber() {self._srsStageNumber = nil}
 
   public var passedAt: Int32 {
-    get {return _passedAt ?? 0}
+    get {_passedAt ?? 0}
     set {_passedAt = newValue}
   }
   /// Returns true if `passedAt` has been explicitly set.
-  public var hasPassedAt: Bool {return self._passedAt != nil}
+  public var hasPassedAt: Bool {self._passedAt != nil}
   /// Clears the value of `passedAt`. Subsequent reads from it will return its default value.
   public mutating func clearPassedAt() {self._passedAt = nil}
 
   public var burnedAt: Int32 {
-    get {return _burnedAt ?? 0}
+    get {_burnedAt ?? 0}
     set {_burnedAt = newValue}
   }
   /// Returns true if `burnedAt` has been explicitly set.
-  public var hasBurnedAt: Bool {return self._burnedAt != nil}
+  public var hasBurnedAt: Bool {self._burnedAt != nil}
   /// Clears the value of `burnedAt`. Subsequent reads from it will return its default value.
   public mutating func clearBurnedAt() {self._burnedAt = nil}
 
   /// Kana-only vocab shares the VOCABULARY subject_type, but we still want to be
   /// able to filter them out if the user wants to.
   public var isKanaOnlyVocab: Bool {
-    get {return _isKanaOnlyVocab ?? false}
+    get {_isKanaOnlyVocab ?? false}
     set {_isKanaOnlyVocab = newValue}
   }
   /// Returns true if `isKanaOnlyVocab` has been explicitly set.
-  public var hasIsKanaOnlyVocab: Bool {return self._isKanaOnlyVocab != nil}
+  public var hasIsKanaOnlyVocab: Bool {self._isKanaOnlyVocab != nil}
   /// Clears the value of `isKanaOnlyVocab`. Subsequent reads from it will return its default value.
   public mutating func clearIsKanaOnlyVocab() {self._isKanaOnlyVocab = nil}
 
@@ -803,71 +803,71 @@ public struct TKMAssignment: Sendable {
   fileprivate var _isKanaOnlyVocab: Bool? = nil
 }
 
-public struct TKMProgress: Sendable {
+public nonisolated struct TKMProgress: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var meaningWrong: Bool {
-    get {return _meaningWrong ?? false}
+    get {_meaningWrong ?? false}
     set {_meaningWrong = newValue}
   }
   /// Returns true if `meaningWrong` has been explicitly set.
-  public var hasMeaningWrong: Bool {return self._meaningWrong != nil}
+  public var hasMeaningWrong: Bool {self._meaningWrong != nil}
   /// Clears the value of `meaningWrong`. Subsequent reads from it will return its default value.
   public mutating func clearMeaningWrong() {self._meaningWrong = nil}
 
   public var readingWrong: Bool {
-    get {return _readingWrong ?? false}
+    get {_readingWrong ?? false}
     set {_readingWrong = newValue}
   }
   /// Returns true if `readingWrong` has been explicitly set.
-  public var hasReadingWrong: Bool {return self._readingWrong != nil}
+  public var hasReadingWrong: Bool {self._readingWrong != nil}
   /// Clears the value of `readingWrong`. Subsequent reads from it will return its default value.
   public mutating func clearReadingWrong() {self._readingWrong = nil}
 
   public var isLesson: Bool {
-    get {return _isLesson ?? false}
+    get {_isLesson ?? false}
     set {_isLesson = newValue}
   }
   /// Returns true if `isLesson` has been explicitly set.
-  public var hasIsLesson: Bool {return self._isLesson != nil}
+  public var hasIsLesson: Bool {self._isLesson != nil}
   /// Clears the value of `isLesson`. Subsequent reads from it will return its default value.
   public mutating func clearIsLesson() {self._isLesson = nil}
 
   public var assignment: TKMAssignment {
-    get {return _assignment ?? TKMAssignment()}
+    get {_assignment ?? TKMAssignment()}
     set {_assignment = newValue}
   }
   /// Returns true if `assignment` has been explicitly set.
-  public var hasAssignment: Bool {return self._assignment != nil}
+  public var hasAssignment: Bool {self._assignment != nil}
   /// Clears the value of `assignment`. Subsequent reads from it will return its default value.
   public mutating func clearAssignment() {self._assignment = nil}
 
   public var createdAt: Int32 {
-    get {return _createdAt ?? 0}
+    get {_createdAt ?? 0}
     set {_createdAt = newValue}
   }
   /// Returns true if `createdAt` has been explicitly set.
-  public var hasCreatedAt: Bool {return self._createdAt != nil}
+  public var hasCreatedAt: Bool {self._createdAt != nil}
   /// Clears the value of `createdAt`. Subsequent reads from it will return its default value.
   public mutating func clearCreatedAt() {self._createdAt = nil}
 
   public var meaningWrongCount: Int32 {
-    get {return _meaningWrongCount ?? 0}
+    get {_meaningWrongCount ?? 0}
     set {_meaningWrongCount = newValue}
   }
   /// Returns true if `meaningWrongCount` has been explicitly set.
-  public var hasMeaningWrongCount: Bool {return self._meaningWrongCount != nil}
+  public var hasMeaningWrongCount: Bool {self._meaningWrongCount != nil}
   /// Clears the value of `meaningWrongCount`. Subsequent reads from it will return its default value.
   public mutating func clearMeaningWrongCount() {self._meaningWrongCount = nil}
 
   public var readingWrongCount: Int32 {
-    get {return _readingWrongCount ?? 0}
+    get {_readingWrongCount ?? 0}
     set {_readingWrongCount = newValue}
   }
   /// Returns true if `readingWrongCount` has been explicitly set.
-  public var hasReadingWrongCount: Bool {return self._readingWrongCount != nil}
+  public var hasReadingWrongCount: Bool {self._readingWrongCount != nil}
   /// Clears the value of `readingWrongCount`. Subsequent reads from it will return its default value.
   public mutating func clearReadingWrongCount() {self._readingWrongCount = nil}
 
@@ -884,44 +884,44 @@ public struct TKMProgress: Sendable {
   fileprivate var _readingWrongCount: Int32? = nil
 }
 
-public struct TKMStudyMaterials: Sendable {
+public nonisolated struct TKMStudyMaterials: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var id: Int64 {
-    get {return _id ?? 0}
+    get {_id ?? 0}
     set {_id = newValue}
   }
   /// Returns true if `id` has been explicitly set.
-  public var hasID: Bool {return self._id != nil}
+  public var hasID: Bool {self._id != nil}
   /// Clears the value of `id`. Subsequent reads from it will return its default value.
   public mutating func clearID() {self._id = nil}
 
   public var subjectID: Int64 {
-    get {return _subjectID ?? 0}
+    get {_subjectID ?? 0}
     set {_subjectID = newValue}
   }
   /// Returns true if `subjectID` has been explicitly set.
-  public var hasSubjectID: Bool {return self._subjectID != nil}
+  public var hasSubjectID: Bool {self._subjectID != nil}
   /// Clears the value of `subjectID`. Subsequent reads from it will return its default value.
   public mutating func clearSubjectID() {self._subjectID = nil}
 
   public var meaningNote: String {
-    get {return _meaningNote ?? String()}
+    get {_meaningNote ?? String()}
     set {_meaningNote = newValue}
   }
   /// Returns true if `meaningNote` has been explicitly set.
-  public var hasMeaningNote: Bool {return self._meaningNote != nil}
+  public var hasMeaningNote: Bool {self._meaningNote != nil}
   /// Clears the value of `meaningNote`. Subsequent reads from it will return its default value.
   public mutating func clearMeaningNote() {self._meaningNote = nil}
 
   public var readingNote: String {
-    get {return _readingNote ?? String()}
+    get {_readingNote ?? String()}
     set {_readingNote = newValue}
   }
   /// Returns true if `readingNote` has been explicitly set.
-  public var hasReadingNote: Bool {return self._readingNote != nil}
+  public var hasReadingNote: Bool {self._readingNote != nil}
   /// Clears the value of `readingNote`. Subsequent reads from it will return its default value.
   public mutating func clearReadingNote() {self._readingNote = nil}
 
@@ -937,80 +937,80 @@ public struct TKMStudyMaterials: Sendable {
   fileprivate var _readingNote: String? = nil
 }
 
-public struct TKMUser: Sendable {
+public nonisolated struct TKMUser: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var username: String {
-    get {return _username ?? String()}
+    get {_username ?? String()}
     set {_username = newValue}
   }
   /// Returns true if `username` has been explicitly set.
-  public var hasUsername: Bool {return self._username != nil}
+  public var hasUsername: Bool {self._username != nil}
   /// Clears the value of `username`. Subsequent reads from it will return its default value.
   public mutating func clearUsername() {self._username = nil}
 
   public var level: Int32 {
-    get {return _level ?? 0}
+    get {_level ?? 0}
     set {_level = newValue}
   }
   /// Returns true if `level` has been explicitly set.
-  public var hasLevel: Bool {return self._level != nil}
+  public var hasLevel: Bool {self._level != nil}
   /// Clears the value of `level`. Subsequent reads from it will return its default value.
   public mutating func clearLevel() {self._level = nil}
 
   public var maxLevelGrantedBySubscription: Int32 {
-    get {return _maxLevelGrantedBySubscription ?? 0}
+    get {_maxLevelGrantedBySubscription ?? 0}
     set {_maxLevelGrantedBySubscription = newValue}
   }
   /// Returns true if `maxLevelGrantedBySubscription` has been explicitly set.
-  public var hasMaxLevelGrantedBySubscription: Bool {return self._maxLevelGrantedBySubscription != nil}
+  public var hasMaxLevelGrantedBySubscription: Bool {self._maxLevelGrantedBySubscription != nil}
   /// Clears the value of `maxLevelGrantedBySubscription`. Subsequent reads from it will return its default value.
   public mutating func clearMaxLevelGrantedBySubscription() {self._maxLevelGrantedBySubscription = nil}
 
   public var profileURL: String {
-    get {return _profileURL ?? String()}
+    get {_profileURL ?? String()}
     set {_profileURL = newValue}
   }
   /// Returns true if `profileURL` has been explicitly set.
-  public var hasProfileURL: Bool {return self._profileURL != nil}
+  public var hasProfileURL: Bool {self._profileURL != nil}
   /// Clears the value of `profileURL`. Subsequent reads from it will return its default value.
   public mutating func clearProfileURL() {self._profileURL = nil}
 
   public var startedAt: Int32 {
-    get {return _startedAt ?? 0}
+    get {_startedAt ?? 0}
     set {_startedAt = newValue}
   }
   /// Returns true if `startedAt` has been explicitly set.
-  public var hasStartedAt: Bool {return self._startedAt != nil}
+  public var hasStartedAt: Bool {self._startedAt != nil}
   /// Clears the value of `startedAt`. Subsequent reads from it will return its default value.
   public mutating func clearStartedAt() {self._startedAt = nil}
 
   public var subscribed: Bool {
-    get {return _subscribed ?? false}
+    get {_subscribed ?? false}
     set {_subscribed = newValue}
   }
   /// Returns true if `subscribed` has been explicitly set.
-  public var hasSubscribed: Bool {return self._subscribed != nil}
+  public var hasSubscribed: Bool {self._subscribed != nil}
   /// Clears the value of `subscribed`. Subsequent reads from it will return its default value.
   public mutating func clearSubscribed() {self._subscribed = nil}
 
   public var subscriptionEndsAt: Int32 {
-    get {return _subscriptionEndsAt ?? 0}
+    get {_subscriptionEndsAt ?? 0}
     set {_subscriptionEndsAt = newValue}
   }
   /// Returns true if `subscriptionEndsAt` has been explicitly set.
-  public var hasSubscriptionEndsAt: Bool {return self._subscriptionEndsAt != nil}
+  public var hasSubscriptionEndsAt: Bool {self._subscriptionEndsAt != nil}
   /// Clears the value of `subscriptionEndsAt`. Subsequent reads from it will return its default value.
   public mutating func clearSubscriptionEndsAt() {self._subscriptionEndsAt = nil}
 
   public var vacationStartedAt: Int32 {
-    get {return _vacationStartedAt ?? 0}
+    get {_vacationStartedAt ?? 0}
     set {_vacationStartedAt = newValue}
   }
   /// Returns true if `vacationStartedAt` has been explicitly set.
-  public var hasVacationStartedAt: Bool {return self._vacationStartedAt != nil}
+  public var hasVacationStartedAt: Bool {self._vacationStartedAt != nil}
   /// Clears the value of `vacationStartedAt`. Subsequent reads from it will return its default value.
   public mutating func clearVacationStartedAt() {self._vacationStartedAt = nil}
 
@@ -1028,7 +1028,7 @@ public struct TKMUser: Sendable {
   fileprivate var _vacationStartedAt: Int32? = nil
 }
 
-public struct TKMFormattedText: Sendable {
+public nonisolated struct TKMFormattedText: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1036,26 +1036,26 @@ public struct TKMFormattedText: Sendable {
   public var format: [TKMFormattedText.Format] = []
 
   public var text: String {
-    get {return _text ?? String()}
+    get {_text ?? String()}
     set {_text = newValue}
   }
   /// Returns true if `text` has been explicitly set.
-  public var hasText: Bool {return self._text != nil}
+  public var hasText: Bool {self._text != nil}
   /// Clears the value of `text`. Subsequent reads from it will return its default value.
   public mutating func clearText() {self._text = nil}
 
   public var linkURL: String {
-    get {return _linkURL ?? String()}
+    get {_linkURL ?? String()}
     set {_linkURL = newValue}
   }
   /// Returns true if `linkURL` has been explicitly set.
-  public var hasLinkURL: Bool {return self._linkURL != nil}
+  public var hasLinkURL: Bool {self._linkURL != nil}
   /// Clears the value of `linkURL`. Subsequent reads from it will return its default value.
   public mutating func clearLinkURL() {self._linkURL = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public enum Format: SwiftProtobuf.Enum, Swift.CaseIterable {
+  public nonisolated enum Format: SwiftProtobuf.Enum, Swift.CaseIterable {
     public typealias RawValue = Int
     case unknown // = 0
     case radical // = 1
@@ -1141,7 +1141,7 @@ public struct TKMFormattedText: Sendable {
   fileprivate var _linkURL: String? = nil
 }
 
-public struct TKMDataFileHeader: Sendable {
+public nonisolated struct TKMDataFileHeader: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1164,7 +1164,7 @@ public struct TKMDataFileHeader: Sendable {
   public init() {}
 }
 
-public struct TKMSubjectsByLevel: Sendable {
+public nonisolated struct TKMSubjectsByLevel: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1180,80 +1180,80 @@ public struct TKMSubjectsByLevel: Sendable {
   public init() {}
 }
 
-public struct TKMLevel: Sendable {
+public nonisolated struct TKMLevel: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var id: Int64 {
-    get {return _id ?? 0}
+    get {_id ?? 0}
     set {_id = newValue}
   }
   /// Returns true if `id` has been explicitly set.
-  public var hasID: Bool {return self._id != nil}
+  public var hasID: Bool {self._id != nil}
   /// Clears the value of `id`. Subsequent reads from it will return its default value.
   public mutating func clearID() {self._id = nil}
 
   public var level: Int32 {
-    get {return _level ?? 0}
+    get {_level ?? 0}
     set {_level = newValue}
   }
   /// Returns true if `level` has been explicitly set.
-  public var hasLevel: Bool {return self._level != nil}
+  public var hasLevel: Bool {self._level != nil}
   /// Clears the value of `level`. Subsequent reads from it will return its default value.
   public mutating func clearLevel() {self._level = nil}
 
   public var abandonedAt: Int32 {
-    get {return _abandonedAt ?? 0}
+    get {_abandonedAt ?? 0}
     set {_abandonedAt = newValue}
   }
   /// Returns true if `abandonedAt` has been explicitly set.
-  public var hasAbandonedAt: Bool {return self._abandonedAt != nil}
+  public var hasAbandonedAt: Bool {self._abandonedAt != nil}
   /// Clears the value of `abandonedAt`. Subsequent reads from it will return its default value.
   public mutating func clearAbandonedAt() {self._abandonedAt = nil}
 
   public var completedAt: Int32 {
-    get {return _completedAt ?? 0}
+    get {_completedAt ?? 0}
     set {_completedAt = newValue}
   }
   /// Returns true if `completedAt` has been explicitly set.
-  public var hasCompletedAt: Bool {return self._completedAt != nil}
+  public var hasCompletedAt: Bool {self._completedAt != nil}
   /// Clears the value of `completedAt`. Subsequent reads from it will return its default value.
   public mutating func clearCompletedAt() {self._completedAt = nil}
 
   public var createdAt: Int32 {
-    get {return _createdAt ?? 0}
+    get {_createdAt ?? 0}
     set {_createdAt = newValue}
   }
   /// Returns true if `createdAt` has been explicitly set.
-  public var hasCreatedAt: Bool {return self._createdAt != nil}
+  public var hasCreatedAt: Bool {self._createdAt != nil}
   /// Clears the value of `createdAt`. Subsequent reads from it will return its default value.
   public mutating func clearCreatedAt() {self._createdAt = nil}
 
   public var passedAt: Int32 {
-    get {return _passedAt ?? 0}
+    get {_passedAt ?? 0}
     set {_passedAt = newValue}
   }
   /// Returns true if `passedAt` has been explicitly set.
-  public var hasPassedAt: Bool {return self._passedAt != nil}
+  public var hasPassedAt: Bool {self._passedAt != nil}
   /// Clears the value of `passedAt`. Subsequent reads from it will return its default value.
   public mutating func clearPassedAt() {self._passedAt = nil}
 
   public var startedAt: Int32 {
-    get {return _startedAt ?? 0}
+    get {_startedAt ?? 0}
     set {_startedAt = newValue}
   }
   /// Returns true if `startedAt` has been explicitly set.
-  public var hasStartedAt: Bool {return self._startedAt != nil}
+  public var hasStartedAt: Bool {self._startedAt != nil}
   /// Clears the value of `startedAt`. Subsequent reads from it will return its default value.
   public mutating func clearStartedAt() {self._startedAt = nil}
 
   public var unlockedAt: Int32 {
-    get {return _unlockedAt ?? 0}
+    get {_unlockedAt ?? 0}
     set {_unlockedAt = newValue}
   }
   /// Returns true if `unlockedAt` has been explicitly set.
-  public var hasUnlockedAt: Bool {return self._unlockedAt != nil}
+  public var hasUnlockedAt: Bool {self._unlockedAt != nil}
   /// Clears the value of `unlockedAt`. Subsequent reads from it will return its default value.
   public mutating func clearUnlockedAt() {self._unlockedAt = nil}
 
@@ -1271,7 +1271,7 @@ public struct TKMLevel: Sendable {
   fileprivate var _unlockedAt: Int32? = nil
 }
 
-public struct TKMDeprecatedMnemonicFile: Sendable {
+public nonisolated struct TKMDeprecatedMnemonicFile: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1280,17 +1280,17 @@ public struct TKMDeprecatedMnemonicFile: Sendable {
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public struct Subject: Sendable {
+  public nonisolated struct Subject: Sendable {
     // SwiftProtobuf.Message conformance is added in an extension below. See the
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
     public var id: Int32 {
-      get {return _id ?? 0}
+      get {_id ?? 0}
       set {_id = newValue}
     }
     /// Returns true if `id` has been explicitly set.
-    public var hasID: Bool {return self._id != nil}
+    public var hasID: Bool {self._id != nil}
     /// Clears the value of `id`. Subsequent reads from it will return its default value.
     public mutating func clearID() {self._id = nil}
 
@@ -1306,50 +1306,50 @@ public struct TKMDeprecatedMnemonicFile: Sendable {
   public init() {}
 }
 
-public struct TKMVoiceActor: Sendable {
+public nonisolated struct TKMVoiceActor: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var id: Int64 {
-    get {return _id ?? 0}
+    get {_id ?? 0}
     set {_id = newValue}
   }
   /// Returns true if `id` has been explicitly set.
-  public var hasID: Bool {return self._id != nil}
+  public var hasID: Bool {self._id != nil}
   /// Clears the value of `id`. Subsequent reads from it will return its default value.
   public mutating func clearID() {self._id = nil}
 
   public var gender: TKMVoiceActor.Gender {
-    get {return _gender ?? .unknown}
+    get {_gender ?? .unknown}
     set {_gender = newValue}
   }
   /// Returns true if `gender` has been explicitly set.
-  public var hasGender: Bool {return self._gender != nil}
+  public var hasGender: Bool {self._gender != nil}
   /// Clears the value of `gender`. Subsequent reads from it will return its default value.
   public mutating func clearGender() {self._gender = nil}
 
   public var name: String {
-    get {return _name ?? String()}
+    get {_name ?? String()}
     set {_name = newValue}
   }
   /// Returns true if `name` has been explicitly set.
-  public var hasName: Bool {return self._name != nil}
+  public var hasName: Bool {self._name != nil}
   /// Clears the value of `name`. Subsequent reads from it will return its default value.
   public mutating func clearName() {self._name = nil}
 
   public var description_p: String {
-    get {return _description_p ?? String()}
+    get {_description_p ?? String()}
     set {_description_p = newValue}
   }
   /// Returns true if `description_p` has been explicitly set.
-  public var hasDescription_p: Bool {return self._description_p != nil}
+  public var hasDescription_p: Bool {self._description_p != nil}
   /// Clears the value of `description_p`. Subsequent reads from it will return its default value.
   public mutating func clearDescription_p() {self._description_p = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public enum Gender: SwiftProtobuf.Enum, Swift.CaseIterable {
+  public nonisolated enum Gender: SwiftProtobuf.Enum, Swift.CaseIterable {
     public typealias RawValue = Int
     case unknown // = 0
     case male // = 1
@@ -1395,140 +1395,140 @@ public struct TKMVoiceActor: Sendable {
   fileprivate var _description_p: String? = nil
 }
 
-public struct TKMReviewStatistic: Sendable {
+public nonisolated struct TKMReviewStatistic: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   public var id: Int64 {
-    get {return _id ?? 0}
+    get {_id ?? 0}
     set {_id = newValue}
   }
   /// Returns true if `id` has been explicitly set.
-  public var hasID: Bool {return self._id != nil}
+  public var hasID: Bool {self._id != nil}
   /// Clears the value of `id`. Subsequent reads from it will return its default value.
   public mutating func clearID() {self._id = nil}
 
   public var subjectID: Int64 {
-    get {return _subjectID ?? 0}
+    get {_subjectID ?? 0}
     set {_subjectID = newValue}
   }
   /// Returns true if `subjectID` has been explicitly set.
-  public var hasSubjectID: Bool {return self._subjectID != nil}
+  public var hasSubjectID: Bool {self._subjectID != nil}
   /// Clears the value of `subjectID`. Subsequent reads from it will return its default value.
   public mutating func clearSubjectID() {self._subjectID = nil}
 
   public var createdAt: Int32 {
-    get {return _createdAt ?? 0}
+    get {_createdAt ?? 0}
     set {_createdAt = newValue}
   }
   /// Returns true if `createdAt` has been explicitly set.
-  public var hasCreatedAt: Bool {return self._createdAt != nil}
+  public var hasCreatedAt: Bool {self._createdAt != nil}
   /// Clears the value of `createdAt`. Subsequent reads from it will return its default value.
   public mutating func clearCreatedAt() {self._createdAt = nil}
 
   public var type: TKMReviewStatistic.TypeEnum {
-    get {return _type ?? .unknown}
+    get {_type ?? .unknown}
     set {_type = newValue}
   }
   /// Returns true if `type` has been explicitly set.
-  public var hasType: Bool {return self._type != nil}
+  public var hasType: Bool {self._type != nil}
   /// Clears the value of `type`. Subsequent reads from it will return its default value.
   public mutating func clearType() {self._type = nil}
 
   public var meaningCorrect: Int32 {
-    get {return _meaningCorrect ?? 0}
+    get {_meaningCorrect ?? 0}
     set {_meaningCorrect = newValue}
   }
   /// Returns true if `meaningCorrect` has been explicitly set.
-  public var hasMeaningCorrect: Bool {return self._meaningCorrect != nil}
+  public var hasMeaningCorrect: Bool {self._meaningCorrect != nil}
   /// Clears the value of `meaningCorrect`. Subsequent reads from it will return its default value.
   public mutating func clearMeaningCorrect() {self._meaningCorrect = nil}
 
   public var meaningIncorrect: Int32 {
-    get {return _meaningIncorrect ?? 0}
+    get {_meaningIncorrect ?? 0}
     set {_meaningIncorrect = newValue}
   }
   /// Returns true if `meaningIncorrect` has been explicitly set.
-  public var hasMeaningIncorrect: Bool {return self._meaningIncorrect != nil}
+  public var hasMeaningIncorrect: Bool {self._meaningIncorrect != nil}
   /// Clears the value of `meaningIncorrect`. Subsequent reads from it will return its default value.
   public mutating func clearMeaningIncorrect() {self._meaningIncorrect = nil}
 
   public var meaningMaxStreak: Int32 {
-    get {return _meaningMaxStreak ?? 0}
+    get {_meaningMaxStreak ?? 0}
     set {_meaningMaxStreak = newValue}
   }
   /// Returns true if `meaningMaxStreak` has been explicitly set.
-  public var hasMeaningMaxStreak: Bool {return self._meaningMaxStreak != nil}
+  public var hasMeaningMaxStreak: Bool {self._meaningMaxStreak != nil}
   /// Clears the value of `meaningMaxStreak`. Subsequent reads from it will return its default value.
   public mutating func clearMeaningMaxStreak() {self._meaningMaxStreak = nil}
 
   public var meaningCurrentStreak: Int32 {
-    get {return _meaningCurrentStreak ?? 0}
+    get {_meaningCurrentStreak ?? 0}
     set {_meaningCurrentStreak = newValue}
   }
   /// Returns true if `meaningCurrentStreak` has been explicitly set.
-  public var hasMeaningCurrentStreak: Bool {return self._meaningCurrentStreak != nil}
+  public var hasMeaningCurrentStreak: Bool {self._meaningCurrentStreak != nil}
   /// Clears the value of `meaningCurrentStreak`. Subsequent reads from it will return its default value.
   public mutating func clearMeaningCurrentStreak() {self._meaningCurrentStreak = nil}
 
   public var readingCorrect: Int32 {
-    get {return _readingCorrect ?? 0}
+    get {_readingCorrect ?? 0}
     set {_readingCorrect = newValue}
   }
   /// Returns true if `readingCorrect` has been explicitly set.
-  public var hasReadingCorrect: Bool {return self._readingCorrect != nil}
+  public var hasReadingCorrect: Bool {self._readingCorrect != nil}
   /// Clears the value of `readingCorrect`. Subsequent reads from it will return its default value.
   public mutating func clearReadingCorrect() {self._readingCorrect = nil}
 
   public var readingIncorrect: Int32 {
-    get {return _readingIncorrect ?? 0}
+    get {_readingIncorrect ?? 0}
     set {_readingIncorrect = newValue}
   }
   /// Returns true if `readingIncorrect` has been explicitly set.
-  public var hasReadingIncorrect: Bool {return self._readingIncorrect != nil}
+  public var hasReadingIncorrect: Bool {self._readingIncorrect != nil}
   /// Clears the value of `readingIncorrect`. Subsequent reads from it will return its default value.
   public mutating func clearReadingIncorrect() {self._readingIncorrect = nil}
 
   public var readingMaxStreak: Int32 {
-    get {return _readingMaxStreak ?? 0}
+    get {_readingMaxStreak ?? 0}
     set {_readingMaxStreak = newValue}
   }
   /// Returns true if `readingMaxStreak` has been explicitly set.
-  public var hasReadingMaxStreak: Bool {return self._readingMaxStreak != nil}
+  public var hasReadingMaxStreak: Bool {self._readingMaxStreak != nil}
   /// Clears the value of `readingMaxStreak`. Subsequent reads from it will return its default value.
   public mutating func clearReadingMaxStreak() {self._readingMaxStreak = nil}
 
   public var readingCurrentStreak: Int32 {
-    get {return _readingCurrentStreak ?? 0}
+    get {_readingCurrentStreak ?? 0}
     set {_readingCurrentStreak = newValue}
   }
   /// Returns true if `readingCurrentStreak` has been explicitly set.
-  public var hasReadingCurrentStreak: Bool {return self._readingCurrentStreak != nil}
+  public var hasReadingCurrentStreak: Bool {self._readingCurrentStreak != nil}
   /// Clears the value of `readingCurrentStreak`. Subsequent reads from it will return its default value.
   public mutating func clearReadingCurrentStreak() {self._readingCurrentStreak = nil}
 
   public var percentageCorrect: Int32 {
-    get {return _percentageCorrect ?? 0}
+    get {_percentageCorrect ?? 0}
     set {_percentageCorrect = newValue}
   }
   /// Returns true if `percentageCorrect` has been explicitly set.
-  public var hasPercentageCorrect: Bool {return self._percentageCorrect != nil}
+  public var hasPercentageCorrect: Bool {self._percentageCorrect != nil}
   /// Clears the value of `percentageCorrect`. Subsequent reads from it will return its default value.
   public mutating func clearPercentageCorrect() {self._percentageCorrect = nil}
 
   public var hidden: Bool {
-    get {return _hidden ?? false}
+    get {_hidden ?? false}
     set {_hidden = newValue}
   }
   /// Returns true if `hidden` has been explicitly set.
-  public var hasHidden: Bool {return self._hidden != nil}
+  public var hasHidden: Bool {self._hidden != nil}
   /// Clears the value of `hidden`. Subsequent reads from it will return its default value.
   public mutating func clearHidden() {self._hidden = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  public enum TypeEnum: SwiftProtobuf.Enum, Swift.CaseIterable {
+  public nonisolated enum TypeEnum: SwiftProtobuf.Enum, Swift.CaseIterable {
     public typealias RawValue = Int
     case unknown // = 0
     case radical // = 1
@@ -1590,14 +1590,11 @@ public struct TKMReviewStatistic: Sendable {
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "proto"
+fileprivate nonisolated let _protobuf_package = "proto"
 
-extension TKMMeaning: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMMeaning: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Meaning"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "meaning"),
-    3: .same(proto: "type"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}meaning\0\u{2}\u{2}type\0\u{c}\u{2}\u{1}")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -1634,23 +1631,13 @@ extension TKMMeaning: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   }
 }
 
-extension TKMMeaning.TypeEnum: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "UNKNOWN"),
-    1: .same(proto: "PRIMARY"),
-    2: .same(proto: "SECONDARY"),
-    3: .same(proto: "AUXILIARY_WHITELIST"),
-    4: .same(proto: "BLACKLIST"),
-  ]
+nonisolated extension TKMMeaning.TypeEnum: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{2}\0UNKNOWN\0\u{1}PRIMARY\0\u{1}SECONDARY\0\u{1}AUXILIARY_WHITELIST\0\u{1}BLACKLIST\0")
 }
 
-extension TKMReading: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMReading: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Reading"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "reading"),
-    2: .standard(proto: "is_primary"),
-    3: .same(proto: "type"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}reading\0\u{3}is_primary\0\u{1}type\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -1692,23 +1679,13 @@ extension TKMReading: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   }
 }
 
-extension TKMReading.TypeEnum: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "UNKNOWN"),
-    1: .same(proto: "ONYOMI"),
-    2: .same(proto: "KUNYOMI"),
-    3: .same(proto: "NANORI"),
-  ]
+nonisolated extension TKMReading.TypeEnum: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{2}\0UNKNOWN\0\u{1}ONYOMI\0\u{1}KUNYOMI\0\u{1}NANORI\0")
 }
 
-extension TKMRadical: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMRadical: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Radical"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "character_image"),
-    2: .same(proto: "mnemonic"),
-    5: .standard(proto: "deprecated_mnemonic"),
-    3: .standard(proto: "has_character_image_file"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{3}character_image\0\u{1}mnemonic\0\u{3}has_character_image_file\0\u{4}\u{2}deprecated_mnemonic\0\u{c}\u{4}\u{1}\u{c}\u{6}\u{1}")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -1755,16 +1732,9 @@ extension TKMRadical: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   }
 }
 
-extension TKMKanji: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMKanji: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Kanji"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "meaning_mnemonic"),
-    2: .standard(proto: "meaning_hint"),
-    3: .standard(proto: "reading_mnemonic"),
-    4: .standard(proto: "reading_hint"),
-    10: .standard(proto: "visually_similar_kanji"),
-    11: .standard(proto: "visually_similar_kanji_ids"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{3}meaning_mnemonic\0\u{3}meaning_hint\0\u{3}reading_mnemonic\0\u{3}reading_hint\0\u{4}\u{6}visually_similar_kanji\0\u{3}visually_similar_kanji_ids\0\u{c}\u{5}\u{1}\u{c}\u{6}\u{1}\u{c}\u{7}\u{1}\u{c}\u{8}\u{1}\u{c}\u{9}\u{1}")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -1821,15 +1791,9 @@ extension TKMKanji: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   }
 }
 
-extension TKMVocabulary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMVocabulary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Vocabulary"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "meaning_explanation"),
-    2: .standard(proto: "reading_explanation"),
-    3: .same(proto: "sentences"),
-    4: .standard(proto: "parts_of_speech"),
-    8: .same(proto: "audio"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{3}meaning_explanation\0\u{3}reading_explanation\0\u{1}sentences\0\u{3}parts_of_speech\0\u{2}\u{4}audio\0\u{c}\u{5}\u{1}\u{c}\u{6}\u{1}\u{c}\u{7}\u{1}")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -1881,42 +1845,13 @@ extension TKMVocabulary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
   }
 }
 
-extension TKMVocabulary.PartOfSpeech: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "UNKNOWN"),
-    1: .same(proto: "NOUN"),
-    2: .same(proto: "NUMERAL"),
-    3: .same(proto: "INTRANSITIVE_VERB"),
-    4: .same(proto: "ICHIDAN_VERB"),
-    5: .same(proto: "TRANSITIVE_VERB"),
-    6: .same(proto: "NO_ADJECTIVE"),
-    7: .same(proto: "GODAN_VERB"),
-    8: .same(proto: "NA_ADJECTIVE"),
-    9: .same(proto: "I_ADJECTIVE"),
-    10: .same(proto: "SUFFIX"),
-    11: .same(proto: "ADVERB"),
-    12: .same(proto: "SURU_VERB"),
-    13: .same(proto: "PREFIX"),
-    14: .same(proto: "PROPER_NOUN"),
-    15: .same(proto: "EXPRESSION"),
-    16: .same(proto: "ADJECTIVE"),
-    17: .same(proto: "INTERJECTION"),
-    18: .same(proto: "COUNTER"),
-    19: .same(proto: "PRONOUN"),
-    20: .same(proto: "CONJUNCTION"),
-    21: .same(proto: "VERBAL_NOUN"),
-    22: .same(proto: "INDEPENDENT_NOUN"),
-    23: .same(proto: "KOSOADO_WORD"),
-    24: .same(proto: "ONOMATOPOEIA"),
-  ]
+nonisolated extension TKMVocabulary.PartOfSpeech: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{2}\0UNKNOWN\0\u{1}NOUN\0\u{1}NUMERAL\0\u{1}INTRANSITIVE_VERB\0\u{1}ICHIDAN_VERB\0\u{1}TRANSITIVE_VERB\0\u{1}NO_ADJECTIVE\0\u{1}GODAN_VERB\0\u{1}NA_ADJECTIVE\0\u{1}I_ADJECTIVE\0\u{1}SUFFIX\0\u{1}ADVERB\0\u{1}SURU_VERB\0\u{1}PREFIX\0\u{1}PROPER_NOUN\0\u{1}EXPRESSION\0\u{1}ADJECTIVE\0\u{1}INTERJECTION\0\u{1}COUNTER\0\u{1}PRONOUN\0\u{1}CONJUNCTION\0\u{1}VERBAL_NOUN\0\u{1}INDEPENDENT_NOUN\0\u{1}KOSOADO_WORD\0\u{1}ONOMATOPOEIA\0")
 }
 
-extension TKMVocabulary.Sentence: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMVocabulary.Sentence: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = TKMVocabulary.protoMessageName + ".Sentence"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "japanese"),
-    2: .same(proto: "english"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}japanese\0\u{1}english\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -1953,12 +1888,9 @@ extension TKMVocabulary.Sentence: SwiftProtobuf.Message, SwiftProtobuf._MessageI
   }
 }
 
-extension TKMVocabulary.PronunciationAudio: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMVocabulary.PronunciationAudio: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = TKMVocabulary.protoMessageName + ".PronunciationAudio"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "url"),
-    2: .standard(proto: "voice_actor_id"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}url\0\u{3}voice_actor_id\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -1995,22 +1927,9 @@ extension TKMVocabulary.PronunciationAudio: SwiftProtobuf.Message, SwiftProtobuf
   }
 }
 
-extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Subject"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "id"),
-    2: .same(proto: "level"),
-    3: .same(proto: "slug"),
-    4: .standard(proto: "document_url"),
-    5: .same(proto: "japanese"),
-    6: .same(proto: "readings"),
-    7: .same(proto: "meanings"),
-    8: .standard(proto: "component_subject_ids"),
-    12: .standard(proto: "amalgamation_subject_ids"),
-    9: .same(proto: "radical"),
-    10: .same(proto: "kanji"),
-    11: .same(proto: "vocabulary"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}id\0\u{1}level\0\u{1}slug\0\u{3}document_url\0\u{1}japanese\0\u{1}readings\0\u{1}meanings\0\u{3}component_subject_ids\0\u{1}radical\0\u{1}kanji\0\u{1}vocabulary\0\u{3}amalgamation_subject_ids\0")
 
   fileprivate class _StorageClass {
     var _id: Int64? = nil
@@ -2026,15 +1945,11 @@ extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
     var _kanji: TKMKanji? = nil
     var _vocabulary: TKMVocabulary? = nil
 
-    #if swift(>=5.10)
       // This property is used as the initial default value for new instances of the type.
       // The type itself is protecting the reference to its storage via CoW semantics.
       // This will force a copy to be made of this reference when the first mutation occurs;
       // hence, it is safe to mark this as `nonisolated(unsafe)`.
       static nonisolated(unsafe) let defaultInstance = _StorageClass()
-    #else
-      static let defaultInstance = _StorageClass()
-    #endif
 
     private init() {}
 
@@ -2159,29 +2074,13 @@ extension TKMSubject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   }
 }
 
-extension TKMSubject.TypeEnum: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "UNKNOWN"),
-    1: .same(proto: "RADICAL"),
-    2: .same(proto: "KANJI"),
-    3: .same(proto: "VOCABULARY"),
-  ]
+nonisolated extension TKMSubject.TypeEnum: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{2}\0UNKNOWN\0\u{1}RADICAL\0\u{1}KANJI\0\u{1}VOCABULARY\0")
 }
 
-extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Assignment"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "id"),
-    2: .same(proto: "level"),
-    3: .standard(proto: "subject_id"),
-    4: .standard(proto: "subject_type"),
-    5: .standard(proto: "available_at"),
-    6: .standard(proto: "started_at"),
-    7: .standard(proto: "srs_stage_number"),
-    8: .standard(proto: "passed_at"),
-    9: .standard(proto: "burned_at"),
-    10: .standard(proto: "is_kana_only_vocab"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}id\0\u{1}level\0\u{3}subject_id\0\u{3}subject_type\0\u{3}available_at\0\u{3}started_at\0\u{3}srs_stage_number\0\u{3}passed_at\0\u{3}burned_at\0\u{3}is_kana_only_vocab\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2258,17 +2157,9 @@ extension TKMAssignment: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
   }
 }
 
-extension TKMProgress: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMProgress: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Progress"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    3: .standard(proto: "meaning_wrong"),
-    4: .standard(proto: "reading_wrong"),
-    5: .standard(proto: "is_lesson"),
-    6: .same(proto: "assignment"),
-    7: .standard(proto: "created_at"),
-    8: .standard(proto: "meaning_wrong_count"),
-    9: .standard(proto: "reading_wrong_count"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{4}\u{3}meaning_wrong\0\u{3}reading_wrong\0\u{3}is_lesson\0\u{1}assignment\0\u{3}created_at\0\u{3}meaning_wrong_count\0\u{3}reading_wrong_count\0\u{c}\u{1}\u{1}\u{c}\u{2}\u{1}")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2330,15 +2221,9 @@ extension TKMProgress: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
   }
 }
 
-extension TKMStudyMaterials: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMStudyMaterials: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".StudyMaterials"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "id"),
-    2: .standard(proto: "subject_id"),
-    3: .standard(proto: "meaning_note"),
-    4: .standard(proto: "reading_note"),
-    5: .standard(proto: "meaning_synonyms"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}id\0\u{3}subject_id\0\u{3}meaning_note\0\u{3}reading_note\0\u{3}meaning_synonyms\0\u{c}\u{6}\u{1}")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2390,18 +2275,9 @@ extension TKMStudyMaterials: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension TKMUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".User"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "username"),
-    2: .same(proto: "level"),
-    3: .standard(proto: "max_level_granted_by_subscription"),
-    4: .standard(proto: "profile_url"),
-    5: .standard(proto: "started_at"),
-    6: .same(proto: "subscribed"),
-    7: .standard(proto: "subscription_ends_at"),
-    8: .standard(proto: "vacation_started_at"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}username\0\u{1}level\0\u{3}max_level_granted_by_subscription\0\u{3}profile_url\0\u{3}started_at\0\u{1}subscribed\0\u{3}subscription_ends_at\0\u{3}vacation_started_at\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2468,13 +2344,9 @@ extension TKMUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
   }
 }
 
-extension TKMFormattedText: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMFormattedText: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".FormattedText"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "format"),
-    2: .same(proto: "text"),
-    3: .standard(proto: "link_url"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}format\0\u{1}text\0\u{3}link_url\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2516,32 +2388,13 @@ extension TKMFormattedText: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   }
 }
 
-extension TKMFormattedText.Format: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "UNKNOWN"),
-    1: .same(proto: "RADICAL"),
-    2: .same(proto: "KANJI"),
-    3: .same(proto: "JAPANESE"),
-    4: .same(proto: "READING"),
-    5: .same(proto: "VOCABULARY"),
-    6: .same(proto: "ITALIC"),
-    7: .same(proto: "BOLD"),
-    8: .same(proto: "LINK"),
-    9: .same(proto: "APPRENTICE"),
-    10: .same(proto: "GURU"),
-    11: .same(proto: "MASTER"),
-    12: .same(proto: "ENLIGHTENED"),
-  ]
+nonisolated extension TKMFormattedText.Format: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{2}\0UNKNOWN\0\u{1}RADICAL\0\u{1}KANJI\0\u{1}JAPANESE\0\u{1}READING\0\u{1}VOCABULARY\0\u{1}ITALIC\0\u{1}BOLD\0\u{1}LINK\0\u{1}APPRENTICE\0\u{1}GURU\0\u{1}MASTER\0\u{1}ENLIGHTENED\0")
 }
 
-extension TKMDataFileHeader: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMDataFileHeader: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".DataFileHeader"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "subjects_by_level"),
-    4: .standard(proto: "level_by_subject"),
-    3: .standard(proto: "deleted_subject_ids"),
-    2: .standard(proto: "subject_byte_offset"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{3}subjects_by_level\0\u{3}subject_byte_offset\0\u{3}deleted_subject_ids\0\u{3}level_by_subject\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2584,13 +2437,9 @@ extension TKMDataFileHeader: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension TKMSubjectsByLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMSubjectsByLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".SubjectsByLevel"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "radicals"),
-    2: .same(proto: "kanji"),
-    3: .same(proto: "vocabulary"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}radicals\0\u{1}kanji\0\u{1}vocabulary\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2628,18 +2477,9 @@ extension TKMSubjectsByLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
   }
 }
 
-extension TKMLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Level"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "id"),
-    2: .same(proto: "level"),
-    3: .standard(proto: "abandoned_at"),
-    4: .standard(proto: "completed_at"),
-    5: .standard(proto: "created_at"),
-    6: .standard(proto: "passed_at"),
-    7: .standard(proto: "started_at"),
-    8: .standard(proto: "unlocked_at"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}id\0\u{1}level\0\u{3}abandoned_at\0\u{3}completed_at\0\u{3}created_at\0\u{3}passed_at\0\u{3}started_at\0\u{3}unlocked_at\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2706,11 +2546,9 @@ extension TKMLevel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   }
 }
 
-extension TKMDeprecatedMnemonicFile: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMDeprecatedMnemonicFile: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".DeprecatedMnemonicFile"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "subjects"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}subjects\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2738,12 +2576,9 @@ extension TKMDeprecatedMnemonicFile: SwiftProtobuf.Message, SwiftProtobuf._Messa
   }
 }
 
-extension TKMDeprecatedMnemonicFile.Subject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMDeprecatedMnemonicFile.Subject: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = TKMDeprecatedMnemonicFile.protoMessageName + ".Subject"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "id"),
-    2: .standard(proto: "formatted_deprecated_mnemonic"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}id\0\u{3}formatted_deprecated_mnemonic\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2780,14 +2615,9 @@ extension TKMDeprecatedMnemonicFile.Subject: SwiftProtobuf.Message, SwiftProtobu
   }
 }
 
-extension TKMVoiceActor: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMVoiceActor: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".VoiceActor"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "id"),
-    2: .same(proto: "gender"),
-    3: .same(proto: "name"),
-    4: .same(proto: "description"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}id\0\u{1}gender\0\u{1}name\0\u{1}description\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2834,32 +2664,13 @@ extension TKMVoiceActor: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
   }
 }
 
-extension TKMVoiceActor.Gender: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "UNKNOWN"),
-    1: .same(proto: "MALE"),
-    2: .same(proto: "FEMALE"),
-  ]
+nonisolated extension TKMVoiceActor.Gender: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{2}\0UNKNOWN\0\u{1}MALE\0\u{1}FEMALE\0")
 }
 
-extension TKMReviewStatistic: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+nonisolated extension TKMReviewStatistic: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".ReviewStatistic"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "id"),
-    2: .standard(proto: "subject_id"),
-    3: .standard(proto: "created_at"),
-    4: .same(proto: "type"),
-    5: .standard(proto: "meaning_correct"),
-    6: .standard(proto: "meaning_incorrect"),
-    7: .standard(proto: "meaning_max_streak"),
-    8: .standard(proto: "meaning_current_streak"),
-    9: .standard(proto: "reading_correct"),
-    10: .standard(proto: "reading_incorrect"),
-    11: .standard(proto: "reading_max_streak"),
-    12: .standard(proto: "reading_current_streak"),
-    13: .standard(proto: "percentage_correct"),
-    14: .same(proto: "hidden"),
-  ]
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{1}id\0\u{3}subject_id\0\u{3}created_at\0\u{1}type\0\u{3}meaning_correct\0\u{3}meaning_incorrect\0\u{3}meaning_max_streak\0\u{3}meaning_current_streak\0\u{3}reading_correct\0\u{3}reading_incorrect\0\u{3}reading_max_streak\0\u{3}reading_current_streak\0\u{3}percentage_correct\0\u{1}hidden\0")
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
@@ -2956,11 +2767,6 @@ extension TKMReviewStatistic: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
   }
 }
 
-extension TKMReviewStatistic.TypeEnum: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "UNKNOWN"),
-    1: .same(proto: "RADICAL"),
-    2: .same(proto: "KANJI"),
-    3: .same(proto: "VOCABULARY"),
-  ]
+nonisolated extension TKMReviewStatistic.TypeEnum: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{2}\0UNKNOWN\0\u{1}RADICAL\0\u{1}KANJI\0\u{1}VOCABULARY\0")
 }
