@@ -44,6 +44,9 @@ jobs:
           path: pr
           fetch-depth: 1
           persist-credentials: false
+          # actions/checkout refuses to fetch fork code under pull_request_target unless
+          # told to. That is safe here because nothing in pr/ is ever built or run.
+          allow-unsafe-pr-checkout: true
 
       - name: Run Claude Code Review
         id: claude-review
