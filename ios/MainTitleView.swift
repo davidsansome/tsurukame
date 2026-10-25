@@ -75,10 +75,16 @@ class MainTitleView: UIView {
   }
 
   private func updateTopConstraint() {
-    // The -48 top offset pulls the title view up into a standard top navigation bar. When the
-    // navigation bar is placed on a side rail (such as on iPhone Duo) and safeAreaInsets.top is
-    // small, clamp the offset so the header stays at least 16pt below the top edge of the view.
-    topConstraint.constant = max(-48, 16 - safeAreaInsets.top)
+    // When the navigation bar is placed on a side rail (such as on iPhone Duo) and
+    // safeAreaInsets.top
+    // is small (<= 24pt without a top navigation bar), position the header so it sits 16pt below
+    // the top edge of the screen. On standard devices with a top navigation bar (where
+    // safeAreaInsets.top >= 32 in landscape or >= 64 in portrait), keep the original -48pt offset.
+    if safeAreaInsets.top <= 24 {
+      topConstraint.constant = 16 - safeAreaInsets.top
+    } else {
+      topConstraint.constant = -48
+    }
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
