@@ -584,13 +584,11 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
   }
 
-  // The reading strip is ink in light mode but paper in dark mode, so in dark mode the answer
-  // field on it is drawn as it would be on paper in light mode.
   private func updateAnswerFieldStyle() {
     let isReading = session.activeTaskType == .reading
     let isDark = traitCollection.userInterfaceStyle == .dark
-    answerField.isOnInk = isReading && !isDark
-    answerField.overrideUserInterfaceStyle = isReading && isDark ? .light : .unspecified
+    answerField.isOnInk = isReading || isDark
+    answerField.overrideUserInterfaceStyle = .unspecified
     answerField.keyboardAppearance = isDark ? .dark : .default
   }
 
