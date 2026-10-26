@@ -15,6 +15,7 @@
                 <outlet property="imageView" destination="kk8-Qx-bay" id="Mh2-ba-Fcx"/>
                 <outlet property="levelLabel" destination="zDX-hi-ady" id="Qn2-Xd-Wte"/>
                 <outlet property="stackView" destination="SSi-ep-c54" id="DW3-Wk-g9O"/>
+                <outlet property="topConstraint" destination="w1J-iK-tBN" id="tC8-9p-kL2"/>
                 <outlet property="usernameLabel" destination="ypb-Gb-Cnh" id="AkY-7X-K15"/>
             </connections>
         </placeholder>

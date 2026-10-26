@@ -21,6 +21,7 @@ class MainTitleView: UIView {
   @IBOutlet var imageContainer: UIView!
   @IBOutlet var imageView: UIImageView!
 
+  @IBOutlet var topConstraint: NSLayoutConstraint!
   @IBOutlet var bottomConstraint: NSLayoutConstraint!
 
   required init?(coder: NSCoder) {
@@ -64,6 +65,25 @@ class MainTitleView: UIView {
       stackView.distribution = .fill
       bottomConstraint.constant = 6
       setNeedsLayout()
+    }
+    updateTopConstraint()
+  }
+
+  override func safeAreaInsetsDidChange() {
+    super.safeAreaInsetsDidChange()
+    updateTopConstraint()
+  }
+
+  private func updateTopConstraint() {
+    // When the navigation bar is placed on a side rail (such as on iPhone Duo) and
+    // safeAreaInsets.top
+    // is small (<= 24pt without a top navigation bar), position the header so it sits 16pt below
+    // the top edge of the screen. On standard devices with a top navigation bar (where
+    // safeAreaInsets.top >= 32 in landscape or >= 64 in portrait), keep the original -48pt offset.
+    if safeAreaInsets.top <= 24 {
+      topConstraint.constant = 16 - safeAreaInsets.top
+    } else {
+      topConstraint.constant = -48
     }
   }
 
