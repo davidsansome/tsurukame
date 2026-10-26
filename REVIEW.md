@@ -47,4 +47,5 @@ the codebase:
   posting nothing is fine if nothing qualifies.
 - Each comment says what goes wrong and how to trigger it, in two or three
   sentences, with a suggested fix where it's obvious.
-- Be friendly. Many authors are first-time contributors.
+- Keep a neutral voice and stick to the problems found. Don't thank the
+  author, praise the change, or write as if you were a maintainer.
