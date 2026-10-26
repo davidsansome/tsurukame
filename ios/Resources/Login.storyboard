@@ -86,29 +86,34 @@
                                     <constraint firstAttribute="width" constant="240" id="alm-4Y-yRu"/>
                                 </constraints>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CPO-Og-8Rb">
-                                <rect key="frame" x="119.5" y="418.5" width="136" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="Create an API token">
-                                    <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <color key="titleShadowColor" systemColor="labelColor"/>
-                                </state>
-                                <connections>
-                                    <action selector="didTapCreateApiTokenButton:" destination="RE3-Ck-N2j" eventType="touchUpInside" id="XO4-ED-Pmy"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZdY-Fw-RIo">
-                                <rect key="frame" x="104" y="448.5" width="167" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <state key="normal" title="Use email and password">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" systemColor="labelColor"/>
-                                </state>
-                                <connections>
-                                    <action selector="didTapSwapLoginMethods" destination="RE3-Ck-N2j" eventType="touchUpInside" id="zOl-5j-AS0"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="o8C-cK-v19">
+                                <rect key="frame" x="104" y="397.5" width="167" height="68"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CPO-Og-8Rb">
+                                        <rect key="frame" x="15.5" y="0.0" width="136" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Create an API token">
+                                            <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleShadowColor" systemColor="labelColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="didTapCreateApiTokenButton:" destination="RE3-Ck-N2j" eventType="touchUpInside" id="XO4-ED-Pmy"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZdY-Fw-RIo">
+                                        <rect key="frame" x="0.0" y="38" width="167" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" title="Use email and password">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" systemColor="labelColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="didTapSwapLoginMethods" destination="RE3-Ck-N2j" eventType="touchUpInside" id="zOl-5j-AS0"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nzq-PL-tt3">
                                 <rect key="frame" x="145.5" y="623" width="84" height="28"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
@@ -145,20 +150,18 @@
                             <constraint firstItem="Nzq-PL-tt3" firstAttribute="top" secondItem="XQW-gv-i5e" secondAttribute="bottom" id="CFp-Ks-pDH"/>
                             <constraint firstItem="5XY-Jr-SQY" firstAttribute="leading" secondItem="dX7-mn-Kqu" secondAttribute="leading" id="EP2-Ed-FHs"/>
                             <constraint firstItem="5XY-Jr-SQY" firstAttribute="top" secondItem="dX7-mn-Kqu" secondAttribute="top" id="GAv-il-7KY"/>
-                            <constraint firstItem="d7n-s4-OyH" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="HzV-nI-Nph"/>
+                            <constraint firstItem="d7n-s4-OyH" firstAttribute="centerX" secondItem="ALW-Xn-F7M" secondAttribute="centerX" id="HzV-nI-Nph"/>
                             <constraint firstItem="ALW-Xn-F7M" firstAttribute="centerY" secondItem="Rp7-Cm-oWw" secondAttribute="centerY" id="Oih-nr-rVO"/>
                             <constraint firstItem="5XY-Jr-SQY" firstAttribute="bottom" secondItem="dX7-mn-Kqu" secondAttribute="bottom" id="RrX-4Y-sRH"/>
                             <constraint firstItem="ALW-Xn-F7M" firstAttribute="centerX" secondItem="Rp7-Cm-oWw" secondAttribute="centerX" id="S46-jY-dQh"/>
                             <constraint firstItem="Rp7-Cm-oWw" firstAttribute="bottom" secondItem="Nzq-PL-tt3" secondAttribute="bottom" constant="16" id="SXf-im-eLH"/>
                             <constraint firstItem="XQW-gv-i5e" firstAttribute="leading" secondItem="Rp7-Cm-oWw" secondAttribute="leading" constant="16" id="fPH-ty-5QI"/>
                             <constraint firstItem="5XY-Jr-SQY" firstAttribute="trailing" secondItem="dX7-mn-Kqu" secondAttribute="trailing" id="few-EA-9bH"/>
-                            <constraint firstItem="CPO-Og-8Rb" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="fiv-rM-akO"/>
-                            <constraint firstItem="d7n-s4-OyH" firstAttribute="centerY" secondItem="dX7-mn-Kqu" secondAttribute="centerY" constant="-90" id="hjD-kw-ruH"/>
-                            <constraint firstItem="Nzq-PL-tt3" firstAttribute="centerX" secondItem="dX7-mn-Kqu" secondAttribute="centerX" id="j30-z5-gLN"/>
+                            <constraint firstItem="ALW-Xn-F7M" firstAttribute="top" secondItem="d7n-s4-OyH" secondAttribute="bottom" constant="20" id="hjD-kw-ruH"/>
+                            <constraint firstItem="Nzq-PL-tt3" firstAttribute="centerX" secondItem="ALW-Xn-F7M" secondAttribute="centerX" id="j30-z5-gLN"/>
                             <constraint firstItem="Rp7-Cm-oWw" firstAttribute="trailing" secondItem="XQW-gv-i5e" secondAttribute="trailing" constant="16" id="jwX-SG-i0P"/>
-                            <constraint firstItem="CPO-Og-8Rb" firstAttribute="centerY" secondItem="dX7-mn-Kqu" secondAttribute="centerY" constant="100" id="qUg-uh-6ye"/>
-                            <constraint firstItem="ZdY-Fw-RIo" firstAttribute="centerY" secondItem="Rp7-Cm-oWw" secondAttribute="centerY" constant="120" id="si1-qd-eM8"/>
-                            <constraint firstItem="ZdY-Fw-RIo" firstAttribute="centerX" secondItem="ALW-Xn-F7M" secondAttribute="centerX" id="vZn-4k-6Fq"/>
+                            <constraint firstItem="o8C-cK-v19" firstAttribute="top" secondItem="ALW-Xn-F7M" secondAttribute="bottom" constant="16" id="qUg-uh-6ye"/>
+                            <constraint firstItem="o8C-cK-v19" firstAttribute="centerX" secondItem="ALW-Xn-F7M" secondAttribute="centerX" id="si1-qd-eM8"/>
                         </constraints>
                     </view>
                     <connections>
