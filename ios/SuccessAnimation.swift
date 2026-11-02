@@ -70,19 +70,18 @@ enum SuccessAnimation {
                    })
   }
 
-  private static func createPlusOneText(toView: UIView, text: String, font: UIFont,
-                                        color: UIColor,
-                                        duration: CGFloat) {
-    guard let superview = toView.superview else {
-      return
-    }
+  private static func createPlusOneText(toLabel: UILabel, in superview: UIView, text: String,
+                                        font: UIFont, color: UIColor, duration: CGFloat) {
+    // Aim at the label's text rather than its frame, which may be stretched wider than the text.
+    let textRect = toLabel.textRect(forBounds: toLabel.bounds, limitedToNumberOfLines: 1)
+    let destination = toLabel.convert(CGPoint(x: textRect.midX, y: textRect.midY), to: superview)
 
     let view = UILabel(frame: .zero)
     view.text = text
     view.font = font
     view.textColor = color
     view.alpha = 0.0
-    view.center = CGPoint(x: toView.center.x, y: toView.center.y + font.pointSize * 1.5)
+    view.center = CGPoint(x: destination.x, y: destination.y + font.pointSize * 2)
     view.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
     superview.addSubview(view)
     view.sizeToFit()
@@ -111,7 +110,7 @@ enum SuccessAnimation {
                    delay: duration * 0.7,
                    options: .curveLinear,
                    animations: {
-                     view.center = toView.center
+                     view.center = destination
                      view.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
                      view.alpha = 0.1
                    },
@@ -250,7 +249,8 @@ enum SuccessAnimation {
   }
 
   static func run(answerField: UIView,
-                  doneLabel: UIView,
+                  plusOneLabel: UILabel,
+                  container: UIView,
                   srsLevelLabel: UILabel,
                   isSubjectFinished: Bool,
                   didLevelUp: Bool,
@@ -261,7 +261,7 @@ enum SuccessAnimation {
 
     if isSubjectFinished {
       if Settings.animatePlusOne {
-        createPlusOneText(toView: doneLabel,
+        createPlusOneText(toLabel: plusOneLabel, in: container,
                           text: "+1",
                           font: UIFont.boldSystemFont(ofSize: 20.0),
                           color: .white,

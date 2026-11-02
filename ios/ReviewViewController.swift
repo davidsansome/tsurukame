@@ -421,8 +421,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   private func setUpHeader() {
-    // The storyboard's stats row, progress bar and menu button are replaced by this header. The
-    // stats labels stay in the view (invisibly) because the success animation starts from them.
+    // The storyboard's stats row, progress bar and menu button are replaced by this header.
     for v: UIView in [progressBar, menuButton, successRateIcon, successRateLabel, doneIcon,
                       doneLabel, queueIcon, queueLabel, wrapUpIcon, wrapUpLabel] {
       v.alpha = 0
@@ -1486,8 +1485,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         // We must start the success animations *after* all the UI elements have been moved to their
         // new locations by randomTask(), so that, for example, the success sparkles animate from
         // the final position of the answerField, not the original position.
-        SuccessAnimation.run(answerField: answerField, doneLabel: doneLabel,
-                             srsLevelLabel: levelLabel, isSubjectFinished: marked.subjectFinished,
+        SuccessAnimation.run(answerField: answerField, plusOneLabel: headerProgressLabel,
+                             container: view, srsLevelLabel: levelLabel,
+                             isSubjectFinished: marked.subjectFinished,
                              didLevelUp: marked.didLevelUp, newSrsStage: marked.newSrsStage)
       }
 
