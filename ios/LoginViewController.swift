@@ -205,12 +205,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     signInButton.setTitleColor(kSecondaryOnNight, for: .disabled)
     signInButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
 
-    // Make the token field as tall as the Sign in button. Below required so it gives way when the
-    // token stack is collapsed for email and password login.
-    let tokenHeight = apiTokenField.heightAnchor
-      .constraint(equalToConstant: signInButton.intrinsicContentSize.height)
-    tokenHeight.priority = .required - 1
-    tokenHeight.isActive = true
+    // Make the text fields as tall as the Sign in button. Below required so they give way when
+    // collapsed by switching login method.
+    for field in [emailField!, passwordField!, apiTokenField!] {
+      let height = field.heightAnchor
+        .constraint(equalToConstant: signInButton.intrinsicContentSize.height)
+      height.priority = .required - 1
+      height.isActive = true
+    }
 
     for button in [pasteButton!, createApiTokenButton!, swapLoginMethodsButton!,
                    privacyPolicyButton!] {
