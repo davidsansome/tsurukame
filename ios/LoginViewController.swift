@@ -131,13 +131,27 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     waves.waveColor = UIColor(red: 0.200, green: 0.278, blue: 0.424, alpha: 1)
     waves.radius = 32
 
-    for v in [waves, hanko, title] {
+    // A dim gear in the corner for changing the API server. Rarely needed, so kept out of the way.
+    let serverButton = UIButton(type: .system)
+    serverButton.setImage(UIImage(systemName: "gearshape"), for: .normal)
+    serverButton.tintColor = kSecondaryOnNight.withAlphaComponent(0.6)
+    serverButton.accessibilityLabel = "API server"
+    serverButton.addTarget(self, action: #selector(didTapServerButton), for: .touchUpInside)
+
+    for v in [waves, hanko, title, serverButton] {
       v.translatesAutoresizingMaskIntoConstraints = false
     }
     view.insertSubview(waves, at: 0)
     view.addSubview(hanko)
     view.addSubview(title)
+    view.insertSubview(serverButton, belowSubview: activityIndicatorOverlay)
     NSLayoutConstraint.activate([
+      serverButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+      serverButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                                             constant: -8),
+      serverButton.widthAnchor.constraint(equalToConstant: 44),
+      serverButton.heightAnchor.constraint(equalToConstant: 44),
+
       waves.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       waves.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       waves.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -190,6 +204,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     signInButton.setTitleColor(.white, for: .normal)
     signInButton.setTitleColor(kSecondaryOnNight, for: .disabled)
     signInButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+
+    // Make the text fields as tall as the Sign in button. Below required so they give way when
+    // collapsed by switching login method.
+    for field in [emailField!, passwordField!, apiTokenField!] {
+      let height = field.heightAnchor
+        .constraint(equalToConstant: signInButton.intrinsicContentSize.height)
+      height.priority = .required - 1
+      height.isActive = true
+    }
 
     for button in [pasteButton!, createApiTokenButton!, swapLoginMethodsButton!,
                    privacyPolicyButton!] {
@@ -303,6 +326,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     } else {
       activityIndicator.stopAnimating()
     }
+  }
+
+  // MARK: - API server
+
+  @objc private func didTapServerButton() {
+    ApiBaseUrlAlert.present(from: self) { _ in }
   }
 
   // MARK: - Privacy policy
