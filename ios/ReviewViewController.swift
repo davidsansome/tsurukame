@@ -25,6 +25,7 @@ private let kPreviousSubjectFontSize: CGFloat = 14
 private let kPreviousSubjectHorizontalPadding: CGFloat = 12
 private let kPreviousSubjectVerticalPadding: CGFloat = 4
 private let kPreviousSubjectAnimationDuration: Double = 0.3
+private let kPreviousSubjectArrowSpacing: CGFloat = 5
 
 // Text on the reading strip (paper on ink, or ink on paper in dark mode), and on the meaning strip.
 private let kReadingTextColor = TKMStyle.readingTextColor
@@ -199,7 +200,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   private var isShowingWrongAnswer = false
 
-  private var previousSubjectGradient: CAGradientLayer!
+  private let previousSubjectArrow = UIImageView()
 
   private var previousSubject: TKMSubject?
   private var previousSubjectLabel: UILabel?
@@ -347,12 +348,23 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     wrapUpIcon.image = Asset.baselineAccessTimeBlack24pt.image
       .withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
 
-    previousSubjectGradient = CAGradientLayer()
-    previousSubjectGradient.cornerCurve = .continuous
-    // A faint white edge keeps the pill visible over a subject of the same type.
-    previousSubjectGradient.borderWidth = 1
-    previousSubjectGradient.borderColor = UIColor.white.withAlphaComponent(0.35).cgColor
-    previousSubjectButton.layer.addSublayer(previousSubjectGradient)
+    // Styled like the level and SRS chips, with an arrow to show it goes back to the last review.
+    previousSubjectButton.backgroundColor = UIColor.white.withAlphaComponent(0.18)
+    previousSubjectButton.layer.cornerCurve = .continuous
+    previousSubjectButton.accessibilityLabel = "Last review"
+    previousSubjectArrow.image = UIImage(systemName: "arrow.uturn.backward",
+                                         withConfiguration: UIImage
+                                           .SymbolConfiguration(pointSize: 11,
+                                                                weight: .bold))
+    previousSubjectArrow.tintColor = .white
+    previousSubjectArrow.isUserInteractionEnabled = false
+    previousSubjectArrow.translatesAutoresizingMaskIntoConstraints = false
+    previousSubjectButton.addSubview(previousSubjectArrow)
+    NSLayoutConstraint.activate([
+      previousSubjectArrow.leadingAnchor.constraint(equalTo: previousSubjectButton.leadingAnchor,
+                                                    constant: kPreviousSubjectHorizontalPadding),
+      previousSubjectArrow.centerYAnchor.constraint(equalTo: previousSubjectButton.centerYAnchor),
+    ])
 
     nd.add(name: UIResponder.keyboardWillShowNotification) { [weak self] notification in
       self?.keyboardWillShow(notification)
@@ -1133,7 +1145,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   // MARK: - Previous subject button
 
   func animateLabelToPreviousSubjectButton(_ label: UILabel) {
-    guard let previousSubject = previousSubject else {
+    guard previousSubject != nil else {
       return
     }
 
@@ -1143,13 +1155,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     label.center = oldLabelCenter
 
     let scale = kPreviousSubjectFontSize / label.font.pointSize
-    let newButtonWidth = kPreviousSubjectHorizontalPadding * 2 + labelBounds.size.width * scale
-    let newButtonHeight = kPreviousSubjectVerticalPadding * 2 + labelBounds.size.height * scale
-
-    var newGradient: [CGColor]!
-    TKMStyle.withTraitCollection(traitCollection) {
-      newGradient = TKMStyle.gradient(forSubject: previousSubject)
-    }
+    let arrowWidth = previousSubjectArrow.intrinsicContentSize.width + kPreviousSubjectArrowSpacing
+    let newButtonWidth = kPreviousSubjectHorizontalPadding * 2 + arrowWidth +
+      labelBounds.size.width * scale
+    // At least as tall as the level chip it sits in line with.
+    let newButtonHeight = max(levelChip.intrinsicContentSize.height,
+                              kPreviousSubjectVerticalPadding * 2 + labelBounds.size.height * scale)
 
     view.layoutIfNeeded()
     UIView.animate(withDuration: kPreviousSubjectAnimationDuration,
@@ -1175,16 +1186,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
                                           toItem: self.previousSubjectButton,
                                           attribute: .centerX,
                                           multiplier: 1.0,
-                                          constant: 0)
+                                          constant: arrowWidth / 2)
                      self.view.addConstraints([centerXConstraint, centerYConstraint])
 
                      self.previousSubjectButtonWidthConstraint.constant = newButtonWidth
                      self.previousSubjectButtonHeightConstraint.constant = newButtonHeight
                      self.view.layoutIfNeeded()
 
-                     self.previousSubjectGradient.colors = newGradient
-                     self.previousSubjectGradient.frame = self.previousSubjectButton.bounds
-                     self.previousSubjectGradient.cornerRadius = newButtonHeight / 2
+                     self.previousSubjectButton.layer.cornerRadius = newButtonHeight / 2
                      self.previousSubjectButton.alpha = 1.0
 
                      self.previousSubjectLabel?.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
