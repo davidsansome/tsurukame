@@ -78,49 +78,10 @@ class DeveloperOptionsViewController: SettingsTableViewController, TKMViewContro
   // MARK: - Tap handlers
 
   private func didTapApiBaseUrl() {
-    let c = UIAlertController(title: "API base URL",
-                              message: "Default: \(WaniKaniAPIClient.defaultBaseUrl)",
-                              preferredStyle: .alert)
-    c.addTextField { field in
-      field.text = Settings.apiBaseUrl
-      field.placeholder = WaniKaniAPIClient.defaultBaseUrl
-      field.keyboardType = .URL
-      field.autocapitalizationType = .none
-      field.autocorrectionType = .no
-      field.clearButtonMode = .whileEditing
+    ApiBaseUrlAlert.present(from: self) { [unowned self] url in
+      services.client.baseUrl = url
+      rerender()
     }
-    c.addAction(UIAlertAction(title: "Save", style: .default) { [unowned self] _ in
-      setApiBaseUrl(c.textFields?.first?.text ?? "")
-    })
-    c.addAction(UIAlertAction(title: "Reset to default", style: .destructive) { [unowned self] _ in
-      setApiBaseUrl(WaniKaniAPIClient.defaultBaseUrl)
-    })
-    c.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-    present(c, animated: true, completion: nil)
-  }
-
-  private func setApiBaseUrl(_ text: String) {
-    var url = text.trimmingCharacters(in: .whitespacesAndNewlines)
-    while url.hasSuffix("/") {
-      url.removeLast()
-    }
-    if url.isEmpty {
-      url = WaniKaniAPIClient.defaultBaseUrl
-    }
-
-    guard let parsed = URL(string: url), let scheme = parsed.scheme?.lowercased(),
-          scheme == "http" || scheme == "https", parsed.host != nil else {
-      let c = UIAlertController(title: "Invalid URL",
-                                message: "\"\(url)\" isn't a valid http or https URL.",
-                                preferredStyle: .alert)
-      c.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-      present(c, animated: true, completion: nil)
-      return
-    }
-
-    Settings.apiBaseUrl = url
-    services.client.baseUrl = url
-    rerender()
   }
 
   private func didTapExportDatabase() {
