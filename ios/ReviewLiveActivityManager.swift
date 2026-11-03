@@ -43,7 +43,7 @@ final class ReviewLiveActivityManager {
     }
 
     let state = ReviewLiveActivityAttributes.ContentState(
-      subject: subject.japanese,
+      subject: subject.japanese.isEmpty ? subject.primaryMeaning : subject.japanese,
       subjectType: subjectType,
       color: color,
       completed: completed,
@@ -60,12 +60,12 @@ final class ReviewLiveActivityManager {
       do {
         if #available(iOS 16.2, *) {
           activity = try Activity.request(
-            attributes: ReviewLiveActivityAttributes(sessionID: UUID()),
+            attributes: ReviewLiveActivityAttributes(),
             content: ActivityContent(state: state, staleDate: nil)
           )
         } else {
           activity = try Activity.request(
-            attributes: ReviewLiveActivityAttributes(sessionID: UUID()), contentState: state
+            attributes: ReviewLiveActivityAttributes(), contentState: state
           )
         }
       } catch {

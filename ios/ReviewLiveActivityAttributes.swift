@@ -24,6 +24,4 @@ struct ReviewLiveActivityAttributes: ActivityAttributes {
     var completed: Int
     var total: Int
   }
-
-  var sessionID: UUID
 }
