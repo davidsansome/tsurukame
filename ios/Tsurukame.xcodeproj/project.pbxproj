@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FBE186E80A1B43C88C110F1C /* ReviewLiveActivityAttributes.swift in Tsurukame Sources */ = {isa = PBXBuildFile; fileRef = 440B4578A77F46F3A062857C /* ReviewLiveActivityAttributes.swift */; };
+		5D3EFDCF030142F68DD8911C /* ReviewLiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D98C0A554BA4721900AE006 /* ReviewLiveActivityManager.swift */; };
+		78293FBC974E49378144B7F7 /* ReviewLiveActivityAttributes.swift in Widget Sources */ = {isa = PBXBuildFile; fileRef = 440B4578A77F46F3A062857C /* ReviewLiveActivityAttributes.swift */; };
+		15843C9BAA4D46508AC534E3 /* ReviewLiveActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7BE7127395450EA14A274A /* ReviewLiveActivityWidget.swift */; };
+		0895F62F77EC4B7C9C7F5AFF /* ReviewLiveActivity.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F0302F37B5D54842A9DFE2EC /* ReviewLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0A943349E17FA7889EFEE41F /* Pods_Tsurukame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC80AAF9736A570E3C4CC09E /* Pods_Tsurukame.framework */; };
 		1C1A27E594D03064CFACBADB /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639CE0BC2CF0ABCE00902668 /* FeatureFlags.swift */; };
 		480B243123D6830300FC2A82 /* Rexy in Frameworks */ = {isa = PBXBuildFile; productRef = 480B243023D6830300FC2A82 /* Rexy */; };
@@ -223,6 +228,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		A58ACF4971E24BCDA33F0F03 /* PBXContainerItemProxy */ = {isa = PBXContainerItemProxy; containerPortal = 630FD60B1FC45BDF00D21C1F /* Project object */; proxyType = 1; remoteGlobalIDString = 3D3D968F262143598AB551AC; remoteInfo = ReviewLiveActivity; };
 		6335B46723CF0C820071671E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 630FD60B1FC45BDF00D21C1F /* Project object */;
@@ -283,9 +289,23 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5FF88F6A756748CA952B1754 /* Embed Review Live Activity */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (0895F62F77EC4B7C9C7F5AFF /* ReviewLiveActivity.appex in Embed App Extensions */,);
+			name = "Embed Review Live Activity";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		440B4578A77F46F3A062857C /* ReviewLiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewLiveActivityAttributes.swift; sourceTree = "<group>"; };
+		4D98C0A554BA4721900AE006 /* ReviewLiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewLiveActivityManager.swift; sourceTree = "<group>"; };
+		EA7BE7127395450EA14A274A /* ReviewLiveActivityWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewLiveActivityWidget.swift; sourceTree = "<group>"; };
+		5877B5A5BC574FEFBAF4C954 /* ReviewLiveActivity/Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ReviewLiveActivity/Info.plist; sourceTree = "<group>"; };
+		F0302F37B5D54842A9DFE2EC /* ReviewLiveActivity.appex */ = {isa = PBXFileReference; explicitFileType = wrapper.app-extension; includeInIndex = 0; path = ReviewLiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		10E5709643045C62AD6AC427 /* Pods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		116070EC9485A78089387729 /* Pods-FontScreenshotterUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotterUITests.debug.xcconfig"; path = "Target Support Files/Pods-FontScreenshotterUITests/Pods-FontScreenshotterUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		1BBBD142815F6A55FA9D2C21 /* libPods-Tsurukame Complication Extension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tsurukame Complication Extension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -508,6 +528,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C459A4A8837E4DC387F0D09E /* ReviewLiveActivity Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 		630FD6101FC45BDF00D21C1F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -638,6 +659,11 @@
 		630FD60A1FC45BDF00D21C1F = {
 			isa = PBXGroup;
 			children = (
+				440B4578A77F46F3A062857C /* ReviewLiveActivityAttributes.swift */,
+				4D98C0A554BA4721900AE006 /* ReviewLiveActivityManager.swift */,
+				EA7BE7127395450EA14A274A /* ReviewLiveActivityWidget.swift */,
+				5877B5A5BC574FEFBAF4C954 /* ReviewLiveActivity/Info.plist */,
+				F0302F37B5D54842A9DFE2EC /* ReviewLiveActivity.appex */,
 				6324AE3D2F9DC7FF0089066C /* RadicalCharacterImages.swift */,
 				96A335062EEF5F800017BC70 /* BottomSheetAction.swift */,
 				999BBB1111CCAA22BB333344 /* BurnedReviewFiltersViewController.swift */,
@@ -922,6 +948,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		3D3D968F262143598AB551AC /* ReviewLiveActivity */ = {isa = PBXNativeTarget; buildConfigurationList = 87CEFCD031CC44A7BF4DAB63 /* Build configuration list for PBXNativeTarget "ReviewLiveActivity" */; buildPhases = (EF60F3C0120D44D38C90054C /* ReviewLiveActivity Sources */, C459A4A8837E4DC387F0D09E /* ReviewLiveActivity Frameworks */, D74E1D66678F4F7FA2CEBB6D /* ReviewLiveActivity Resources */,); buildRules = (); dependencies = (); name = ReviewLiveActivity; productName = ReviewLiveActivity; productReference = F0302F37B5D54842A9DFE2EC /* ReviewLiveActivity.appex */; productType = "com.apple.product-type.app-extension"; };
 		630FD6121FC45BDF00D21C1F /* Tsurukame */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 630FD6291FC45BDF00D21C1F /* Build configuration list for PBXNativeTarget "Tsurukame" */;
@@ -933,6 +960,7 @@
 				630FD6101FC45BDF00D21C1F /* Frameworks */,
 				630FD6111FC45BDF00D21C1F /* Resources */,
 				C90846C9237F1C790068A272 /* Embed Watch Content */,
+				5FF88F6A756748CA952B1754 /* Embed Review Live Activity */,
 				0C9C13E732A68C21AE8F0AA3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -940,6 +968,7 @@
 			dependencies = (
 				63EF56FD26060BE50038551A /* PBXTargetDependency */,
 				C90846C7237F1C790068A272 /* PBXTargetDependency */,
+				ED13E0D8575345BFAE32F0AB /* ReviewLiveActivity dependency */,
 			);
 			name = Tsurukame;
 			packageProductDependencies = (
@@ -1146,12 +1175,14 @@
 				63C42A3521B6A290008CA938 /* FontScreenshotterUITests */,
 				C90846AB237F1C770068A272 /* Tsurukame Complication */,
 				C90846B7237F1C790068A272 /* Tsurukame Complication Extension */,
+				3D3D968F262143598AB551AC /* ReviewLiveActivity */,
 				6335B46123CF0C820071671E /* AppStoreScreenshots */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D74E1D66678F4F7FA2CEBB6D /* ReviewLiveActivity Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 		630FD6111FC45BDF00D21C1F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1462,10 +1493,13 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF60F3C0120D44D38C90054C /* ReviewLiveActivity Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (78293FBC974E49378144B7F7 /* ReviewLiveActivityAttributes.swift in Widget Sources */, 15843C9BAA4D46508AC534E3 /* ReviewLiveActivityWidget.swift in Sources */,); runOnlyForDeploymentPostprocessing = 0; };
 		630FD60F1FC45BDF00D21C1F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBE186E80A1B43C88C110F1C /* ReviewLiveActivityAttributes.swift in Tsurukame Sources */,
+				5D3EFDCF030142F68DD8911C /* ReviewLiveActivityManager.swift in Sources */,
 				638D197525C6AA4B00B80544 /* MarkupModelItem.swift in Sources */,
 				63A5598527E433E000E7BBCB /* NavigationController.swift in Sources */,
 				638A5C4E25A471F9001A7AEE /* AppDelegate.swift in Sources */,
@@ -1658,6 +1692,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		ED13E0D8575345BFAE32F0AB /* ReviewLiveActivity dependency */ = {isa = PBXTargetDependency; target = 3D3D968F262143598AB551AC /* ReviewLiveActivity */; targetProxy = A58ACF4971E24BCDA33F0F03 /* PBXContainerItemProxy */; };
 		6335B46823CF0C820071671E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 630FD6121FC45BDF00D21C1F /* Tsurukame */;
@@ -1712,6 +1747,9 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		AD959B1060664C59B53F17E4 /* ReviewLiveActivity Debug */ = {isa = XCBuildConfiguration; buildSettings = {APPLICATION_EXTENSION_API_ONLY = YES; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = 7B2GP77Y4A; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = ReviewLiveActivity/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 16.1; PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.ReviewLiveActivity; PRODUCT_NAME = "$(TARGET_NAME)"; SKIP_INSTALL = YES; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Debug; };
+		0288E49476C440DEA8948AA7 /* ReviewLiveActivity Release */ = {isa = XCBuildConfiguration; buildSettings = {APPLICATION_EXTENSION_API_ONLY = YES; CODE_SIGN_STYLE = Automatic; DEVELOPMENT_TEAM = 7B2GP77Y4A; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = ReviewLiveActivity/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 16.1; PRODUCT_BUNDLE_IDENTIFIER = com.davidsansome.wanikani.ReviewLiveActivity; PRODUCT_NAME = "$(TARGET_NAME)"; SKIP_INSTALL = YES; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Release; };
+
 		630FD6271FC45BDF00D21C1F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2258,6 +2296,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		87CEFCD031CC44A7BF4DAB63 /* Build configuration list for PBXNativeTarget "ReviewLiveActivity" */ = {isa = XCConfigurationList; buildConfigurations = (AD959B1060664C59B53F17E4 /* Debug */, 0288E49476C440DEA8948AA7 /* Release */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
 		630FD60E1FC45BDF00D21C1F /* Build configuration list for PBXProject "Tsurukame" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

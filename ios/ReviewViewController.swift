@@ -192,6 +192,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private weak var delegate: ReviewViewControllerDelegate!
 
   private var session: ReviewSession!
+  private var totalReviewCount = 0
 
   private var lastMarkAnswerWasFirstTime = false
   private var ankiModeCachedSubmit = false
@@ -294,6 +295,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     self.showSubjectHistory = showSubjectHistory
     self.delegate = delegate
     self.isPracticeSession = isPracticeSession
+    totalReviewCount = items.count
 
     session = ReviewSession(services: services, items: items,
                             isPracticeSession: isPracticeSession)
@@ -772,6 +774,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   @objc public func endReviewSession() {
+    if #available(iOS 16.1, *) {
+      Task { await ReviewLiveActivityManager.shared.end() }
+    }
     if session.completedReviews.isEmpty {
       // There's nothing to show in the summary.
       navigationController?.popToRootViewController(animated: true)
@@ -784,6 +789,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
 
   private func randomTask() {
     if session.activeQueueLength == 0 {
+      if #available(iOS 16.1, *) {
+        Task { await ReviewLiveActivityManager.shared.end() }
+      }
       delegate.finishedAllReviewItems(self)
       return
     }
@@ -805,6 +813,16 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       // Update the progress bar.
       let totalLength = queueLength + session.reviewsCompleted
       updateHeader(completed: session.reviewsCompleted, total: totalLength)
+      if #available(iOS 16.1, *), let subject = session.activeSubject {
+        Task {
+          await ReviewLiveActivityManager.shared.update(
+            subject: subject,
+            type: session.activeAssignment.subjectType,
+            completed: session.reviewsCompleted,
+            total: totalReviewCount
+          )
+        }
+      }
       updateChips()
       if totalLength == 0 {
         progressBar.setProgress(0.0, animated: true)
