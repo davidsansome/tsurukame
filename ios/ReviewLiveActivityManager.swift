@@ -43,7 +43,7 @@ final class ReviewLiveActivityManager {
     }
 
     let state = ReviewLiveActivityAttributes.ContentState(
-      subject: subject.japanese.isEmpty ? subject.primaryMeaning : subject.japanese,
+      subject: subject.japanese.isEmpty ? "部" : subject.japanese,
       subjectType: subjectType,
       color: color,
       completed: completed,
