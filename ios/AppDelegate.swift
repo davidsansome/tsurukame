@@ -31,6 +31,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     Settings.migrate()
     Screenshotter.setUp()
 
+    if #available(iOS 16.1, *) {
+      Task { await ReviewLiveActivityManager.shared.endExistingActivities() }
+    }
+
     application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
     services = TKMServices()
 

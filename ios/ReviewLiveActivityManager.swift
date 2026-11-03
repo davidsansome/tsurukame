@@ -22,6 +22,17 @@ final class ReviewLiveActivityManager {
   static let shared = ReviewLiveActivityManager()
   private var activity: Activity<ReviewLiveActivityAttributes>?
 
+  func endExistingActivities() async {
+    for activity in Activity<ReviewLiveActivityAttributes>.activities {
+      if #available(iOS 16.2, *) {
+        await activity.end(nil, dismissalPolicy: .immediate)
+      } else {
+        await activity.end(using: nil, dismissalPolicy: .immediate)
+      }
+    }
+    activity = nil
+  }
+
   func update(subject: TKMSubject, type: TKMSubject.TypeEnum, completed: Int, total: Int) async {
     guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
     activity = activity ?? Activity<ReviewLiveActivityAttributes>.activities.first

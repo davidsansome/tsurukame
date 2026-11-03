@@ -782,6 +782,15 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     perform(segue: StoryboardSegue.Review.reviewSummary, sender: self)
   }
 
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    if isMovingFromParent || isBeingDismissed {
+      if #available(iOS 16.1, *) {
+        Task { await ReviewLiveActivityManager.shared.end() }
+      }
+    }
+  }
+
   // MARK: - Setup
 
   private func randomTask() {
