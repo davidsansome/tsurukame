@@ -177,22 +177,61 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
   // Note: as there is only one option right now, this function is not called if
   // Settings.allowExcludeItems is false
-  private func addOptions(_: TKMSubject,
+  private func addOptions(_ subject: TKMSubject,
                           studyMaterials _: TKMStudyMaterials?,
                           toModel model: MutableTableModel) -> IndexPath? {
     let sectionIndexPath = model.add(section: "Options")
     let isExcluded = services.localCachingClient.isExcluded(studyMaterials: studyMaterials)
 
-    model.add(SwitchModelItem(style: .subtitle,
-                              title: "Exclude this item",
-                              subtitle: "Excluded items do not appear in lessons or reviews.\nYou can exclude items that you are not interesting in learning.",
-                              on: isExcluded) { [unowned self] in
-        let exclude = $0.isOn
-        _ = services.localCachingClient.setExcluded(studyMaterials: &studyMaterials,
-                                                    shouldExclude: exclude)
-      })
+    let item = SwitchModelItem(style: .subtitle,
+                               title: "Exclude this item",
+                               subtitle: "Excluded items do not appear in lessons or reviews.\nYou can exclude items that you are not interesting in learning.",
+                               on: isExcluded)
+    // This row is often the last thing above the lesson page control, so only the switch itself
+    // should exclude the item - not a stray tap anywhere on the row.
+    item.togglesOnRowTap = false
+    item.switchHandler = { [unowned self, unowned item] in
+      let exclude = $0.isOn
+      _ = services.localCachingClient.setExcluded(studyMaterials: &studyMaterials,
+                                                  shouldExclude: exclude)
+      if exclude {
+        showExcludedUndoBanner(subject: subject, item: item)
+      } else {
+        dismissUndoBanner()
+      }
+    }
+    model.add(item)
 
     return sectionIndexPath
+  }
+
+  // The view the undo banner is shown over: the screen this table is in, so it sits above the
+  // table rather than scrolling with it.
+  private var undoBannerHost: UIView { superview ?? self }
+
+  private func showExcludedUndoBanner(subject: TKMSubject, item: SwitchModelItem) {
+    UndoBanner.show(in: undoBannerHost, message: "\(subject.japanese) excluded") {
+      [weak self, weak item] in
+      guard let self = self else { return }
+      let client = self.services.localCachingClient!
+      if self.studyMaterials.subjectID == subject.id {
+        _ = client.setExcluded(studyMaterials: &self.studyMaterials, shouldExclude: false)
+      } else if var studyMaterials = client.getStudyMaterial(subjectId: subject.id) {
+        // This view has since moved on to another subject.
+        _ = client.setExcluded(studyMaterials: &studyMaterials, shouldExclude: false)
+      }
+      guard let item = item else { return }
+      item.isOn = false
+      for case let cell as SwitchModelCell in self.visibleCells where cell.switchItem === item {
+        cell.switchView.setOn(false, animated: true)
+      }
+    }
+  }
+
+  private func dismissUndoBanner() {
+    for case let banner as UndoBanner in undoBannerHost.subviews {
+      banner.dismiss(animated: true)
+    }
   }
 
   private func addMeanings(_ subject: TKMSubject,

@@ -15,9 +15,15 @@
 import Foundation
 import UIKit
 
+private let kSwitchActionIdentifier = UIAction.Identifier("SwitchModelCell.valueChanged")
+
 class SwitchModelItem: BasicModelItem {
   var isOn: Bool
   var switchHandler: ((UISwitch) -> Void)?
+
+  // Whether tapping anywhere on the row flips the switch. Turn this off for switches that are
+  // costly to flip by accident, so only the switch itself responds.
+  var togglesOnRowTap = true
 
   init(style: UITableViewCell.CellStyle, title: String?, subtitle: String?, on: Bool,
        switchHandler: ((UISwitch) -> Void)? = nil) {
@@ -56,15 +62,16 @@ class SwitchModelCell: BasicModelCell {
     super.update()
 
     switchView.isOn = switchItem.isOn
-    if let switchHandler = switchItem.switchHandler {
-      switchView.addAction(for: .valueChanged) { [unowned self] in
-        switchHandler(self.switchView)
-      }
-    }
+    // Keep the item in step with the switch, so a reused cell shows the right state.
+    // A fixed identifier means this replaces the action added for the cell's previous item.
+    switchView.addAction(UIAction(identifier: kSwitchActionIdentifier) { [unowned self] _ in
+      self.switchItem.isOn = self.switchView.isOn
+      self.switchItem.switchHandler?(self.switchView)
+    }, for: .valueChanged)
   }
 
   override func didSelect() {
-    switchItem.isOn = !switchItem.isOn
+    guard switchItem.togglesOnRowTap else { return }
 
     switchView.setOn(!switchView.isOn, animated: true)
     switchView.sendActions(for: .valueChanged)
