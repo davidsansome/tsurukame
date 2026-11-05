@@ -98,6 +98,13 @@ class SettingsViewController: SettingsTableViewController, TKMViewController {
         UIApplication.shared.open(kRedesignFeedbackURL)
       })
 
+    model.addSection()
+    model.add(BasicModelItem(style: .default,
+                             title: "Credits",
+                             accessoryType: .disclosureIndicator) { [unowned self] in
+        navigationController?.pushViewController(CreditsViewController(), animated: true)
+      })
+
     self.model = model
     styleRows(model)
     model.reloadTable()
