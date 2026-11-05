@@ -261,6 +261,7 @@ protocol SettingProtocol {
   @Setting(true, #keyPath(animateParticleExplosion)) static var animateParticleExplosion: Bool
   @Setting(true, #keyPath(animateLevelUpPopup)) static var animateLevelUpPopup: Bool
   @Setting(true, #keyPath(animatePlusOne)) static var animatePlusOne: Bool
+  @Setting(true, #keyPath(showWavesBackground)) static var showWavesBackground: Bool
 
   @Setting(true,
            #keyPath(subjectCatalogueViewShowAnswers)) static var subjectCatalogueViewShowAnswers: Bool

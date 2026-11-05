@@ -101,6 +101,7 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     // A faint dark fill between the lines, like the mocks.
     waves.fillColor = UIColor.black.withAlphaComponent(0.08)
     waves.radius = 36
+    waves.isHidden = !Settings.showWavesBackground
 
     // Subjects keep the app's Japanese font. Unlike the review screen this isn't scaled up on iPad,
     // so the details below still fit on screen.

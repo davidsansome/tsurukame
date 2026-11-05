@@ -334,6 +334,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     waves.fillColor = UIColor.black.withAlphaComponent(0.08)
     waves.radius = 36
     waves.translatesAutoresizingMaskIntoConstraints = false
+    waves.isHidden = !Settings.showWavesBackground
     questionBackground.insertSubview(waves, at: 0)
 
     setUpHeader()
