@@ -101,6 +101,7 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     // A faint dark fill between the lines, like the mocks.
     waves.fillColor = UIColor.black.withAlphaComponent(0.08)
     waves.radius = 36
+    waves.isHidden = !Settings.showWavesBackground
 
     // Subjects keep the app's Japanese font, no bigger than on the review screen.
     let titleSize = TKMStyle.reviewSubjectFontSize() * (isFullScreen ? 0.8 : 1)

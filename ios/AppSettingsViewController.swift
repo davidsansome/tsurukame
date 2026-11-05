@@ -47,8 +47,8 @@ class AppSettingsViewController: SettingsTableViewController, TKMViewController 
   private func rerender() {
     let model = MutableTableModel(tableView: tableView)
 
+    model.add(section: "UI appearance")
     if #available(iOS 13.0, *) {
-      model.add(section: "UI appearance")
       model.add(BasicModelItem(style: .value1,
                                title: "Interface style",
                                subtitle: Settings.interfaceStyle.description,
@@ -57,6 +57,12 @@ class AppSettingsViewController: SettingsTableViewController, TKMViewController 
           self.didTapInterfaceStyle()
         })
     }
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Wave pattern background",
+                              subtitle: "Behind the subject in reviews, lessons and subject details",
+                              on: Settings.showWavesBackground) { switchView in
+        Settings.showWavesBackground = switchView.isOn
+      })
 
     model.add(section: "Custom Gravatar email address")
     let gravatarItem =
