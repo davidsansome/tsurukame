@@ -14,25 +14,38 @@
 
 import Foundation
 
-// The top of the home screen: a large night-indigo Reviews card over the waves, with smaller
-// Lessons and Leeches cards beneath it and a row for the lesson picker under those.
+// The top of the home screen: a compact night-indigo Reviews card (or a one-line "all caught
+// up" row when nothing is due), with a Lessons card beneath it that can start lessons or open
+// the lesson picker.
 class HomeHeroItem: TableModelItem {
   let reviewCount: Int
   let lessonCount: Int
   // Shown instead of the lesson count's caption when lessons can't be started.
   let lessonsDisabledMessage: String?
-  let leechCount: Int
+  // When the next reviews become available, and how many, if any are due in the forecast.
+  let nextReviewDate: Date?
+  let nextReviewCount: Int
 
   var startReviews: (() -> Void)?
   var startLessons: (() -> Void)?
   var showLessonPicker: (() -> Void)?
-  var startLeechReviews: (() -> Void)?
 
-  init(reviewCount: Int, lessonCount: Int, lessonsDisabledMessage: String?, leechCount: Int) {
+  init(reviewCount: Int, lessonCount: Int, lessonsDisabledMessage: String?,
+       upcomingReviews: [Int], date: Date) {
     self.reviewCount = reviewCount
     self.lessonCount = lessonCount
     self.lessonsDisabledMessage = lessonsDisabledMessage
-    self.leechCount = leechCount
+
+    // upcomingReviews[i] is the number of reviews that become available in the hour starting
+    // i + 1 hours after the start of the current hour.
+    if let index = upcomingReviews.firstIndex(where: { $0 > 0 }) {
+      let startOfHour = Calendar.current.dateInterval(of: .hour, for: date)?.start ?? date
+      nextReviewDate = startOfHour.addingTimeInterval(Double(index + 1) * 3600)
+      nextReviewCount = upcomingReviews[index]
+    } else {
+      nextReviewDate = nil
+      nextReviewCount = 0
+    }
   }
 
   var cellFactory: TableModelCellFactory {
@@ -41,134 +54,56 @@ class HomeHeroItem: TableModelItem {
 }
 
 private let kCardSpacing: CGFloat = 12
-private let kReviewsCardHeight: CGFloat = 210
-private let kSmallCardHeight: CGFloat = 118
-private let kPickerRowHeight: CGFloat = 64
+private let kReviewsCardHeight: CGFloat = 96
+private let kCaughtUpRowHeight: CGFloat = 64
+private let kLessonsCardHeight: CGFloat = 88
+private let kButtonHeight: CGFloat = 44
+
+private func arrowImage(pointSize: CGFloat) -> UIImage? {
+  UIImage(systemName: "arrow.right",
+          withConfiguration: UIImage.SymbolConfiguration(pointSize: pointSize, weight: .bold))
+}
+
+private func captionText(_ text: String, color: UIColor) -> NSAttributedString {
+  NSAttributedString(string: text, attributes: [
+    .font: UIFont.systemFont(ofSize: 12, weight: .bold),
+    .foregroundColor: color,
+    .kern: 2,
+  ])
+}
 
 class HomeHeroCell: TableModelCell {
   @TypedModelItem var item: HomeHeroItem
 
-  private let reviewsCard = UIView()
-  private let waves = WavesView()
-  private let reviewsCaption = UILabel()
-  private let reviewsCount = UILabel()
-  private let reviewsReady = UILabel()
-  private let startReviewsButton = UIButton(type: .system)
-
-  private let lessonsCard = HomeSmallCard()
-  private let leechesCard = HomeSmallCard()
-  private let lessonPickerRow = HomeLessonPickerRow()
+  private let reviewsCard = HomeReviewsCard()
+  private let caughtUpRow = HomeCaughtUpRow()
+  private let lessonsCard = HomeLessonsCard()
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     selectionStyle = .none
 
-    // Reviews card.
-    reviewsCard.backgroundColor = TKMStyle.Color.night
-    reviewsCard.layer.cornerRadius = 26
-    reviewsCard.layer.cornerCurve = .continuous
-    reviewsCard.clipsToBounds = true
-
-    reviewsCaption.attributedText = NSAttributedString(string: "REVIEWS", attributes: [
-      .font: UIFont.systemFont(ofSize: 12, weight: .bold),
-      .foregroundColor: TKMStyle.Color.onNightSecondary,
-      .kern: 3,
-    ])
-    reviewsCount.font = UIFont.systemFont(ofSize: 72, weight: .heavy)
-    reviewsCount.textColor = TKMStyle.Color.onNight
-    reviewsReady.font = UIFont.systemFont(ofSize: 15)
-    reviewsReady.textColor = TKMStyle.Color.onNightSecondary
-
-    var buttonConfig = UIButton.Configuration.filled()
-    buttonConfig.baseBackgroundColor = TKMStyle.Color.onNight
-    buttonConfig.baseForegroundColor = TKMStyle.Color.night
-    buttonConfig.cornerStyle = .fixed
-    buttonConfig.background.cornerRadius = 14
-    buttonConfig.image = UIImage(systemName: "arrow.right",
-                                 withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
-    buttonConfig.imagePlacement = .trailing
-    buttonConfig.imagePadding = 8
-    startReviewsButton.configuration = buttonConfig
-    startReviewsButton.addAction(UIAction { [weak self] _ in self?.item.startReviews?() },
-                                 for: .touchUpInside)
-
-    let countRow = UIStackView(arrangedSubviews: [reviewsCount, reviewsReady])
-    countRow.alignment = .firstBaseline
-    countRow.spacing = 10
-    let reviewsText = UIStackView(arrangedSubviews: [reviewsCaption, countRow])
-    reviewsText.axis = .vertical
-    reviewsText.alignment = .leading
-    reviewsText.spacing = 0
-
-    let hanko = HankoView()
-    hanko.isAccessibilityElement = false
-    hanko.transform = CGAffineTransform(rotationAngle: -5 * .pi / 180)
-
-    for view in [waves, reviewsText, startReviewsButton, hanko] {
-      view.translatesAutoresizingMaskIntoConstraints = false
-      reviewsCard.addSubview(view)
-    }
-
-    // Small cards.
-    lessonsCard.caption = "LESSONS"
-    lessonsCard.addAction(UIAction { [weak self] _ in self?.item.startLessons?() },
+    reviewsCard.addAction(UIAction { [weak self] _ in self?.item.startReviews?() },
                           for: .touchUpInside)
-    leechesCard.caption = "LEECHES"
-    leechesCard.addAction(UIAction { [weak self] _ in self?.item.startLeechReviews?() },
-                          for: .touchUpInside)
+    lessonsCard.startButton.addAction(UIAction { [weak self] _ in self?.item.startLessons?() },
+                                      for: .touchUpInside)
+    lessonsCard.pickButton.addAction(UIAction { [weak self] _ in self?.item.showLessonPicker?() },
+                                     for: .touchUpInside)
 
-    let smallCards = UIStackView(arrangedSubviews: [lessonsCard, leechesCard])
-    smallCards.distribution = .fillEqually
-    smallCards.spacing = kCardSpacing
-
-    lessonPickerRow.addAction(UIAction { [weak self] _ in self?.item.showLessonPicker?() },
-                              for: .touchUpInside)
-
-    for view in [reviewsCard, smallCards, lessonPickerRow] {
-      view.translatesAutoresizingMaskIntoConstraints = false
-      contentView.addSubview(view)
-    }
+    let stack = UIStackView(arrangedSubviews: [reviewsCard, caughtUpRow, lessonsCard])
+    stack.axis = .vertical
+    stack.spacing = kCardSpacing
+    stack.translatesAutoresizingMaskIntoConstraints = false
+    contentView.addSubview(stack)
 
     NSLayoutConstraint.activate([
-      reviewsCard.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-      reviewsCard.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-      reviewsCard.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+      stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
+      stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+      stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+      stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
       reviewsCard.heightAnchor.constraint(equalToConstant: kReviewsCardHeight),
-
-      waves.leadingAnchor.constraint(equalTo: reviewsCard.leadingAnchor),
-      waves.trailingAnchor.constraint(equalTo: reviewsCard.trailingAnchor),
-      waves.bottomAnchor.constraint(equalTo: reviewsCard.bottomAnchor),
-      waves.heightAnchor.constraint(equalToConstant: 64),
-
-      reviewsText.topAnchor.constraint(equalTo: reviewsCard.topAnchor, constant: 20),
-      reviewsText.leadingAnchor.constraint(equalTo: reviewsCard.leadingAnchor, constant: 22),
-      reviewsText.trailingAnchor.constraint(lessThanOrEqualTo: reviewsCard.trailingAnchor,
-                                            constant: -22),
-
-      hanko.topAnchor.constraint(equalTo: reviewsCard.topAnchor, constant: 22),
-      hanko.trailingAnchor.constraint(equalTo: reviewsCard.trailingAnchor, constant: -24),
-      hanko.widthAnchor.constraint(equalToConstant: 40),
-      hanko.heightAnchor.constraint(equalTo: hanko.widthAnchor, multiplier: HankoView.aspectRatio),
-
-      startReviewsButton.leadingAnchor.constraint(equalTo: reviewsCard.leadingAnchor,
-                                                  constant: 20),
-      startReviewsButton.trailingAnchor.constraint(equalTo: reviewsCard.trailingAnchor,
-                                                   constant: -20),
-      startReviewsButton.bottomAnchor.constraint(equalTo: reviewsCard.bottomAnchor,
-                                                 constant: -18),
-      startReviewsButton.heightAnchor.constraint(equalToConstant: 50),
-
-      smallCards.topAnchor.constraint(equalTo: reviewsCard.bottomAnchor, constant: kCardSpacing),
-      smallCards.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-      smallCards.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-      smallCards.heightAnchor.constraint(equalToConstant: kSmallCardHeight),
-
-      lessonPickerRow.topAnchor.constraint(equalTo: smallCards.bottomAnchor,
-                                           constant: kCardSpacing),
-      lessonPickerRow.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-      lessonPickerRow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-      lessonPickerRow.heightAnchor.constraint(equalToConstant: kPickerRowHeight),
-      lessonPickerRow.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
+      caughtUpRow.heightAnchor.constraint(equalToConstant: kCaughtUpRowHeight),
+      lessonsCard.heightAnchor.constraint(equalToConstant: kLessonsCardHeight),
     ])
   }
 
@@ -181,43 +116,192 @@ class HomeHeroCell: TableModelCell {
     // The cards draw their own backgrounds; the row itself is transparent.
     backgroundConfiguration = UIBackgroundConfiguration.clear()
 
-    reviewsCount.text = "\(item.reviewCount)"
     let hasReviews = item.reviewCount > 0
-    reviewsReady.text = hasReviews ? "ready now" : "all caught up"
-    var config = startReviewsButton.configuration
-    config?
-      .attributedTitle = AttributedString(hasReviews ? "Start reviews" : "No reviews right now",
-                                          attributes: AttributeContainer([
-                                            .font: UIFont.systemFont(ofSize: 16,
-                                                                     weight: .bold),
-                                          ]))
-    startReviewsButton.configuration = config
-    startReviewsButton.isEnabled = hasReviews
-    reviewsCard.accessibilityLabel = "\(item.reviewCount) reviews"
+    reviewsCard.isHidden = !hasReviews
+    caughtUpRow.isHidden = hasReviews
+    reviewsCard.count = item.reviewCount
+    caughtUpRow.setNextReview(date: item.nextReviewDate, count: item.nextReviewCount)
 
     lessonsCard.count = item.lessonCount
-    lessonsCard.detail = item.lessonsDisabledMessage ?? "ready to learn"
-    lessonsCard.isEnabled = item.lessonCount > 0 && item.lessonsDisabledMessage == nil
-    lessonPickerRow.isEnabled = lessonsCard.isEnabled
-
-    leechesCard.count = item.leechCount
-    leechesCard.detail = "in Apprentice"
-    leechesCard.isEnabled = item.leechCount > 0
+    lessonsCard.detail = item.lessonsDisabledMessage ?? "ready"
+    lessonsCard.setEnabled(item.lessonCount > 0 && item.lessonsDisabledMessage == nil)
   }
 }
 
-// A paper card with a caption, a large count and a line of detail. The whole card is a button.
-private class HomeSmallCard: UIControl {
-  var caption = "" {
+// The night-indigo card with the number of reviews available and a Start pill. The whole card
+// is one button.
+private class HomeReviewsCard: UIControl {
+  var count = 0 {
     didSet {
-      captionLabel.attributedText = NSAttributedString(string: caption, attributes: [
-        .font: UIFont.systemFont(ofSize: 12, weight: .bold),
-        .foregroundColor: TKMStyle.Color.grey33,
-        .kern: 2,
-      ])
-      updateAccessibility()
+      countLabel.text = "\(count)"
+      accessibilityLabel = "Start \(count) reviews"
     }
   }
+
+  private let captionLabel = UILabel()
+  private let countLabel = UILabel()
+  private let readyLabel = UILabel()
+  private let startPill = UIView()
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    backgroundColor = TKMStyle.Color.night
+    layer.cornerRadius = 22
+    layer.cornerCurve = .continuous
+    isAccessibilityElement = true
+    accessibilityTraits = .button
+
+    captionLabel.attributedText = captionText("REVIEWS", color: TKMStyle.Color.onNightSecondary)
+    countLabel.font = UIFont.systemFont(ofSize: 44, weight: .heavy)
+    countLabel.textColor = TKMStyle.Color.onNight
+    readyLabel.text = "ready now"
+    readyLabel.font = UIFont.systemFont(ofSize: 15)
+    readyLabel.textColor = TKMStyle.Color.onNightSecondary
+
+    let countRow = UIStackView(arrangedSubviews: [countLabel, readyLabel])
+    countRow.alignment = .firstBaseline
+    countRow.spacing = 8
+    let text = UIStackView(arrangedSubviews: [captionLabel, countRow])
+    text.axis = .vertical
+    text.alignment = .leading
+
+    startPill.backgroundColor = TKMStyle.Color.onNight
+    startPill.layer.cornerRadius = 12
+    startPill.layer.cornerCurve = .continuous
+    let startLabel = UILabel()
+    startLabel.text = "Start"
+    startLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+    startLabel.textColor = TKMStyle.Color.night
+    let arrow = UIImageView(image: arrowImage(pointSize: 14))
+    arrow.tintColor = TKMStyle.Color.night
+    let pillContent = UIStackView(arrangedSubviews: [startLabel, arrow])
+    pillContent.alignment = .center
+    pillContent.spacing = 6
+    pillContent.translatesAutoresizingMaskIntoConstraints = false
+    startPill.addSubview(pillContent)
+
+    for view in [text, startPill] {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      view.isUserInteractionEnabled = false
+      addSubview(view)
+    }
+    NSLayoutConstraint.activate([
+      text.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+      text.centerYAnchor.constraint(equalTo: centerYAnchor),
+      text.trailingAnchor.constraint(lessThanOrEqualTo: startPill.leadingAnchor, constant: -12),
+      startPill.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+      startPill.centerYAnchor.constraint(equalTo: centerYAnchor),
+      startPill.heightAnchor.constraint(equalToConstant: kButtonHeight),
+      pillContent.leadingAnchor.constraint(equalTo: startPill.leadingAnchor, constant: 16),
+      pillContent.trailingAnchor.constraint(equalTo: startPill.trailingAnchor, constant: -16),
+      pillContent.centerYAnchor.constraint(equalTo: startPill.centerYAnchor),
+    ])
+  }
+
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override var isHighlighted: Bool {
+    didSet {
+      UIView.animate(withDuration: 0.15) {
+        self.transform = self.isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+      }
+    }
+  }
+}
+
+// A paper row shown in place of the Reviews card when no reviews are available, saying when
+// the next ones are due.
+private class HomeCaughtUpRow: UIView {
+  private let iconCircle = UIView()
+  private let titleLabel = UILabel()
+  private let subtitleLabel = UILabel()
+
+  private let formatter: DateFormatter = {
+    let f = DateFormatter()
+    f.setLocalizedDateFormatFromTemplate("ha")
+    return f
+  }()
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    backgroundColor = TKMStyle.Color.cellBackground
+    layer.cornerRadius = 22
+    layer.cornerCurve = .continuous
+    layer.borderWidth = 1
+    isAccessibilityElement = true
+
+    iconCircle.backgroundColor = TKMStyle.Color.night
+    iconCircle.layer.cornerRadius = 18
+    let icon = UIImageView(image: UIImage(systemName: "checkmark",
+                                          withConfiguration: UIImage
+                                            .SymbolConfiguration(pointSize: 14, weight: .bold)))
+    icon.tintColor = TKMStyle.Color.onNight
+    icon.translatesAutoresizingMaskIntoConstraints = false
+    iconCircle.addSubview(icon)
+
+    titleLabel.text = "All caught up on reviews"
+    titleLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+    titleLabel.textColor = TKMStyle.Color.label
+    subtitleLabel.font = UIFont.systemFont(ofSize: 13)
+    subtitleLabel.textColor = TKMStyle.Color.grey33
+    subtitleLabel.adjustsFontSizeToFitWidth = true
+    subtitleLabel.minimumScaleFactor = 0.8
+
+    let text = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
+    text.axis = .vertical
+    text.spacing = 1
+
+    for view in [iconCircle, text] {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      addSubview(view)
+    }
+    NSLayoutConstraint.activate([
+      iconCircle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      iconCircle.centerYAnchor.constraint(equalTo: centerYAnchor),
+      iconCircle.widthAnchor.constraint(equalToConstant: 36),
+      iconCircle.heightAnchor.constraint(equalToConstant: 36),
+      icon.centerXAnchor.constraint(equalTo: iconCircle.centerXAnchor),
+      icon.centerYAnchor.constraint(equalTo: iconCircle.centerYAnchor),
+      text.leadingAnchor.constraint(equalTo: iconCircle.trailingAnchor, constant: 12),
+      text.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16),
+      text.centerYAnchor.constraint(equalTo: centerYAnchor),
+    ])
+    updateColors()
+  }
+
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  func setNextReview(date: Date?, count: Int) {
+    if let date = date {
+      let items = count == 1 ? "1 item" : "\(count) items"
+      subtitleLabel.text = "Next review at \(formatter.string(from: date)) (\(items))"
+    } else {
+      subtitleLabel.text = "No reviews in the next few days"
+    }
+    accessibilityLabel = "\(titleLabel.text!). \(subtitleLabel.text!)"
+  }
+
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    super.traitCollectionDidChange(previousTraitCollection)
+    updateColors()
+  }
+
+  private func updateColors() {
+    layer.borderColor = TKMStyle.Color.cardBorder.resolvedColor(with: traitCollection).cgColor
+  }
+}
+
+// A paper card with the number of lessons available, a Pick button that opens the lesson
+// picker and a Start button that starts lessons.
+private class HomeLessonsCard: UIView {
+  let pickButton = UIButton(type: .system)
+  let startButton = UIButton(type: .system)
 
   var count = 0 {
     didSet {
@@ -236,7 +320,6 @@ private class HomeSmallCard: UIControl {
   private let captionLabel = UILabel()
   private let countLabel = UILabel()
   private let detailLabel = UILabel()
-  private let chevron = UIImageView(image: UIImage(systemName: "chevron.right"))
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -244,34 +327,81 @@ private class HomeSmallCard: UIControl {
     layer.cornerRadius = 22
     layer.cornerCurve = .continuous
     layer.borderWidth = 1
-    isAccessibilityElement = true
-    accessibilityTraits = .button
 
+    captionLabel.attributedText = captionText("LESSONS", color: TKMStyle.Color.grey33)
     countLabel.font = UIFont.systemFont(ofSize: 40, weight: .heavy)
     countLabel.textColor = TKMStyle.Color.label
-    detailLabel.font = UIFont.systemFont(ofSize: 13)
+    detailLabel.font = UIFont.systemFont(ofSize: 15)
     detailLabel.textColor = TKMStyle.Color.grey33
     detailLabel.adjustsFontSizeToFitWidth = true
-    detailLabel.minimumScaleFactor = 0.8
-    chevron.tintColor = TKMStyle.Color.grey33
-    chevron.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 13,
-                                                                       weight: .semibold)
+    detailLabel.minimumScaleFactor = 0.7
+    detailLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
-    for view in [captionLabel, countLabel, detailLabel, chevron] {
+    let countRow = UIStackView(arrangedSubviews: [countLabel, detailLabel])
+    countRow.alignment = .firstBaseline
+    countRow.spacing = 8
+    let text = UIStackView(arrangedSubviews: [captionLabel, countRow])
+    text.axis = .vertical
+    text.alignment = .leading
+    text.isAccessibilityElement = true
+    textAccessibilityElement = text
+
+    var pickConfig = UIButton.Configuration.filled()
+    pickConfig.baseBackgroundColor = TKMStyle.Color.background
+    pickConfig.baseForegroundColor = TKMStyle.Color.label
+    pickConfig.cornerStyle = .fixed
+    pickConfig.background.cornerRadius = 12
+    pickConfig.background.strokeWidth = 1
+    pickConfig.background.strokeColor = TKMStyle.Color.grey80
+    pickConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 14, bottom: 0,
+                                                       trailing: 14)
+    pickConfig.image = UIImage(systemName: "list.bullet",
+                               withConfiguration: UIImage.SymbolConfiguration(pointSize: 13,
+                                                                              weight: .semibold))
+    pickConfig.imagePadding = 6
+    pickConfig.attributedTitle = AttributedString("Pick", attributes: AttributeContainer([
+      .font: UIFont.systemFont(ofSize: 15, weight: .bold),
+    ]))
+    pickButton.configuration = pickConfig
+    pickButton.accessibilityLabel = "Lesson picker"
+    pickButton.accessibilityHint = "Choose exactly what to learn next"
+
+    var startConfig = UIButton.Configuration.filled()
+    startConfig.baseBackgroundColor = TKMStyle.Color.night
+    startConfig.baseForegroundColor = TKMStyle.Color.onNight
+    startConfig.cornerStyle = .fixed
+    startConfig.background.cornerRadius = 12
+    startConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 14, bottom: 0,
+                                                        trailing: 14)
+    startConfig.image = arrowImage(pointSize: 14)
+    startConfig.imagePlacement = .trailing
+    startConfig.imagePadding = 6
+    startConfig.attributedTitle = AttributedString("Start", attributes: AttributeContainer([
+      .font: UIFont.systemFont(ofSize: 16, weight: .bold),
+    ]))
+    startButton.configuration = startConfig
+    startButton.accessibilityLabel = "Start lessons"
+
+    for button in [pickButton, startButton] {
+      button.setContentCompressionResistancePriority(.required, for: .horizontal)
+      button.setContentHuggingPriority(.required, for: .horizontal)
+    }
+
+    let buttons = UIStackView(arrangedSubviews: [pickButton, startButton])
+    buttons.spacing = 8
+
+    for view in [text, buttons] {
       view.translatesAutoresizingMaskIntoConstraints = false
-      view.isUserInteractionEnabled = false
       addSubview(view)
     }
     NSLayoutConstraint.activate([
-      captionLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-      captionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-      chevron.centerYAnchor.constraint(equalTo: captionLabel.centerYAnchor),
-      chevron.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-      countLabel.leadingAnchor.constraint(equalTo: captionLabel.leadingAnchor),
-      countLabel.topAnchor.constraint(equalTo: captionLabel.bottomAnchor, constant: 4),
-      detailLabel.leadingAnchor.constraint(equalTo: captionLabel.leadingAnchor),
-      detailLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -12),
-      detailLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14),
+      text.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+      text.centerYAnchor.constraint(equalTo: centerYAnchor),
+      text.trailingAnchor.constraint(lessThanOrEqualTo: buttons.leadingAnchor, constant: -8),
+      buttons.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
+      buttons.centerYAnchor.constraint(equalTo: centerYAnchor),
+      pickButton.heightAnchor.constraint(equalToConstant: kButtonHeight),
+      startButton.heightAnchor.constraint(equalToConstant: kButtonHeight),
     ])
     updateColors()
   }
@@ -281,19 +411,11 @@ private class HomeSmallCard: UIControl {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override var isEnabled: Bool {
-    didSet {
-      alpha = isEnabled ? 1 : 0.55
-      chevron.isHidden = !isEnabled
-    }
-  }
+  private weak var textAccessibilityElement: UIView?
 
-  override var isHighlighted: Bool {
-    didSet {
-      UIView.animate(withDuration: 0.15) {
-        self.transform = self.isHighlighted ? CGAffineTransform(scaleX: 0.97, y: 0.97) : .identity
-      }
-    }
+  func setEnabled(_ enabled: Bool) {
+    pickButton.isEnabled = enabled
+    startButton.isEnabled = enabled
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -306,101 +428,6 @@ private class HomeSmallCard: UIControl {
   }
 
   private func updateAccessibility() {
-    accessibilityLabel = "\(caption.capitalized): \(count), \(detail)"
-  }
-}
-
-// A full-width paper row under the small cards that opens the lesson picker: an icon in a
-// circle, a title and subtitle, and a chevron. The whole row is a button.
-private class HomeLessonPickerRow: UIControl {
-  private let iconCircle = UIView()
-  private let icon = UIImageView(image: UIImage(systemName: "list.bullet"))
-  private let titleLabel = UILabel()
-  private let subtitleLabel = UILabel()
-  private let chevron = UIImageView(image: UIImage(systemName: "chevron.right"))
-
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    backgroundColor = TKMStyle.Color.cellBackground
-    layer.cornerRadius = 22
-    layer.cornerCurve = .continuous
-    layer.borderWidth = 1
-    isAccessibilityElement = true
-    accessibilityTraits = .button
-    accessibilityLabel = "Lesson picker"
-    accessibilityHint = "Choose exactly what to learn next"
-
-    iconCircle.backgroundColor = TKMStyle.Color.background
-    iconCircle.layer.cornerRadius = 18
-    iconCircle.layer.borderWidth = 1
-    icon.tintColor = TKMStyle.Color.label
-    icon.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 14,
-                                                                    weight: .semibold)
-    titleLabel.text = "Lesson picker"
-    titleLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-    titleLabel.textColor = TKMStyle.Color.label
-    subtitleLabel.text = "Choose exactly what to learn next"
-    subtitleLabel.font = UIFont.systemFont(ofSize: 13)
-    subtitleLabel.textColor = TKMStyle.Color.grey33
-    subtitleLabel.adjustsFontSizeToFitWidth = true
-    subtitleLabel.minimumScaleFactor = 0.8
-    chevron.tintColor = TKMStyle.Color.grey33
-    chevron.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 13,
-                                                                       weight: .semibold)
-
-    let text = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
-    text.axis = .vertical
-    text.spacing = 1
-
-    for view in [iconCircle, icon, text, chevron] {
-      view.translatesAutoresizingMaskIntoConstraints = false
-      view.isUserInteractionEnabled = false
-      addSubview(view)
-    }
-    NSLayoutConstraint.activate([
-      iconCircle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-      iconCircle.centerYAnchor.constraint(equalTo: centerYAnchor),
-      iconCircle.widthAnchor.constraint(equalToConstant: 36),
-      iconCircle.heightAnchor.constraint(equalToConstant: 36),
-      icon.centerXAnchor.constraint(equalTo: iconCircle.centerXAnchor),
-      icon.centerYAnchor.constraint(equalTo: iconCircle.centerYAnchor),
-      text.leadingAnchor.constraint(equalTo: iconCircle.trailingAnchor, constant: 12),
-      text.centerYAnchor.constraint(equalTo: centerYAnchor),
-      text.trailingAnchor.constraint(lessThanOrEqualTo: chevron.leadingAnchor, constant: -12),
-      chevron.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-      chevron.centerYAnchor.constraint(equalTo: centerYAnchor),
-    ])
-    updateColors()
-  }
-
-  @available(*, unavailable)
-  required init?(coder _: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  override var isEnabled: Bool {
-    didSet {
-      alpha = isEnabled ? 1 : 0.55
-      chevron.isHidden = !isEnabled
-    }
-  }
-
-  override var isHighlighted: Bool {
-    didSet {
-      UIView.animate(withDuration: 0.15) {
-        self.transform = self.isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
-      }
-    }
-  }
-
-  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-    super.traitCollectionDidChange(previousTraitCollection)
-    updateColors()
-  }
-
-  private func updateColors() {
-    layer.borderColor = TKMStyle.Color.cardBorder.resolvedColor(with: traitCollection).cgColor
-    iconCircle.layer.borderColor = TKMStyle.Color.grey80.resolvedColor(with: traitCollection)
-      .cgColor
+    textAccessibilityElement?.accessibilityLabel = "Lessons: \(count), \(detail)"
   }
 }

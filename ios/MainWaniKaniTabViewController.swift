@@ -101,23 +101,29 @@ class MainWaniKaniTabViewController: UITableViewController {
       hasLessons = lessons > 0 && lessonsDisabledMessage == nil
       hasReviews = reviews > 0
 
+      let now = Date()
       let hero = HomeHeroItem(reviewCount: reviews, lessonCount: lessons,
                               lessonsDisabledMessage: lessonsDisabledMessage,
-                              leechCount: max(alreadyPassedButApprenticeCount, 0))
+                              upcomingReviews: upcomingReviews, date: now)
       hero.startReviews = { [unowned self] in self.startReviews() }
       hero.startLessons = { [unowned self] in self.startLessons() }
       hero.showLessonPicker = { [unowned self] in self.showLessonPicker() }
-      hero.startLeechReviews = { [unowned self] in self.startAlreadyPassedApprenticeReviews() }
       model.add(hero)
 
       model.add(section: "Upcoming reviews")
       model.add(UpcomingReviewsChartItem(upcomingReviews: upcomingReviews,
                                          currentReviewCount: reviews,
-                                         date: Date()) { [unowned self] in self.showTableForecast()
+                                         date: now) { [unowned self] in self.showTableForecast()
         })
       model
         .add(createCurrentLevelReviewTimeItem(services: services,
                                               currentLevelAssignments: currentLevelAssignments))
+
+      // Practice sessions over particular sets of items, each shown only when it has some.
+      if recentLessonCount > 0 || recentMistakes > 0 || alreadyPassedButApprenticeCount > 0 ||
+        leechCount > 0 {
+        model.add(section: "Extra study")
+      }
 
       if recentLessonCount > 0 {
         let recentLessonsItem = BasicModelItem(style: .value1,
@@ -143,6 +149,20 @@ class MainWaniKaniTabViewController: UITableViewController {
         }
         _ = setTableViewCellCount(recentMistakesItem, count: recentMistakes)
         model.add(recentMistakesItem)
+      }
+
+      if alreadyPassedButApprenticeCount > 0 {
+        let alreadyPassedApprenticeItem = BasicModelItem(style: .value1,
+                                                         title: "Review apprentice leeches",
+                                                         subtitle: "",
+                                                         accessoryType: .disclosureIndicator) { [
+          unowned self
+        ] in
+          self.startAlreadyPassedApprenticeReviews()
+        }
+        _ = setTableViewCellCount(alreadyPassedApprenticeItem,
+                                  count: alreadyPassedButApprenticeCount)
+        model.add(alreadyPassedApprenticeItem)
       }
 
       if leechCount > 0 {
