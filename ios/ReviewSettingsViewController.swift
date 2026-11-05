@@ -135,6 +135,12 @@ class ReviewSettingsViewController: SettingsTableViewController, TKMViewControll
                                 .showMinutesForNextLevelUpReview) { [unowned self] in
         showMinutesForNextLevelUpReview($0)
       })
+    model.add(SwitchModelItem(style: .subtitle,
+                              title: "Show review accuracy",
+                              subtitle: "The percentage of correct answers shown while reviewing",
+                              on: Settings.showReviewAccuracy) {
+        Settings.showReviewAccuracy = $0.isOn
+      })
 
     model.add(section: "Answers & marking")
     model.add(SwitchModelItem(style: .subtitle,

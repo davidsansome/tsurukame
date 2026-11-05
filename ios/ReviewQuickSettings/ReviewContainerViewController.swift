@@ -95,7 +95,7 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
   }
 
   func showsSuccessRate() -> Bool {
-    true
+    Settings.showReviewAccuracy
   }
 
   // MARK: - ReviewMenuDelegate
