@@ -127,7 +127,7 @@ class LessonPickerViewController: UIViewController, UICollectionViewDataSource,
     for (level, byType) in byLevelAndType.sorted(by: { $0.key < $1.key }) {
       for (type, name) in types {
         if let items = byType[type], !items.isEmpty {
-          groups.append(Group(title: "Level \(level) · \(name)",
+          groups.append(Group(title: "Level \(level) · \(name) (\(items.count))",
                               items: items.map { (subject: $0.0, reviewItem: $0.1) }))
         }
       }

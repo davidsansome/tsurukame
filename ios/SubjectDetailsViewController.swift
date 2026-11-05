@@ -102,14 +102,16 @@ class SubjectDetailsViewController: UIViewController, SubjectDelegate, TKMViewCo
     waves.fillColor = UIColor.black.withAlphaComponent(0.08)
     waves.radius = 36
 
-    // Subjects keep the app's Japanese font, no bigger than on the review screen.
-    let titleSize = TKMStyle.reviewSubjectFontSize() * (isFullScreen ? 0.8 : 1)
+    // Subjects keep the app's Japanese font. Unlike the review screen this isn't scaled up on iPad,
+    // so the details below still fit on screen.
+    let fontScale = CGFloat(Settings.fontSize)
+    let titleSize = (isFullScreen ? 48 : 60) * fontScale
     subjectTitle.font = UIFont(name: TKMStyle.japaneseFontName, size: titleSize)
     subjectTitle.attributedText = japaneseText(subject, imageSize: titleSize * 0.85)
     subjectTitle.adjustsFontSizeToFitWidth = true
     subjectTitle.minimumScaleFactor = 0.4
     for constraint in subjectTitle.constraints where constraint.firstAttribute == .height {
-      constraint.constant = isFullScreen ? 90 : 120
+      constraint.constant = (isFullScreen ? 90 : 120) * fontScale
     }
 
     let meaning = UILabel()
