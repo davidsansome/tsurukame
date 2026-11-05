@@ -16,6 +16,7 @@
 		48F4B1DC268CB9850033860E /* UpcomingReviewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F4B1DB268CB9850033860E /* UpcomingReviewsViewController.swift */; };
 		5C82B2908507339A293B0E59 /* Pods_FontScreenshotter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33812F134DC80E5D981C40E /* Pods_FontScreenshotter.framework */; };
 		5E77A1C2D3B4F5061728394A /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E77A1C2D3B4F5061728394B /* SettingsTableViewController.swift */; };
+		61E27D1BC9EFEDBFEEBCBA7C /* UndoBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9078E9E682BE8FBAFF052596 /* UndoBanner.swift */; };
 		630EB10A25C561A900783E54 /* NSMutableAttributedString+Replacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB10925C561A900783E54 /* NSMutableAttributedString+Replacements.swift */; };
 		630EB12125C5652400783E54 /* LessonsPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB12025C5652400783E54 /* LessonsPageControl.swift */; };
 		630EB13F25C5713000783E54 /* ReviewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630EB13E25C5713000783E54 /* ReviewItem.swift */; };
@@ -32,9 +33,6 @@
 		6332528E2727F32800ABBA04 /* PillModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6332528D2727F32800ABBA04 /* PillModelItem.swift */; };
 		633252922728131100ABBA04 /* TableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252912728131100ABBA04 /* TableModel.swift */; };
 		633252932728EA1100ABBA04 /* TableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252912728131100ABBA04 /* TableModel.swift */; };
-		63344E802D291C9F002A4FED /* AppStoreRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 63344E7C2D291C9F002A4FED /* AppStoreRelease.xcconfig */; };
-		63344E812D291C9F002A4FED /* DeveloperDebug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 63344E7D2D291C9F002A4FED /* DeveloperDebug.xcconfig */; };
-		63344E822D291C9F002A4FED /* TestFlightRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 63344E7E2D291C9F002A4FED /* TestFlightRelease.xcconfig */; };
 		63344E8A2D291CAA002A4FED /* ReviewContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63344E832D291CAA002A4FED /* ReviewContainerViewController.swift */; };
 		63344E8B2D291CAA002A4FED /* ReviewQuickSettingsAnswersMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63344E842D291CAA002A4FED /* ReviewQuickSettingsAnswersMenu.swift */; };
 		63344E8C2D291CAA002A4FED /* ReviewQuickSettingsAudioMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63344E852D291CAA002A4FED /* ReviewQuickSettingsAudioMenu.swift */; };
@@ -106,7 +104,6 @@
 		63BEBF9725C57D4000123147 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BEBF9625C57D4000123147 /* SearchResultViewController.swift */; };
 		63BFA78B218EB1B30058E885 /* DownloadModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63BFA78A218EB1B30058E885 /* DownloadModelItem.xib */; };
 		63BFA78E218EB6890058E885 /* OfflineAudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BFA78D218EB6890058E885 /* OfflineAudioViewController.swift */; };
-		63C0400E28DD581F0068F53D /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 63C0400D28DD581F0068F53D /* Charts */; };
 		63C42A2621B6A28D008CA938 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C42A2521B6A28D008CA938 /* AppDelegate.swift */; };
 		63C42A2821B6A28D008CA938 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C42A2721B6A28D008CA938 /* ViewController.swift */; };
 		63C42A3021B6A290008CA938 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63C42A2E21B6A290008CA938 /* LaunchScreen.storyboard */; };
@@ -193,7 +190,6 @@
 		9721708C2DBAF3A6001DFFED /* SubjectsExcluded.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9721708B2DBAF3A6001DFFED /* SubjectsExcluded.storyboard */; };
 		97A120DF2D9C467100D19CAE /* ReviewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A120DE2D9C467100D19CAE /* ReviewUtils.swift */; };
 		97D823D8C321A8DCEFD65355 /* PillLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6952928A3A57ECAC38BF1F03 /* PillLabel.swift */; };
-		61E27D1BC9EFEDBFEEBCBA7C /* UndoBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9078E9E682BE8FBAFF052596 /* UndoBanner.swift */; };
 		98CB06617A7F94BF2B0CE9AC /* RedesignFeedbackItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3857A1F90A4B6B5CDFDE7003 /* RedesignFeedbackItem.swift */; };
 		999BBB5555CCAA66BB777788 /* BurnedReviewFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 999BBB1111CCAA22BB333344 /* BurnedReviewFiltersViewController.swift */; };
 		A8C37490C70EB24EEC4C6AE8 /* PracticeCardItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3565A0DBD16020ADBFAB194 /* PracticeCardItem.swift */; };
@@ -454,7 +450,6 @@
 		63FCAE77237F75CC00DB1418 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		68B19C946E2F2284DA18EC3F /* Pods_Tsurukame__App_Store_screenshots_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tsurukame__App_Store_screenshots_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6952928A3A57ECAC38BF1F03 /* PillLabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PillLabel.swift; sourceTree = "<group>"; };
-		9078E9E682BE8FBAFF052596 /* UndoBanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UndoBanner.swift; sourceTree = "<group>"; };
 		6978F17AB58C6447CED81564 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		6A11C0DE0000000000000002 /* TableCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCards.swift; sourceTree = "<group>"; };
 		6A11C0DE0000000000000004 /* SubjectListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectListItem.swift; sourceTree = "<group>"; };
@@ -469,6 +464,7 @@
 		79D887462B419609003D8F99 /* String+SHA256Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SHA256Test.swift"; sourceTree = "<group>"; };
 		7E3A3B65C3A0B280B5FF32D3 /* Pods-Tsurukame (App Store screenshots).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).debug.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).debug.xcconfig"; sourceTree = "<group>"; };
 		82721E7B5A9C5562CC8D3B9B /* Pods-FontScreenshotter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.release.xcconfig"; sourceTree = "<group>"; };
+		9078E9E682BE8FBAFF052596 /* UndoBanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UndoBanner.swift; sourceTree = "<group>"; };
 		93B59B292367AF130097533C /* UpcomingReviewsChartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingReviewsChartItem.swift; sourceTree = "<group>"; };
 		96A335062EEF5F800017BC70 /* BottomSheetAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetAction.swift; sourceTree = "<group>"; };
 		972170892DBAF247001DFFED /* SubjectsExcludedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectsExcludedViewController.swift; sourceTree = "<group>"; };
@@ -521,7 +517,6 @@
 				63EF56DE26060B980038551A /* WaniKaniAPI in Frameworks */,
 				637E636E242E137C00F0B5CA /* Intents.framework in Frameworks */,
 				63CAB5012605FB1B0057E1C2 /* PromiseKit in Frameworks */,
-				63C0400E28DD581F0068F53D /* Charts in Frameworks */,
 				63CAAB111FD7FACD00E09DA1 /* SystemConfiguration.framework in Frameworks */,
 				480B243123D6830300FC2A82 /* Rexy in Frameworks */,
 				637CA18725D7F5A10082580E /* SwiftProtobuf in Frameworks */,
@@ -939,7 +934,7 @@
 				630FD6101FC45BDF00D21C1F /* Frameworks */,
 				630FD6111FC45BDF00D21C1F /* Resources */,
 				C90846C9237F1C790068A272 /* Embed Watch Content */,
-				0C9C13E732A68C21AE8F0AA3 /* [CP] Embed Pods Frameworks */,
+				5910F87849FA2C6E94C8804A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -953,7 +948,6 @@
 				637CA18625D7F5A10082580E /* SwiftProtobuf */,
 				63CAB5002605FB1B0057E1C2 /* PromiseKit */,
 				63EF56DD26060B980038551A /* WaniKaniAPI */,
-				63C0400D28DD581F0068F53D /* Charts */,
 				63A702142C2920D500AB0504 /* WaniKaniAPI */,
 				6324AE402F9DCEAD0089066C /* SVGKit */,
 			);
@@ -987,7 +981,7 @@
 				63C42A1F21B6A28D008CA938 /* Sources */,
 				63C42A2021B6A28D008CA938 /* Frameworks */,
 				63C42A2121B6A28D008CA938 /* Resources */,
-				D83E3BD421D1F4B4CA24FB27 /* [CP] Embed Pods Frameworks */,
+				3898A0033F16722D67A158B6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1009,7 +1003,7 @@
 				63C42A3221B6A290008CA938 /* Sources */,
 				63C42A3321B6A290008CA938 /* Frameworks */,
 				63C42A3421B6A290008CA938 /* Resources */,
-				9804FFEB930FBEDA5837C79C /* [CP] Embed Pods Frameworks */,
+				5A1CAF6FF795C7078C060F81 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1029,7 +1023,6 @@
 				63E9A8DE21199C8500418CE1 /* Sources */,
 				63E9A8DF21199C8500418CE1 /* Frameworks */,
 				63E9A8E021199C8500418CE1 /* Resources */,
-				43228C58AB8A11FE0C7DDB68 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1138,7 +1131,6 @@
 				480B242F23D6830300FC2A82 /* XCRemoteSwiftPackageReference "Rexy" */,
 				637CA18525D7F5A10082580E /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 				63CAB4FF2605FB1B0057E1C2 /* XCRemoteSwiftPackageReference "PromiseKit" */,
-				63C0400C28DD581F0068F53D /* XCRemoteSwiftPackageReference "Charts" */,
 				63A702132C2920D500AB0504 /* XCLocalSwiftPackageReference "WaniKaniAPI" */,
 				6324AE3F2F9DCEAD0089066C /* XCRemoteSwiftPackageReference "SVGKit" */,
 			);
@@ -1188,9 +1180,6 @@
 				63C4EA6A2C258E0E003D3C0B /* LessonPicker.storyboard in Resources */,
 				63C4EA6C2C258E10003D3C0D /* BurnedReviewFilters.storyboard in Resources */,
 				63C4EA4C2C257B8A003D3C0B /* Navigation.storyboard in Resources */,
-				63344E802D291C9F002A4FED /* AppStoreRelease.xcconfig in Resources */,
-				63344E812D291C9F002A4FED /* DeveloperDebug.xcconfig in Resources */,
-				63344E822D291C9F002A4FED /* TestFlightRelease.xcconfig in Resources */,
 				6365041F25D7DE0900801C2D /* Lessons.storyboard in Resources */,
 				63BFA78B218EB1B30058E885 /* DownloadModelItem.xib in Resources */,
 				63C4EA762C25991F003D3C0B /* ReviewSettings.storyboard in Resources */,
@@ -1256,30 +1245,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0C9C13E732A68C21AE8F0AA3 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Tsurukame/Pods-Tsurukame-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Haneke/Haneke.framework",
-				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
-				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
-				"${BUILT_PRODUCTS_DIR}/MMDrawerController/MMDrawerController.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Haneke.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMDrawerController.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tsurukame/Pods-Tsurukame-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		22FD5D8C02FF41B194D57E41 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1302,22 +1267,58 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		43228C58AB8A11FE0C7DDB68 /* [CP] Embed Pods Frameworks */ = {
+		3898A0033F16722D67A158B6 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Hippolyte/Hippolyte.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Reachability/Reachability_Privacy.bundle",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hippolyte.framework",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Reachability_Privacy.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5910F87849FA2C6E94C8804A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tsurukame/Pods-Tsurukame-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Reachability/Reachability_Privacy.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Reachability_Privacy.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tsurukame/Pods-Tsurukame-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5A1CAF6FF795C7078C060F81 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Reachability/Reachability_Privacy.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Reachability_Privacy.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		631CAD61234ACF69008CEA73 /* Run Swift Format */ = {
@@ -1381,26 +1382,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9804FFEB930FBEDA5837C79C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Haneke/Haneke.framework",
-				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Haneke.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter-FontScreenshotterUITests/Pods-FontScreenshotter-FontScreenshotterUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		AC9F4EB6C45321235EDA9EDE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1443,26 +1424,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D83E3BD421D1F4B4CA24FB27 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Haneke/Haneke.framework",
-				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Haneke.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2372,14 +2333,6 @@
 				minimumVersion = 1.39.0;
 			};
 		};
-		63C0400C28DD581F0068F53D /* XCRemoteSwiftPackageReference "Charts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/danielgindi/Charts";
-			requirement = {
-				kind = exactVersion;
-				version = 4.1.0;
-			};
-		};
 		63CAB4FF2605FB1B0057E1C2 /* XCRemoteSwiftPackageReference "PromiseKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mxcl/PromiseKit";
@@ -2409,11 +2362,6 @@
 		63A702142C2920D500AB0504 /* WaniKaniAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WaniKaniAPI;
-		};
-		63C0400D28DD581F0068F53D /* Charts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 63C0400C28DD581F0068F53D /* XCRemoteSwiftPackageReference "Charts" */;
-			productName = Charts;
 		};
 		63CAB5002605FB1B0057E1C2 /* PromiseKit */ = {
 			isa = XCSwiftPackageProductDependency;

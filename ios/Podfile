@@ -5,7 +5,7 @@ platform :ios, '15.0'
 
 target 'FontScreenshotter' do
   # Comment the next line if you don't want to use dynamic frameworks
-  use_frameworks!
+  use_frameworks! :linkage => :static
 
   # Pods for FontScreenshotter
   pod 'Haneke', '~> 1.0.2', :inhibit_warnings => true
@@ -19,7 +19,7 @@ end
 
 target 'Tsurukame' do
   # Comment the next line if you don't want to use dynamic frameworks
-  use_frameworks!
+  use_frameworks! :linkage => :static
 
   # Pods for Tsurukame
   pod 'FMDB', '~> 2.7.5'

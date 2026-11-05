@@ -41,6 +41,9 @@ public class WaniKaniAPIClient: NSObject {
 
     let sessionConfig = URLSessionConfiguration.default
     sessionConfig.requestCachePolicy = .reloadIgnoringLocalCacheData
+    // The cache policy above only stops reads - without this every response would still be written
+    // to the shared URLCache on disk.
+    sessionConfig.urlCache = nil
     session = URLSession(configuration: sessionConfig)
 
     httpDateFormatter = DateFormatter()
