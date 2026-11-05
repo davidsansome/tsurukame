@@ -39,6 +39,7 @@ let package = Package(name: "WaniKaniAPI",
                                 resources: [
                                   .copy("Resources/old-mnemonics.json"),
                                   .copy("Resources/visually-similar-kanji.json"),
+                                  .copy("Resources/word-frequency.json"),
                                 ]),
                         .testTarget(name: "WaniKaniAPITests",
                                     dependencies: ["Hippolyte", "WaniKaniAPI"]),

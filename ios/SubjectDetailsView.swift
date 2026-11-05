@@ -421,6 +421,20 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     model.add(item)
   }
 
+  private func addWordFrequency(_ subject: TKMSubject, toModel model: MutableTableModel) {
+    guard let frequency = WordFrequency.forSubject(id: subject.id) else {
+      return
+    }
+
+    model.add(section: "Frequency")
+    let item = BasicModelItem(style: .value1,
+                              title: frequency.isCommon ? "Common word" : "Word frequency",
+                              subtitle: frequency.rankBand)
+    item.titleFont = UIFont.systemFont(ofSize: kFontSize)
+    item.subtitleFont = UIFont.systemFont(ofSize: kFontSize)
+    model.add(item)
+  }
+
   static var showAllFieldsCount = 0
 
   @objc func showAllFields() {
@@ -681,6 +695,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       }
 
       addPartsOfSpeech(subject.vocabulary, toModel: model)
+      addWordFrequency(subject, toModel: model)
     }
 
     // Your progress, SRS level, next review, first started, reached guru
