@@ -66,12 +66,14 @@ public struct WordFrequency: Equatable {
 private let kWordFrequencies: [Int64: WordFrequency] = {
   let path = Bundle.module.path(forResource: "word-frequency.json", ofType: nil)!
   let data = try! Data(contentsOf: URL(fileURLWithPath: path))
-  let json = try! JSONSerialization.jsonObject(with: data) as! [String: [String: Any]]
+  // Each entry is "subject ID": [rank, common], where a rank of 0 means it's not known, and
+  // common is 1 or 0.
+  let json = try! JSONSerialization.jsonObject(with: data) as! [String: [Int]]
 
   var ret = [Int64: WordFrequency]()
   for (id, fields) in json {
-    ret[Int64(id)!] = WordFrequency(isCommon: fields["common"] as? Bool ?? false,
-                                    rank: fields["rank"] as? Int)
+    ret[Int64(id)!] = WordFrequency(isCommon: fields[1] != 0,
+                                    rank: fields[0] == 0 ? nil : fields[0])
   }
   return ret
 }()

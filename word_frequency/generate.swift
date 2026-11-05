@@ -456,17 +456,17 @@ for vocab in vocabulary {
   }
   let rank = combinedRank(japanese: japanese, readings: readings)
 
-  var fields = [String]()
   if common {
-    fields.append("\"common\": true")
     commonCount += 1
   }
-  if let rank = rank {
-    fields.append("\"rank\": \(rank)")
+  if rank != nil {
     rankCount += 1
   }
-  if !fields.isEmpty {
-    lines.append("  \"\(vocab.id)\": {\(fields.joined(separator: ", "))}")
+  // Each entry is "subject ID": [rank, common], where a rank of 0 means it's not known, and
+  // common is 1 or 0. This is much smaller than an object with named fields. One entry per line
+  // keeps diffs readable.
+  if common || rank != nil {
+    lines.append("\"\(vocab.id)\":[\(rank ?? 0),\(common ? 1 : 0)]")
   }
 }
 
