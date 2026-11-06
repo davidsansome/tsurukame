@@ -91,7 +91,7 @@ class UpcomingReviewsChartCell: TableModelCell {
     bars.counts = item.hourlyCounts
     bars.startDate = item.date
     accessibilityLabel = "Upcoming reviews: \(item.currentReviewCount) now, " +
-      "\(total) more in the next 24 hours"
+      "\(total) more in the next 24 hours, \(item.currentReviewCount + total) in total"
     accessibilityHint = "Shows the full forecast"
   }
 
@@ -157,6 +157,8 @@ private class UpcomingReviewsBarsView: UIView {
                    cornerRadii: CGSize(width: 3, height: 3)).fill()
     }
 
+    drawTotalLine(chartHeight: chartHeight, barWidth: barWidth, gap: gap)
+
     // Labels: "Now N" under the first bar, then the hour every six hours.
     let labelY = chartHeight + 6
     let font = UIFont.systemFont(ofSize: 11)
@@ -173,6 +175,74 @@ private class UpcomingReviewsBarsView: UIView {
       let centre = CGFloat(hour) * (barWidth + gap) + barWidth / 2
       text.draw(at: CGPoint(x: min(centre - width / 2, bounds.width - width), y: labelY),
                 withAttributes: attributes)
+    }
+  }
+
+  // A line showing how many reviews will be waiting at each hour if none are done, with the
+  // total written above each point where it goes up. It has its own scale, separate from the
+  // bars, with room at the top for the labels.
+  private func drawTotalLine(chartHeight: CGFloat, barWidth: CGFloat, gap: CGFloat) {
+    var totals = [Int]()
+    for count in counts {
+      totals.append((totals.last ?? 0) + count)
+    }
+    guard let maxTotal = totals.last, maxTotal > 0 else { return }
+
+    let labelFont = UIFont.systemFont(ofSize: 10, weight: .semibold)
+    let labelRoom = labelFont.lineHeight + 4
+    let dotRadius: CGFloat = 2
+    let points = totals.enumerated().map { i, total in
+      CGPoint(x: CGFloat(i) * (barWidth + gap) + barWidth / 2,
+              y: chartHeight - (chartHeight - labelRoom) * CGFloat(total) / CGFloat(maxTotal))
+    }
+    let color = TKMStyle.Color.accent.resolvedColor(with: traitCollection)
+
+    // Label each point where the total goes up, skipping any that would overlap the previous
+    // label. The first point is already labelled "Now N" under the axis.
+    let attributes: [NSAttributedString.Key: Any] = [.font: labelFont, .foregroundColor: color]
+    var labels = [(text: NSString, origin: CGPoint)]()
+    var lastLabelEnd = -CGFloat.greatestFiniteMagnitude
+    for i in 1 ..< points.count where counts[i] > 0 {
+      let text = String(totals[i]) as NSString
+      let size = text.size(withAttributes: attributes)
+      let x = min(max(points[i].x - size.width / 2, 0), bounds.width - size.width)
+      if x < lastLabelEnd + 3 {
+        continue
+      }
+      labels.append((text, CGPoint(x: x, y: points[i].y - dotRadius - 2 - size.height)))
+      lastLabelEnd = x + size.width
+    }
+
+    // Outline the labels in the card's colour first, so they stay readable over the bars
+    // without cutting gaps in the line.
+    let haloAttributes: [NSAttributedString.Key: Any] = [
+      .font: labelFont,
+      .strokeColor: TKMStyle.Color.cellBackground.resolvedColor(with: traitCollection),
+      // A percentage of the font size, so about 5pt wide.
+      .strokeWidth: 50,
+    ]
+    for label in labels {
+      label.text.draw(at: label.origin, withAttributes: haloAttributes)
+    }
+
+    color.setStroke()
+    color.setFill()
+    let line = UIBezierPath()
+    line.lineWidth = 2
+    line.lineJoinStyle = .round
+    line.lineCapStyle = .round
+    line.move(to: points[0])
+    for point in points.dropFirst() {
+      line.addLine(to: point)
+    }
+    line.stroke()
+    for point in points {
+      UIBezierPath(arcCenter: point, radius: dotRadius, startAngle: 0, endAngle: .pi * 2,
+                   clockwise: true).fill()
+    }
+
+    for label in labels {
+      label.text.draw(at: label.origin, withAttributes: attributes)
     }
   }
 
