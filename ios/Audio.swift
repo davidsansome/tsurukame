@@ -42,7 +42,7 @@ class Audio: NSObject {
     // Set the audio session category.
     let session = AVAudioSession.sharedInstance()
     try? session
-      .setCategory(.playback,
+      .setCategory(.ambient,
                    options: Settings
                      .interruptBackgroundAudio ? [
                        .duckOthers,
