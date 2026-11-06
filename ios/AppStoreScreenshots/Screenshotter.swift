@@ -550,7 +550,6 @@ import WaniKaniAPI
             english: "You’re way off base if you think you know me better than I know myself."
           }
           parts_of_speech: [PRONOUN]
-          audio_ids: [41385, 41377, 6643, 29636]
         }
       """,
 
@@ -1260,9 +1259,13 @@ import WaniKaniAPI
 
     override func getSubject(id: Int64) -> TKMSubject? {
       if let textProto = subjectTextProtos[id] {
-        return try! TKMSubject(textFormatString: textProto)
+        return try? TKMSubject(textFormatString: textProto)
       }
       return nil
+    }
+
+    override func isValid(subjectId: Int64) -> Bool {
+      getSubject(id: subjectId) != nil
     }
 
     override func getAllAssignments() -> [TKMAssignment] {
