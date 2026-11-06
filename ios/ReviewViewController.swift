@@ -244,6 +244,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var chipsInset: CGFloat = 0
   // How far the subject is nudged to stay put when the keyboard changes size slightly.
   private var keyboardNudge: CGFloat = 0
+  private let waves = WavesView()
   @IBOutlet private var questionBackground: GradientView!
   @IBOutlet private var promptBackground: GradientView!
   @IBOutlet private var questionLabel: UILabel!
@@ -328,7 +329,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     questionBackground.layer.cornerCurve = .continuous
     questionBackground.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
     questionBackground.clipsToBounds = true
-    let waves = WavesView()
     waves.waveColor = UIColor.white.withAlphaComponent(0.08)
     // A faint dark fill between the lines, like the mocks.
     waves.fillColor = UIColor.black.withAlphaComponent(0.08)
@@ -1285,6 +1285,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   }
 
   func quickSettingsChanged() {
+    waves.isHidden = !Settings.showWavesBackground
     if subjectDetailsView.isHidden {
       updateViewForCurrentTask(updateFirstResponder: false)
     }

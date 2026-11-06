@@ -24,6 +24,11 @@ class ReviewQuickSettingsDisplayMenu: ReviewQuickSettingsTable {
         [unowned self] in
         self.delegate?.closeMenuAndPush(viewController: makeInterfaceStyleViewController())
       })
+    model.add(CheckmarkModelItem(style: .default, title: "Wave pattern background",
+                                 on: Settings.showWavesBackground) { [weak self] on in
+        Settings.showWavesBackground = on
+        self?.delegate?.quickSettingsChanged()
+      })
     model.add(BasicModelItem(style: .value1, title: "SRS level indicator",
                              subtitle: Settings.srsLevelIndicatorStyle.description,
                              accessoryType: .disclosureIndicator) {
