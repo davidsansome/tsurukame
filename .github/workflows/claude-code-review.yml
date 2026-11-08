@@ -82,7 +82,7 @@ jobs:
             mcp__github_inline_comment__create_inline_comment. If nothing qualifies, post
             nothing. If you do post comments, end the last one with:
             "A maintainer can reply `@claude fix these` to have Claude push fixes."
-          claude_args: '--add-dir pr --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Read,Grep,Glob"'
+          claude_args: '--model claude-opus-5-5 --add-dir pr --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Read,Grep,Glob"'
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
 
