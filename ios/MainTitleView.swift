@@ -99,7 +99,8 @@ class MainTitleView: UIView {
       // safeAreaInsets.top
       // is small (<= 24pt without a top navigation bar), position the header so it sits 16pt below
       // the top edge of the screen. On standard devices with a top navigation bar (where
-      // safeAreaInsets.top >= 32 in landscape or >= 64 in portrait), keep the original -48pt offset.
+      // safeAreaInsets.top >= 32 in landscape or >= 64 in portrait), keep the original -48pt
+      // offset.
       if safeAreaInsets.top <= 24 {
         topConstraint.constant = 16 - safeAreaInsets.top
       } else {
