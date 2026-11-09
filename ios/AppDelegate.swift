@@ -150,7 +150,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                         image: UIImage(systemName: "arrow.clockwise"),
                                         action: #selector(handleRefreshAction(_:)),
                                         input: "r",
-                                        modifierFlags: [.command] // ⌘R
+                                        modifierFlags: [.command, .shift] // ⇧⌘R
       )
       let refreshMenu = UIMenu(title: "",
                                options: .displayInline,
