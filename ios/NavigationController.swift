@@ -85,7 +85,7 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
   }
 
   @objc func zoomOut() {
-    zoomScale = max(zoomScale - 0.15, 0.75)
+    zoomScale = max(zoomScale - 0.15, 0.70)
   }
 
   @objc func zoomReset() {
