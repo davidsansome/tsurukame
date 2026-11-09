@@ -131,14 +131,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
   }
 
+  @objc func handleRefreshAction(_: Any) {
+    if let vc = NavigationController.shared?.topViewController as? MainViewController {
+      vc.refresh(quick: false)
+    }
+  }
+
   // MARK: - Mac Catalyst / iPadOS Menu Zoom
 
   override func buildMenu(with builder: UIMenuBuilder) {
     super.buildMenu(with: builder)
     guard builder.system == .main else { return }
 
-    // Quitar menús estándar que Tsurukame no utiliza
     builder.remove(menu: .format)
+
+    #if targetEnvironment(macCatalyst)
+      let refreshCommand = UIKeyCommand(title: "Full Refresh",
+                                        image: UIImage(systemName: "arrow.clockwise"),
+                                        action: #selector(handleRefreshAction(_:)),
+                                        input: "r",
+                                        modifierFlags: [.command] // ⌘R
+      )
+      let refreshMenu = UIMenu(title: "",
+                               options: .displayInline,
+                               children: [refreshCommand])
+
+      builder.insertChild(refreshMenu, atEndOfMenu: .view)
+    #endif
 
     let zoomIn = UIKeyCommand(title: "Zoom In",
                               action: #selector(NavigationController.zoomIn),
