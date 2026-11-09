@@ -76,6 +76,7 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
     didSet {
       UserDefaults.standard.set(Double(zoomScale), forKey: NavigationController.kZoomScaleKey)
       applyZoom()
+      NotificationCenter.default.post(name: .zoomScaleDidChange, object: nil)
     }
   }
 
@@ -189,4 +190,8 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
                             animated _: Bool) {
     isPushingViewController = false
   }
+}
+
+extension Notification.Name {
+  static let zoomScaleDidChange = Notification.Name("zoomScaleDidChange")
 }
