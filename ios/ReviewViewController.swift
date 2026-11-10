@@ -1592,8 +1592,12 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     if traitCollection.userInterfaceIdiom == .pad {
       let c = UIAlertController(title: dialogTitle, message: dialogMessage,
                                 preferredStyle: .actionSheet)
-      c.popoverPresentationController?.sourceView = addSynonymButton
-      c.popoverPresentationController?.sourceRect = addSynonymButton.bounds
+      if let popover = c.popoverPresentationController {
+        popover.sourceView = answerField
+        popover.sourceRect = CGRect(x: answerField.bounds.midX, y: answerField.bounds.maxY,
+                                    width: 0, height: 0)
+        popover.permittedArrowDirections = .up
+      }
 
       for action in actions {
         let style: UIAlertAction.Style
