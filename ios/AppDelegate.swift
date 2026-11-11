@@ -131,6 +131,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
   }
 
+  override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    if action == #selector(zoomIn) ||
+      action == #selector(zoomOut) ||
+      action == #selector(zoomReset) {
+      return true
+    }
+    if action == #selector(handleRefreshAction(_:)) {
+      return NavigationController.shared?.topViewController is MainViewController
+    }
+    return super.canPerformAction(action, withSender: sender)
+  }
+
+  @objc func zoomIn() {
+    NavigationController.shared?.zoomIn()
+  }
+
+  @objc func zoomOut() {
+    NavigationController.shared?.zoomOut()
+  }
+
+  @objc func zoomReset() {
+    NavigationController.shared?.zoomReset()
+  }
+
   @objc func handleRefreshAction(_: Any) {
     if let vc = NavigationController.shared?.topViewController as? MainViewController {
       vc.refresh(quick: false)
