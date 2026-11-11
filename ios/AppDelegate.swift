@@ -141,28 +141,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     super.buildMenu(with: builder)
     guard builder.system == .main else { return }
 
-    builder.remove(menu: .format)
-
     #if !targetEnvironment(macCatalyst)
-      let zoomIn = UIKeyCommand(title: "Zoom In",
-                                action: #selector(NavigationController.zoomIn),
-                                input: "+",
-                                modifierFlags: .command)
-      let zoomOut = UIKeyCommand(title: "Zoom Out",
-                                 action: #selector(NavigationController.zoomOut),
-                                 input: "-",
-                                 modifierFlags: .command)
-      let zoomReset = UIKeyCommand(title: "Actual Size",
-                                   action: #selector(NavigationController.zoomReset),
-                                   input: "0",
+      // Add Zoom functionality only on Mac Designed for iPad
+      if ProcessInfo.processInfo.isiOSAppOnMac {
+        // Removes unused system Format menu to avoid conflicts with Zoom menu
+        builder.remove(menu: .format)
+
+        let zoomIn = UIKeyCommand(title: "Zoom In",
+                                  action: #selector(NavigationController.zoomIn),
+                                  input: "+",
+                                  modifierFlags: .command)
+        let zoomOut = UIKeyCommand(title: "Zoom Out",
+                                   action: #selector(NavigationController.zoomOut),
+                                   input: "-",
                                    modifierFlags: .command)
+        let zoomReset = UIKeyCommand(title: "Actual Size",
+                                     action: #selector(NavigationController.zoomReset),
+                                     input: "0",
+                                     modifierFlags: .command)
 
-      let zoomMenu = UIMenu(title: "Zoom",
-                            image: nil,
-                            identifier: UIMenu.Identifier("app.tsurukame.menu.zoom"),
-                            children: [zoomIn, zoomOut, zoomReset])
+        let zoomMenu = UIMenu(title: "Zoom",
+                              image: nil,
+                              identifier: UIMenu.Identifier("app.tsurukame.menu.zoom"),
+                              children: [zoomIn, zoomOut, zoomReset])
 
-      builder.insertChild(zoomMenu, atEndOfMenu: .view)
+        builder.insertChild(zoomMenu, atEndOfMenu: .view)
+      }
     #endif
 
     let refreshCommand = UIKeyCommand(title: "Full Refresh",
