@@ -80,7 +80,7 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
   }
 
   @objc func zoomIn() {
-    zoomScale = min(zoomScale + 0.15, 2.0)
+    zoomScale = min(zoomScale + 0.15, 1.9)
   }
 
   @objc func zoomOut() {
