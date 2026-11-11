@@ -137,58 +137,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
   }
 
-  // MARK: - Mac Catalyst / iPadOS Menu Zoom
-
   override func buildMenu(with builder: UIMenuBuilder) {
     super.buildMenu(with: builder)
     guard builder.system == .main else { return }
 
     builder.remove(menu: .format)
 
-    #if targetEnvironment(macCatalyst)
-      let refreshCommand = UIKeyCommand(title: "Full Refresh",
-                                        image: UIImage(systemName: "arrow.clockwise"),
-                                        action: #selector(handleRefreshAction(_:)),
-                                        input: "r",
-                                        modifierFlags: [.command, .shift] // ⇧⌘R
-      )
-      let refreshMenu = UIMenu(title: "",
-                               options: .displayInline,
-                               children: [refreshCommand])
+    #if !targetEnvironment(macCatalyst)
+      let zoomIn = UIKeyCommand(title: "Zoom In",
+                                action: #selector(NavigationController.zoomIn),
+                                input: "+",
+                                modifierFlags: .command)
+      let zoomOut = UIKeyCommand(title: "Zoom Out",
+                                 action: #selector(NavigationController.zoomOut),
+                                 input: "-",
+                                 modifierFlags: .command)
+      let zoomReset = UIKeyCommand(title: "Actual Size",
+                                   action: #selector(NavigationController.zoomReset),
+                                   input: "0",
+                                   modifierFlags: .command)
 
-      builder.insertChild(refreshMenu, atEndOfMenu: .view)
+      let zoomMenu = UIMenu(title: "Zoom",
+                            image: nil,
+                            identifier: UIMenu.Identifier("app.tsurukame.menu.zoom"),
+                            children: [zoomIn, zoomOut, zoomReset])
+
+      builder.insertChild(zoomMenu, atEndOfMenu: .view)
     #endif
 
-    let zoomIn = UIKeyCommand(title: "Zoom In",
-                              action: #selector(NavigationController.zoomIn),
-                              input: "+",
-                              modifierFlags: .command)
-    let zoomOut = UIKeyCommand(title: "Zoom Out",
-                               action: #selector(NavigationController.zoomOut),
-                               input: "-",
-                               modifierFlags: .command)
-    let zoomReset = UIKeyCommand(title: "Actual Size",
-                                 action: #selector(NavigationController.zoomReset),
-                                 input: "0",
-                                 modifierFlags: .command)
+    let refreshCommand = UIKeyCommand(title: "Full Refresh",
+                                      action: #selector(handleRefreshAction(_:)),
+                                      input: "r",
+                                      modifierFlags: [.command, .shift]) // ⇧⌘R
 
-    let zoomMenu = UIMenu(title: "Zoom",
-                          image: nil,
-                          identifier: UIMenu.Identifier("app.tsurukame.menu.zoom"),
-                          children: [zoomIn, zoomOut, zoomReset])
+    let refreshMenu = UIMenu(title: "",
+                             options: .displayInline,
+                             children: [refreshCommand])
 
-    builder.insertSibling(zoomMenu, afterMenu: .view)
-  }
-
-  @objc func zoomIn() {
-    NavigationController.shared?.zoomIn()
-  }
-
-  @objc func zoomOut() {
-    NavigationController.shared?.zoomOut()
-  }
-
-  @objc func zoomReset() {
-    NavigationController.shared?.zoomReset()
+    builder.insertChild(refreshMenu, atEndOfMenu: .view)
   }
 }

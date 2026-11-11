@@ -76,7 +76,6 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
     didSet {
       UserDefaults.standard.set(Double(zoomScale), forKey: NavigationController.kZoomScaleKey)
       applyZoom()
-      NotificationCenter.default.post(name: .zoomScaleDidChange, object: nil)
     }
   }
 
@@ -129,19 +128,6 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
     }
   }
 
-  override var keyCommands: [UIKeyCommand]? {
-    var commands = super.keyCommands ?? []
-    commands.append(contentsOf: [
-      UIKeyCommand(input: "+", modifierFlags: .command, action: #selector(zoomIn),
-                   discoverabilityTitle: "Zoom In"),
-      UIKeyCommand(input: "-", modifierFlags: .command, action: #selector(zoomOut),
-                   discoverabilityTitle: "Zoom Out"),
-      UIKeyCommand(input: "0", modifierFlags: .command, action: #selector(zoomReset),
-                   discoverabilityTitle: "Actual Size"),
-    ])
-    return commands
-  }
-
   override var childForStatusBarStyle: UIViewController? {
     topViewController?.childForStatusBarStyle ?? topViewController
   }
@@ -190,8 +176,4 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
                             animated _: Bool) {
     isPushingViewController = false
   }
-}
-
-extension Notification.Name {
-  static let zoomScaleDidChange = Notification.Name("zoomScaleDidChange")
 }

@@ -27,13 +27,6 @@ class MainTitleView: UIView {
   required init?(coder: NSCoder) {
     super.init(coder: coder)
 
-    #if targetEnvironment(macCatalyst)
-      NotificationCenter.default.addObserver(self,
-                                             selector: #selector(zoomScaleDidChange),
-                                             name: .zoomScaleDidChange,
-                                             object: nil)
-    #endif
-
     let nib = UINib(nibName: "MainTitleView", bundle: Bundle(for: type(of: self)))
     let container = nib.instantiate(withOwner: self, options: nil).first as! UIView
 
@@ -81,33 +74,17 @@ class MainTitleView: UIView {
     updateTopConstraint()
   }
 
-  @objc private func zoomScaleDidChange() {
-    updateTopConstraint()
-  }
-
   private func updateTopConstraint() {
-    #if targetEnvironment(macCatalyst)
-      // In Mac Catalyst, we leave some space at the top so that the header sits
-      // completely below the window buttons (traffic lights).
-      if safeAreaInsets.top >= 121 {
-        topConstraint.constant = -48
-      } else {
-        topConstraint.constant = -16
-      }
-    #else
-      // When the navigation bar is placed on a side rail (such as on iPhone Duo) and
-      // safeAreaInsets.top
-      // is small (<= 24pt without a top navigation bar), position the header so it sits 16pt below
-      // the top edge of the screen. On standard devices with a top navigation bar (where
-      // safeAreaInsets.top >= 32 in landscape or >= 64 in portrait), keep the original -48pt
-      // offset.
-      if safeAreaInsets.top <= 24 {
-        topConstraint.constant = 16 - safeAreaInsets.top
-      } else {
-        topConstraint.constant = -48
-      }
-    #endif
-    setNeedsLayout()
+    // When the navigation bar is placed on a side rail (such as on iPhone Duo) and
+    // safeAreaInsets.top
+    // is small (<= 24pt without a top navigation bar), position the header so it sits 16pt below
+    // the top edge of the screen. On standard devices with a top navigation bar (where
+    // safeAreaInsets.top >= 32 in landscape or >= 64 in portrait), keep the original -48pt offset.
+    if safeAreaInsets.top <= 24 {
+      topConstraint.constant = 16 - safeAreaInsets.top
+    } else {
+      topConstraint.constant = -48
+    }
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
