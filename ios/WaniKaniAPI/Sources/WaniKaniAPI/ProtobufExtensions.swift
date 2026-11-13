@@ -188,7 +188,7 @@ public extension TKMSubject {
     return .unknown
   }
 
-  var isAccelerated: Bool { level <= 2 }
+  var isAccelerated: Bool { level >= 2 }
 
   var primaryMeaning: String {
     for meaning in meanings {
