@@ -35,7 +35,6 @@ class ArtworkModelCell: TableModelCell {
   @TypedModelItem var item: ArtworkModelItem
 
   private var hostingController: UIHostingController<AnyView>?
-  private var widthConstraint: NSLayoutConstraint?
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -48,13 +47,6 @@ class ArtworkModelCell: TableModelCell {
 
   override func layoutSubviews() {
     super.layoutSubviews()
-    let containerWidth = contentView.bounds.width
-    if let constraint = widthConstraint {
-      if constraint.constant != containerWidth {
-        constraint.constant = containerWidth
-        updateHostingController(with: item.subjectID)
-      }
-    }
   }
 
   private func updateHostingController(with subjectID: Int64) {
@@ -102,7 +94,6 @@ class ArtworkModelCell: TableModelCell {
     .background(Color.white)
     .cornerRadius(10)
     .shadow(radius: 5)
-    .frame(width: containerWidth)
 
     if hostingController == nil {
       hostingController = UIHostingController(rootView: AnyView(artworkView))
@@ -111,14 +102,12 @@ class ArtworkModelCell: TableModelCell {
         hostedView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(hostedView)
 
-        let widthConstraint = hostedView.widthAnchor.constraint(equalToConstant: containerWidth)
-        self.widthConstraint = widthConstraint
         // Define constraints for hostedView
         NSLayoutConstraint.activate([
           hostedView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
           hostedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-          hostedView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-          widthConstraint,
+          hostedView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+          hostedView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ])
       }
     } else {
