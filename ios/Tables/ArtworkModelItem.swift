@@ -45,10 +45,6 @@ class ArtworkModelCell: TableModelCell {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override func layoutSubviews() {
-    super.layoutSubviews()
-  }
-
   private func updateHostingController(with subjectID: Int64) {
     var windowHeight: CGFloat
 
