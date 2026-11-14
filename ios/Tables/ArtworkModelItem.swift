@@ -36,6 +36,7 @@ class ArtworkModelCell: TableModelCell {
 
   private var hostingController: UIHostingController<AnyView>?
   private var widthConstraint: NSLayoutConstraint?
+  private var heightConstraint: NSLayoutConstraint?
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -48,10 +49,15 @@ class ArtworkModelCell: TableModelCell {
 
   override func layoutSubviews() {
     super.layoutSubviews()
-    let containerWidth = contentView.bounds.width
-    if let constraint = widthConstraint {
-      if constraint.constant != containerWidth {
-        constraint.constant = containerWidth
+
+    let updates: [(constraint: NSLayoutConstraint?, value: CGFloat)] = [
+      (widthConstraint, contentView.bounds.width),
+      (heightConstraint, contentView.bounds.height),
+    ]
+
+    for (constraint, newValue) in updates {
+      if let constraint, constraint.constant != newValue {
+        constraint.constant = newValue
         updateHostingController(with: item.subjectID)
       }
     }
@@ -59,30 +65,33 @@ class ArtworkModelCell: TableModelCell {
 
   private func updateHostingController(with subjectID: Int64) {
     var windowHeight: CGFloat
+
     var containerWidth: CGFloat
+    var containerHeight: CGFloat
 
     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
        let window = windowScene.windows.first {
       // If we have a window, we're guaranteed to have valid height and width
       windowHeight = window.bounds.height
       containerWidth = contentView.bounds.width
+      containerHeight = contentView.bounds.height
     } else {
       // Fallback to main screen's dimensions if the window scene or the window itself is not
       // available
       windowHeight = UIScreen.main.bounds.height
       containerWidth = UIScreen.main.bounds.width
+      containerHeight = UIScreen.main.bounds.height
     }
 
     let desiredHeight = windowHeight * 0.25
-
-    let artworkView: some View = VStack(alignment: .center, spacing: 20) {
+    let artworkView: some View = VStack(alignment: .center, spacing: 0) {
       if let artworkURLString = ArtworkManager.artworkFullURL(subjectID: subjectID),
          let url = URL(string: artworkURLString) {
         AsyncImage(url: url) { phase in
           switch phase {
           case .empty:
             ProgressView()
-              .frame(height: desiredHeight)
+              .frame(width: containerWidth, height: desiredHeight)
           case let .success(image):
             image
               .resizable()
@@ -93,7 +102,7 @@ class ArtworkModelCell: TableModelCell {
             EmptyView()
           }
         }
-        .frame(maxHeight: desiredHeight)
+        .frame(maxWidth: containerWidth, maxHeight: desiredHeight)
       } else {
         Text("Artwork not available for this subject ID.")
       }
@@ -102,7 +111,7 @@ class ArtworkModelCell: TableModelCell {
     .background(Color.white)
     .cornerRadius(10)
     .shadow(radius: 5)
-    .frame(width: containerWidth)
+    .frame(width: containerWidth, height: desiredHeight)
 
     if hostingController == nil {
       hostingController = UIHostingController(rootView: AnyView(artworkView))
@@ -111,14 +120,14 @@ class ArtworkModelCell: TableModelCell {
         hostedView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(hostedView)
 
-        let widthConstraint = hostedView.widthAnchor.constraint(equalToConstant: containerWidth)
-        self.widthConstraint = widthConstraint
+        widthConstraint = hostedView.widthAnchor.constraint(equalToConstant: containerWidth)
+        heightConstraint = hostedView.heightAnchor.constraint(equalToConstant: containerHeight)
+
         // Define constraints for hostedView
         NSLayoutConstraint.activate([
-          hostedView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-          hostedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+          hostedView.topAnchor.constraint(equalTo: contentView.topAnchor),
+          hostedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
           hostedView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-          widthConstraint,
         ])
       }
     } else {
