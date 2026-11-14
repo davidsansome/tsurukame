@@ -35,6 +35,7 @@ class ArtworkModelCell: TableModelCell {
   @TypedModelItem var item: ArtworkModelItem
 
   private var hostingController: UIHostingController<AnyView>?
+  private var lastWindowHeight: CGFloat?
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -47,8 +48,23 @@ class ArtworkModelCell: TableModelCell {
 
   override func layoutSubviews() {
     super.layoutSubviews()
-    // Update the hosting controller when layout changes (rotation, split view, etc.)
-    updateHostingController(with: item.subjectID)
+
+    // Guard against accessing item when baseItem is nil
+    guard baseItem != nil else { return }
+
+    // Only update if window height has changed to avoid repeated relayouts
+    var windowHeight: CGFloat
+    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+       let window = windowScene.windows.first {
+      windowHeight = window.bounds.height
+    } else {
+      windowHeight = UIScreen.main.bounds.height
+    }
+
+    if lastWindowHeight != windowHeight {
+      lastWindowHeight = windowHeight
+      updateHostingController(with: item.subjectID)
+    }
   }
 
   private func updateHostingController(with subjectID: Int64) {
