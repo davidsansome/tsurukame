@@ -45,6 +45,12 @@ class ArtworkModelCell: TableModelCell {
     fatalError("init(coder:) has not been implemented")
   }
 
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    // Update the hosting controller when layout changes (rotation, split view, etc.)
+    updateHostingController(with: item.subjectID)
+  }
+
   private func updateHostingController(with subjectID: Int64) {
     var windowHeight: CGFloat
 
