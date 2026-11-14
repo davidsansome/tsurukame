@@ -93,6 +93,7 @@ class ArtworkModelCell: TableModelCell {
             EmptyView()
           }
         }
+        .frame(maxHeight: desiredHeight)
       } else {
         Text("Artwork not available for this subject ID.")
       }
