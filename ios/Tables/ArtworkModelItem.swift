@@ -70,7 +70,7 @@ class ArtworkModelCell: TableModelCell {
     }
 
     let containerWidth = contentView.bounds.width
-    let desiredHeight = windowHeight * 0.25
+    let desiredHeight = windowHeight * 0.30
     let artworkView: some View = VStack(alignment: .center, spacing: 0) {
       if let artworkURLString = ArtworkManager.artworkFullURL(subjectID: subjectID),
          let url = URL(string: artworkURLString) {
