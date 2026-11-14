@@ -35,8 +35,7 @@ class ArtworkModelCell: TableModelCell {
   @TypedModelItem var item: ArtworkModelItem
 
   private var hostingController: UIHostingController<AnyView>?
-  private var widthConstraint: NSLayoutConstraint?
-  private var heightConstraint: NSLayoutConstraint?
+  private var lastSize: CGSize = .zero
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -50,37 +49,27 @@ class ArtworkModelCell: TableModelCell {
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    let updates: [(constraint: NSLayoutConstraint?, value: CGFloat)] = [
-      (widthConstraint, contentView.bounds.width),
-      (heightConstraint, contentView.bounds.height),
-    ]
-
-    for (constraint, newValue) in updates {
-      if let constraint, constraint.constant != newValue {
-        constraint.constant = newValue
-        updateHostingController(with: item.subjectID)
-      }
+    let currentSize = contentView.bounds.size
+    if currentSize != lastSize && currentSize.width > 0 {
+      lastSize = currentSize
+      updateHostingController(with: item.subjectID)
     }
   }
 
   private func updateHostingController(with subjectID: Int64) {
     var windowHeight: CGFloat
-
     var containerWidth: CGFloat
-    var containerHeight: CGFloat
 
     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
        let window = windowScene.windows.first {
       // If we have a window, we're guaranteed to have valid height and width
       windowHeight = window.bounds.height
       containerWidth = contentView.bounds.width
-      containerHeight = contentView.bounds.height
     } else {
       // Fallback to main screen's dimensions if the window scene or the window itself is not
       // available
       windowHeight = UIScreen.main.bounds.height
       containerWidth = UIScreen.main.bounds.width
-      containerHeight = UIScreen.main.bounds.height
     }
 
     let desiredHeight = windowHeight * 0.25
@@ -119,9 +108,6 @@ class ArtworkModelCell: TableModelCell {
       if let hostedView = hostingController?.view {
         hostedView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(hostedView)
-
-        widthConstraint = hostedView.widthAnchor.constraint(equalToConstant: containerWidth)
-        heightConstraint = hostedView.heightAnchor.constraint(equalToConstant: containerHeight)
 
         // Define constraints for hostedView
         NSLayoutConstraint.activate([
