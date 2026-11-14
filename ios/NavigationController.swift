@@ -59,6 +59,73 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
         view.addGestureRecognizer(panGestureRecognizer)
       }
     }
+
+    NavigationController.shared = self
+    let saved = UserDefaults.standard.double(forKey: NavigationController.kZoomScaleKey)
+    if saved >= 0.5 {
+      zoomScale = CGFloat(saved)
+    }
+  }
+
+  // MARK: - UI Zoom
+
+  weak static var shared: NavigationController?
+
+  private static let kZoomScaleKey = "ui_zoom_scale"
+  private(set) var zoomScale: CGFloat = 1.0 {
+    didSet {
+      UserDefaults.standard.set(Double(zoomScale), forKey: NavigationController.kZoomScaleKey)
+      applyZoom()
+    }
+  }
+
+  @objc func zoomIn() {
+    zoomScale = min(zoomScale + 0.15, 1.9)
+  }
+
+  @objc func zoomOut() {
+    zoomScale = max(zoomScale - 0.15, 0.70)
+  }
+
+  @objc func zoomReset() {
+    zoomScale = 1.0
+  }
+
+  func applyZoom() {
+    guard let window = view.window else { return }
+
+    let winSize = window.bounds.size
+    if abs(zoomScale - 1.0) < 0.001 {
+      if view.transform != .identity {
+        view.transform = .identity
+      }
+      if view.frame != window.bounds {
+        view.frame = window.bounds
+      }
+      return
+    }
+
+    let targetBounds = CGRect(x: 0, y: 0, width: winSize.width / zoomScale,
+                              height: winSize.height / zoomScale)
+    let targetTransform = CGAffineTransform(scaleX: zoomScale, y: zoomScale)
+    let targetCenter = CGPoint(x: winSize.width / 2.0, y: winSize.height / 2.0)
+
+    if view.bounds != targetBounds {
+      view.bounds = targetBounds
+    }
+    if view.transform != targetTransform {
+      view.transform = targetTransform
+    }
+    if view.center != targetCenter {
+      view.center = targetCenter
+    }
+  }
+
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    if abs(zoomScale - 1.0) >= 0.001 {
+      applyZoom()
+    }
   }
 
   override var childForStatusBarStyle: UIViewController? {
