@@ -53,13 +53,8 @@ class ArtworkModelCell: TableModelCell {
     guard baseItem != nil else { return }
 
     // Only update if window height has changed to avoid repeated relayouts
-    var windowHeight: CGFloat
-    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-       let window = windowScene.windows.first {
-      windowHeight = window.bounds.height
-    } else {
-      windowHeight = UIScreen.main.bounds.height
-    }
+    // Use the window that contains this cell, not a random window from connectedScenes
+    let windowHeight = window?.bounds.height ?? UIScreen.main.bounds.height
 
     if lastWindowHeight != windowHeight {
       lastWindowHeight = windowHeight
@@ -68,18 +63,8 @@ class ArtworkModelCell: TableModelCell {
   }
 
   private func updateHostingController(with subjectID: Int64) {
-    var windowHeight: CGFloat
-
-    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-       let window = windowScene.windows.first {
-      // If we have a window, we're guaranteed to have valid height and width
-      windowHeight = window.bounds.height
-    } else {
-      // Fallback to main screen's dimensions if the window scene or the window itself is not
-      // available
-      windowHeight = UIScreen.main.bounds.height
-    }
-
+    // Use the window that contains this cell for accurate height calculation
+    let windowHeight = window?.bounds.height ?? UIScreen.main.bounds.height
     let desiredHeight = windowHeight * 0.25
 
     let artworkView: some View = VStack(alignment: .center, spacing: 20) {
