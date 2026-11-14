@@ -51,18 +51,15 @@ class ArtworkModelCell: TableModelCell {
 
   private func updateHostingController(with subjectID: Int64) {
     var windowHeight: CGFloat
-    var containerWidth: CGFloat
 
     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
        let window = windowScene.windows.first {
       // If we have a window, we're guaranteed to have valid height and width
       windowHeight = window.bounds.height
-      containerWidth = contentView.bounds.width
     } else {
       // Fallback to main screen's dimensions if the window scene or the window itself is not
       // available
       windowHeight = UIScreen.main.bounds.height
-      containerWidth = UIScreen.main.bounds.width
     }
 
     let desiredHeight = windowHeight * 0.25
