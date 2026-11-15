@@ -109,8 +109,8 @@ class ArtworkModelCell: TableModelCell {
 
         // Define constraints for hostedView
         NSLayoutConstraint.activate([
-          hostedView.topAnchor.constraint(equalTo: contentView.topAnchor),
-          hostedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+          hostedView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -20),
+          hostedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 20),
           hostedView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
         ])
       }
