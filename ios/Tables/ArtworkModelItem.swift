@@ -83,6 +83,10 @@ class ArtworkModelCell: TableModelCell {
             image
               .resizable()
               .scaledToFit()
+              .contentShape(Rectangle())
+              .onTapGesture {
+                self.presentFullWindowArtwork(url: url)
+              }
           case .failure:
             Text("Error loading image")
           @unknown default:
@@ -119,7 +123,74 @@ class ArtworkModelCell: TableModelCell {
     }
   }
 
+  private func presentFullWindowArtwork(url: URL) {
+    guard let topViewController = topPresentedViewController() else { return }
+
+    let viewerView = FullWindowArtworkView(url: url) { [weak topViewController] in
+      topViewController?.dismiss(animated: true)
+    }
+
+    let modalController = UIHostingController(rootView: viewerView)
+    modalController.modalPresentationStyle = .overFullScreen
+    modalController.modalTransitionStyle = .crossDissolve
+    modalController.view.backgroundColor = .clear
+
+    topViewController.present(modalController, animated: true)
+  }
+
+  private func topPresentedViewController() -> UIViewController? {
+    let windowScene = UIApplication.shared.connectedScenes
+      .compactMap { $0 as? UIWindowScene }
+      .first { $0.activationState == .foregroundActive }
+      ?? UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
+
+    let window = windowScene?.windows.first { $0.isKeyWindow } ?? windowScene?.windows.first
+    var current = window?.rootViewController
+
+    while let presented = current?.presentedViewController {
+      current = presented
+    }
+    return current
+  }
+
   override func update() {
     updateHostingController(with: item.subjectID)
+  }
+}
+
+@available(iOS 15.0, *)
+private struct FullWindowArtworkView: View {
+  let url: URL
+  let onDismiss: () -> Void
+
+  var body: some View {
+    ZStack {
+      Color.black.opacity(0.92)
+        .ignoresSafeArea()
+        .onTapGesture {
+          onDismiss()
+        }
+
+      AsyncImage(url: url) { phase in
+        switch phase {
+        case .empty:
+          ProgressView()
+            .tint(.white)
+        case let .success(image):
+          image
+            .resizable()
+            .scaledToFit()
+            .onTapGesture {
+              onDismiss()
+            }
+        case .failure:
+          Text("Error loading image")
+            .foregroundColor(.white)
+        @unknown default:
+          EmptyView()
+        }
+      }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
   }
 }
