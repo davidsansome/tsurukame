@@ -173,6 +173,9 @@ protocol ReviewViewControllerDelegate: AnyObject {
   func showsSuccessRate() -> Bool
   func finishedAllReviewItems(_ reviewViewController: ReviewViewController)
 
+  // Only real review sessions show a Live Activity, not lessons.
+  @objc optional func showsLiveActivity() -> Bool
+
   @objc optional func tappedMenuButton(reviewViewController: ReviewViewController,
                                        menuButton: UIButton)
   @objc optional func tappedCloseButton(reviewViewController: ReviewViewController,
@@ -835,7 +838,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       // Update the progress bar.
       let totalLength = queueLength + session.reviewsCompleted
       updateHeader(completed: session.reviewsCompleted, total: totalLength)
-      if #available(iOS 16.2, *) {
+      if #available(iOS 16.2, *), !isPracticeSession, delegate.showsLiveActivity?() == true {
         ReviewLiveActivityManager.shared.setProgress(completed: session.reviewsCompleted,
                                                      total: totalLength)
       }

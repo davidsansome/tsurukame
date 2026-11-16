@@ -98,6 +98,10 @@ class ReviewContainerViewController: MMDrawerController, ReviewViewControllerDel
     Settings.showReviewAccuracy
   }
 
+  func showsLiveActivity() -> Bool {
+    true
+  }
+
   // MARK: - ReviewMenuDelegate
 
   // Set to true when another settings view controller is pushed. Upon returning to
