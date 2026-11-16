@@ -807,11 +807,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     perform(segue: StoryboardSegue.Review.reviewSummary, sender: self)
   }
 
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    if isMovingFromParent || isBeingDismissed { endLiveActivity() }
-  }
-
   // MARK: - Setup
 
   private func randomTask() {
