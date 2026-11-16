@@ -788,7 +788,14 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     }
   }
 
+  private func endLiveActivity() {
+    if #available(iOS 16.2, *) {
+      Task { await ReviewLiveActivityManager.shared.end() }
+    }
+  }
+
   @objc public func endReviewSession() {
+    endLiveActivity()
     if session.completedReviews.isEmpty {
       // There's nothing to show in the summary.
       navigationController?.popToRootViewController(animated: true)
@@ -797,10 +804,16 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     perform(segue: StoryboardSegue.Review.reviewSummary, sender: self)
   }
 
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    if isMovingFromParent || isBeingDismissed { endLiveActivity() }
+  }
+
   // MARK: - Setup
 
   private func randomTask() {
     if session.activeQueueLength == 0 {
+      endLiveActivity()
       delegate.finishedAllReviewItems(self)
       return
     }
@@ -822,6 +835,10 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       // Update the progress bar.
       let totalLength = queueLength + session.reviewsCompleted
       updateHeader(completed: session.reviewsCompleted, total: totalLength)
+      if #available(iOS 16.2, *) {
+        ReviewLiveActivityManager.shared.setProgress(completed: session.reviewsCompleted,
+                                                     total: totalLength)
+      }
       updateChips()
       if totalLength == 0 {
         progressBar.setProgress(0.0, animated: true)

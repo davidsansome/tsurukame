@@ -141,6 +141,14 @@ class ReviewSettingsViewController: SettingsTableViewController, TKMViewControll
                               on: Settings.showReviewAccuracy) {
         Settings.showReviewAccuracy = $0.isOn
       })
+    if #available(iOS 16.2, *) {
+      model.add(SwitchModelItem(style: .subtitle,
+                                title: "Live Activity",
+                                subtitle: "Show review progress on the Lock Screen and Dynamic Island",
+                                on: Settings.reviewLiveActivity) {
+          Settings.reviewLiveActivity = $0.isOn
+        })
+    }
 
     model.add(section: "Answers & marking")
     model.add(SwitchModelItem(style: .subtitle,
