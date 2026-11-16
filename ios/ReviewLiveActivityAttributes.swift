@@ -12,15 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import ActivityKit
-import Foundation
+#if !targetEnvironment(macCatalyst)
+  import ActivityKit
+  import Foundation
 
-// Shared by the app and the ReviewLiveActivity extension. Only progress is ever shown, never the
-// subject being reviewed.
-@available(iOS 16.2, *)
-struct ReviewLiveActivityAttributes: ActivityAttributes {
-  struct ContentState: Codable, Hashable {
-    var completed: Int
-    var total: Int
+  // Shared by the app and the ReviewLiveActivity extension. Only progress is ever shown, never the
+  // subject being reviewed.
+  @available(iOS 16.2, *)
+  struct ReviewLiveActivityAttributes: ActivityAttributes {
+    struct ContentState: Codable, Hashable {
+      var completed: Int
+      var total: Int
+    }
   }
-}
+#endif
