@@ -11,7 +11,7 @@
 		5D3EFDCF030142F68DD8911C /* ReviewLiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D98C0A554BA4721900AE006 /* ReviewLiveActivityManager.swift */; };
 		78293FBC974E49378144B7F7 /* ReviewLiveActivityAttributes.swift in Widget Sources */ = {isa = PBXBuildFile; fileRef = 440B4578A77F46F3A062857C /* ReviewLiveActivityAttributes.swift */; };
 		15843C9BAA4D46508AC534E3 /* ReviewLiveActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7BE7127395450EA14A274A /* ReviewLiveActivityWidget.swift */; };
-		0895F62F77EC4B7C9C7F5AFF /* ReviewLiveActivity.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F0302F37B5D54842A9DFE2EC /* ReviewLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0895F62F77EC4B7C9C7F5AFF /* ReviewLiveActivity.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F0302F37B5D54842A9DFE2EC /* ReviewLiveActivity.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0A943349E17FA7889EFEE41F /* Pods_Tsurukame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC80AAF9736A570E3C4CC09E /* Pods_Tsurukame.framework */; };
 		1C1A27E594D03064CFACBADB /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639CE0BC2CF0ABCE00902668 /* FeatureFlags.swift */; };
 		480B243123D6830300FC2A82 /* Rexy in Frameworks */ = {isa = PBXBuildFile; productRef = 480B243023D6830300FC2A82 /* Rexy */; };
@@ -1665,7 +1665,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		ED13E0D8575345BFAE32F0AB /* ReviewLiveActivity dependency */ = {isa = PBXTargetDependency; target = 3D3D968F262143598AB551AC /* ReviewLiveActivity */; targetProxy = A58ACF4971E24BCDA33F0F03 /* PBXContainerItemProxy */; };
+		ED13E0D8575345BFAE32F0AB /* ReviewLiveActivity dependency */ = {isa = PBXTargetDependency; platformFilter = ios; target = 3D3D968F262143598AB551AC /* ReviewLiveActivity */; targetProxy = A58ACF4971E24BCDA33F0F03 /* PBXContainerItemProxy */; };
 		6335B46823CF0C820071671E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 630FD6121FC45BDF00D21C1F /* Tsurukame */;
