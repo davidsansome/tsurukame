@@ -55,6 +55,8 @@ final class ReviewLiveActivityManager {
   }
 
   private func refresh() async {
+    // The setting was turned off during the session.
+    guard Settings.reviewLiveActivity else { return await end() }
     await activity?.update(ActivityContent(state: state, staleDate: nil))
   }
 }
