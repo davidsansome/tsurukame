@@ -44,9 +44,12 @@ final class ReviewLiveActivityManager {
   }
 
   private func start() {
-    guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
-    activity = try? Activity.request(attributes: ReviewLiveActivityAttributes(),
-                                     content: ActivityContent(state: state, staleDate: nil))
+    guard ActivityAuthorizationInfo().areActivitiesEnabled,
+          let activity = try? Activity.request(attributes: ReviewLiveActivityAttributes(),
+                                               content: ActivityContent(state: state,
+                                                                        staleDate: nil))
+    else { return }
+    self.activity = activity
     observer = NotificationCenter.default
       .addObserver(forName: UIApplication.willResignActiveNotification, object: nil,
                    queue: .main) { [weak self] _ in
