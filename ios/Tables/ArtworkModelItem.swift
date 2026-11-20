@@ -340,8 +340,11 @@ private final class ArtworkViewerHostingController<Content: View>: UIHostingCont
       if visited.contains(id) { continue }
       visited.insert(id)
 
-      for selector in selectors where responder.canPerformAction(selector, withSender: sender) {
-        return (responder, selector)
+      for selector in selectors {
+        if let resolvedTarget = responder.target(forAction: selector, withSender: sender),
+           (resolvedTarget as AnyObject).responds(to: selector) {
+          return (resolvedTarget, selector)
+        }
       }
 
       if let vc = responder as? UIViewController {
