@@ -126,11 +126,12 @@ class ArtworkModelCell: TableModelCell {
   private func presentFullWindowArtwork(url: URL) {
     guard let topViewController = topPresentedViewController() else { return }
 
-    let viewerView = FullWindowArtworkView(url: url) { [weak topViewController] in
-      topViewController?.dismiss(animated: true)
+    let modalController =
+      ArtworkViewerHostingController(rootView: FullWindowArtworkView(url: url) {})
+    modalController.rootView = FullWindowArtworkView(url: url) { [weak modalController] in
+      modalController?.dismiss(animated: true)
     }
-
-    let modalController = UIHostingController(rootView: viewerView)
+    modalController.underlyingResponder = self
     modalController.modalPresentationStyle = .overFullScreen
     modalController.modalTransitionStyle = .crossDissolve
     modalController.view.backgroundColor = .clear
@@ -177,12 +178,8 @@ private struct FullWindowArtworkView: View {
           ProgressView()
             .tint(.white)
         case let .success(image):
-          image
-            .resizable()
-            .scaledToFit()
-            .onTapGesture {
-              onDismiss()
-            }
+          ZoomableArtworkScrollView(image: image, onSingleTapOutsideZoom: onDismiss)
+            .ignoresSafeArea()
         case .failure:
           Text("Error loading image")
             .foregroundColor(.white)
@@ -191,6 +188,169 @@ private struct FullWindowArtworkView: View {
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+  }
+}
+
+@available(iOS 15.0, *)
+private struct ZoomableArtworkScrollView: UIViewRepresentable {
+  let image: Image
+  let onSingleTapOutsideZoom: () -> Void
+
+  func makeCoordinator() -> Coordinator {
+    Coordinator(onSingleTapOutsideZoom: onSingleTapOutsideZoom)
+  }
+
+  func makeUIView(context: Context) -> UIScrollView {
+    let scrollView = UIScrollView()
+    scrollView.delegate = context.coordinator
+    scrollView.minimumZoomScale = 1.0
+    scrollView.maximumZoomScale = 4.0
+    scrollView.showsHorizontalScrollIndicator = false
+    scrollView.showsVerticalScrollIndicator = false
+    scrollView.backgroundColor = .clear
+    scrollView.bouncesZoom = true
+
+    let hostingController = UIHostingController(rootView: AnyView(image
+        .resizable()
+        .scaledToFit()))
+    hostingController.view.backgroundColor = .clear
+    hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+
+    scrollView.addSubview(hostingController.view)
+    context.coordinator.hostedView = hostingController.view
+    context.coordinator.hostingController = hostingController
+
+    NSLayoutConstraint.activate([
+      hostingController.view.leadingAnchor
+        .constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+      hostingController.view.trailingAnchor
+        .constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+      hostingController.view.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+      hostingController.view.bottomAnchor
+        .constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+      hostingController.view.widthAnchor
+        .constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+      hostingController.view.heightAnchor
+        .constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor),
+    ])
+
+    let singleTap = UITapGestureRecognizer(target: context.coordinator,
+                                           action: #selector(Coordinator.handleSingleTap(_:)))
+    singleTap.numberOfTapsRequired = 1
+    singleTap.cancelsTouchesInView = false
+    singleTap.delaysTouchesEnded = false
+    singleTap.delegate = context.coordinator
+    scrollView.addGestureRecognizer(singleTap)
+
+    return scrollView
+  }
+
+  func updateUIView(_: UIScrollView, context: Context) {
+    context.coordinator.onSingleTapOutsideZoom = onSingleTapOutsideZoom
+    context.coordinator.hostingController?.rootView = AnyView(image
+      .resizable()
+      .scaledToFit())
+  }
+
+  @MainActor
+  final class Coordinator: NSObject, UIScrollViewDelegate,
+    UIGestureRecognizerDelegate { var onSingleTapOutsideZoom: () -> Void
+    weak var hostedView: UIView?
+    var hostingController: UIHostingController<AnyView>?
+
+    init(onSingleTapOutsideZoom: @escaping () -> Void) {
+      self.onSingleTapOutsideZoom = onSingleTapOutsideZoom
+    }
+
+    func viewForZooming(in _: UIScrollView) -> UIView? {
+      hostedView
+    }
+
+    func gestureRecognizer(_: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer) -> Bool {
+      true
+    }
+
+    @objc func handleSingleTap(_ gesture: UITapGestureRecognizer) {
+      guard let scrollView = gesture.view as? UIScrollView else { return }
+      if scrollView.zoomScale <= 1.01 {
+        onSingleTapOutsideZoom()
+      } else {
+        scrollView.setZoomScale(1.0, animated: true)
+      }
+    }
+  }
+}
+
+@available(iOS 15.0, *)
+private final class ArtworkViewerHostingController<Content: View>: UIHostingController<Content> {
+  weak var underlyingResponder: UIResponder?
+
+  override var canBecomeFirstResponder: Bool {
+    true
+  }
+
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    becomeFirstResponder()
+  }
+
+  override var keyCommands: [UIKeyCommand]? {
+    let inputs = [
+      UIKeyCommand.inputRightArrow,
+      UIKeyCommand.inputLeftArrow,
+      "\r",
+    ]
+    return inputs.map { input in
+      UIKeyCommand(input: input,
+                   modifierFlags: [],
+                   action: #selector(handleDismissAndForward(_:)))
+    }
+  }
+
+  private func candidateSelectors(for input: String?) -> [Selector] {
+    switch input {
+    case UIKeyCommand.inputLeftArrow:
+      return [
+        Selector(("prevPage")),
+        Selector(("backButtonPressedWithSender:")),
+      ]
+    case UIKeyCommand.inputRightArrow:
+      return [
+        Selector(("nextPage")),
+      ]
+    case "\r":
+      return [
+        Selector(("nextPage")),
+        Selector(("enterKeyPressed")),
+      ]
+    default:
+      return []
+    }
+  }
+
+  private func findResponderAndSelector(for input: String?,
+                                        withSender sender: Any?)
+    -> (target: Any, selector: Selector)? {
+    guard let responder = underlyingResponder else { return nil }
+
+    for selector in candidateSelectors(for: input) {
+      if let resolvedTarget = responder.target(forAction: selector, withSender: sender),
+         (resolvedTarget as AnyObject).responds(to: selector) {
+        return (resolvedTarget, selector)
+      }
+    }
+
+    return nil
+  }
+
+  @objc private func handleDismissAndForward(_ sender: UIKeyCommand) {
+    let match = findResponderAndSelector(for: sender.input, withSender: sender)
+
+    dismiss(animated: true) {
+      guard let match else { return }
+      UIApplication.shared.sendAction(match.selector, to: match.target, from: sender, for: nil)
     }
   }
 }
