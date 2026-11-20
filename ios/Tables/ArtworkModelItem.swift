@@ -304,18 +304,33 @@ private final class ArtworkViewerHostingController<Content: View>: UIHostingCont
     }
   }
 
-  private func targetSelector(for input: String?) -> Selector {
+  private func candidateSelectors(for input: String?) -> [Selector] {
     switch input {
     case UIKeyCommand.inputLeftArrow:
-      return Selector(("prevPage"))
-    case UIKeyCommand.inputRightArrow, "\r":
-      return Selector(("nextPage"))
+      return [
+        Selector(("prevPage")),
+        Selector(("backButtonPressed")),
+      ]
+    case UIKeyCommand.inputRightArrow:
+      return [
+        Selector(("nextPage")),
+      ]
+    case "\r":
+      return [
+        Selector(("nextPage")),
+        Selector(("enterKeyPressed")),
+      ]
     default:
-      return Selector(("nextPage"))
+      return []
     }
   }
 
-  private func findResponder(capableOf action: Selector, withSender sender: Any?) -> Any? {
+  private func findResponderAndSelector(for input: String?,
+                                        withSender sender: Any?)
+    -> (target: Any, selector: Selector)? {
+    let selectors = candidateSelectors(for: input)
+    guard !selectors.isEmpty else { return nil }
+
     var visited = Set<ObjectIdentifier>()
     var queue: [UIResponder?] = [underlyingResponder, presentingViewController, parent, next]
 
@@ -325,8 +340,8 @@ private final class ArtworkViewerHostingController<Content: View>: UIHostingCont
       if visited.contains(id) { continue }
       visited.insert(id)
 
-      if responder.canPerformAction(action, withSender: sender) {
-        return responder
+      for selector in selectors where responder.canPerformAction(selector, withSender: sender) {
+        return (responder, selector)
       }
 
       if let vc = responder as? UIViewController {
@@ -343,12 +358,11 @@ private final class ArtworkViewerHostingController<Content: View>: UIHostingCont
   }
 
   @objc private func handleDismissAndForward(_ sender: UIKeyCommand) {
-    let selector = targetSelector(for: sender.input)
-    let target = findResponder(capableOf: selector, withSender: sender)
+    let match = findResponderAndSelector(for: sender.input, withSender: sender)
 
     dismiss(animated: true) {
-      guard let target else { return }
-      UIApplication.shared.sendAction(selector, to: target, from: sender, for: nil)
+      guard let match else { return }
+      UIApplication.shared.sendAction(match.selector, to: match.target, from: sender, for: nil)
     }
   }
 }
