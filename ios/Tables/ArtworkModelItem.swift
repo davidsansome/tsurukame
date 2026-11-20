@@ -177,12 +177,8 @@ private struct FullWindowArtworkView: View {
           ProgressView()
             .tint(.white)
         case let .success(image):
-          image
-            .resizable()
-            .scaledToFit()
-            .onTapGesture {
-              onDismiss()
-            }
+          ZoomableArtworkScrollView(image: image, onSingleTapOutsideZoom: onDismiss)
+            .ignoresSafeArea()
         case .failure:
           Text("Error loading image")
             .foregroundColor(.white)
@@ -191,6 +187,90 @@ private struct FullWindowArtworkView: View {
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+  }
+}
+
+@available(iOS 15.0, *)
+private struct ZoomableArtworkScrollView: UIViewRepresentable {
+  let image: Image
+  let onSingleTapOutsideZoom: () -> Void
+
+  func makeCoordinator() -> Coordinator {
+    Coordinator(onSingleTapOutsideZoom: onSingleTapOutsideZoom)
+  }
+
+  func makeUIView(context: Context) -> UIScrollView {
+    let scrollView = UIScrollView()
+    scrollView.delegate = context.coordinator
+    scrollView.minimumZoomScale = 1.0
+    scrollView.maximumZoomScale = 4.0
+    scrollView.showsHorizontalScrollIndicator = false
+    scrollView.showsVerticalScrollIndicator = false
+    scrollView.backgroundColor = .clear
+    scrollView.bouncesZoom = true
+
+    let hostingController = UIHostingController(rootView: AnyView(image
+        .resizable()
+        .scaledToFit()
+    ))
+    hostingController.view.backgroundColor = .clear
+    hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+
+    scrollView.addSubview(hostingController.view)
+    context.coordinator.hostedView = hostingController.view
+    context.coordinator.hostingController = hostingController
+
+    NSLayoutConstraint.activate([
+      hostingController.view.leadingAnchor
+        .constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+      hostingController.view.trailingAnchor
+        .constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+      hostingController.view.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+      hostingController.view.bottomAnchor
+        .constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+      hostingController.view.widthAnchor
+        .constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+      hostingController.view.heightAnchor
+        .constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor),
+    ])
+
+    let singleTap = UITapGestureRecognizer(target: context.coordinator,
+                                           action: #selector(Coordinator.handleSingleTap(_:)))
+    singleTap.numberOfTapsRequired = 1
+    scrollView.addGestureRecognizer(singleTap)
+
+    return scrollView
+  }
+
+  func updateUIView(_: UIScrollView, context: Context) {
+    context.coordinator.onSingleTapOutsideZoom = onSingleTapOutsideZoom
+    context.coordinator.hostingController?.rootView = AnyView(image
+      .resizable()
+      .scaledToFit())
+  }
+
+  @MainActor
+  final class Coordinator: NSObject, UIScrollViewDelegate {
+    var onSingleTapOutsideZoom: () -> Void
+    weak var hostedView: UIView?
+    var hostingController: UIHostingController<AnyView>?
+
+    init(onSingleTapOutsideZoom: @escaping () -> Void) {
+      self.onSingleTapOutsideZoom = onSingleTapOutsideZoom
+    }
+
+    func viewForZooming(in _: UIScrollView) -> UIView? {
+      hostedView
+    }
+
+    @objc func handleSingleTap(_ gesture: UITapGestureRecognizer) {
+      guard let scrollView = gesture.view as? UIScrollView else { return }
+      if scrollView.zoomScale <= 1.01 {
+        onSingleTapOutsideZoom()
+      } else {
+        scrollView.setZoomScale(1.0, animated: true)
+      }
     }
   }
 }
