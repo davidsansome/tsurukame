@@ -304,14 +304,14 @@ private final class ArtworkViewerHostingController<Content: View>: UIHostingCont
     }
   }
 
-  private func targetSelector(for input: String?) -> Selector? {
+  private func targetSelector(for input: String?) -> Selector {
     switch input {
     case UIKeyCommand.inputLeftArrow:
       return Selector(("prevPage"))
     case UIKeyCommand.inputRightArrow, "\r":
       return Selector(("nextPage"))
     default:
-      return nil
+      return Selector(("nextPage"))
     }
   }
 
@@ -343,11 +343,7 @@ private final class ArtworkViewerHostingController<Content: View>: UIHostingCont
   }
 
   @objc private func handleDismissAndForward(_ sender: UIKeyCommand) {
-    guard let selector = targetSelector(for: sender.input) else {
-      dismiss(animated: true)
-      return
-    }
-
+    let selector = targetSelector(for: sender.input)
     let target = findResponder(capableOf: selector, withSender: sender)
 
     dismiss(animated: true) {
