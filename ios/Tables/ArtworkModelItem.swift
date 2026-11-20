@@ -291,6 +291,11 @@ private final class ArtworkViewerHostingController<Content: View>: UIHostingCont
     true
   }
 
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    becomeFirstResponder()
+  }
+
   override var keyCommands: [UIKeyCommand]? {
     let inputs = [
       UIKeyCommand.inputRightArrow,
