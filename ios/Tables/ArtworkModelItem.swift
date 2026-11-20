@@ -328,35 +328,13 @@ private final class ArtworkViewerHostingController<Content: View>: UIHostingCont
   private func findResponderAndSelector(for input: String?,
                                         withSender sender: Any?)
     -> (target: Any, selector: Selector)? {
-    let selectors = candidateSelectors(for: input)
-    guard !selectors.isEmpty else { return nil }
+    guard let responder = underlyingResponder else { return nil }
 
-    var visited = Set<ObjectIdentifier>()
-    var queue: [UIResponder?] = [underlyingResponder, presentingViewController, parent, next]
-
-    while !queue.isEmpty {
-      guard let responder = queue.removeFirst() else { continue }
-      let id = ObjectIdentifier(responder)
-      if visited.contains(id) { continue }
-      visited.insert(id)
-
-      for selector in selectors {
-        if let resolvedTarget = responder.target(forAction: selector, withSender: sender),
-           (resolvedTarget as AnyObject).responds(to: selector) {
-          return (resolvedTarget, selector)
-        }
+    for selector in candidateSelectors(for: input) {
+      if let resolvedTarget = responder.target(forAction: selector, withSender: sender),
+         (resolvedTarget as AnyObject).responds(to: selector) {
+        return (resolvedTarget, selector)
       }
-
-      if let vc = responder as? UIViewController {
-        queue.append(contentsOf: vc.children)
-        queue.append(vc.parent)
-        queue.append(vc.presentingViewController)
-        if let nav = vc as? UINavigationController {
-          queue.append(nav.topViewController)
-          queue.append(contentsOf: nav.viewControllers)
-        }
-      }
-      queue.append(responder.next)
     }
 
     return nil
