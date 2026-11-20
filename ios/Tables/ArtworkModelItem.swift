@@ -131,7 +131,7 @@ class ArtworkModelCell: TableModelCell {
     modalController.rootView = FullWindowArtworkView(url: url) { [weak modalController] in
       modalController?.dismiss(animated: true)
     }
-    modalController.underlyingResponder = topViewController
+    modalController.underlyingResponder = self
     modalController.modalPresentationStyle = .overFullScreen
     modalController.modalTransitionStyle = .crossDissolve
     modalController.view.backgroundColor = .clear
@@ -309,7 +309,7 @@ private final class ArtworkViewerHostingController<Content: View>: UIHostingCont
     case UIKeyCommand.inputLeftArrow:
       return [
         Selector(("prevPage")),
-        Selector(("backButtonPressed")),
+        Selector(("backButtonPressedWithSender:")),
       ]
     case UIKeyCommand.inputRightArrow:
       return [
@@ -345,10 +345,12 @@ private final class ArtworkViewerHostingController<Content: View>: UIHostingCont
       }
 
       if let vc = responder as? UIViewController {
+        queue.append(contentsOf: vc.children)
         queue.append(vc.parent)
         queue.append(vc.presentingViewController)
         if let nav = vc as? UINavigationController {
           queue.append(nav.topViewController)
+          queue.append(contentsOf: nav.viewControllers)
         }
       }
       queue.append(responder.next)
