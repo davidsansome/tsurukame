@@ -23,6 +23,8 @@ public enum WaniKaniWebClientError: Int, LocalizedError {
   case emailNotFound
   case sessionCookieNotSet
   case badCredentials
+  case sessionExpired
+  case resurrectFailed
   case unknown
 
   public var errorDescription: String? {
@@ -39,6 +41,10 @@ public enum WaniKaniWebClientError: Int, LocalizedError {
       return "Incorrect email or password"
     case .accountHibernating:
       return "Account is in hibernation mode"
+    case .sessionExpired:
+      return "WaniKani session expired"
+    case .resurrectFailed:
+      return "WaniKani didn't resurrect the item"
     default:
       return "Unknown error"
     }
@@ -161,6 +167,48 @@ public class WaniKaniWebClient {
     }
   }
 
+  // MARK: - Features that aren't available through the API
+
+  /**
+   * Resurrect a burned subject through the website, which moves it back to Apprentice 1.
+   */
+  public func resurrectSubject(subjectId: Int64, cookie: String) -> Promise<Void> {
+    // Both requests share one session, so a cookie WaniKani replaces on the first response is
+    // the one sent with the second.
+    let session = URLSession(configuration: .ephemeral, delegate: RedirectBlocker(),
+                             delegateQueue: nil)
+    session.configuration.httpCookieStorage?.setCookie(HTTPCookie(properties: [
+      .name: kWanikaniSessionCookieName,
+      .value: cookie,
+      .domain: kDashboardUrl.host!,
+      .path: "/",
+      .secure: true,
+    ])!)
+
+    return firstly { () -> DataTaskPromise in
+      request(URLRequest(url: kDashboardUrl), session: session)
+    }.then { arg -> DataTaskPromise in
+      // The dashboard redirects to the login page when the session cookie has expired.
+      guard let response = arg.response as? HTTPURLResponse, response.statusCode == 200 else {
+        throw WaniKaniWebClientError.sessionExpired
+      }
+      let csrfToken = try self.extractCSRFToken(arg.data)
+
+      // The website's route takes the subject ID, even though the path says assignments.
+      var req = URLRequest(url: URL(string: "\(kAssignmentUrlPrefix)\(subjectId)/resurrect")!)
+      req.httpMethod = "PUT"
+      req.setValue(csrfToken, forHTTPHeaderField: "X-CSRF-Token")
+      return request(req, session: session)
+    }.map { arg in
+      guard let response = arg.response as? HTTPURLResponse, response.statusCode < 400 else {
+        throw WaniKaniWebClientError.resurrectFailed
+      }
+      if response.valueForHeaderField("Location") == kLoginUrl.absoluteString {
+        throw WaniKaniWebClientError.sessionExpired
+      }
+    }
+  }
+
   // MARK: - Extracting things from HTTP responses
 
   private func extractCSRFToken(_ data: Data) throws -> String {
@@ -208,6 +256,7 @@ private let kAccessTokenUrl =
   URL(string: "https://www.wanikani.com/settings/personal_access_tokens")!
 private let kLoginUrl = URL(string: "https://www.wanikani.com/login")!
 private let kDashboardUrl = URL(string: "https://www.wanikani.com/dashboard")!
+private let kAssignmentUrlPrefix = "https://www.wanikani.com/assignments/"
 
 private let kCSRFTokenRE = try! NSRegularExpression(pattern:
   "<meta name=\"csrf-token\" content=\"([^\"]*)", options: [])
@@ -224,4 +273,13 @@ private func request(_ req: URLRequest,
                      session: URLSession = URLSession.shared) -> DataTaskPromise {
   NSLog("%@ %@", req.httpMethod!, req.url!.absoluteString)
   return session.dataTask(.promise, with: req)
+}
+
+// URLSession would repeat the PUT against the page WaniKani redirects to after a resurrect.
+private class RedirectBlocker: NSObject, URLSessionTaskDelegate {
+  func urlSession(_: URLSession, task _: URLSessionTask,
+                  willPerformHTTPRedirection _: HTTPURLResponse, newRequest _: URLRequest,
+                  completionHandler: @escaping (URLRequest?) -> Void) {
+    completionHandler(nil)
+  }
 }
