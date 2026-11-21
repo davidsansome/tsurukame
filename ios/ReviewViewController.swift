@@ -900,6 +900,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
         submitButton.isHidden = true
       } else {
         // Normal mode: button visible but disabled until text entered
+        submitButton.setImage(tickImage, for: .normal)
         submitButton.isEnabled = false
         submitButton.isHidden = false
       }
