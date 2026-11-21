@@ -917,6 +917,32 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     return mistakeTimes
   }
 
+  // MARK: - Resurrecting
+
+  // Call this after WaniKani accepted the resurrect. The next sync replaces the row with the
+  // server's copy.
+  func markResurrected(_ assignment: TKMAssignment) {
+    var resurrected = assignment
+    resurrected.srsStageNumber = Int32(SRSStage.apprentice1.rawValue)
+    resurrected.availableAt = Int32(Date().timeIntervalSince1970)
+
+    db.inTransaction { db in
+      db.mustExecuteUpdate("REPLACE INTO assignments (id, pb, subject_id) VALUES (?, ?, ?)",
+                           args: [
+                             resurrected.id,
+                             try! resurrected.serializedData(),
+                             resurrected.subjectID,
+                           ])
+      db.mustExecuteUpdate("UPDATE subject_progress SET srs_stage = ? WHERE id = ?",
+                           args: [resurrected.srsStage.rawValue, resurrected.subjectID])
+    }
+
+    _availableSubjects.invalidate()
+    _srsCategoryCounts.invalidate()
+    _guruKanjiCount.invalidate()
+    _apprenticeCount.invalidate()
+  }
+
   func sendProgress(_ progress: [TKMProgress]) -> Promise<Void> {
     db.inTransaction { db in
       for p in progress {

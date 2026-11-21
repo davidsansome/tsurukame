@@ -13,7 +13,9 @@
 // limitations under the License.
 
 import Foundation
+import PromiseKit
 import WaniKaniAPI
+import WebKit
 
 private let kSectionHeaderHeight: CGFloat = 38.0
 private let kSectionFooterHeight: CGFloat = 0.0
@@ -131,6 +133,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
   private var studyMaterials: TKMStudyMaterials!
   private var studyMaterialsChanged = false
   private var synonymSection: Int?
+  private var shownSubjectID: Int64?
+  private var shownAlwaysShowLevel = false
 
   // Items that are hidden, and will be shown when the Show All button is pressed.
   private var hiddenIndexPaths = [IndexPath]()
@@ -625,6 +629,8 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     readingItem = nil
     studyMaterialsChanged = false
+    shownSubjectID = subject.id
+    shownAlwaysShowLevel = alwaysShowLevel
     if studyMaterials != nil {
       self.studyMaterials = studyMaterials
     } else {
@@ -782,8 +788,14 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
                                      .string(from: subjectAssignment.burnedAtDate)))
         }
       }
+    }
 
-      // TODO: When possible in the API, add a resurrect button.
+    if let assignment = assignment, assignment.isBurned {
+      model.add(section: "Burned")
+      model.add(BasicModelItem(style: .default, title: "Resurrect",
+                               accessoryType: .disclosureIndicator) { [unowned self] in
+          self.confirmResurrect(subject: subject, assignment: assignment, task: task)
+        })
     }
 
     if optionsShown {
@@ -799,6 +811,71 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
 
     tableModel = model
     model.reloadTable()
+  }
+
+  // MARK: - Resurrecting
+
+  private func confirmResurrect(subject: TKMSubject, assignment: TKMAssignment,
+                                task: ReviewItem?) {
+    let ac = UIAlertController(title: "Resurrect this item?",
+                               message: "It goes back to Apprentice 1 and into your reviews.",
+                               preferredStyle: .alert)
+    ac.addAction(UIAlertAction(title: "Resurrect", style: .destructive) { _ in
+      self.resurrect(subject: subject, assignment: assignment, task: task)
+    })
+    ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+    window?.rootViewController?.present(ac, animated: true)
+  }
+
+  private func resurrect(subject: TKMSubject, assignment: TKMAssignment, task: ReviewItem?,
+                         justSignedIn: Bool = false) {
+    if Settings.userCookie.isEmpty {
+      promptForWebSignIn {
+        self.resurrect(subject: subject, assignment: assignment, task: task, justSignedIn: true)
+      }
+      return
+    }
+
+    firstly {
+      WaniKaniWebClient().resurrectSubject(subjectId: subject.id, cookie: Settings.userCookie)
+    }.done {
+      self.services.localCachingClient.markResurrected(assignment)
+      // A review can move on to the next item while the request is running.
+      if self.shownSubjectID != subject.id {
+        return
+      }
+      // update() forgets unsaved study material edits, so save them first.
+      self.saveStudyMaterials()
+      self.update(withSubject: subject, studyMaterials: self.studyMaterials,
+                  assignment: self.services.localCachingClient
+                    .getAssignment(subjectId: subject.id),
+                  task: task, alwaysShowLevel: self.shownAlwaysShowLevel)
+    }.catch { error in
+      if let error = error as? WaniKaniWebClientError, error == .sessionExpired, !justSignedIn {
+        // Clearing the cookie makes the retry open the sign-in page again.
+        Settings.userCookie = ""
+        self.resurrect(subject: subject, assignment: assignment, task: task)
+      } else {
+        self.showResurrectError(error)
+      }
+    }
+  }
+
+  private func promptForWebSignIn(onSignedIn: @escaping () -> Void) {
+    let signIn = WebSignInViewController { cookie in
+      Settings.userCookie = cookie
+      onSignedIn()
+    }
+    window?.rootViewController?.present(UINavigationController(rootViewController: signIn),
+                                        animated: true)
+  }
+
+  private func showResurrectError(_ error: Error) {
+    let ac = UIAlertController(title: "Couldn't resurrect",
+                               message: error.localizedDescription,
+                               preferredStyle: .alert)
+    ac.addAction(UIAlertAction(title: "OK", style: .default))
+    window?.rootViewController?.present(ac, animated: true)
   }
 
   @objc public func deselectLastSubjectChipTapped() {
@@ -878,5 +955,61 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     }
 
     return result
+  }
+}
+
+// WaniKani's login page runs a Cloudflare Turnstile check, so only a browser can sign in.
+private class WebSignInViewController: UIViewController {
+  private let onSignedIn: (String) -> Void
+  private let webView: WKWebView = {
+    let configuration = WKWebViewConfiguration()
+    configuration.websiteDataStore = .nonPersistent()
+    return WKWebView(frame: .zero, configuration: configuration)
+  }()
+
+  private var urlObservation: NSKeyValueObservation?
+
+  init(onSignedIn: @escaping (String) -> Void) {
+    self.onSignedIn = onSignedIn
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override func loadView() {
+    view = webView
+  }
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    title = "Sign in to WaniKani"
+    navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self,
+                                                       action: #selector(cancel))
+    // The login form submits through Turbo, which can change the URL without a new navigation.
+    urlObservation = webView.observe(\.url) { [unowned self] webView, _ in
+      if ["/", "/dashboard"].contains(webView.url?.path) {
+        self.urlObservation = nil
+        self.finishSignIn()
+      }
+    }
+    webView.load(URLRequest(url: URL(string: "https://www.wanikani.com/login")!))
+  }
+
+  @objc private func cancel() {
+    dismiss(animated: true)
+  }
+
+  private func finishSignIn() {
+    webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+      guard let cookie = cookies.first(where: { $0.name == "_wanikani_session" }) else {
+        return
+      }
+      self.dismiss(animated: true) {
+        self.onSignedIn(cookie.value)
+      }
+    }
   }
 }

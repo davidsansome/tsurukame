@@ -181,6 +181,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, LoginViewControllerDele
   private func logout(_: Notification?) {
     Settings.userApiToken = ""
     Settings.userEmailAddress = ""
+    Settings.userCookie = ""
     services.localCachingClient.clearAllDataAndClose()
     services.localCachingClient = nil
 
