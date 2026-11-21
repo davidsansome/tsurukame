@@ -183,9 +183,9 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private var kanaInput: TKMKanaInput!
   private let hapticGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator
     .FeedbackStyle.light)
-  private let tickImage = Asset.checkmarkCircle.image
+  private let tickImage = UIImage(systemName: "checkmark.circle")!
   private let forwardArrowImage = Asset.icArrowForwardWhite.image
-  private let skipImage = Asset.goforwardPlus.image
+  private let skipImage = UIImage(systemName: "goforward.plus")!
 
   private var services: TKMServices!
   private var showMenuButton: Bool!
