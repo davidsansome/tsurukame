@@ -74,7 +74,7 @@
                                 <rect key="frame" x="361" y="835" width="53" height="58"/>
                                 <accessibility key="accessibilityConfiguration" label="Confirm"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
-                                <state key="normal" image="checkmark.circle">
+                                <state key="normal" image="checkmark.circle" catalog="system">
                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="semibold"/>
                                 </state>
                                 <connections>
@@ -313,7 +313,7 @@
     <resources>
         <image name="add" width="22" height="22"/>
         <image name="baseline_menu_black_24pt" width="24" height="24"/>
-        <image name="checkmark.circle" width="13" height="13"/>
+        <image name="checkmark.circle" catalog="system" width="128" height="123"/>
         <image name="inbox" width="24" height="24"/>
         <image name="thumb" width="24" height="24"/>
         <image name="tick" width="24" height="24"/>
