@@ -43,7 +43,6 @@ internal enum Asset {
   internal static let baselineNoteAddBlack24pt = ImageAsset(name: "baseline_note_add_black_24pt")
   internal static let baselineStopBlack24pt = ImageAsset(name: "baseline_stop_black_24pt")
   internal static let baselineVolumeUpBlack24pt = ImageAsset(name: "baseline_volume_up_black_24pt")
-  internal static let checkmarkCircle = SymbolAsset(name: "checkmark.circle")
   internal enum FontPreviews {
     internal static let armedBanana = ImageAsset(name: "ArmedBanana")
     internal static let hinaMincho = ImageAsset(name: "Hina Mincho")
@@ -55,7 +54,6 @@ internal enum Asset {
     internal static let santyoumeFont = ImageAsset(name: "santyoume-font")
   }
   internal static let forward = ImageAsset(name: "forward")
-  internal static let goforwardPlus = SymbolAsset(name: "goforward.plus")
   internal static let icArrowForwardWhite = ImageAsset(name: "ic_arrow_forward_white")
   internal static let icSearchWhite = ImageAsset(name: "ic_search_white")
   internal static let icSettingsWhite = ImageAsset(name: "ic_settings_white")
@@ -210,66 +208,6 @@ internal extension SwiftUI.Image {
   }
 
   init(decorative asset: ImageAsset) {
-    let bundle = BundleToken.bundle
-    self.init(decorative: asset.name, bundle: bundle)
-  }
-}
-#endif
-
-internal struct SymbolAsset {
-  internal fileprivate(set) var name: String
-
-  #if os(iOS) || os(tvOS) || os(watchOS)
-  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-  internal typealias Configuration = UIImage.SymbolConfiguration
-  internal typealias Image = UIImage
-
-  @available(iOS 12.0, tvOS 12.0, watchOS 5.0, *)
-  internal var image: Image {
-    let bundle = BundleToken.bundle
-    #if os(iOS) || os(tvOS)
-    let image = Image(named: name, in: bundle, compatibleWith: nil)
-    #elseif os(watchOS)
-    let image = Image(named: name)
-    #endif
-    guard let result = image else {
-      fatalError("Unable to load symbol asset named \(name).")
-    }
-    return result
-  }
-
-  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-  internal func image(with configuration: Configuration) -> Image {
-    let bundle = BundleToken.bundle
-    guard let result = Image(named: name, in: bundle, with: configuration) else {
-      fatalError("Unable to load symbol asset named \(name).")
-    }
-    return result
-  }
-  #endif
-
-  #if canImport(SwiftUI)
-  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-  internal var swiftUIImage: SwiftUI.Image {
-    SwiftUI.Image(asset: self)
-  }
-  #endif
-}
-
-#if canImport(SwiftUI)
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-internal extension SwiftUI.Image {
-  init(asset: SymbolAsset) {
-    let bundle = BundleToken.bundle
-    self.init(asset.name, bundle: bundle)
-  }
-
-  init(asset: SymbolAsset, label: Text) {
-    let bundle = BundleToken.bundle
-    self.init(asset.name, bundle: bundle, label: label)
-  }
-
-  init(decorative asset: SymbolAsset) {
     let bundle = BundleToken.bundle
     self.init(decorative: asset.name, bundle: bundle)
   }
