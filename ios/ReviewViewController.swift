@@ -499,13 +499,24 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
       }
       ancestor = v.superview
     }
+    let headerTopToSafeArea = header.topAnchor
+      .constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+                  constant: 4)
+    headerTopToSafeArea.priority = .defaultHigh
     NSLayoutConstraint.activate([
       questionLabel.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 4),
-      header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
+      header.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor,
+                                  constant: 4),
+      // Keep the close button clear of rounded display corners when there is no top safe area
+      // (e.g. iPhone Duo, whose status bar sits on the side edge).
+      header.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: 16),
+      headerTopToSafeArea,
       // Fixed so the subject below can't stretch it.
       header.heightAnchor.constraint(equalToConstant: 48),
-      header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-      header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+      header.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                                      constant: 16),
+      header.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                                       constant: -16),
       closeButton.widthAnchor.constraint(equalToConstant: 44),
       closeButton.heightAnchor.constraint(equalToConstant: 44),
       settingsButton.widthAnchor.constraint(equalToConstant: 44),

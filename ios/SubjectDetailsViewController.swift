@@ -266,14 +266,21 @@ func styleRoundBackButton(_ button: UIButton, in view: UIView) {
   button.accessibilityLabel = "Back"
 
   // A 44pt circle, inset from the edge like the other round buttons.
-  for constraint in view.constraints where
-    (constraint.firstItem as? UIView) == button && constraint.firstAttribute == .leading {
-    constraint.constant = 16
+  for constraint in view.constraints where (constraint.firstItem as? UIView) == button {
+    if constraint.firstAttribute == .leading {
+      constraint.constant = 16
+    } else if constraint.firstAttribute == .top {
+      constraint.isActive = false
+      constraint.priority = .defaultHigh
+      constraint.isActive = true
+    }
   }
   NSLayoutConstraint.deactivate(button.constraints.filter {
     $0.firstAttribute == .height || $0.firstAttribute == .width
   })
   NSLayoutConstraint.activate([
+    button.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor),
+    button.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: 18),
     button.widthAnchor.constraint(equalToConstant: 44),
     button.heightAnchor.constraint(equalToConstant: 44),
   ])
