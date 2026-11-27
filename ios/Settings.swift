@@ -233,6 +233,7 @@ protocol SettingProtocol {
            #keyPath(showMinutesForNextLevelUpReview)) static var showMinutesForNextLevelUpReview: Bool
   @Setting(false, #keyPath(showAllReadings)) static var showAllReadings: Bool
   @Setting(true, #keyPath(showReviewAccuracy)) static var showReviewAccuracy: Bool
+  @Setting(false, #keyPath(reviewLiveActivity)) static var reviewLiveActivity: Bool
   @Setting(false, #keyPath(autoSwitchKeyboard)) static var autoSwitchKeyboard: Bool
   @Setting(false, #keyPath(allowSkippingReviews)) static var allowSkippingReviews: Bool
   @Setting(true, #keyPath(minimizeReviewPenalty)) static var minimizeReviewPenalty: Bool

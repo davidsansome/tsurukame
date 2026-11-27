@@ -78,6 +78,13 @@ lane :beta do
     build_configuration: "Release",
   )
 
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^ReviewLiveActivity$",
+    profile:ENV["sigh_com.davidsansome.wanikani.ReviewLiveActivity_appstore_profile-path"],
+    build_configuration: "Release",
+  )
+
   build_app(
     scheme: "Tsurukame",
     xcconfig: "BuildConfigurations/TestFlightRelease.xcconfig",
@@ -123,6 +130,13 @@ lane :release do
     xcodeproj: "Tsurukame.xcodeproj",
     target_filter: "^Tsurukame Complication Extension$",
     profile:ENV["sigh_com.davidsansome.wanikani.watchapp.c_appstore_profile-path"],
+    build_configuration: "Release",
+  )
+
+  update_project_provisioning(
+    xcodeproj: "Tsurukame.xcodeproj",
+    target_filter: "^ReviewLiveActivity$",
+    profile:ENV["sigh_com.davidsansome.wanikani.ReviewLiveActivity_appstore_profile-path"],
     build_configuration: "Release",
   )
 

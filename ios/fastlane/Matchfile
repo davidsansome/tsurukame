@@ -9,5 +9,6 @@ app_identifier([
   CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier),
   "com.davidsansome.wanikani.watchapp",
   "com.davidsansome.wanikani.watchapp.c",
+  "com.davidsansome.wanikani.ReviewLiveActivity",
 ])
 username(CredentialsManager::AppfileConfig.try_fetch_value(:apple_id))
