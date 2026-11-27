@@ -54,9 +54,9 @@
                             <constraint firstAttribute="bottom" secondItem="wFr-RK-iSq" secondAttribute="bottom" id="Qfm-AA-5RG"/>
                             <constraint firstItem="CbN-0R-8Ce" firstAttribute="top" secondItem="Gf0-8S-iQ7" secondAttribute="top" id="Ypd-Hg-SOO"/>
                             <constraint firstItem="CbN-0R-8Ce" firstAttribute="leading" secondItem="Gf0-8S-iQ7" secondAttribute="leading" id="aLi-55-oEf"/>
-                            <constraint firstItem="h4n-sy-iRy" firstAttribute="trailing" secondItem="Gf0-8S-iQ7" secondAttribute="trailing" id="ndz-L2-PJk"/>
+                            <constraint firstItem="h4n-sy-iRy" firstAttribute="trailing" secondItem="r2h-5H-rEP" secondAttribute="trailing" id="ndz-L2-PJk"/>
                             <constraint firstItem="Gf0-8S-iQ7" firstAttribute="trailing" secondItem="wFr-RK-iSq" secondAttribute="trailing" id="nvy-bh-sCt"/>
-                            <constraint firstItem="h4n-sy-iRy" firstAttribute="leading" secondItem="Gf0-8S-iQ7" secondAttribute="leading" id="y1v-f5-4X9"/>
+                            <constraint firstItem="h4n-sy-iRy" firstAttribute="leading" secondItem="r2h-5H-rEP" secondAttribute="leading" id="y1v-f5-4X9"/>
                         </constraints>
                     </view>
                     <nil key="simulatedTopBarMetrics"/>
