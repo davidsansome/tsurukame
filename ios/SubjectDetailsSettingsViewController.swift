@@ -72,6 +72,12 @@ class SubjectDetailsSettingsViewController: SettingsTableViewController, TKMView
                                 subtitle: "Mnemonic Artwork for Radical Levels 1-10 and Kanji Levels 1-7",
                                 on: Settings.showArtwork,
                                 switchHandler: showArtworkChanged))
+
+      model.add(SwitchModelItem(style: .subtitle,
+                                title: "Show radical mnemonic artwork by Wanikani",
+                                subtitle: "Mnemonic artwork for radicals",
+                                on: Settings.showRadicalMnemonic,
+                                switchHandler: showRadicalMnemonicChanged))
     }
 
     model.add(SwitchModelItem(style: .subtitle,
@@ -99,6 +105,10 @@ class SubjectDetailsSettingsViewController: SettingsTableViewController, TKMView
 
   private func showArtworkChanged(_ switchView: UISwitch) {
     Settings.showArtwork = switchView.isOn
+  }
+
+  private func showRadicalMnemonicChanged(_ switchView: UISwitch) {
+    Settings.showRadicalMnemonic = switchView.isOn
   }
 
   private func showOldMnemonicSwitchChanged(_ switchView: UISwitch) {

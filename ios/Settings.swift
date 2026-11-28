@@ -208,6 +208,7 @@ protocol SettingProtocol {
   @Setting(5, #keyPath(lessonBatchSize)) static var lessonBatchSize: Int
   @Setting(true, #keyPath(showStatsSection)) static var showStatsSection: Bool
   @Setting(false, #keyPath(showArtwork)) static var showArtwork: Bool
+  @Setting(false, #keyPath(showRadicalMnemonic)) static var showRadicalMnemonic: Bool
 
   @EnumSetting(ReviewOrder.random, #keyPath(reviewOrder)) static var reviewOrder: ReviewOrder
   @Setting(5, #keyPath(reviewBatchSize)) static var reviewBatchSize: Int
