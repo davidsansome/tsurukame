@@ -613,6 +613,16 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
     }
   }
 
+  private func addRadicalMnemonicSvg(_ subject: TKMSubject, _ model: MutableTableModel) {
+    // Add the Radical Mnemonic section.
+    if #available(iOS 15.0, *), Settings.showRadicalMnemonic,
+       services.reachability.isReachable(),
+       ArtworkManager.containsRadical(subjectId: subject.id) {
+      model.add(section: "Radical mnemonic artwork by Wanikani")
+      model.add(RadicalMnemonicModelItem(subjectId: subject.id))
+    }
+  }
+
   public func update(withSubject subject: TKMSubject, studyMaterials: TKMStudyMaterials?,
                      assignment: TKMAssignment?, task: ReviewItem?,
                      alwaysShowLevel: Bool = false) {
@@ -657,6 +667,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       meaningNote = services.localCachingClient
         .getMeaningNoteDisplay(studyMaterials: studyMaterials!)
     }
+
     if subject.hasRadical {
       let meanings = addMeanings(subject, studyMaterials: studyMaterials, toModel: model)
 
@@ -673,6 +684,7 @@ class SubjectDetailsView: UITableView, SubjectChipDelegate {
       if !meaningShown {
         addShowAllButton(hiddenIndexPaths: [meanings, mnemonic, oldMnemonic], model: model)
       }
+      addRadicalMnemonicSvg(subject, model)
       addArtwork(subject, model)
       addAmalgamationSubjects(subject, toModel: model)
     }

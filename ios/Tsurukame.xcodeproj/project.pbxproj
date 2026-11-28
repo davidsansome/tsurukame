@@ -27,6 +27,7 @@
 		631CAD72234B4A96008CEA73 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631CAD71234B4A96008CEA73 /* ReviewViewController.swift */; };
 		631F34D72C36B7FE0071E983 /* BiggerTapAreaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631F34D62C36B7FE0071E983 /* BiggerTapAreaButton.swift */; };
 		6324AE3E2F9DC8040089066C /* RadicalCharacterImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324AE3D2F9DC7FF0089066C /* RadicalCharacterImages.swift */; };
+		F50EB79530BA1EE600B02CA0 /* RadicalMnemonicImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50EB79430BA1EE600B02CA0 /* RadicalMnemonicImages.swift */; };
 		6324AE412F9DCEAD0089066C /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6324AE402F9DCEAD0089066C /* SVGKit */; };
 		633252882727E8A700ABBA04 /* SubjectCatalogueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */; };
 		6332528C2727F29D00ABBA04 /* PillModelItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6332528B2727F29D00ABBA04 /* PillModelItem.xib */; };
@@ -212,6 +213,7 @@
 		C970BC0323D262CE001F3735 /* SiriShortcutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C970BC0223D262CE001F3735 /* SiriShortcutHelper.swift */; };
 		C2ED175C0000000000000002 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2ED175C0000000000000001 /* CreditsViewController.swift */; };
 		D0E1A2B3C4D5E6F708192A3C /* DeveloperOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E1A2B3C4D5E6F708192A3B /* DeveloperOptionsViewController.swift */; };
+		F5B110B230B596DB00F26277 /* RadicalMnemonicModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B110B130B596DB00F26277 /* RadicalMnemonicModelItem.swift */; };
 		E881943B2A6BC0CF002C2E1C /* ArtworkModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E881943A2A6BC0CF002C2E1C /* ArtworkModelItem.swift */; };
 		E881943F2A6BC38A002C2E1C /* ArtworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E881943E2A6BC38A002C2E1C /* ArtworkManager.swift */; };
 		EC6A5487F6875EC64C63B6B2 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404461BC39B4A19B128F9E69 /* Pods_FontScreenshotter_FontScreenshotterUITests.framework */; };
@@ -313,6 +315,7 @@
 		631CAD71234B4A96008CEA73 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		631F34D62C36B7FE0071E983 /* BiggerTapAreaButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiggerTapAreaButton.swift; sourceTree = "<group>"; };
 		6324AE3D2F9DC7FF0089066C /* RadicalCharacterImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadicalCharacterImages.swift; sourceTree = "<group>"; };
+		F50EB79430BA1EE600B02CA0 /* RadicalMnemonicImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadicalMnemonicImages.swift; sourceTree = "<group>"; };
 		633252872727E8A700ABBA04 /* SubjectCatalogueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectCatalogueViewController.swift; sourceTree = "<group>"; };
 		6332528B2727F29D00ABBA04 /* PillModelItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PillModelItem.xib; sourceTree = "<group>"; };
 		6332528D2727F32800ABBA04 /* PillModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillModelItem.swift; sourceTree = "<group>"; };
@@ -498,6 +501,7 @@
 		D9929E537851D24D07F47938 /* Pods-Tsurukame (App Store screenshots).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tsurukame (App Store screenshots).release.xcconfig"; path = "Target Support Files/Pods-Tsurukame (App Store screenshots)/Pods-Tsurukame (App Store screenshots).release.xcconfig"; sourceTree = "<group>"; };
 		E0AAF9AA4EFECB4B5DB94C29 /* Pods-FontScreenshotterUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotterUITests.release.xcconfig"; path = "Target Support Files/Pods-FontScreenshotterUITests/Pods-FontScreenshotterUITests.release.xcconfig"; sourceTree = "<group>"; };
 		E76D291A2528193C74A43C60 /* Pods-FontScreenshotter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FontScreenshotter.debug.xcconfig"; path = "Target Support Files/Pods-FontScreenshotter/Pods-FontScreenshotter.debug.xcconfig"; sourceTree = "<group>"; };
+        F5B110B130B596DB00F26277 /* RadicalMnemonicModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadicalMnemonicModelItem.swift; sourceTree = "<group>"; };
 		E881943A2A6BC0CF002C2E1C /* ArtworkModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtworkModelItem.swift; sourceTree = "<group>"; };
 		E881943E2A6BC38A002C2E1C /* ArtworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtworkManager.swift; sourceTree = "<group>"; };
 		F33812F134DC80E5D981C40E /* Pods_FontScreenshotter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FontScreenshotter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -640,6 +644,7 @@
 			isa = PBXGroup;
 			children = (
 				6324AE3D2F9DC7FF0089066C /* RadicalCharacterImages.swift */,
+				F50EB79430BA1EE600B02CA0 /* RadicalMnemonicImages.swift */,
 				96A335062EEF5F800017BC70 /* BottomSheetAction.swift */,
 				999BBB1111CCAA22BB333344 /* BurnedReviewFiltersViewController.swift */,
 				9721708B2DBAF3A6001DFFED /* SubjectsExcluded.storyboard */,
@@ -794,6 +799,7 @@
 			children = (
 				E881943E2A6BC38A002C2E1C /* ArtworkManager.swift */,
 				E881943A2A6BC0CF002C2E1C /* ArtworkModelItem.swift */,
+				F5B110B130B596DB00F26277 /* RadicalMnemonicModelItem.swift */,
 				63F7F52023D3F36E006A31FB /* AttributedModelItem.swift */,
 				63358E9D273664F50013A2AC /* BasicModelItem.swift */,
 				63358EA127366D720013A2AC /* CheckmarkModelItem.swift */,
@@ -1481,6 +1487,7 @@
 				C904455D2395DBAE001BC48B /* AnswerTextField.swift in Sources */,
 				63ECACD32C3430F900A0FBDD /* MainPracticeTabViewController.swift in Sources */,
 				6324AE3E2F9DC8040089066C /* RadicalCharacterImages.swift in Sources */,
+				F50EB79530BA1EE600B02CA0 /* RadicalMnemonicImages.swift in Sources */,
 				636A63E7238A607A00902269 /* VacationModeView.swift in Sources */,
 				63C4EA562C257F57003D3C0B /* IB-Segues+Generated.swift in Sources */,
 				63391B5D2779BECB005CDA72 /* SubjectDetailsSettingsViewController.swift in Sources */,
@@ -1535,6 +1542,7 @@
 				63A7021B2C2DBD0D00AB0504 /* MainTabBarViewController.swift in Sources */,
 				63CBFF29277327920086BA5F /* FontsViewController.swift in Sources */,
 				E881943B2A6BC0CF002C2E1C /* ArtworkModelItem.swift in Sources */,
+				F5B110B230B596DB00F26277 /* RadicalMnemonicModelItem.swift in Sources */,
 				633252922728131100ABBA04 /* TableModel.swift in Sources */,
 				63C4EA822C269AA3003D3C0B /* ListSeparatorItem.swift in Sources */,
 				636502B325D7A39600801C2D /* SubjectsRemainingViewController.swift in Sources */,

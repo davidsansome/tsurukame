@@ -23,6 +23,7 @@ class TKMServices {
   private(set) var offlineAudio: OfflineAudio!
   private(set) var audio: Audio!
   private(set) var radicalCharacterImages: RadicalCharacterImages!
+  private(set) var radicalMnemonicImages: RadicalMnemonicImages!
 
   var client: WaniKaniAPIClient!
   var localCachingClient: LocalCachingClient!
@@ -31,5 +32,6 @@ class TKMServices {
     offlineAudio = OfflineAudio(services: self)
     audio = Audio(services: self)
     radicalCharacterImages = RadicalCharacterImages(services: self)
+    radicalMnemonicImages = RadicalMnemonicImages(services: self)
   }
 }

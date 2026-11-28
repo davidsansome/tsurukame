@@ -293,6 +293,9 @@ class MainViewController: UIViewController, LoginViewControllerDelegate,
         }
 
         self.services.radicalCharacterImages.downloadAll()
+        if let user = self.services.localCachingClient.getUserInfo(), user.level != 0 {
+          self.services.radicalMnemonicImages.downloadByLevel(byLevel: Int(user.level))
+        }
       }
     }
   }

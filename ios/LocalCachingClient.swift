@@ -785,6 +785,18 @@ class LocalCachingClient: NSObject, SubjectLevelGetter {
     }
   }
 
+  func getRadicals(byLevel level: Int) -> [TKMSubject] {
+    db.inDatabase { db in
+      var ret = [TKMSubject]()
+      for cursor in db.query("SELECT pb FROM subjects WHERE type = ? AND level = ?",
+                             args: [TKMSubject.TypeEnum.radical.rawValue, level]) {
+        let subject: TKMSubject = cursor.proto(forColumnIndex: 0)!
+        ret.append(subject)
+      }
+      return ret
+    }
+  }
+
   private func getAllSubjects(transaction db: FMDatabase) -> [TKMSubject] {
     var ret = [TKMSubject]()
     for cursor in db.query("SELECT pb FROM subjects") {
